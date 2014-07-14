@@ -12,4 +12,4 @@ categories: bookmarks weekly
 
 [Mike Ash](https://www.mikeash.com/book.html): Collection of articles on iOS dev (performace tuning, memory management, etc.).
 
-[iOS Programming)[http://www.bignerdranch.com/we-write/ios-programming.html]: Big Nerd Ranch's book on iOS dev.
+[iOS Programming](http://www.bignerdranch.com/we-write/ios-programming.html): Big Nerd Ranch's book on iOS dev.
