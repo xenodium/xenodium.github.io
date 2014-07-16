@@ -17,3 +17,5 @@ categories: bookmarks weekly
 [Github pages/Jekyll/Poole example](http://joshualande.com/jekyll-github-pages-poole/): By Joshua Lande.
 
 [Bootstrap 3 grid](http://www.helloerik.com/the-subtle-magic-behind-why-the-bootstrap-3-grid-works): Why it works.
+
+[Lanterna](https://code.google.com/p/lanterna/): Text GUI (a la ncurses) written in Java.
