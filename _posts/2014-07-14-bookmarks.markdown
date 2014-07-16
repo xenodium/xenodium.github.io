@@ -15,3 +15,5 @@ categories: bookmarks weekly
 [iOS Programming](http://www.bignerdranch.com/we-write/ios-programming.html): Big Nerd Ranch's book on iOS dev.
 
 [Github pages/Jekyll/Poole example](http://joshualande.com/jekyll-github-pages-poole/): By Joshua Lande.
+
+[Bootstrap 3 grid](http://www.helloerik.com/the-subtle-magic-behind-why-the-bootstrap-3-grid-works): Why it works.
