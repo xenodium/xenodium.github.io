@@ -4,6 +4,8 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Thinkpad X1 Carbon](http://www.forbes.com/sites/gordonkelly/2014/06/25/lenovo-thinkpad-x1-carbon-review-beats-macbook-air-on-paper): Linux laptop alternative.
+
 [Emacs in one year](https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-en.org): Someone's emacs experience over a year.
 
 [List of tiling WM](http://askubuntu.com/questions/1844/is-there-a-keyboard-centric-desktop-wm-available/1860#1860): A nice list of tiling window managers from a post.
