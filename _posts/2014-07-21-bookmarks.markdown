@@ -4,6 +4,10 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Giorgio's iOS blog](http://giorgiocalderolla.com/blog.html): Lots of great iOs dev tips.
+
+[Emacs Nifty tricks](http://www.emacswiki.org/emacs/EmacsNiftyTricks): Another source of emacs goodness.
+
 [Thinkpad X1 Carbon](http://www.forbes.com/sites/gordonkelly/2014/06/25/lenovo-thinkpad-x1-carbon-review-beats-macbook-air-on-paper): Linux laptop alternative.
 
 [Emacs in one year](https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-en.org): Someone's emacs experience over a year.
