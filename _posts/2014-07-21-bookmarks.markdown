@@ -4,6 +4,8 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Yan's dot files](https://github.com/skwp/dotfiles): For peaking.
+
 [Flx for emacs](https://github.com/lewang/flx): Sublime-style searching for emacs.
 
 [Giorgio's iOS blog](http://giorgiocalderolla.com/blog.html): Lots of great iOs dev tips.
