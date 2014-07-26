@@ -4,7 +4,7 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
-[Fuzzy matching for emacs](https://github.com/lewang/flx): Sublime-style searching for emacs.
+[Flx for emacs](https://github.com/lewang/flx): Sublime-style searching for emacs.
 
 [Giorgio's iOS blog](http://giorgiocalderolla.com/blog.html): Lots of great iOs dev tips.
 
