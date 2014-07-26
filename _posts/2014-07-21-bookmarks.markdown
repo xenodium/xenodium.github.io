@@ -4,6 +4,8 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Fuzzy matching for emacs](https://github.com/lewang/flx): Sublime-style searching for emacs.
+
 [Giorgio's iOS blog](http://giorgiocalderolla.com/blog.html): Lots of great iOs dev tips.
 
 [Emacs Nifty tricks](http://www.emacswiki.org/emacs/EmacsNiftyTricks): Another source of emacs goodness.
