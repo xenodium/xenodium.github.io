@@ -4,6 +4,8 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Yan's productivity tips](http://yanpritzker.com/2006/10/03/five-ways-to-get-insane-productivity-boosts/): Also to try.
+
 [Yan's dot files](https://github.com/skwp/dotfiles): For peaking.
 
 [Flx for emacs](https://github.com/lewang/flx): Sublime-style searching for emacs.
