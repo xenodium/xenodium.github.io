@@ -4,6 +4,8 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Change hostname Mac OS X](http://www.cs.usfca.edu/~bhardie/misc/misc/scutil.html): $sudo scutil --set HostName air
+
 [Yan's productivity tips](http://yanpritzker.com/2006/10/03/five-ways-to-get-insane-productivity-boosts/): Also to try.
 
 [Yan's dot files](https://github.com/skwp/dotfiles): For peaking.
