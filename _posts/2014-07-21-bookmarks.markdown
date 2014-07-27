@@ -3,6 +3,8 @@ layout: post
 title:  "bookmarks"
 categories: bookmarks weekly
 ---
+[Shapecatcher](http://shapecatcher.com): Draw shapes and find unicode alternatives.
+
 [Font Awesome](http://fortawesome.github.io/Font-Awesome/): css scalable vector icons.
 
 [Change hostname Mac OS X](http://www.cs.usfca.edu/~bhardie/misc/misc/scutil.html): $sudo scutil --set HostName air
