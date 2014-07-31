@@ -33,21 +33,17 @@ categories: bookmarks weekly
 [Effective emacs tips](http://ergoemacs.org/emacs/effective_emacs.html): From ergoemacs.
 
 [CSS vertical align](http://codepen.io/oisinlavery/pen/Jmjtz): Using flex:
-div{
-  height: 200px;
-  background: #ccc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    div{
+      height: 200px;
+      background: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-p{
-  margin: auto
-}
-
-<div>
-a line of text</br>and a second line of text
-</div>
+    p{
+      margin: auto
+    }
 
 [Asking for iOS permissions](http://techcrunch.com/2014/04/04/the-right-way-to-ask-users-for-ios-permissions/).
 
