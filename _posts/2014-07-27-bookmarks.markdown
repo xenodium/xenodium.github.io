@@ -20,7 +20,7 @@ categories: bookmarks weekly
 
 [Icicles](http://philogb.github.io/jit/static/v20/Jit/Examples/Icicle/example2.html): Data viz.
 
-[Protoviz)(http://mbostock.github.io/protovis/): Data viz.
+[Protoviz](http://mbostock.github.io/protovis/): Data viz.
 
 [Tmux crash course](http://robots.thoughtbot.com/a-tmux-crash-course): By Josh Clayton.
 
