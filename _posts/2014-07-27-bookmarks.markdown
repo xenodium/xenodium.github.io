@@ -4,6 +4,14 @@ title:  "bookmarks"
 categories: bookmarks weekly
 ---
 
+[Prelude emacs distribution](https://github.com/bbatsov/prelude): Lots of tips to get from this distro.
+
+[What's in my iOS toolbos part 2](http://edsancha.com/blog/2014/02/03/whats-in-my-iOS-toolbox-2.html).
+
+[What's in my iOS toolbox part 1](http://edsancha.com/blog/2014/01/28/whats-in-my-iOS-toolbox.html).
+
+[Helm Projectile](https://github.com/bbatsov/projectile): Is awesome for finding files in emacs.
+
 [Git from the trenches](https://ochronus.com/git-tips-from-the-trenches/).
 
 [Mind body green](http://www.mindbodygreen.com/).
