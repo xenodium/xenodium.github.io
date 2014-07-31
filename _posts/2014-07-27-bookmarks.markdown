@@ -33,6 +33,7 @@ categories: bookmarks weekly
 [Effective emacs tips](http://ergoemacs.org/emacs/effective_emacs.html): From ergoemacs.
 
 [CSS vertical align](http://codepen.io/oisinlavery/pen/Jmjtz): Using flex:
+
     div{
       height: 200px;
       background: #ccc;
