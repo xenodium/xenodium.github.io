@@ -3,6 +3,7 @@ layout: post
 title:  "bookmarks"
 categories: bookmarks weekly
 ---
+[Customizing emacs mode line](http://emacs-fu.blogspot.co.uk/2011/08/customizing-mode-line.html): Also lots of handy tips at emacs-fu blog.
 
 [Prelude emacs distribution](https://github.com/bbatsov/prelude): Lots of tips to get from this distro.
 
