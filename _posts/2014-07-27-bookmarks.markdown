@@ -3,6 +3,7 @@ layout: post
 title:  "bookmarks"
 categories: bookmarks weekly
 ---
+[Textract](https://github.com/deanmalmgren/textract): Python util extracting text from a handful of document types.
 
 [Git diffs using emacs ediff](http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/).
 
