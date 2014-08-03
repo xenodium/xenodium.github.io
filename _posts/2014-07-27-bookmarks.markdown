@@ -3,6 +3,8 @@ layout: post
 title:  "bookmarks"
 categories: bookmarks weekly
 ---
+[Dotfiles for insane productivity in bash, git, and vim ](http://yanpritzker.com/2011/11/17/dotfiles-for-ultimate-productivity-in-bash-and-vim/)/.
+
 [Textract](https://github.com/deanmalmgren/textract): Python util extracting text from a handful of document types.
 
 [Git diffs using emacs ediff](http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/).
