@@ -4,12 +4,12 @@ title:  "emacs blogs"
 categories: bookmarks weekly emacs
 ---
 
-[http://ericscrosson.wordpress.com](Zen in the Art of Emacs).
+[Zen in the Art of Emacs](http://ericscrosson.wordpress.com).
 
-[http://endlessparentheses.com](Endless parenthesis).
+[Endless parenthesis](http://endlessparentheses.com).
 
-[http://sachachua.com](Sachua Chua).
+[Sachua Chua](http://sachachua.com).
 
-[http://emacsrocks.com](Emacs rocks).
+[Emacs rocks](http://emacsrocks.com).
 
-[http://www.masteringemacs.org](Mastering emacs).
+[Mastering emacs](http://www.masteringemacs.org).
