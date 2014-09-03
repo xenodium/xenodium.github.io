@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "installing emacs-ycmd
+title:  "installing emacs-ycmd"
 categories: howto
 ---
 
