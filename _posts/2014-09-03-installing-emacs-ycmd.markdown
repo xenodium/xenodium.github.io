@@ -7,14 +7,18 @@ categories: howto
 Installing [emacs-ymcd](https://github.com/abingham/emacs-ycmd) (work in progress):
 
 ```shell
-  git clone https://github.com/Valloric/YouCompleteMe.git
-  cd YouCompleteMe
-  git submodule update --init --recursive
-  ./install.sh --clang-completer --omnisharp-completer
-  cd third_party/ycmd/examples
-  sudo pip install requests
-  brew install httpie
+  pip install requests
   pip install enum34
+  brew install httpie
+
+  git clone https://github.com/Valloric/ycmd.git
+  git submodule update --init --recursive
+  ./build.sh --clang-completer --omnisharp-completer
+```
+```lisp
+  (require 'ycmd)
+  (setq ycmd-server-command '("python" "path/to/your/ycmd/ycmd"))
+  (ycmd-open "path/to/your/.ycm_extra_conf.py")
 ```
 
 Reference:
