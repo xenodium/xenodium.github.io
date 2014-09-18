@@ -4,50 +4,50 @@ title:  "ios dev goodies"
 categories: bookmarks
 ---
 
-[http://ios.devtools.me](iOS Dev Tools).
+[iOS Dev Tools](http://ios.devtools.me).
 
-[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools](TETHR:) iOS design kit.
+[TETHR:](http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools) iOS design kit.
 
-[https://www.behance.net/search?search=ios&utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools](Behance:) For inspiration.
+[Behance:](https://www.behance.net/search?search=ios&utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools) For inspiration.
 
-[http://iphone.meer.li/designs/featured?page=3](Meerli:) More ispiration.
+[Meerli:](http://iphone.meer.li/designs/featured?page=3) More ispiration.
 
-[http://injectionforxcode.com](Injection for Xcode:) Faster dev/build/launch/inspect cycle.
+[Injection for Xcode:](http://injectionforxcode.com) Faster dev/build/launch/inspect cycle.
 
-[http://codepilot.cc](Code pilot:) Faster Xcode project navigation.
+[Code pilot:](http://codepilot.cc) Faster Xcode project navigation.
 
-[http://www.davemark.com/?p=1829](DaveLots of iOS resources)
+[DaveLots of iOS resources](http://www.davemark.com/?p=1829)
 
-[https://github.com/stanislaw/iOS-Projects-Catalogue](iOS projects catalogues)
+[iOS projects catalogues](https://github.com/stanislaw/iOS-Projects-Catalogue)
 
-[https://github.com/2359media/ios-dev-guide/blob/master/iOS%20Topics%20and%20References.md](More aggregation of awesomeness on github)
+[More aggregation of awesomeness on github](https://github.com/2359media/ios-dev-guide/blob/master/iOS%20Topics%20and%20References.md)
 
-[https://developer.apple.com/videos/wwdc/2012/](WWDC 2012 Xcode tips)
+[WWDC 2012 Xcode tips](https://developer.apple.com/videos/wwdc/2012/)
 
-[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1](Apple docs:) Basic programming Concepts for Cocoa and Cocoa Touch.
+[Apple docs:](https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1) Basic programming Concepts for Cocoa and Cocoa Touch.
 
-[https://medium.com/ios-apprentice/the-valuable-toolset-for-ios-development-ba312d12577d](iOS Apprentice): More valuable dev info.
+[iOS Apprentice](https://medium.com/ios-apprentice/the-valuable-toolset-for-ios-development-ba312d12577d): More valuable dev info.
 
-[http://revealapp.com](Reveal:) Looks amazing for inspecting UI hierarchy.
+[Reveal:](http://revealapp.com) Looks amazing for inspecting UI hierarchy.
 
-[https://github.com/jamztang/CSStickyHeaderFlowLayout](CSStickyHeaderFlowLayout)
+[CSStickyHeaderFlowLayout](https://github.com/jamztang/CSStickyHeaderFlowLayout)
 
-[https://github.com/ColinEberhardt/VCTransitionsLibrary](VCTransitionsLibrary)
+[VCTransitionsLibrary](https://github.com/ColinEberhardt/VCTransitionsLibrary)
 
-[https://developer.apple.com/videos/wwdc/2014/](WWDC 2014)
+[WWDC 2014](https://developer.apple.com/videos/wwdc/2014/)
 
-[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8](11 Insanely Great iOS Developers Sites)
+[11 Insanely Great iOS Developers Sites](https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8)
 
-[http://subjc.com](Subjective-C:) Study of innovative iOS interfaces.
+[Subjective-C:](http://subjc.com) Study of innovative iOS interfaces.
 
-[http://iosdevtips.co](iosdevtips.co)
+[iosdevtips.co](http://iosdevtips.co)
 
-[http://iosdevweekly.com](iOS dev weekly)
+[iOS dev weekly](http://iosdevweekly.com)
 
-[http://ios-goodies.com](ios-goodies.com)
+[ios-goodies.com](http://ios-goodies.com)
 
-[http://joppar.com/mobile-app-development-resources-guide/](joppar.com): More dev resources.
+[joppar.com](http://joppar.com/mobile-app-development-resources-guide/): More dev resources.
 
-[http://bpoplauschi.wordpress.com](Yet another iOS Blog)
+[Yet another iOS Blog](http://bpoplauschi.wordpress.com)
 
-[http://nsscreencast.com](nsscreencast.com): Weekly bite-sized screencasts.
+[nsscreencast.com](http://nsscreencast.com): Weekly bite-sized screencasts.
