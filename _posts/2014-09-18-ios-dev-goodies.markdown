@@ -56,4 +56,8 @@ categories: bookmarks
 
 [nsscreencast.com](http://nsscreencast.com): Weekly bite-sized screencasts.
 
-[Giorgio Calderolla](http://giorgiocalderolla.com/blog.html).
+[Giorgio Calderolla](http://giorgiocalderolla.com/blog.html)
+
+[Objective-C linter](http://oclint.org/)
+
+[Apple's Concepts in Objective-C programming](https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Initialization/Initialization.html#//apple_ref/doc/uid/TP40010810-CH6-SW3)
