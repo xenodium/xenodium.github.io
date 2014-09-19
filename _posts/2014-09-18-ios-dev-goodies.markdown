@@ -55,3 +55,5 @@ categories: bookmarks
 [Yet another iOS Blog](http://bpoplauschi.wordpress.com)
 
 [nsscreencast.com](http://nsscreencast.com): Weekly bite-sized screencasts.
+
+[Giorgio Calderolla](http://giorgiocalderolla.com/blog.html).
