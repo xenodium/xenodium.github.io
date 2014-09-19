@@ -21,3 +21,5 @@ categories: bookmarks dev emacs
 [Awesome emacs](https://github.com/emacs-tw/awesome-emacs/blob/master/README.org)
 
 [Nerdgasms's emacs tips](http://bbbscarter.wordpress.com/category/coding/emacs/)
+
+[What the emacsd](http://whattheemacsd.com/)
