@@ -10,6 +10,8 @@ categories: bookmarks dev emacs
 
 [Emacs for developers:](https://github.com/pierre-lecocq/emacs4developers) Setting up the beloved editor for dev.
 
+[Emacs for Xcode+ios Development](http://roupam.github.io/)
+
 [Emacs for Cocoa development](https://sites.google.com/site/drielsma/xcodeplusemacs)
 
 [Ajoke:](https://github.com/baohaojun/ajoke) May be handy for Java dev.
@@ -18,4 +20,4 @@ categories: bookmarks dev emacs
 
 [Awesome emacs](https://github.com/emacs-tw/awesome-emacs/blob/master/README.org)
 
-
+[Nerdgasms's emacs tips](http://bbbscarter.wordpress.com/category/coding/emacs/)
