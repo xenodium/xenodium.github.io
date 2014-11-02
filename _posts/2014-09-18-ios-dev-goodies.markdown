@@ -4,6 +4,10 @@ title:  "ios dev goodies"
 categories: bookmarks
 ---
 
+[Apple's mogile HIG guidelines](https://developer.apple.com/library/ios/documentation/userexperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556)
+
+[Apple's coding guidelines for Cocoa](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html#//apple_ref/doc/uid/20001282-BCIGIJJF)
+
 [iOS Dev Tools](http://ios.devtools.me).
 
 [TETHR:](http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools) iOS design kit.
@@ -51,3 +55,9 @@ categories: bookmarks
 [Yet another iOS Blog](http://bpoplauschi.wordpress.com)
 
 [nsscreencast.com](http://nsscreencast.com): Weekly bite-sized screencasts.
+
+[Giorgio Calderolla](http://giorgiocalderolla.com/blog.html)
+
+[Objective-C linter](http://oclint.org/)
+
+[Apple's Concepts in Objective-C programming](https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Initialization/Initialization.html#//apple_ref/doc/uid/TP40010810-CH6-SW3)
