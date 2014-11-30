@@ -10,6 +10,10 @@ categories: bookmarks dev emacs
 
 [Emacs for developers:](https://github.com/pierre-lecocq/emacs4developers) Setting up the beloved editor for dev.
 
+[Fukuyama's Emacs/iOS](http://fukuyama.co)
+
+[Sakito's Emacs Objective-C](http://sakito.jp/emacs/emacsobjectivec.html)
+
 [Emacs for Xcode+ios Development](http://roupam.github.io/)
 
 [Emacs for Cocoa development](https://sites.google.com/site/drielsma/xcodeplusemacs)
