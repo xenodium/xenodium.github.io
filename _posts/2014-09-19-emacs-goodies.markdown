@@ -4,6 +4,12 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
+[What Emacs communities exist?](http://emacs.stackexchange.com/questions/2571/what-emacs-communities-exist)
+
+[Making emacs work for me](http://zeekat.nl/articles/making-emacs-work-for-me.html)
+
+[An introduction to Magit, an Emacs mode for Git](http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git)
+
 [C/C++ dev on emacs:](http://tuhdo.github.io/c-ide.html) tuhdo's guides.
 
 [javadoc-lookup](https://github.com/skeeto/javadoc-lookup)
