@@ -4,6 +4,8 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
+[Yoo Box's Emacs category](https://yoo2080.wordpress.com/category/emacs/)
+
 [What Emacs communities exist?](http://emacs.stackexchange.com/questions/2571/what-emacs-communities-exist)
 
 [Making emacs work for me](http://zeekat.nl/articles/making-emacs-work-for-me.html)
