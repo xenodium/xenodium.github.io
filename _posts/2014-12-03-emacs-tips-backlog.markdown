@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+### [Try out kurecolor](https://github.com/emacsfodder/kurecolor)
+
+
 ### Repeat last command
 
 C-x z (and just z threreafter).
@@ -27,7 +30,9 @@ C-x z (and just z threreafter).
 * y/n for each match.
 * C-x s ! (save all).
 
+
 ### [save-some-buffers:](http://www.gnu.org/software/emacs/manual/html_node/emacs/Save-Commands.html) C-x s ! (to save all).
+
 
 ### [set-selective-display](http://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html)
 
