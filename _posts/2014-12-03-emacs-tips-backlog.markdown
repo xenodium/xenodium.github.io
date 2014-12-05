@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## How to debug expanded elisp macros
+[http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros](http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros)
+
 ## Moving by parens
 For example, C-M-u Move backward out of one level of parentheses.
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html
