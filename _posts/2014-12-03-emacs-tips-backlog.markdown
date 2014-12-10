@@ -11,7 +11,7 @@ Random tips to try, which I would likely forget otherwise.
 
 ## Moving by parens
 For example, C-M-u Move backward out of one level of parentheses.
-https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html
+[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html](https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html)
 
 ## Try out kurecolor
 [https://github.com/emacsfodder/kurecolor](https://github.com/emacsfodder/kurecolor)
@@ -24,7 +24,8 @@ C-x z (and just z threreafter).
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 
-## Query replace recursively
+## Query replace recursively  
+
 * M-x find-dired RET
 * Navigate to location, RET
 * Add find argument (none of all files), RET
@@ -32,8 +33,8 @@ C-x z (and just z threreafter).
 * Q (query-replace).
 * Enter search/replace terms.
 * y/n for each match.
-* C-x s ! (save all).
-
+* C-x s ! (save all).  
+  
 
 ## save-some-buffers
 [C-x s ! (to save all)](http://www.gnu.org/software/emacs/manual/html_node/emacs/Save-Commands.html)
