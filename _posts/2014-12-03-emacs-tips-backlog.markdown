@@ -6,6 +6,12 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## describe-bindings
+C-h b lists all bindings. Narrow down with occurr.
+
+## Malabar-mode
+[https://github.com/m0smith/malabar-mode](https://github.com/m0smith/malabar-mode)
+
 ## How to debug expanded elisp macros
 [http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros](http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros)
 
