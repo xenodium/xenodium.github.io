@@ -4,6 +4,8 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
+[Chen Bin's emacs conf](https://github.com/redguardtoo/emacs.d/)  
+
 Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode), [here](https://github.com/altschuler/yas-objc), and [here](https://github.com/al-skobelev/objc-yassnippets)  
 
 [Yoo Box's Emacs category](https://yoo2080.wordpress.com/category/emacs/)
