@@ -6,6 +6,10 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## inline shell-command and shell-command-on-region
+C-u M-!  
+C-u M-|  
+
 ## describe-bindings
 C-h b lists all bindings. Narrow down with occurr.
 
