@@ -4,6 +4,8 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
+[Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
+
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
 
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
