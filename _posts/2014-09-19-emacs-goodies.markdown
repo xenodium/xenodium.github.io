@@ -4,7 +4,9 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
-[Chen Bin's emacs conf](https://github.com/redguardtoo/emacs.d/)  
+[Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
+
+[Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
 
 Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode), [here](https://github.com/altschuler/yas-objc), and [here](https://github.com/al-skobelev/objc-yassnippets)  
 
