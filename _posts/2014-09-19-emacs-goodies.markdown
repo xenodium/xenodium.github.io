@@ -4,6 +4,8 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
+[Universidad de Vigo's Emacs course](http://tv.uvigo.es/gl/serial/513.html)  
+
 [Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
 
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
