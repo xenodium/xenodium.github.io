@@ -4,13 +4,19 @@ title:  "emacs goodies"
 categories: bookmarks dev emacs
 ---
 
-[Universidad de Vigo's Emacs course](http://tv.uvigo.es/gl/serial/513.html)  
-
-[Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
+## Configs
 
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
 
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
+
+[Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
+
+## Others
+
+[Universidad de Vigo's Emacs course](http://tv.uvigo.es/gl/serial/513.html)  
+
+[Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
 
 Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode), [here](https://github.com/altschuler/yas-objc), and [here](https://github.com/al-skobelev/objc-yassnippets)  
 
