@@ -6,6 +6,12 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## Search all info documentation
+info-apropos
+
+## Search Emacs lisp reference manual
+elisp-index-search
+
 ## inline shell-command and shell-command-on-region
 C-u M-!  
 C-u M-|  
