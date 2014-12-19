@@ -7,7 +7,8 @@ categories: emacs tips dev
 Random tips to try, which I would likely forget otherwise.
 
 ## Search all info documentation
-info-apropos
+info-apropos  
+emacs-index-search  
 
 ## Search Emacs lisp reference manual
 elisp-index-search
