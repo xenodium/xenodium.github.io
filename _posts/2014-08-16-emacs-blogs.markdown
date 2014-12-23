@@ -4,6 +4,8 @@ title:  "emacs blogs"
 categories: bookmarks weekly emacs
 ---
 
+[or emacs](http://oremacs.com/)
+
 [lunarsite](http://www.lunaryorn.com/)
 
 [Emacs redux](http://emacsredux.com/)
