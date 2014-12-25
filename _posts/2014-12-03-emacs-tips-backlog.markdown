@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## Squashing Commits with Magit
+[http://howardism.org/Technical/Emacs/magit-squashing.html](http://howardism.org/Technical/Emacs/magit-squashing.html)
+
 ## Search all info documentation
 info-apropos  
 emacs-index-search  
