@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## Toggling key bingings
+[Ode to the toggle](http://oremacs.com/2014/12/25/ode-to-toggle/)
+
 ## Squashing Commits with Magit
 [http://howardism.org/Technical/Emacs/magit-squashing.html](http://howardism.org/Technical/Emacs/magit-squashing.html)
 
