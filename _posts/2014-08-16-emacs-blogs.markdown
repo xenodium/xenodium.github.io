@@ -3,6 +3,7 @@ layout: post
 title:  "emacs blogs"
 categories: bookmarks weekly emacs
 ---
+[Trần Xuân Trường's emacs posts](http://truongtx.me/categories.html#emacs-ref)
 
 [or emacs](http://oremacs.com/)
 
