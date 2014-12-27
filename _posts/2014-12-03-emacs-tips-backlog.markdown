@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Random tips to try, which I would likely forget otherwise.
 
+## Check out [smart-mode-line](https://github.com/Bruce-Connor/smart-mode-line)
+[Sacha's sample usage](http://pages.sachachua.com/.emacs.d/Sacha.html)
+
 ## Toggling key bingings
 [Ode to the toggle](http://oremacs.com/2014/12/25/ode-to-toggle/)
 
