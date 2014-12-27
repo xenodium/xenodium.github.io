@@ -4,7 +4,21 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
-Random tips to try, which I would likely forget otherwise.
+Emacs tips for me to try...
+
+## Emacs regex
+[Emacs: Text Pattern Matching (regex) tutorial](http://ergoemacs.org/emacs/emacs_regex.html)
+
+## NaturalDocs for JavaScript in Emacs
+[Vineet's post](http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html)
+
+## checkdoc
+Checks buffer for doc strings file errors.
+
+## Replace char with a newline
+M-x replace-string RET ; RET C-q C-j.  
+C-q (quoted-insert)  
+C-j (newline)  
 
 ## Check out [smart-mode-line](https://github.com/Bruce-Connor/smart-mode-line)
 [Sacha's sample usage](http://pages.sachachua.com/.emacs.d/Sacha.html)
