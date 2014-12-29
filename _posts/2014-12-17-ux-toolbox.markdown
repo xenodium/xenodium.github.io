@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ux resources"
+title:  "ux toolbox"
 categories: bookmarks
 ---
 
