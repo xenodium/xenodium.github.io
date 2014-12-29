@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## Skeletor
+[https://github.com/chrisbarrett/skeletor.el](https://github.com/chrisbarrett/skeletor.el)
+
 ## Melpa recipe format
 [https://github.com/milkypostman/melpa#recipe-format](https://github.com/milkypostman/melpa#recipe-format)
 
