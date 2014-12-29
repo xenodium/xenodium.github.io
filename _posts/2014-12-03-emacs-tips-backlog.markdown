@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## Melpa recipe format
+[https://github.com/milkypostman/melpa#recipe-format](https://github.com/milkypostman/melpa#recipe-format)
+
 ## Emacs regex
 [Emacs: Text Pattern Matching (regex) tutorial](http://ergoemacs.org/emacs/emacs_regex.html)
 
