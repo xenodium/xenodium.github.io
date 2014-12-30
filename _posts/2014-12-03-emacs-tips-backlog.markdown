@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## O(n) link jump
+[Using ace-link](http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link)
+
 ## Choosing magit repo
 C-u C-x g (magit-status)
 
