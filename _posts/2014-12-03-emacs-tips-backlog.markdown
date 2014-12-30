@@ -6,14 +6,17 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## [lazyblorg](https://github.com/novoid/lazyblorg)
+For simplifying blogging.
+
 ## Continue comment blocks
-M-j (indent-new-comment-line)
+M-j (indent-new-comment-line).
 
 ## O(1) link jump
 [Using ace-link](http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link)
 
 ## Choosing magit repo
-C-u C-x g (magit-status)
+C-u C-x g (magit-status).
 
 ## Skeletor
 [https://github.com/chrisbarrett/skeletor.el](https://github.com/chrisbarrett/skeletor.el)
