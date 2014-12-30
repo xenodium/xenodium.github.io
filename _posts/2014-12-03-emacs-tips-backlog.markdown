@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## Choosing magit repo
+C-u C-x g (magit-status)
+
 ## Skeletor
 [https://github.com/chrisbarrett/skeletor.el](https://github.com/chrisbarrett/skeletor.el)
 
