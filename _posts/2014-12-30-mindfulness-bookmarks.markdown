@@ -14,3 +14,4 @@ categories: bookmarks mindfulness
 [Memreise's blog](http://www.memrise.com/blog/)  
 [HN's comments on memory](https://news.ycombinator.com/item?id=6522901)  
 [HN's comments on learning languages](https://news.ycombinator.com/item?id=7826745)  
+[lingua.ly](http://lingua.ly/)  
