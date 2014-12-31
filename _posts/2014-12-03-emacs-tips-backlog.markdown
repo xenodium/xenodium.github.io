@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## [lispy](https://github.com/abo-abo/lispy)
+For LISP editing.
+
 ## [lazyblorg](https://github.com/novoid/lazyblorg)
 For simplifying blogging.
 
