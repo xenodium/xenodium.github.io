@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## Simplify file transformations
+With [make-it-so](https://github.com/abo-abo/make-it-so)
+
 ## [lispy](https://github.com/abo-abo/lispy)
 For LISP editing.
 
