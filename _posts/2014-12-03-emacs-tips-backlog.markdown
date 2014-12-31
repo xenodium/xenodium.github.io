@@ -6,6 +6,9 @@ categories: emacs tips dev
 
 Emacs tips for me to try...
 
+## GTD Emacs workflow
+[Charles Cave's notes](http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html)
+
 ## Simplify file transformations
 With [make-it-so](https://github.com/abo-abo/make-it-so)
 
