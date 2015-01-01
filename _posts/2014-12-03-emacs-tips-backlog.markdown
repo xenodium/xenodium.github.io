@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+### Lots of org links
+Found at [dain.io](http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/)
+
 ### Create custom theme
 [See Trường's post](http://truongtx.me/2013/03/31/color-theming-in-emacs-24/)
 
