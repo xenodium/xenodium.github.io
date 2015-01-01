@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+### Git modes
+See [git-modes](https://github.com/magit/git-modes)
+
 ### Lots of org links
 Found at [dain.io](http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/)
 
