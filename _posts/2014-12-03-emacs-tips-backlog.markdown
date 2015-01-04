@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+### Project management for C/C++
+[Malinka](https://github.com/LefterisJP/malinka)
+
 ### Git modes
 See [git-modes](https://github.com/magit/git-modes)
 
