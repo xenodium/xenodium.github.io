@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+### Clang indexing tool
+[clang-tags](http://ffevotte.github.io/clang-tags/)
+
 ### Project management for C/C++
 [Malinka](https://github.com/LefterisJP/malinka)
 
