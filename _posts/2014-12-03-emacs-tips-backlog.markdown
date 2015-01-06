@@ -3,6 +3,8 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+## Static blog
+[org-page](https://github.com/kelvinh/org-page)
 
 ## youtube-dl for Emacs
 [Details at or emacs](http://oremacs.com/2015/01/05/youtube-dl/)
