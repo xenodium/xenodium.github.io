@@ -12,6 +12,8 @@ categories: bookmarks dev emacs
 
 [Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
 
+[Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
+
 ## Others
 
 [Universidad de Vigo's Emacs course](http://tv.uvigo.es/gl/serial/513.html)  
