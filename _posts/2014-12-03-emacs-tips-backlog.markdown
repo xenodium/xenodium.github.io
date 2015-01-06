@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+## youtube-dl for Emacs
+[Details at or emacs](http://oremacs.com/2015/01/05/youtube-dl/)
+
 ### Clang indexing tool
 [clang-tags](http://ffevotte.github.io/clang-tags/)
 
