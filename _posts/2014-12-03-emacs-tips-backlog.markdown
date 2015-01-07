@@ -3,10 +3,16 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
-## Static blog
+### Jumping around tips
+At [zerokspot](http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/)
+
+### use-package post
+At [lunaryorn](http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html)
+
+### Static blog
 [org-page](https://github.com/kelvinh/org-page)
 
-## youtube-dl for Emacs
+### youtube-dl for Emacs
 [Details at or emacs](http://oremacs.com/2015/01/05/youtube-dl/)
 
 ### Clang indexing tool
