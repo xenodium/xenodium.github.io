@@ -4,6 +4,9 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+## ace-jump-mode and helm-swoop combined
+See Sacha's [post](http://sachachua.com/blog/2015/01/emacs-kaizen-ace-isearch-combines-ace-jump-mode-helm-swoop/) on ace-isearch.
+
 ## youtube-dl for Emacs
 [Details at or emacs](http://oremacs.com/2015/01/05/youtube-dl/)
 
