@@ -3,6 +3,10 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Building Emacs 24.4 on Linux
+sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
+./configure --with-gtk --prefix=/your/fav/prefix
+
 ### Jumping around tips
 At [zerokspot](http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/)
 
