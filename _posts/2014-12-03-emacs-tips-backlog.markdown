@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+## Org Protocol
+Irreal's [post](http://irreal.org/blog/?p=3594) and Or Emacs's [post 1](http://oremacs.com/2015/01/07/org-protocol-1/) and [post 2](http://oremacs.com/2015/01/08/org-protocol-2/)
+
 ### Try out nxml-mode
 
 ### Building Emacs 24.4 on Linux
