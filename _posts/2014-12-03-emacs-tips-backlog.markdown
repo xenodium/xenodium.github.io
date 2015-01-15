@@ -3,6 +3,8 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Try out nxml-mode
+
 ### Building Emacs 24.4 on Linux
 sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
 ./configure --with-gtk --prefix=/your/fav/prefix
