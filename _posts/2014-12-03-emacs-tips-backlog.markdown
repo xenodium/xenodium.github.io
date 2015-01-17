@@ -3,6 +3,10 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+
+### Emacs key bindings in Ubuntu
+[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/](http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/)
+
 ### Jumping around tips
 At [zerokspot](http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/)
 
