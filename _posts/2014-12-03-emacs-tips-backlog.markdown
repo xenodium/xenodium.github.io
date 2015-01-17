@@ -7,8 +7,20 @@ categories: emacs tips dev
 ### Emacs key bindings in Ubuntu
 [http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/](http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/)
 
+## Org Protocol
+Irreal's [post](http://irreal.org/blog/?p=3594) and Or Emacs's [post 1](http://oremacs.com/2015/01/07/org-protocol-1/) and [post 2](http://oremacs.com/2015/01/08/org-protocol-2/)
+
+### Try out nxml-mode
+
+### Building Emacs 24.4 on Linux
+sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
+./configure --with-gtk --prefix=/your/fav/prefix
+
 ### Jumping around tips
 At [zerokspot](http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/)
+
+## ace-jump-mode and helm-swoop combined
+See Sacha's [post](http://sachachua.com/blog/2015/01/emacs-kaizen-ace-isearch-combines-ace-jump-mode-helm-swoop/) on ace-isearch.
 
 ### use-package post
 At [lunaryorn](http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html)
