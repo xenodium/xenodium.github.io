@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "bookmarks"
+title:  "lifestyle bookmarks"
 categories: bookmarks lifestyle
 ---
 
