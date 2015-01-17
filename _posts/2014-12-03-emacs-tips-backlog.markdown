@@ -4,6 +4,12 @@ title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
 
+### Narrow to region
+narrow-to-region: C-x n n
+
+### Widen previously narrowed region
+widen: C-x n w
+
 ### Emacs key bindings in Ubuntu
 [http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/](http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/)
 
