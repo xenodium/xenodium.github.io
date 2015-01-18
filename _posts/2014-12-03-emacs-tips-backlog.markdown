@@ -3,6 +3,20 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Mac OS clipboard support (from terminal)
+[pbcopy](https://github.com/jkp/pbcopy.el)
+
+### Speedtype
+[speedtype](https://github.com/hagleitn/speed-type)
+
+### A sub-theme to make org-mode more beautiful
+[org-beautify-theme](https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org)
+
+### Minimalist appearance
+[Minimal](https://github.com/dandavison/minimal)
+
+### Buffer local cursor color
+[ccc](https://github.com/skk-dev/ddskk/blob/master/READMEs/README.ccc.org)
 
 ### Narrow to region
 narrow-to-region: C-x n n
