@@ -10,6 +10,7 @@ categories: bookmarks dev emacs
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
 [Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
 [Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
+[Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
 
 ## Others
 
