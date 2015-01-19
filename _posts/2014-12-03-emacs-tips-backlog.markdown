@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+## Unify mechanism to open files
+[unify-opening](https://github.com/DamienCassou/unify-opening)
+
 ### Speed up window handling
 [ace-window](https://github.com/abo-abo/ace-window)
 
