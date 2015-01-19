@@ -12,5 +12,6 @@ categories: bookmarks startup
 [Office Snapshots](http://officesnapshots.com/)  
 [parse.com](https://www.parse.com)  
 [Send email like a startup](https://www.sendwithus.com/resources/guide/)  
+[Swagger](http://swagger.io/): Represent REST API  
 [TextBelt:](http://textbelt.com/) A free, open source API for outgoing texts.  
 [ToroDB](https://github.com/torodb/torodb)  
