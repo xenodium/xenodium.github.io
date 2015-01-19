@@ -3,6 +3,36 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Speed up window handling
+[ace-window](https://github.com/abo-abo/ace-window)
+
+### Mac OS clipboard support (from terminal)
+[pbcopy](https://github.com/jkp/pbcopy.el)
+
+### Speedtype
+[speedtype](https://github.com/hagleitn/speed-type)
+
+### A sub-theme to make org-mode more beautiful
+[org-beautify-theme](https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org)
+
+### Minimalist appearance
+[Minimal](https://github.com/dandavison/minimal)
+
+### Buffer local cursor color
+[ccc](https://github.com/skk-dev/ddskk/blob/master/READMEs/README.ccc.org)
+
+### Narrow to region
+narrow-to-region: C-x n n
+
+### Widen previously narrowed region
+widen: C-x n w
+
+### Emacs key bindings in Ubuntu
+[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/](http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/)
+
+## Org Protocol
+Irreal's [post](http://irreal.org/blog/?p=3594) and Or Emacs's [post 1](http://oremacs.com/2015/01/07/org-protocol-1/) and [post 2](http://oremacs.com/2015/01/08/org-protocol-2/)
+
 ### Try out nxml-mode
 
 ### Building Emacs 24.4 on Linux
