@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Speed up window handling
+[ace-window](https://github.com/abo-abo/ace-window)
+
 ### Mac OS clipboard support (from terminal)
 [pbcopy](https://github.com/jkp/pbcopy.el)
 
