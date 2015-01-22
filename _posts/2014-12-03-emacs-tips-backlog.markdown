@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+## [Artist mode](http://www.lysator.liu.se/~tab/artist/) + [ditaa](http://ditaa.sourceforge.net) for UML
+Demo [video](https://www.youtube.com/watch?v=cIuX87Xo8Fc).
+
 ## Unify mechanism to open files
 [unify-opening](https://github.com/DamienCassou/unify-opening)
 
