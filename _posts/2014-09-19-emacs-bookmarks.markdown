@@ -14,7 +14,8 @@ categories: bookmarks dev emacs
 
 ## Others
 
-[Ajoke:](https://github.com/baohaojun/ajoke) May be handy for Java dev.
+[Aaron Bieber's blog](http://blog.aaronbieber.com/blog/2014/09/20/from-vim-to-emacs-in-fourteen-days/)  
+[Ajoke](https://github.com/baohaojun/ajoke): May be handy for Java dev.
 [An introduction to Magit, an Emacs mode for Git](http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git)
 [Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
 [Awesome emacs](https://github.com/emacs-tw/awesome-emacs/blob/master/README.org)
@@ -33,7 +34,9 @@ categories: bookmarks dev emacs
 [Making emacs work for me](http://zeekat.nl/articles/making-emacs-work-for-me.html)
 [Mastering emacs](http://www.masteringemacs.org)  
 [Nerdgasms's emacs tips](http://bbbscarter.wordpress.com/category/coding/emacs/)
-Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode), [here](https://github.com/altschuler/yas-objc), and [here](https://github.com/al-skobelev/objc-yassnippets)    
+[Objective-C snippets #1](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode)  
+[Objective-C snippets #2](https://github.com/altschuler/yas-objc)  
+[Objective-C snippets #3](https://github.com/al-skobelev/objc-yassnippets)    
 [Or emacs](http://oremacs.com/)
 [Sachua Chua](http://sachachua.com)  
 [Sakito's Emacs Objective-C](http://sakito.jp/emacs/emacsobjectivec.html)
@@ -45,4 +48,3 @@ Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree
 [Yasnippet generator for Cocoa iphone SDK](https://github.com/zegal/yasobjc)
 [Yoo Box's Emacs category](https://yoo2080.wordpress.com/category/emacs/)
 [Zen in the Art of Emacs](http://ericscrosson.wordpress.com)  
-
