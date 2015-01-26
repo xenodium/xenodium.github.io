@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Weather package
+With [sunchine.el](https://github.com/aaronbieber/sunshine.el)
+
 ### Monitor clipboard and automatically paste to buffer
 With [clipmon](https://github.com/bburns/clipmon)
 
