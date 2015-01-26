@@ -3,7 +3,20 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
-## Unify mechanism to open files
+### Monitor clipboard and automatically paste to buffer
+With [clipmon](https://github.com/bburns/clipmon)
+
+### Try out stock-ticker
+
+### Try out ibuffer-vc
+
+### Sort python imports
+With [pyimpsort](https://github.com/emacs-pe/pyimpsort.el)
+
+### Private configuration
+With [private](https://github.com/cheunghy/private) package.
+
+### Unify mechanism to open files
 [unify-opening](https://github.com/DamienCassou/unify-opening)
 
 ### Speed up window handling
