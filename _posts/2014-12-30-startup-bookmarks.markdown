@@ -7,6 +7,7 @@ categories: bookmarks startup
 [AppFigures:](https://appfigures.com/) App tracking platform.  
 [Dashborads using ASCII and JS](https://github.com/yaronn/blessed-contrib)  
 [Free tools for startups (Shyahi blog)](http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for)  
+[Glyphish icon collection](http://www.glyphish.com/)  
 [gofundme](http://www.gofundme.com/)  
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
 [Office Snapshots](http://officesnapshots.com/)  
