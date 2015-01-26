@@ -19,6 +19,9 @@ With [private](https://github.com/cheunghy/private) package.
 ### Unify mechanism to open files
 [unify-opening](https://github.com/DamienCassou/unify-opening)
 
+### [Artist mode](http://www.lysator.liu.se/~tab/artist/) + [ditaa](http://ditaa.sourceforge.net) for UML
+Demo [video](https://www.youtube.com/watch?v=cIuX87Xo8Fc).
+
 ### Speed up window handling
 [ace-window](https://github.com/abo-abo/ace-window)
 
