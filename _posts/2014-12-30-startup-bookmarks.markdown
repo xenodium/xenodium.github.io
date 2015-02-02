@@ -16,3 +16,4 @@ categories: bookmarks startup
 [Swagger](http://swagger.io/): Represent REST API  
 [TextBelt:](http://textbelt.com/) A free, open source API for outgoing texts.  
 [ToroDB](https://github.com/torodb/torodb)  
+[Authentication Cheet Sheet](https://www.owasp.org/index.php/Authentication_Cheat_Sheet)  
