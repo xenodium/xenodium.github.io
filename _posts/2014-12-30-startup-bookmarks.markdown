@@ -10,6 +10,7 @@ categories: bookmarks startup
 [Free tools for startups (Shyahi blog)](http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for)  
 [Glyphish icon collection](http://www.glyphish.com/)  
 [gofundme](http://www.gofundme.com/)  
+[Icon archive](http://www.iconarchive.com/)  
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
 [Office Snapshots](http://officesnapshots.com/)  
 [parse.com](https://www.parse.com)  
