@@ -11,6 +11,7 @@ categories: bookmarks startup
 [Glyphish icon collection](http://www.glyphish.com/)  
 [gofundme](http://www.gofundme.com/)  
 [Icon archive](http://www.iconarchive.com/)  
+[Icon finder](https://www.iconfinder.com)  
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
 [Office Snapshots](http://officesnapshots.com/)  
 [parse.com](https://www.parse.com)  
