@@ -16,6 +16,7 @@ categories: bookmarks startup
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
 [Office Snapshots](http://officesnapshots.com/)  
 [parse.com](https://www.parse.com)  
+[Psychological differences in price](http://www.theatlantic.com/business/archive/2015/01/the-psychological-difference-between-1200-and-1167/384993/?single_page=true)  
 [Send email like a startup](https://www.sendwithus.com/resources/guide/)  
 [Share as image](https://shareasimage.com/)  
 [Swagger](http://swagger.io/): Represent REST API  
