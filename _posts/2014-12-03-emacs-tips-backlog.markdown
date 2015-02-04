@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Rewrite git logs
+[Emacs Magit tutorial | Rewrite older commit](http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/)
+
 ### Monitor clipboard and automatically paste to buffer
 With [clipmon](https://github.com/bburns/clipmon)
 
