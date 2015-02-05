@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Elmacro
+[elmacro](https://github.com/Silex/elmacro) shows keyboard macros or latest interactive commands as emacs lisp.
+
 ### Weather package
 With [sunchine.el](https://github.com/aaronbieber/sunshine.el)
 
