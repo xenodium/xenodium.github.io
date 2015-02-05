@@ -6,6 +6,12 @@ categories: emacs tips dev
 ### Rewrite git logs
 [Emacs Magit tutorial | Rewrite older commit](http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/)
 
+### Elmacro
+[elmacro](https://github.com/Silex/elmacro) shows keyboard macros or latest interactive commands as emacs lisp.
+
+### Weather package
+With [sunchine.el](https://github.com/aaronbieber/sunshine.el)
+
 ### Monitor clipboard and automatically paste to buffer
 With [clipmon](https://github.com/bburns/clipmon)
 
