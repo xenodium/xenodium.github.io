@@ -24,3 +24,4 @@ categories: bookmarks startup
 [TextBelt:](http://textbelt.com/) A free, open source API for outgoing texts.  
 [The noun project (more icons)](http://thenounproject.com/)  
 [ToroDB](https://github.com/torodb/torodb)  
+[YC Sales agreement](http://www.ycombinator.com/documents/#sales)  
