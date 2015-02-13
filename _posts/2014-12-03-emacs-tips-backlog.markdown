@@ -3,6 +3,12 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Graphical system monitor
+[Symon](https://github.com/zk-phi/symon)
+
+### Rewrite git logs
+[Emacs Magit tutorial | Rewrite older commit](http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/)
+
 ### Elmacro
 [elmacro](https://github.com/Silex/elmacro) shows keyboard macros or latest interactive commands as emacs lisp.
 
