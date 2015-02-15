@@ -11,6 +11,7 @@ categories: bookmarks dev emacs
 [Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
 [Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
 [Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
+[Mathew Lee Hinman's config](http://writequit.org/org/settings.htm)  
 
 ## Others
 
@@ -45,4 +46,4 @@ Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree
 [Yasnippet generator for Cocoa iphone SDK](https://github.com/zegal/yasobjc)
 [Yoo Box's Emacs category](https://yoo2080.wordpress.com/category/emacs/)
 [Zen in the Art of Emacs](http://ericscrosson.wordpress.com)  
-
+[Emacs | less](http://lavnir.be/wp/)  
