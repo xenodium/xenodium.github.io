@@ -8,14 +8,16 @@ categories: bookmarks dev emacs
 
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
-[Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
-[Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
 [Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
+[Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
+[Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
 [Mathew Lee Hinman's config](http://writequit.org/org/settings.htm)  
+[Ohai Emacs](https://github.com/bodil/ohai-emacs)  
 
 ## Others
 
-[Ajoke:](https://github.com/baohaojun/ajoke) May be handy for Java dev.
+[Aaron Bieber's blog](http://blog.aaronbieber.com/blog/2014/09/20/from-vim-to-emacs-in-fourteen-days/)  
+[Ajoke](https://github.com/baohaojun/ajoke): May be handy for Java dev.
 [An introduction to Magit, an Emacs mode for Git](http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git)
 [Andrey's Opionated Emacs Guide](http://m00natic.github.io/emacs/emacs-wiki.html)  
 [Awesome emacs](https://github.com/emacs-tw/awesome-emacs/blob/master/README.org)
@@ -26,6 +28,7 @@ categories: bookmarks dev emacs
 [Emacs for Xcode+ios Development](http://roupam.github.io/)
 [Emacs redux](http://emacsredux.com/)  
 [Emacs rocks](http://emacsrocks.com)  
+[Emacs | less](http://lavnir.be/wp/)  
 [Emacslife](http://emacslife.com/)  
 [Endless parenthesis](http://endlessparentheses.com)  
 [Fukuyama's Emacs/iOS](http://fukuyama.co)
@@ -34,7 +37,9 @@ categories: bookmarks dev emacs
 [Making emacs work for me](http://zeekat.nl/articles/making-emacs-work-for-me.html)
 [Mastering emacs](http://www.masteringemacs.org)  
 [Nerdgasms's emacs tips](http://bbbscarter.wordpress.com/category/coding/emacs/)
-Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode), [here](https://github.com/altschuler/yas-objc), and [here](https://github.com/al-skobelev/objc-yassnippets)    
+[Objective-C snippets #1](https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode)  
+[Objective-C snippets #2](https://github.com/altschuler/yas-objc)  
+[Objective-C snippets #3](https://github.com/al-skobelev/objc-yassnippets)    
 [Or emacs](http://oremacs.com/)
 [Sachua Chua](http://sachachua.com)  
 [Sakito's Emacs Objective-C](http://sakito.jp/emacs/emacsobjectivec.html)
@@ -46,4 +51,3 @@ Objective-C snippets [here](https://github.com/al-skobelev/objc-yassnippets/tree
 [Yasnippet generator for Cocoa iphone SDK](https://github.com/zegal/yasobjc)
 [Yoo Box's Emacs category](https://yoo2080.wordpress.com/category/emacs/)
 [Zen in the Art of Emacs](http://ericscrosson.wordpress.com)  
-[Emacs | less](http://lavnir.be/wp/)  
