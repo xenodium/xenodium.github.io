@@ -3,11 +3,36 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
-## [Artist mode](http://www.lysator.liu.se/~tab/artist/) + [ditaa](http://ditaa.sourceforge.net) for UML
-Demo [video](https://www.youtube.com/watch?v=cIuX87Xo8Fc).
+### Graphical system monitor
+[Symon](https://github.com/zk-phi/symon)
 
-## Unify mechanism to open files
+### Rewrite git logs
+[Emacs Magit tutorial | Rewrite older commit](http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/)
+
+### Elmacro
+[elmacro](https://github.com/Silex/elmacro) shows keyboard macros or latest interactive commands as emacs lisp.
+
+### Weather package
+With [sunchine.el](https://github.com/aaronbieber/sunshine.el)
+
+### Monitor clipboard and automatically paste to buffer
+With [clipmon](https://github.com/bburns/clipmon)
+
+### Try out stock-ticker
+
+### Try out ibuffer-vc
+
+### Sort python imports
+With [pyimpsort](https://github.com/emacs-pe/pyimpsort.el)
+
+### Private configuration
+With [private](https://github.com/cheunghy/private) package.
+
+### Unify mechanism to open files
 [unify-opening](https://github.com/DamienCassou/unify-opening)
+
+### [Artist mode](http://www.lysator.liu.se/~tab/artist/) + [ditaa](http://ditaa.sourceforge.net) for UML
+Demo [video](https://www.youtube.com/watch?v=cIuX87Xo8Fc).
 
 ### Speed up window handling
 [ace-window](https://github.com/abo-abo/ace-window)
