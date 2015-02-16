@@ -7,6 +7,7 @@ categories: bookmarks dev emacs
 ## Configs
 
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
+[Anler Hernandez's literate config](https://github.com/ikame/.emacs.d-literate)  
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
 [Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
 [Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
