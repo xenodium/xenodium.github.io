@@ -7,10 +7,12 @@ categories: bookmarks dev emacs
 ## Configs
 
 [Andrew Gwozdziewycz's init.el](https://github.com/apg/emacs-config/tree/master/lisp/activator.d)  
+[Anler Hernandez's literate config](https://github.com/ikame/.emacs.d-literate)  
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
 [Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
 [Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
 [Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
+[Mathew Lee Hinman's config](http://writequit.org/org/settings.htm)  
 [Ohai Emacs](https://github.com/bodil/ohai-emacs)  
 
 ## Others
@@ -27,6 +29,7 @@ categories: bookmarks dev emacs
 [Emacs for Xcode+ios Development](http://roupam.github.io/)
 [Emacs redux](http://emacsredux.com/)  
 [Emacs rocks](http://emacsrocks.com)  
+[Emacs | less](http://lavnir.be/wp/)  
 [Emacslife](http://emacslife.com/)  
 [Endless parenthesis](http://endlessparentheses.com)  
 [Fukuyama's Emacs/iOS](http://fukuyama.co)

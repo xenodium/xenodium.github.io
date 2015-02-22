@@ -4,6 +4,7 @@ title:  "startup bookmarks"
 categories: bookmarks startup
 ---
 [19 Amazing Sites To Get Free Stock Photos](http://sidejobr.com/help/19-amazing-sites-get-free-stock-photos/)  
+[An iOS Weather app case study](http://www.raywenderlich.com/55384/ios-7-best-practices-part-1)  
 [AppFigures:](https://appfigures.com/) App tracking platform.  
 [Authentication Cheet Sheet](https://www.owasp.org/index.php/Authentication_Cheat_Sheet)  
 [Dashborads using ASCII and JS](https://github.com/yaronn/blessed-contrib)  
