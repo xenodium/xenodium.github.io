@@ -12,6 +12,7 @@ categories: bookmarks startup
 [Free vectors](http://www.freevectors.net/)  
 [Glyphish icon collection](http://www.glyphish.com/)  
 [gofundme](http://www.gofundme.com/)  
+[How I got to the app store top with a simple currency app](http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app)  
 [Icon archive](http://www.iconarchive.com/)  
 [Icon finder](https://www.iconfinder.com)  
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
