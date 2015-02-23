@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "unix tips"
+categories: unix linux mac tips
+---
+### Profiling linux
+[Linux profiling at Netflix](http://www.slideshare.net/brendangregg/scale2015-linux-perfprofiling)
+
+### ASCII art text
+With [figlet](http://www.figlet.org/)
+
+### Cool but obscure unix tools
+More info at [kkovacs.eu](http://kkovacs.eu/cool-but-obscure-unix-tools#)
+
+### Awk
+[by Bruce Barnett](http://www.grymoire.com/Unix/Awk.html)
+
+### Awk
+[awk in 20 minutes](http://ferd.ca/awk-in-20-minutes.html)
+
+### Sed
+[An Introduction and Tutorial by Bruce Barnett](http://www.grymoire.com/Unix/sed.html)
+
+### Resume partial secure copy with rsync
+rsync --rsync-path=/usr/local/bin/rsync --partial --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
