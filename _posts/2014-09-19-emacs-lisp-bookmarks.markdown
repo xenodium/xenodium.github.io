@@ -13,6 +13,7 @@ categories: bookmarks dev emacs elisp
 [How to read emacs lisp:](http://emacslife.com/how-to-read-emacs-lisp.html) By Sacha Chua.  
 [Learn emacs lisp in 15 minutes](http://bzg.fr/learn-emacs-lisp-in-15-minutes.html)  
 [Living with Emacs Lisp](https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp)  
+[It's not hard to edit Lisp code](https://yoo2080.wordpress.com/2014/07/20/it-is-not-hard-to-edit-lisp-code/)  
 [Read Lisp, Tweak Emacs](http://emacslife.com/how-to-read-emacs-lisp.html)  
 [Slime-style navigation for Emacs Lisp](https://github.com/purcell/elisp-slime-nav)  
 [Writing a Spotify Client](https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be)  
