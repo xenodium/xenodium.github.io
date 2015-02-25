@@ -3,6 +3,9 @@ layout: post
 title:  "emacs tips backlog"
 categories: emacs tips dev
 ---
+### Export org to reveal.js
+[Org-Reveal](https://github.com/yjwen/org-reveal/tree/stable)
+
 ### Graphical system monitor
 [Symon](https://github.com/zk-phi/symon)
 

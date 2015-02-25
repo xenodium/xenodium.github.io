@@ -3,6 +3,8 @@ layout: post
 title:  "unix tips"
 categories: unix linux mac tips
 ---
+### Profiling linux
+[Linux profiling at Netflix](http://www.slideshare.net/brendangregg/scale2015-linux-perfprofiling)
 
 ### ASCII art text
 With [figlet](http://www.figlet.org/)
