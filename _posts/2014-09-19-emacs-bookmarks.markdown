@@ -10,7 +10,9 @@ categories: bookmarks dev emacs
 [Anler Hernandez's literate config](https://github.com/ikame/.emacs.d-literate)  
 [Chen Bin's init.el](https://github.com/redguardtoo/emacs.d/)  
 [Emagicians starter kit](https://github.com/jonnay/emagicians-starter-kit)  
+[Eric James Michael Ritz](https://github.com/ejmr/DotEmacs/blob/master/.emacs)  
 [Hardcore Freestyle Emacs](http://doc.rix.si/org/fsem.html)  
+[Huseyin Yilmaz]https://github.com/huseyinyilmaz/emacs-config/blob/master/lisp/user-init.el  
 [Mark Sparks's init.el](https://github.com/msparks/dotfiles/blob/master/.emacs)  
 [Mathew Lee Hinman's config](http://writequit.org/org/settings.htm)  
 [Ohai Emacs](https://github.com/bodil/ohai-emacs)  
