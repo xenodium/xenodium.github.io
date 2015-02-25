@@ -3,6 +3,7 @@ layout: post
 title:  "emacs lisp bookmarks"
 categories: bookmarks dev emacs elisp
 ---
+[A quick guide to Emacs Lisp programming](https://github.com/kinghom/elisp-guide)  
 [An introduction to emacs lisp:](http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html) By Harry Schwartz.  
 [eldoc-mode](http://www.emacswiki.org/emacs/ElDoc)  
 [Emacs Lisp Guide](https://github.com/abo-abo/elisp-guide)  
