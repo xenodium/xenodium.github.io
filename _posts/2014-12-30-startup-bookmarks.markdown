@@ -16,7 +16,9 @@ categories: bookmarks startup
 [Icon archive](http://www.iconarchive.com/)  
 [Icon finder](https://www.iconfinder.com)  
 [List of Minimal frameworks](https://github.com/neiesc/ListOfMinimalistFrameworks)  
+[Luis Abreu, iOS Design/UX Specialist](https://lmjabreu.com/)  
 [Office Snapshots](http://officesnapshots.com/)  
+[Origami for UI patterns and interactions](http://facebook.github.io/origami/examples/)  
 [parse.com](https://www.parse.com)  
 [Psychological differences in price](http://www.theatlantic.com/business/archive/2015/01/the-psychological-difference-between-1200-and-1167/384993/?single_page=true)  
 [Send email like a startup](https://www.sendwithus.com/resources/guide/)  
@@ -25,5 +27,4 @@ categories: bookmarks startup
 [TextBelt:](http://textbelt.com/) A free, open source API for outgoing texts.  
 [The noun project (more icons)](http://thenounproject.com/)  
 [ToroDB](https://github.com/torodb/torodb)  
-[Luis Abreu, iOS Design/UX Specialist](https://lmjabreu.com/)  
 [YC Sales agreement](http://www.ycombinator.com/documents/#sales)  
