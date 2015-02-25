@@ -3,10 +3,10 @@ layout: post
 title:  "ux scrapbook"
 categories: bookmarks ux
 ---
-
-[Minimalistic one-pager](http://indie.vc)  
 [Another minilimalistic one-pager](http://rix.si/)  
-[Meng To's I Love Food I](http://mengto.com/img/snoflake-menu.jpg)  
-[Meng To's I Love Food II](http://mengto.com/img/exp-menu.jpg)  
-[Minimalistic gallery](http://www.piotrpisarzphotography.com/)  
 [Another minimalistic gallery](https://exposure.co/)  
+[Meng To's I Love Food II](http://mengto.com/img/exp-menu.jpg)  
+[Meng To's I Love Food I](http://mengto.com/img/snoflake-menu.jpg)  
+[Minimalistic blog layout](https://lmjabreu.com/)  
+[Minimalistic gallery](http://www.piotrpisarzphotography.com/)  
+[Minimalistic one-pager](http://indie.vc)  
