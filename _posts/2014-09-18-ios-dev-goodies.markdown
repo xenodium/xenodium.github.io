@@ -28,6 +28,7 @@ categories: bookmarks
 [Objective-C linter](http://oclint.org/)  
 [Reveal:](http://revealapp.com) Looks amazing for inspecting UI hierarchy.  
 [Subjective-C:](http://subjc.com) Study of innovative iOS interfaces.  
+[SwiftMothly](http://swiftmonthly.com/)  
 [TETHR:](http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools) iOS design kit.  
 [VCTransitionsLibrary](https://github.com/ColinEberhardt/VCTransitionsLibrary)  
 [WWDC 2012 Xcode tips](https://developer.apple.com/videos/wwdc/2012/)  
