@@ -10,3 +10,4 @@ categories: bookmarks ux
 [Minimalistic blog layout](https://lmjabreu.com/)  
 [Minimalistic gallery](http://www.piotrpisarzphotography.com/)  
 [Minimalistic one-pager](http://indie.vc)  
+[Minimalistic blog layout](http://antirez.com/latest/0)  
