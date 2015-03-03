@@ -29,6 +29,7 @@ categories: bookmarks dev emacs
 [Emacs for Cocoa development](https://sites.google.com/site/drielsma/xcodeplusemacs)
 [Emacs for developers:](https://github.com/pierre-lecocq/emacs4developers) Setting up the beloved editor for dev.
 [Emacs for Xcode+ios Development](http://roupam.github.io/)
+[Emacs NYC videos](emacsnyc.org/videos.html)  
 [Emacs redux](http://emacsredux.com/)  
 [Emacs rocks](http://emacsrocks.com)  
 [Emacs | less](http://lavnir.be/wp/)  
