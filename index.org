@@ -1,6 +1,24 @@
 #+TITLE: me@xenodium
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-03-14 Sat] [[#prefill-emacs-swiper-with-current-region][#]] Prefill Emacs swiper with current region
+  :PROPERTIES:
+  :CUSTOM_ID: prefill-emacs-swiper-with-current-region
+  :END:
+  The new [[https://github.com/abo-abo/swiper][swiper]] Emacs package is proving to be a great alternative to [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]. Here's how to prefill with current region:
+#+BEGIN_SRC emacs-lisp
+  (defun ar/prefilled-swiper ()
+    "Pre-fill swiper input with region."
+    (interactive)
+    (if (region-active-p)
+        (let ((region-text (buffer-substring (region-beginning)
+                                             (region-end))))
+          (swiper region-text))
+      (swiper)))
+
+  (global-set-key (kbd "C-s")
+                  #'ar/prefilled-swiper)
+#+END_SRC
 * [2015-03-14 Sat] [[#change-mac-os-app-icon][#]] Change Mac OS app icon
   :PROPERTIES:
   :CUSTOM_ID: change-mac-os-app-icon
