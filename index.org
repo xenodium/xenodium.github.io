@@ -1,6 +1,42 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-03-18 Wed] [[#sharing-on-ios][#]] Sharing on iOS
+  :PROPERTIES:
+  :Custom_ID: sharing-on-ios
+  :END:
+  - [[https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityViewController_Class/][UIActivityViewController]].
+    - Use completionWithItemsHandler on iOS 8.
+    - Sample:
+#+BEGIN_SRC objc
+  NSString *title = @"Sharing on iOS bookmarks.";
+  NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
+  UIImage *image = [UIImage imageNamed:@"beautiful-image"];
+
+  UIActivityViewController *controller =
+    [[UIActivityViewController alloc]
+      initWithActivityItems:@[title, url, image]
+      applicationActivities:nil];
+
+  // self being a UIViewController.
+  [self presentViewController:controller animated:YES completion:nil];
+#+END_SRC
+  - Sharing through Mail app on simulator isn't supported.
+#+BEGIN_QUOTE
+  viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomain Code=3 "The operation couldn’t be completed. (_UIViewServiceInterfaceErrorDomain error 3.)" UserInfo=... {Message=Service Connection Interrupted}
+#+END_QUOTE
+  - Sharing through Mail app in device is OK.
+  - [[http://devstreaming.apple.com/videos/wwdc/2014/205xxqzduadzo14/205/205_hd_creating_extensions_for_ios_and_os_x,_part_1.mov?dl%3D1][WWDC 2014 Creating Extensions for iOS and OSX, Part 1]].
+    - Share Extensions talk by Guy Fullerton.
+      - Usually view controllers in addition to plist.
+      - CFBundleDisplayName.
+      - NSExtendion.
+        - NSExtensionAttributes.
+          - NSExtensionActivationRule.
+    - SLComposeServiceViewController.
+    - UIActivityViewController.
+  - [[http://devstreaming.apple.com/videos/wwdc/2014/217xxsvxdga3rh5/217/217_hd_creating_extensions_for_ios_and_os_x_part_2.mov?dl%3D1][WWDC 2014 Creating Extensions for iOS and OSX, Part 2]].
+  - Want to a share URL to App Store? See [[https://developer.apple.com/library/ios/qa/qa1633/_index.html][Technical Q&A 1633]].
 * [2015-03-17 Tue] [[#italy-travel-backlog][#]] Italy travel backlog
   :PROPERTIES:
   :CUSTOM_ID: italy-travel-backlog
