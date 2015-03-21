@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-03-20 Fri 02:18 -->
+<!-- 2015-03-21 Sat 12:50 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -253,9 +253,9 @@ Lots of great tips in <a href="http://sachachua.com/blog/2015/03/emacs-hangout-2
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #de935f;">:PRIVATE:</span>
+<pre class="src src-org"><span style="color: #66D9EF;">:PRIVATE:</span>
 My super duper secret text I don't want to export.
-<span style="color: #de935f;">:END:</span>
+<span style="color: #66D9EF;">:END:</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -267,7 +267,7 @@ My super duper secret text I don't want to export.
 </li>
 <li>(org-refile).
 </li>
-<li>C-u C-c C-w.
+<li>C-u (org-refile) jumps, no refile.
 </li>
 <li>(helm-org-in-buffer-headings).
 </li>
@@ -356,7 +356,7 @@ Wanted to track down which package was enabling ido-mode on my behalf. debug-on-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>debug-on-entry 'ido-mode<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>debug-on-entry 'ido-mode<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <p>
@@ -364,11 +364,12 @@ When done, use cancel.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 </div>
 </div>
+
 <div id="outline-container-os-x-screencasts-to-animated-gif" class="outline-2">
 <h2 id="os-x-screencasts-to-animated-gif"><a id="sec-11" name="sec-11"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-16 Mon]</span></span> <a href="#os-x-screencasts-to-animated-gif">#</a> OS X Screencasts to animated GIF</h2>
 <div class="outline-text-2" id="text-os-x-screencasts-to-animated-gif">
@@ -395,7 +396,7 @@ When done, use cancel.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">defaults read <span style="color: #8abeb7;">\</span>
+<pre class="src src-sh">defaults read <span style="color: #E6DB74;">\</span>
     /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 </pre>
 </div>
@@ -424,8 +425,8 @@ When done, use cancel.
 <div class="outline-text-2" id="text-uninstalling-alcatraz-from-xcode">
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #8abeb7;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
-$ rm -rf ~/Library/Application<span style="color: #8abeb7;">\ </span>Support/Alcatraz
+<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/Alcatraz<span style="color: #ee82ee; background-color: #333333;">.xcplugin</span>
+$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Alcatraz
 </pre>
 </div>
 <p>
@@ -433,7 +434,7 @@ ps. Removing all plugins:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #8abeb7;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/*
+<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/*
 </pre>
 </div>
 </div>
@@ -446,17 +447,17 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span><span style="color: #b5bd68;">defun</span> <span style="color: #de935f; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #8abeb7;">()</span>
-  <span style="color: #b294bb; font-style: italic;">"Pre-fill swiper input with region."</span>
-  <span style="color: #8abeb7;">(</span>interactive<span style="color: #8abeb7;">)</span>
-  <span style="color: #8abeb7;">(</span><span style="color: #b5bd68;">if</span> <span style="color: #f0c674;">(</span>region-active-p<span style="color: #f0c674;">)</span>
-      <span style="color: #f0c674;">(</span><span style="color: #b5bd68;">let</span> <span style="color: #b5bd68;">(</span><span style="color: #81a2be;">(</span>region-text <span style="color: #c5c8c6;">(</span>buffer-substring <span style="color: #8abeb7;">(</span>region-beginning<span style="color: #8abeb7;">)</span>
-                                           <span style="color: #8abeb7;">(</span>region-end<span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span><span style="color: #81a2be;">)</span><span style="color: #b5bd68;">)</span>
-        <span style="color: #b5bd68;">(</span>swiper region-text<span style="color: #b5bd68;">)</span><span style="color: #f0c674;">)</span>
-    <span style="color: #f0c674;">(</span>swiper<span style="color: #f0c674;">)</span><span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #93a8c6;">()</span>
+  <span style="color: #E6DB74; font-style: italic;">"Pre-fill swiper input with region."</span>
+  <span style="color: #93a8c6;">(</span>interactive<span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #b0b1a3;">(</span>region-active-p<span style="color: #b0b1a3;">)</span>
+      <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>region-text <span style="color: #b0b0b3;">(</span>buffer-substring <span style="color: #90a890;">(</span>region-beginning<span style="color: #90a890;">)</span>
+                                           <span style="color: #90a890;">(</span>region-end<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
+        <span style="color: #97b098;">(</span>swiper region-text<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span>
+    <span style="color: #b0b1a3;">(</span>swiper<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 
-<span style="color: #c5c8c6;">(</span>global-set-key <span style="color: #8abeb7;">(</span>kbd <span style="color: #8abeb7;">"C-s"</span><span style="color: #8abeb7;">)</span>
-                #'ar/prefilled-swiper<span style="color: #c5c8c6;">)</span>
+<span style="color: #8c8c8c;">(</span>global-set-key <span style="color: #93a8c6;">(</span>kbd <span style="color: #E6DB74;">"C-s"</span><span style="color: #93a8c6;">)</span>
+                #'ar/prefilled-swiper<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 </div>
@@ -644,6 +645,8 @@ $ ./build.sh --clang-completer
 <li><a href="http://kelvinh.github.io/wiki/org-mode-manual/">Kevin's org notes</a>.
 </li>
 <li><a href="http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html">org-mode examples and cookbook</a>.
+</li>
+<li><a href="http://doc.norang.ca/org-mode.html">Organize your life in plain text</a>.
 </li>
 </ul>
 </div>
@@ -1153,9 +1156,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>thing-at-point 'word<span style="color: #c5c8c6;">)</span>
-<span style="color: #c5c8c6;">(</span>thing-at-point 'symbol<span style="color: #c5c8c6;">)</span>
-<span style="color: #c5c8c6;">(</span>thing-at-point 'line<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>thing-at-point 'word<span style="color: #8c8c8c;">)</span>
+<span style="color: #8c8c8c;">(</span>thing-at-point 'symbol<span style="color: #8c8c8c;">)</span>
+<span style="color: #8c8c8c;">(</span>thing-at-point 'line<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1168,9 +1171,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span><span style="color: #b5bd68;">with-current-buffer</span> <span style="color: #8abeb7;">(</span>get-buffer-create <span style="color: #8abeb7;">"*some buffer*"</span><span style="color: #8abeb7;">)</span>
-  <span style="color: #8abeb7;">(</span>princ '<span style="color: #f0c674;">(</span>some list to print<span style="color: #f0c674;">)</span>
-         <span style="color: #f0c674;">(</span>current-buffer<span style="color: #f0c674;">)</span><span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">with-current-buffer</span> <span style="color: #93a8c6;">(</span>get-buffer-create <span style="color: #E6DB74;">"*some buffer*"</span><span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span>princ '<span style="color: #b0b1a3;">(</span>some list to print<span style="color: #b0b1a3;">)</span>
+         <span style="color: #b0b1a3;">(</span>current-buffer<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1179,9 +1182,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span><span style="color: #b5bd68;">with-temp-buffer</span>
-  <span style="color: #8abeb7;">(</span>insert <span style="color: #8abeb7;">"abc"</span><span style="color: #8abeb7;">)</span>
-  <span style="color: #8abeb7;">(</span>point<span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">with-temp-buffer</span>
+  <span style="color: #93a8c6;">(</span>insert <span style="color: #E6DB74;">"abc"</span><span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span>point<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1192,7 +1195,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>string-match-p REGEXP STRING <span style="color: #81a2be;">&amp;optional</span> START<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>string-match-p REGEXP STRING <span style="color: #66D9EF;">&amp;optional</span> START<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1201,7 +1204,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>identity ARG<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>identity ARG<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1210,7 +1213,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>org-insert-time-stamp <span style="color: #8abeb7;">(</span>current-time<span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>org-insert-time-stamp <span style="color: #93a8c6;">(</span>current-time<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1221,7 +1224,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>car LIST<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>car LIST<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1230,7 +1233,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>cdr LIST<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>cdr LIST<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1239,7 +1242,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>push NEWELT PLACE<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>push NEWELT PLACE<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1248,7 +1251,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -1257,8 +1260,8 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span><span style="color: #b5bd68;">while</span> <span style="color: #8abeb7;">(</span>search-forward <span style="color: #8abeb7;">"Hello"</span><span style="color: #8abeb7;">)</span>
-  <span style="color: #8abeb7;">(</span>replace-match <span style="color: #8abeb7;">"Bonjour"</span><span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #93a8c6;">(</span>search-forward <span style="color: #E6DB74;">"Hello"</span><span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span>replace-match <span style="color: #E6DB74;">"Bonjour"</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 </div>
@@ -1284,7 +1287,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial <span style="color: #8abeb7;">\</span>
+<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial <span style="color: #E6DB74;">\</span>
     --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
 </pre>
 </div>
@@ -1584,17 +1587,17 @@ For example:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #de935f; font-style: italic;">-</span> <span style="color: #c5c8c6;">(</span>$<span style="color: #8abeb7;">{</span><span style="color: #f0c674;">1</span>:id<span style="color: #8abeb7;">}</span><span style="color: #c5c8c6;">)</span>$<span style="color: #c5c8c6;">{</span><span style="color: #f0c674;">2</span>:foo<span style="color: #c5c8c6;">}</span>
-<span style="color: #c5c8c6;">{</span>
-    <span style="color: #b5bd68;">return</span> $<span style="color: #f0c674;">2</span>;
-<span style="color: #c5c8c6;">}</span>
+<pre class="src src-sh"><span style="color: #F92672; font-style: italic;">-</span> <span style="color: #8c8c8c;">(</span>$<span style="color: #93a8c6;">{</span><span style="color: #F92672;">1</span>:id<span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>$<span style="color: #8c8c8c;">{</span><span style="color: #F92672;">2</span>:foo<span style="color: #8c8c8c;">}</span>
+<span style="color: #8c8c8c;">{</span>
+    <span style="color: #66D9EF;">return</span> $<span style="color: #F92672;">2</span>;
+<span style="color: #8c8c8c;">}</span>
 
-<span style="color: #de935f; font-style: italic;">-</span> <span style="color: #c5c8c6;">(</span>void<span style="color: #c5c8c6;">)</span><span style="color: #b294bb;">set</span>$<span style="color: #c5c8c6;">{</span><span style="color: #f0c674;">2</span>:$<span style="color: #8abeb7;">(</span><span style="color: #b294bb;">capitalize</span> yas-text<span style="color: #8abeb7;">)</span><span style="color: #c5c8c6;">}</span>:<span style="color: #c5c8c6;">(</span>$<span style="color: #f0c674;">1</span><span style="color: #c5c8c6;">)</span>aValue
-<span style="color: #c5c8c6;">{</span>
-    <span style="color: #8abeb7;">[</span>$<span style="color: #f0c674;">2</span> autorelease<span style="color: #8abeb7;">]</span>;
-    $<span style="color: #f0c674;">2</span> = <span style="color: #8abeb7;">[</span>aValue retain<span style="color: #8abeb7;">]</span>;
-<span style="color: #c5c8c6;">}</span>
-$<span style="color: #f0c674;">0</span>
+<span style="color: #F92672; font-style: italic;">-</span> <span style="color: #8c8c8c;">(</span>void<span style="color: #8c8c8c;">)</span><span style="color: #A6E22E;">set</span>$<span style="color: #8c8c8c;">{</span><span style="color: #F92672;">2</span>:$<span style="color: #93a8c6;">(</span><span style="color: #fa8072;">capitalize</span> yas-text<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">}</span>:<span style="color: #8c8c8c;">(</span>$<span style="color: #F92672;">1</span><span style="color: #8c8c8c;">)</span>aValue
+<span style="color: #8c8c8c;">{</span>
+    <span style="color: #93a8c6;">[</span>$<span style="color: #F92672;">2</span> autorelease<span style="color: #93a8c6;">]</span>;
+    $<span style="color: #F92672;">2</span> = <span style="color: #93a8c6;">[</span>aValue retain<span style="color: #93a8c6;">]</span>;
+<span style="color: #8c8c8c;">}</span>
+$<span style="color: #F92672;">0</span>
 </pre>
 </div>
 <p>
@@ -2083,9 +2086,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 <div class="outline-text-3" id="text-52-60">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #c5c8c6;">(</span>menu-bar-mode -1<span style="color: #c5c8c6;">)</span>
-<span style="color: #c5c8c6;">(</span>toggle-scroll-bar -1<span style="color: #c5c8c6;">)</span>
-<span style="color: #c5c8c6;">(</span>tool-bar-mode -1<span style="color: #c5c8c6;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>menu-bar-mode -1<span style="color: #8c8c8c;">)</span>
+<span style="color: #8c8c8c;">(</span>toggle-scroll-bar -1<span style="color: #8c8c8c;">)</span>
+<span style="color: #8c8c8c;">(</span>tool-bar-mode -1<span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
 </div>
