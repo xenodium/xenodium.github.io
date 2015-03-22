@@ -495,6 +495,35 @@
   :PROPERTIES:
   :Custom_ID: learning-emacs-lisp
   :END:
+  - Search and/or replace in curent buffer:
+#+BEGIN_SRC elisp
+  (re-search-forward "needle"
+                     nil t)
+  (match-beginning 0) ;; Start location of match from last search.
+  (match-end 0) ;; End location of match from last search.
+  (replace-match "love")
+
+  ;; needle-in-haystack
+#+END_SRC
+  - Restric buffer editing to a region:
+#+BEGIN_SRC elisp
+  (narrow-to-region (point)
+                    (point-max))
+#+END_SRC
+  - Restore restriction:
+#+BEGIN_SRC elisp
+  (save-restriction (narrow-to-region (point)
+                                      (point-max))
+#+END_SRC
+  - Restore point, mark, and current buffer:
+#+BEGIN_SRC elisp
+  (save-excursion (goto-char (point-max))
+                  (insert "Hello elisp."))
+#+END_SRC
+  - Concatenating strings:
+#+BEGIN_SRC emacs-lisp
+  (concat "Hello " "elisp " "world.")
+#+END_SRC
   - Grabbing thing at point:
 #+BEGIN_SRC emacs-lisp
   (thing-at-point 'word)
