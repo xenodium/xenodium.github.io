@@ -1,6 +1,135 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-03-22 Sun] [[#resetting-variables-using-defvar][#]] Resetting variables using defvar
+  :PROPERTIES:
+  :CUSTOM_ID: resetting-variables-using-defvar
+  :END:
+  Want to re-evaluate defvars and modify variables? eval-defun (bound to C-M-x) can help. From the manual:
+#+BEGIN_QUOTE
+  If the current defun is actually a call to `defvar', then reset the
+  variable using its initial value expression even if the variable
+  already has some other value.  (Normally `defvar' does not change the
+  variable's value if it already has a value.)  Treat `defcustom'
+  similarly.
+#+END_QUOTE
+* [2015-03-22 Sun] [[#born-to-run-references][#]] Born to run references
+  :PROPERTIES:
+  :CUSTOM_ID: born-to-run-references
+  :END:
+  References from reading Christopher McDougall's [[http://www.chrismcdougall.com/born-to-run][Born to Run]]:
+  - [[http://www.chirunning.com][Chi running]].
+  - Chia and pinole. Random recipes [[http://www.nomeatathlete.com/tarahumara-pinole-chia-recipes/][here]].
+  - [[http://heritageseeds.org/][Heritage Seeds]].
+  - Ken Mierke’s [[http://www.evolutionrunning.com][Evolution running]].
+  - [[https://posemethod.com/running][Pose method]].
+* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
+  :PROPERTIES:
+  :Custom_ID: learning-emacs-lisp
+  :END:
+  :MODIFIED:
+  [2015-03-22 Sun]
+  :END:
+  - Pretty printing objects:
+#+BEGIN_SRC emacs-lisp
+  (let ((my-var (list "val1"
+                      "val2"
+                      "val3")))
+    (pp-to-string my-var))
+#+END_SRC
+  - Search and/or replace in curent buffer:
+#+BEGIN_SRC emacs-lisp
+  (re-search-forward "needle"
+                     nil t)
+  (match-beginning 0) ;; Start location of match from last search.
+  (match-end 0) ;; End location of match from last search.
+  (replace-match "love")
+
+  ;; needle-in-haystack
+#+END_SRC
+  - Restric buffer editing to a region:
+#+BEGIN_SRC emacs-lisp
+  (narrow-to-region (point)
+                    (point-max))
+#+END_SRC
+  - Restore restriction:
+#+BEGIN_SRC emacs-lisp
+  (save-restriction (narrow-to-region (point)
+                                      (point-max))
+#+END_SRC
+  - Restore point, mark, and current buffer:
+#+BEGIN_SRC emacs-lisp
+  (save-excursion (goto-char (point-max))
+                  (insert "Hello elisp."))
+#+END_SRC
+  - Concatenating strings:
+#+BEGIN_SRC emacs-lisp
+  (concat "Hello " "elisp " "world.")
+#+END_SRC
+  - Grabbing thing at point:
+#+BEGIN_SRC emacs-lisp
+  (thing-at-point 'word)
+  (thing-at-point 'symbol)
+  (thing-at-point 'line)
+#+END_SRC
+  - Unit test with ert.
+  - Basic iteration with dolist and while.
+  - Output to other buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*some buffer*")
+    (princ '(some list to print)
+           (current-buffer)))
+#+END_SRC
+  - For a temporary buffer, use with-temp-buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-temp-buffer
+    (insert "abc")
+    (point))
+#+END_SRC
+  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
+  - Check for substring:
+#+BEGIN_SRC emacs-lisp
+  (string-match-p REGEXP STRING &optional START)
+#+END_SRC
+  - Return argument unchanged (noop):
+#+BEGIN_SRC emacs-lisp
+  (identity ARG)
+#+END_SRC
+  - Org insert today's timestamp
+#+BEGIN_SRC emacs-lisp
+  (org-insert-time-stamp (current-time))
+#+END_SRC
+  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
+  - First element
+#+BEGIN_SRC emacs-lisp
+  (car LIST)
+#+END_SRC
+  - All but first element
+#+BEGIN_SRC emacs-lisp
+  (cdr LIST)
+#+END_SRC
+  - Add NEWELT to front of PLACE
+#+BEGIN_SRC emacs-lisp
+  (push NEWELT PLACE)
+#+END_SRC
+  - Invoke 'FUNCTION for each in SEQUENCE
+#+BEGIN_SRC emacs-lisp
+  (mapcar FUNCTION SEQUENCE)
+#+END_SRC
+  - Search/replace
+#+BEGIN_SRC emacs-lisp
+(while (search-forward "Hello")
+  (replace-match "Bonjour"))
+#+END_SRC
+* [2015-03-22 Sun] [[#broken-xcode-plugins][#]] Broken Xcode plugins?
+  :PROPERTIES:
+  :CUSTOM_ID: broken-xcode-plugins
+  :END:
+  Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPlugInCompatibilityUUIDs is added to the plugin's Info.plist. Get from:
+#+BEGIN_SRC sh
+  $ defaults read \
+      /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+#+END_SRC
 * [2015-03-18 Wed] [[#sharing-on-ios][#]] Sharing on iOS
   :PROPERTIES:
   :Custom_ID: sharing-on-ios
@@ -41,7 +170,10 @@
   :PROPERTIES:
   :CUSTOM_ID: org-tips-from-2015-03-18-emacs-hangout
   :END:
-  Lots of great tips in [[http://sachachua.com/blog/2015/03/emacs-hangout-2015-03-18-show-notes/][Emacs Hangout 2015-03-18]]. My favorites:
+  :MODIFIED:
+  [2015-03-22 Sun]
+  :END:
+  Lots of great tips in [[http://sachachua.com/blog/2015/03/emacs-hangout-2015-03-18-show-notes/][Emacs Hangout 2015-03-18]]. Favorites:
   - Private org drawer to prevent export:
 #+BEGIN_SRC org
   :PRIVATE:
@@ -52,7 +184,7 @@
   - (setq org-hide-leading-stars t).
   - (org-bullets-mode).
   - (org-refile).
-  - C-u C-c C-w.
+  - C-u (org-refile) jumps, no refile.
   - (helm-org-in-buffer-headings).
 * [2015-03-19 Thu] [[#food-bookmarks][#]] Food bookmarks
   :PROPERTIES:
@@ -107,10 +239,11 @@
 #+BEGIN_SRC emacs-lisp
   (cancel-debug-on-entry 'ido-mode)
 #+END_SRC
+
 * [2015-03-16 Mon] [[#os-x-screencasts-to-animated-gif][#]] OS X Screencasts to animated GIF
   :PROPERTIES:
   :Custom_ID: os-x-screencasts-to-animated-gif
-  :END:      
+  :END:
   - [[https://gist.github.com/dergachev/4627207][Alex Dergachev]] has a great [[https://gist.github.com/dergachev/4627207][howto]] for generating animated GIF out of OS X Screencasts.
   - Of interest [[http://gifbrewery.com/][GIF Brewery]].
 * [2015-03-15 Sun] [[#writing-xcode-plugins][#]] Writing Xcode plugins
@@ -250,7 +383,9 @@
   - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
   - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
   - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
+  - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
+  - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
 * [2015-03-08 Sun] [[#regular-bookmarks][#]] Regular bookmarks
   :PROPERTIES:
   :CUSTOM_ID: regular-bookmarks
@@ -420,6 +555,7 @@
   :PROPERTIES:
   :CUSTOM_ID: travel-bookmarks
   :END:
+  - [[http://www.traveldudes.org/][Traveldudes]].
   - [[http://travelingspoon.com/][Traveling Spoon]].
   - [[http://www.travelistly.com/tv][Travelistly TV (high quality travel content)]].
 * [2015-03-06 Fri] [[#github][#]] GitHub
@@ -511,65 +647,6 @@
   - [[https://en.wikipedia.org/wiki/Pandavleni_Caves][Pandavleni caves, Nashik, Maharashtra]].
   - [[https://en.wikipedia.org/wiki/Havelock_Island][Radhanagar beach]].
   - [[https://duckduckgo.com/?q%3DVipassana%2BPagoda&iax%3D1&ia%3Dimages][Vipassana pagoda]].
-* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
-  :PROPERTIES:
-  :Custom_ID: learning-emacs-lisp
-  :END:
-  - Grabbing thing at point:
-#+BEGIN_SRC emacs-lisp
-  (thing-at-point 'word)
-  (thing-at-point 'symbol)
-  (thing-at-point 'line)
-#+END_SRC
-  - Unit test with ert.
-  - Basic iteration with dolist and while.
-  - Output to other buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-current-buffer (get-buffer-create "*some buffer*")
-    (princ '(some list to print)
-           (current-buffer)))
-#+END_SRC
-  - For a temporary buffer, use with-temp-buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-temp-buffer
-    (insert "abc")
-    (point))
-#+END_SRC
-  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
-  - Check for substring:
-#+BEGIN_SRC emacs-lisp
-  (string-match-p REGEXP STRING &optional START)
-#+END_SRC
-  - Return argument unchanged (noop):
-#+BEGIN_SRC emacs-lisp
-  (identity ARG)
-#+END_SRC
-  - Org insert today's timestamp
-#+BEGIN_SRC emacs-lisp
-  (org-insert-time-stamp (current-time))
-#+END_SRC
-  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
-  - First element
-#+BEGIN_SRC emacs-lisp
-  (car LIST)
-#+END_SRC
-  - All but first element
-#+BEGIN_SRC emacs-lisp
-  (cdr LIST)
-#+END_SRC
-  - Add NEWELT to front of PLACE
-#+BEGIN_SRC emacs-lisp
-  (push NEWELT PLACE)
-#+END_SRC
-  - Invoke 'FUNCTION for each in SEQUENCE
-#+BEGIN_SRC emacs-lisp
-  (mapcar FUNCTION SEQUENCE)
-#+END_SRC
-  - Search/replace
-#+BEGIN_SRC emacs-lisp
-(while (search-forward "Hello")
-  (replace-match "Bonjour"))
-#+END_SRC
 * [2015-03-07 Sat] [[#unix-linux-tips-backlog][#]] Unix/Linux tips backlog
   :PROPERTIES:
   :CUSTOM_ID: unix-linux-tips-backlog
@@ -964,6 +1041,7 @@
   - [[http://www.masteringemacs.org/articles/2011/01/14/effective-editing-movement/][Effective editing I:Movement]]
   - [[http://ergoemacs.org/emacs/effective_emacs.html][Effective emacs tips]]: From ergoemacs.
   - [[https://sites.google.com/site/steveyegge2/effective-emacs][Effective emacs]]: Steve Yegge's effective emacs tips.
+  - [[https://forums.unrealengine.com/showthread.php?52891-Emacs-as-my-UE4-IDE-with-intellisense][Emacs as my UE4 IDE with intellisense]].
   - [[http://www.swaroopch.com/2013/10/17/emacs-configuration-tutorial][Emacs configuration]]: Simplify package management with cask.
   - [[http://emacsfodder.github.io/][Emacs Fodder]].
   - [[https://sites.google.com/site/drielsma/xcodeplusemacs][Emacs for Cocoa development]].
