@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-03-26 Thu 22:43 -->
+<!-- 2015-03-26 Thu 22:51 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -261,20 +261,20 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
   <span style="color: #E6DB74; font-style: italic;">"Generate helm candidates for all URLs in buffer."</span>
   <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">save-excursion</span>
     <span style="color: #b0b1a3;">(</span>goto-char <span style="color: #97b098;">(</span>point-min<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>url-candidates '<span style="color: #b0b0b3;">()</span><span style="color: #aebed8;">)</span>
-          <span style="color: #aebed8;">(</span>url-candidate<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
+    <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>helm-candidates '<span style="color: #b0b0b3;">()</span><span style="color: #aebed8;">)</span>
+          <span style="color: #aebed8;">(</span>url<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #aebed8;">(</span>re-search-forward goto-address-url-regexp
                                 nil t<span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>setq url-candidate
+        <span style="color: #aebed8;">(</span>setq url
               <span style="color: #b0b0b3;">(</span>buffer-substring-no-properties <span style="color: #90a890;">(</span>match-beginning 0<span style="color: #90a890;">)</span>
                                               <span style="color: #90a890;">(</span>match-end 0<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>add-to-list 'url-candidates
-                     <span style="color: #b0b0b3;">(</span>cons url-candidate
-                           url-candidate<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
-      url-candidates<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+        <span style="color: #aebed8;">(</span>add-to-list 'helm-candidates
+                     <span style="color: #b0b0b3;">(</span>cons url
+                           url<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
+      helm-candidates<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 
 <span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-buffer-urls</span> <span style="color: #93a8c6;">()</span>
-  <span style="color: #E6DB74; font-style: italic;">"Narrow down and open URL in buffer."</span>
+  <span style="color: #E6DB74; font-style: italic;">"Narrow down and open a URL in buffer."</span>
   <span style="color: #93a8c6;">(</span>interactive<span style="color: #93a8c6;">)</span>
   <span style="color: #93a8c6;">(</span>helm <span style="color: #A6E22E;">:sources</span> `<span style="color: #b0b1a3;">(</span><span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>name . <span style="color: #E6DB74;">"Buffer URLs"</span><span style="color: #aebed8;">)</span>
                     <span style="color: #aebed8;">(</span>candidates . ,<span style="color: #b0b0b3;">(</span>ar/helm-buffer-url-candidates<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
