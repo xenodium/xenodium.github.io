@@ -11,20 +11,20 @@
   "Generate helm candidates for all URLs in buffer."
   (save-excursion
     (goto-char (point-min))
-    (let ((url-candidates '())
-          (url-candidate))
+    (let ((helm-candidates '())
+          (url))
       (while (re-search-forward goto-address-url-regexp
                                 nil t)
-        (setq url-candidate
+        (setq url
               (buffer-substring-no-properties (match-beginning 0)
                                               (match-end 0)))
-        (add-to-list 'url-candidates
-                     (cons url-candidate
-                           url-candidate)))
-      url-candidates)))
+        (add-to-list 'helm-candidates
+                     (cons url
+                           url)))
+      helm-candidates)))
 
 (defun ar/helm-buffer-urls ()
-  "Narrow down and open URL in buffer."
+  "Narrow down and open a URL in buffer."
   (interactive)
   (helm :sources `(((name . "Buffer URLs")
                     (candidates . ,(ar/helm-buffer-url-candidates))
