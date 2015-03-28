@@ -1,6 +1,112 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
+  :PROPERTIES:
+  :Custom_ID: learning-emacs-lisp
+  :END:
+  :MODIFIED:
+  [2015-03-28 Sat]
+  :END:
+  - From [[http://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html]["Debugging Elisp Part 1: Earn your independence"]]:
+#+BEGIN_QUOTE
+    - Go to where the function is defined.
+    - Press C-u C-M-x. Edebug breakpoint for function.
+    - Invoke function in question.
+    - n/c will get you around.
+    - q when done.
+#+END_QUOTE
+  - Pretty printing objects:
+#+BEGIN_SRC emacs-lisp
+  (let ((my-var (list "val1"
+                      "val2"
+                      "val3")))
+    (pp-to-string my-var))
+#+END_SRC
+  - Search and/or replace in curent buffer:
+#+BEGIN_SRC emacs-lisp
+  (re-search-forward "needle"
+                     nil t)
+  (match-beginning 0) ;; Start location of match from last search.
+  (match-end 0) ;; End location of match from last search.
+  (replace-match "love")
+
+  ;; needle-in-haystack
+#+END_SRC
+  - Restric buffer editing to a region:
+#+BEGIN_SRC emacs-lisp
+  (narrow-to-region (point)
+                    (point-max))
+#+END_SRC
+  - Restore restriction:
+#+BEGIN_SRC emacs-lisp
+  (save-restriction (narrow-to-region (point)
+                                      (point-max))
+#+END_SRC
+  - Restore point, mark, and current buffer:
+#+BEGIN_SRC emacs-lisp
+  (save-excursion (goto-char (point-max))
+                  (insert "Hello elisp."))
+#+END_SRC
+  - Concatenating strings:
+#+BEGIN_SRC emacs-lisp
+  (concat "Hello " "elisp " "world.")
+#+END_SRC
+  - Grabbing thing at point:
+#+BEGIN_SRC emacs-lisp
+  (thing-at-point 'word)
+  (thing-at-point 'symbol)
+  (thing-at-point 'line)
+#+END_SRC
+  - Unit test with ert.
+  - Basic iteration with dolist and while.
+  - Output to other buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*some buffer*")
+    (princ '(some list to print)
+           (current-buffer)))
+#+END_SRC
+  - For a temporary buffer, use with-temp-buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-temp-buffer
+    (insert "abc")
+    (point))
+#+END_SRC
+  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
+  - Check for substring:
+#+BEGIN_SRC emacs-lisp
+  (string-match-p REGEXP STRING &optional START)
+#+END_SRC
+  - Return argument unchanged (noop):
+#+BEGIN_SRC emacs-lisp
+  (identity ARG)
+#+END_SRC
+  - Org insert today's timestamp
+#+BEGIN_SRC emacs-lisp
+  (org-insert-time-stamp (current-time))
+#+END_SRC
+  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
+  - First element
+#+BEGIN_SRC emacs-lisp
+  (car LIST)
+#+END_SRC
+  - All but first element
+#+BEGIN_SRC emacs-lisp
+  (cdr LIST)
+#+END_SRC
+  - Add NEWELT to front of PLACE
+#+BEGIN_SRC emacs-lisp
+  (push NEWELT PLACE)
+#+END_SRC
+  - Invoke 'FUNCTION for each in SEQUENCE
+#+BEGIN_SRC emacs-lisp
+  (mapcar FUNCTION SEQUENCE)
+#+END_SRC
+  - Search/replace
+#+BEGIN_SRC emacs-lisp
+(while (search-forward "Hello")
+  (replace-match "Bonjour"))
+#+END_SRC
 * [2015-03-28 Sat] [[#css-vertical-align-using-flex][#]] CSS vertical align using flex
   :PROPERTIES:
   :CUSTOM_ID: css-vertical-align-using-flex
@@ -294,104 +400,6 @@
   variable's value if it already has a value.)  Treat `defcustom'
   similarly.
 #+END_QUOTE
-* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
-  :PROPERTIES:
-  :Custom_ID: learning-emacs-lisp
-  :END:
-  :MODIFIED:
-  [2015-03-22 Sun]
-  :END:
-  - Pretty printing objects:
-#+BEGIN_SRC emacs-lisp
-  (let ((my-var (list "val1"
-                      "val2"
-                      "val3")))
-    (pp-to-string my-var))
-#+END_SRC
-  - Search and/or replace in curent buffer:
-#+BEGIN_SRC emacs-lisp
-  (re-search-forward "needle"
-                     nil t)
-  (match-beginning 0) ;; Start location of match from last search.
-  (match-end 0) ;; End location of match from last search.
-  (replace-match "love")
-
-  ;; needle-in-haystack
-#+END_SRC
-  - Restric buffer editing to a region:
-#+BEGIN_SRC emacs-lisp
-  (narrow-to-region (point)
-                    (point-max))
-#+END_SRC
-  - Restore restriction:
-#+BEGIN_SRC emacs-lisp
-  (save-restriction (narrow-to-region (point)
-                                      (point-max))
-#+END_SRC
-  - Restore point, mark, and current buffer:
-#+BEGIN_SRC emacs-lisp
-  (save-excursion (goto-char (point-max))
-                  (insert "Hello elisp."))
-#+END_SRC
-  - Concatenating strings:
-#+BEGIN_SRC emacs-lisp
-  (concat "Hello " "elisp " "world.")
-#+END_SRC
-  - Grabbing thing at point:
-#+BEGIN_SRC emacs-lisp
-  (thing-at-point 'word)
-  (thing-at-point 'symbol)
-  (thing-at-point 'line)
-#+END_SRC
-  - Unit test with ert.
-  - Basic iteration with dolist and while.
-  - Output to other buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-current-buffer (get-buffer-create "*some buffer*")
-    (princ '(some list to print)
-           (current-buffer)))
-#+END_SRC
-  - For a temporary buffer, use with-temp-buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-temp-buffer
-    (insert "abc")
-    (point))
-#+END_SRC
-  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
-  - Check for substring:
-#+BEGIN_SRC emacs-lisp
-  (string-match-p REGEXP STRING &optional START)
-#+END_SRC
-  - Return argument unchanged (noop):
-#+BEGIN_SRC emacs-lisp
-  (identity ARG)
-#+END_SRC
-  - Org insert today's timestamp
-#+BEGIN_SRC emacs-lisp
-  (org-insert-time-stamp (current-time))
-#+END_SRC
-  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
-  - First element
-#+BEGIN_SRC emacs-lisp
-  (car LIST)
-#+END_SRC
-  - All but first element
-#+BEGIN_SRC emacs-lisp
-  (cdr LIST)
-#+END_SRC
-  - Add NEWELT to front of PLACE
-#+BEGIN_SRC emacs-lisp
-  (push NEWELT PLACE)
-#+END_SRC
-  - Invoke 'FUNCTION for each in SEQUENCE
-#+BEGIN_SRC emacs-lisp
-  (mapcar FUNCTION SEQUENCE)
-#+END_SRC
-  - Search/replace
-#+BEGIN_SRC emacs-lisp
-(while (search-forward "Hello")
-  (replace-match "Bonjour"))
-#+END_SRC
 * [2015-03-22 Sun] [[#broken-xcode-plugins][#]] Broken Xcode plugins?
   :PROPERTIES:
   :CUSTOM_ID: broken-xcode-plugins
