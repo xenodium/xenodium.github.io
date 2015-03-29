@@ -8,6 +8,17 @@
   :MODIFIED:
   [2015-03-28 Sat]
   :END:
+  - Creating markers:
+#+BEGIN_SRC emacs-lisp
+  (setq my-marker (copy-marker (point)))
+    #<marker at 10251 in *ielm*>
+
+  (marker-buffer my-marker)
+    #<buffer *ielm*>
+
+  (marker-position my-marker)
+    10251 (#o24013, #x280b, ?⠋)
+#+END_SRC
   - Get org heading at point:
 #+BEGIN_SRC emacs-lisp
   (org-get-heading 'no-tags 'no-todo)
@@ -98,6 +109,27 @@ If FROM or TO is negative, it counts from the end.
   - Check for substring:
 #+BEGIN_SRC emacs-lisp
   (string-match-p REGEXP STRING &optional START)
+#+END_SRC
+  - Matching substrings and accessing groups:
+#+BEGIN_SRC emacs-lisp
+  (setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+    "Always click [[http://reddit.com/r/emacs][here]]."
+
+  (setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+    "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
+
+  (string-match needle-re haystack)
+    13 (#o15, #xd, ?\C-m)
+
+  (match-string 0 haystack)
+    "[[http://reddit.com/r/emacs][here]]"
+
+  (match-string 1 haystack)
+    "http://reddit.com/r/emacs"
+
+  (match-string 2 haystack)
+    "here"
+
 #+END_SRC
   - Return argument unchanged (noop):
 #+BEGIN_SRC emacs-lisp
