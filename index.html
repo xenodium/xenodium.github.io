@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-03-28 Sat 19:53 -->
+<!-- 2015-03-29 Sun 19:05 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -254,6 +254,22 @@ for the JavaScript code in this tag.
 <div class="outline-text-2" id="text-learning-emacs-lisp">
 <br><span class="modified-timestamp">  <em>[2015-03-28 Sat]  updated  </em></span>
 <ul class="org-ul">
+<li>Creating markers:
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq my-marker <span style="color: #93a8c6;">(</span>copy-marker <span style="color: #b0b1a3;">(</span>point<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+  #&lt;marker at 10251 in *ielm*&gt;
+
+<span style="color: #8c8c8c;">(</span>marker-buffer my-marker<span style="color: #8c8c8c;">)</span>
+  #&lt;buffer *ielm*&gt;
+
+<span style="color: #8c8c8c;">(</span>marker-position my-marker<span style="color: #8c8c8c;">)</span>
+  10251 <span style="color: #8c8c8c;">(</span>#o24013, #x280b, ?&#10251;<span style="color: #8c8c8c;">)</span>
+</pre>
+</div>
+<ul class="org-ul">
 <li>Get org heading at point:
 </li>
 </ul>
@@ -427,6 +443,31 @@ If FROM or TO is negative, it counts from the end.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>string-match-p REGEXP STRING <span style="color: #66D9EF;">&amp;optional</span> START<span style="color: #8c8c8c;">)</span>
+</pre>
+</div>
+<ul class="org-ul">
+<li>Matching substrings and accessing groups:
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq haystack <span style="color: #E6DB74;">"Always click [[http://reddit.com/r/emacs][here]]."</span><span style="color: #8c8c8c;">)</span>
+  <span style="color: #E6DB74;">"Always click [[http://reddit.com/r/emacs][here]]."</span>
+
+<span style="color: #8c8c8c;">(</span>setq needle-re <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span><span style="color: #8c8c8c;">)</span>
+  <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span>
+
+<span style="color: #8c8c8c;">(</span>string-match needle-re haystack<span style="color: #8c8c8c;">)</span>
+  13 <span style="color: #8c8c8c;">(</span>#o15, #xd, ?\C-m<span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span>match-string 0 haystack<span style="color: #8c8c8c;">)</span>
+  <span style="color: #E6DB74;">"[[http://reddit.com/r/emacs][here]]"</span>
+
+<span style="color: #8c8c8c;">(</span>match-string 1 haystack<span style="color: #8c8c8c;">)</span>
+  <span style="color: #E6DB74;">"http://reddit.com/r/emacs"</span>
+
+<span style="color: #8c8c8c;">(</span>match-string 2 haystack<span style="color: #8c8c8c;">)</span>
+  <span style="color: #E6DB74;">"here"</span>
 </pre>
 </div>
 <ul class="org-ul">
