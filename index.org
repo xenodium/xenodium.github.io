@@ -1,6 +1,39 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-04-06 Mon] [[#fci-mode-and-org-html-export-to-html-bug][#]] fci-mode and org-html-export-to-html bug
+  :PROPERTIES:
+  :CUSTOM_ID: fci-mode-and-org-html-export-to-html-bug
+  :END:
+  Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This [[http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html][thread]] has a workaround:
+#+BEGIN_SRC emacs-lisp
+  (defun org-html-fontify-code (code lang)
+    ;; ...
+    (funcall lang-mode)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (when (require 'fill-column-indicator nil 'noerror)
+      (fci-mode -1))
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (insert code)
+    ;; ...
+#+END_SRC
+* [2015-03-28 Sat] [[#emacs-init.el-bookmarks][#]] Emacs init.el bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-init.el-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-05 Sun]
+  :END:
+  - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
+  - [[https://github.com/Droogans/.emacs.d/blob/mac/init.el][Andrew's .emacs]].
+  - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
+  - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
+  - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
+  - [[https://github.com/grettke/home/blob/master/ALEC.txt][Grant Rettke's literate config]].
+  - [[https://github.com/huseyinyilmaz/emacs-config/blob/master/lisp/user-init.el][Huseyin Yilmaz]].
+  - [[https://github.com/msparks/dotfiles/blob/master/.emacs][Mark Sparks's init.el]].
+  - [[https://github.com/CQQL/dotfiles/blob/master/src/.emacs.d/init.el][Marten Lienen's init.el]].
+  - [[http://writequit.org/org/settings.html][Mathew Lee Hinman's Emacs settings file]].
 * [2015-03-06 Fri] [[#lifestyle-bookmarks][#]] Lifestyle bookmarks
   :PROPERTIES:
   :CUSTOM_ID: lifestyle-bookmarks
@@ -262,6 +295,12 @@
   :MODIFIED:
   [2015-03-28 Sat]
   :END:
+  - Execute before saving buffer:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'write-file-hooks
+            (lambda ()
+              (message "about to save!")))
+#+END_SRC
   - Possibly use to start processes and send file content:
 #+BEGIN_SRC emacs-lisp
   (make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
@@ -350,7 +389,11 @@ If FROM or TO is negative, it counts from the end.
   (thing-at-point 'line)
 #+END_SRC
   - Unit test with ert.
-  - Basic iteration with dolist and while.
+  - Basic iteration with dolist:
+#+BEGIN_SRC emacs-lisp
+  (dolist (v '("a" "b" "c"))
+    (print v))
+#+END_SRC
   - Output to other buffer:
 #+BEGIN_SRC emacs-lisp
   (with-current-buffer (get-buffer-create "*some buffer*")
@@ -446,19 +489,6 @@ If FROM or TO is negative, it counts from the end.
   - [[http://indie.vc][Minimalistic one-pager]].
   - [[http://spootnik.org/][Pierre-Yves Ritschard's minialistic blog]].
   - [[http://nsainsbury.svbtle.com/java-developers][Svbtle]]: A post on java developers. Enjoyed its minimalistic layout.
-* [2015-03-28 Sat] [[#emacs-init.el-bookmarks][#]] Emacs init.el bookmarks
-  :PROPERTIES:
-  :CUSTOM_ID: emacs-init.el-bookmarks
-  :END:
-  - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
-  - [[https://github.com/Droogans/.emacs.d/blob/mac/init.el][Andrew's .emacs]].
-  - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
-  - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
-  - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
-  - [[https://github.com/huseyinyilmaz/emacs-config/blob/master/lisp/user-init.el][Huseyin Yilmaz]].
-  - [[https://github.com/msparks/dotfiles/blob/master/.emacs][Mark Sparks's init.el]].
-  - [[https://github.com/CQQL/dotfiles/blob/master/src/.emacs.d/init.el][Marten Lienen's init.el]].
-  - [[http://writequit.org/org/settings.html][Mathew Lee Hinman's Emacs settings file]].
 * [2015-03-28 Sat] [[#css-vertical-align-using-flex][#]] CSS vertical align using flex
   :PROPERTIES:
   :CUSTOM_ID: css-vertical-align-using-flex
