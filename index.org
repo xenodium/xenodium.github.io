@@ -1,0 +1,1476 @@
+#+TITLE: Álvaro Ramírez
+#+AUTHOR: Alvaro Ramirez
+#+OPTIONS: toc:nil num:nil ^:nil
+* [2015-04-09 Thu] [[#git-commit-message-style][#]] Git commit message style
+  :PROPERTIES:
+  :CUSTOM_ID: git-commit-message-style
+  :END:
+  Adopted Tim Pope's Git commit message [[http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html][style]]. Also enabled Emacs's git-commit-training-wheels-mode:
+#+BEGIN_SRC emacs-lisp
+  (use-package git-commit-training-wheels-mode :ensure t
+    :commands (git-commit-training-wheels-mode))
+
+  (use-package git-commit-mode :ensure t
+    :config
+    (add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
+    :commands (git-commit-mode))
+#+END_SRC
+* [2015-04-06 Mon] [[#fci-mode-and-org-html-export-to-html-bug][#]] fci-mode and org-html-export-to-html bug
+  :PROPERTIES:
+  :CUSTOM_ID: fci-mode-and-org-html-export-to-html-bug
+  :END:
+  Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This [[http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html][thread]] has a workaround:
+#+BEGIN_SRC emacs-lisp
+  (defun org-html-fontify-code (code lang)
+    ;; ...
+    (funcall lang-mode)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (when (require 'fill-column-indicator nil 'noerror)
+      (fci-mode -1))
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (insert code)
+    ;; ...
+#+END_SRC
+* [2015-03-28 Sat] [[#emacs-init.el-bookmarks][#]] Emacs init.el bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-init.el-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-05 Sun]
+  :END:
+  - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
+  - [[https://github.com/Droogans/.emacs.d/blob/mac/init.el][Andrew's .emacs]].
+  - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
+  - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
+  - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
+  - [[https://github.com/grettke/home/blob/master/ALEC.txt][Grant Rettke's literate config]].
+  - [[https://github.com/huseyinyilmaz/emacs-config/blob/master/lisp/user-init.el][Huseyin Yilmaz]].
+  - [[https://github.com/msparks/dotfiles/blob/master/.emacs][Mark Sparks's init.el]].
+  - [[https://github.com/CQQL/dotfiles/blob/master/src/.emacs.d/init.el][Marten Lienen's init.el]].
+  - [[http://writequit.org/org/settings.html][Mathew Lee Hinman's Emacs settings file]].
+* [2015-03-06 Fri] [[#lifestyle-bookmarks][#]] Lifestyle bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: lifestyle-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-04 Sat]
+  :END:
+  - [[http://camdez.com/blog/2010/01/15/lifehacking-expanded/][Cameron Desautel on lifehacking]].
+  - [[http://camdez.com/blog/categories/productivity/][Cameron Desautel on productivity]].
+  - [[https://www.youtube.com/playlist?list=PL2FF649D0C4407B30][Learning to learn]].
+  - [[http://www.mindbodygreen.com/][Mind body green]].
+  - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
+  - [[http://www.quora.com/What-methods-can-I-use-to-avoid-getting-so-tired-when-I-do-the-same-amount-of-a-work-as-my-peers-who-do-not-get-so-tired][Quora on increasing energy levels]].
+  - [[http://articles.mercola.com/sites/articles/archive/2011/08/16/dirty-little-secret-orange-juice-is-artificially-flavored-to-taste-like-oranges.aspx][The Shocking Truth About Freshly Squeezed Orange Juice]].
+  - [[http://www.zerowastehome.com/][Zero Waste Home]].
+* [2014-09-20 Sat] [[#emacs-lisp-bookmarks][#]] Emacs lisp bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-lisp-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-03 Fri]
+  :END:
+  - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
+  - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
+  - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
+  - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
+  - [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
+  - [[http://www.emacswiki.org/emacs/EmacsSymbolNotation][Emacs symbol notation]].
+  - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
+  - [[https://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix][How to choose Emacs Lisp package namespace prefix]].
+  - [[http://emacslife.com/how-to-read-emacs-lisp.html][How to read emacs lisp]].
+  - [[https://yoo2080.wordpress.com/2014/07/20/it-is-not-hard-to-edit-lisp-code/][It's not hard to edit Lisp code]].
+  - [[http://bzg.fr/learn-emacs-lisp-in-15-minutes.html][Learn emacs lisp in 15 minutes]].
+  - [[http://thewanderingcoder.com/2015/01/emacs-org-mode-links-and-exported-html/][Links and exported HTML]].
+  - [[https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp][Living with Emacs Lisp]].
+  - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
+  - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
+  - [[http://wikemacs.org/wiki/Emacs_Lisp_Cookbook][Wikemacs's Emacs Lisp Cookbook]].
+  - [[https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be][Writing a Spotify Client]].
+  - [[http://ergoemacs.org/emacs/elisp_common_functions.html][Xah's Common Emacs Lisp Functions]].
+  - [[http://ergoemacs.org/emacs/elisp_idioms_batch.html][Xah's Emacs Lisp idioms for Text Processing in Batch Style]].
+  - [[http://ergoemacs.org/emacs/elisp.html][Xah's Emacs Lisp Tutorial]].
+* [2015-03-06 Fri] [[#startup-bookmarks][#]] Startup bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: startup-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-03 Fri]
+  :END:
+  - [[http://sidejobr.com/help/19-amazing-sites-get-free-stock-photos/][19 Amazing Sites To Get Free Stock Photos]].
+  - [[http://www.raywenderlich.com/55384/ios-7-best-practices-part-1][An iOS Weather app case study]].
+  - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform?utm_campaign=Socialflow&utm_source=Socialflow&utm_medium=Tweet][Answer these questions about potential digital platform]].
+  - [[https://appfigures.com/][AppFigures:]] App tracking platform.
+  - [[https://www.owasp.org/index.php/Authentication_Cheat_Sheet][Authentication Cheet Sheet]].
+  - [[https://docs.google.com/spreadsheet/ccc?key%3D0Al7M8fgKPXoidENFa0M5VnJpb3pMeHQtS0RDcHFvY1E&usp%3Dsharing#gid%3D0][BaaS comparison]].
+  - [[http://www.kinvey.com/images/kinvey_backend-as-a-service_mobileecosystem_2100px.png][BaaS ecosystem map]].
+  - [[https://github.com/yaronn/blessed-contrib][Dashborads using ASCII and JS]].
+  - [[http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for][Free tools for startups (Shyahi blog)]].
+  - [[http://www.freevectors.net/][Free vectors]].
+  - [[http://www.backa.co/][Gain valuable, actionable feedback on your startup ideas]].
+  - [[http://www.glyphish.com/][Glyphish icon collection]].
+  - [[http://www.gofundme.com/][gofundme]].
+  - [[http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app][How I got to the app store top with a simple currency app]].
+  - [[http://www.iconarchive.com/][Icon archive]].
+  - [[https://www.iconfinder.com][Icon finder]].
+  - [[https://layer.com][Layer, messaging platform]].
+  - [[https://github.com/neiesc/ListOfMinimalistFrameworks][List of Minimal frameworks]].
+  - [[https://lmjabreu.com/][Luis Abreu, iOS Design/UX Specialist]].
+  - [[https://github.com/jessesquires/JSQMessagesViewController][Messaging UI for iOS]].
+  - [[http://mobilenighthawk.com/][Nighthawk (Debug iOS apps remotely from your browser)]].
+  - [[http://officesnapshots.com/][Office Snapshots]].
+  - [[http://facebook.github.io/origami/examples/][Origami for UI patterns and interactions]].
+  - [[http://www.paintcodeapp.com][PaintCode (drawings into ObjC code)]] - [[bit.ly/PaintCodeRocks][coupon]].
+  - [[http://eatcodeplay.com/why-we-killed-off-code-reviews/][Pair programming over code-reviews]].
+  - [[https://www.parse.com][parse.com]].
+  - [[http://www.theatlantic.com/business/archive/2015/01/the-psychological-difference-between-1200-and-1167/384993/?single_page=true][Psychological differences in price]].
+  - [[http://rethinkdb.com/faq/][RethinkDB FAQ]].
+  - [[https://news.ycombinator.com/item?id=9185338][RethinkDB HN comments]].
+  - [[https://www.sendwithus.com/resources/guide/][Send email like a startup]].
+  - [[https://shareasimage.com/][Share as image]].
+  - [[http://blog.samaltman.com/startup-advice-briefly][Startup advice, briefly]].
+  - [[http://swagger.io/][Swagger]]: Represent REST API.
+  - [[http://textbelt.com/][TextBelt:]] A free, open source API for outgoing texts..
+  - [[http://thenounproject.com/][The noun project (more icons)]].
+  - [[https://github.com/torodb/torodb][ToroDB]].
+  - [[http://www.valvesoftware.com/company/Valve_Handbook_LowRes.pdf][Valve employee handbook]].
+  - [[http://blog.workshape.io/we-use-rethinkdb-at-workshapeio/][We use RethinkDB at Workshape.io]].
+  - [[http://www.ycombinator.com/documents/#sales][YC Sales agreement]].
+* [2015-04-03 Fri] [[#try-cocoapods-out][#]] Try cocoapods out
+  :PROPERTIES:
+  :CUSTOM_ID: try-cocoapods-out
+  :END:
+  [[https://github.com/CocoaPods/cocoapods-try][Cocapods try]]:
+#+BEGIN_SRC sh
+  $ pod try POD_NAME
+#+END_SRC
+* [2015-03-05 Thu] [[#ios-bookmarks][#]] iOS bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ios-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-03 Fri]
+  :END:
+  - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
+  - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
+  - [[https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html#//apple_ref/doc/uid/20001282-BCIGIJJF][Apple's coding guidelines for Cocoa]].
+  - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Initialization/Initialization.html#//apple_ref/doc/uid/TP40010810-CH6-SW3][Apple's Concepts in Objective-C programming]].
+  - [[https://developer.apple.com/library/ios/documentation/userexperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556][Apple's mogile HIG guidelines]].
+  - [[https://www.behance.net/search?search=ios&utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][Behance]].
+  - [[https://github.com/luisobo/clean-architecture][Clean architecture for iOS]].
+  - [[http://cocoadocs.org/][Cocoadocs]].
+  - [[http://www.objc.io/issue-6/cocoapods-under-the-hood.html][Cocoapods under the hood]].
+  - [[http://cocoapods.org/][Cocoapods]].
+  - [[http://codepilot.cc][Code pilot]].
+  - [[https://github.com/jamztang/CSStickyHeaderFlowLayout][CSStickyHeaderFlowLayout]].
+  - [[http://www.davemark.com/?p=1829][DaveLots of iOS resources]].
+  - [[http://giorgiocalderolla.com/blog.html][Giorgio Calderolla]].
+  - [[http://injectionforxcode.com][Injection for Xcode.]]
+  - [[https://medium.com/ios-apprentice/the-valuable-toolset-for-ios-development-ba312d12577d][iOS Apprentice]].
+  - [[http://ios.devtools.me][iOS Dev Tools]].
+  - [[http://iosdevweekly.com][iOS dev weekly]].
+  - [[http://www.bignerdranch.com/we-write/ios-programming.html][iOS Programming]].
+  - [[https://github.com/stanislaw/iOS-Projects-Catalogue][iOS projects catalogues]].
+  - [[http://ios-goodies.com][ios-goodies.com]].
+  - [[http://iosdevtips.co][iosdevtips.co]].
+  - [[http://joppar.com/mobile-app-development-resources-guide/][joppar.com]].
+  - [[http://iphone.meer.li/designs/featured?page=3][Meerli.]]
+  - [[https://www.mikeash.com/book.html][Mike Ash]].
+  - [[https://github.com/2359media/ios-dev-guide/blob/master/iOS%20Topics%20and%20References.md][More aggregation of awesomeness on github]].
+  - [[http://nshipster.com/xcode-plugins/][NSHipster's Xcode plugins post]].
+  - [[http://nsscreencast.com][nsscreencast.com]].
+  - [[https://github.com/objc-zen/objc-zen-book][Objc-C Zen book]].
+  - [[http://www.objc.io/][Objc.io]].
+  - [[http://oclint.org/][Objective-C linter]].
+  - [[https://github.com/mattneub/Programming-iOS-Book-Examples][Programming iOS Book examples]].
+  - [[http://www.raywenderlich.com/tutorials][Ray Wendelich]].
+  - [[http://revealapp.com][Reveal.]]
+  - [[http://subjc.com][Subjective-C.]]
+  - [[http://swiftmonthly.com/][SwiftMothly]].
+  - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
+  - [[https://github.com/ColinEberhardt/VCTransitionsLibrary][VCTransitionsLibrary]].
+  - [[https://developer.apple.com/videos/wwdc/2012/][WWDC 2012 Xcode tips]].
+  - [[https://developer.apple.com/videos/wwdc/2014/][WWDC 2014]].
+  - [[http://bpoplauschi.wordpress.com][Yet another iOS Blog]].
+* [2015-04-03 Fri] [[#cornwall-travel-backlog][#]] Cornwall travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: cornwall-travel-backlog
+  :END:
+  - [[http://barefootcornwall.com/on-the-road/][Food along the way]].
+* [2015-04-03 Fri] [[#austria-travel-backlog][#]] Austria travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: austria-travel-backlog
+  :END:
+  - [[https://duckduckgo.com/?q%3Dmelk%2Baustria%2Blibrary&iax%3D1&ia%3Dimages][Melk Abbey library]].
+* [2015-04-02 Thu] [[#cinnamon-desktop-run-dialog][#]] Cinnamon desktop run dialog
+  :PROPERTIES:
+  :CUSTOM_ID: cinnamon-desktop-run-dialog
+  :END:
+  Note to self. Open with Alt-f2.
+* [2015-03-06 Fri] [[#go-bookmarks][#]] Go bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: go-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-03-30 Mon]
+  :END:
+  - [[http://beego.me/docs/intro/releases.md][Beego, platform for web apps]].
+  - [[http://blog.matttproud.com/2015/02/exploring-gos-runtime-how-process.html][Exploring Go's runtime]].
+  - [[http://gohugo.io/templates/go-templates][Go Template Primer]].
+  - [[https://github.com/emicklei/go-restful][Go-restful]].
+  - [[http://bouk.co/blog/monkey-patching-in-go/][Monkey Patching in Go]].
+  - [[http://revel.github.io/][Revel:]] A high-productivity web framework for the Go language.
+  - [[https://bitbucket.org/seanerussell/sashay][Sashay Go codegen]].
+  - [[https://github.com/yvasiyarov/swagger][Swagger Go documentation generator]].
+  - [[https://github.com/gizak/termui][termui, Go terminal dashboard]].
+  - [[https://sourcegraph.com/blog/live/gopherconindia/112025389257 ][The 5 stages of learning Go]].
+* [2015-03-29 Sun] [[#books-for-2015][#]] Books for 2015
+  :PROPERTIES:
+  :CUSTOM_ID: books-for-2015
+  :END:
+  - [[http://www.amazon.co.uk/Catch-22-Vintage-Classics-Joseph-Heller/dp/0099470462][Catch 22]].
+  - [[http://www.amazon.co.uk/Circle-Dave-Eggers/dp/0804172293][The Circle]].
+  - [[http://www.amazon.co.uk/Born-Run-Hidden-Ultra-Runners-Greatest/dp/1861978774][Born to Run]].
+  - [[http://www.amazon.co.uk/Thinking-Fast-Slow-Daniel-Kahneman/dp/0141033576][Thinking, Fast and Slow]].
+* [2014-09-19 Fri] [[#emacs-bookmarks][#]] Emacs bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-03-29 Sun]
+  :END:
+  - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
+  - [[https://github.com/baohaojun/ajoke][Ajoke]].
+  - [[http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git][An introduction to Magit, an Emacs mode for Git]].
+  - [[http://m00natic.github.io/emacs/emacs-wiki.html][Andrey's Opionated Emacs Guide]].
+  - [[https://github.com/emacs-tw/awesome-emacs/blob/master/README.org][Awesome Emacs]].
+  - [[http://bzg.fr/blogging-from-emacs.html][Blogging from org-mode + rss]].
+  - [[http://mbork.pl/Content_AND_Presentation][Content AND Presentation]].
+  - [[https://emacs.zeef.com/ehartc][Curated list of packages by Ernst de Hart]].
+  - [[http://emacs-fu.blogspot.co.uk/2011/08/customizing-mode-line.html][Customizing emacs mode line]].
+  - [[http://www.masteringemacs.org/articles/2011/01/14/effective-editing-movement/][Effective editing I:Movement]]
+  - [[http://ergoemacs.org/emacs/effective_emacs.html][Effective emacs tips]]: From ergoemacs.
+  - [[https://sites.google.com/site/steveyegge2/effective-emacs][Effective emacs]]: Steve Yegge's effective emacs tips.
+  - [[https://forums.unrealengine.com/showthread.php?52891-Emacs-as-my-UE4-IDE-with-intellisense][Emacs as my UE4 IDE with intellisense]].
+  - [[http://www.swaroopch.com/2013/10/17/emacs-configuration-tutorial][Emacs configuration]]: Simplify package management with cask.
+  - [[http://emacsfodder.github.io/][Emacs Fodder]].
+  - [[https://sites.google.com/site/drielsma/xcodeplusemacs][Emacs for Cocoa development]].
+  - [[https://github.com/pierre-lecocq/emacs4developers][Emacs for developers]].
+  - [[http://roupam.github.io/][Emacs for Xcode+ios Development]].
+  - [[http://www.reddit.com/r/emacs/comments/1rck3u/what_do_you_use_to_navigate_code][Emacs goodies]]: Emacs post with tips for navigating code.
+  - [[http://emacshorrors.com][Emacs horrors]].
+  - [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-en.org][Emacs in one year]]: Someone's emacs experience over a year.
+  - [[http://emacs.sexy/][Emacs is sexy]].
+  - [[http://overtone.github.io/emacs-live/][Emacs live]].
+  - [[http://www.emacswiki.org/emacs/EmacsNiftyTricks][Emacs Nifty tricks]]: Another source of emacs goodness.
+  - [[http://emacsnyc.org/videos.html][Emacs NYC videos]].
+  - [[http://emacsredux.com/][Emacs redux]].
+  - [[http://emacsrocks.com][Emacs rocks]].
+  - [[http://lavnir.be/wp/][Emacs | less]].
+  - [[http://emacslife.com/][Emacslife]].
+  - [[https://github.com/jonnay/emagicians-starter-kit][Emagicians starter kit]].
+  - [[http://endlessparentheses.com][Endless parenthesis]].
+  - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
+  - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
+  - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
+  - [[http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/][Git diffs using Emacs ediff]].
+  - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
+  - [[https://github.com/bbatsov/projectile][Helm Projectile]]: Is awesome for finding files in emacs.
+  - [[https://github.com/skeeto/javadoc-lookup][javadoc-lookup]].
+  - [[http://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][Javascript development environment]].
+  - [[http://www.lunaryorn.com/][Lunarsite]].
+  - [[http://zeekat.nl/articles/making-emacs-work-for-me.html][Making Emacs work for me]].
+  - [[http://www.masteringemacs.org][Mastering Emacs]].
+  - [[http://truongtx.me/2013/03/10/emacs-setting-up-perfect-environment-for-cc-programming][More emacs C++ goodness]]: More emacs dev environment tips.
+  - [[http://bbbscarter.wordpress.com/category/coding/emacs/][Nerdgasms's Emacs tips]].
+  - [[http://angelic-sedition.github.io/][Nocturnal Artifice]].
+  - [[http://renard.github.io/o-blog-v2/][o-blog]].
+  - [[https://github.com/al-skobelev/objc-yassnippets/tree/master/objc-mode][Objective-C snippets #1]].
+  - [[https://github.com/altschuler/yas-objc][Objective-C snippets #2]].
+  - [[https://github.com/al-skobelev/objc-yassnippets][Objective-C snippets #3]].
+  - [[https://github.com/bodil/ohai-emacs][Ohai Emacs]].
+  - [[http://oremacs.com/][Or Emacs]].
+  - [[https://github.com/bbatsov/prelude][Prelude emacs distribution]].
+  - [[http://sachachua.com][Sachua Chua]].
+  - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
+  - [[http://truongtx.me/categories.html#emacs-ref][Trần Xuân Trường's Emacs posts]].
+  - [[http://tuhdo.github.io/c-ide.html][Tuhdo's C/C++ dev on Emacs]].
+  - [[http://tv.uvigo.es/gl/serial/513.html][Universidad de Vigo's Emacs course]].
+  - [[http://emacs.stackexchange.com/questions/2571/what-emacs-communities-exist][What Emacs communities exist?]]
+  - [[http://whattheemacsd.com/][What the Emacsd]].
+  - [[http://www.wisdomandwonder.com/][Wisdom and Wonder]].
+  - [[https://github.com/zegal/yasobjc][Yasnippet generator for Cocoa iphone SDK]].
+  - [[https://yoo2080.wordpress.com/category/emacs/][Yoo Box's Emacs category]].
+  - [[http://ericscrosson.wordpress.com][Zen in the Art of Emacs]].
+* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
+  :PROPERTIES:
+  :Custom_ID: learning-emacs-lisp
+  :END:
+  :MODIFIED:
+  [2015-03-28 Sat]
+  :END:
+  - Execute before saving buffer:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'write-file-hooks
+            (lambda ()
+              (message "about to save!")))
+#+END_SRC
+  - Possibly use to start processes and send file content:
+#+BEGIN_SRC emacs-lisp
+  (make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
+#+END_SRC
+  - Creating markers:
+#+BEGIN_SRC emacs-lisp
+  (setq my-marker (copy-marker (point)))
+    #<marker at 10251 in *ielm*>
+
+  (marker-buffer my-marker)
+    #<buffer *ielm*>
+
+  (marker-position my-marker)
+    10251 (#o24013, #x280b, ?⠋)
+#+END_SRC
+  - Get org heading at point:
+#+BEGIN_SRC emacs-lisp
+  (org-get-heading 'no-tags 'no-todo)
+#+END_SRC
+  - Remove string text properties. From manual:
+#+BEGIN_QUOTE
+(substring-no-properties STRING &optional FROM TO)
+
+Return a substring of STRING, without text properties.
+It starts at index FROM and ends before TO.
+TO may be nil or omitted; then the substring runs to the end of STRING.
+If FROM is nil or omitted, the substring starts at the beginning of STRING.
+If FROM or TO is negative, it counts from the end.
+#+END_QUOTE
+  - Skip org entry metadata/drawers:
+#+BEGIN_SRC emacs-lisp
+  (org-end-of-meta-data-and-drawers)
+#+END_SRC
+  - Random access to org entry using id (or CUSTOM_ID):
+#+BEGIN_SRC emacs-lisp
+  (org-open-link-from-string "[[#%exciting-custom-id]]")
+#+END_SRC
+  - From [[http://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html][Debugging Elisp Part 1: Earn your independence]]:
+#+BEGIN_QUOTE
+    - Go to where the function is defined.
+    - Press C-u C-M-x. Edebug breakpoint for function.
+    - Invoke function in question.
+    - n/c will get you around.
+    - q when done.
+#+END_QUOTE
+  - Pretty printing objects:
+#+BEGIN_SRC emacs-lisp
+  (let ((my-var (list "val1"
+                      "val2"
+                      "val3")))
+    (pp-to-string my-var))
+#+END_SRC
+  - Search and/or replace in curent buffer:
+#+BEGIN_SRC emacs-lisp
+  (re-search-forward "needle"
+                     nil t)
+  (match-beginning 0) ;; Start location of match from last search.
+  (match-end 0) ;; End location of match from last search.
+  (replace-match "love")
+
+  ;; needle-in-haystack
+#+END_SRC
+  - Restric buffer editing to a region:
+#+BEGIN_SRC emacs-lisp
+  (narrow-to-region (point)
+                    (point-max))
+#+END_SRC
+  - Restore restriction:
+#+BEGIN_SRC emacs-lisp
+  (save-restriction (narrow-to-region (point)
+                                      (point-max))
+#+END_SRC
+  - Restore point, mark, and current buffer:
+#+BEGIN_SRC emacs-lisp
+  (save-excursion (goto-char (point-max))
+                  (insert "Hello elisp."))
+#+END_SRC
+  - Concatenating strings:
+#+BEGIN_SRC emacs-lisp
+  (concat "Hello " "elisp " "world.")
+#+END_SRC
+  - Grabbing thing at point:
+#+BEGIN_SRC emacs-lisp
+  (thing-at-point 'word)
+  (thing-at-point 'symbol)
+  (thing-at-point 'line)
+#+END_SRC
+  - Unit test with ert.
+  - Basic iteration with dolist:
+#+BEGIN_SRC emacs-lisp
+  (dolist (v '("a" "b" "c"))
+    (print v))
+#+END_SRC
+  - Output to other buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*some buffer*")
+    (princ '(some list to print)
+           (current-buffer)))
+#+END_SRC
+  - For a temporary buffer, use with-temp-buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-temp-buffer
+    (insert "abc")
+    (point))
+#+END_SRC
+  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
+  - Check for substring:
+#+BEGIN_SRC emacs-lisp
+  (string-match-p REGEXP STRING &optional START)
+#+END_SRC
+  - Matching substrings and accessing groups:
+#+BEGIN_SRC emacs-lisp
+  (setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+    "Always click [[http://reddit.com/r/emacs][here]]."
+
+  (setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+    "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
+
+  (string-match needle-re haystack)
+    13 (#o15, #xd, ?\C-m)
+
+  (match-string 0 haystack)
+    "[[http://reddit.com/r/emacs][here]]"
+
+  (match-string 1 haystack)
+    "http://reddit.com/r/emacs"
+
+  (match-string 2 haystack)
+    "here"
+
+#+END_SRC
+  - Return argument unchanged (noop):
+#+BEGIN_SRC emacs-lisp
+  (identity ARG)
+#+END_SRC
+  - Org insert today's timestamp
+#+BEGIN_SRC emacs-lisp
+  (org-insert-time-stamp (current-time))
+#+END_SRC
+  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
+  - First element
+#+BEGIN_SRC emacs-lisp
+  (car LIST)
+#+END_SRC
+  - All but first element
+#+BEGIN_SRC emacs-lisp
+  (cdr LIST)
+#+END_SRC
+  - Add NEWELT to front of PLACE
+#+BEGIN_SRC emacs-lisp
+  (push NEWELT PLACE)
+#+END_SRC
+  - Invoke 'FUNCTION for each in SEQUENCE
+#+BEGIN_SRC emacs-lisp
+  (mapcar FUNCTION SEQUENCE)
+#+END_SRC
+  - Search/replace
+#+BEGIN_SRC emacs-lisp
+(while (search-forward "Hello")
+  (replace-match "Bonjour"))
+#+END_SRC
+  - Save to kill ring = copy.
+  - Point = cursor position.
+  - Mark = a buffer position.
+  - Kill = cut text.
+  - Yank = paste.
+  - Buffer:File = 1:1.
+  - Window:Buffer = 1:1.
+  - Frame:Window = 1:many.
+  - Font lock = syntax highlighting.
+* [2015-03-06 Fri] [[#ux-scrapbook-bookmarks][#]] UX scrapbook bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ux-scrapbook-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-03-28 Sat]
+  :END:
+  - [[http://www.vox.com/2015/2/8/7475667/27-fonts-give-or-take-that-explain-your-world][27 fonts* (give or take) that explain your world]].
+  - [[http://rix.si/][Another minilimalistic one-pager]].
+  - [[https://exposure.co/][Another minimalistic gallery]].
+  - [[http://mengto.com/img/snoflake-menu.jpg][Meng To's I Love Food I]].
+  - [[http://mengto.com/img/exp-menu.jpg][Meng To's I Love Food II]].
+  - [[https://lmjabreu.com/][Minimalistic blog layout]].
+  - [[http://antirez.com/latest/0][Minimalistic blog layout]].
+  - [[http://www.piotrpisarzphotography.com/][Minimalistic gallery]].
+  - [[http://indie.vc][Minimalistic one-pager]].
+  - [[http://spootnik.org/][Pierre-Yves Ritschard's minialistic blog]].
+  - [[http://nsainsbury.svbtle.com/java-developers][Svbtle]]: A post on java developers. Enjoyed its minimalistic layout.
+* [2015-03-28 Sat] [[#css-vertical-align-using-flex][#]] CSS vertical align using flex
+  :PROPERTIES:
+  :CUSTOM_ID: css-vertical-align-using-flex
+  :END:
+  Codepen [[http://codepen.io/oisinlavery/pen/Jmjtz][snippet]]:
+#+BEGIN_SRC css
+  div{
+    height: 200px;
+    background: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  p{
+    margin: auto
+  }
+#+END_SRC
+* [2014-07-14 Mon] [[#html5-bookmarks][#]] HTML5 bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: html5-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-03-28 Sat]
+  :END:
+  - [[http://www.helloerik.com/the-subtle-magic-behind-why-the-bootstrap-3-grid-works][Bootstrap 3 grid]].
+  - [[http://blog.chromium.org/2014/06/web-fundamentals-and-web-starter-kit.html][Chromium's web fundamentals and Web Starter Kit]].
+  - [[https://slides.com/concise/js/fullscreen#/][Concise JavaScript intro]].
+  - [[http://cssguidelin.es][CSS style guide]].
+  - [[https://developer.mozilla.org/en-US/Learn][Learning the Web (mozilla.org)]].
+  - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
+  - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
+* [2015-03-26 Thu] [[#helm-buffer-urls][#]] Helm buffer URLs
+  :PROPERTIES:
+  :CUSTOM_ID: helm-buffer-urls
+  :END:
+  Venturing into Emacs lisp and [[https://github.com/emacs-helm/helm][Helm]]. Here's a go at listing all URLs in current buffer.
+#+BEGIN_SRC emacs-lisp
+(require 'goto-addr)
+
+(defun ar/helm-buffer-url-candidates ()
+  "Generate helm candidates for all URLs in buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((helm-candidates '())
+          (url))
+      (while (re-search-forward goto-address-url-regexp
+                                nil t)
+        (setq url
+              (buffer-substring-no-properties (match-beginning 0)
+                                              (match-end 0)))
+        (add-to-list 'helm-candidates
+                     (cons url
+                           url)))
+      helm-candidates)))
+
+(defun ar/helm-buffer-urls ()
+  "Narrow down and open a URL in buffer."
+  (interactive)
+  (helm :sources `(((name . "Buffer URLs")
+                    (candidates . ,(ar/helm-buffer-url-candidates))
+                    (action . (lambda (url)
+                                (browse-url url)))))))
+#+END_SRC
+* [2014-07-13 Sun] [[#development-bookmarks][#]] Development bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: development-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-03-26 Thu]
+  :END:
+  - [[http://robertmuth.blogspot.it/2012/08/better-bash-scripting-in-15-minutes.html][Better Bash scripting in 15 Minutes]].
+  - [[https://github.com/rxin/db-readings][Database readings]].
+  - [[http://mollyrocket.com/casey/stream_0028.html][Designing and evaluating reusable components]]: Talk by Casey Muratori.
+  - [[http://doc.qt.digia.com/qq/qq13-apis.html][Designing Qt-Style C++ APIs]].
+  - [[https://google-styleguide.googlecode.com/svn/trunk/shell.xml][Google shell style guide]].
+  - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
+  - [[http://sheredom.wordpress.com/2014/08/10/how-to-design-api-function-that-creates-something/][How to design API function creating objects]]: By Neil Henning.
+  - [[http://regexrenamer.sourceforge.net/help/regex_quickref.html][Regex quick reference]]: From regexrenamer.
+  - [[https://bourgeois.me/rest/][Some REST best practices]]
+  - [[http://robots.thoughtbot.com/a-tmux-crash-course][Tmux crash course]]: By Josh Clayton.
+  - [[http://www.comp.nus.edu.sg/~stevenha/visualization/][VisuAlgo.net]]: Visualising data structures and algorithms through animation.
+* [2015-03-26 Thu] [[#london-diving-schools][#]] London diving schools
+  :PROPERTIES:
+  :Custom_ID: london-diving-schools
+  :END:
+  - [[http://londonschoolofdiving.co.uk][London Diving School]]. Not heard good comments.
+  - [[http://www.divewimbledon.com][Dive Wimbledon]]. Heard ok comments.
+  - [[http://www.clidive.org/][Clidive]] is a BSAC club (amateur organisation). Not commercial but may take longer.
+  - [[http://www.sublimediving.co.uk/][Sublime Diving]]. Heard good comments.
+  - [[http://www.oysterdiving.com/][Oyster Diving]]. Pool in cetral London. Good comments.
+  - [[http://en.wikipedia.org/wiki/SS_Thistlegorm][SS Thistlegorm]] mentioned as a memorable site.
+  - Many suggest to get certified elsewhere. Perhaps Egypt via [[http://www.poseidondivers.com/][Poseidon Divers]].
+* [2015-03-05 Thu] [[#india-travel-backlog][#]] India travel backlog
+  :PROPERTIES:
+  :Custom_ID: india-travel-backlog
+  :END:
+  :MODIFIED:
+  [2015-03-25 Wed]
+  :END:
+  - [[https://www.google.com/culturalinstitute/browse/?f.media_type=museumview&q.8129907598665562501=139704082&q.openId=media_type][Archeological Survey of India sites]].
+  - [[https://en.wikipedia.org/wiki/Bhaja_Caves][Bhaja caves, Pune, Maharashtra]].
+  - [[http://en.wikipedia.org/wiki/Bhang][Bhang]].
+  - [[http://en.wikipedia.org/wiki/Bodh_Gaya][Bodh Gaya]].
+  - [[http://joegoauk.blogspot.co.uk/2013/07/budbudyanchi-tali-bubbling-pond-at.html][Budbudyanchi tali (Bubbling Pond) at Netravali, Sanguem, Goa]].
+  - [[https://en.wikipedia.org/wiki/Chand_Baori][Chand Baori]].
+  - [[https://india.zeef.com/gautam.garg][India on Zeef]].
+  - [[https://en.wikipedia.org/wiki/Pandavleni_Caves][Pandavleni caves, Nashik, Maharashtra]].
+  - [[https://en.wikipedia.org/wiki/Havelock_Island][Radhanagar beach]].
+  - [[https://duckduckgo.com/?q%3DVipassana%2BPagoda&iax%3D1&ia%3Dimages][Vipassana pagoda]].
+* [2015-03-22 Sun] [[#born-to-run-references][#]] Born to Run references
+  :PROPERTIES:
+  :CUSTOM_ID: born-to-run-references
+  :END:
+  :MODIFIED:
+  [2015-03-23 Mon]
+  :END:
+
+  References from reading Christopher McDougall's [[http://www.chrismcdougall.com/born-to-run][Born to Run]]:
+
+  - [[http://www.chirunning.com][Chi running]].
+  - Chia and pinole. Random recipes [[http://www.nomeatathlete.com/tarahumara-pinole-chia-recipes/][here]].
+  - [[http://heritageseeds.org/][Heritage Seeds]].
+  - Ken Mierke’s [[http://www.evolutionrunning.com][Evolution running]].
+  - [[https://posemethod.com/running][Pose method]].
+  - Quotes, references, videos, etc. at [[http://ultimatepaleoguide.com/born-to-run/][ultimate paleo guide]].
+
+  Recipe by [[http://www.bellaonline.com/articles/art51802.asp][Megan Mignot]], based on book references:
+
+*** Mama Tita’s Pancakes
+    - 1 ½ cups cooked brown rice
+    - 1 cup coconut milk
+    - 2 ripe bananas
+    - 1 tablespoon honey
+    - ½ cup white cornmeal
+    - 2 teaspoons baking powder
+
+* [2015-03-23 Mon] [[#doh-undo-last-git-commit][#]] Doh! undo last git commit
+  :PROPERTIES:
+  :Custom_ID: doh-undo-last-git-commit
+  :END:
+#+BEGIN_SRC sh
+  $ git reset --soft HEAD~1
+#+END_SRC
+* [2015-03-22 Sun] [[#resetting-variables-using-defvar][#]] Resetting variables using defvar
+  :PROPERTIES:
+  :CUSTOM_ID: resetting-variables-using-defvar
+  :END:
+  Want to re-evaluate defvars and modify variables? eval-defun (bound to C-M-x) can help. From the manual:
+#+BEGIN_QUOTE
+  If the current defun is actually a call to `defvar', then reset the
+  variable using its initial value expression even if the variable
+  already has some other value.  (Normally `defvar' does not change the
+  variable's value if it already has a value.)  Treat `defcustom'
+  similarly.
+#+END_QUOTE
+* [2015-03-22 Sun] [[#broken-xcode-plugins][#]] Broken Xcode plugins?
+  :PROPERTIES:
+  :CUSTOM_ID: broken-xcode-plugins
+  :END:
+  Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPlugInCompatibilityUUIDs is added to the plugin's Info.plist. Get from:
+#+BEGIN_SRC sh
+  $ defaults read \
+      /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+#+END_SRC
+* [2015-03-18 Wed] [[#sharing-on-ios][#]] Sharing on iOS
+  :PROPERTIES:
+  :Custom_ID: sharing-on-ios
+  :END:
+  - [[https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityViewController_Class/][UIActivityViewController]].
+    - Use completionWithItemsHandler on iOS 8.
+    - Sample:
+#+BEGIN_SRC objc
+  NSString *title = @"Sharing on iOS bookmarks.";
+  NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
+  UIImage *image = [UIImage imageNamed:@"beautiful-image"];
+
+  UIActivityViewController *controller =
+    [[UIActivityViewController alloc]
+      initWithActivityItems:@[title, url, image]
+      applicationActivities:nil];
+
+  // self being a UIViewController.
+  [self presentViewController:controller animated:YES completion:nil];
+#+END_SRC
+  - Sharing through Mail app on simulator isn't supported.
+#+BEGIN_QUOTE
+  viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomain Code=3 "The operation couldn’t be completed. (_UIViewServiceInterfaceErrorDomain error 3.)" UserInfo=... {Message=Service Connection Interrupted}
+#+END_QUOTE
+  - Sharing through Mail app in device is OK.
+  - [[http://devstreaming.apple.com/videos/wwdc/2014/205xxqzduadzo14/205/205_hd_creating_extensions_for_ios_and_os_x,_part_1.mov?dl%3D1][WWDC 2014 Creating Extensions for iOS and OSX, Part 1]].
+    - Share Extensions talk by Guy Fullerton.
+      - Usually view controllers in addition to plist.
+      - CFBundleDisplayName.
+      - NSExtendion.
+        - NSExtensionAttributes.
+          - NSExtensionActivationRule.
+    - SLComposeServiceViewController.
+    - UIActivityViewController.
+  - [[http://devstreaming.apple.com/videos/wwdc/2014/217xxsvxdga3rh5/217/217_hd_creating_extensions_for_ios_and_os_x_part_2.mov?dl%3D1][WWDC 2014 Creating Extensions for iOS and OSX, Part 2]].
+  - Want to a share URL to App Store? See [[https://developer.apple.com/library/ios/qa/qa1633/_index.html][Technical Q&A 1633]].
+* [2015-03-19 Thu] [[#org-tips-from-2015-03-18-emacs-hangout][#]] Org tips from 2015-03-18 Emacs hangout
+  :PROPERTIES:
+  :CUSTOM_ID: org-tips-from-2015-03-18-emacs-hangout
+  :END:
+  :MODIFIED:
+  [2015-03-22 Sun]
+  :END:
+  Lots of great tips in [[http://sachachua.com/blog/2015/03/emacs-hangout-2015-03-18-show-notes/][Emacs Hangout 2015-03-18]]. Favorites:
+  - Private org drawer to prevent export:
+#+BEGIN_SRC org
+  :PRIVATE:
+  My super duper secret text I don't want to export.
+  :END:
+#+END_SRC
+  - C-c C-p/C-c C-n Jump over sections.
+  - (setq org-hide-leading-stars t).
+  - (org-bullets-mode).
+  - (org-refile).
+  - C-u (org-refile) jumps, no refile.
+  - (helm-org-in-buffer-headings).
+* [2015-03-19 Thu] [[#food-bookmarks][#]] Food bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: food-bookmarks
+  :END:
+  - [[http://summertomato.com/][Summer tomato]].
+  - [[http://www.tarladalal.com/][Tarladalal recipes]].
+* [2015-03-19 Thu] [[#china-travel-backlog][#]] China travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: china-travel-backlog
+  :END:
+  - Ctrip for hotels. Stick to high-rated only.
+  - [[https://goo.gl/maps/yP03w][Houhai Lake]] (Beijing). Miscellaneous bars.
+  - [[https://goo.gl/maps/TfdOV][Nan Luo Gu Xiang]] (Beijing). Street Food!
+  - [[https://goo.gl/maps/15aFa][Qianmen Street]]. Near Tiananmen Square. Artifact shopping and famous food.
+  - [[http://joi.ito.com/weblog/2014/09/01/shenzhen-trip-r.html][Shenzhen]] (Hong Kong). The worlds manufacturing ecosystem.
+  - [[http://arts.cultural-china.com/en/85Arts192.html][Suspended Temple of Mt. Hengshan]].
+  - [[http://tianzifang.cn/][Tianzi Fang]] ([[https://goo.gl/maps/FQmSF][Shanghai]]). Lots of arts!
+  - [[https://goo.gl/maps/Ngqwk][Town God's Temple]] (Shanghai). Street Food!
+* [2015-03-19 Thu] [[#ethiopia-travel-backlog][#]] Ethiopia travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: ethiopia-travel-backlog
+  :END:
+  - [[https://en.wikipedia.org/wiki/Church_of_Saint_George,_Lalibela][Bet Giyorgis Church]].
+* [2015-03-18 Wed] [[#istanbul-travel-backlog][#]] Istanbul travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: istanbul-travel-backlog
+  :END:
+  - [[http://www.turkeyfromtheinside.com/istanbul-guide/f/1255-findikli.html][Findikli rainbow stairs]].
+* [2015-03-18 Wed] [[#south-korea-travel-backlog][#]] South Korea travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: south-korea-travel-backlog
+  :END:
+  - [[http://www.humarakausar.com/tag/koi-fish-mural][Koi fish mural at Naksan Park, Seoul]].
+* [2015-03-18 Wed] [[#san-francisco-travel-backlog][#]] San Francisco travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: san-francisco-travel-backlog
+  :END:
+  - [[http://www.tiledsteps.org/][Tiled steps at 16th Moraga Street in San Francisco]].
+* [2015-03-17 Tue] [[#italy-travel-backlog][#]] Italy travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: italy-travel-backlog
+  :END:
+  - [[https://en.wikipedia.org/wiki/Lampedusa][Rabbit beach]].
+* [2015-03-17 Tue] [[#burma-travel-backlog][#]] Burma travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: burma-travel-backlog
+  :END:
+  - [[https://en.wikipedia.org/wiki/Ngapali_Beach][Ngapali beach]].
+* [2015-03-17 Tue] [[#emacs-lisp-debug-on-entry][#]] Emacs lisp debug on entry
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-lisp-debug-on-entry
+  :END:
+  Wanted to track down which package was enabling ido-mode on my behalf. debug-on-entry to the rescue. Pass the method name in question and you're good to go.
+#+BEGIN_SRC emacs-lisp
+  (debug-on-entry 'ido-mode)
+#+END_SRC
+  When done, use cancel.
+#+BEGIN_SRC emacs-lisp
+  (cancel-debug-on-entry 'ido-mode)
+#+END_SRC
+
+* [2015-03-16 Mon] [[#os-x-screencasts-to-animated-gif][#]] OS X Screencasts to animated GIF
+  :PROPERTIES:
+  :Custom_ID: os-x-screencasts-to-animated-gif
+  :END:
+  - [[https://gist.github.com/dergachev/4627207][Alex Dergachev]] has a great [[https://gist.github.com/dergachev/4627207][howto]] for generating animated GIF out of OS X Screencasts.
+  - Of interest [[http://gifbrewery.com/][GIF Brewery]].
+* [2015-03-15 Sun] [[#writing-xcode-plugins][#]] Writing Xcode plugins
+  :PROPERTIES:
+  :CUSTOM_ID: writing-xcode-plugins
+  :END:
+  - [[https://github.com/kattrali/Xcode-Plugin-Template][Xcode-Plugin-Template]] from [[http://www.delisa.me/][Delisa Mason]]/[[https://github.com/kattrali/Xcode-Plugin-Template][kattrali]].
+    - Ensure DVTPlugInCompatibilityUUIDs is in Info.plist.
+    - Get from:
+#+BEGIN_SRC sh
+  defaults read \
+      /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+#+END_SRC
+  - Luis Solanos's [[https://github.com/luisobo/Xcode-RuntimeHeaders][Xcode-RuntimeHeaders]].
+  - Boris Bügling's [[https://github.com/neonichu/Xcode-RuntimeHeaders][Xcode-RuntimeHeaders]] fork.
+  - [[http://artsy.github.io/blog/2014/06/17/building-the-xcode-plugin-snapshots/][Building the Xcode plugin snapshots]].
+  - [[https://github.com/edwardaux/XcodeExplorer][Xcode Explorer]] enables you to explore Xcode events/notifications.
+  - [[http://www.blackdogfoundry.com/blog/creating-an-xcode4-plugin/][Creating an Xcode4 plugin]].
+  - [[http://www.blackdogfoundry.com/blog/common-xcode4-plugin-techniques/][Common Xcode plugin techniques]].
+  - [[http://www.blackdogfoundry.com/blog/xcodeexplorer-monitor-xcode4-internals/][XcodeExplorer to monitor Xcode internals]].
+  - [[http://www.blackdogfoundry.com/blog/debugging-your-xcode-plugin/][Debugging your Xcode plugin]].
+* [2015-03-15 Sun] [[#uninstalling-alcatraz-from-xcode][#]] Uninstalling Alcatraz from Xcode
+  :PROPERTIES:
+  :CUSTOM_ID: uninstalling-alcatraz-from-xcode
+  :END:
+#+BEGIN_SRC sh
+  $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
+  $ rm -rf ~/Library/Application\ Support/Alcatraz
+#+END_SRC
+  ps. Removing all plugins:
+#+BEGIN_SRC sh
+  $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
+#+END_SRC
+* [2015-03-14 Sat] [[#prefill-emacs-swiper-with-current-region][#]] Prefill Emacs swiper with current region
+  :PROPERTIES:
+  :CUSTOM_ID: prefill-emacs-swiper-with-current-region
+  :END:
+  The new [[https://github.com/abo-abo/swiper][swiper]] Emacs package is proving to be a great alternative to [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]. Here's how to prefill with current region:
+#+BEGIN_SRC emacs-lisp
+  (defun ar/prefilled-swiper ()
+    "Pre-fill swiper input with region."
+    (interactive)
+    (if (region-active-p)
+        (let ((region-text (buffer-substring (region-beginning)
+                                             (region-end))))
+          (swiper region-text))
+      (swiper)))
+
+  (global-set-key (kbd "C-s")
+                  #'ar/prefilled-swiper)
+#+END_SRC
+* [2015-03-14 Sat] [[#change-mac-os-app-icon][#]] Change Mac OS app icon
+  :PROPERTIES:
+  :CUSTOM_ID: change-mac-os-app-icon
+  :END:
+  - Open the new icon (.icns) in Preview.
+  - Select all (⌘-a).
+  - Copy (⌘-c).
+  - Ctrl-click on app icon.
+  - Select Get Info.
+  - Click on app icon (top-left).
+  - Paste (⌘-v).
+  - Done!
+
+[[file:images/change-mac-os-app-icon/overriding.png]]
+
+[[file:images/change-mac-os-app-icon/after.png]]
+
+* [2015-03-11 Wed] [[#hack-on-emacs-meetup][#]] Hack on Emacs London meetup bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: hack-on-emacs-meetup
+  :END:
+  - [[http://www.european-lisp-symposium.org][European Lisp Symposium]].
+  - [[https://github.com/kai2nenobu/guide-key][guide-key]] displays available key bindings.
+  - [[https://github.com/csrhodes/iplayer-el][iplayer-el]] Emacs interface to the BBC's iPlayer.
+  - [[https://github.com/csrhodes/swankr][swankr]] REPL (swank protocol for R).
+* [2015-03-09 Mon] [[#working-with-os-x-and-emacs-tips][#]] Working with OS X and Emacs tips
+  :PROPERTIES:
+  :CUSTOM_ID: working-with-os-x-and-emacs-tips
+  :END:
+  From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [[http://emacsblog.org/2011/01/04/how-i-work-working-with-os-x-and-emacs/][workflow]].
+*** Frequently used apps:
+    - [[https://agilebits.com/onepassword][1 password]].
+    - [[http://www.choosyosx.com/][Choosy]].
+    - [[http://mizage.com/divvy/][Divvy]].
+    - [[http://www.red-sweater.com/fastscripts][Fastscript]].
+    - [[http://fluidapp.com/][Fluid]] (SSB).
+    - [[http://www.obdev.at/products/launchbar/index.html][Launchbar]].
+    - [[https://evernote.com/skitch/guide/mac/][Skitch (screenshots)]].
+    - [[http://smilesoftware.com/TextExpander/index.html][te (Text expander)]].
+*** Dotfiles
+    - [[https://github.com/rmm5t/dotfiles][Github]].
+* [2015-03-09 Mon] [[#building-ycmd][#]] Building ycmd
+  :PROPERTIES:
+  :Custom_ID: building-ycmd
+  :END:
+*** Build
+#+BEGIN_SRC sh
+  $ git clone https://github.com/Valloric/ycmd.git
+  $ cd ycmd
+  $ git submodule update --init --recursive
+  $ ./build.sh --clang-completer
+#+END_SRC
+*** Test
+#+BEGIN_SRC sh
+  $ python ycmd
+    serving on http://127.0.0.1:54265
+#+END_SRC
+*** More info
+    - [[https://github.com/Valloric/YouCompleteMe/blob/master/README.md][YouCompleteMe README]].
+    - [[https://github.com/Valloric/ycmd/blob/master/README.md][ycmd README]].
+* [2015-03-08 Sun] [[#paris-travel-backlog][#]] Paris travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: paris-travel-backlog
+  :END:
+  - Au Passage. Small plates in fun atmosphere.
+  - Berthillon Ice Cream.
+  - Buvette Gastrotheque. Wine bar with small dishes.
+  - Cheri Bibi, possibly hipster, underneath Sacre Coeur, good cocktails.
+  - Creperie Josseline. Worth the queue. Drink Breton cider with crepes.
+  - [[http://holybel.ly][Holybelly]] Canal Saint Martin.
+  - L'Aller Retour. The place for steak-frites.
+  - L'Office. Wine bar/bistrot.
+  - Le Barav'.
+  - Marché d'Aligre. Authentic neighbourhood market.
+  - Marché des Enfants Rouge. Small covered market. Eat at food stalls.
+  - Mosquee de Paris. City mosque. Drink mint tea at courtyard under olive trees or eat in restaurant inside. North African food.
+  - Musee d'Orsay.
+  - [[http://sprudge.com/paris-a-guide-to-some-of-the-best-cafes-in-canal-st-martin-56068.html][Paris: A Guide To Some Of The Best Cafes In Canal St. Martin]].
+  - Pierre Herme. For great pastries and macarons.
+  - RATP for transport info including the "carnet" of 10 tickets.
+  - Rodin Museum.
+* [2015-03-08 Sun] [[#org-mode-bookmarks][#]] Org mode bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: org-mode-bookmarks
+  :END:
+  - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
+  - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
+  - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
+  - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+  - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
+  - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
+* [2015-03-08 Sun] [[#regular-bookmarks][#]] Regular bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: regular-bookmarks
+  :END:
+  - [[http://roadsandkingdoms.com/category/food/][Roads & Kingdoms (food)]].
+  - [[http://roadsandkingdoms.com/category/music][Roads & Kingdoms (music)]].
+  - [[http://roadsandkingdoms.com/category/travel/][Roads & Kingdoms (travel)]].
+* [2015-03-08 Sun] [[#photography-bookmarks][#]] Photography bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: photography-bookmarks
+  :END:
+* [2015-03-07 Sat] [[#music-backlog][#]] Music backlog
+  :PROPERTIES:
+  :CUSTOM_ID: music-backlog
+  :END:
+  - [[http://www.archiveofindianmusic.org/][Archive of Indian music]].
+  - Budhaditya Mukherjee.
+  - Debashish Bhattcharya.
+  - Halim Jafar Khan and his Disciples - Sitar Quintet - LP published in India in 1968.
+  - Harjinderpal Singh.
+  - Jayanthi Kumaresh.
+  - [[https://www.youtube.com/watch?v=jMEjPKBvhzE#t=0][Kayhan Kalhor]].
+  - [[http://youtu.be/qQcKzwSmGy0][Malaya Chalo]].
+  - Mehboob Nadeem.
+  - Nirmalya Dey.
+  - [[http://oriental-traditional-music.blogspot.in][Oriental traditional music]].
+  - [[https://www.youtube.com/watch?v=dPSr3swtLDk][Zia Mohiuddin]].
+* [2015-03-07 Sat] [[#ux-bookmarks][#]] UX bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ux-bookmarks
+  :END:
+  - [[http://tympanus.net/Development/AnimatedSVGIcons/][Animated SVG icons]]
+  - [[https://www.behance.net/gallery/18006477/California-Magazine][California magazine]].
+  - [[http://evil-icons.io][Evil icons]]
+  - [[http://www.fontsquirrel.com/][Font squirrel (free fonts for commercial use)]].
+  - [[http://www.typewolf.com/blog/most-popular-fonts-of-2014][Ten most popular webfonts of 2014]].
+  - [[https://lmjabreu.com/post/creating-badass-users/][Creating badass users]].
+* [2015-03-06 Fri] [[#graphics-bookmarks][#]] Graphics bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: graphics-bookmarks
+  :END:
+  - [[http://jnordberg.github.io/gif.js/][gif.js]].
+  - [[http://philogb.github.io/jit/static/v20/Jit/Examples/Icicle/example2.html][Icicles]]: Data viz.
+  - [[http://mbostock.github.io/protovis/][Protoviz]]: Data viz.
+  - [[http://www.inkscapeforum.com/viewtopic.php?f=22&t=13126][Svg animation info]]: Potentially useful for some ideas in mind.
+  - [[http://stackoverflow.com/questions/14804950/include-one-svg-inside-another][Svg within svg]]: Potentially useful for some ideas in mind.
+* [2015-03-29 Sun] [[#ayahuasca-bookmarks][#]] Ayahuasca bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ayahuasca-bookmarks
+  :END:
+  - [[http://ayaadvisor.org/listings/onanya-joni-shipibo-europe/][Ayaadvisor]].
+  - [[https://www.erowid.org/chemicals/ayahuasca/ayahuasca_death.shtml][Ayahuasca fatalities]].
+  - [[https://erowid.org/chemicals/ayahuasca/][Ayahuasca on erowid]].
+  - [[http://www.cbc.ca/m/news/canada/jennifer-logan-s-death-in-peru-puts-focus-on-purging-ceremonies-1.2948955][Jennifer Logan's death in Peru]].
+  - [[https://medium.com/@Grayfox/the-hacker-who-drank-ayahuasca-517148aa1ed4][The hacker who drank Ayahuasca]].
+* [2015-03-06 Fri] [[#productivity-bookmarks][#]] Productivity bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: productivity-bookmarks
+  :END:
+  - [[http://10fastfingers.com/][10 fast fingers]] (improve typing skills).
+  - [[http://dayoneapp.com/][Day One Journal]]
+  - [[http://yanpritzker.com/2011/11/17/dotfiles-for-ultimate-productivity-in-bash-and-vim/ ][Dotfiles for insane productivity in bash, git, and vim]].
+  - [[http://maebert.github.io/jrnl/][jrnl]]: Likely what I've been looking for journaling from command line.
+  - [[https://github.com/skwp/dotfiles][Yan's dot files]]: For peaking.
+  - [[http://yanpritzker.com/2006/10/03/five-ways-to-get-insane-productivity-boosts/][Yan's productivity tips]]: Also to try.
+  - [[https://www.zotero.org][Zotero]].
+* [2015-03-06 Fri] [[#courses-bookmarks][#]] Courses bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: courses-bookmarks
+  :END:
+  - [[http://www.chesscademy.com][Chessacademy]].
+  - [[http://www.gravitycircuscentre.com/][Gravity Circus Centre]].
+  - [[http://idler.co.uk/shop/live-courses/][Idler courses]].
+  - [[http://lingua.ly/][lingua.ly]].
+* [2015-03-06 Fri] [[#mindfulness-bookmarks][#]] Mindfulness bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: mindfulness-bookmarks
+  :END:
+  - [[https://en.wikipedia.org/wiki/Aimless_wandering][Aimless Wandering]].
+  - [[http://lesswrong.com/lw/3w3/how_to_beat_procrastination/][Beating procrastination]].
+  - [[http://theenergyproject.com/blog/take-back-your-life-ten-steps][Best 10 life changes]].
+  - [[https://news.ycombinator.com/item?id=7826745][HN's comments on learning languages]].
+  - [[https://news.ycombinator.com/item?id=6522901][HN's comments on memory]].
+  - [[https://hbr.org/2014/02/how-to-make-yourself-work-when-you-just-dont-want-to/][How to Make Yourself Work When You Just Don’t Want To]].
+  - [[http://www.ludism.org/mentat/][Ludism's memory techniques]].
+  - [[http://www.memrise.com/blog/][Memreise's blog]].
+  - [[https://thebuddhistcentre.com/text/mindfulness-breathing][Mindfulness breathing]].
+  - [[https://hbr.org/2014/12/mindfulness-mitigates-biases-you-may-not-know-you-have][Mindfulness Mitigates Biases You May Not Know You Have]].
+  - [[http://theenergyproject.com/blog][The Energy Project blog]].
+* [2015-03-06 Fri] [[#privacy-bookmarks][#]] Privacy bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: privacy-bookmarks
+  :END:
+  - [[http://digital-era.net/][Digital Era]].
+  - [[http://adi.is/s/cpunk20/#21][New privacy tools]].
+  - [[http://digital-era.net/tor-use-best-practices/][Tor use - best practices]].
+* [2015-03-06 Fri] [[#romania-travel-backlog][#]] Romania travel backlog
+  :PROPERTIES:
+  :CUSTOM_ID: romania-travel-backlog
+  :END:
+  - [[http://bran-castle.com/][Bran Castle]].
+* [2015-03-06 Fri] [[#travel-bookmarks][#]] Travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: travel-bookmarks
+  :END:
+  - [[http://www.traveldudes.org/][Traveldudes]].
+  - [[http://travelingspoon.com/][Traveling Spoon]].
+  - [[http://www.travelistly.com/tv][Travelistly TV (high quality travel content)]].
+* [2015-03-06 Fri] [[#github][#]] GitHub
+  :PROPERTIES:
+  :CUSTOM_ID: github
+  :END:
+  - [[https://help.github.com/articles/adding-a-cname-file-to-your-repository/][Adding a CNAME file to your repository]].
+  - [[https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/][Tips for configuring a CNAME record with your DNS provider]].
+  - [[https://help.github.com/categories/github-pages-basics/][Github pages basics]].
+  - [[http://stackoverflow.com/questions/23375422/how-to-setup-github-pages-to-redirect-dns-requests-from-subdomain-e-g-www-to][SO DNS response]].
+* [2015-03-06 Fri] [[#ios-imaging-bookmarks][#]] iOS imaging bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ios-imaging-bookmarks
+  :END:
+  - [[https://developer.apple.com/library/ios/samplecode/PhotoScroller/Introduction/Intro.html][Apple's PhotoScroller]].
+  - [[http://www.raywenderlich.com/22167/beginning-core-image-in-ios-6][Beginning Core Image in iOS 6]].
+  - [[http://en.wikipedia.org/wiki/Color_difference][Color difference]].
+  - [[http://www.raywenderlich.com/69855/image-processing-in-ios-part-1-raw-bitmap-modification][Image Processing in iOS Part 1: Raw Bitmap Modification]].
+  - [[http://www.raywenderlich.com/71151/image-processing-ios-part-2-core-graphics-core-image-gpuimage][Image Processing in iOS Part 2: Core Graphics, Core Image, and GPUImage]].
+  - [[http://nshipster.com/image-resizing/][Image resizing techniques]].
+  - [[http://www.colourphil.co.uk/lab_lch_colour_space.shtml][Introduction to color spaces]].
+  - [[https://github.com/jessedc/JCTiledScrollView][JCTiledScrollView]].
+  - [[http://en.wikipedia.org/wiki/Lab_color_space][Lab color space]].
+  - [[https://github.com/jessedc/SliceTool/blob/master/SliceTool.m][SliceTool]].
+  - [[http://www.cimgf.com/2011/03/01/subduing-catiledlayer/][Subduing CATiledLayer]].
+  - [[https://github.com/jlamarche/Tile-Cutter][Tile-Cutter]].
+  - [[http://stackoverflow.com/questions/14912938/uicolor-cmyk-and-lab-values][UIColor CMYK and Lab Values?]].
+  - [[https://github.com/PaulSolt/UIImage-Conversion][UIImage-Conversion]].
+  - [[http://stackoverflow.com/questions/649454/what-is-the-best-way-to-average-two-colors-that-define-a-linear-gradient][What's the best way to average two colors that define a linear gradient?]].
+* [2015-03-05 Thu] [[#reload-inputrc][#]] Reload inputrc
+  :PROPERTIES:
+  :CUSTOM_ID: reload-inputrc
+  :END:
+  Reload .iputrc from bash prompt: C-x C-r. [[http://www.gnu.org/software/bash/manual/bashref.html#Miscellaneous-Commands][More at bashref manual]].
+* [2015-03-07 Sat] [[#unix-linux-tips-backlog][#]] Unix/Linux tips backlog
+  :PROPERTIES:
+  :CUSTOM_ID: unix-linux-tips-backlog
+  :END:
+   - ASCII art text with [[http://www.figlet.org][figlet]].
+   - [[http://ferd.ca/awk-in-20-minutes.html][awk in 20 minutes]].
+   - [[http://www.grymoire.com/Unix/Awk.html][Bruce Barnett's awk tutorial]].
+   - [[http://www.grymoire.com/Unix/sed.html][Bruce Barnett's sed tutorial]].
+   - Cool but obscure unix tools at [[http://kkovacs.eu/cool-but-obscure-unix-tools#][kkovacs.eu]].
+   - [[http://www.slideshare.net/brendangregg/scale2015-linux-perfprofiling][Linux profiling at Netflix]].
+   - Partial secure copy with rsync
+#+BEGIN_SRC sh
+  rsync --rsync-path=/usr/local/bin/rsync --partial \
+      --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
+#+END_SRC
+* [2015-03-04 Wed] [[#language-learning-bookmarks][#]] Language learning bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: language-learning-bookmarks
+  :END:
+  - HN's comments on [[https://news.ycombinator.com/item?id%3D8806678][learning laguages]].
+* [2015-03-08 Sun] [[#london-food-backlog][#]] London food backlog
+  :PROPERTIES:
+  :CUSTOM_ID: london-food-backlog
+  :END:
+*** Hammersmith
+    - [[http://indian-zing.co.uk/][Indian Zing]] (Indian).
+*** Islington
+    - [[http://delhigrill.com][Delhi Grill]] (Indian).
+    - [[http://rootsatn1.com][Roots N1]] (Indian).
+*** Peckham
+    - [[http://www.ganapatirestaurant.com][Ganapati]] (South Indian).
+*** Soho
+    - [[http://baolondon.com][BAO]] (Bao buns! enough said).
+*** Sloane Square
+    - [[http://rasoi-uk.com/][Rasoi]] (Indian).
+*** Hammersmith
+    - [[http://indian-zing.co.uk/][Indian Zing]] (Indian).
+* [2015-01-17 Sat] [[#graphics-design-tools][#]] Graphics design tools
+  :PROPERTIES:
+  :CUSTOM_ID: graphics-design-tools
+  :END:
+  - [[http://leaverou.github.io/contrast-ratio][Contrast ratio]].
+  - [[https://designcode.io][Design+code]].
+  - [[http://blog.mengto.com/quick-ios-prototyping-flinto/][iOS prototyping with flinto]].
+  - [[https://krita.org/][Krita]].
+  - [[https://www.getleonardo.com/][Leonardo]].
+  - [[https://www.madewithmischief.com/][Mischief]].
+  - [[http://mypaint.intilinux.com/][Mypaint]].
+  - [[https://natron.inria.fr/][Natron]].
+  - [[https://www.getormr.com/features/][Ormr]].
+  - [[http://bohemiancoding.com/sketch/][Sketch for Mamc]].
+  - [[http://www.sketchup.com/][Sketchup]].
+* [2014-12-30 Tue] [[#books-backlog][#]] Books backlog
+  :PROPERTIES:
+  :Custom_ID: books-backlog
+  :END:
+  - [[http://www.amazon.com/Great-Curries-India-Camellia-Panjabi/dp/1904920357][50 Great Curries of India]].
+  - [[http://www.amazon.com/Full-Catastrophe-Living-Wisdom-Illness/dp/0739358588][Full Catastrophe Living]].
+  - [[http://www.goodreads.com/review/list/266149-michael?page=1&shelf=2014_read&view=covers][Michael's bookshelf]].
+  - [[http://www.brainpickings.org/2014/12/29/neil-degrasse-tyson-reading-list/][Neil deGrasse Tyson's reading list]].
+  - [[https://librivox.org/search?primary_key=0&search_category=title&search_page=1&search_form=get_results][Public domain audio books]].
+  - [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=UTF8&me=&qid=1419902519&sr=8-1][Royal Horticultural Society's Organic Gardening]].
+  - [[http://www.amazon.co.uk/Madhur-Jaffreys-Ultimate-Curry-Bible/dp/0091874157/ref=sr_1_3?ie=UTF8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate Curry bible]].
+  - [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=UTF8&me=&qid=1419902519&sr=8-1][Veg Patch]].
+* [2015-03-07 Sat] [[#recipes][#]] Recipes
+  :PROPERTIES:
+  :CUSTOM_ID: recipes
+  :END:
+*** Tom Kha Gai soup
+    - Chicken or Prawns
+    - 2 kaffir lime leaves
+    - 1 lemongrass stalk
+    - 1 1/2 cocunut milk
+    - 3/4 sliced fresh galaghal
+    - 1 1/2 chicken stock or water
+    - 1/2 cup mushrooms
+    - 3 1/2 tbsp sugar
+    - 1/2 cup of cilantro
+    - 1-4 thai chillies
+    - 1-2 tbsp chili oil
+    - 1 green onion
+*** Veg-Fruit juice
+    - Lime
+    - Ginger
+    - Apple
+    - Chilly
+    - Celery
+    - Fig
+    - Blueberries
+*** Berry Hempster
+    - Hemp milk
+    - Hemp protein
+    - Strawberry
+    - Blueberry
+    - Date
+* [2014-12-30 Tue] [[#travel-gear][#]] Travel gear
+  :PROPERTIES:
+  :CUSTOM_ID: travel-gear
+  :END:
+  - [[http://www.goruck.com/en][Goruck bag]].
+  - [[http://www.tombihn.com][Tom Bihn bags]].
+* [2014-12-30 Tue] [[#movie-backlog][#]] Movie backlog
+  :PROPERTIES:
+  :Custom_ID: movie-backlog
+  :END:
+  - Akira Kurosawa director.
+  - [[http://www.awaketheyoganandamovie.com/][Awake, The Life of Yogananda]].
+  - [[http://www.imdb.com/title/tt2321549/][Babadook]].
+  - [[http://www.imdb.com/title/tt2562232/][Birdman]]e.
+  - [[http://www.imdb.com/title/tt1065073/][Boyhood]].
+  - Enter the Void, by Gaspar Noe
+  - Hirokazu Koreeda director.
+  - Naomi Kawaze director.
+  - Nostalghia
+  - Sion Sono director.
+  - Solyaris
+  - Stalker
+  - Takashi Kitano director.
+  - Takashi Miike director.
+  - [[https://www.theconnection.tv/][The Connection]].
+  - The Mirror
+  - Uncle Boonmee Who Can Recall His Past Lives, by Apichatpong Weerasethakul.
+  - Waking Life, by Rickard Linklater.
+* [2014-12-30 Tue] [[#video-backlog][#]] Video backlog
+  :PROPERTIES:
+  :CUSTOM_ID: video-backlog
+  :END:
+*** TODO [[http://audio-video.gnu.org/video/misc/2015-01__GNU_Guix__The_Emacs_of_Distros.webm][The Emacs of distros]].
+*** TODO [[http://www.nfb.ca/film/griefwalker?utm_content%3Dbuffer24b02&utm_medium%3Dsocial&utm_source%3Dtwitter.com&utm_campaign%3Dbuffer][Griefwalker]].
+*** TODO [[https://www.youtube.com/watch?v%3DBKDt9Bfh5gs][Frugal Fire 002: Justin McCurry (RootOfGood)]].
+*** TODO [[https://www.youtube.com/watch?v%3Da5sxax2CvE0][BBC's Secret of levitation]].
+*** TODO [[https://www.youtube.com/watch?v=8CrOL-ydFMI][This is Water, commencement speech]].
+*** TODO [[https://www.youtube.com/watch?v=DKYJVV7HuZw][This is Water]].
+* [2014-12-29 Mon] [[#spotted][#]] Spotted
+  :PROPERTIES:
+  :CUSTOM_ID: spotted
+  :END:
+  - [[http://www.ravpower.com/][Ravpower]].
+  - [[http://www.powerslide.com/products/skates#all][Skates?!]]
+* [2014-12-03 Wed] [[#emacs-tips-backlog][#]] Emacs tips backlog
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-tips-backlog
+  :END:
+*** Avoid writing pitfalls using artbollocks-mode and writegood
+    More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
+*** Try out [[https://github.com/myuhe/org-multiple-keymap.el][org-multiple-keymap.el]].
+*** Create presentations in org and export via [[https://coldnew.github.io/slides/org-ioslide][org-ioslide]].
+*** Yasnippet mirrors with transformations
+    For example:
+#+BEGIN_SRC sh
+  - (${1:id})${2:foo}
+  {
+      return $2;
+  }
+
+  - (void)set${2:$(capitalize yas-text)}:($1)aValue
+  {
+      [$2 autorelease];
+      $2 = [aValue retain];
+  }
+  $0
+#+END_SRC
+    More at [[https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6][snippet development]].
+*** installing Emacs 24.4 on Mac OS
+    See Yamamoto's Mac [[https://github.com/railwaycat/emacs-mac-port][port]].
+#+BEGIN_SRC sh
+  $ brew tap railwaycat/emacsmacport
+  $ brew install emacs-mac
+#+END_SRC
+*** Graphical system monitor
+    See [[https://github.com/zk-phi/symon][Symon]].
+*** Rewrite git logs
+    See [[http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/][Emacs Magit tutorial | Rewrite older commit]].
+*** Elmacro
+    [[https://github.com/Silex/elmacro][elmacro]] shows keyboard macros or latest interactive commands as emacs lisp.
+*** Weather package
+    See [[https://github.com/aaronbieber/sunshine.el][sunshine.el]]
+*** Monitor clipboard and automatically paste to buffer
+    See [[https://github.com/bburns/clipmon][clipmon]].
+*** Try out stock-ticker
+*** Try out ibuffer-vc
+*** Sort python imports
+    See [[https://github.com/emacs-pe/pyimpsort.el][pyimpsort]].
+*** Private configuration
+    See [[https://github.com/cheunghy/private][private]] package.
+*** Unify mechanism to open files
+    See [[https://github.com/DamienCassou/unify-opening][unify-opening]]
+*** Export ASCII art
+    With [[http://www.lysator.liu.se/~tab/artist/][Artist mode]] + [[http://ditaa.sourceforge.net][ditaa]] for UML. Demo [[https://www.youtube.com/watch?v=cIuX87Xo8Fc][video]].
+*** Speed up window handling
+    See [[https://github.com/abo-abo/ace-window][ace-window]].
+*** Mac OS clipboard support (from terminal)
+    See [[https://github.com/jkp/pbcopy.el][pbcopy]].
+*** Speedtype
+    See [[https://github.com/hagleitn/speed-type][speedtype]].
+*** Building Emacs 24.4 on Linux
+    sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
+./configure --with-gtk --prefix=/your/fav/prefix
+*** Jumping around tips
+    See [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
+*** use-package post
+    At [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][lunaryorn]].
+*** Static blog
+    See [[https://github.com/kelvinh/org-page][org-page]].
+*** youtube-dl for Emacs
+    See [[http://oremacs.com/2015/01/05/youtube-dl/][Or emacs]].
+*** Clang indexing tool
+    See [[http://ffevotte.github.io/clang-tags/][clang-tags]].
+*** Project management for C/C++
+    See [[https://github.com/LefterisJP/malinka][Malinka]].
+*** Git modes
+    See [[https://github.com/magit/git-modes][git-modes]].
+*** Lots of org links
+    Found at [[http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/][dain.io]].
+*** Create custom theme
+    See Trường's [[http://truongtx.me/2013/03/31/color-theming-in-emacs-24/][post]].
+*** GTD Emacs workflow
+    See Charles Cave's [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][notes]].
+*** Simplify file transformations
+    See [[https://github.com/abo-abo/make-it-so][make-it-so]].
+*** LISP editing
+    See [[https://github.com/abo-abo/lispy][lispy]].
+*** Continue comment blocks
+    M-j (indent-new-comment-line).
+*** O(1) link jump
+    See [[http://melpa.org/?utm_source%3Ddlvr.it&utm_medium%3Dtwitter#/ace-link][ace-link]].
+*** Choosing magit repo
+    C-u C-x g (magit-status).
+*** Project templates
+    See [[https://github.com/chrisbarrett/skeletor.el][Skeletor]].
+*** Melpa recipe format
+    See [[https://github.com/milkypostman/melpa#recipe-format][format]].
+*** Emacs regex
+    See [[http://ergoemacs.org/emacs/emacs_regex.html][Emacs: Text Pattern Matching (regex) tutorial]].
+*** NaturalDocs for JavaScript in Emacs
+    See [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][Vineet's post]].
+*** checkdoc
+    Checks buffer for doc strings file errors.
+*** Check out [[https://github.com/Bruce-Connor/smart-mode-line][smart-mode-line]]
+    [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha's sample usage]].
+*** Toggling key bingings
+    See [[http://oremacs.com/2014/12/25/ode-to-toggle/][Ode to the toggle]].
+*** Squashing Commits with Magit
+    See [[http://howardism.org/Technical/Emacs/magit-squashing.html][post]].
+*** Editing colors
+    See [[https://github.com/emacsfodder/kurecolor][Kurecolor]].
+*** Hide lines longer than
+    See [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html][selective display]].
+*** Export org to reveal.js
+    See [[https://github.com/yjwen/org-reveal/tree/stable][Org-Reveal]].
+*** Beautify org
+    [[https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org][org-beautify-theme]]: A sub-theme to make org-mode more beautiful.
+*** Minimalist appearance
+    See [[https://github.com/dandavison/minimal][minimal]].
+*** Want buffer local cursor color?
+    See [[https://github.com/skk-dev/ddskk/blob/master/READMEs/README.ccc.org][ccc]].
+*** Narrowing regions
+    - C-x n n (narrow-to-region).
+    - C-x n w (widen).
+*** Linux system-wide Emacs keybindings
+    See [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get Emacs key bindings in Ubuntu]].
+*** Org Protocol
+    - See Irreal's [[http://irreal.org/blog/?p=3594][post]].
+    - See Or Emacs's [[http://oremacs.com/2015/01/07/org-protocol-1/][part 1]] and [[http://oremacs.com/2015/01/08/org-protocol-2/][part 2]].
+*** Editing XML?
+    Try out [[https://www.gnu.org/software/emacs/manual/nxml-mode.html][nxml-mode]].
+*** Move by parens
+    For example, C-M-u moves backward out of one level of parentheses. More at the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html][manual]].
+*** Debug expanded elisp macros
+    See Wisdom and Wonder's [[http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros][post]].
+*** Working with Java
+    - [[https://github.com/m0smith/malabar-mode][Malabar mode]].
+*** Describe bindings
+    - C-h b lists all bindings.
+    - Narrow down with occurr or Helm!
+*** Shell commands
+    - C-u M-! (inline shell-command).
+    - C-u M-| (shell-command-on-region).
+*** Search manuals
+    - info-apropos (lookup subject in all manuals).
+    - emacs-index-search (lookup subject in Emacs manual).
+*** Recursive query/replace
+    - M-x find-dired RET.
+    - Navigate to location, RET.
+    - Add find argument (omit for all files), RET.
+    - t (select all).
+    - Q (query-replace).
+    - Enter search/replace terms.
+    - y/n for each match.
+    - C-x s ! (save all).
+*** Disable furniture
+#+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1)
+#+END_SRC
+*** Repeat last command
+    C-x z (and just z threreafter).
+*** Replace char with a newline
+    - M-x replace-string RET ; RET C-q C-j.
+    - C-q (quoted-insert).
+    - C-j (newline).
+* [2014-11-02 Sun] [[#xcode6-tips][#]] Xcode6 tips
+  :PROPERTIES:
+  :CUSTOM_ID: xcode6-tips
+  :END:
+  From Ray Wenderlich's [[http://www.raywenderlich.com/85999/xcode-6-tips-tricks-tech-talk-video][tech talk]] And [[http://www.raywenderlich.com/72021/supercharging-xcode-efficiency][supercharging Your Xcode Efficiency (by Jack Wu)]].
+*** Shortcuts
+    -  ⌘⇧o Fuzzy file search.
+    -  ⌘⌥j Fuzzy file search (showing in Xcode project hierarchy).
+    -  ⌘⇧j Show file in Xcode project hierarchy.
+    -  ⌘⌥0 Show/hide utility area (right panel).
+    -  ⌘0 Show/hide navigation area (left panel).
+    -  ⇧⌘Y Show/hide debug area (bottom panel).
+    -  Ctrli Indent selection.
+    -  ⌘\ Toggle breakpoint on line.
+    -  ⌘/ Toggle comment.
+    -  ⌘[1-8] Select tabs on left panel.
+    -  Ctrl[1-x] Select top file navigation menu items.
+*** Xcode features
+    - Snippets.
+    - Templates.
+    - View debugging.
+    - Simctl (send files to simulator).
+
+*** Plugins of interest
+    - Fuzzy autocomplete.
+    - Uncrustify for indentation.
+    - xcs code switch expansion.
+    - Org and order (for properties).
+* [2014-09-11 Thu] [[#resetting-gnome-terminal-preferences][#]] Resetting gnome-terminal preferences
+  :PROPERTIES:
+  :CUSTOM_ID: resetting-gnome-terminal-preferences
+  :END:
+*** Resetting preferences
+#+BEGIN_SRC sh
+  gconftool --recursive-unset /apps/gnome-terminal
+#+END_SRC
+*** Want 256 colors?
+    Edit .bash_profile
+#+BEGIN_SRC
+  export TERM="screen-256color"
+#+END_SRC
+*** Ensure .bash_profile is loaded
+    From gnome-terminal window:
+#+BEGIN_SRC
+  gnome-terminal
+    Edit
+      Profiles...
+        Edit
+          Title and Command
+            X Run command as login shell
+#+END_SRC
+*** Solarized
+    Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs][post]] to get solarized on gnome-terminal.
+* [2014-07-13 Sun] [[#python-bookmarks][#]] Python bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: python-bookmarks
+  :END:
+  - [[http://mkaz.com/2014/07/26/python-argparse-cookbook/][Argparse cookbook]]: For simple python scripts.
+  - [[https://github.com/asciimoo/drawille/][Drawille]]: Python drawing in ascii/unicode braille characters.
+  - [[https://pypi.python.org/pypi/pudb][Pudb]]: A tui python debugger.
+  - [[https://www.airpair.com/python/posts/python-tips-and-traps][Python Tips and Traps]].
+  - [[https://github.com/deanmalmgren/textract][Textract]]: Python util extracting text from a handful of document types.
+  - [[https://github.com/gorakhargosh/watchdog][Watchdog]] (monitor filesystem in python).
+* [2015-03-05 Thu] [[#git-bookmarks][#]] Git bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: git-bookmarks
+  :END:
+  - [[http://wildlyinaccurate.com/a-hackers-guide-to-git][A hackers guide to git]]
+  - [[http://nakkaya.com/2009/09/24/git-delete-last-commit/][Delete last commit]]
+  - [[http://www.git-tower.com/learn/?utm_source=Tower+Blog&utm_medium=sidebar&utm_campaign=Learn-Git][Git course]]: Another git online tutorial, by git-tower folks.
+  - [[https://ochronus.com/git-tips-from-the-trenches/][Git from the trenches]].
+  - [[http://caspervonb.com/tools/git-recipes-for-the-common-mistakes-and-mishaps/][Git recipes for common mistakes and mishaps]].
+  - [[https://git.wiki.kernel.org/index.php/Git_FAQ][Kernel's git FAQ]].
+  - [[http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html][Model git commit message]]
+  - [[http://ndpsoftware.com/git-cheatsheet.html][Ndp software's git cheatsheet]]
+  - [[http://git-scm.com/blog/2010/03/08/rerere.html][Rerere: reuse recorded resolution.]]
+  - [[http://www.matheuslima.com/things-you-didnt-know-about-git][Things you didn't know about GIT]].
+
+* [2014-07-14 Mon] [[#java-bookmarks][#]] Java bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: java-bookmarks
+  :END:
+  - [[https://code.google.com/p/lanterna/][Lanterna]], a text GUI (a la ncurses) written in Java.
+* [2013-11-04 Mon] [[#some-python-idioms][#]] Some python idioms
+  :PROPERTIES:
+  :Custom_ID: some-python-idioms
+  :END:
+  - Prefer double quotes if escaping single quotes.
+  - Prefer string interpolation over join. Eg. "'%s'" % member_default.
+  - Prefer double underscore for privates.
+  - Prefer with statement to implicitly close file.
+#+BEGIN_SRC python
+  with open(path, 'r') as text_file:
+      text = text_file.read()
+#+END_SRC
+  - Prefer list comprehensions to filter.
+  - Prefer using separate modules over classes if only using for separation.
+  - Keep in mind: "eafp vs lbyl" (ie. just let it throw).
+  - Prefer exceptions over assertions.
+  - Throw ValueError for wrong input.
+  - Return explicit False if remaining case is always false.
