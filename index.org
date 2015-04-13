@@ -1,6 +1,222 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
+  :PROPERTIES:
+  :Custom_ID: learning-emacs-lisp
+  :END:
+  :MODIFIED:
+  [2015-04-13 Mon]
+  :END:
+  - Use nreverse and nconc to operate on lists in-place.
+  - Set buffer local variables:
+#+BEGIN_SRC emacs-lisp
+  (setq-local my-clever-var)
+#+END_SRC
+  - Execute before saving buffer:
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'write-file-hooks
+            (lambda ()
+              (message "about to save!")))
+#+END_SRC
+  - Possibly use to start processes and send file content:
+#+BEGIN_SRC emacs-lisp
+  (make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
+#+END_SRC
+  - Creating markers:
+#+BEGIN_SRC emacs-lisp
+  (setq my-marker (copy-marker (point)))
+    #<marker at 10251 in *ielm*>
+
+  (marker-buffer my-marker)
+    #<buffer *ielm*>
+
+  (marker-position my-marker)
+    10251 (#o24013, #x280b, ?⠋)
+#+END_SRC
+  - Get org heading at point:
+#+BEGIN_SRC emacs-lisp
+  (org-get-heading 'no-tags 'no-todo)
+#+END_SRC
+  - Remove string text properties. From manual:
+#+BEGIN_QUOTE
+(substring-no-properties STRING &optional FROM TO)
+
+Return a substring of STRING, without text properties.
+It starts at index FROM and ends before TO.
+TO may be nil or omitted; then the substring runs to the end of STRING.
+If FROM is nil or omitted, the substring starts at the beginning of STRING.
+If FROM or TO is negative, it counts from the end.
+#+END_QUOTE
+  - Skip org entry metadata/drawers:
+#+BEGIN_SRC emacs-lisp
+  (org-end-of-meta-data-and-drawers)
+#+END_SRC
+  - Random access to org entry using id (or CUSTOM_ID):
+#+BEGIN_SRC emacs-lisp
+  (org-open-link-from-string "[[#%exciting-custom-id]]")
+#+END_SRC
+  - From [[http://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html][Debugging Elisp Part 1: Earn your independence]]:
+#+BEGIN_QUOTE
+    - Go to where the function is defined.
+    - Press C-u C-M-x. Edebug breakpoint for function.
+    - Invoke function in question.
+    - n/c will get you around.
+    - q when done.
+#+END_QUOTE
+  - Pretty printing objects:
+#+BEGIN_SRC emacs-lisp
+  (let ((my-var (list "val1"
+                      "val2"
+                      "val3")))
+    (pp-to-string my-var))
+#+END_SRC
+  - Search and/or replace in curent buffer:
+#+BEGIN_SRC emacs-lisp
+  (re-search-forward "needle"
+                     nil t)
+  (match-beginning 0) ;; Start location of match from last search.
+  (match-end 0) ;; End location of match from last search.
+  (replace-match "love")
+
+  ;; needle-in-haystack
+#+END_SRC
+  - Restric buffer editing to a region:
+#+BEGIN_SRC emacs-lisp
+  (narrow-to-region (point)
+                    (point-max))
+#+END_SRC
+  - Restore restriction:
+#+BEGIN_SRC emacs-lisp
+  (save-restriction (narrow-to-region (point)
+                                      (point-max))
+#+END_SRC
+  - Restore point, mark, and current buffer:
+#+BEGIN_SRC emacs-lisp
+  (save-excursion (goto-char (point-max))
+                  (insert "Hello elisp."))
+#+END_SRC
+  - Concatenating strings:
+#+BEGIN_SRC emacs-lisp
+  (concat "Hello " "elisp " "world.")
+#+END_SRC
+  - Grabbing thing at point:
+#+BEGIN_SRC emacs-lisp
+  (thing-at-point 'word)
+  (thing-at-point 'symbol)
+  (thing-at-point 'line)
+#+END_SRC
+  - Unit test with ert.
+  - Basic iteration with dolist:
+#+BEGIN_SRC emacs-lisp
+  (dolist (v '("a" "b" "c"))
+    (print v))
+#+END_SRC
+  - Output to other buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*some buffer*")
+    (princ '(some list to print)
+           (current-buffer)))
+#+END_SRC
+  - For a temporary buffer, use with-temp-buffer:
+#+BEGIN_SRC emacs-lisp
+  (with-temp-buffer
+    (insert "abc")
+    (point))
+#+END_SRC
+  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
+  - Check for substring:
+#+BEGIN_SRC emacs-lisp
+  (string-match-p REGEXP STRING &optional START)
+#+END_SRC
+  - Matching substrings and accessing groups:
+#+BEGIN_SRC emacs-lisp
+  (setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+    "Always click [[http://reddit.com/r/emacs][here]]."
+
+  (setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+    "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
+
+  (string-match needle-re haystack)
+    13 (#o15, #xd, ?\C-m)
+
+  (match-string 0 haystack)
+    "[[http://reddit.com/r/emacs][here]]"
+
+  (match-string 1 haystack)
+    "http://reddit.com/r/emacs"
+
+  (match-string 2 haystack)
+    "here"
+
+#+END_SRC
+  - Return argument unchanged (noop):
+#+BEGIN_SRC emacs-lisp
+  (identity ARG)
+#+END_SRC
+  - Org insert today's timestamp
+#+BEGIN_SRC emacs-lisp
+  (org-insert-time-stamp (current-time))
+#+END_SRC
+  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
+  - First element
+#+BEGIN_SRC emacs-lisp
+  (car LIST)
+#+END_SRC
+  - All but first element
+#+BEGIN_SRC emacs-lisp
+  (cdr LIST)
+#+END_SRC
+  - Add NEWELT to front of PLACE
+#+BEGIN_SRC emacs-lisp
+  (push NEWELT PLACE)
+#+END_SRC
+  - Invoke 'FUNCTION for each in SEQUENCE
+#+BEGIN_SRC emacs-lisp
+  (mapcar FUNCTION SEQUENCE)
+#+END_SRC
+  - Search/replace
+#+BEGIN_SRC emacs-lisp
+(while (search-forward "Hello")
+  (replace-match "Bonjour"))
+#+END_SRC
+  - Save to kill ring = copy.
+  - Point = cursor position.
+  - Mark = a buffer position.
+  - Kill = cut text.
+  - Yank = paste.
+  - Buffer:File = 1:1.
+  - Window:Buffer = 1:1.
+  - Frame:Window = 1:many.
+  - Font lock = syntax highlighting.
+* [2014-09-20 Sat] [[#emacs-lisp-bookmarks][#]] Emacs lisp bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-lisp-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-04-13 Mon]
+  :END:
+  - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
+  - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
+  - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
+  - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
+  - [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
+  - [[http://www.emacswiki.org/emacs/EmacsSymbolNotation][Emacs symbol notation]].
+  - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
+  - [[https://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix][How to choose Emacs Lisp package namespace prefix]].
+  - [[http://emacslife.com/how-to-read-emacs-lisp.html][How to read emacs lisp]].
+  - [[https://yoo2080.wordpress.com/2014/07/20/it-is-not-hard-to-edit-lisp-code/][It's not hard to edit Lisp code]].
+  - [[http://bzg.fr/learn-emacs-lisp-in-15-minutes.html][Learn emacs lisp in 15 minutes]].
+  - [[http://thewanderingcoder.com/2015/01/emacs-org-mode-links-and-exported-html/][Links and exported HTML]].
+  - [[https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp][Living with Emacs Lisp]].
+  - [[http://www.gigamonkeys.com/book/loop-for-black-belts.html][LOOP for Black Belts]].
+  - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
+  - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
+  - [[http://wikemacs.org/wiki/Emacs_Lisp_Cookbook][Wikemacs's Emacs Lisp Cookbook]].
+  - [[https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be][Writing a Spotify Client]].
+  - [[http://ergoemacs.org/emacs/elisp_common_functions.html][Xah's Common Emacs Lisp Functions]].
+  - [[http://ergoemacs.org/emacs/elisp_idioms_batch.html][Xah's Emacs Lisp idioms for Text Processing in Batch Style]].
+  - [[http://ergoemacs.org/emacs/elisp.html][Xah's Emacs Lisp Tutorial]].
 * [2015-04-12 Sun] [[#youtube-videos-in-your-org-html-export][#]] Youtube videos in your org html export
   :PROPERTIES:
   :CUSTOM_ID: youtube-videos-in-your-org-html-export
@@ -200,33 +416,6 @@
   - [[http://www.quora.com/What-methods-can-I-use-to-avoid-getting-so-tired-when-I-do-the-same-amount-of-a-work-as-my-peers-who-do-not-get-so-tired][Quora on increasing energy levels]].
   - [[http://articles.mercola.com/sites/articles/archive/2011/08/16/dirty-little-secret-orange-juice-is-artificially-flavored-to-taste-like-oranges.aspx][The Shocking Truth About Freshly Squeezed Orange Juice]].
   - [[http://www.zerowastehome.com/][Zero Waste Home]].
-* [2014-09-20 Sat] [[#emacs-lisp-bookmarks][#]] Emacs lisp bookmarks
-  :PROPERTIES:
-  :CUSTOM_ID: emacs-lisp-bookmarks
-  :END:
-  :MODIFIED:
-  [2015-04-03 Fri]
-  :END:
-  - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
-  - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
-  - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
-  - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
-  - [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
-  - [[http://www.emacswiki.org/emacs/EmacsSymbolNotation][Emacs symbol notation]].
-  - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
-  - [[https://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix][How to choose Emacs Lisp package namespace prefix]].
-  - [[http://emacslife.com/how-to-read-emacs-lisp.html][How to read emacs lisp]].
-  - [[https://yoo2080.wordpress.com/2014/07/20/it-is-not-hard-to-edit-lisp-code/][It's not hard to edit Lisp code]].
-  - [[http://bzg.fr/learn-emacs-lisp-in-15-minutes.html][Learn emacs lisp in 15 minutes]].
-  - [[http://thewanderingcoder.com/2015/01/emacs-org-mode-links-and-exported-html/][Links and exported HTML]].
-  - [[https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp][Living with Emacs Lisp]].
-  - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
-  - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
-  - [[http://wikemacs.org/wiki/Emacs_Lisp_Cookbook][Wikemacs's Emacs Lisp Cookbook]].
-  - [[https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be][Writing a Spotify Client]].
-  - [[http://ergoemacs.org/emacs/elisp_common_functions.html][Xah's Common Emacs Lisp Functions]].
-  - [[http://ergoemacs.org/emacs/elisp_idioms_batch.html][Xah's Emacs Lisp idioms for Text Processing in Batch Style]].
-  - [[http://ergoemacs.org/emacs/elisp.html][Xah's Emacs Lisp Tutorial]].
 * [2015-04-03 Fri] [[#try-cocoapods-out][#]] Try cocoapods out
   :PROPERTIES:
   :CUSTOM_ID: try-cocoapods-out
@@ -376,193 +565,6 @@
   - [[https://github.com/zegal/yasobjc][Yasnippet generator for Cocoa iphone SDK]].
   - [[https://yoo2080.wordpress.com/category/emacs/][Yoo Box's Emacs category]].
   - [[http://ericscrosson.wordpress.com][Zen in the Art of Emacs]].
-* [2015-03-05 Thu] [[#learning-emacs-lisp][#]] Learning Emacs lisp
-  :PROPERTIES:
-  :Custom_ID: learning-emacs-lisp
-  :END:
-  :MODIFIED:
-  [2015-03-28 Sat]
-  :END:
-  - Set buffer local variables:
-#+BEGIN_SRC emacs-lisp
-  (setq-local my-clever-var)
-#+END_SRC
-  - Execute before saving buffer:
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'write-file-hooks
-            (lambda ()
-              (message "about to save!")))
-#+END_SRC
-  - Possibly use to start processes and send file content:
-#+BEGIN_SRC emacs-lisp
-  (make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
-#+END_SRC
-  - Creating markers:
-#+BEGIN_SRC emacs-lisp
-  (setq my-marker (copy-marker (point)))
-    #<marker at 10251 in *ielm*>
-
-  (marker-buffer my-marker)
-    #<buffer *ielm*>
-
-  (marker-position my-marker)
-    10251 (#o24013, #x280b, ?⠋)
-#+END_SRC
-  - Get org heading at point:
-#+BEGIN_SRC emacs-lisp
-  (org-get-heading 'no-tags 'no-todo)
-#+END_SRC
-  - Remove string text properties. From manual:
-#+BEGIN_QUOTE
-(substring-no-properties STRING &optional FROM TO)
-
-Return a substring of STRING, without text properties.
-It starts at index FROM and ends before TO.
-TO may be nil or omitted; then the substring runs to the end of STRING.
-If FROM is nil or omitted, the substring starts at the beginning of STRING.
-If FROM or TO is negative, it counts from the end.
-#+END_QUOTE
-  - Skip org entry metadata/drawers:
-#+BEGIN_SRC emacs-lisp
-  (org-end-of-meta-data-and-drawers)
-#+END_SRC
-  - Random access to org entry using id (or CUSTOM_ID):
-#+BEGIN_SRC emacs-lisp
-  (org-open-link-from-string "[[#%exciting-custom-id]]")
-#+END_SRC
-  - From [[http://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html][Debugging Elisp Part 1: Earn your independence]]:
-#+BEGIN_QUOTE
-    - Go to where the function is defined.
-    - Press C-u C-M-x. Edebug breakpoint for function.
-    - Invoke function in question.
-    - n/c will get you around.
-    - q when done.
-#+END_QUOTE
-  - Pretty printing objects:
-#+BEGIN_SRC emacs-lisp
-  (let ((my-var (list "val1"
-                      "val2"
-                      "val3")))
-    (pp-to-string my-var))
-#+END_SRC
-  - Search and/or replace in curent buffer:
-#+BEGIN_SRC emacs-lisp
-  (re-search-forward "needle"
-                     nil t)
-  (match-beginning 0) ;; Start location of match from last search.
-  (match-end 0) ;; End location of match from last search.
-  (replace-match "love")
-
-  ;; needle-in-haystack
-#+END_SRC
-  - Restric buffer editing to a region:
-#+BEGIN_SRC emacs-lisp
-  (narrow-to-region (point)
-                    (point-max))
-#+END_SRC
-  - Restore restriction:
-#+BEGIN_SRC emacs-lisp
-  (save-restriction (narrow-to-region (point)
-                                      (point-max))
-#+END_SRC
-  - Restore point, mark, and current buffer:
-#+BEGIN_SRC emacs-lisp
-  (save-excursion (goto-char (point-max))
-                  (insert "Hello elisp."))
-#+END_SRC
-  - Concatenating strings:
-#+BEGIN_SRC emacs-lisp
-  (concat "Hello " "elisp " "world.")
-#+END_SRC
-  - Grabbing thing at point:
-#+BEGIN_SRC emacs-lisp
-  (thing-at-point 'word)
-  (thing-at-point 'symbol)
-  (thing-at-point 'line)
-#+END_SRC
-  - Unit test with ert.
-  - Basic iteration with dolist:
-#+BEGIN_SRC emacs-lisp
-  (dolist (v '("a" "b" "c"))
-    (print v))
-#+END_SRC
-  - Output to other buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-current-buffer (get-buffer-create "*some buffer*")
-    (princ '(some list to print)
-           (current-buffer)))
-#+END_SRC
-  - For a temporary buffer, use with-temp-buffer:
-#+BEGIN_SRC emacs-lisp
-  (with-temp-buffer
-    (insert "abc")
-    (point))
-#+END_SRC
-  - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
-  - Check for substring:
-#+BEGIN_SRC emacs-lisp
-  (string-match-p REGEXP STRING &optional START)
-#+END_SRC
-  - Matching substrings and accessing groups:
-#+BEGIN_SRC emacs-lisp
-  (setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
-    "Always click [[http://reddit.com/r/emacs][here]]."
-
-  (setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
-    "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
-
-  (string-match needle-re haystack)
-    13 (#o15, #xd, ?\C-m)
-
-  (match-string 0 haystack)
-    "[[http://reddit.com/r/emacs][here]]"
-
-  (match-string 1 haystack)
-    "http://reddit.com/r/emacs"
-
-  (match-string 2 haystack)
-    "here"
-
-#+END_SRC
-  - Return argument unchanged (noop):
-#+BEGIN_SRC emacs-lisp
-  (identity ARG)
-#+END_SRC
-  - Org insert today's timestamp
-#+BEGIN_SRC emacs-lisp
-  (org-insert-time-stamp (current-time))
-#+END_SRC
-  - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
-  - First element
-#+BEGIN_SRC emacs-lisp
-  (car LIST)
-#+END_SRC
-  - All but first element
-#+BEGIN_SRC emacs-lisp
-  (cdr LIST)
-#+END_SRC
-  - Add NEWELT to front of PLACE
-#+BEGIN_SRC emacs-lisp
-  (push NEWELT PLACE)
-#+END_SRC
-  - Invoke 'FUNCTION for each in SEQUENCE
-#+BEGIN_SRC emacs-lisp
-  (mapcar FUNCTION SEQUENCE)
-#+END_SRC
-  - Search/replace
-#+BEGIN_SRC emacs-lisp
-(while (search-forward "Hello")
-  (replace-match "Bonjour"))
-#+END_SRC
-  - Save to kill ring = copy.
-  - Point = cursor position.
-  - Mark = a buffer position.
-  - Kill = cut text.
-  - Yank = paste.
-  - Buffer:File = 1:1.
-  - Window:Buffer = 1:1.
-  - Frame:Window = 1:many.
-  - Font lock = syntax highlighting.
 * [2015-03-28 Sat] [[#css-vertical-align-using-flex][#]] CSS vertical align using flex
   :PROPERTIES:
   :CUSTOM_ID: css-vertical-align-using-flex
