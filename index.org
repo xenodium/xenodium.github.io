@@ -1171,6 +1171,51 @@ If FROM or TO is negative, it counts from the end.
   - [[https://www.getormr.com/features/][Ormr]].
   - [[http://bohemiancoding.com/sketch/][Sketch for Mamc]].
   - [[http://www.sketchup.com/][Sketchup]].
+* [2015-04-23 Thu] [[#emacs-key-bindings-and-maps][#]] Emacs key bindings and maps
+  :PROPERTIES:
+  :Custom_ID: emacs-key-bindings-and-maps
+  :END:
+*** Based on [[http://www.masteringemacs.org/article/mastering-key-bindings-emacs][masteringemacs.org]].
+*** Bonus tip
+    Prefix key, followed by C-h, lists keys in prefix.
+*** Keymap
+    Maps key to action.
+*** Keymap found in buffer and most major modes.
+*** Keys
+    - Undefined: self explanatory.
+    - Prefix key: ie. C-x (part of complete key).
+    - Complete key: Complete input executes associated command.
+*** Mapping
+    - (define-key KEYMAP KEY DEF): Add to current buffer map.
+    - (local-set-key KEY COMMAND): Add to active buffer (no map option).
+    - (local-unset-key KEY)
+    - (global-set-key KEY COMMAND): Add to global keymap (all buffers).
+    - (global-unset-key KEY)
+*** Key codes
+    - kbd: Macro transaltes human-readable key to Emacs readable.
+    - Function and navigation keys must be surrounded by <>.
+    - Example: (kbd "C-c p") or (kbd "<f8>") of (kbd "<down>").
+*** Remapping
+    - Use remap to replace mapping (ie. kill-line with my/kill-line).
+    - (define-key keymap [remap original-function] 'my-own-function).
+*** Reserved Keys
+    - "C-c ?" Generally reserved for you, but third party packages use it.
+    - Function keys (ie. F1-F12).
+    - Hyper and Super (ancient).
+*** Lookup order
+    - In a nutshell: minor mode keys, local keys, global keys.
+    - Full order:
+      1. overriding-terminal-local-map: terminal-specific key binds.
+      2. overriding-local-map: override all other local keymaps (avoid if possible).
+      3. char property at point: useful for yasnippet.
+      4. emulation-mode-map-alists: advanced multi-mode keymap.
+      5. minor-mode-overriding-map-alist: minor modes in major modes.
+      6. minor-mode-map-alist: As previous (preferred for minor modes) <-----
+      7. current-local-map: Buffers current local map.
+      8. current-global-map: Last place to look (ie. global).
+*** Mode hooks
+    - (local-set-key (kbd "C-c q") 'my-awesome-method)) in hook-method.
+    - For key-chord-define, use current-local-map.
 * [2014-12-30 Tue] [[#video-backlog][#]] Video backlog
   :PROPERTIES:
   :CUSTOM_ID: video-backlog
