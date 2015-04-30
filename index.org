@@ -1,6 +1,55 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-04-30 Thu] [[#building-clang-format][#]] Building clang-format
+  :PROPERTIES:
+  :Custom_ID: building-clang-format
+  :END:
+  Based on instructions from [[http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion][Building clang-format and friends on OSX Mountain Lion]].
+#+BEGIN_SRC sh
+  #!/bin/bash
+  set -o nounset
+  set -o errexit
+
+  # Based on instructions from:
+  # http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
+
+  readonly LLVM_DIR_PATH='/tmp/llvm'
+
+  update_repo() {
+    if [[ ! -d $1 ]]; then
+      git clone $2
+    else
+      cd $1
+      git pull
+      cd ..
+    fi
+    cd ..
+  }
+
+  update_all_repos() {
+    update_repo "llvm" "http://llvm.org/git/llvm.git"
+    pushd "${LLVM_DIR_PATH}/llvm/tools"
+    update_repo "clang" "http://llvm.org/git/clang.git"
+    popd
+    cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
+    update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
+    cd "../../.."
+  }
+
+  build_clang() {
+    mkdir -p clang
+    mkdir -p build
+    cd clang
+    ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
+    make install
+  }
+
+  mkdir -p $LLVM_DIR_PATH
+  cd ${LLVM_DIR_PATH}
+  update_all_repos
+  build_clang
+#+END_SRC
 * [2015-04-30 Thu] [[#programmatic-ios-auto-layout][#]] Programmatic iOS Auto Layout
   :PROPERTIES:
   :Custom_ID: programmatic-ios-auto-layout
