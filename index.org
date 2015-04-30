@@ -1,6 +1,43 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-04-30 Thu] [[#programmatic-ios-auto-layout][#]] Programmatic iOS Auto Layout
+  :PROPERTIES:
+  :Custom_ID: programmatic-ios-auto-layout
+  :END:
+  Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html][Adopting Auto Layout]] and [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html][Visual Format language]] for reference.
+#+BEGIN_SRC objc
+- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    // Disable autoresizing mask translation for parent.
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _subview1 = [[UIView alloc] init];
+    // Disable autoresizing mask translation for subview.
+    _subview1.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _subview1.backgroundColor = [UIColor redColor];
+    [self addSubview:_subview1];
+
+    // Creates a dictionary of bindings to be used in visual format.
+    NSDictionary *viewBindings = NSDictionaryOfVariableBindings(_subview1);
+
+    // H: horizontal layout
+    // |-50- spacing in relation to superview
+    // [_subview1(==50)] subview1's width
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-50-[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+  }
+  return self;
+}
+#+END_SRC
 * [2015-04-23 Thu] [[#japan-travel-bookmarks][#]] Japan travel bookmarks
   :PROPERTIES:
   :Custom_ID: japan-travel-bookmarks
@@ -585,10 +622,14 @@ Generating diagram:
   :PROPERTIES:
   :CUSTOM_ID: org-mode-bookmarks
   :END:
+  :MODIFIED:
+  [2015-04-30 Thu]
+  :END:
   - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
   - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
   - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
   - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+  - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
   - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
 * [2015-03-08 Sun] [[#london-food-backlog][#]] London food backlog
