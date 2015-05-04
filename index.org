@@ -14,7 +14,6 @@
   :CUSTOM_ID: sri-lanka-travel-bookmarks
   :END:
   - [[http://www.agoda.com/the-safari-hotel/hotel/yala-lk.html%20][The Safari Hotel (great area to go on safari, see leopards)]].
-
 * [2015-05-04 Mon] [[#switzerland-travel-bookmarks][#]] Switzerland travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: switzerland-travel-bookmarks
@@ -46,10 +45,48 @@
   :END:
   - [[http://www.lonelyplanet.com/iceland/travel-tips-and-articles/how-to-have-a-budget-break-in-iceland][How to have a budget break in iceland]].
 
+* [2015-04-30 Thu] [[#programmatic-ios-auto-layout][#]] Programmatic iOS Auto Layout
+  :PROPERTIES:
+  :Custom_ID: programmatic-ios-auto-layout
+  :END:
+  Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html][Adopting Auto Layout]] and [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html][Visual Format language]] for reference.
+#+BEGIN_SRC objc
+- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    // Disable autoresizing mask translation for parent.
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _subview1 = [[UIView alloc] init];
+    // Disable autoresizing mask translation for subview.
+    _subview1.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _subview1.backgroundColor = [UIColor redColor];
+    [self addSubview:_subview1];
+
+    // Creates a dictionary of bindings to be used in visual format.
+    NSDictionary *viewBindings = NSDictionaryOfVariableBindings(_subview1);
+
+    // H: horizontal layout
+    // |-50- spacing in relation to superview
+    // [_subview1(==50)] subview1's width
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-50-[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+  }
+  return self;
+}
+#+END_SRC
 * [2015-04-23 Thu] [[#japan-travel-bookmarks][#]] Japan travel bookmarks
   :PROPERTIES:
   :Custom_ID: japan-travel-bookmarks
   :END:
+  - [[https://publishizer.com/8020-japanese/][80/20 Japanese]].
   - [[http://tokyocheapo.com/][TokyoCheapo]].
 * [2015-04-19 Sun] [[#uk-travel-bookmarks][#]] UK travel bookmarks
   :PROPERTIES:
@@ -640,10 +677,14 @@ Generating diagram:
   :PROPERTIES:
   :CUSTOM_ID: org-mode-bookmarks
   :END:
+  :MODIFIED:
+  [2015-04-30 Thu]
+  :END:
   - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
   - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
   - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
   - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+  - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
   - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
 * [2015-03-08 Sun] [[#london-food-backlog][#]] London food backlog
@@ -931,10 +972,15 @@ Generating diagram:
   :CUSTOM_ID: go-bookmarks
   :END:
   :MODIFIED:
+<<<<<<< HEAD
   [2015-05-04 Mon]
+=======
+  [2015-04-30 Thu]
+>>>>>>> 41aa6f72def4ec8e49cb059bb2ee608a03f311c8
   :END:
   - [[http://beego.me/docs/intro/releases.md][Beego, platform for web apps]].
   - [[http://blog.wercker.com/2013/08/07/building-an-api-with-golang-rethinkdb-wercker.html][Building an API with Golang, RethinkDB and wercker]].
+  - [[https://godoc.org/golang.org/x/tools/cmd/vet][Command vet (reports suspicious constructs)]].
   - [[http://biasedbit.com/blog/golang-custom-transports/][Custom transports and timeouts]].
   - [[http://blog.matttproud.com/2015/02/exploring-gos-runtime-how-process.html][Exploring Go's runtime]].
   - [[http://golang-challenge.com/go-challenge3/][Go Challenge 3 (Web application, OAuth, REST-based AIP, etc)]].
@@ -1560,7 +1606,11 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
+<<<<<<< HEAD
   [2015-05-04 Mon]
+=======
+  [2015-04-30 Thu]
+>>>>>>> 41aa6f72def4ec8e49cb059bb2ee608a03f311c8
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
@@ -1578,6 +1628,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.gigamonkeys.com/book/loop-for-black-belts.html][LOOP for Black Belts]].
   - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
   - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
+  - [[http://nic.ferrier.me.uk/blog/2012_07/tips-and-tricks-for-emacslisp][Tips on Emacs Lisp programming]].
   - [[http://wikemacs.org/wiki/Emacs_Lisp_Cookbook][Wikemacs's Emacs Lisp Cookbook]].
   - [[https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be][Writing a Spotify Client]].
   - [[http://ergoemacs.org/emacs/elisp_symbol.html][Xah Lee's Emacs Lisp Symbol (tutorial)]].
