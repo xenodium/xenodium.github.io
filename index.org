@@ -1,6 +1,16 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-05-06 Wed] [[#write-to-temp-ios-snippet][#]] Write to temp iOS snippet
+  :PROPERTIES:
+  :Custom_ID: write-to-temp-ios-snippet
+  :END:
+#+BEGIN_SRC objc
+  NSString *tempDir = NSTemporaryDirectory();
+  NSLog(@"%@", tempDir);
+  NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
+  [data writeToFile:dataFilePath atomically:YES];
+#+END_SRC
 * [2015-05-04 Mon] [[#greece-travel-bookmarks][#]] Greece travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: greece-travel-bookmarks
@@ -44,7 +54,55 @@
   :CUSTOM_ID: iceland-travel-bookmarks
   :END:
   - [[http://www.lonelyplanet.com/iceland/travel-tips-and-articles/how-to-have-a-budget-break-in-iceland][How to have a budget break in iceland]].
+* [2015-04-30 Thu] [[#building-clang-format][#]] Building clang-format
+  :PROPERTIES:
+  :Custom_ID: building-clang-format
+  :END:
+  Based on instructions from [[http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion][Building clang-format and friends on OSX Mountain Lion]].
+#+BEGIN_SRC sh
+  #!/bin/bash
+  set -o nounset
+  set -o errexit
 
+  # Based on instructions from:
+  # http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
+
+  readonly LLVM_DIR_PATH='/tmp/llvm'
+
+  update_repo() {
+    if [[ ! -d $1 ]]; then
+      git clone $2
+    else
+      cd $1
+      git pull
+      cd ..
+    fi
+    cd ..
+  }
+
+  update_all_repos() {
+    update_repo "llvm" "http://llvm.org/git/llvm.git"
+    pushd "${LLVM_DIR_PATH}/llvm/tools"
+    update_repo "clang" "http://llvm.org/git/clang.git"
+    popd
+    cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
+    update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
+    cd "../../.."
+  }
+
+  build_clang() {
+    mkdir -p clang
+    mkdir -p build
+    cd clang
+    ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
+    make install
+  }
+
+  mkdir -p $LLVM_DIR_PATH
+  cd ${LLVM_DIR_PATH}
+  update_all_repos
+  build_clang
+#+END_SRC
 * [2015-04-30 Thu] [[#programmatic-ios-auto-layout][#]] Programmatic iOS Auto Layout
   :PROPERTIES:
   :Custom_ID: programmatic-ios-auto-layout
@@ -976,11 +1034,7 @@ Generating diagram:
   :CUSTOM_ID: go-bookmarks
   :END:
   :MODIFIED:
-<<<<<<< HEAD
   [2015-05-04 Mon]
-=======
-  [2015-04-30 Thu]
->>>>>>> 41aa6f72def4ec8e49cb059bb2ee608a03f311c8
   :END:
   - [[http://beego.me/docs/intro/releases.md][Beego, platform for web apps]].
   - [[http://blog.wercker.com/2013/08/07/building-an-api-with-golang-rethinkdb-wercker.html][Building an API with Golang, RethinkDB and wercker]].
@@ -1610,11 +1664,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
-<<<<<<< HEAD
   [2015-05-04 Mon]
-=======
-  [2015-04-30 Thu]
->>>>>>> 41aa6f72def4ec8e49cb059bb2ee608a03f311c8
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
