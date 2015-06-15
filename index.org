@@ -1,6 +1,27 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-06-15 Mon] [[#debugging-objective-c-reference-cycles][#]] Debugging Objective-C reference cycles
+  :PROPERTIES:
+  :Custom_ID: debugging-objective-c-reference-cycles
+  :END:
+  Overriding retain/release/autorelease may help:
+#+BEGIN_SRC objc
+  - (instancetype)retain {
+    NSLog(@"%p, retain", self);
+    return [super retain];
+  }
+
+  - (oneway void)release {
+    NSLog(@"%p, release", self);
+    [super release];
+  }
+
+  - (instancetype)autorelease {
+    NSLog(@"%p, autorelease", self);
+    return [super autorelease];
+  }
+#+END_SRC
 * [2015-06-13 Sat] [[#london-grub][#]] London grub
   :PROPERTIES:
   :CUSTOM_ID: london-grub
