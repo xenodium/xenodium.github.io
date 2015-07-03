@@ -1,6 +1,36 @@
+
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-07-03 Fri] [[#fishing-with-emacs][#]] Fishing with Emacs
+  :PROPERTIES:
+  :CUSTOM_ID: fishing-with-emacs
+  :END:
+  OK not quite, but having recently learned about [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Appending-Kills.html][C-M-w (append-next-kill)]], I used it in a keyboard macro to fish out matching lines. This is similar to [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Repeating-Search.html][flush-lines]], except the kill ring is also populated. This is handy, if you need the flushed lines. Here's an example.
+
+[[file:images/fishing-with-emacs/fishing.gif]]
+
+Here's the equivalent in Emacs lisp:
+
+#+BEGIN_SRC emacs-lisp
+  (defun flush-kill-lines (regex)
+    "Flush lines matching REGEX and append to kill ring.  Restrict to \
+  region if active."
+    (interactive "sFlush kill regex: ")
+    (save-excursion
+      (save-restriction
+        (when (use-region-p)
+          (narrow-to-region (point) (mark))
+          (goto-char 0))
+        (while (search-forward-regexp regex nil t)
+          (move-beginning-of-line nil)
+          (kill-whole-line)))))
+#+END_SRC
+* [2015-07-03 Fri] [[#california-travel-bookmarks][#]] California travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: california-travel-bookmarks
+  :END:
+  - [[https://en.wikipedia.org/wiki/Sequoia_National_Park][General Sherman Tree at Sequoia National Park]].
 * [2015-07-01 Wed] [[#rebind-caps-lock-to-control-key-on-mac-os-x][#]] Rebind caps lock to control key on Mac OS X
   :PROPERTIES:
   :CUSTOM_ID: rebind-caps-lock-to-control-key-on-mac-os-x
