@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-07-05 Sun 23:32 -->
+<!-- 2015-07-09 Thu 09:19 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -305,18 +305,18 @@ Here's the equivalent in Emacs lisp:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">defun</span> <span style="color: #f09fff; font-style: italic;">flush-kill-lines</span> <span style="color: #5af2ee;">(</span>regex<span style="color: #5af2ee;">)</span>
-  <span style="color: #c350ff; font-style: italic;">"Flush lines matching REGEX and append to kill ring.  Restrict to \</span>
-<span style="color: #c350ff; font-style: italic;">region if active."</span>
-  <span style="color: #5af2ee;">(</span>interactive <span style="color: #ff5f87;">"sFlush kill regex: "</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">save-excursion</span>
-    <span style="color: #f6df92;">(</span><span style="color: #5af2ee;">save-restriction</span>
-      <span style="color: #acfb5a;">(</span><span style="color: #5af2ee;">when</span> <span style="color: #b2baf6;">(</span>use-region-p<span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>narrow-to-region <span style="color: #bebebe;">(</span>point<span style="color: #bebebe;">)</span> <span style="color: #bebebe;">(</span>mark<span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>goto-char 0<span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span>
-      <span style="color: #acfb5a;">(</span><span style="color: #5af2ee;">while</span> <span style="color: #b2baf6;">(</span>search-forward-regexp regex nil t<span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>move-beginning-of-line nil<span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>kill-whole-line<span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span><span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(defun flush-kill-lines (regex)
+  "Flush lines matching REGEX and append to kill ring.  Restrict to \
+region if active."
+  (interactive "sFlush kill regex: ")
+  (save-excursion
+    (save-restriction
+      (when (use-region-p)
+        (narrow-to-region (point) (mark))
+        (goto-char 0))
+      (while (search-forward-regexp regex nil t)
+        (move-beginning-of-line nil)
+        (kill-whole-line)))))
 </pre>
 </div>
 </div>
@@ -435,20 +435,20 @@ Overriding retain/release/autorelease may be handy while debugging:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #bebebe;">(</span><span style="color: #b2baf6;">instancetype</span><span style="color: #bebebe;">)</span><span style="color: #f09fff; font-style: italic;">retain</span> <span style="color: #bebebe;">{</span>
-  NSLog<span style="color: #5af2ee;">(</span>@<span style="color: #ff5f87;">"%p, retain"</span>, <span style="color: #5af2ee;">self</span><span style="color: #5af2ee;">)</span>;
-  <span style="color: #5af2ee;">return</span> <span style="color: #5af2ee; font-weight: bold;">[</span><span style="color: #5af2ee;">super</span> <span style="color: #f09fff; font-style: italic;">retain</span><span style="color: #5af2ee; font-weight: bold;">]</span>;
-<span style="color: #bebebe;">}</span>
+<pre class="src src-objc">- (instancetype)retain {
+  NSLog(@"%p, retain", self);
+  return [super retain];
+}
 
-- <span style="color: #bebebe;">(</span><span style="color: #5af2ee;">oneway</span> <span style="color: #b2baf6;">void</span><span style="color: #bebebe;">)</span><span style="color: #f09fff; font-style: italic;">release</span> <span style="color: #bebebe;">{</span>
-  NSLog<span style="color: #5af2ee;">(</span>@<span style="color: #ff5f87;">"%p, release"</span>, <span style="color: #5af2ee;">self</span><span style="color: #5af2ee;">)</span>;
-  <span style="color: #5af2ee; font-weight: bold;">[</span><span style="color: #5af2ee;">super</span> <span style="color: #f09fff; font-style: italic;">release</span><span style="color: #5af2ee; font-weight: bold;">]</span>;
-<span style="color: #bebebe;">}</span>
+- (oneway void)release {
+  NSLog(@"%p, release", self);
+  [super release];
+}
 
-- <span style="color: #bebebe;">(</span><span style="color: #b2baf6;">instancetype</span><span style="color: #bebebe;">)</span><span style="color: #f09fff; font-style: italic;">autorelease</span> <span style="color: #bebebe;">{</span>
-  NSLog<span style="color: #5af2ee;">(</span>@<span style="color: #ff5f87;">"%p, autorelease"</span>, <span style="color: #5af2ee;">self</span><span style="color: #5af2ee;">)</span>;
-  <span style="color: #5af2ee;">return</span> <span style="color: #5af2ee; font-weight: bold;">[</span><span style="color: #5af2ee;">super</span> <span style="color: #f09fff; font-style: italic;">autorelease</span><span style="color: #5af2ee; font-weight: bold;">]</span>;
-<span style="color: #bebebe;">}</span>
+- (instancetype)autorelease {
+  NSLog(@"%p, autorelease", self);
+  return [super autorelease];
+}
 </pre>
 </div>
 </div>
@@ -760,10 +760,10 @@ M-x flush-lines RET ^$ RET
 <div class="outline-text-2" id="text-write-to-temp-ios-snippet">
 <div class="org-src-container">
 
-<pre class="src src-objc"><span style="color: #b2baf6;">NSString</span> *<span style="color: #f6df92;">tempDir</span> = NSTemporaryDirectory<span style="color: #bebebe;">()</span>;
-NSLog<span style="color: #bebebe;">(</span>@<span style="color: #ff5f87;">"%@"</span>, tempDir<span style="color: #bebebe;">)</span>;
-<span style="color: #b2baf6;">NSString</span> *<span style="color: #f6df92;">dataFilePath</span> = <span style="color: #bebebe; font-weight: bold;">[</span>tempDir <span style="color: #f09fff; font-style: italic;">stringByAppendingPathComponent</span>:@<span style="color: #ff5f87;">"my.file"</span><span style="color: #bebebe; font-weight: bold;">]</span>;
-<span style="color: #bebebe; font-weight: bold;">[</span>data <span style="color: #f09fff; font-style: italic;">writeToFile</span>:dataFilePath <span style="color: #f09fff; font-style: italic;">atomically</span>:<span style="color: #3aff83;">YES</span><span style="color: #bebebe; font-weight: bold;">]</span>;
+<pre class="src src-objc">NSString *tempDir = NSTemporaryDirectory();
+NSLog(@"%@", tempDir);
+NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
+[data writeToFile:dataFilePath atomically:YES];
 </pre>
 </div>
 </div>
@@ -865,46 +865,46 @@ Based on instructions from <a href="http://blog.hardcodes.de/articles/63/buildin
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #f6df92; font-style: italic;">#</span><span style="color: #efc334; font-style: italic;">!/bin/</span><span style="color: #5af2ee;">bash</span>
-<span style="color: #b2baf6;">set</span> -o nounset
-<span style="color: #b2baf6;">set</span> -o errexit
+<pre class="src src-sh">#!/bin/bash
+set -o nounset
+set -o errexit
 
-<span style="color: #f6df92; font-style: italic;"># </span><span style="color: #efc334; font-style: italic;">Based on instructions from:</span>
-<span style="color: #f6df92; font-style: italic;"># </span><span style="color: #efc334; font-style: italic;">http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion</span>
+# Based on instructions from:
+# http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
 
-<span style="color: #b2baf6;">readonly</span> <span style="color: #f6df92;">LLVM_DIR_PATH</span>=<span style="color: #ff5f87;">'/tmp/llvm'</span>
+readonly LLVM_DIR_PATH='/tmp/llvm'
 
-<span style="color: #f09fff; font-style: italic;">update_repo</span><span style="color: #bebebe;">()</span> <span style="color: #bebebe;">{</span>
-  <span style="color: #5af2ee;">if</span> <span style="color: #5af2ee;">[</span><span style="color: #f6df92;">[</span> <span style="color: #acfb5a; font-weight: bold;">!</span> -d $<span style="color: #f6df92;">1</span> <span style="color: #f6df92;">]</span><span style="color: #5af2ee;">]</span>; <span style="color: #5af2ee;">then</span>
-    git clone $<span style="color: #f6df92;">2</span>
-  <span style="color: #5af2ee;">else</span>
-    <span style="color: #b2baf6;">cd</span> $<span style="color: #f6df92;">1</span>
+update_repo() {
+  if [[ ! -d $1 ]]; then
+    git clone $2
+  else
+    cd $1
     git pull
-    <span style="color: #b2baf6;">cd</span> ..
-  <span style="color: #5af2ee;">fi</span>
-  <span style="color: #b2baf6;">cd</span> ..
-<span style="color: #bebebe;">}</span>
+    cd ..
+  fi
+  cd ..
+}
 
-<span style="color: #f09fff; font-style: italic;">update_all_repos</span><span style="color: #bebebe;">()</span> <span style="color: #bebebe;">{</span>
-  update_repo <span style="color: #ff5f87;">"llvm"</span> <span style="color: #ff5f87;">"http://llvm.org/git/llvm.git"</span>
-  <span style="color: #b2baf6;">pushd</span> <span style="color: #ff5f87;">"${LLVM_DIR_PATH}/llvm/tools"</span>
-  update_repo <span style="color: #ff5f87;">"clang"</span> <span style="color: #ff5f87;">"http://llvm.org/git/clang.git"</span>
-  <span style="color: #b2baf6;">popd</span>
-  <span style="color: #b2baf6;">cd</span> <span style="color: #ff5f87;">"../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"</span>
-  update_repo <span style="color: #ff5f87;">"clang-tools-extra"</span> <span style="color: #ff5f87;">"http://llvm.org/git/clang-tools-extra.git"</span>
-  <span style="color: #b2baf6;">cd</span> <span style="color: #ff5f87;">"../../.."</span>
-<span style="color: #bebebe;">}</span>
+update_all_repos() {
+  update_repo "llvm" "http://llvm.org/git/llvm.git"
+  pushd "${LLVM_DIR_PATH}/llvm/tools"
+  update_repo "clang" "http://llvm.org/git/clang.git"
+  popd
+  cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
+  update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
+  cd "../../.."
+}
 
-<span style="color: #f09fff; font-style: italic;">build_clang</span><span style="color: #bebebe;">()</span> <span style="color: #bebebe;">{</span>
+build_clang() {
   mkdir -p clang
   mkdir -p build
-  <span style="color: #b2baf6;">cd</span> clang
-  ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix=<span style="color: #ff5f87;">"${LLVM_DIR_PATH}/build"</span>
+  cd clang
+  ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
   make install
-<span style="color: #bebebe;">}</span>
+}
 
-mkdir -p $<span style="color: #f6df92;">LLVM_DIR_PATH</span>
-<span style="color: #b2baf6;">cd</span> $<span style="color: #bebebe;">{</span><span style="color: #f6df92;">LLVM_DIR_PATH</span><span style="color: #bebebe;">}</span>
+mkdir -p $LLVM_DIR_PATH
+cd ${LLVM_DIR_PATH}
 update_all_repos
 build_clang
 </pre>
@@ -919,36 +919,36 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #bebebe;">(</span><span style="color: #b2baf6;">instancetype</span><span style="color: #bebebe;">)</span><span style="color: #f09fff; font-style: italic;">initWithFrame</span>:<span style="color: #bebebe;">(</span><span style="color: #b2baf6;">CGRect</span><span style="color: #bebebe;">)</span><span style="color: #f6df92;">frame</span> <span style="color: #bebebe;">{</span>
-  <span style="color: #5af2ee;">self</span> = <span style="color: #5af2ee; font-weight: bold;">[</span><span style="color: #5af2ee;">super</span> <span style="color: #f09fff; font-style: italic;">initWithFrame</span>:frame<span style="color: #5af2ee; font-weight: bold;">]</span>;
-  <span style="color: #5af2ee;">if</span> <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">self</span><span style="color: #5af2ee;">)</span> <span style="color: #5af2ee;">{</span>
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">Disable autoresizing mask translation for parent.</span>
-    <span style="color: #5af2ee;">self</span>.translatesAutoresizingMaskIntoConstraints = <span style="color: #3aff83;">NO</span>;
+<pre class="src src-objc">- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    // Disable autoresizing mask translation for parent.
+    self.translatesAutoresizingMaskIntoConstraints = NO;
 
-    _subview1 = <span style="color: #f6df92; font-weight: bold;">[</span><span style="color: #acfb5a; font-weight: bold;">[</span><span style="color: #b2baf6;">UIView</span> <span style="color: #f09fff; font-style: italic;">alloc</span><span style="color: #acfb5a; font-weight: bold;">]</span> <span style="color: #f09fff; font-style: italic;">init</span><span style="color: #f6df92; font-weight: bold;">]</span>;
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">Disable autoresizing mask translation for subview.</span>
-    _subview1.translatesAutoresizingMaskIntoConstraints = <span style="color: #3aff83;">NO</span>;
+    _subview1 = [[UIView alloc] init];
+    // Disable autoresizing mask translation for subview.
+    _subview1.translatesAutoresizingMaskIntoConstraints = NO;
 
-    _subview1.backgroundColor = <span style="color: #f6df92; font-weight: bold;">[</span><span style="color: #b2baf6;">UIColor</span> <span style="color: #f09fff; font-style: italic;">redColor</span><span style="color: #f6df92; font-weight: bold;">]</span>;
-    <span style="color: #f6df92; font-weight: bold;">[</span><span style="color: #5af2ee;">self</span> <span style="color: #f09fff; font-style: italic;">addSubview</span>:_subview1<span style="color: #f6df92; font-weight: bold;">]</span>;
+    _subview1.backgroundColor = [UIColor redColor];
+    [self addSubview:_subview1];
 
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">Creates a dictionary of bindings to be used in visual format.</span>
-    <span style="color: #b2baf6;">NSDictionary</span> *<span style="color: #f6df92;">viewBindings</span> = NSDictionaryOfVariableBindings<span style="color: #f6df92;">(</span>_subview1<span style="color: #f6df92;">)</span>;
+    // Creates a dictionary of bindings to be used in visual format.
+    NSDictionary *viewBindings = NSDictionaryOfVariableBindings(_subview1);
 
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">H: horizontal layout</span>
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">|-50- spacing in relation to superview</span>
-    <span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">[_subview1(==50)] subview1's width</span>
-    <span style="color: #f6df92; font-weight: bold;">[</span><span style="color: #5af2ee;">self</span> <span style="color: #f09fff; font-style: italic;">addConstraints</span>:<span style="color: #acfb5a; font-weight: bold;">[</span><span style="color: #b2baf6;">NSLayoutConstraint</span> <span style="color: #f09fff; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #ff5f87;">"H:|-50-[_subview1(==50)]"</span>
-                                                                 <span style="color: #f09fff; font-style: italic;">options</span>:0
-                                                                 <span style="color: #f09fff; font-style: italic;">metrics</span>:<span style="color: #3aff83;">nil</span>
-                                                                   <span style="color: #f09fff; font-style: italic;">views</span>:viewBindings<span style="color: #acfb5a; font-weight: bold;">]</span><span style="color: #f6df92; font-weight: bold;">]</span>;
-    <span style="color: #f6df92; font-weight: bold;">[</span><span style="color: #5af2ee;">self</span> <span style="color: #f09fff; font-style: italic;">addConstraints</span>:<span style="color: #acfb5a; font-weight: bold;">[</span><span style="color: #b2baf6;">NSLayoutConstraint</span> <span style="color: #f09fff; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #ff5f87;">"V:[_subview1(==50)]"</span>
-                                                                 <span style="color: #f09fff; font-style: italic;">options</span>:0
-                                                                 <span style="color: #f09fff; font-style: italic;">metrics</span>:<span style="color: #3aff83;">nil</span>
-                                                                   <span style="color: #f09fff; font-style: italic;">views</span>:viewBindings<span style="color: #acfb5a; font-weight: bold;">]</span><span style="color: #f6df92; font-weight: bold;">]</span>;
-  <span style="color: #5af2ee;">}</span>
-  <span style="color: #5af2ee;">return</span> <span style="color: #5af2ee;">self</span>;
-<span style="color: #bebebe;">}</span>
+    // H: horizontal layout
+    // |-50- spacing in relation to superview
+    // [_subview1(==50)] subview1's width
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-50-[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+  }
+  return self;
+}
 </pre>
 </div>
 </div>
@@ -964,7 +964,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </li>
 <li><a href="http://www.lonelyplanet.com/japan/travel-tips-and-articles/77501">A no-sushi guide to food in Japan</a>.
 </li>
-<li><i>A trip to Japan (Quora answer)</i>.
+<li><a href="http://www.quora.com/How-does-it-feel-to-travel-alone#__w2_kxAuQyJ_answer_content">A trip to Japan (Quora answer)</a>.
 </li>
 <li><a href="http://www.japanonwheels.com/kawachi_fujien.html">Kawachi Fujien 河内藤園 (Kawachi Wisteria Garden)</a>.
 </li>
@@ -1090,7 +1090,7 @@ Generating diagram:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$<span style="color: #f6df92;">GRAPHVIZ_DOT</span>=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
+<pre class="src src-sh">$GRAPHVIZ_DOT=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
 </pre>
 </div>
 </div>
@@ -1117,12 +1117,12 @@ Generating diagram:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #f09fff; font-style: italic;">iframe</span> <span style="color: #f6df92;">width</span>=<span style="color: #ff5f87;">"420"</span>
-        <span style="color: #f6df92;">height</span>=<span style="color: #ff5f87;">"315"</span>
-        <span style="color: #f6df92;">src</span>=<span style="color: #ff5f87;">"https://www.youtube.com/embed/QRBcm6jFJ3Q"</span>
-        <span style="color: #f6df92;">frameborder</span>=<span style="color: #ff5f87;">"0"</span>
+<pre class="src src-html">&lt;iframe width="420"
+        height="315"
+        src="https://www.youtube.com/embed/QRBcm6jFJ3Q"
+        frameborder="0"
         allowfullscreen&gt;
-&lt;/<span style="color: #f09fff; font-style: italic;">iframe</span>&gt;
+&lt;/iframe&gt;
 </pre>
 </div>
 <p>
@@ -1164,13 +1164,13 @@ Adopted Tim Pope's Git commit message <a href="http://tbaggery.com/2008/04/19/a-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">use-package</span> <span style="color: #3aff83;">git-commit-training-wheels-mode</span> <span style="color: #b2baf6;">:ensure</span> t
-  <span style="color: #b2baf6;">:commands</span> <span style="color: #5af2ee;">(</span>git-commit-training-wheels-mode<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(use-package git-commit-training-wheels-mode :ensure t
+  :commands (git-commit-training-wheels-mode))
 
-<span style="color: #bebebe;">(</span><span style="color: #5af2ee;">use-package</span> <span style="color: #3aff83;">git-commit-mode</span> <span style="color: #b2baf6;">:ensure</span> t
-  <span style="color: #b2baf6;">:config</span>
-  <span style="color: #5af2ee;">(</span>add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode<span style="color: #5af2ee;">)</span>
-  <span style="color: #b2baf6;">:commands</span> <span style="color: #5af2ee;">(</span>git-commit-mode<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+(use-package git-commit-mode :ensure t
+  :config
+  (add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
+  :commands (git-commit-mode))
 </pre>
 </div>
 </div>
@@ -1183,15 +1183,15 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">defun</span> <span style="color: #f09fff; font-style: italic;">org-html-fontify-code</span> <span style="color: #5af2ee;">(</span>code lang<span style="color: #5af2ee;">)</span>
-  <span style="color: #f6df92; font-style: italic;">;; </span><span style="color: #efc334; font-style: italic;">...</span>
-  <span style="color: #5af2ee;">(</span>funcall lang-mode<span style="color: #5af2ee;">)</span>
-<span style="color: #f6df92; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">when</span> <span style="color: #f6df92;">(</span><span style="color: #5af2ee;">require</span> '<span style="color: #3aff83;">fill-column-indicator</span> nil 'noerror<span style="color: #f6df92;">)</span>
-    <span style="color: #f6df92;">(</span>fci-mode -1<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span>
-<span style="color: #f6df92; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #5af2ee;">(</span>insert code<span style="color: #5af2ee;">)</span>
-  <span style="color: #f6df92; font-style: italic;">;; </span><span style="color: #efc334; font-style: italic;">...</span>
+<pre class="src src-emacs-lisp">(defun org-html-fontify-code (code lang)
+  ;; ...
+  (funcall lang-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (when (require 'fill-column-indicator nil 'noerror)
+    (fci-mode -1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (insert code)
+  ;; ...
 </pre>
 </div>
 </div>
@@ -1308,16 +1308,16 @@ Codepen <a href="http://codepen.io/oisinlavery/pen/Jmjtz">snippet</a>:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-css"><span style="color: #F92672;">div</span>{
-  <span style="color: #66D9EF;">height</span>: 200px;
-  <span style="color: #66D9EF;">background</span>: #ccc;
-  <span style="color: #66D9EF;">display</span>: flex;
-  <span style="color: #66D9EF;">justify-content</span>: center;
-  <span style="color: #66D9EF;">align-items</span>: center;
+<pre class="src src-css">div{
+  height: 200px;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 p{
-  <span style="color: #66D9EF;">margin</span>: auto
+  margin: auto
 }
 </pre>
 </div>
@@ -1352,31 +1352,31 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">require</span> '<span style="color: #3aff83;">goto-addr</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(require 'goto-addr)
 
-<span style="color: #bebebe;">(</span><span style="color: #5af2ee;">defun</span> <span style="color: #f09fff; font-style: italic;">ar/helm-buffer-url-candidates</span> <span style="color: #5af2ee;">()</span>
-  <span style="color: #c350ff; font-style: italic;">"Generate helm candidates for all URLs in buffer."</span>
-  <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">save-excursion</span>
-    <span style="color: #f6df92;">(</span>goto-char <span style="color: #acfb5a;">(</span>point-min<span style="color: #acfb5a;">)</span><span style="color: #f6df92;">)</span>
-    <span style="color: #f6df92;">(</span><span style="color: #5af2ee;">let</span> <span style="color: #acfb5a;">(</span><span style="color: #b2baf6;">(</span>helm-candidates '<span style="color: #bebebe;">()</span><span style="color: #b2baf6;">)</span>
-          <span style="color: #b2baf6;">(</span>url<span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span>
-      <span style="color: #acfb5a;">(</span><span style="color: #5af2ee;">while</span> <span style="color: #b2baf6;">(</span>re-search-forward goto-address-url-regexp
-                                nil t<span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>setq url
-              <span style="color: #bebebe;">(</span>buffer-substring-no-properties <span style="color: #5af2ee;">(</span>match-beginning 0<span style="color: #5af2ee;">)</span>
-                                              <span style="color: #5af2ee;">(</span>match-end 0<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span>
-        <span style="color: #b2baf6;">(</span>add-to-list 'helm-candidates
-                     <span style="color: #bebebe;">(</span>cons url
-                           url<span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span>
-      helm-candidates<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+(defun ar/helm-buffer-url-candidates ()
+  "Generate helm candidates for all URLs in buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((helm-candidates '())
+          (url))
+      (while (re-search-forward goto-address-url-regexp
+                                nil t)
+        (setq url
+              (buffer-substring-no-properties (match-beginning 0)
+                                              (match-end 0)))
+        (add-to-list 'helm-candidates
+                     (cons url
+                           url)))
+      helm-candidates)))
 
-<span style="color: #bebebe;">(</span><span style="color: #5af2ee;">defun</span> <span style="color: #f09fff; font-style: italic;">ar/helm-buffer-urls</span> <span style="color: #5af2ee;">()</span>
-  <span style="color: #c350ff; font-style: italic;">"Narrow down and open a URL in buffer."</span>
-  <span style="color: #5af2ee;">(</span>interactive<span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>helm <span style="color: #b2baf6;">:sources</span> `<span style="color: #f6df92;">(</span><span style="color: #acfb5a;">(</span><span style="color: #b2baf6;">(</span>name . <span style="color: #ff5f87;">"Buffer URLs"</span><span style="color: #b2baf6;">)</span>
-                    <span style="color: #b2baf6;">(</span>candidates . ,<span style="color: #bebebe;">(</span>ar/helm-buffer-url-candidates<span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span>
-                    <span style="color: #b2baf6;">(</span>action . <span style="color: #bebebe;">(</span><span style="color: #5af2ee;">lambda</span> <span style="color: #5af2ee;">(</span>url<span style="color: #5af2ee;">)</span>
-                                <span style="color: #5af2ee;">(</span>browse-url url<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span><span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+(defun ar/helm-buffer-urls ()
+  "Narrow down and open a URL in buffer."
+  (interactive)
+  (helm :sources `(((name . "Buffer URLs")
+                    (candidates . ,(ar/helm-buffer-url-candidates))
+                    (action . (lambda (url)
+                                (browse-url url)))))))
 </pre>
 </div>
 </div>
@@ -1416,7 +1416,7 @@ Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPl
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ defaults read <span style="color: #ff5f87;">\</span>
+<pre class="src src-sh">$ defaults read \
     /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 </pre>
 </div>
@@ -1485,9 +1485,9 @@ Lots of great tips in <a href="http://sachachua.com/blog/2015/03/emacs-hangout-2
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #a86;">:PRIVATE:</span>
+<pre class="src src-org">:PRIVATE:
 My super duper secret text I don't want to export.
-<span style="color: #a86;">:END:</span>
+:END:
 </pre>
 </div>
 <ul class="org-ul">
@@ -1588,17 +1588,17 @@ My super duper secret text I don't want to export.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-objc"><span style="color: #b2baf6;">NSString</span> *<span style="color: #f6df92;">title</span> = @<span style="color: #ff5f87;">"Sharing on iOS bookmarks."</span>;
-<span style="color: #b2baf6;">NSURL</span> *<span style="color: #f6df92;">url</span> = <span style="color: #bebebe; font-weight: bold;">[</span>NSURL <span style="color: #f09fff; font-style: italic;">URLWithString</span>:@<span style="color: #ff5f87;">"http://xenodium.com/#sharing-on-ios"</span><span style="color: #bebebe; font-weight: bold;">]</span>;
-<span style="color: #b2baf6;">UIImage</span> *<span style="color: #f6df92;">image</span> = <span style="color: #bebebe; font-weight: bold;">[</span><span style="color: #b2baf6;">UIImage</span> <span style="color: #f09fff; font-style: italic;">imageNamed</span>:@<span style="color: #ff5f87;">"beautiful-image"</span><span style="color: #bebebe; font-weight: bold;">]</span>;
+<pre class="src src-objc">NSString *title = @"Sharing on iOS bookmarks.";
+NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
+UIImage *image = [UIImage imageNamed:@"beautiful-image"];
 
-<span style="color: #b2baf6;">UIActivityViewController</span> *<span style="color: #f6df92;">controller</span> =
-  <span style="color: #bebebe; font-weight: bold;">[</span><span style="color: #5af2ee; font-weight: bold;">[</span><span style="color: #b2baf6;">UIActivityViewController</span> <span style="color: #f09fff; font-style: italic;">alloc</span><span style="color: #5af2ee; font-weight: bold;">]</span>
-    <span style="color: #f09fff; font-style: italic;">initWithActivityItems</span>:@<span style="color: #5af2ee;">[</span>title, url, image<span style="color: #5af2ee;">]</span>
-    <span style="color: #f09fff; font-style: italic;">applicationActivities</span>:<span style="color: #3aff83;">nil</span><span style="color: #bebebe; font-weight: bold;">]</span>;
+UIActivityViewController *controller =
+  [[UIActivityViewController alloc]
+    initWithActivityItems:@[title, url, image]
+    applicationActivities:nil];
 
-<span style="color: #f6df92; font-style: italic;">// </span><span style="color: #efc334; font-style: italic;">self being a UIViewController.</span>
-<span style="color: #bebebe; font-weight: bold;">[</span><span style="color: #5af2ee;">self</span> <span style="color: #f09fff; font-style: italic;">presentViewController</span>:controller <span style="color: #f09fff; font-style: italic;">animated</span>:<span style="color: #3aff83;">YES</span> <span style="color: #f09fff; font-style: italic;">completion</span>:<span style="color: #3aff83;">nil</span><span style="color: #bebebe; font-weight: bold;">]</span>;
+// self being a UIViewController.
+[self presentViewController:controller animated:YES completion:nil];
 </pre>
 </div>
 <ul class="org-ul">
@@ -1721,7 +1721,7 @@ Wanted to track down which package was enabling ido-mode on my behalf. debug-on-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>debug-on-entry 'ido-mode<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(debug-on-entry 'ido-mode)
 </pre>
 </div>
 <p>
@@ -1729,7 +1729,7 @@ When done, use cancel.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(cancel-debug-on-entry 'ido-mode)
 </pre>
 </div>
 </div>
@@ -1780,7 +1780,7 @@ When done, use cancel.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">defaults read <span style="color: #ff5f87;">\</span>
+<pre class="src src-sh">defaults read \
     /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 </pre>
 </div>
@@ -1809,8 +1809,8 @@ When done, use cancel.
 <div class="outline-text-2" id="text-uninstalling-alcatraz-from-xcode">
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #ff5f87;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
-$ rm -rf ~/Library/Application<span style="color: #ff5f87;">\ </span>Support/Alcatraz
+<pre class="src src-sh">$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
+$ rm -rf ~/Library/Application\ Support/Alcatraz
 </pre>
 </div>
 <p>
@@ -1818,7 +1818,7 @@ ps. Removing all plugins:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #ff5f87;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/*
+<pre class="src src-sh">$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
 </pre>
 </div>
 </div>
@@ -1831,17 +1831,17 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">defun</span> <span style="color: #f09fff; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #5af2ee;">()</span>
-  <span style="color: #c350ff; font-style: italic;">"Pre-fill swiper input with region."</span>
-  <span style="color: #5af2ee;">(</span>interactive<span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">if</span> <span style="color: #f6df92;">(</span>region-active-p<span style="color: #f6df92;">)</span>
-      <span style="color: #f6df92;">(</span><span style="color: #5af2ee;">let</span> <span style="color: #acfb5a;">(</span><span style="color: #b2baf6;">(</span>region-text <span style="color: #bebebe;">(</span>buffer-substring <span style="color: #5af2ee;">(</span>region-beginning<span style="color: #5af2ee;">)</span>
-                                           <span style="color: #5af2ee;">(</span>region-end<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span><span style="color: #b2baf6;">)</span><span style="color: #acfb5a;">)</span>
-        <span style="color: #acfb5a;">(</span>swiper region-text<span style="color: #acfb5a;">)</span><span style="color: #f6df92;">)</span>
-    <span style="color: #f6df92;">(</span>swiper<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(defun ar/prefilled-swiper ()
+  "Pre-fill swiper input with region."
+  (interactive)
+  (if (region-active-p)
+      (let ((region-text (buffer-substring (region-beginning)
+                                           (region-end))))
+        (swiper region-text))
+    (swiper)))
 
-<span style="color: #bebebe;">(</span>global-set-key <span style="color: #5af2ee;">(</span>kbd <span style="color: #ff5f87;">"C-s"</span><span style="color: #5af2ee;">)</span>
-                #'ar/prefilled-swiper<span style="color: #bebebe;">)</span>
+(global-set-key (kbd "C-s")
+                #'ar/prefilled-swiper)
 </pre>
 </div>
 </div>
@@ -2175,7 +2175,7 @@ $ ./build.sh --clang-completer
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial <span style="color: #ff5f87;">\</span>
+<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial \
     --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
 </pre>
 </div>
@@ -2700,7 +2700,7 @@ $ ./build.sh --clang-completer
 <div id="outline-container-go-bookmarks" class="outline-2">
 <h2 id="go-bookmarks"><a id="sec-109" name="sec-109"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#go-bookmarks">#</a> Go bookmarks</h2>
 <div class="outline-text-2" id="text-go-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-06-26 Fri]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+spf13+(Steve+Francia's+Blog)">7 Common mistakes in Go</a>.
 </li>
@@ -2731,6 +2731,8 @@ $ ./build.sh --clang-completer
 <li><a href="http://goji.io/">Goji: A web microframework for Golang</a>.
 </li>
 <li><a href="http://golangtoolbox.com/">Golang toolbox (high quality Go packages)</a>.
+</li>
+<li><a href="https://github.com/levigross/grequests">GRequests: A Go "clone" of the great and famous Requests library</a>.
 </li>
 <li><a href="http://bouk.co/blog/monkey-patching-in-go/">Monkey Patching in Go</a>.
 </li>
@@ -2805,7 +2807,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>setq-local my-clever-var<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(setq-local my-clever-var)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2814,9 +2816,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>add-hook 'write-file-hooks
-          <span style="color: #5af2ee;">(</span><span style="color: #5af2ee;">lambda</span> <span style="color: #f6df92;">()</span>
-            <span style="color: #f6df92;">(</span>message <span style="color: #ff5f87;">"about to save!"</span><span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(add-hook 'write-file-hooks
+          (lambda ()
+            (message "about to save!")))
 </pre>
 </div>
 <ul class="org-ul">
@@ -2825,7 +2827,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>make-comint NAME PROGRAM <span style="color: #b2baf6;">&amp;optional</span> STARTFILE <span style="color: #b2baf6;">&amp;rest</span> SWITCHES<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(make-comint NAME PROGRAM &amp;optional STARTFILE &amp;rest SWITCHES)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2834,14 +2836,14 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>setq my-marker <span style="color: #5af2ee;">(</span>copy-marker <span style="color: #f6df92;">(</span>point<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(setq my-marker (copy-marker (point)))
   #&lt;marker at 10251 in *ielm*&gt;
 
-<span style="color: #bebebe;">(</span>marker-buffer my-marker<span style="color: #bebebe;">)</span>
+(marker-buffer my-marker)
   #&lt;buffer *ielm*&gt;
 
-<span style="color: #bebebe;">(</span>marker-position my-marker<span style="color: #bebebe;">)</span>
-  10251 <span style="color: #bebebe;">(</span>#o24013, #x280b, ?&#10251;<span style="color: #bebebe;">)</span>
+(marker-position my-marker)
+  10251 (#o24013, #x280b, ?⠋)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2850,7 +2852,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>org-get-heading 'no-tags 'no-todo<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(org-get-heading 'no-tags 'no-todo)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2876,7 +2878,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>org-end-of-meta-data-and-drawers<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(org-end-of-meta-data-and-drawers)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2885,7 +2887,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>org-open-link-from-string <span style="color: #ff5f87;">"[[#%exciting-custom-id]]"</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(org-open-link-from-string "[[#%exciting-custom-id]]")
 </pre>
 </div>
 <ul class="org-ul">
@@ -2912,10 +2914,10 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">let</span> <span style="color: #5af2ee;">(</span><span style="color: #f6df92;">(</span>my-var <span style="color: #acfb5a;">(</span>list <span style="color: #ff5f87;">"val1"</span>
-                    <span style="color: #ff5f87;">"val2"</span>
-                    <span style="color: #ff5f87;">"val3"</span><span style="color: #acfb5a;">)</span><span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>pp-to-string my-var<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(let ((my-var (list "val1"
+                    "val2"
+                    "val3")))
+  (pp-to-string my-var))
 </pre>
 </div>
 <ul class="org-ul">
@@ -2924,13 +2926,13 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>re-search-forward <span style="color: #ff5f87;">"needle"</span>
-                   nil t<span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>match-beginning 0<span style="color: #bebebe;">)</span> <span style="color: #f6df92; font-style: italic;">;; </span><span style="color: #efc334; font-style: italic;">Start location of match from last search.</span>
-<span style="color: #bebebe;">(</span>match-end 0<span style="color: #bebebe;">)</span> <span style="color: #f6df92; font-style: italic;">;; </span><span style="color: #efc334; font-style: italic;">End location of match from last search.</span>
-<span style="color: #bebebe;">(</span>replace-match <span style="color: #ff5f87;">"love"</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(re-search-forward "needle"
+                   nil t)
+(match-beginning 0) ;; Start location of match from last search.
+(match-end 0) ;; End location of match from last search.
+(replace-match "love")
 
-<span style="color: #f6df92; font-style: italic;">;; </span><span style="color: #efc334; font-style: italic;">needle-in-haystack</span>
+;; needle-in-haystack
 </pre>
 </div>
 <ul class="org-ul">
@@ -2939,8 +2941,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>narrow-to-region <span style="color: #5af2ee;">(</span>point<span style="color: #5af2ee;">)</span>
-                  <span style="color: #5af2ee;">(</span>point-max<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(narrow-to-region (point)
+                  (point-max))
 </pre>
 </div>
 <ul class="org-ul">
@@ -2949,8 +2951,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">save-restriction</span> <span style="color: #5af2ee;">(</span>narrow-to-region <span style="color: #f6df92;">(</span>point<span style="color: #f6df92;">)</span>
-                                    <span style="color: #f6df92;">(</span>point-max<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span>
+<pre class="src src-emacs-lisp">(save-restriction (narrow-to-region (point)
+                                    (point-max))
 </pre>
 </div>
 <ul class="org-ul">
@@ -2959,8 +2961,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">save-excursion</span> <span style="color: #5af2ee;">(</span>goto-char <span style="color: #f6df92;">(</span>point-max<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span>
-                <span style="color: #5af2ee;">(</span>insert <span style="color: #ff5f87;">"Hello elisp."</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(save-excursion (goto-char (point-max))
+                (insert "Hello elisp."))
 </pre>
 </div>
 <ul class="org-ul">
@@ -2969,7 +2971,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>concat <span style="color: #ff5f87;">"Hello "</span> <span style="color: #ff5f87;">"elisp "</span> <span style="color: #ff5f87;">"world."</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(concat "Hello " "elisp " "world.")
 </pre>
 </div>
 <ul class="org-ul">
@@ -2978,9 +2980,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>thing-at-point 'word<span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>thing-at-point 'symbol<span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>thing-at-point 'line<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(thing-at-point 'word)
+(thing-at-point 'symbol)
+(thing-at-point 'line)
 </pre>
 </div>
 <ul class="org-ul">
@@ -2991,8 +2993,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">dolist</span> <span style="color: #5af2ee;">(</span>v '<span style="color: #f6df92;">(</span><span style="color: #ff5f87;">"a"</span> <span style="color: #ff5f87;">"b"</span> <span style="color: #ff5f87;">"c"</span><span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>print v<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(dolist (v '("a" "b" "c"))
+  (print v))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3001,9 +3003,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">with-current-buffer</span> <span style="color: #5af2ee;">(</span>get-buffer-create <span style="color: #ff5f87;">"*some buffer*"</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>princ '<span style="color: #f6df92;">(</span>some list to print<span style="color: #f6df92;">)</span>
-         <span style="color: #f6df92;">(</span>current-buffer<span style="color: #f6df92;">)</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(with-current-buffer (get-buffer-create "*some buffer*")
+  (princ '(some list to print)
+         (current-buffer)))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3012,9 +3014,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">with-temp-buffer</span>
-  <span style="color: #5af2ee;">(</span>insert <span style="color: #ff5f87;">"abc"</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>point<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(with-temp-buffer
+  (insert "abc")
+  (point))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3025,7 +3027,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>string-match-p REGEXP STRING <span style="color: #b2baf6;">&amp;optional</span> START<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(string-match-p REGEXP STRING &amp;optional START)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3034,21 +3036,21 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>setq haystack <span style="color: #ff5f87;">"Always click [[http://reddit.com/r/emacs][here]]."</span><span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>setq needle-re <span style="color: #ff5f87;">"\\[\\[</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">(</span><span style="color: #ff5f87;">.*</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">)</span><span style="color: #ff5f87;">]\\[</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">(</span><span style="color: #ff5f87;">.*</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">)</span><span style="color: #ff5f87;">]]"</span><span style="color: #bebebe;">)</span>
-  <span style="color: #ff5f87;">"\\[\\[</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">(</span><span style="color: #ff5f87;">.*</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">)</span><span style="color: #ff5f87;">]\\[</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">(</span><span style="color: #ff5f87;">.*</span><span style="color: #5af2ee; font-weight: bold;">\\</span><span style="color: #c350ff; font-weight: bold;">)</span><span style="color: #ff5f87;">]]"</span>
+<pre class="src src-emacs-lisp">(setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+(setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+  "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
 
-<span style="color: #bebebe;">(</span>string-match needle-re haystack<span style="color: #bebebe;">)</span>
-  13 <span style="color: #bebebe;">(</span>#o15, #xd, ?\C-m<span style="color: #bebebe;">)</span>
+(string-match needle-re haystack)
+  13 (#o15, #xd, ?\C-m)
 
-<span style="color: #bebebe;">(</span>match-string 0 haystack<span style="color: #bebebe;">)</span>
-  <span style="color: #ff5f87;">"[[http://reddit.com/r/emacs][here]]"</span>
+(match-string 0 haystack)
+  "[[http://reddit.com/r/emacs][here]]"
 
-<span style="color: #bebebe;">(</span>match-string 1 haystack<span style="color: #bebebe;">)</span>
-  <span style="color: #ff5f87;">"http://reddit.com/r/emacs"</span>
+(match-string 1 haystack)
+  "http://reddit.com/r/emacs"
 
-<span style="color: #bebebe;">(</span>match-string 2 haystack<span style="color: #bebebe;">)</span>
-  <span style="color: #ff5f87;">"here"</span>
+(match-string 2 haystack)
+  "here"
 </pre>
 </div>
 <ul class="org-ul">
@@ -3057,7 +3059,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>identity ARG<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(identity ARG)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3066,7 +3068,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>org-insert-time-stamp <span style="color: #5af2ee;">(</span>current-time<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(org-insert-time-stamp (current-time))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3077,7 +3079,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>car LIST<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(car LIST)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3086,7 +3088,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>cdr LIST<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(cdr LIST)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3095,7 +3097,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>push NEWELT PLACE<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(push NEWELT PLACE)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3104,7 +3106,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(mapcar FUNCTION SEQUENCE)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3113,8 +3115,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span><span style="color: #5af2ee;">while</span> <span style="color: #5af2ee;">(</span>search-forward <span style="color: #ff5f87;">"Hello"</span><span style="color: #5af2ee;">)</span>
-  <span style="color: #5af2ee;">(</span>replace-match <span style="color: #ff5f87;">"Bonjour"</span><span style="color: #5af2ee;">)</span><span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(while (search-forward "Hello")
+  (replace-match "Bonjour"))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3622,42 +3624,60 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-emacs-tips-backlog" class="outline-2">
-<h2 id="emacs-tips-backlog"><a id="sec-126" name="sec-126"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-03 wed]</span></span> <a href="#emacs-tips-backlog">#</a> emacs tips backlog</h2>
+<h2 id="emacs-tips-backlog"><a id="sec-126" name="sec-126"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-03 wed]</span></span> <a href="#emacs-tips-backlog">#</a> Emacs tips backlog</h2>
 <div class="outline-text-2" id="text-emacs-tips-backlog">
 </div>
 <div id="outline-container-sec-126-1" class="outline-3">
-<h3 id="sec-126-1">avoid writing pitfalls using artbollocks-mode and writegood</h3>
+<h3 id="sec-126-1">delete-duplicate-lines</h3>
 <div class="outline-text-3" id="text-126-1">
 <p>
-more at sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.
+Delete all but one copy of any identical lines in the region. Duplicates may or may not be adjacent.
 </p>
 </div>
 </div>
 <div id="outline-container-sec-126-2" class="outline-3">
-<h3 id="sec-126-2">try out <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.</h3>
+<h3 id="sec-126-2">artbollocks-mode and writegood</h3>
+<div class="outline-text-3" id="text-126-2">
+<p>
+Both help avoid writing pitfalls. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.
+</p>
+</div>
 </div>
 <div id="outline-container-sec-126-3" class="outline-3">
-<h3 id="sec-126-3">create presentations in org and export via <a href="https://coldnew.github.io/slides/org-ioslide">org-ioslide</a>.</h3>
+<h3 id="sec-126-3">org-multiple-keymap</h3>
+<div class="outline-text-3" id="text-126-3">
+<p>
+A minor-mode to apply different keymaps per org element. More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.
+</p>
+</div>
 </div>
 <div id="outline-container-sec-126-4" class="outline-3">
-<h3 id="sec-126-4">yasnippet mirrors with transformations</h3>
+<h3 id="sec-126-4">org-ioslide</h3>
 <div class="outline-text-3" id="text-126-4">
+<p>
+create presentations in org and export via <a href="https://coldnew.github.io/slides/org-ioslide">org-ioslide</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-126-5" class="outline-3">
+<h3 id="sec-126-5">yasnippet mirrors with transformations</h3>
+<div class="outline-text-3" id="text-126-5">
 <p>
 for example:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #f09fff; font-style: italic;">-</span> <span style="color: #bebebe;">(</span>$<span style="color: #5af2ee;">{</span><span style="color: #f6df92;">1</span>:id<span style="color: #5af2ee;">}</span><span style="color: #bebebe;">)</span>$<span style="color: #bebebe;">{</span><span style="color: #f6df92;">2</span>:foo<span style="color: #bebebe;">}</span>
-<span style="color: #bebebe;">{</span>
-    <span style="color: #5af2ee;">return</span> $<span style="color: #f6df92;">2</span>;
-<span style="color: #bebebe;">}</span>
+<pre class="src src-sh">- (${1:id})${2:foo}
+{
+    return $2;
+}
 
-<span style="color: #f09fff; font-style: italic;">-</span> <span style="color: #bebebe;">(</span>void<span style="color: #bebebe;">)</span><span style="color: #b2baf6;">set</span>$<span style="color: #bebebe;">{</span><span style="color: #f6df92;">2</span>:$<span style="color: #5af2ee;">(</span><span style="color: #d020a7;">capitalize</span> yas-text<span style="color: #5af2ee;">)</span><span style="color: #bebebe;">}</span>:<span style="color: #bebebe;">(</span>$<span style="color: #f6df92;">1</span><span style="color: #bebebe;">)</span>avalue
-<span style="color: #bebebe;">{</span>
-    <span style="color: #5af2ee;">[</span>$<span style="color: #f6df92;">2</span> autorelease<span style="color: #5af2ee;">]</span>;
-    $<span style="color: #f6df92;">2</span> = <span style="color: #5af2ee;">[</span>avalue retain<span style="color: #5af2ee;">]</span>;
-<span style="color: #bebebe;">}</span>
-$<span style="color: #f6df92;">0</span>
+- (void)set${2:$(capitalize yas-text)}:($1)avalue
+{
+    [$2 autorelease];
+    $2 = [avalue retain];
+}
+$0
 </pre>
 </div>
 <p>
@@ -3665,25 +3685,11 @@ more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.ht
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-5" class="outline-3">
-<h3 id="sec-126-5">installing emacs 24.4 on mac os</h3>
-<div class="outline-text-3" id="text-126-5">
-<p>
-see yamamoto's mac <a href="https://github.com/railwaycat/emacs-mac-port">port</a>.
-</p>
-<div class="org-src-container">
-
-<pre class="src src-sh">$ brew tap railwaycat/emacsmacport
-$ brew install emacs-mac
-</pre>
-</div>
-</div>
-</div>
 <div id="outline-container-sec-126-6" class="outline-3">
-<h3 id="sec-126-6">graphical system monitor</h3>
+<h3 id="sec-126-6">symon</h3>
 <div class="outline-text-3" id="text-126-6">
 <p>
-see <a href="https://github.com/zk-phi/symon">symon</a>.
+Graphical system monitor. See <a href="https://github.com/zk-phi/symon">symon</a>.
 </p>
 </div>
 </div>
@@ -3782,161 +3788,152 @@ see <a href="https://github.com/hagleitn/speed-type">speedtype</a>.
 </div>
 </div>
 <div id="outline-container-sec-126-20" class="outline-3">
-<h3 id="sec-126-20">building emacs 24.4 on linux</h3>
+<h3 id="sec-126-20">jumping around tips</h3>
 <div class="outline-text-3" id="text-126-20">
-<p>
-    sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
-./configure &#x2013;with-gtk &#x2013;prefix=/your/fav/prefix
-</p>
-</div>
-</div>
-<div id="outline-container-sec-126-21" class="outline-3">
-<h3 id="sec-126-21">jumping around tips</h3>
-<div class="outline-text-3" id="text-126-21">
 <p>
 see <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-22" class="outline-3">
-<h3 id="sec-126-22">use-package post</h3>
-<div class="outline-text-3" id="text-126-22">
+<div id="outline-container-sec-126-21" class="outline-3">
+<h3 id="sec-126-21">use-package post</h3>
+<div class="outline-text-3" id="text-126-21">
 <p>
 at <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-23" class="outline-3">
-<h3 id="sec-126-23">static blog</h3>
-<div class="outline-text-3" id="text-126-23">
+<div id="outline-container-sec-126-22" class="outline-3">
+<h3 id="sec-126-22">static blog</h3>
+<div class="outline-text-3" id="text-126-22">
 <p>
 see <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-24" class="outline-3">
-<h3 id="sec-126-24">youtube-dl for emacs</h3>
-<div class="outline-text-3" id="text-126-24">
+<div id="outline-container-sec-126-23" class="outline-3">
+<h3 id="sec-126-23">youtube-dl for emacs</h3>
+<div class="outline-text-3" id="text-126-23">
 <p>
 see <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-25" class="outline-3">
-<h3 id="sec-126-25">clang indexing tool</h3>
-<div class="outline-text-3" id="text-126-25">
+<div id="outline-container-sec-126-24" class="outline-3">
+<h3 id="sec-126-24">clang indexing tool</h3>
+<div class="outline-text-3" id="text-126-24">
 <p>
 see <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-26" class="outline-3">
-<h3 id="sec-126-26">project management for c/c++</h3>
-<div class="outline-text-3" id="text-126-26">
+<div id="outline-container-sec-126-25" class="outline-3">
+<h3 id="sec-126-25">project management for c/c++</h3>
+<div class="outline-text-3" id="text-126-25">
 <p>
 see <a href="https://github.com/lefterisjp/malinka">malinka</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-27" class="outline-3">
-<h3 id="sec-126-27">git modes</h3>
-<div class="outline-text-3" id="text-126-27">
+<div id="outline-container-sec-126-26" class="outline-3">
+<h3 id="sec-126-26">git modes</h3>
+<div class="outline-text-3" id="text-126-26">
 <p>
 see <a href="https://github.com/magit/git-modes">git-modes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-28" class="outline-3">
-<h3 id="sec-126-28">lots of org links</h3>
-<div class="outline-text-3" id="text-126-28">
+<div id="outline-container-sec-126-27" class="outline-3">
+<h3 id="sec-126-27">lots of org links</h3>
+<div class="outline-text-3" id="text-126-27">
 <p>
 found at <a href="http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/">dain.io</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-29" class="outline-3">
-<h3 id="sec-126-29">create custom theme</h3>
-<div class="outline-text-3" id="text-126-29">
+<div id="outline-container-sec-126-28" class="outline-3">
+<h3 id="sec-126-28">create custom theme</h3>
+<div class="outline-text-3" id="text-126-28">
 <p>
 see trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-30" class="outline-3">
-<h3 id="sec-126-30">gtd emacs workflow</h3>
-<div class="outline-text-3" id="text-126-30">
+<div id="outline-container-sec-126-29" class="outline-3">
+<h3 id="sec-126-29">gtd emacs workflow</h3>
+<div class="outline-text-3" id="text-126-29">
 <p>
 see charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-31" class="outline-3">
-<h3 id="sec-126-31">simplify file transformations</h3>
-<div class="outline-text-3" id="text-126-31">
+<div id="outline-container-sec-126-30" class="outline-3">
+<h3 id="sec-126-30">simplify file transformations</h3>
+<div class="outline-text-3" id="text-126-30">
 <p>
 see <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-32" class="outline-3">
-<h3 id="sec-126-32">lisp editing</h3>
-<div class="outline-text-3" id="text-126-32">
+<div id="outline-container-sec-126-31" class="outline-3">
+<h3 id="sec-126-31">lisp editing</h3>
+<div class="outline-text-3" id="text-126-31">
 <p>
 see <a href="https://github.com/abo-abo/lispy">lispy</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-33" class="outline-3">
-<h3 id="sec-126-33">continue comment blocks</h3>
-<div class="outline-text-3" id="text-126-33">
+<div id="outline-container-sec-126-32" class="outline-3">
+<h3 id="sec-126-32">continue comment blocks</h3>
+<div class="outline-text-3" id="text-126-32">
 <p>
 m-j (indent-new-comment-line).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-34" class="outline-3">
-<h3 id="sec-126-34">o(1) link jump</h3>
-<div class="outline-text-3" id="text-126-34">
+<div id="outline-container-sec-126-33" class="outline-3">
+<h3 id="sec-126-33">o(1) link jump</h3>
+<div class="outline-text-3" id="text-126-33">
 <p>
 see <a href="http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link">ace-link</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-35" class="outline-3">
-<h3 id="sec-126-35">choosing magit repo</h3>
-<div class="outline-text-3" id="text-126-35">
+<div id="outline-container-sec-126-34" class="outline-3">
+<h3 id="sec-126-34">choosing magit repo</h3>
+<div class="outline-text-3" id="text-126-34">
 <p>
 c-u c-x g (magit-status).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-36" class="outline-3">
-<h3 id="sec-126-36">project templates</h3>
-<div class="outline-text-3" id="text-126-36">
+<div id="outline-container-sec-126-35" class="outline-3">
+<h3 id="sec-126-35">project templates</h3>
+<div class="outline-text-3" id="text-126-35">
 <p>
 see <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-37" class="outline-3">
-<h3 id="sec-126-37">melpa recipe format</h3>
-<div class="outline-text-3" id="text-126-37">
+<div id="outline-container-sec-126-36" class="outline-3">
+<h3 id="sec-126-36">melpa recipe format</h3>
+<div class="outline-text-3" id="text-126-36">
 <p>
 see <a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-38" class="outline-3">
-<h3 id="sec-126-38">emacs regex</h3>
-<div class="outline-text-3" id="text-126-38">
+<div id="outline-container-sec-126-37" class="outline-3">
+<h3 id="sec-126-37">emacs regex</h3>
+<div class="outline-text-3" id="text-126-37">
 <p>
 see <a href="http://ergoemacs.org/emacs/emacs_regex.html">emacs: text pattern matching (regex) tutorial</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-39" class="outline-3">
-<h3 id="sec-126-39">naturaldocs for javascript in emacs</h3>
-<div class="outline-text-3" id="text-126-39">
+<div id="outline-container-sec-126-38" class="outline-3">
+<h3 id="sec-126-38">naturaldocs for javascript in emacs</h3>
+<div class="outline-text-3" id="text-126-38">
 <p>
 see <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">vineet's post</a>.
 <code>=====</code>
@@ -3944,217 +3941,217 @@ At <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-40" class="outline-3">
-<h3 id="sec-126-40">Static blog</h3>
-<div class="outline-text-3" id="text-126-40">
+<div id="outline-container-sec-126-39" class="outline-3">
+<h3 id="sec-126-39">Static blog</h3>
+<div class="outline-text-3" id="text-126-39">
 <p>
 See <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-41" class="outline-3">
-<h3 id="sec-126-41">youtube-dl for Emacs</h3>
-<div class="outline-text-3" id="text-126-41">
+<div id="outline-container-sec-126-40" class="outline-3">
+<h3 id="sec-126-40">youtube-dl for Emacs</h3>
+<div class="outline-text-3" id="text-126-40">
 <p>
 See <a href="http://oremacs.com/2015/01/05/youtube-dl/">Or emacs</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-42" class="outline-3">
-<h3 id="sec-126-42">Clang indexing tool</h3>
-<div class="outline-text-3" id="text-126-42">
+<div id="outline-container-sec-126-41" class="outline-3">
+<h3 id="sec-126-41">Clang indexing tool</h3>
+<div class="outline-text-3" id="text-126-41">
 <p>
 See <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-43" class="outline-3">
-<h3 id="sec-126-43">Project management for C/C++</h3>
-<div class="outline-text-3" id="text-126-43">
+<div id="outline-container-sec-126-42" class="outline-3">
+<h3 id="sec-126-42">Project management for C/C++</h3>
+<div class="outline-text-3" id="text-126-42">
 <p>
 See <a href="https://github.com/LefterisJP/malinka">Malinka</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-44" class="outline-3">
-<h3 id="sec-126-44">Git modes</h3>
-<div class="outline-text-3" id="text-126-44">
+<div id="outline-container-sec-126-43" class="outline-3">
+<h3 id="sec-126-43">Git modes</h3>
+<div class="outline-text-3" id="text-126-43">
 <p>
 See <a href="https://github.com/magit/git-modes">git-modes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-45" class="outline-3">
-<h3 id="sec-126-45">Lots of org links</h3>
-<div class="outline-text-3" id="text-126-45">
+<div id="outline-container-sec-126-44" class="outline-3">
+<h3 id="sec-126-44">Lots of org links</h3>
+<div class="outline-text-3" id="text-126-44">
 <p>
 Found at <a href="http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/">dain.io</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-46" class="outline-3">
-<h3 id="sec-126-46">Create custom theme</h3>
-<div class="outline-text-3" id="text-126-46">
+<div id="outline-container-sec-126-45" class="outline-3">
+<h3 id="sec-126-45">Create custom theme</h3>
+<div class="outline-text-3" id="text-126-45">
 <p>
 See Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-47" class="outline-3">
-<h3 id="sec-126-47">GTD Emacs workflow</h3>
-<div class="outline-text-3" id="text-126-47">
+<div id="outline-container-sec-126-46" class="outline-3">
+<h3 id="sec-126-46">GTD Emacs workflow</h3>
+<div class="outline-text-3" id="text-126-46">
 <p>
 See Charles Cave's <a href="http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html">notes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-48" class="outline-3">
-<h3 id="sec-126-48">Simplify file transformations</h3>
-<div class="outline-text-3" id="text-126-48">
+<div id="outline-container-sec-126-47" class="outline-3">
+<h3 id="sec-126-47">Simplify file transformations</h3>
+<div class="outline-text-3" id="text-126-47">
 <p>
 See <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-49" class="outline-3">
-<h3 id="sec-126-49">LISP editing</h3>
-<div class="outline-text-3" id="text-126-49">
+<div id="outline-container-sec-126-48" class="outline-3">
+<h3 id="sec-126-48">LISP editing</h3>
+<div class="outline-text-3" id="text-126-48">
 <p>
 See <a href="https://github.com/abo-abo/lispy">lispy</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-50" class="outline-3">
-<h3 id="sec-126-50">Continue comment blocks</h3>
-<div class="outline-text-3" id="text-126-50">
+<div id="outline-container-sec-126-49" class="outline-3">
+<h3 id="sec-126-49">Continue comment blocks</h3>
+<div class="outline-text-3" id="text-126-49">
 <p>
 M-j (indent-new-comment-line).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-51" class="outline-3">
-<h3 id="sec-126-51">O(1) link jump</h3>
-<div class="outline-text-3" id="text-126-51">
+<div id="outline-container-sec-126-50" class="outline-3">
+<h3 id="sec-126-50">O(1) link jump</h3>
+<div class="outline-text-3" id="text-126-50">
 <p>
 See <a href="http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link">ace-link</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-52" class="outline-3">
-<h3 id="sec-126-52">Choosing magit repo</h3>
-<div class="outline-text-3" id="text-126-52">
+<div id="outline-container-sec-126-51" class="outline-3">
+<h3 id="sec-126-51">Choosing magit repo</h3>
+<div class="outline-text-3" id="text-126-51">
 <p>
 C-u C-x g (magit-status).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-53" class="outline-3">
-<h3 id="sec-126-53">Project templates</h3>
-<div class="outline-text-3" id="text-126-53">
+<div id="outline-container-sec-126-52" class="outline-3">
+<h3 id="sec-126-52">Project templates</h3>
+<div class="outline-text-3" id="text-126-52">
 <p>
 See <a href="https://github.com/chrisbarrett/skeletor.el">Skeletor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-54" class="outline-3">
-<h3 id="sec-126-54">Melpa recipe format</h3>
-<div class="outline-text-3" id="text-126-54">
+<div id="outline-container-sec-126-53" class="outline-3">
+<h3 id="sec-126-53">Melpa recipe format</h3>
+<div class="outline-text-3" id="text-126-53">
 <p>
 See <a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-55" class="outline-3">
-<h3 id="sec-126-55">NaturalDocs for JavaScript in Emacs</h3>
-<div class="outline-text-3" id="text-126-55">
+<div id="outline-container-sec-126-54" class="outline-3">
+<h3 id="sec-126-54">NaturalDocs for JavaScript in Emacs</h3>
+<div class="outline-text-3" id="text-126-54">
 <p>
 See <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-56" class="outline-3">
-<h3 id="sec-126-56">checkdoc</h3>
-<div class="outline-text-3" id="text-126-56">
+<div id="outline-container-sec-126-55" class="outline-3">
+<h3 id="sec-126-55">checkdoc</h3>
+<div class="outline-text-3" id="text-126-55">
 <p>
 checks buffer for doc strings file errors.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-57" class="outline-3">
-<h3 id="sec-126-57">check out <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a></h3>
-<div class="outline-text-3" id="text-126-57">
+<div id="outline-container-sec-126-56" class="outline-3">
+<h3 id="sec-126-56">check out <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a></h3>
+<div class="outline-text-3" id="text-126-56">
 <p>
 <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-58" class="outline-3">
-<h3 id="sec-126-58">toggling key bingings</h3>
-<div class="outline-text-3" id="text-126-58">
+<div id="outline-container-sec-126-57" class="outline-3">
+<h3 id="sec-126-57">toggling key bingings</h3>
+<div class="outline-text-3" id="text-126-57">
 <p>
 see <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-59" class="outline-3">
-<h3 id="sec-126-59">squashing commits with magit</h3>
-<div class="outline-text-3" id="text-126-59">
+<div id="outline-container-sec-126-58" class="outline-3">
+<h3 id="sec-126-58">squashing commits with magit</h3>
+<div class="outline-text-3" id="text-126-58">
 <p>
 see <a href="http://howardism.org/technical/emacs/magit-squashing.html">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-60" class="outline-3">
-<h3 id="sec-126-60">editing colors</h3>
-<div class="outline-text-3" id="text-126-60">
+<div id="outline-container-sec-126-59" class="outline-3">
+<h3 id="sec-126-59">editing colors</h3>
+<div class="outline-text-3" id="text-126-59">
 <p>
 see <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-61" class="outline-3">
-<h3 id="sec-126-61">hide lines longer than</h3>
-<div class="outline-text-3" id="text-126-61">
+<div id="outline-container-sec-126-60" class="outline-3">
+<h3 id="sec-126-60">hide lines longer than</h3>
+<div class="outline-text-3" id="text-126-60">
 <p>
 see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/selective-display.html">selective display</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-62" class="outline-3">
-<h3 id="sec-126-62">export org to reveal.js</h3>
-<div class="outline-text-3" id="text-126-62">
+<div id="outline-container-sec-126-61" class="outline-3">
+<h3 id="sec-126-61">export org to reveal.js</h3>
+<div class="outline-text-3" id="text-126-61">
 <p>
 see <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-63" class="outline-3">
-<h3 id="sec-126-63">beautify org</h3>
-<div class="outline-text-3" id="text-126-63">
+<div id="outline-container-sec-126-62" class="outline-3">
+<h3 id="sec-126-62">beautify org</h3>
+<div class="outline-text-3" id="text-126-62">
 <p>
 <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-64" class="outline-3">
-<h3 id="sec-126-64">minimalist appearance</h3>
-<div class="outline-text-3" id="text-126-64">
+<div id="outline-container-sec-126-63" class="outline-3">
+<h3 id="sec-126-63">minimalist appearance</h3>
+<div class="outline-text-3" id="text-126-63">
 <p>
 see <a href="https://github.com/dandavison/minimal">minimal</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-65" class="outline-3">
-<h3 id="sec-126-65">want buffer local cursor color?</h3>
-<div class="outline-text-3" id="text-126-65">
+<div id="outline-container-sec-126-64" class="outline-3">
+<h3 id="sec-126-64">want buffer local cursor color?</h3>
+<div class="outline-text-3" id="text-126-64">
 <p>
 see <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-66" class="outline-3">
-<h3 id="sec-126-66">narrowing regions</h3>
-<div class="outline-text-3" id="text-126-66">
+<div id="outline-container-sec-126-65" class="outline-3">
+<h3 id="sec-126-65">narrowing regions</h3>
+<div class="outline-text-3" id="text-126-65">
 <ul class="org-ul">
 <li>c-x n n (narrow-to-region).
 </li>
@@ -4163,17 +4160,17 @@ see <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-67" class="outline-3">
-<h3 id="sec-126-67">linux system-wide emacs keybindings</h3>
-<div class="outline-text-3" id="text-126-67">
+<div id="outline-container-sec-126-66" class="outline-3">
+<h3 id="sec-126-66">linux system-wide emacs keybindings</h3>
+<div class="outline-text-3" id="text-126-66">
 <p>
 see <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">how to get emacs key bindings in ubuntu</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-68" class="outline-3">
-<h3 id="sec-126-68">org protocol</h3>
-<div class="outline-text-3" id="text-126-68">
+<div id="outline-container-sec-126-67" class="outline-3">
+<h3 id="sec-126-67">org protocol</h3>
+<div class="outline-text-3" id="text-126-67">
 <ul class="org-ul">
 <li>see irreal's <a href="http://irreal.org/blog/?p=3594">post</a>.
 </li>
@@ -4182,42 +4179,42 @@ see <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindin
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-69" class="outline-3">
-<h3 id="sec-126-69">Editing XML?</h3>
-<div class="outline-text-3" id="text-126-69">
+<div id="outline-container-sec-126-68" class="outline-3">
+<h3 id="sec-126-68">Editing XML?</h3>
+<div class="outline-text-3" id="text-126-68">
 <p>
 Try out <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-70" class="outline-3">
-<h3 id="sec-126-70">Move by parens</h3>
-<div class="outline-text-3" id="text-126-70">
+<div id="outline-container-sec-126-69" class="outline-3">
+<h3 id="sec-126-69">Move by parens</h3>
+<div class="outline-text-3" id="text-126-69">
 <p>
 For example, C-M-u moves backward out of one level of parentheses. More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-71" class="outline-3">
-<h3 id="sec-126-71">Debug expanded elisp macros</h3>
-<div class="outline-text-3" id="text-126-71">
+<div id="outline-container-sec-126-70" class="outline-3">
+<h3 id="sec-126-70">Debug expanded elisp macros</h3>
+<div class="outline-text-3" id="text-126-70">
 <p>
 See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-72" class="outline-3">
-<h3 id="sec-126-72">Working with Java</h3>
-<div class="outline-text-3" id="text-126-72">
+<div id="outline-container-sec-126-71" class="outline-3">
+<h3 id="sec-126-71">Working with Java</h3>
+<div class="outline-text-3" id="text-126-71">
 <ul class="org-ul">
 <li><a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>.
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-73" class="outline-3">
-<h3 id="sec-126-73">Describe bindings</h3>
-<div class="outline-text-3" id="text-126-73">
+<div id="outline-container-sec-126-72" class="outline-3">
+<h3 id="sec-126-72">Describe bindings</h3>
+<div class="outline-text-3" id="text-126-72">
 <ul class="org-ul">
 <li>C-h b lists all bindings.
 </li>
@@ -4226,9 +4223,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-74" class="outline-3">
-<h3 id="sec-126-74">Shell commands</h3>
-<div class="outline-text-3" id="text-126-74">
+<div id="outline-container-sec-126-73" class="outline-3">
+<h3 id="sec-126-73">Shell commands</h3>
+<div class="outline-text-3" id="text-126-73">
 <ul class="org-ul">
 <li>C-u M-! (inline shell-command).
 </li>
@@ -4237,9 +4234,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-75" class="outline-3">
-<h3 id="sec-126-75">Search manuals</h3>
-<div class="outline-text-3" id="text-126-75">
+<div id="outline-container-sec-126-74" class="outline-3">
+<h3 id="sec-126-74">Search manuals</h3>
+<div class="outline-text-3" id="text-126-74">
 <ul class="org-ul">
 <li>info-apropos (lookup subject in all manuals).
 </li>
@@ -4248,9 +4245,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-76" class="outline-3">
-<h3 id="sec-126-76">Recursive query/replace</h3>
-<div class="outline-text-3" id="text-126-76">
+<div id="outline-container-sec-126-75" class="outline-3">
+<h3 id="sec-126-75">Recursive query/replace</h3>
+<div class="outline-text-3" id="text-126-75">
 <ul class="org-ul">
 <li>M-x find-dired RET.
 </li>
@@ -4271,29 +4268,29 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-126-77" class="outline-3">
-<h3 id="sec-126-77">Disable furniture</h3>
-<div class="outline-text-3" id="text-126-77">
+<div id="outline-container-sec-126-76" class="outline-3">
+<h3 id="sec-126-76">Disable furniture</h3>
+<div class="outline-text-3" id="text-126-76">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #bebebe;">(</span>menu-bar-mode -1<span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>toggle-scroll-bar -1<span style="color: #bebebe;">)</span>
-<span style="color: #bebebe;">(</span>tool-bar-mode -1<span style="color: #bebebe;">)</span>
+<pre class="src src-emacs-lisp">(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-sec-126-78" class="outline-3">
-<h3 id="sec-126-78">Repeat last command</h3>
-<div class="outline-text-3" id="text-126-78">
+<div id="outline-container-sec-126-77" class="outline-3">
+<h3 id="sec-126-77">Repeat last command</h3>
+<div class="outline-text-3" id="text-126-77">
 <p>
 C-x z (and just z threreafter).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-126-79" class="outline-3">
-<h3 id="sec-126-79">Replace char with a newline</h3>
-<div class="outline-text-3" id="text-126-79">
+<div id="outline-container-sec-126-78" class="outline-3">
+<h3 id="sec-126-78">Replace char with a newline</h3>
+<div class="outline-text-3" id="text-126-78">
 <ul class="org-ul">
 <li>M-x replace-string RET ; RET C-q C-j.
 </li>
@@ -4305,16 +4302,40 @@ C-x z (and just z threreafter).
 </div>
 </div>
 </div>
+<div id="outline-container-installing-emacs--on-linux" class="outline-2">
+<h2 id="installing-emacs--on-linux"><a id="sec-127" name="sec-127"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-linux">#</a> Installing Emacs 24.4 on Linux</h2>
+<div class="outline-text-2" id="text-installing-emacs--on-linux">
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-installing-emacs--on-mac-ox-x" class="outline-2">
+<h2 id="installing-emacs--on-mac-ox-x"><a id="sec-128" name="sec-128"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-mac-ox-x">#</a> Installing Emacs 24.4 on Mac OX X</h2>
+<div class="outline-text-2" id="text-installing-emacs--on-mac-ox-x">
+<p>
+See Yamamoto's Mac OS X <a href="https://github.com/railwaycat/emacs-mac-port">port</a>. To install:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">$ brew tap railwaycat/emacsmacport
+$ brew install emacs-mac
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-xcode6-tips" class="outline-2">
-<h2 id="xcode6-tips"><a id="sec-127" name="sec-127"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-11-02 Sun]</span></span> <a href="#xcode6-tips">#</a> Xcode6 tips</h2>
+<h2 id="xcode6-tips"><a id="sec-129" name="sec-129"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-11-02 Sun]</span></span> <a href="#xcode6-tips">#</a> Xcode6 tips</h2>
 <div class="outline-text-2" id="text-xcode6-tips">
 <p>
 From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-tricks-tech-talk-video">tech talk</a> And <a href="http://www.raywenderlich.com/72021/supercharging-xcode-efficiency">supercharging Your Xcode Efficiency (by Jack Wu)</a>.
 </p>
 </div>
-<div id="outline-container-sec-127-1" class="outline-3">
-<h3 id="sec-127-1">Shortcuts</h3>
-<div class="outline-text-3" id="text-127-1">
+<div id="outline-container-sec-129-1" class="outline-3">
+<h3 id="sec-129-1">Shortcuts</h3>
+<div class="outline-text-3" id="text-129-1">
 <ul class="org-ul">
 <li>⌘⇧o Fuzzy file search.
 </li>
@@ -4341,9 +4362,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-2" class="outline-3">
-<h3 id="sec-127-2">Xcode features</h3>
-<div class="outline-text-3" id="text-127-2">
+<div id="outline-container-sec-129-2" class="outline-3">
+<h3 id="sec-129-2">Xcode features</h3>
+<div class="outline-text-3" id="text-129-2">
 <ul class="org-ul">
 <li>Snippets.
 </li>
@@ -4357,9 +4378,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 
-<div id="outline-container-sec-127-3" class="outline-3">
-<h3 id="sec-127-3">Plugins of interest</h3>
-<div class="outline-text-3" id="text-127-3">
+<div id="outline-container-sec-129-3" class="outline-3">
+<h3 id="sec-129-3">Plugins of interest</h3>
+<div class="outline-text-3" id="text-129-3">
 <ul class="org-ul">
 <li>Fuzzy autocomplete.
 </li>
@@ -4374,7 +4395,7 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-emacs-lisp-bookmarks" class="outline-2">
-<h2 id="emacs-lisp-bookmarks"><a id="sec-128" name="sec-128"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-20 Sat]</span></span> <a href="#emacs-lisp-bookmarks">#</a> Emacs lisp bookmarks</h2>
+<h2 id="emacs-lisp-bookmarks"><a id="sec-130" name="sec-130"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-20 Sat]</span></span> <a href="#emacs-lisp-bookmarks">#</a> Emacs lisp bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-lisp-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-06 Sat]  updated  </em></span>
 <ul class="org-ul">
@@ -4430,7 +4451,7 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-emacs-bookmarks" class="outline-2">
-<h2 id="emacs-bookmarks"><a id="sec-129" name="sec-129"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-19 Fri]</span></span> <a href="#emacs-bookmarks">#</a> Emacs bookmarks</h2>
+<h2 id="emacs-bookmarks"><a id="sec-131" name="sec-131"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-19 Fri]</span></span> <a href="#emacs-bookmarks">#</a> Emacs bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -4578,12 +4599,12 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-resetting-gnome-terminal-preferences" class="outline-2">
-<h2 id="resetting-gnome-terminal-preferences"><a id="sec-130" name="sec-130"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-11 Thu]</span></span> <a href="#resetting-gnome-terminal-preferences">#</a> Resetting gnome-terminal preferences</h2>
+<h2 id="resetting-gnome-terminal-preferences"><a id="sec-132" name="sec-132"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-11 Thu]</span></span> <a href="#resetting-gnome-terminal-preferences">#</a> Resetting gnome-terminal preferences</h2>
 <div class="outline-text-2" id="text-resetting-gnome-terminal-preferences">
 </div>
-<div id="outline-container-sec-130-1" class="outline-3">
-<h3 id="sec-130-1">Resetting preferences</h3>
-<div class="outline-text-3" id="text-130-1">
+<div id="outline-container-sec-132-1" class="outline-3">
+<h3 id="sec-132-1">Resetting preferences</h3>
+<div class="outline-text-3" id="text-132-1">
 <div class="org-src-container">
 
 <pre class="src src-sh">gconftool --recursive-unset /apps/gnome-terminal
@@ -4591,9 +4612,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 </div>
-<div id="outline-container-sec-130-2" class="outline-3">
-<h3 id="sec-130-2">Want 256 colors?</h3>
-<div class="outline-text-3" id="text-130-2">
+<div id="outline-container-sec-132-2" class="outline-3">
+<h3 id="sec-132-2">Want 256 colors?</h3>
+<div class="outline-text-3" id="text-132-2">
 <p>
 Edit .bash_profile
 </p>
@@ -4602,9 +4623,9 @@ export TERM="screen-256color"
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-130-3" class="outline-3">
-<h3 id="sec-130-3">Ensure .bash_profile is loaded</h3>
-<div class="outline-text-3" id="text-130-3">
+<div id="outline-container-sec-132-3" class="outline-3">
+<h3 id="sec-132-3">Ensure .bash_profile is loaded</h3>
+<div class="outline-text-3" id="text-132-3">
 <p>
 From gnome-terminal window:
 </p>
@@ -4618,9 +4639,9 @@ gnome-terminal
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-130-4" class="outline-3">
-<h3 id="sec-130-4">Solarized</h3>
-<div class="outline-text-3" id="text-130-4">
+<div id="outline-container-sec-132-4" class="outline-3">
+<h3 id="sec-132-4">Solarized</h3>
+<div class="outline-text-3" id="text-132-4">
 <p>
 Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs">post</a> to get solarized on gnome-terminal.
 </p>
@@ -4628,7 +4649,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-java-bookmarks" class="outline-2">
-<h2 id="java-bookmarks"><a id="sec-131" name="sec-131"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#java-bookmarks">#</a> Java bookmarks</h2>
+<h2 id="java-bookmarks"><a id="sec-133" name="sec-133"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#java-bookmarks">#</a> Java bookmarks</h2>
 <div class="outline-text-2" id="text-java-bookmarks">
 <ul class="org-ul">
 <li><a href="https://code.google.com/p/lanterna/">Lanterna</a>, a text GUI (a la ncurses) written in Java.
@@ -4641,7 +4662,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-html5-bookmarks" class="outline-2">
-<h2 id="html5-bookmarks"><a id="sec-132" name="sec-132"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#html5-bookmarks">#</a> HTML5 bookmarks</h2>
+<h2 id="html5-bookmarks"><a id="sec-134" name="sec-134"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#html5-bookmarks">#</a> HTML5 bookmarks</h2>
 <div class="outline-text-2" id="text-html5-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -4683,7 +4704,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-python-bookmarks" class="outline-2">
-<h2 id="python-bookmarks"><a id="sec-133" name="sec-133"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#python-bookmarks">#</a> Python bookmarks</h2>
+<h2 id="python-bookmarks"><a id="sec-135" name="sec-135"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#python-bookmarks">#</a> Python bookmarks</h2>
 <div class="outline-text-2" id="text-python-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-05-04 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -4711,7 +4732,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-development-bookmarks" class="outline-2">
-<h2 id="development-bookmarks"><a id="sec-134" name="sec-134"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#development-bookmarks">#</a> Development bookmarks</h2>
+<h2 id="development-bookmarks"><a id="sec-136" name="sec-136"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#development-bookmarks">#</a> Development bookmarks</h2>
 <div class="outline-text-2" id="text-development-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -4751,7 +4772,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-some-python-idioms" class="outline-2">
-<h2 id="some-python-idioms"><a id="sec-135" name="sec-135"></a><span class="timestamp-wrapper"><span class="timestamp">[2013-11-04 Mon]</span></span> <a href="#some-python-idioms">#</a> Some python idioms</h2>
+<h2 id="some-python-idioms"><a id="sec-137" name="sec-137"></a><span class="timestamp-wrapper"><span class="timestamp">[2013-11-04 Mon]</span></span> <a href="#some-python-idioms">#</a> Some python idioms</h2>
 <div class="outline-text-2" id="text-some-python-idioms">
 <ul class="org-ul">
 <li>Prefer double quotes if escaping single quotes.
@@ -4765,8 +4786,8 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #5af2ee;">with</span> <span style="color: #b2baf6;">open</span><span style="color: #bebebe;">(</span>path, <span style="color: #ff5f87;">'r'</span><span style="color: #bebebe;">)</span> <span style="color: #5af2ee;">as</span> text_file:
-    <span style="color: #f6df92;">text</span> = text_file.read<span style="color: #bebebe;">()</span>
+<pre class="src src-python">with open(path, 'r') as text_file:
+    text = text_file.read()
 </pre>
 </div>
 <ul class="org-ul">
