@@ -1,15 +1,23 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-07-15 Wed] [[#create-ios-static-fat-libraries][#]] Create iOS static fat libraries
+  :PROPERTIES:
+  :Custom_ID: create-ios-static-fat-libraries
+  :END:
+  Have separate static libraries for different iOS architectures? Stitch 'em up into a single fat library using with lipo:
+#+BEGIN_SRC sh
+$ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -output libOne.a
+#+END_SRC
 * [2015-07-13 Mon] [[#recognize-new-password-prompts-in-emacs-shell][#]] Recognize new password prompts in Emacs shell
   :PROPERTIES:
   :CUSTOM_ID: recognize-new-password-prompts-in-emacs-shell
   :END:
   At some point, you may come across a trusted command-line utility prompting you for a password, and Emacs shell happily displaying each typed character to the nearby-world to see. Luckily, you can train Emacs to recognize new password prompts and hide the typed characters in modes deriving from comint. Append the password prompt REGEXP:
 #+BEGIN_SRC emacs-lisp
-  (setq comint-password-prompt-regexp (concat comint-password-prompt-regexp
-                                              "\\|"
-                                              "Password for red alert:"))
+(setq comint-password-prompt-regexp (concat comint-password-prompt-regexp
+                                            "\\|"
+                                            "Password for red alert:"))
 #+END_SRC
 * [2015-07-11 Sat] [[#bosnia-and-hercegovina-travel-bookmarks][#]] Bosnia and Hercegovina travel bookmarks
   :PROPERTIES:
@@ -38,16 +46,16 @@
   :END:
   Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
 #+BEGIN_SRC sh
-  apt-get install ffmpeg imagemagick (linux)
-  brew install ffmpeg imagemagick (Mac)
+apt-get install ffmpeg imagemagick (linux)
+brew install ffmpeg imagemagick (Mac)
 #+END_SRC
   Convert to gif:
 #+BEGIN_SRC sh
-  ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
+ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
 #+END_SRC
   Optimize with:
 #+BEGIN_SRC sh
-  convert -dither none -layers Optimize my.gif my_optimized.gif
+convert -dither none -layers Optimize my.gif my_optimized.gif
 #+END_SRC
 * [2015-07-06 Mon] [[#keyboards-bookmarks][#]] Keyboards bookmarks
   :PROPERTIES:
@@ -88,18 +96,18 @@
 Here's the equivalent in Emacs lisp:
 
 #+BEGIN_SRC emacs-lisp
-  (defun flush-kill-lines (regex)
-    "Flush lines matching REGEX and append to kill ring.  Restrict to \
-  region if active."
-    (interactive "sFlush kill regex: ")
-    (save-excursion
-      (save-restriction
-        (when (use-region-p)
-          (narrow-to-region (point) (mark))
-          (goto-char 0))
-        (while (search-forward-regexp regex nil t)
-          (move-beginning-of-line nil)
-          (kill-whole-line)))))
+(defun flush-kill-lines (regex)
+  "Flush lines matching REGEX and append to kill ring.  Restrict to \
+region if active."
+  (interactive "sFlush kill regex: ")
+  (save-excursion
+    (save-restriction
+      (when (use-region-p)
+        (narrow-to-region (point) (mark))
+        (goto-char 0))
+      (while (search-forward-regexp regex nil t)
+        (move-beginning-of-line nil)
+        (kill-whole-line)))))
 #+END_SRC
 * [2015-07-03 Fri] [[#california-travel-bookmarks][#]] California travel bookmarks
   :PROPERTIES:
@@ -125,7 +133,7 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   The ebook is available in epub and pdf format. Though Emacs's docview is super handy for viewing pdf's, searching didn't feel as comfortable as searching in org mode. The epub, on the other hand, proved useful. [[http://pandoc.org][Pandoc]] can easily convert from epub to org.
 
 #+BEGIN_SRC sh
-  pandoc  --from=epub --to=org mastering-emacs.epub > mastering-emacs.org
+pandoc  --from=epub --to=org mastering-emacs.epub > mastering-emacs.org
 #+END_SRC
 
   After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITLE/AUTHOR), the resulting org file is surprisingly clean and easy to search/navigate. [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]] and [[https://github.com/emacs-helm/helm/blob/199b9feb396eedc0e502dd767b19060f7dc09f6a/helm-org.el][helm-org-in-buffer-headings]] are great for that.
@@ -167,7 +175,7 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   :END:
   [[https://github.com/insidegui][Guilherme Rambo]] created a great OS X [[https://github.com/insidegui/WWDC][OS X app for viewing WWDC content]]. Just installed it. Super handy. Thanks. Installing as simple as:
 #+BEGIN_SRC sh
-  $ brew cask install wwdc
+$ brew cask install wwdc
 #+END_SRC
 * [2015-06-15 Mon] [[#debugging-objective-c-reference-cycles][#]] Debugging Objective-C reference cycles
   :PROPERTIES:
@@ -175,20 +183,20 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   :END:
   Overriding retain/release/autorelease may be handy while debugging:
 #+BEGIN_SRC objc
-  - (instancetype)retain {
-    NSLog(@"%p, retain", self);
-    return [super retain];
-  }
+- (instancetype)retain {
+  NSLog(@"%p, retain", self);
+  return [super retain];
+}
 
-  - (oneway void)release {
-    NSLog(@"%p, release", self);
-    [super release];
-  }
+- (oneway void)release {
+  NSLog(@"%p, release", self);
+  [super release];
+}
 
-  - (instancetype)autorelease {
-    NSLog(@"%p, autorelease", self);
-    return [super autorelease];
-  }
+- (instancetype)autorelease {
+  NSLog(@"%p, autorelease", self);
+  return [super autorelease];
+}
 #+END_SRC
 * [2015-06-13 Sat] [[#london-grub][#]] London grub
   :PROPERTIES:
@@ -366,10 +374,10 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   :CUSTOM_ID: write-to-temp-ios-snippet
   :END:
 #+BEGIN_SRC objc
-  NSString *tempDir = NSTemporaryDirectory();
-  NSLog(@"%@", tempDir);
-  NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
-  [data writeToFile:dataFilePath atomically:YES];
+NSString *tempDir = NSTemporaryDirectory();
+NSLog(@"%@", tempDir);
+NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
+[data writeToFile:dataFilePath atomically:YES];
 #+END_SRC
 * [2015-05-04 Mon] [[#greece-travel-bookmarks][#]] Greece travel bookmarks
   :PROPERTIES:
@@ -440,48 +448,48 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   :END:
   Based on instructions from [[http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion][Building clang-format and friends on OSX Mountain Lion]].
 #+BEGIN_SRC sh
-  #!/bin/bash
-  set -o nounset
-  set -o errexit
+#!/bin/bash
+set -o nounset
+set -o errexit
 
-  # Based on instructions from:
-  # http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
+# Based on instructions from:
+# http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
 
-  readonly LLVM_DIR_PATH='/tmp/llvm'
+readonly LLVM_DIR_PATH='/tmp/llvm'
 
-  update_repo() {
-    if [[ ! -d $1 ]]; then
-      git clone $2
-    else
-      cd $1
-      git pull
-      cd ..
-    fi
+update_repo() {
+  if [[ ! -d $1 ]]; then
+    git clone $2
+  else
+    cd $1
+    git pull
     cd ..
-  }
+  fi
+  cd ..
+}
 
-  update_all_repos() {
-    update_repo "llvm" "http://llvm.org/git/llvm.git"
-    pushd "${LLVM_DIR_PATH}/llvm/tools"
-    update_repo "clang" "http://llvm.org/git/clang.git"
-    popd
-    cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
-    update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
-    cd "../../.."
-  }
+update_all_repos() {
+  update_repo "llvm" "http://llvm.org/git/llvm.git"
+  pushd "${LLVM_DIR_PATH}/llvm/tools"
+  update_repo "clang" "http://llvm.org/git/clang.git"
+  popd
+  cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
+  update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
+  cd "../../.."
+}
 
-  build_clang() {
-    mkdir -p clang
-    mkdir -p build
-    cd clang
-    ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
-    make install
-  }
+build_clang() {
+  mkdir -p clang
+  mkdir -p build
+  cd clang
+  ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
+  make install
+}
 
-  mkdir -p $LLVM_DIR_PATH
-  cd ${LLVM_DIR_PATH}
-  update_all_repos
-  build_clang
+mkdir -p $LLVM_DIR_PATH
+cd ${LLVM_DIR_PATH}
+update_all_repos
+build_clang
 #+END_SRC
 * [2015-04-30 Thu] [[#programmatic-ios-auto-layout][#]] Programmatic iOS Auto Layout
   :PROPERTIES:
@@ -525,7 +533,7 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   :CUSTOM_ID: japan-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-07-05 Sun]
+  [2015-07-15 Wed]
   :END:
   - [[https://publishizer.com/8020-japanese/][80/20 Japanese]].
   - [[http://luckypeach.com/a-guide-to-the-regional-ramen-of-japan/][A Guide to the regional ramen of Japan]].
@@ -538,6 +546,7 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys...
   - [[https://en.wikipedia.org/wiki/T%C5%8Ddai-ji][Nara Buddha temple]].
   - [[http://www.quora.com/What-are-some-of-Japans-best-kept-secrets][Quora: What are some of Japans best kept secrets]]?
   - [[http://tokyocheapo.com/][TokyoCheapo]].
+  - [[http://www.mymodernmet.com/profiles/blogs/zao-fox-village-miyagi-japan][Zao Fox Village]].
 * [2015-04-19 Sun] [[#uk-travel-bookmarks][#]] UK travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: uk-travel-bookmarks
