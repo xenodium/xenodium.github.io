@@ -1,6 +1,49 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-07-17 Fri] [[#open-closest-build-file-in-emacs][#]] Open closest build file in Emacs
+  :PROPERTIES:
+  :CUSTOM_ID: open-closest-build-file-in-emacs
+  :END:
+  Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances are you have to tweak it from time to time. ~ar/open-build-file~ searches your current and parent directories to find a build file.
+#+BEGIN_SRC emacs-lisp
+  (defvar ar/project-file-names '("Makefile" "SConstruct" "BUILD"))
+
+  (defun ar/parent-directory (path)
+    "Get parent directory for PATH."
+    (unless (equal "/" path)
+      (file-name-directory (directory-file-name path))))
+
+  (defun ar/find-upwards (path filename)
+    "Search upwards from PATH for a file named FILENAME."
+    (let ((file (concat path filename))
+          (parent (ar/parent-directory (expand-file-name path))))
+      (if (file-exists-p file)
+          file
+        (when parent
+          (ar/find-upwards parent filename)))))
+
+  (defun ar/open-closest (filename)
+    "Open the closest FILENAME in current or parent dirs (handy for finding Makefiles)."
+    (let ((closest-file-path (ar/find-upwards (buffer-file-name)
+                                                   filename)))
+      (when closest-file-path
+        (message closest-file-path)
+        (switch-to-buffer (find-file-noselect closest-file-path)))
+      closest-file-path))
+
+  (defun ar/open-build-file ()
+    "Open the closest project file in current or parent directory.
+  For example: Makefile, SConstruct, BUILD, etc.
+  Append `ar/project-file-names' to search for other file names."
+    (interactive)
+    (catch 'found
+      (mapc (lambda (filename)
+              (when (ar/open-closest filename)
+                (throw 'found t)))
+            ar/project-file-names)
+      (error "No project file found")))
+#+END_SRC
 * [2015-07-15 Wed] [[#settling-scores-with-an-org-table][#]] Settling scores with an org table
   :PROPERTIES:
   :CUSTOM_ID: settling-scores-with-an-org-table
@@ -1218,15 +1261,17 @@ Generating diagram:
   :CUSTOM_ID: org-mode-bookmarks
   :END:
   :MODIFIED:
-  [2015-04-30 Thu]
+  [2015-07-16 Thu]
   :END:
   - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
   - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
+  - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
   - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
   - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
   - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
+  - [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][Writing Specs with Org-mode]].
 * [2015-03-08 Sun] [[#london-food-backlog][#]] London food backlog
   :PROPERTIES:
   :CUSTOM_ID: london-food-backlog
@@ -2406,7 +2451,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: html5-bookmarks
   :END:
   :MODIFIED:
-  [2015-07-05 Sun]
+  [2015-07-16 Thu]
   :END:
   - [[https://news.ycombinator.com/item?id=9822975][Airbnb JavaScript Style Guide]].
   - [[http://rrees.me/2015/06/04/overview-of-javascript-reactive-frameworks/][An overview of JavaScript reactive frameworks]].
@@ -2425,6 +2470,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
   - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
   - [[https://philipwalton.github.io/solved-by-flexbox/][Solved by Flexbox]].
+  - [[http://jonobr1.github.io/two.js][Two.js is a two-dimensional drawing api geared towards modern web browsers]].
 * [2014-07-13 Sun] [[#python-bookmarks][#]] Python bookmarks
   :PROPERTIES:
   :CUSTOM_ID: python-bookmarks
