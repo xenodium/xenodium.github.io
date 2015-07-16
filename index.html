@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-07-15 Wed 23:22 -->
+<!-- 2015-07-16 Thu 10:10 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -365,9 +365,9 @@ At some point, you may come across a trusted command-line utility prompting you 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq comint-password-prompt-regexp <span style="color: #93a8c6;">(</span>concat comint-password-prompt-regexp
-                                            <span style="color: #E6DB74;">"</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">|</span><span style="color: #E6DB74;">"</span>
-                                            <span style="color: #E6DB74;">"Password for </span><span style="color: #ffffff; background-color: #ff0000;">red</span><span style="color: #E6DB74;"> alert:"</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(setq comint-password-prompt-regexp (concat comint-password-prompt-regexp
+                                            "\\|"
+                                            "Password for red alert:"))
 </pre>
 </div>
 </div>
@@ -420,8 +420,8 @@ Converting mp4 to gif is handy for posting short screencasts. You can convert to
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">apt-get install ffmpeg imagemagick <span style="color: #8c8c8c;">(</span>linux<span style="color: #8c8c8c;">)</span>
-brew install ffmpeg imagemagick <span style="color: #8c8c8c;">(</span>Mac<span style="color: #8c8c8c;">)</span>
+<pre class="src src-sh">apt-get install ffmpeg imagemagick (linux)
+brew install ffmpeg imagemagick (Mac)
 </pre>
 </div>
 <p>
@@ -510,18 +510,18 @@ Here's the equivalent in Emacs lisp:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">flush-kill-lines</span> <span style="color: #93a8c6;">(</span>regex<span style="color: #93a8c6;">)</span>
-  <span style="color: #E6DB74; font-style: italic;">"Flush lines matching REGEX and append to kill ring.  Restrict to \</span>
-<span style="color: #E6DB74; font-style: italic;">region if active."</span>
-  <span style="color: #93a8c6;">(</span>interactive <span style="color: #E6DB74;">"sFlush kill regex: "</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">save-excursion</span>
-    <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">save-restriction</span>
-      <span style="color: #97b098;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #aebed8;">(</span>use-region-p<span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>narrow-to-region <span style="color: #b0b0b3;">(</span>point<span style="color: #b0b0b3;">)</span> <span style="color: #b0b0b3;">(</span>mark<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>goto-char 0<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
-      <span style="color: #97b098;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #aebed8;">(</span>search-forward-regexp regex nil t<span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>move-beginning-of-line nil<span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>kill-whole-line<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(defun flush-kill-lines (regex)
+  "Flush lines matching REGEX and append to kill ring.  Restrict to \
+region if active."
+  (interactive "sFlush kill regex: ")
+  (save-excursion
+    (save-restriction
+      (when (use-region-p)
+        (narrow-to-region (point) (mark))
+        (goto-char 0))
+      (while (search-forward-regexp regex nil t)
+        (move-beginning-of-line nil)
+        (kill-whole-line)))))
 </pre>
 </div>
 </div>
@@ -640,20 +640,20 @@ Overriding retain/release/autorelease may be handy while debugging:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #8c8c8c;">)</span><span style="color: #F92672; font-style: italic;">retain</span> <span style="color: #8c8c8c;">{</span>
-  NSLog<span style="color: #93a8c6;">(</span>@<span style="color: #E6DB74;">"%p, retain"</span>, <span style="color: #66D9EF;">self</span><span style="color: #93a8c6;">)</span>;
-  <span style="color: #66D9EF;">return</span> <span style="color: #93a8c6;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">retain</span><span style="color: #93a8c6;">]</span>;
-<span style="color: #8c8c8c;">}</span>
+<pre class="src src-objc">- (instancetype)retain {
+  NSLog(@"%p, retain", self);
+  return [super retain];
+}
 
-- <span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">oneway</span> <span style="color: #66D9EF;">void</span><span style="color: #8c8c8c;">)</span><span style="color: #F92672; font-style: italic;">release</span> <span style="color: #8c8c8c;">{</span>
-  NSLog<span style="color: #93a8c6;">(</span>@<span style="color: #E6DB74;">"%p, release"</span>, <span style="color: #66D9EF;">self</span><span style="color: #93a8c6;">)</span>;
-  <span style="color: #93a8c6;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">release</span><span style="color: #93a8c6;">]</span>;
-<span style="color: #8c8c8c;">}</span>
+- (oneway void)release {
+  NSLog(@"%p, release", self);
+  [super release];
+}
 
-- <span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #8c8c8c;">)</span><span style="color: #F92672; font-style: italic;">autorelease</span> <span style="color: #8c8c8c;">{</span>
-  NSLog<span style="color: #93a8c6;">(</span>@<span style="color: #E6DB74;">"%p, autorelease"</span>, <span style="color: #66D9EF;">self</span><span style="color: #93a8c6;">)</span>;
-  <span style="color: #66D9EF;">return</span> <span style="color: #93a8c6;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">autorelease</span><span style="color: #93a8c6;">]</span>;
-<span style="color: #8c8c8c;">}</span>
+- (instancetype)autorelease {
+  NSLog(@"%p, autorelease", self);
+  return [super autorelease];
+}
 </pre>
 </div>
 </div>
@@ -965,10 +965,10 @@ M-x flush-lines RET ^$ RET
 <div class="outline-text-2" id="text-write-to-temp-ios-snippet">
 <div class="org-src-container">
 
-<pre class="src src-objc"><span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">tempDir</span> = NSTemporaryDirectory<span style="color: #8c8c8c;">()</span>;
-NSLog<span style="color: #8c8c8c;">(</span>@<span style="color: #E6DB74;">"%@"</span>, tempDir<span style="color: #8c8c8c;">)</span>;
-<span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">dataFilePath</span> = <span style="color: #8c8c8c;">[</span>tempDir <span style="color: #F92672; font-style: italic;">stringByAppendingPathComponent</span>:@<span style="color: #E6DB74;">"my.file"</span><span style="color: #8c8c8c;">]</span>;
-<span style="color: #8c8c8c;">[</span>data <span style="color: #F92672; font-style: italic;">writeToFile</span>:dataFilePath <span style="color: #F92672; font-style: italic;">atomically</span>:<span style="color: #AE81FF;">YES</span><span style="color: #8c8c8c;">]</span>;
+<pre class="src src-objc">NSString *tempDir = NSTemporaryDirectory();
+NSLog(@"%@", tempDir);
+NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
+[data writeToFile:dataFilePath atomically:YES];
 </pre>
 </div>
 </div>
@@ -1079,46 +1079,46 @@ Based on instructions from <a href="http://blog.hardcodes.de/articles/63/buildin
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #465457; font-style: italic;">#</span><span style="color: #465457; font-style: italic;">!/bin/</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #A6E22E;">set</span> -o nounset
-<span style="color: #A6E22E;">set</span> -o errexit
+<pre class="src src-sh">#!/bin/bash
+set -o nounset
+set -o errexit
 
-<span style="color: #465457; font-style: italic;"># </span><span style="color: #465457; font-style: italic;">Based on instructions from:</span>
-<span style="color: #465457; font-style: italic;"># </span><span style="color: #465457; font-style: italic;">http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion</span>
+# Based on instructions from:
+# http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion
 
-<span style="color: #A6E22E;">readonly</span> <span style="color: #F92672;">LLVM_DIR_PATH</span>=<span style="color: #E6DB74;">'/tmp/llvm'</span>
+readonly LLVM_DIR_PATH='/tmp/llvm'
 
-<span style="color: #F92672; font-style: italic;">update_repo</span><span style="color: #8c8c8c;">()</span> <span style="color: #8c8c8c;">{</span>
-  <span style="color: #66D9EF;">if</span> <span style="color: #93a8c6;">[</span><span style="color: #b0b1a3;">[</span> <span style="font-weight: bold;">!</span> -d $<span style="color: #F92672;">1</span> <span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>; <span style="color: #66D9EF;">then</span>
-    git clone $<span style="color: #F92672;">2</span>
-  <span style="color: #66D9EF;">else</span>
-    <span style="color: #A6E22E;">cd</span> $<span style="color: #F92672;">1</span>
+update_repo() {
+  if [[ ! -d $1 ]]; then
+    git clone $2
+  else
+    cd $1
     git pull
-    <span style="color: #A6E22E;">cd</span> ..
-  <span style="color: #66D9EF;">fi</span>
-  <span style="color: #A6E22E;">cd</span> ..
-<span style="color: #8c8c8c;">}</span>
+    cd ..
+  fi
+  cd ..
+}
 
-<span style="color: #F92672; font-style: italic;">update_all_repos</span><span style="color: #8c8c8c;">()</span> <span style="color: #8c8c8c;">{</span>
-  update_repo <span style="color: #E6DB74;">"llvm"</span> <span style="color: #E6DB74;">"http://llvm.org/git/llvm.git"</span>
-  <span style="color: #A6E22E;">pushd</span> <span style="color: #E6DB74;">"${LLVM_DIR_PATH}/llvm/tools"</span>
-  update_repo <span style="color: #E6DB74;">"clang"</span> <span style="color: #E6DB74;">"http://llvm.org/git/clang.git"</span>
-  <span style="color: #A6E22E;">popd</span>
-  <span style="color: #A6E22E;">cd</span> <span style="color: #E6DB74;">"../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"</span>
-  update_repo <span style="color: #E6DB74;">"clang-tools-extra"</span> <span style="color: #E6DB74;">"http://llvm.org/git/clang-tools-extra.git"</span>
-  <span style="color: #A6E22E;">cd</span> <span style="color: #E6DB74;">"../../.."</span>
-<span style="color: #8c8c8c;">}</span>
+update_all_repos() {
+  update_repo "llvm" "http://llvm.org/git/llvm.git"
+  pushd "${LLVM_DIR_PATH}/llvm/tools"
+  update_repo "clang" "http://llvm.org/git/clang.git"
+  popd
+  cd "../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"
+  update_repo "clang-tools-extra" "http://llvm.org/git/clang-tools-extra.git"
+  cd "../../.."
+}
 
-<span style="color: #F92672; font-style: italic;">build_clang</span><span style="color: #8c8c8c;">()</span> <span style="color: #8c8c8c;">{</span>
+build_clang() {
   mkdir -p clang
   mkdir -p build
-  <span style="color: #A6E22E;">cd</span> clang
-  ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix=<span style="color: #E6DB74;">"${LLVM_DIR_PATH}/build"</span>
+  cd clang
+  ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix="${LLVM_DIR_PATH}/build"
   make install
-<span style="color: #8c8c8c;">}</span>
+}
 
-mkdir -p $<span style="color: #F92672;">LLVM_DIR_PATH</span>
-<span style="color: #A6E22E;">cd</span> $<span style="color: #8c8c8c;">{</span><span style="color: #F92672;">LLVM_DIR_PATH</span><span style="color: #8c8c8c;">}</span>
+mkdir -p $LLVM_DIR_PATH
+cd ${LLVM_DIR_PATH}
 update_all_repos
 build_clang
 </pre>
@@ -1133,36 +1133,36 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #8c8c8c;">)</span><span style="color: #F92672; font-style: italic;">initWithFrame</span>:<span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">CGRect</span><span style="color: #8c8c8c;">)</span><span style="color: #F92672;">frame</span> <span style="color: #8c8c8c;">{</span>
-  <span style="color: #66D9EF;">self</span> = <span style="color: #93a8c6;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">initWithFrame</span>:frame<span style="color: #93a8c6;">]</span>;
-  <span style="color: #66D9EF;">if</span> <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">self</span><span style="color: #93a8c6;">)</span> <span style="color: #93a8c6;">{</span>
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Disable autoresizing mask translation for parent.</span>
-    <span style="color: #66D9EF;">self</span>.translatesAutoresizingMaskIntoConstraints = <span style="color: #AE81FF;">NO</span>;
+<pre class="src src-objc">- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    // Disable autoresizing mask translation for parent.
+    self.translatesAutoresizingMaskIntoConstraints = NO;
 
-    _subview1 = <span style="color: #b0b1a3;">[</span><span style="color: #97b098;">[</span><span style="color: #66D9EF;">UIView</span> <span style="color: #F92672; font-style: italic;">alloc</span><span style="color: #97b098;">]</span> <span style="color: #F92672; font-style: italic;">init</span><span style="color: #b0b1a3;">]</span>;
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Disable autoresizing mask translation for subview.</span>
-    _subview1.translatesAutoresizingMaskIntoConstraints = <span style="color: #AE81FF;">NO</span>;
+    _subview1 = [[UIView alloc] init];
+    // Disable autoresizing mask translation for subview.
+    _subview1.translatesAutoresizingMaskIntoConstraints = NO;
 
-    _subview1.backgroundColor = <span style="color: #b0b1a3;">[</span><span style="color: #66D9EF;">UIColor</span> <span style="color: #F92672; font-style: italic;">redColor</span><span style="color: #b0b1a3;">]</span>;
-    <span style="color: #b0b1a3;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addSubview</span>:_subview1<span style="color: #b0b1a3;">]</span>;
+    _subview1.backgroundColor = [UIColor redColor];
+    [self addSubview:_subview1];
 
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Creates a dictionary of bindings to be used in visual format.</span>
-    <span style="color: #66D9EF;">NSDictionary</span> *<span style="color: #F92672;">viewBindings</span> = NSDictionaryOfVariableBindings<span style="color: #b0b1a3;">(</span>_subview1<span style="color: #b0b1a3;">)</span>;
+    // Creates a dictionary of bindings to be used in visual format.
+    NSDictionary *viewBindings = NSDictionaryOfVariableBindings(_subview1);
 
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">H: horizontal layout</span>
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">|-50- spacing in relation to superview</span>
-    <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">[_subview1(==50)] subview1's width</span>
-    <span style="color: #b0b1a3;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addConstraints</span>:<span style="color: #97b098;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"H:|-50-[_subview1(==50)]"</span>
-                                                                 <span style="color: #F92672; font-style: italic;">options</span>:0
-                                                                 <span style="color: #F92672; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
-                                                                   <span style="color: #F92672; font-style: italic;">views</span>:viewBindings<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">]</span>;
-    <span style="color: #b0b1a3;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addConstraints</span>:<span style="color: #97b098;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"V:[_subview1(==50)]"</span>
-                                                                 <span style="color: #F92672; font-style: italic;">options</span>:0
-                                                                 <span style="color: #F92672; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
-                                                                   <span style="color: #F92672; font-style: italic;">views</span>:viewBindings<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">]</span>;
-  <span style="color: #93a8c6;">}</span>
-  <span style="color: #66D9EF;">return</span> <span style="color: #66D9EF;">self</span>;
-<span style="color: #8c8c8c;">}</span>
+    // H: horizontal layout
+    // |-50- spacing in relation to superview
+    // [_subview1(==50)] subview1's width
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-50-[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_subview1(==50)]"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewBindings]];
+  }
+  return self;
+}
 </pre>
 </div>
 </div>
@@ -1304,7 +1304,7 @@ Generating diagram:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$<span style="color: #F92672;">GRAPHVIZ_DOT</span>=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
+<pre class="src src-sh">$GRAPHVIZ_DOT=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
 </pre>
 </div>
 </div>
@@ -1331,12 +1331,12 @@ Generating diagram:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #F92672; font-style: italic;">iframe</span> <span style="color: #F92672;">width</span>=<span style="color: #E6DB74;">"420"</span>
-        <span style="color: #F92672;">height</span>=<span style="color: #E6DB74;">"315"</span>
-        <span style="color: #F92672;">src</span>=<span style="color: #E6DB74;">"https://www.youtube.com/embed/QRBcm6jFJ3Q"</span>
-        <span style="color: #F92672;">frameborder</span>=<span style="color: #E6DB74;">"0"</span>
+<pre class="src src-html">&lt;iframe width="420"
+        height="315"
+        src="https://www.youtube.com/embed/QRBcm6jFJ3Q"
+        frameborder="0"
         allowfullscreen&gt;
-&lt;/<span style="color: #F92672; font-style: italic;">iframe</span>&gt;
+&lt;/iframe&gt;
 </pre>
 </div>
 <p>
@@ -1378,13 +1378,13 @@ Adopted Tim Pope's Git commit message <a href="http://tbaggery.com/2008/04/19/a-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">use-package</span> <span style="color: #AE81FF;">git-commit-training-wheels-mode</span> <span style="color: #A6E22E;">:ensure</span> t
-  <span style="color: #A6E22E;">:commands</span> <span style="color: #93a8c6;">(</span>git-commit-training-wheels-mode<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(use-package git-commit-training-wheels-mode :ensure t
+  :commands (git-commit-training-wheels-mode))
 
-<span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">use-package</span> <span style="color: #AE81FF;">git-commit-mode</span> <span style="color: #A6E22E;">:ensure</span> t
-  <span style="color: #A6E22E;">:config</span>
-  <span style="color: #93a8c6;">(</span>add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode<span style="color: #93a8c6;">)</span>
-  <span style="color: #A6E22E;">:commands</span> <span style="color: #93a8c6;">(</span>git-commit-mode<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+(use-package git-commit-mode :ensure t
+  :config
+  (add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
+  :commands (git-commit-mode))
 </pre>
 </div>
 </div>
@@ -1397,15 +1397,15 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">org-html-fontify-code</span> <span style="color: #93a8c6;">(</span>code lang<span style="color: #93a8c6;">)</span>
-  <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">...</span>
-  <span style="color: #93a8c6;">(</span>funcall lang-mode<span style="color: #93a8c6;">)</span>
-<span style="color: #465457; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">fill-column-indicator</span> nil 'noerror<span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span>fci-mode -1<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-<span style="color: #465457; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #93a8c6;">(</span>insert code<span style="color: #93a8c6;">)</span>
-  <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">...</span>
+<pre class="src src-emacs-lisp">(defun org-html-fontify-code (code lang)
+  ;; ...
+  (funcall lang-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (when (require 'fill-column-indicator nil 'noerror)
+    (fci-mode -1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (insert code)
+  ;; ...
 </pre>
 </div>
 </div>
@@ -1524,16 +1524,16 @@ Codepen <a href="http://codepen.io/oisinlavery/pen/Jmjtz">snippet</a>:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-css"><span style="color: #F92672;">div</span>{
-  <span style="color: #66D9EF;">height</span>: 200px;
-  <span style="color: #66D9EF;">background</span>: #ccc;
-  <span style="color: #66D9EF;">display</span>: flex;
-  <span style="color: #66D9EF;">justify-content</span>: center;
-  <span style="color: #66D9EF;">align-items</span>: center;
+<pre class="src src-css">div{
+  height: 200px;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 p{
-  <span style="color: #66D9EF;">margin</span>: auto
+  margin: auto
 }
 </pre>
 </div>
@@ -1568,31 +1568,31 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">goto-addr</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(require 'goto-addr)
 
-<span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-buffer-url-candidates</span> <span style="color: #93a8c6;">()</span>
-  <span style="color: #E6DB74; font-style: italic;">"Generate helm candidates for all URLs in buffer."</span>
-  <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">save-excursion</span>
-    <span style="color: #b0b1a3;">(</span>goto-char <span style="color: #97b098;">(</span>point-min<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>helm-candidates '<span style="color: #b0b0b3;">()</span><span style="color: #aebed8;">)</span>
-          <span style="color: #aebed8;">(</span>url<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
-      <span style="color: #97b098;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #aebed8;">(</span>re-search-forward goto-address-url-regexp
-                                nil t<span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>setq url
-              <span style="color: #b0b0b3;">(</span>buffer-substring-no-properties <span style="color: #90a890;">(</span>match-beginning 0<span style="color: #90a890;">)</span>
-                                              <span style="color: #90a890;">(</span>match-end 0<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
-        <span style="color: #aebed8;">(</span>add-to-list 'helm-candidates
-                     <span style="color: #b0b0b3;">(</span>cons url
-                           url<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
-      helm-candidates<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+(defun ar/helm-buffer-url-candidates ()
+  "Generate helm candidates for all URLs in buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((helm-candidates '())
+          (url))
+      (while (re-search-forward goto-address-url-regexp
+                                nil t)
+        (setq url
+              (buffer-substring-no-properties (match-beginning 0)
+                                              (match-end 0)))
+        (add-to-list 'helm-candidates
+                     (cons url
+                           url)))
+      helm-candidates)))
 
-<span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-buffer-urls</span> <span style="color: #93a8c6;">()</span>
-  <span style="color: #E6DB74; font-style: italic;">"Narrow down and open a URL in buffer."</span>
-  <span style="color: #93a8c6;">(</span>interactive<span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>helm <span style="color: #A6E22E;">:sources</span> `<span style="color: #b0b1a3;">(</span><span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>name . <span style="color: #E6DB74;">"Buffer URLs"</span><span style="color: #aebed8;">)</span>
-                    <span style="color: #aebed8;">(</span>candidates . ,<span style="color: #b0b0b3;">(</span>ar/helm-buffer-url-candidates<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
-                    <span style="color: #aebed8;">(</span>action . <span style="color: #b0b0b3;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #90a890;">(</span>url<span style="color: #90a890;">)</span>
-                                <span style="color: #90a890;">(</span>browse-url url<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+(defun ar/helm-buffer-urls ()
+  "Narrow down and open a URL in buffer."
+  (interactive)
+  (helm :sources `(((name . "Buffer URLs")
+                    (candidates . ,(ar/helm-buffer-url-candidates))
+                    (action . (lambda (url)
+                                (browse-url url)))))))
 </pre>
 </div>
 </div>
@@ -1632,7 +1632,7 @@ Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPl
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ defaults read <span style="color: #E6DB74;">\</span>
+<pre class="src src-sh">$ defaults read \
     /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 </pre>
 </div>
@@ -1701,9 +1701,9 @@ Lots of great tips in <a href="http://sachachua.com/blog/2015/03/emacs-hangout-2
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #66D9EF;">:PRIVATE:</span>
+<pre class="src src-org">:PRIVATE:
 My super duper secret text I don't want to export.
-<span style="color: #66D9EF;">:END:</span>
+:END:
 </pre>
 </div>
 <ul class="org-ul">
@@ -1804,17 +1804,17 @@ My super duper secret text I don't want to export.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-objc"><span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">title</span> = @<span style="color: #E6DB74;">"Sharing on iOS bookmarks."</span>;
-<span style="color: #66D9EF;">NSURL</span> *<span style="color: #F92672;">url</span> = <span style="color: #8c8c8c;">[</span>NSURL <span style="color: #F92672; font-style: italic;">URLWithString</span>:@<span style="color: #E6DB74;">"http://xenodium.com/#sharing-on-ios"</span><span style="color: #8c8c8c;">]</span>;
-<span style="color: #66D9EF;">UIImage</span> *<span style="color: #F92672;">image</span> = <span style="color: #8c8c8c;">[</span><span style="color: #66D9EF;">UIImage</span> <span style="color: #F92672; font-style: italic;">imageNamed</span>:@<span style="color: #E6DB74;">"beautiful-image"</span><span style="color: #8c8c8c;">]</span>;
+<pre class="src src-objc">NSString *title = @"Sharing on iOS bookmarks.";
+NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
+UIImage *image = [UIImage imageNamed:@"beautiful-image"];
 
-<span style="color: #66D9EF;">UIActivityViewController</span> *<span style="color: #F92672;">controller</span> =
-  <span style="color: #8c8c8c;">[</span><span style="color: #93a8c6;">[</span><span style="color: #66D9EF;">UIActivityViewController</span> <span style="color: #F92672; font-style: italic;">alloc</span><span style="color: #93a8c6;">]</span>
-    <span style="color: #F92672; font-style: italic;">initWithActivityItems</span>:@<span style="color: #93a8c6;">[</span>title, url, image<span style="color: #93a8c6;">]</span>
-    <span style="color: #F92672; font-style: italic;">applicationActivities</span>:<span style="color: #AE81FF;">nil</span><span style="color: #8c8c8c;">]</span>;
+UIActivityViewController *controller =
+  [[UIActivityViewController alloc]
+    initWithActivityItems:@[title, url, image]
+    applicationActivities:nil];
 
-<span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">self being a UIViewController.</span>
-<span style="color: #8c8c8c;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">presentViewController</span>:controller <span style="color: #F92672; font-style: italic;">animated</span>:<span style="color: #AE81FF;">YES</span> <span style="color: #F92672; font-style: italic;">completion</span>:<span style="color: #AE81FF;">nil</span><span style="color: #8c8c8c;">]</span>;
+// self being a UIViewController.
+[self presentViewController:controller animated:YES completion:nil];
 </pre>
 </div>
 <ul class="org-ul">
@@ -1937,7 +1937,7 @@ Wanted to track down which package was enabling ido-mode on my behalf. debug-on-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>debug-on-entry 'ido-mode<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(debug-on-entry 'ido-mode)
 </pre>
 </div>
 <p>
@@ -1945,7 +1945,7 @@ When done, use cancel.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(cancel-debug-on-entry 'ido-mode)
 </pre>
 </div>
 </div>
@@ -1996,7 +1996,7 @@ When done, use cancel.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">defaults read <span style="color: #E6DB74;">\</span>
+<pre class="src src-sh">defaults read \
     /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 </pre>
 </div>
@@ -2025,8 +2025,8 @@ When done, use cancel.
 <div class="outline-text-2" id="text-uninstalling-alcatraz-from-xcode">
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
-$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Alcatraz
+<pre class="src src-sh">$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
+$ rm -rf ~/Library/Application\ Support/Alcatraz
 </pre>
 </div>
 <p>
@@ -2034,7 +2034,7 @@ ps. Removing all plugins:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ rm -rf ~/Library/Application<span style="color: #E6DB74;">\ </span>Support/Developer/Shared/Xcode/Plug-ins/*
+<pre class="src src-sh">$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
 </pre>
 </div>
 </div>
@@ -2047,17 +2047,17 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #93a8c6;">()</span>
-  <span style="color: #E6DB74; font-style: italic;">"Pre-fill swiper input with region."</span>
-  <span style="color: #93a8c6;">(</span>interactive<span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #b0b1a3;">(</span>region-active-p<span style="color: #b0b1a3;">)</span>
-      <span style="color: #b0b1a3;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>region-text <span style="color: #b0b0b3;">(</span>buffer-substring <span style="color: #90a890;">(</span>region-beginning<span style="color: #90a890;">)</span>
-                                           <span style="color: #90a890;">(</span>region-end<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
-        <span style="color: #97b098;">(</span>swiper region-text<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span>swiper<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(defun ar/prefilled-swiper ()
+  "Pre-fill swiper input with region."
+  (interactive)
+  (if (region-active-p)
+      (let ((region-text (buffer-substring (region-beginning)
+                                           (region-end))))
+        (swiper region-text))
+    (swiper)))
 
-<span style="color: #8c8c8c;">(</span>global-set-key <span style="color: #93a8c6;">(</span>kbd <span style="color: #E6DB74;">"C-s"</span><span style="color: #93a8c6;">)</span>
-                #'ar/prefilled-swiper<span style="color: #8c8c8c;">)</span>
+(global-set-key (kbd "C-s")
+                #'ar/prefilled-swiper)
 </pre>
 </div>
 </div>
@@ -2411,7 +2411,7 @@ $ ./build.sh --clang-completer
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial <span style="color: #E6DB74;">\</span>
+<pre class="src src-sh">rsync --rsync-path=/usr/local/bin/rsync --partial \
     --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
 </pre>
 </div>
@@ -3049,7 +3049,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq-local my-clever-var<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(setq-local my-clever-var)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3058,9 +3058,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>add-hook 'write-file-hooks
-          <span style="color: #93a8c6;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #b0b1a3;">()</span>
-            <span style="color: #b0b1a3;">(</span>message <span style="color: #E6DB74;">"about to save!"</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(add-hook 'write-file-hooks
+          (lambda ()
+            (message "about to save!")))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3069,7 +3069,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>make-comint NAME PROGRAM <span style="color: #66D9EF;">&amp;optional</span> STARTFILE <span style="color: #66D9EF;">&amp;rest</span> SWITCHES<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(make-comint NAME PROGRAM &amp;optional STARTFILE &amp;rest SWITCHES)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3078,14 +3078,14 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq my-marker <span style="color: #93a8c6;">(</span>copy-marker <span style="color: #b0b1a3;">(</span>point<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(setq my-marker (copy-marker (point)))
   #&lt;marker at 10251 in *ielm*&gt;
 
-<span style="color: #8c8c8c;">(</span>marker-buffer my-marker<span style="color: #8c8c8c;">)</span>
+(marker-buffer my-marker)
   #&lt;buffer *ielm*&gt;
 
-<span style="color: #8c8c8c;">(</span>marker-position my-marker<span style="color: #8c8c8c;">)</span>
-  10251 <span style="color: #8c8c8c;">(</span>#o24013, #x280b, ?&#10251;<span style="color: #8c8c8c;">)</span>
+(marker-position my-marker)
+  10251 (#o24013, #x280b, ?⠋)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3094,7 +3094,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>org-get-heading 'no-tags 'no-todo<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(org-get-heading 'no-tags 'no-todo)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3120,7 +3120,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>org-end-of-meta-data-and-drawers<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(org-end-of-meta-data-and-drawers)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3129,7 +3129,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>org-open-link-from-string <span style="color: #E6DB74;">"[[#%exciting-custom-id]]"</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(org-open-link-from-string "[[#%exciting-custom-id]]")
 </pre>
 </div>
 <ul class="org-ul">
@@ -3156,10 +3156,10 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #93a8c6;">(</span><span style="color: #b0b1a3;">(</span>my-var <span style="color: #97b098;">(</span>list <span style="color: #E6DB74;">"val1"</span>
-                    <span style="color: #E6DB74;">"val2"</span>
-                    <span style="color: #E6DB74;">"val3"</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>pp-to-string my-var<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(let ((my-var (list "val1"
+                    "val2"
+                    "val3")))
+  (pp-to-string my-var))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3168,13 +3168,13 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>re-search-forward <span style="color: #E6DB74;">"needle"</span>
-                   nil t<span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>match-beginning 0<span style="color: #8c8c8c;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">Start location of match from last search.</span>
-<span style="color: #8c8c8c;">(</span>match-end 0<span style="color: #8c8c8c;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">End location of match from last search.</span>
-<span style="color: #8c8c8c;">(</span>replace-match <span style="color: #E6DB74;">"love"</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(re-search-forward "needle"
+                   nil t)
+(match-beginning 0) ;; Start location of match from last search.
+(match-end 0) ;; End location of match from last search.
+(replace-match "love")
 
-<span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">needle-in-haystack</span>
+;; needle-in-haystack
 </pre>
 </div>
 <ul class="org-ul">
@@ -3183,8 +3183,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>narrow-to-region <span style="color: #93a8c6;">(</span>point<span style="color: #93a8c6;">)</span>
-                  <span style="color: #93a8c6;">(</span>point-max<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(narrow-to-region (point)
+                  (point-max))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3193,8 +3193,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">save-restriction</span> <span style="color: #93a8c6;">(</span>narrow-to-region <span style="color: #b0b1a3;">(</span>point<span style="color: #b0b1a3;">)</span>
-                                    <span style="color: #b0b1a3;">(</span>point-max<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
+<pre class="src src-emacs-lisp">(save-restriction (narrow-to-region (point)
+                                    (point-max))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3203,8 +3203,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">save-excursion</span> <span style="color: #93a8c6;">(</span>goto-char <span style="color: #b0b1a3;">(</span>point-max<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-                <span style="color: #93a8c6;">(</span>insert <span style="color: #E6DB74;">"Hello elisp."</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(save-excursion (goto-char (point-max))
+                (insert "Hello elisp."))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3213,7 +3213,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>concat <span style="color: #E6DB74;">"Hello "</span> <span style="color: #E6DB74;">"elisp "</span> <span style="color: #E6DB74;">"world."</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(concat "Hello " "elisp " "world.")
 </pre>
 </div>
 <ul class="org-ul">
@@ -3222,9 +3222,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>thing-at-point 'word<span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>thing-at-point 'symbol<span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>thing-at-point 'line<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(thing-at-point 'word)
+(thing-at-point 'symbol)
+(thing-at-point 'line)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3235,8 +3235,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">dolist</span> <span style="color: #93a8c6;">(</span>v '<span style="color: #b0b1a3;">(</span><span style="color: #E6DB74;">"a"</span> <span style="color: #E6DB74;">"b"</span> <span style="color: #E6DB74;">"c"</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>print v<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(dolist (v '("a" "b" "c"))
+  (print v))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3245,9 +3245,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">with-current-buffer</span> <span style="color: #93a8c6;">(</span>get-buffer-create <span style="color: #E6DB74;">"*some buffer*"</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>princ '<span style="color: #b0b1a3;">(</span>some list to print<span style="color: #b0b1a3;">)</span>
-         <span style="color: #b0b1a3;">(</span>current-buffer<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(with-current-buffer (get-buffer-create "*some buffer*")
+  (princ '(some list to print)
+         (current-buffer)))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3256,9 +3256,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">with-temp-buffer</span>
-  <span style="color: #93a8c6;">(</span>insert <span style="color: #E6DB74;">"abc"</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>point<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(with-temp-buffer
+  (insert "abc")
+  (point))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3269,7 +3269,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>string-match-p REGEXP STRING <span style="color: #66D9EF;">&amp;optional</span> START<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(string-match-p REGEXP STRING &amp;optional START)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3278,21 +3278,21 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>setq haystack <span style="color: #E6DB74;">"Always click [[http://reddit.com/r/emacs][here]]."</span><span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>setq needle-re <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span><span style="color: #8c8c8c;">)</span>
-  <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span>
+<pre class="src src-emacs-lisp">(setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+(setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+  "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
 
-<span style="color: #8c8c8c;">(</span>string-match needle-re haystack<span style="color: #8c8c8c;">)</span>
-  13 <span style="color: #8c8c8c;">(</span>#o15, #xd, ?\C-m<span style="color: #8c8c8c;">)</span>
+(string-match needle-re haystack)
+  13 (#o15, #xd, ?\C-m)
 
-<span style="color: #8c8c8c;">(</span>match-string 0 haystack<span style="color: #8c8c8c;">)</span>
-  <span style="color: #E6DB74;">"[[http://reddit.com/r/emacs][here]]"</span>
+(match-string 0 haystack)
+  "[[http://reddit.com/r/emacs][here]]"
 
-<span style="color: #8c8c8c;">(</span>match-string 1 haystack<span style="color: #8c8c8c;">)</span>
-  <span style="color: #E6DB74;">"http://reddit.com/r/emacs"</span>
+(match-string 1 haystack)
+  "http://reddit.com/r/emacs"
 
-<span style="color: #8c8c8c;">(</span>match-string 2 haystack<span style="color: #8c8c8c;">)</span>
-  <span style="color: #E6DB74;">"here"</span>
+(match-string 2 haystack)
+  "here"
 </pre>
 </div>
 <ul class="org-ul">
@@ -3301,7 +3301,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>identity ARG<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(identity ARG)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3310,7 +3310,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>org-insert-time-stamp <span style="color: #93a8c6;">(</span>current-time<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(org-insert-time-stamp (current-time))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3321,7 +3321,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>car LIST<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(car LIST)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3330,7 +3330,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>cdr LIST<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(cdr LIST)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3339,7 +3339,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>push NEWELT PLACE<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(push NEWELT PLACE)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3348,7 +3348,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(mapcar FUNCTION SEQUENCE)
 </pre>
 </div>
 <ul class="org-ul">
@@ -3357,8 +3357,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #93a8c6;">(</span>search-forward <span style="color: #E6DB74;">"Hello"</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>replace-match <span style="color: #E6DB74;">"Bonjour"</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(while (search-forward "Hello")
+  (replace-match "Bonjour"))
 </pre>
 </div>
 <ul class="org-ul">
@@ -3913,17 +3913,17 @@ for example:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #F92672; font-style: italic;">-</span> <span style="color: #8c8c8c;">(</span>$<span style="color: #93a8c6;">{</span><span style="color: #F92672;">1</span>:id<span style="color: #93a8c6;">}</span><span style="color: #8c8c8c;">)</span>$<span style="color: #8c8c8c;">{</span><span style="color: #F92672;">2</span>:foo<span style="color: #8c8c8c;">}</span>
-<span style="color: #8c8c8c;">{</span>
-    <span style="color: #66D9EF;">return</span> $<span style="color: #F92672;">2</span>;
-<span style="color: #8c8c8c;">}</span>
+<pre class="src src-sh">- (${1:id})${2:foo}
+{
+    return $2;
+}
 
-<span style="color: #F92672; font-style: italic;">-</span> <span style="color: #8c8c8c;">(</span>void<span style="color: #8c8c8c;">)</span><span style="color: #A6E22E;">set</span>$<span style="color: #8c8c8c;">{</span><span style="color: #F92672;">2</span>:$<span style="color: #93a8c6;">(</span><span style="color: #fa8072;">capitalize</span> yas-text<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">}</span>:<span style="color: #8c8c8c;">(</span>$<span style="color: #F92672;">1</span><span style="color: #8c8c8c;">)</span>avalue
-<span style="color: #8c8c8c;">{</span>
-    <span style="color: #93a8c6;">[</span>$<span style="color: #F92672;">2</span> autorelease<span style="color: #93a8c6;">]</span>;
-    $<span style="color: #F92672;">2</span> = <span style="color: #93a8c6;">[</span>avalue retain<span style="color: #93a8c6;">]</span>;
-<span style="color: #8c8c8c;">}</span>
-$<span style="color: #F92672;">0</span>
+- (void)set${2:$(capitalize yas-text)}:($1)avalue
+{
+    [$2 autorelease];
+    $2 = [avalue retain];
+}
+$0
 </pre>
 </div>
 <p>
@@ -4519,9 +4519,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 <div class="outline-text-3" id="text-133-76">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>menu-bar-mode -1<span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>toggle-scroll-bar -1<span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span>tool-bar-mode -1<span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp">(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
 </pre>
 </div>
 </div>
@@ -4701,7 +4701,7 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 <div id="outline-container-emacs-bookmarks" class="outline-2">
 <h2 id="emacs-bookmarks"><a id="sec-138" name="sec-138"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-19 Fri]</span></span> <a href="#emacs-bookmarks">#</a> Emacs bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-07-11 Sat]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-07-16 Thu]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="http://blog.aaronbieber.com">Aaron Bieber's blog</a>.
 </li>
@@ -4776,6 +4776,8 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 <li><a href="http://fukuyama.co">Fukuyama's Emacs/iOS</a>.
 </li>
 <li><a href="http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/">Git diffs using Emacs ediff</a>.
+</li>
+<li><a href="https://github.com/benma/go-dlv.el">Go Delve - Debug Go programs interactively with the GUD</a>.
 </li>
 <li><a href="http://doc.rix.si/org/fsem.html">Hardcore Freestyle Emacs</a>.
 </li>
@@ -5042,8 +5044,8 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #66D9EF;">with</span> <span style="color: #A6E22E;">open</span><span style="color: #8c8c8c;">(</span>path, <span style="color: #E6DB74;">'r'</span><span style="color: #8c8c8c;">)</span> <span style="color: #66D9EF;">as</span> text_file:
-    <span style="color: #F92672;">text</span> = text_file.read<span style="color: #8c8c8c;">()</span>
+<pre class="src src-python">with open(path, 'r') as text_file:
+    text = text_file.read()
 </pre>
 </div>
 <ul class="org-ul">
