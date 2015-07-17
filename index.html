@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-07-15 Wed 15:48 -->
+<!-- 2015-07-17 Fri 19:03 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -246,25 +246,183 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-open-closest-build-file-in-emacs" class="outline-2">
+<h2 id="open-closest-build-file-in-emacs"><a id="sec-1" name="sec-1"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-17 Fri]</span></span> <a href="#open-closest-build-file-in-emacs">#</a> Open closest build file in Emacs</h2>
+<div class="outline-text-2" id="text-open-closest-build-file-in-emacs">
+<p>
+Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances are you have to tweak it from time to time. <code>ar/open-build-file</code> searches your current and parent directories to find a build file.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(defvar ar/project-file-names '("Makefile" "SConstruct" "BUILD"))
+
+(defun ar/parent-directory (path)
+  "Get parent directory for PATH."
+  (unless (equal "/" path)
+    (file-name-directory (directory-file-name path))))
+
+(defun ar/find-upwards (path filename)
+  "Search upwards from PATH for a file named FILENAME."
+  (let ((file (concat path filename))
+        (parent (ar/parent-directory (expand-file-name path))))
+    (if (file-exists-p file)
+        file
+      (when parent
+        (ar/find-upwards parent filename)))))
+
+(defun ar/open-closest (filename)
+  "Open the closest FILENAME in current or parent dirs (handy for finding Makefiles)."
+  (let ((closest-file-path (ar/find-upwards (buffer-file-name)
+                                                 filename)))
+    (when closest-file-path
+      (message closest-file-path)
+      (switch-to-buffer (find-file-noselect closest-file-path)))
+    closest-file-path))
+
+(defun ar/open-build-file ()
+  "Open the closest project file in current or parent directory.
+For example: Makefile, SConstruct, BUILD, etc.
+Append `ar/project-file-names' to search for other file names."
+  (interactive)
+  (catch 'found
+    (mapc (lambda (filename)
+            (when (ar/open-closest filename)
+              (throw 'found t)))
+          ar/project-file-names)
+    (error "No project file found")))
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-create-ios-static-fat-libraries" class="outline-2">
-<h2 id="create-ios-static-fat-libraries"><a id="sec-1" name="sec-1"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-15 Wed]</span></span> <a href="#create-ios-static-fat-libraries">#</a> Create iOS static fat libraries</h2>
+<h2 id="create-ios-static-fat-libraries"><a id="sec-2" name="sec-2"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-15 Wed]</span></span> <a href="#create-ios-static-fat-libraries">#</a> Create iOS static fat libraries</h2>
 <div class="outline-text-2" id="text-create-ios-static-fat-libraries">
 <p>
 Have separate static libraries for different iOS architectures? Stitch 'em up into a single fat library using with lipo:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ lipo -create libCrazyAwesome_i386.a \
-               libCrazyAwesome_x86_64.a \
-               libCrazyAwesome_armv7.a \
-               libCrazyAwesome_arm64.a \
-       -output libOne.a
+<pre class="src src-sh">$ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -output libOne.a
 </pre>
 </div>
 </div>
 </div>
+<div id="outline-container-settling-scores-with-an-org-table" class="outline-2">
+<h2 id="settling-scores-with-an-org-table"><a id="sec-3" name="sec-3"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-15 Wed]</span></span> <a href="#settling-scores-with-an-org-table">#</a> Settling scores with an org table</h2>
+<div class="outline-text-2" id="text-settling-scores-with-an-org-table">
+<p>
+Recently kept track of expenses between a group of us. To settle the scores, I emailed an exported HTML table from an org file. This was simple enough and required no external viewer from recepients. The org table, in all its textful glory, looked as follows&#x2026;
+</p>
+
+<pre class="example">
+| Date             | Item           |   Charge |
+|------------------+----------------+----------|
+| [2015-06-18 Thu] | Cash           |    20.00 |
+| [2015-07-11 Sat] | Lucky 7        |    42.97 |
+| [2015-07-13 Mon] | Santa Maria    |    32.00 |
+| [2015-07-12 Sun] | Tayyabs        |    46.00 |
+| [2015-07-13 Mon] | The Brass Rail |    39.00 |
+| [2015-07-13 Mon] | Underground    |    10.00 |
+| [2015-07-10 Fri] | Cash           |    20.00 |
+| [2015-07-13 Mon] | Cash           |    20.00 |
+| [2015-07-14 Tue] | Cash           |    20.00 |
+|------------------+----------------+----------|
+|                  | total          | £ 249.97 |
+#+TBLFM: @11$3=vsum(@2..@10);£ %.2f
+</pre>
+
+<p>
+&#x2026;while the exported HTML below could be easily pasted on to an email.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Date</th>
+<th scope="col" class="left">Item</th>
+<th scope="col" class="right">Charge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-06-18 Thu]</span></span></td>
+<td class="left">Cash</td>
+<td class="right">20.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-11 Sat]</span></span></td>
+<td class="left">Lucky 7</td>
+<td class="right">42.97</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span></td>
+<td class="left">Santa Maria</td>
+<td class="right">32.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-12 Sun]</span></span></td>
+<td class="left">Tayyabs</td>
+<td class="right">46.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span></td>
+<td class="left">The Brass Rail</td>
+<td class="right">39.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span></td>
+<td class="left">Underground</td>
+<td class="right">10.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-10 Fri]</span></span></td>
+<td class="left">Cash</td>
+<td class="right">20.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span></td>
+<td class="left">Cash</td>
+<td class="right">20.00</td>
+</tr>
+
+<tr>
+<td class="left"><span class="timestamp-wrapper"><span class="timestamp">[2015-07-14 Tue]</span></span></td>
+<td class="left">Cash</td>
+<td class="right">20.00</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">total</td>
+<td class="right">£ 249.97</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 49527599e5bc8e7704edec9e50a3bb48e4826f31
+</p>
+</div>
+</div>
 <div id="outline-container-recognize-new-password-prompts-in-emacs-shell" class="outline-2">
-<h2 id="recognize-new-password-prompts-in-emacs-shell"><a id="sec-2" name="sec-2"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span> <a href="#recognize-new-password-prompts-in-emacs-shell">#</a> Recognize new password prompts in Emacs shell</h2>
+<h2 id="recognize-new-password-prompts-in-emacs-shell"><a id="sec-4" name="sec-4"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-13 Mon]</span></span> <a href="#recognize-new-password-prompts-in-emacs-shell">#</a> Recognize new password prompts in Emacs shell</h2>
 <div class="outline-text-2" id="text-recognize-new-password-prompts-in-emacs-shell">
 <p>
 At some point, you may come across a trusted command-line utility prompting you for a password, and Emacs shell happily displaying each typed character to the nearby-world to see. Luckily, you can train Emacs to recognize new password prompts and hide the typed characters in modes deriving from comint. Append the password prompt REGEXP:
@@ -279,7 +437,7 @@ At some point, you may come across a trusted command-line utility prompting you 
 </div>
 </div>
 <div id="outline-container-bosnia-and-hercegovina-travel-bookmarks" class="outline-2">
-<h2 id="bosnia-and-hercegovina-travel-bookmarks"><a id="sec-3" name="sec-3"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-11 Sat]</span></span> <a href="#bosnia-and-hercegovina-travel-bookmarks">#</a> Bosnia and Hercegovina travel bookmarks</h2>
+<h2 id="bosnia-and-hercegovina-travel-bookmarks"><a id="sec-5" name="sec-5"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-11 Sat]</span></span> <a href="#bosnia-and-hercegovina-travel-bookmarks">#</a> Bosnia and Hercegovina travel bookmarks</h2>
 <div class="outline-text-2" id="text-bosnia-and-hercegovina-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.lonelyplanet.com/bosnia-and-hercegovina/travel-tips-and-articles/ten-reasons-to-visit-bosnia-hercegovina">Ten reasons to visit Bosnia &amp; Hercegovina</a>.
@@ -288,7 +446,7 @@ At some point, you may come across a trusted command-line utility prompting you 
 </div>
 </div>
 <div id="outline-container-ireland-travel-bookmarks" class="outline-2">
-<h2 id="ireland-travel-bookmarks"><a id="sec-4" name="sec-4"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-11 Sat]</span></span> <a href="#ireland-travel-bookmarks">#</a> Ireland travel bookmarks</h2>
+<h2 id="ireland-travel-bookmarks"><a id="sec-6" name="sec-6"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-11 Sat]</span></span> <a href="#ireland-travel-bookmarks">#</a> Ireland travel bookmarks</h2>
 <div class="outline-text-2" id="text-ireland-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Skellig_Michael">Skellig Michael</a>.
@@ -297,7 +455,7 @@ At some point, you may come across a trusted command-line utility prompting you 
 </div>
 </div>
 <div id="outline-container-pizza-in-london" class="outline-2">
-<h2 id="pizza-in-london"><a id="sec-5" name="sec-5"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#pizza-in-london">#</a> Pizza in London</h2>
+<h2 id="pizza-in-london"><a id="sec-7" name="sec-7"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#pizza-in-london">#</a> Pizza in London</h2>
 <div class="outline-text-2" id="text-pizza-in-london">
 <p>
 Not tried these yet. Taking note:
@@ -319,7 +477,7 @@ Not tried these yet. Taking note:
 </div>
 </div>
 <div id="outline-container-mp4-to-gif" class="outline-2">
-<h2 id="mp4-to-gif"><a id="sec-6" name="sec-6"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#mp4-to-gif">#</a> mp4 to gif</h2>
+<h2 id="mp4-to-gif"><a id="sec-8" name="sec-8"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#mp4-to-gif">#</a> mp4 to gif</h2>
 <div class="outline-text-2" id="text-mp4-to-gif">
 <p>
 Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
@@ -349,7 +507,7 @@ Optimize with:
 </div>
 </div>
 <div id="outline-container-keyboards-bookmarks" class="outline-2">
-<h2 id="keyboards-bookmarks"><a id="sec-7" name="sec-7"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-06 Mon]</span></span> <a href="#keyboards-bookmarks">#</a> Keyboards bookmarks</h2>
+<h2 id="keyboards-bookmarks"><a id="sec-9" name="sec-9"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-06 Mon]</span></span> <a href="#keyboards-bookmarks">#</a> Keyboards bookmarks</h2>
 <div class="outline-text-2" id="text-keyboards-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.keyboardco.com/blog/index.php/2012/12/an-introduction-to-cherry-mx-mechanical-switches/">An introduction to Cherry MX mechanical switches</a>.
@@ -360,7 +518,7 @@ Optimize with:
 </div>
 </div>
 <div id="outline-container-united-states-travel-bookmarks" class="outline-2">
-<h2 id="united-states-travel-bookmarks"><a id="sec-8" name="sec-8"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#united-states-travel-bookmarks">#</a> United States travel bookmarks</h2>
+<h2 id="united-states-travel-bookmarks"><a id="sec-10" name="sec-10"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#united-states-travel-bookmarks">#</a> United States travel bookmarks</h2>
 <div class="outline-text-2" id="text-united-states-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://twitter.com/EarthPix/status/613912754227965952/photo/1">Vance Creek Bridge in Washington</a>.
@@ -369,7 +527,7 @@ Optimize with:
 </div>
 </div>
 <div id="outline-container-lebanon-travel-bookmarks" class="outline-2">
-<h2 id="lebanon-travel-bookmarks"><a id="sec-9" name="sec-9"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#lebanon-travel-bookmarks">#</a> Lebanon travel bookmarks</h2>
+<h2 id="lebanon-travel-bookmarks"><a id="sec-11" name="sec-11"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#lebanon-travel-bookmarks">#</a> Lebanon travel bookmarks</h2>
 <div class="outline-text-2" id="text-lebanon-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Baatara_gorge_waterfall">Baatara gorge waterfall</a>.
@@ -379,7 +537,7 @@ Optimize with:
 </div>
 
 <div id="outline-container-slovenia-travel-bookmarks" class="outline-2">
-<h2 id="slovenia-travel-bookmarks"><a id="sec-10" name="sec-10"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#slovenia-travel-bookmarks">#</a> Slovenia travel bookmarks</h2>
+<h2 id="slovenia-travel-bookmarks"><a id="sec-12" name="sec-12"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#slovenia-travel-bookmarks">#</a> Slovenia travel bookmarks</h2>
 <div class="outline-text-2" id="text-slovenia-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://wildswim.com/lake-bohinj">Lake Bohinj</a>.
@@ -388,7 +546,7 @@ Optimize with:
 </div>
 </div>
 <div id="outline-container-belgium-travel-bookmarks" class="outline-2">
-<h2 id="belgium-travel-bookmarks"><a id="sec-11" name="sec-11"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#belgium-travel-bookmarks">#</a> Belgium travel bookmarks</h2>
+<h2 id="belgium-travel-bookmarks"><a id="sec-13" name="sec-13"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-05 Sun]</span></span> <a href="#belgium-travel-bookmarks">#</a> Belgium travel bookmarks</h2>
 <div class="outline-text-2" id="text-belgium-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://twitter.com/planetepics/status/617003120695099392/photo/1">The Flower Carpet event at the Grand-Place in Brussels</a>.
@@ -398,7 +556,7 @@ Optimize with:
 </div>
 
 <div id="outline-container-fishing-with-emacs" class="outline-2">
-<h2 id="fishing-with-emacs"><a id="sec-12" name="sec-12"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-03 Fri]</span></span> <a href="#fishing-with-emacs">#</a> Fishing with Emacs</h2>
+<h2 id="fishing-with-emacs"><a id="sec-14" name="sec-14"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-03 Fri]</span></span> <a href="#fishing-with-emacs">#</a> Fishing with Emacs</h2>
 <div class="outline-text-2" id="text-fishing-with-emacs">
 <p>
 OK not quite, but having recently learned about <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Appending-Kills.html">C-M-w (append-next-kill)</a>, I used it in a keyboard macro to fish out matching lines. This is similar to <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Repeating-Search.html">flush-lines</a>, except the kill ring is also populated. This is handy, if you need the flushed lines. Here's an example.
@@ -433,7 +591,7 @@ region if active."
 </div>
 </div>
 <div id="outline-container-california-travel-bookmarks" class="outline-2">
-<h2 id="california-travel-bookmarks"><a id="sec-13" name="sec-13"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-03 Fri]</span></span> <a href="#california-travel-bookmarks">#</a> California travel bookmarks</h2>
+<h2 id="california-travel-bookmarks"><a id="sec-15" name="sec-15"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-03 Fri]</span></span> <a href="#california-travel-bookmarks">#</a> California travel bookmarks</h2>
 <div class="outline-text-2" id="text-california-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Sequoia_National_Park">General Sherman Tree at Sequoia National Park</a>.
@@ -442,7 +600,7 @@ region if active."
 </div>
 </div>
 <div id="outline-container-rebind-caps-lock-to-control-key-on-mac-os-x" class="outline-2">
-<h2 id="rebind-caps-lock-to-control-key-on-mac-os-x"><a id="sec-14" name="sec-14"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-01 Wed]</span></span> <a href="#rebind-caps-lock-to-control-key-on-mac-os-x">#</a> Rebind caps lock to control key on Mac OS X</h2>
+<h2 id="rebind-caps-lock-to-control-key-on-mac-os-x"><a id="sec-16" name="sec-16"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-01 Wed]</span></span> <a href="#rebind-caps-lock-to-control-key-on-mac-os-x">#</a> Rebind caps lock to control key on Mac OS X</h2>
 <div class="outline-text-2" id="text-rebind-caps-lock-to-control-key-on-mac-os-x">
 <p>
 Let's see if this one sticks. I'll give caps lock as control a try. Rebinding the keys on Mac OS X is easy enough:
@@ -457,7 +615,7 @@ System Preferences -&gt; Keyboard -&gt; Keyboard Tab -&gt; Modifier Keys&#x2026;
 </div>
 </div>
 <div id="outline-container-searchable-ebooks-in-emacs" class="outline-2">
-<h2 id="searchable-ebooks-in-emacs"><a id="sec-15" name="sec-15"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-30 Tue]</span></span> <a href="#searchable-ebooks-in-emacs">#</a> Searchable ebooks in Emacs</h2>
+<h2 id="searchable-ebooks-in-emacs"><a id="sec-17" name="sec-17"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-30 Tue]</span></span> <a href="#searchable-ebooks-in-emacs">#</a> Searchable ebooks in Emacs</h2>
 <div class="outline-text-2" id="text-searchable-ebooks-in-emacs">
 <p>
 If you haven't bought <a href="https://www.masteringemacs.org/book">Mastering Emacs</a> by <a href="https://twitter.com/mickeynp">Mickey Petersen</a>, you should. It's a wonderful source of Emacs tips. Having just finished the ebook on my Kindle, I was keen to go back and fish out some of that newly found wisdom. My immediate reaction was to figure out a way to make the ebook searchable from Emacs.
@@ -482,7 +640,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-portugal-travel-bookmarks" class="outline-2">
-<h2 id="portugal-travel-bookmarks"><a id="sec-16" name="sec-16"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#portugal-travel-bookmarks">#</a> Portugal travel bookmarks</h2>
+<h2 id="portugal-travel-bookmarks"><a id="sec-18" name="sec-18"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#portugal-travel-bookmarks">#</a> Portugal travel bookmarks</h2>
 <div class="outline-text-2" id="text-portugal-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -498,7 +656,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-bulgaria-travel-bookmarks" class="outline-2">
-<h2 id="bulgaria-travel-bookmarks"><a id="sec-17" name="sec-17"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#bulgaria-travel-bookmarks">#</a> Bulgaria travel bookmarks</h2>
+<h2 id="bulgaria-travel-bookmarks"><a id="sec-19" name="sec-19"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#bulgaria-travel-bookmarks">#</a> Bulgaria travel bookmarks</h2>
 <div class="outline-text-2" id="text-bulgaria-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -508,7 +666,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-presenting-bookmarks" class="outline-2">
-<h2 id="presenting-bookmarks"><a id="sec-18" name="sec-18"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#presenting-bookmarks">#</a> Presenting bookmarks</h2>
+<h2 id="presenting-bookmarks"><a id="sec-20" name="sec-20"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#presenting-bookmarks">#</a> Presenting bookmarks</h2>
 <div class="outline-text-2" id="text-presenting-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.troyhunt.com/2015/06/speaker-style-bingo-10-presentation.html?m=1">Speaker style bingo: 10 presentation anti-patterns</a>.
@@ -517,7 +675,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-bali-travel-bookmarks" class="outline-2">
-<h2 id="bali-travel-bookmarks"><a id="sec-19" name="sec-19"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#bali-travel-bookmarks">#</a> Bali travel bookmarks</h2>
+<h2 id="bali-travel-bookmarks"><a id="sec-21" name="sec-21"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-21 Sun]</span></span> <a href="#bali-travel-bookmarks">#</a> Bali travel bookmarks</h2>
 <div class="outline-text-2" id="text-bali-travel-bookmarks">
 <ul class="org-ul">
 <li>Pura Lempuyang, Bali.
@@ -526,7 +684,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-wwdc-app-for-os-x" class="outline-2">
-<h2 id="wwdc-app-for-os-x"><a id="sec-20" name="sec-20"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-17 Wed]</span></span> <a href="#wwdc-app-for-os-x">#</a> WWDC app for OS X</h2>
+<h2 id="wwdc-app-for-os-x"><a id="sec-22" name="sec-22"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-17 Wed]</span></span> <a href="#wwdc-app-for-os-x">#</a> WWDC app for OS X</h2>
 <div class="outline-text-2" id="text-wwdc-app-for-os-x">
 <p>
 <a href="https://github.com/insidegui">Guilherme Rambo</a> created a great OS X <a href="https://github.com/insidegui/WWDC">OS X app for viewing WWDC content</a>. Just installed it. Super handy. Thanks. Installing as simple as:
@@ -539,7 +697,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 </div>
 </div>
 <div id="outline-container-debugging-objective-c-reference-cycles" class="outline-2">
-<h2 id="debugging-objective-c-reference-cycles"><a id="sec-21" name="sec-21"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-15 Mon]</span></span> <a href="#debugging-objective-c-reference-cycles">#</a> Debugging Objective-C reference cycles</h2>
+<h2 id="debugging-objective-c-reference-cycles"><a id="sec-23" name="sec-23"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-15 Mon]</span></span> <a href="#debugging-objective-c-reference-cycles">#</a> Debugging Objective-C reference cycles</h2>
 <div class="outline-text-2" id="text-debugging-objective-c-reference-cycles">
 <p>
 Overriding retain/release/autorelease may be handy while debugging:
@@ -565,7 +723,7 @@ Overriding retain/release/autorelease may be handy while debugging:
 </div>
 </div>
 <div id="outline-container-london-grub" class="outline-2">
-<h2 id="london-grub"><a id="sec-22" name="sec-22"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-13 Sat]</span></span> <a href="#london-grub">#</a> London grub</h2>
+<h2 id="london-grub"><a id="sec-24" name="sec-24"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-13 Sat]</span></span> <a href="#london-grub">#</a> London grub</h2>
 <div class="outline-text-2" id="text-london-grub">
 <p>
 Beyond the hype, buzz, and pricey gimmicks&#x2026; Places to eat in London:
@@ -607,7 +765,7 @@ Beyond the hype, buzz, and pricey gimmicks&#x2026; Places to eat in London:
 </div>
 </div>
 <div id="outline-container-my-working-playlist" class="outline-2">
-<h2 id="my-working-playlist"><a id="sec-23" name="sec-23"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-08 Mon]</span></span> <a href="#my-working-playlist">#</a> My working playlist</h2>
+<h2 id="my-working-playlist"><a id="sec-25" name="sec-25"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-08 Mon]</span></span> <a href="#my-working-playlist">#</a> My working playlist</h2>
 <div class="outline-text-2" id="text-my-working-playlist">
 <p>
 It's been a while since I spotted <a href="http://www.asianefficiency.com/motivation/music-working/">The Ultimate Music Collection for Getting Work Done</a>. Since then, I've been on the lookout for music to work to. Some favorites:
@@ -678,7 +836,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 
 <div id="outline-container-xcode-bookmarks" class="outline-2">
-<h2 id="xcode-bookmarks"><a id="sec-24" name="sec-24"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#xcode-bookmarks">#</a> Xcode bookmarks</h2>
+<h2 id="xcode-bookmarks"><a id="sec-26" name="sec-26"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#xcode-bookmarks">#</a> Xcode bookmarks</h2>
 <div class="outline-text-2" id="text-xcode-bookmarks">
 <ul class="org-ul">
 <li><a href="https://github.com/FuzzyAutocomplete/FuzzyAutocompletePlugin/blob/master/README.md">Fuzzy autocomplete for Xcode</a>.
@@ -689,7 +847,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-costa-rica-travel-bookmarks" class="outline-2">
-<h2 id="costa-rica-travel-bookmarks"><a id="sec-25" name="sec-25"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#costa-rica-travel-bookmarks">#</a> Costa Rica travel bookmarks</h2>
+<h2 id="costa-rica-travel-bookmarks"><a id="sec-27" name="sec-27"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#costa-rica-travel-bookmarks">#</a> Costa Rica travel bookmarks</h2>
 <div class="outline-text-2" id="text-costa-rica-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://twitter.com/planetepics/status/603851463509540864/photo/1">Catarata del Toro</a>.
@@ -698,7 +856,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-australia-travel-bookmarks" class="outline-2">
-<h2 id="australia-travel-bookmarks"><a id="sec-26" name="sec-26"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#australia-travel-bookmarks">#</a> Australia travel bookmarks</h2>
+<h2 id="australia-travel-bookmarks"><a id="sec-28" name="sec-28"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#australia-travel-bookmarks">#</a> Australia travel bookmarks</h2>
 <div class="outline-text-2" id="text-australia-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -710,7 +868,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-samoa-travel-bookmarks" class="outline-2">
-<h2 id="samoa-travel-bookmarks"><a id="sec-27" name="sec-27"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#samoa-travel-bookmarks">#</a> Samoa travel bookmarks</h2>
+<h2 id="samoa-travel-bookmarks"><a id="sec-29" name="sec-29"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#samoa-travel-bookmarks">#</a> Samoa travel bookmarks</h2>
 <div class="outline-text-2" id="text-samoa-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.samoa.travel/activity/to-sua-ocean-trench">To Sua ocean trench</a>.
@@ -719,7 +877,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-norway-travel-bookmarks" class="outline-2">
-<h2 id="norway-travel-bookmarks"><a id="sec-28" name="sec-28"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#norway-travel-bookmarks">#</a> Norway travel bookmarks</h2>
+<h2 id="norway-travel-bookmarks"><a id="sec-30" name="sec-30"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#norway-travel-bookmarks">#</a> Norway travel bookmarks</h2>
 <div class="outline-text-2" id="text-norway-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -731,7 +889,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-los-angeles-travel-bookmarks" class="outline-2">
-<h2 id="los-angeles-travel-bookmarks"><a id="sec-29" name="sec-29"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#los-angeles-travel-bookmarks">#</a> Los Angeles travel bookmarks</h2>
+<h2 id="los-angeles-travel-bookmarks"><a id="sec-31" name="sec-31"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span> <a href="#los-angeles-travel-bookmarks">#</a> Los Angeles travel bookmarks</h2>
 <div class="outline-text-2" id="text-los-angeles-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.beerbellyla.com/">Beer Belly (Craft Beer + Crafty Food)</a>.
@@ -740,7 +898,7 @@ It's been a while since I spotted <a href="http://www.asianefficiency.com/motiva
 </div>
 </div>
 <div id="outline-container-mastering-emacs-is-out" class="outline-2">
-<h2 id="mastering-emacs-is-out"><a id="sec-30" name="sec-30"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-28 Thu]</span></span> <a href="#mastering-emacs-is-out">#</a> Mastering Emacs is out</h2>
+<h2 id="mastering-emacs-is-out"><a id="sec-32" name="sec-32"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-28 Thu]</span></span> <a href="#mastering-emacs-is-out">#</a> Mastering Emacs is out</h2>
 <div class="outline-text-2" id="text-mastering-emacs-is-out">
 <p>
 Emacs is amazingly alive. New packages are regularly listed on <a href="http://melpa.org">melpa</a> and a new book just came out: <a href="https://www.masteringemacs.org/book">Mastering Emacs</a> by <a href="https://twitter.com/mickeynp">Mickey Petersen</a>.
@@ -754,7 +912,7 @@ Emacs is amazingly alive. New packages are regularly listed on <a href="http://m
 </div>
 </div>
 <div id="outline-container-south-carolina-travel-bookmarks" class="outline-2">
-<h2 id="south-carolina-travel-bookmarks"><a id="sec-31" name="sec-31"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#south-carolina-travel-bookmarks">#</a> South Carolina travel bookmarks</h2>
+<h2 id="south-carolina-travel-bookmarks"><a id="sec-33" name="sec-33"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#south-carolina-travel-bookmarks">#</a> South Carolina travel bookmarks</h2>
 <div class="outline-text-2" id="text-south-carolina-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Angel_Oak">Angel Oak tree</a>.
@@ -764,7 +922,7 @@ Emacs is amazingly alive. New packages are regularly listed on <a href="http://m
 </div>
 
 <div id="outline-container-colorado-travel-bookmarks" class="outline-2">
-<h2 id="colorado-travel-bookmarks"><a id="sec-32" name="sec-32"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#colorado-travel-bookmarks">#</a> Colorado travel bookmarks</h2>
+<h2 id="colorado-travel-bookmarks"><a id="sec-34" name="sec-34"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#colorado-travel-bookmarks">#</a> Colorado travel bookmarks</h2>
 <div class="outline-text-2" id="text-colorado-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://horseshoebend.com/">Horseshoe Bend</a>.
@@ -774,7 +932,7 @@ Emacs is amazingly alive. New packages are regularly listed on <a href="http://m
 </div>
 
 <div id="outline-container-bash-bookmarks" class="outline-2">
-<h2 id="bash-bookmarks"><a id="sec-33" name="sec-33"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#bash-bookmarks">#</a> Bash bookmarks</h2>
+<h2 id="bash-bookmarks"><a id="sec-35" name="sec-35"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#bash-bookmarks">#</a> Bash bookmarks</h2>
 <div class="outline-text-2" id="text-bash-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming">Defensive bash programming</a>.
@@ -783,7 +941,7 @@ Emacs is amazingly alive. New packages are regularly listed on <a href="http://m
 </div>
 </div>
 <div id="outline-container-restclient.el" class="outline-2">
-<h2 id="restclient.el"><a id="sec-34" name="sec-34"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#restclient.el">#</a> restclient.el</h2>
+<h2 id="restclient.el"><a id="sec-36" name="sec-36"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#restclient.el">#</a> restclient.el</h2>
 <div class="outline-text-2" id="text-restclient.el">
 <p>
 Installed <a href="https://github.com/pashky/restclient.el">Pashky's</a> <a href="https://github.com/pashky/restclient.el">restclient.el</a> Emacs package. Super helpful when trying out REST APIs.
@@ -798,7 +956,7 @@ Installed <a href="https://github.com/pashky/restclient.el">Pashky's</a> <a href
 </div>
 
 <div id="outline-container-seatle-travel-bookmarks" class="outline-2">
-<h2 id="seatle-travel-bookmarks"><a id="sec-35" name="sec-35"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#seatle-travel-bookmarks">#</a> Seatle travel bookmarks</h2>
+<h2 id="seatle-travel-bookmarks"><a id="sec-37" name="sec-37"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#seatle-travel-bookmarks">#</a> Seatle travel bookmarks</h2>
 <div class="outline-text-2" id="text-seatle-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.lonelyplanet.com/usa/seattle/travel-tips-and-articles/14-free-things-to-do-in-seattle">14 free things to do in Seattle</a>.
@@ -808,7 +966,7 @@ Installed <a href="https://github.com/pashky/restclient.el">Pashky's</a> <a href
 </div>
 
 <div id="outline-container-berlin-travel-bookmarks" class="outline-2">
-<h2 id="berlin-travel-bookmarks"><a id="sec-36" name="sec-36"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#berlin-travel-bookmarks">#</a> Berlin travel bookmarks</h2>
+<h2 id="berlin-travel-bookmarks"><a id="sec-38" name="sec-38"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#berlin-travel-bookmarks">#</a> Berlin travel bookmarks</h2>
 <div class="outline-text-2" id="text-berlin-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -821,7 +979,7 @@ Installed <a href="https://github.com/pashky/restclient.el">Pashky's</a> <a href
 </div>
 
 <div id="outline-container-skeuomorph" class="outline-2">
-<h2 id="skeuomorph"><a id="sec-37" name="sec-37"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#skeuomorph">#</a> Skeuomorph</h2>
+<h2 id="skeuomorph"><a id="sec-39" name="sec-39"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#skeuomorph">#</a> Skeuomorph</h2>
 <div class="outline-text-2" id="text-skeuomorph">
 <p>
 From <a href="https://en.wikipedia.org/wiki/Skeuomorph">Wikipedia</a>, skeuomorph <i>ˈskjuːəmɔrf</i> is a derivative object that retains ornamental design cues from structures that were necessary in the original. Examples include pottery embellished with imitation rivets reminiscent of similar pots made of metal and a software calendar that imitates the appearance of binding on a paper desk calendar.
@@ -829,7 +987,7 @@ From <a href="https://en.wikipedia.org/wiki/Skeuomorph">Wikipedia</a>, skeuomorp
 </div>
 </div>
 <div id="outline-container-define-word" class="outline-2">
-<h2 id="define-word"><a id="sec-38" name="sec-38"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#define-word">#</a> define-word</h2>
+<h2 id="define-word"><a id="sec-40" name="sec-40"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#define-word">#</a> define-word</h2>
 <div class="outline-text-2" id="text-define-word">
 <p>
 Installed <a href="https://github.com/abo-abo">Abo Abo's</a> <a href="https://github.com/abo-abo/define-word">define-word</a> Emacs package. A handy package to define words at point.
@@ -843,7 +1001,7 @@ Installed <a href="https://github.com/abo-abo">Abo Abo's</a> <a href="https://gi
 </div>
 </div>
 <div id="outline-container-flushing-empty-lines-in-emacs" class="outline-2">
-<h2 id="flushing-empty-lines-in-emacs"><a id="sec-39" name="sec-39"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-22 Fri]</span></span> <a href="#flushing-empty-lines-in-emacs">#</a> Flushing empty lines in Emacs</h2>
+<h2 id="flushing-empty-lines-in-emacs"><a id="sec-41" name="sec-41"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-22 Fri]</span></span> <a href="#flushing-empty-lines-in-emacs">#</a> Flushing empty lines in Emacs</h2>
 <div class="outline-text-2" id="text-flushing-empty-lines-in-emacs">
 <p>
 Via <a href="https://www.masteringemacs.org">masteringemacs.org</a>, <a href="https://www.masteringemacs.org/article/removing-blank-lines-buffer">removing blank lines in a buffer</a>:
@@ -854,7 +1012,7 @@ M-x flush-lines RET ^$ RET
 </div>
 </div>
 <div id="outline-container-regex-bookmarks" class="outline-2">
-<h2 id="regex-bookmarks"><a id="sec-40" name="sec-40"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-22 Fri]</span></span> <a href="#regex-bookmarks">#</a> Regex bookmarks</h2>
+<h2 id="regex-bookmarks"><a id="sec-42" name="sec-42"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-22 Fri]</span></span> <a href="#regex-bookmarks">#</a> Regex bookmarks</h2>
 <div class="outline-text-2" id="text-regex-bookmarks">
 <ul class="org-ul">
 <li><a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs: Text Pattern Matching (regex) tutorial</a>.
@@ -867,7 +1025,7 @@ M-x flush-lines RET ^$ RET
 </div>
 </div>
 <div id="outline-container-write-to-temp-ios-snippet" class="outline-2">
-<h2 id="write-to-temp-ios-snippet"><a id="sec-41" name="sec-41"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-06 Wed]</span></span> <a href="#write-to-temp-ios-snippet">#</a> Write to temp iOS snippet</h2>
+<h2 id="write-to-temp-ios-snippet"><a id="sec-43" name="sec-43"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-06 Wed]</span></span> <a href="#write-to-temp-ios-snippet">#</a> Write to temp iOS snippet</h2>
 <div class="outline-text-2" id="text-write-to-temp-ios-snippet">
 <div class="org-src-container">
 
@@ -880,7 +1038,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-greece-travel-bookmarks" class="outline-2">
-<h2 id="greece-travel-bookmarks"><a id="sec-42" name="sec-42"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#greece-travel-bookmarks">#</a> Greece travel bookmarks</h2>
+<h2 id="greece-travel-bookmarks"><a id="sec-44" name="sec-44"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#greece-travel-bookmarks">#</a> Greece travel bookmarks</h2>
 <div class="outline-text-2" id="text-greece-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-06 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -900,7 +1058,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-sri-lanka-travel-bookmarks" class="outline-2">
-<h2 id="sri-lanka-travel-bookmarks"><a id="sec-43" name="sec-43"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#sri-lanka-travel-bookmarks">#</a> Sri Lanka travel bookmarks</h2>
+<h2 id="sri-lanka-travel-bookmarks"><a id="sec-45" name="sec-45"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#sri-lanka-travel-bookmarks">#</a> Sri Lanka travel bookmarks</h2>
 <div class="outline-text-2" id="text-sri-lanka-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.agoda.com/the-safari-hotel/hotel/yala-lk.html%20">The Safari Hotel (great area to go on safari, see leopards)</a>.
@@ -909,7 +1067,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-switzerland-travel-bookmarks" class="outline-2">
-<h2 id="switzerland-travel-bookmarks"><a id="sec-44" name="sec-44"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#switzerland-travel-bookmarks">#</a> Switzerland travel bookmarks</h2>
+<h2 id="switzerland-travel-bookmarks"><a id="sec-46" name="sec-46"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#switzerland-travel-bookmarks">#</a> Switzerland travel bookmarks</h2>
 <div class="outline-text-2" id="text-switzerland-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-04 Sat]  updated  </em></span>
 <ul class="org-ul">
@@ -921,7 +1079,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-thailand-travel-bookmarks" class="outline-2">
-<h2 id="thailand-travel-bookmarks"><a id="sec-45" name="sec-45"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#thailand-travel-bookmarks">#</a> Thailand travel bookmarks</h2>
+<h2 id="thailand-travel-bookmarks"><a id="sec-47" name="sec-47"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#thailand-travel-bookmarks">#</a> Thailand travel bookmarks</h2>
 <div class="outline-text-2" id="text-thailand-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -935,7 +1093,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-madagascar-travel-bookmarks" class="outline-2">
-<h2 id="madagascar-travel-bookmarks"><a id="sec-46" name="sec-46"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#madagascar-travel-bookmarks">#</a> Madagascar travel bookmarks</h2>
+<h2 id="madagascar-travel-bookmarks"><a id="sec-48" name="sec-48"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#madagascar-travel-bookmarks">#</a> Madagascar travel bookmarks</h2>
 <div class="outline-text-2" id="text-madagascar-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://en.wikipedia.org/wiki/Avenue_of_the_Baobabs">Avenue of the Baobabs</a>.
@@ -944,7 +1102,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-hong-kong-travel-bookmarks" class="outline-2">
-<h2 id="hong-kong-travel-bookmarks"><a id="sec-47" name="sec-47"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#hong-kong-travel-bookmarks">#</a> Hong Kong travel bookmarks</h2>
+<h2 id="hong-kong-travel-bookmarks"><a id="sec-49" name="sec-49"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#hong-kong-travel-bookmarks">#</a> Hong Kong travel bookmarks</h2>
 <div class="outline-text-2" id="text-hong-kong-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-10 Fri]  updated  </em></span>
 <ul class="org-ul">
@@ -960,7 +1118,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-barcelona-travel-bookmarks" class="outline-2">
-<h2 id="barcelona-travel-bookmarks"><a id="sec-48" name="sec-48"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#barcelona-travel-bookmarks">#</a> Barcelona travel bookmarks</h2>
+<h2 id="barcelona-travel-bookmarks"><a id="sec-50" name="sec-50"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#barcelona-travel-bookmarks">#</a> Barcelona travel bookmarks</h2>
 <div class="outline-text-2" id="text-barcelona-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.lonelyplanet.com/spain/barcelona/travel-tips-and-articles/77782">18 free things to do in Barcelona</a>.
@@ -969,7 +1127,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-iceland-travel-bookmarks" class="outline-2">
-<h2 id="iceland-travel-bookmarks"><a id="sec-49" name="sec-49"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#iceland-travel-bookmarks">#</a> Iceland travel bookmarks</h2>
+<h2 id="iceland-travel-bookmarks"><a id="sec-51" name="sec-51"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-04 Mon]</span></span> <a href="#iceland-travel-bookmarks">#</a> Iceland travel bookmarks</h2>
 <div class="outline-text-2" id="text-iceland-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.lonelyplanet.com/iceland/travel-tips-and-articles/how-to-have-a-budget-break-in-iceland">How to have a budget break in iceland</a>.
@@ -978,7 +1136,7 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 </div>
 </div>
 <div id="outline-container-building-clang-format" class="outline-2">
-<h2 id="building-clang-format"><a id="sec-50" name="sec-50"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-30 Thu]</span></span> <a href="#building-clang-format">#</a> Building clang-format</h2>
+<h2 id="building-clang-format"><a id="sec-52" name="sec-52"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-30 Thu]</span></span> <a href="#building-clang-format">#</a> Building clang-format</h2>
 <div class="outline-text-2" id="text-building-clang-format">
 <p>
 Based on instructions from <a href="http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion">Building clang-format and friends on OSX Mountain Lion</a>.
@@ -1032,7 +1190,7 @@ build_clang
 </div>
 </div>
 <div id="outline-container-programmatic-ios-auto-layout" class="outline-2">
-<h2 id="programmatic-ios-auto-layout"><a id="sec-51" name="sec-51"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-30 Thu]</span></span> <a href="#programmatic-ios-auto-layout">#</a> Programmatic iOS Auto Layout</h2>
+<h2 id="programmatic-ios-auto-layout"><a id="sec-53" name="sec-53"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-30 Thu]</span></span> <a href="#programmatic-ios-auto-layout">#</a> Programmatic iOS Auto Layout</h2>
 <div class="outline-text-2" id="text-programmatic-ios-auto-layout">
 <p>
 Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html">Adopting Auto Layout</a> and <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html">Visual Format language</a> for reference.
@@ -1074,7 +1232,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-japan-travel-bookmarks" class="outline-2">
-<h2 id="japan-travel-bookmarks"><a id="sec-52" name="sec-52"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-23 Thu]</span></span> <a href="#japan-travel-bookmarks">#</a> Japan travel bookmarks</h2>
+<h2 id="japan-travel-bookmarks"><a id="sec-54" name="sec-54"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-23 Thu]</span></span> <a href="#japan-travel-bookmarks">#</a> Japan travel bookmarks</h2>
 <div class="outline-text-2" id="text-japan-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-15 Wed]  updated  </em></span>
 <ul class="org-ul">
@@ -1106,7 +1264,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-uk-travel-bookmarks" class="outline-2">
-<h2 id="uk-travel-bookmarks"><a id="sec-53" name="sec-53"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#uk-travel-bookmarks">#</a> UK travel bookmarks</h2>
+<h2 id="uk-travel-bookmarks"><a id="sec-55" name="sec-55"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#uk-travel-bookmarks">#</a> UK travel bookmarks</h2>
 <div class="outline-text-2" id="text-uk-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -1126,7 +1284,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-development-quotes" class="outline-2">
-<h2 id="development-quotes"><a id="sec-54" name="sec-54"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#development-quotes">#</a> Development quotes</h2>
+<h2 id="development-quotes"><a id="sec-56" name="sec-56"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#development-quotes">#</a> Development quotes</h2>
 <div class="outline-text-2" id="text-development-quotes">
 <ul class="org-ul">
 <li><a href="https://twitter.com/giorgiosironi/status/587507955521708032">If your backlog is exploding the problem is not that your developers are slow, but that your business model is not based on reality</a>.
@@ -1135,7 +1293,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-spain-travel-bookmarks" class="outline-2">
-<h2 id="spain-travel-bookmarks"><a id="sec-55" name="sec-55"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <i>#</i> Spain travel bookmarks</h2>
+<h2 id="spain-travel-bookmarks"><a id="sec-57" name="sec-57"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <i>#</i> Spain travel bookmarks</h2>
 <div class="outline-text-2" id="text-spain-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -1151,7 +1309,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-meet-up-bookmarks" class="outline-2">
-<h2 id="meet-up-bookmarks"><a id="sec-56" name="sec-56"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#meet-up-bookmarks">#</a> Meet up bookmarks</h2>
+<h2 id="meet-up-bookmarks"><a id="sec-58" name="sec-58"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#meet-up-bookmarks">#</a> Meet up bookmarks</h2>
 <div class="outline-text-2" id="text-meet-up-bookmarks">
 <ul class="org-ul">
 <li><a href="https://www.couchsurfing.com">Couchsurfing.org</a>.
@@ -1164,7 +1322,7 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 <div id="outline-container-plantuml-example" class="outline-2">
-<h2 id="plantuml-example"><a id="sec-57" name="sec-57"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-17 Fri]</span></span> <a href="#plantuml-example">#</a> Plantuml example</h2>
+<h2 id="plantuml-example"><a id="sec-59" name="sec-59"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-17 Fri]</span></span> <a href="#plantuml-example">#</a> Plantuml example</h2>
 <div class="outline-text-2" id="text-plantuml-example">
 <p>
 Played with <a href="http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf">Plantuml</a>. Convenient for generating UML diagrams from text. Here's the <a href="http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf">Language Reference Guide</a>. Here's an example:
@@ -1218,7 +1376,7 @@ Generating diagram:
 </div>
 </div>
 <div id="outline-container-helm-describe-helm-attribute" class="outline-2">
-<h2 id="helm-describe-helm-attribute"><a id="sec-58" name="sec-58"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-14 Tue]</span></span> <a href="#helm-describe-helm-attribute">#</a> Helm-describe-helm-attribute</h2>
+<h2 id="helm-describe-helm-attribute"><a id="sec-60" name="sec-60"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-14 Tue]</span></span> <a href="#helm-describe-helm-attribute">#</a> Helm-describe-helm-attribute</h2>
 <div class="outline-text-2" id="text-helm-describe-helm-attribute">
 <p>
 <a href="https://www.youtube.com/watch?v=XjKtkEMUYGc">Writing A Spotify Client in 16 Minutes</a> is fantastic for picking up helm and Emacs lisp tips. Of interest helm-describe-helm-attribute, second to the awesomeness of helm-spotify integration.
@@ -1232,7 +1390,7 @@ Generating diagram:
 </div>
 </div>
 <div id="outline-container-youtube-videos-in-your-org-html-export" class="outline-2">
-<h2 id="youtube-videos-in-your-org-html-export"><a id="sec-59" name="sec-59"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-12 Sun]</span></span> <a href="#youtube-videos-in-your-org-html-export">#</a> Youtube videos in your org html export</h2>
+<h2 id="youtube-videos-in-your-org-html-export"><a id="sec-61" name="sec-61"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-12 Sun]</span></span> <a href="#youtube-videos-in-your-org-html-export">#</a> Youtube videos in your org html export</h2>
 <div class="outline-text-2" id="text-youtube-videos-in-your-org-html-export">
 <p>
 <a href="https://twitter.com/sachachua">Sacha Chua</a> and <a href="https://twitter.com/jwiegley">John Wiegley</a> posted a wonderful video on <a href="http://sachachua.com/blog/2015/04/2015-04-08-emacs-lisp-development-tips-with-john-wiegley">Emacs lisp development tips</a>. Embedding the following raw HTML using #+BEGIN_HTML/#+END_HTML:
@@ -1259,7 +1417,7 @@ results in an embedded video when exporting your org file:
 </div>
 </div>
 <div id="outline-container-dot-net-bookmarks" class="outline-2">
-<h2 id="dot-net-bookmarks"><a id="sec-60" name="sec-60"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-12 Sun]</span></span> <a href="#dot-net-bookmarks">#</a> .net bookmarks</h2>
+<h2 id="dot-net-bookmarks"><a id="sec-62" name="sec-62"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-12 Sun]</span></span> <a href="#dot-net-bookmarks">#</a> .net bookmarks</h2>
 <div class="outline-text-2" id="text-dot-net-bookmarks">
 <ul class="org-ul">
 <li><a href="http://thomasvm.github.io/blog/2015/03/17/open-source-net-libraries-that-make-your-life-easier/">Open Source .Net libraries that make your life easier</a>.
@@ -1268,7 +1426,7 @@ results in an embedded video when exporting your org file:
 </div>
 </div>
 <div id="outline-container-uk-property-bookmarks" class="outline-2">
-<h2 id="uk-property-bookmarks"><a id="sec-61" name="sec-61"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-10 Fri]</span></span> <a href="#uk-property-bookmarks">#</a> UK property bookmarks</h2>
+<h2 id="uk-property-bookmarks"><a id="sec-63" name="sec-63"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-10 Fri]</span></span> <a href="#uk-property-bookmarks">#</a> UK property bookmarks</h2>
 <div class="outline-text-2" id="text-uk-property-bookmarks">
 <ul class="org-ul">
 <li><a href="http://commutefrom.com/">Commute from</a> (find property based on potential commute).
@@ -1279,7 +1437,7 @@ results in an embedded video when exporting your org file:
 </div>
 </div>
 <div id="outline-container-git-commit-message-style" class="outline-2">
-<h2 id="git-commit-message-style"><a id="sec-62" name="sec-62"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-09 Thu]</span></span> <a href="#git-commit-message-style">#</a> Git commit message style</h2>
+<h2 id="git-commit-message-style"><a id="sec-64" name="sec-64"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-09 Thu]</span></span> <a href="#git-commit-message-style">#</a> Git commit message style</h2>
 <div class="outline-text-2" id="text-git-commit-message-style">
 <p>
 Adopted Tim Pope's Git commit message <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">style</a>. Also enabled Emacs's git-commit-training-wheels-mode:
@@ -1298,7 +1456,7 @@ Adopted Tim Pope's Git commit message <a href="http://tbaggery.com/2008/04/19/a-
 </div>
 </div>
 <div id="outline-container-fci-mode-and-org-html-export-to-html-bug" class="outline-2">
-<h2 id="fci-mode-and-org-html-export-to-html-bug"><a id="sec-63" name="sec-63"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-06 Mon]</span></span> <a href="#fci-mode-and-org-html-export-to-html-bug">#</a> fci-mode and org-html-export-to-html bug</h2>
+<h2 id="fci-mode-and-org-html-export-to-html-bug"><a id="sec-65" name="sec-65"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-06 Mon]</span></span> <a href="#fci-mode-and-org-html-export-to-html-bug">#</a> fci-mode and org-html-export-to-html bug</h2>
 <div class="outline-text-2" id="text-fci-mode-and-org-html-export-to-html-bug">
 <p>
 Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This <a href="http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html">thread</a> has a workaround:
@@ -1319,7 +1477,7 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </div>
 </div>
 <div id="outline-container-try-cocoapods-out" class="outline-2">
-<h2 id="try-cocoapods-out"><a id="sec-64" name="sec-64"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <a href="#try-cocoapods-out">#</a> Try cocoapods out</h2>
+<h2 id="try-cocoapods-out"><a id="sec-66" name="sec-66"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <a href="#try-cocoapods-out">#</a> Try cocoapods out</h2>
 <div class="outline-text-2" id="text-try-cocoapods-out">
 <p>
 <a href="https://github.com/CocoaPods/cocoapods-try">Cocapods try</a>:
@@ -1332,7 +1490,7 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </div>
 </div>
 <div id="outline-container-cornwall-travel-bookmarks" class="outline-2">
-<h2 id="cornwall-travel-bookmarks"><a id="sec-65" name="sec-65"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <i>#</i> Cornwall travel bookmarks</h2>
+<h2 id="cornwall-travel-bookmarks"><a id="sec-67" name="sec-67"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <i>#</i> Cornwall travel bookmarks</h2>
 <div class="outline-text-2" id="text-cornwall-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://barefootcornwall.com/on-the-road/">Food along the way</a>.
@@ -1341,7 +1499,7 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </div>
 </div>
 <div id="outline-container-austria-travel-bookmarks" class="outline-2">
-<h2 id="austria-travel-bookmarks"><a id="sec-66" name="sec-66"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <i>#</i> Austria travel bookmarks</h2>
+<h2 id="austria-travel-bookmarks"><a id="sec-68" name="sec-68"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-03 Fri]</span></span> <i>#</i> Austria travel bookmarks</h2>
 <div class="outline-text-2" id="text-austria-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-02 Tue]  updated  </em></span>
 <ul class="org-ul">
@@ -1353,7 +1511,7 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </div>
 </div>
 <div id="outline-container-cinnamon-desktop-run-dialog" class="outline-2">
-<h2 id="cinnamon-desktop-run-dialog"><a id="sec-67" name="sec-67"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-02 Thu]</span></span> <a href="#cinnamon-desktop-run-dialog">#</a> Cinnamon desktop run dialog</h2>
+<h2 id="cinnamon-desktop-run-dialog"><a id="sec-69" name="sec-69"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-02 Thu]</span></span> <a href="#cinnamon-desktop-run-dialog">#</a> Cinnamon desktop run dialog</h2>
 <div class="outline-text-2" id="text-cinnamon-desktop-run-dialog">
 <p>
 Note to self. Open with Alt-f2.
@@ -1361,7 +1519,7 @@ Note to self. Open with Alt-f2.
 </div>
 </div>
 <div id="outline-container-books-for-2015" class="outline-2">
-<h2 id="books-for-2015"><a id="sec-68" name="sec-68"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-29 Sun]</span></span> <a href="#books-for-2015">#</a> Books for 2015</h2>
+<h2 id="books-for-2015"><a id="sec-70" name="sec-70"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-29 Sun]</span></span> <a href="#books-for-2015">#</a> Books for 2015</h2>
 <div class="outline-text-2" id="text-books-for-2015">
 <ul class="org-ul">
 <li><a href="http://www.amazon.co.uk/Catch-22-Vintage-Classics-Joseph-Heller/dp/0099470462">Catch 22</a>.
@@ -1376,7 +1534,7 @@ Note to self. Open with Alt-f2.
 </div>
 </div>
 <div id="outline-container-ayahuasca-bookmarks" class="outline-2">
-<h2 id="ayahuasca-bookmarks"><a id="sec-69" name="sec-69"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-29 Sun]</span></span> <a href="#ayahuasca-bookmarks">#</a> Ayahuasca bookmarks</h2>
+<h2 id="ayahuasca-bookmarks"><a id="sec-71" name="sec-71"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-29 Sun]</span></span> <a href="#ayahuasca-bookmarks">#</a> Ayahuasca bookmarks</h2>
 <div class="outline-text-2" id="text-ayahuasca-bookmarks">
 <ul class="org-ul">
 <li><a href="http://ayaadvisor.org/listings/onanya-joni-shipibo-europe/">Ayaadvisor</a>.
@@ -1393,7 +1551,7 @@ Note to self. Open with Alt-f2.
 </div>
 </div>
 <div id="outline-container-emacs-init.el-bookmarks" class="outline-2">
-<h2 id="emacs-init.el-bookmarks"><a id="sec-70" name="sec-70"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-28 Sat]</span></span> <a href="#emacs-init.el-bookmarks">#</a> Emacs init.el bookmarks</h2>
+<h2 id="emacs-init.el-bookmarks"><a id="sec-72" name="sec-72"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-28 Sat]</span></span> <a href="#emacs-init.el-bookmarks">#</a> Emacs init.el bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-init.el-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-11 Sat]  updated  </em></span>
 <ul class="org-ul">
@@ -1425,7 +1583,7 @@ Note to self. Open with Alt-f2.
 </div>
 </div>
 <div id="outline-container-css-vertical-align-using-flex" class="outline-2">
-<h2 id="css-vertical-align-using-flex"><a id="sec-71" name="sec-71"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-28 Sat]</span></span> <a href="#css-vertical-align-using-flex">#</a> CSS vertical align using flex</h2>
+<h2 id="css-vertical-align-using-flex"><a id="sec-73" name="sec-73"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-28 Sat]</span></span> <a href="#css-vertical-align-using-flex">#</a> CSS vertical align using flex</h2>
 <div class="outline-text-2" id="text-css-vertical-align-using-flex">
 <p>
 Codepen <a href="http://codepen.io/oisinlavery/pen/Jmjtz">snippet</a>:
@@ -1448,7 +1606,7 @@ p{
 </div>
 </div>
 <div id="outline-container-london-diving-schools" class="outline-2">
-<h2 id="london-diving-schools"><a id="sec-72" name="sec-72"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-26 Thu]</span></span> <a href="#london-diving-schools">#</a> London diving schools</h2>
+<h2 id="london-diving-schools"><a id="sec-74" name="sec-74"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-26 Thu]</span></span> <a href="#london-diving-schools">#</a> London diving schools</h2>
 <div class="outline-text-2" id="text-london-diving-schools">
 <ul class="org-ul">
 <li><a href="http://londonschoolofdiving.co.uk">London Diving School</a>. Not heard good comments.
@@ -1469,7 +1627,7 @@ p{
 </div>
 </div>
 <div id="outline-container-helm-buffer-urls" class="outline-2">
-<h2 id="helm-buffer-urls"><a id="sec-73" name="sec-73"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-26 Thu]</span></span> <a href="#helm-buffer-urls">#</a> Helm buffer URLs</h2>
+<h2 id="helm-buffer-urls"><a id="sec-75" name="sec-75"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-26 Thu]</span></span> <a href="#helm-buffer-urls">#</a> Helm buffer URLs</h2>
 <div class="outline-text-2" id="text-helm-buffer-urls">
 <p>
 Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm</a>. Here's a go at listing all URLs in current buffer.
@@ -1506,7 +1664,7 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
 </div>
 </div>
 <div id="outline-container-doh-undo-last-git-commit" class="outline-2">
-<h2 id="doh-undo-last-git-commit"><a id="sec-74" name="sec-74"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-23 Mon]</span></span> <a href="#doh-undo-last-git-commit">#</a> Doh! undo last git commit</h2>
+<h2 id="doh-undo-last-git-commit"><a id="sec-76" name="sec-76"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-23 Mon]</span></span> <a href="#doh-undo-last-git-commit">#</a> Doh! undo last git commit</h2>
 <div class="outline-text-2" id="text-doh-undo-last-git-commit">
 <div class="org-src-container">
 
@@ -1516,7 +1674,7 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
 </div>
 </div>
 <div id="outline-container-resetting-variables-using-defvar" class="outline-2">
-<h2 id="resetting-variables-using-defvar"><a id="sec-75" name="sec-75"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#resetting-variables-using-defvar">#</a> Resetting variables using defvar</h2>
+<h2 id="resetting-variables-using-defvar"><a id="sec-77" name="sec-77"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#resetting-variables-using-defvar">#</a> Resetting variables using defvar</h2>
 <div class="outline-text-2" id="text-resetting-variables-using-defvar">
 <p>
 Want to re-evaluate defvars and modify variables? eval-defun (bound to C-M-x) can help. From the manual:
@@ -1533,7 +1691,7 @@ similarly.
 </div>
 </div>
 <div id="outline-container-broken-xcode-plugins" class="outline-2">
-<h2 id="broken-xcode-plugins"><a id="sec-76" name="sec-76"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#broken-xcode-plugins">#</a> Broken Xcode plugins?</h2>
+<h2 id="broken-xcode-plugins"><a id="sec-78" name="sec-78"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#broken-xcode-plugins">#</a> Broken Xcode plugins?</h2>
 <div class="outline-text-2" id="text-broken-xcode-plugins">
 <p>
 Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPlugInCompatibilityUUIDs is added to the plugin's Info.plist. Get from:
@@ -1547,7 +1705,7 @@ Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPl
 </div>
 </div>
 <div id="outline-container-born-to-run-references" class="outline-2">
-<h2 id="born-to-run-references"><a id="sec-77" name="sec-77"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#born-to-run-references">#</a> Born to Run references</h2>
+<h2 id="born-to-run-references"><a id="sec-79" name="sec-79"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-22 Sun]</span></span> <a href="#born-to-run-references">#</a> Born to Run references</h2>
 <div class="outline-text-2" id="text-born-to-run-references">
 <br><span class="modified-timestamp">  <em>[2015-03-23 Mon]  updated  </em></span>
 
@@ -1575,9 +1733,9 @@ Recipe by <a href="http://www.bellaonline.com/articles/art51802.asp">Megan Migno
 </p>
 </div>
 
-<div id="outline-container-sec-77-1" class="outline-3">
-<h3 id="sec-77-1">Mama Tita’s Pancakes</h3>
-<div class="outline-text-3" id="text-77-1">
+<div id="outline-container-sec-79-1" class="outline-3">
+<h3 id="sec-79-1">Mama Tita’s Pancakes</h3>
+<div class="outline-text-3" id="text-79-1">
 <ul class="org-ul">
 <li>1 ½ cups cooked brown rice
 </li>
@@ -1597,7 +1755,7 @@ Recipe by <a href="http://www.bellaonline.com/articles/art51802.asp">Megan Migno
 </div>
 
 <div id="outline-container-org-tips-from-2015-03-18-emacs-hangout" class="outline-2">
-<h2 id="org-tips-from-2015-03-18-emacs-hangout"><a id="sec-78" name="sec-78"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <a href="#org-tips-from-2015-03-18-emacs-hangout">#</a> Org tips from 2015-03-18 Emacs hangout</h2>
+<h2 id="org-tips-from-2015-03-18-emacs-hangout"><a id="sec-80" name="sec-80"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <a href="#org-tips-from-2015-03-18-emacs-hangout">#</a> Org tips from 2015-03-18 Emacs hangout</h2>
 <div class="outline-text-2" id="text-org-tips-from-2015-03-18-emacs-hangout">
 <br><span class="modified-timestamp">  <em>[2015-03-22 Sun]  updated  </em></span>
 <p>
@@ -1631,7 +1789,7 @@ My super duper secret text I don't want to export.
 </div>
 </div>
 <div id="outline-container-food-bookmarks" class="outline-2">
-<h2 id="food-bookmarks"><a id="sec-79" name="sec-79"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <a href="#food-bookmarks">#</a> Food bookmarks</h2>
+<h2 id="food-bookmarks"><a id="sec-81" name="sec-81"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <a href="#food-bookmarks">#</a> Food bookmarks</h2>
 <div class="outline-text-2" id="text-food-bookmarks">
 <ul class="org-ul">
 <li><a href="http://summertomato.com/">Summer tomato</a>.
@@ -1642,7 +1800,7 @@ My super duper secret text I don't want to export.
 </div>
 </div>
 <div id="outline-container-ethiopia-travel-bookmarks" class="outline-2">
-<h2 id="ethiopia-travel-bookmarks"><a id="sec-80" name="sec-80"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <i>#</i> Ethiopia travel bookmarks</h2>
+<h2 id="ethiopia-travel-bookmarks"><a id="sec-82" name="sec-82"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <i>#</i> Ethiopia travel bookmarks</h2>
 <div class="outline-text-2" id="text-ethiopia-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Church_of_Saint_George,_Lalibela">Bet Giyorgis Church</a>.
@@ -1651,7 +1809,7 @@ My super duper secret text I don't want to export.
 </div>
 </div>
 <div id="outline-container-china-travel-bookmarks" class="outline-2">
-<h2 id="china-travel-bookmarks"><a id="sec-81" name="sec-81"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <i>#</i> China travel bookmarks</h2>
+<h2 id="china-travel-bookmarks"><a id="sec-83" name="sec-83"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-19 Thu]</span></span> <i>#</i> China travel bookmarks</h2>
 <div class="outline-text-2" id="text-china-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -1689,7 +1847,7 @@ My super duper secret text I don't want to export.
 </div>
 </div>
 <div id="outline-container-south-korea-travel-bookmarks" class="outline-2">
-<h2 id="south-korea-travel-bookmarks"><a id="sec-82" name="sec-82"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> South Korea travel bookmarks</h2>
+<h2 id="south-korea-travel-bookmarks"><a id="sec-84" name="sec-84"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> South Korea travel bookmarks</h2>
 <div class="outline-text-2" id="text-south-korea-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.humarakausar.com/tag/koi-fish-mural">Koi fish mural at Naksan Park, Seoul</a>.
@@ -1698,7 +1856,7 @@ My super duper secret text I don't want to export.
 </div>
 </div>
 <div id="outline-container-sharing-on-ios" class="outline-2">
-<h2 id="sharing-on-ios"><a id="sec-83" name="sec-83"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <a href="#sharing-on-ios">#</a> Sharing on iOS</h2>
+<h2 id="sharing-on-ios"><a id="sec-85" name="sec-85"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <a href="#sharing-on-ios">#</a> Sharing on iOS</h2>
 <div class="outline-text-2" id="text-sharing-on-ios">
 <ul class="org-ul">
 <li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityViewController_Class/">UIActivityViewController</a>.
@@ -1771,7 +1929,7 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
 </div>
 </div>
 <div id="outline-container-san-francisco-travel-bookmarks" class="outline-2">
-<h2 id="san-francisco-travel-bookmarks"><a id="sec-84" name="sec-84"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> San Francisco travel bookmarks</h2>
+<h2 id="san-francisco-travel-bookmarks"><a id="sec-86" name="sec-86"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> San Francisco travel bookmarks</h2>
 <div class="outline-text-2" id="text-san-francisco-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.tiledsteps.org/">Tiled steps at 16th Moraga Street in San Francisco</a>.
@@ -1780,7 +1938,7 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
 </div>
 </div>
 <div id="outline-container-istanbul-travel-bookmarks" class="outline-2">
-<h2 id="istanbul-travel-bookmarks"><a id="sec-85" name="sec-85"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> Istanbul travel bookmarks</h2>
+<h2 id="istanbul-travel-bookmarks"><a id="sec-87" name="sec-87"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-18 Wed]</span></span> <i>#</i> Istanbul travel bookmarks</h2>
 <div class="outline-text-2" id="text-istanbul-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -1794,7 +1952,7 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
 </div>
 </div>
 <div id="outline-container-italy-travel-bookmarks" class="outline-2">
-<h2 id="italy-travel-bookmarks"><a id="sec-86" name="sec-86"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <i>#</i> Italy travel bookmarks</h2>
+<h2 id="italy-travel-bookmarks"><a id="sec-88" name="sec-88"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <i>#</i> Italy travel bookmarks</h2>
 <div class="outline-text-2" id="text-italy-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -1838,7 +1996,7 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
 </div>
 </div>
 <div id="outline-container-emacs-lisp-debug-on-entry" class="outline-2">
-<h2 id="emacs-lisp-debug-on-entry"><a id="sec-87" name="sec-87"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <a href="#emacs-lisp-debug-on-entry">#</a> Emacs lisp debug on entry</h2>
+<h2 id="emacs-lisp-debug-on-entry"><a id="sec-89" name="sec-89"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <a href="#emacs-lisp-debug-on-entry">#</a> Emacs lisp debug on entry</h2>
 <div class="outline-text-2" id="text-emacs-lisp-debug-on-entry">
 <p>
 Wanted to track down which package was enabling ido-mode on my behalf. debug-on-entry to the rescue. Pass the method name in question and you're good to go.
@@ -1860,7 +2018,7 @@ When done, use cancel.
 </div>
 
 <div id="outline-container-burma-travel-bookmarks" class="outline-2">
-<h2 id="burma-travel-bookmarks"><a id="sec-88" name="sec-88"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <i>#</i> Burma travel bookmarks</h2>
+<h2 id="burma-travel-bookmarks"><a id="sec-90" name="sec-90"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-17 Tue]</span></span> <i>#</i> Burma travel bookmarks</h2>
 <div class="outline-text-2" id="text-burma-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Ngapali_Beach">Ngapali beach</a>.
@@ -1879,7 +2037,7 @@ When done, use cancel.
 </div>
 </div>
 <div id="outline-container-os-x-screencasts-to-animated-gif" class="outline-2">
-<h2 id="os-x-screencasts-to-animated-gif"><a id="sec-89" name="sec-89"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-16 Mon]</span></span> <a href="#os-x-screencasts-to-animated-gif">#</a> OS X Screencasts to animated GIF</h2>
+<h2 id="os-x-screencasts-to-animated-gif"><a id="sec-91" name="sec-91"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-16 Mon]</span></span> <a href="#os-x-screencasts-to-animated-gif">#</a> OS X Screencasts to animated GIF</h2>
 <div class="outline-text-2" id="text-os-x-screencasts-to-animated-gif">
 <ul class="org-ul">
 <li><a href="https://gist.github.com/dergachev/4627207">Alex Dergachev</a> has a great <a href="https://gist.github.com/dergachev/4627207">howto</a> for generating animated GIF out of OS X Screencasts.
@@ -1890,7 +2048,7 @@ When done, use cancel.
 </div>
 </div>
 <div id="outline-container-writing-xcode-plugins" class="outline-2">
-<h2 id="writing-xcode-plugins"><a id="sec-90" name="sec-90"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-15 Sun]</span></span> <a href="#writing-xcode-plugins">#</a> Writing Xcode plugins</h2>
+<h2 id="writing-xcode-plugins"><a id="sec-92" name="sec-92"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-15 Sun]</span></span> <a href="#writing-xcode-plugins">#</a> Writing Xcode plugins</h2>
 <div class="outline-text-2" id="text-writing-xcode-plugins">
 <ul class="org-ul">
 <li><a href="https://github.com/kattrali/Xcode-Plugin-Template">Xcode-Plugin-Template</a> from <a href="http://www.delisa.me/">Delisa Mason</a>/<a href="https://github.com/kattrali/Xcode-Plugin-Template">kattrali</a>.
@@ -1929,7 +2087,7 @@ When done, use cancel.
 </div>
 </div>
 <div id="outline-container-uninstalling-alcatraz-from-xcode" class="outline-2">
-<h2 id="uninstalling-alcatraz-from-xcode"><a id="sec-91" name="sec-91"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-15 Sun]</span></span> <a href="#uninstalling-alcatraz-from-xcode">#</a> Uninstalling Alcatraz from Xcode</h2>
+<h2 id="uninstalling-alcatraz-from-xcode"><a id="sec-93" name="sec-93"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-15 Sun]</span></span> <a href="#uninstalling-alcatraz-from-xcode">#</a> Uninstalling Alcatraz from Xcode</h2>
 <div class="outline-text-2" id="text-uninstalling-alcatraz-from-xcode">
 <div class="org-src-container">
 
@@ -1948,7 +2106,7 @@ ps. Removing all plugins:
 </div>
 </div>
 <div id="outline-container-prefill-emacs-swiper-with-current-region" class="outline-2">
-<h2 id="prefill-emacs-swiper-with-current-region"><a id="sec-92" name="sec-92"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-14 Sat]</span></span> <a href="#prefill-emacs-swiper-with-current-region">#</a> Prefill Emacs swiper with current region</h2>
+<h2 id="prefill-emacs-swiper-with-current-region"><a id="sec-94" name="sec-94"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-14 Sat]</span></span> <a href="#prefill-emacs-swiper-with-current-region">#</a> Prefill Emacs swiper with current region</h2>
 <div class="outline-text-2" id="text-prefill-emacs-swiper-with-current-region">
 <p>
 The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is proving to be a great alternative to <a href="https://github.com/ShingoFukuyama/helm-swoop">helm-swoop</a>. Here's how to prefill with current region:
@@ -1971,7 +2129,7 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </div>
 </div>
 <div id="outline-container-change-mac-os-app-icon" class="outline-2">
-<h2 id="change-mac-os-app-icon"><a id="sec-93" name="sec-93"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-14 Sat]</span></span> <a href="#change-mac-os-app-icon">#</a> Change Mac OS app icon</h2>
+<h2 id="change-mac-os-app-icon"><a id="sec-95" name="sec-95"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-14 Sat]</span></span> <a href="#change-mac-os-app-icon">#</a> Change Mac OS app icon</h2>
 <div class="outline-text-2" id="text-change-mac-os-app-icon">
 <ul class="org-ul">
 <li>Open the new icon (.icns) in Preview.
@@ -2007,7 +2165,7 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </div>
 
 <div id="outline-container-hack-on-emacs-meetup" class="outline-2">
-<h2 id="hack-on-emacs-meetup"><a id="sec-94" name="sec-94"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-11 Wed]</span></span> <a href="#hack-on-emacs-meetup">#</a> Hack on Emacs London meetup bookmarks</h2>
+<h2 id="hack-on-emacs-meetup"><a id="sec-96" name="sec-96"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-11 Wed]</span></span> <a href="#hack-on-emacs-meetup">#</a> Hack on Emacs London meetup bookmarks</h2>
 <div class="outline-text-2" id="text-hack-on-emacs-meetup">
 <ul class="org-ul">
 <li><a href="http://www.european-lisp-symposium.org">European Lisp Symposium</a>.
@@ -2022,15 +2180,15 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </div>
 </div>
 <div id="outline-container-working-with-os-x-and-emacs-tips" class="outline-2">
-<h2 id="working-with-os-x-and-emacs-tips"><a id="sec-95" name="sec-95"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-09 Mon]</span></span> <a href="#working-with-os-x-and-emacs-tips">#</a> Working with OS X and Emacs tips</h2>
+<h2 id="working-with-os-x-and-emacs-tips"><a id="sec-97" name="sec-97"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-09 Mon]</span></span> <a href="#working-with-os-x-and-emacs-tips">#</a> Working with OS X and Emacs tips</h2>
 <div class="outline-text-2" id="text-working-with-os-x-and-emacs-tips">
 <p>
 From <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS X/Emacs <a href="http://emacsblog.org/2011/01/04/how-i-work-working-with-os-x-and-emacs/">workflow</a>.
 </p>
 </div>
-<div id="outline-container-sec-95-1" class="outline-3">
-<h3 id="sec-95-1">Frequently used apps:</h3>
-<div class="outline-text-3" id="text-95-1">
+<div id="outline-container-sec-97-1" class="outline-3">
+<h3 id="sec-97-1">Frequently used apps:</h3>
+<div class="outline-text-3" id="text-97-1">
 <ul class="org-ul">
 <li><a href="https://agilebits.com/onepassword">1 password</a>.
 </li>
@@ -2051,9 +2209,9 @@ From <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS 
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-95-2" class="outline-3">
-<h3 id="sec-95-2">Dotfiles</h3>
-<div class="outline-text-3" id="text-95-2">
+<div id="outline-container-sec-97-2" class="outline-3">
+<h3 id="sec-97-2">Dotfiles</h3>
+<div class="outline-text-3" id="text-97-2">
 <ul class="org-ul">
 <li><a href="https://github.com/rmm5t/dotfiles">Github</a>.
 </li>
@@ -2062,12 +2220,12 @@ From <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS 
 </div>
 </div>
 <div id="outline-container-building-ycmd" class="outline-2">
-<h2 id="building-ycmd"><a id="sec-96" name="sec-96"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-09 Mon]</span></span> <a href="#building-ycmd">#</a> Building ycmd</h2>
+<h2 id="building-ycmd"><a id="sec-98" name="sec-98"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-09 Mon]</span></span> <a href="#building-ycmd">#</a> Building ycmd</h2>
 <div class="outline-text-2" id="text-building-ycmd">
 </div>
-<div id="outline-container-sec-96-1" class="outline-3">
-<h3 id="sec-96-1">Build</h3>
-<div class="outline-text-3" id="text-96-1">
+<div id="outline-container-sec-98-1" class="outline-3">
+<h3 id="sec-98-1">Build</h3>
+<div class="outline-text-3" id="text-98-1">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ git clone https://github.com/Valloric/ycmd.git
@@ -2078,9 +2236,9 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 </div>
-<div id="outline-container-sec-96-2" class="outline-3">
-<h3 id="sec-96-2">Test</h3>
-<div class="outline-text-3" id="text-96-2">
+<div id="outline-container-sec-98-2" class="outline-3">
+<h3 id="sec-98-2">Test</h3>
+<div class="outline-text-3" id="text-98-2">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ python ycmd
@@ -2089,9 +2247,9 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 </div>
-<div id="outline-container-sec-96-3" class="outline-3">
-<h3 id="sec-96-3">More info</h3>
-<div class="outline-text-3" id="text-96-3">
+<div id="outline-container-sec-98-3" class="outline-3">
+<h3 id="sec-98-3">More info</h3>
+<div class="outline-text-3" id="text-98-3">
 <ul class="org-ul">
 <li><a href="https://github.com/Valloric/YouCompleteMe/blob/master/README.md">YouCompleteMe README</a>.
 </li>
@@ -2102,7 +2260,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-regular-bookmarks" class="outline-2">
-<h2 id="regular-bookmarks"><a id="sec-97" name="sec-97"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#regular-bookmarks">#</a> Regular bookmarks</h2>
+<h2 id="regular-bookmarks"><a id="sec-99" name="sec-99"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#regular-bookmarks">#</a> Regular bookmarks</h2>
 <div class="outline-text-2" id="text-regular-bookmarks">
 <ul class="org-ul">
 <li><a href="http://roadsandkingdoms.com/category/food/">Roads &amp; Kingdoms (food)</a>.
@@ -2115,12 +2273,12 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-photography-bookmarks" class="outline-2">
-<h2 id="photography-bookmarks"><a id="sec-98" name="sec-98"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#photography-bookmarks">#</a> Photography bookmarks</h2>
+<h2 id="photography-bookmarks"><a id="sec-100" name="sec-100"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#photography-bookmarks">#</a> Photography bookmarks</h2>
 <div class="outline-text-2" id="text-photography-bookmarks">
 </div>
 </div>
 <div id="outline-container-paris-travel-bookmarks" class="outline-2">
-<h2 id="paris-travel-bookmarks"><a id="sec-99" name="sec-99"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <i>#</i> Paris travel bookmarks</h2>
+<h2 id="paris-travel-bookmarks"><a id="sec-101" name="sec-101"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <i>#</i> Paris travel bookmarks</h2>
 <div class="outline-text-2" id="text-paris-travel-bookmarks">
 <ul class="org-ul">
 <li>Au Passage. Small plates in fun atmosphere.
@@ -2161,13 +2319,15 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-org-mode-bookmarks" class="outline-2">
-<h2 id="org-mode-bookmarks"><a id="sec-100" name="sec-100"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#org-mode-bookmarks">#</a> Org mode bookmarks</h2>
+<h2 id="org-mode-bookmarks"><a id="sec-102" name="sec-102"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#org-mode-bookmarks">#</a> Org mode bookmarks</h2>
 <div class="outline-text-2" id="text-org-mode-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-04-30 Thu]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-07-16 Thu]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode">Assigning ids to entries</a>.
 </li>
 <li><a href="http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/">Automating boilerplate in org-mode journalling</a>.
+</li>
+<li><a href="http://correl.phoenixinquis.net/2015/07/12/git-graphs.html">Drawing Git Graphs with Graphviz and Org-Mode</a>.
 </li>
 <li><a href="http://kelvinh.github.io/wiki/org-mode-manual/">Kevin's org notes</a>.
 </li>
@@ -2179,25 +2339,27 @@ $ ./build.sh --clang-completer
 </li>
 <li><a href="http://doc.norang.ca/org-mode.html">Organize your life in plain text</a>.
 </li>
+<li><a href="http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/">Writing Specs with Org-mode</a>.
+</li>
 </ul>
 </div>
 </div>
 <div id="outline-container-london-food-backlog" class="outline-2">
-<h2 id="london-food-backlog"><a id="sec-101" name="sec-101"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#london-food-backlog">#</a> London food backlog</h2>
+<h2 id="london-food-backlog"><a id="sec-103" name="sec-103"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-08 Sun]</span></span> <a href="#london-food-backlog">#</a> London food backlog</h2>
 <div class="outline-text-2" id="text-london-food-backlog">
 </div>
-<div id="outline-container-sec-101-1" class="outline-3">
-<h3 id="sec-101-1">Hammersmith</h3>
-<div class="outline-text-3" id="text-101-1">
+<div id="outline-container-sec-103-1" class="outline-3">
+<h3 id="sec-103-1">Hammersmith</h3>
+<div class="outline-text-3" id="text-103-1">
 <ul class="org-ul">
 <li><a href="http://indian-zing.co.uk/">Indian Zing</a> (Indian).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-2" class="outline-3">
-<h3 id="sec-101-2">Islington</h3>
-<div class="outline-text-3" id="text-101-2">
+<div id="outline-container-sec-103-2" class="outline-3">
+<h3 id="sec-103-2">Islington</h3>
+<div class="outline-text-3" id="text-103-2">
 <ul class="org-ul">
 <li><a href="http://delhigrill.com">Delhi Grill</a> (Indian).
 </li>
@@ -2208,63 +2370,63 @@ $ ./build.sh --clang-completer
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-3" class="outline-3">
-<h3 id="sec-101-3">Peckham</h3>
-<div class="outline-text-3" id="text-101-3">
+<div id="outline-container-sec-103-3" class="outline-3">
+<h3 id="sec-103-3">Peckham</h3>
+<div class="outline-text-3" id="text-103-3">
 <ul class="org-ul">
 <li><a href="http://www.ganapatirestaurant.com">Ganapati</a> (South Indian).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-4" class="outline-3">
-<h3 id="sec-101-4">Soho</h3>
-<div class="outline-text-3" id="text-101-4">
+<div id="outline-container-sec-103-4" class="outline-3">
+<h3 id="sec-103-4">Soho</h3>
+<div class="outline-text-3" id="text-103-4">
 <ul class="org-ul">
 <li><a href="http://baolondon.com">BAO</a> (Bao buns! enough said).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-5" class="outline-3">
-<h3 id="sec-101-5">Sloane Square</h3>
-<div class="outline-text-3" id="text-101-5">
+<div id="outline-container-sec-103-5" class="outline-3">
+<h3 id="sec-103-5">Sloane Square</h3>
+<div class="outline-text-3" id="text-103-5">
 <ul class="org-ul">
 <li><a href="http://rasoi-uk.com/">Rasoi</a> (Indian).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-6" class="outline-3">
-<h3 id="sec-101-6">Tottenham Court Road.</h3>
-<div class="outline-text-3" id="text-101-6">
+<div id="outline-container-sec-103-6" class="outline-3">
+<h3 id="sec-103-6">Tottenham Court Road.</h3>
+<div class="outline-text-3" id="text-103-6">
 <ul class="org-ul">
 <li><a href="https://www.kanada-ya.com/">Kanada-Ya</a> (rammen).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-7" class="outline-3">
-<h3 id="sec-101-7">Hammersmith</h3>
-<div class="outline-text-3" id="text-101-7">
+<div id="outline-container-sec-103-7" class="outline-3">
+<h3 id="sec-103-7">Hammersmith</h3>
+<div class="outline-text-3" id="text-103-7">
 <ul class="org-ul">
 <li><a href="http://indian-zing.co.uk/">Indian Zing</a> (Indian).
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-8" class="outline-3">
-<h3 id="sec-101-8">Shoreditch</h3>
-<div class="outline-text-3" id="text-101-8">
+<div id="outline-container-sec-103-8" class="outline-3">
+<h3 id="sec-103-8">Shoreditch</h3>
+<div class="outline-text-3" id="text-103-8">
 <ul class="org-ul">
 <li><a href="http://mastbrothers.com/pages/london">Mast Brothers chocolate makers</a>.
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-101-9" class="outline-3">
-<h3 id="sec-101-9">Waterloo</h3>
-<div class="outline-text-3" id="text-101-9">
+<div id="outline-container-sec-103-9" class="outline-3">
+<h3 id="sec-103-9">Waterloo</h3>
+<div class="outline-text-3" id="text-103-9">
 <ul class="org-ul">
 <li><i>The Laughing Gravy</i>.
 </li>
@@ -2273,7 +2435,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-ux-bookmarks" class="outline-2">
-<h2 id="ux-bookmarks"><a id="sec-102" name="sec-102"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#ux-bookmarks">#</a> UX bookmarks</h2>
+<h2 id="ux-bookmarks"><a id="sec-104" name="sec-104"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#ux-bookmarks">#</a> UX bookmarks</h2>
 <div class="outline-text-2" id="text-ux-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-15 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -2299,7 +2461,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-unix-linux-tips-backlog" class="outline-2">
-<h2 id="unix-linux-tips-backlog"><a id="sec-103" name="sec-103"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#unix-linux-tips-backlog">#</a> Unix/Linux tips backlog</h2>
+<h2 id="unix-linux-tips-backlog"><a id="sec-105" name="sec-105"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#unix-linux-tips-backlog">#</a> Unix/Linux tips backlog</h2>
 <div class="outline-text-2" id="text-unix-linux-tips-backlog">
 <ul class="org-ul">
 <li>ASCII art text with <a href="http://www.figlet.org">figlet</a>.
@@ -2326,12 +2488,12 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-recipes" class="outline-2">
-<h2 id="recipes"><a id="sec-104" name="sec-104"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#recipes">#</a> Recipes</h2>
+<h2 id="recipes"><a id="sec-106" name="sec-106"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#recipes">#</a> Recipes</h2>
 <div class="outline-text-2" id="text-recipes">
 </div>
-<div id="outline-container-sec-104-1" class="outline-3">
-<h3 id="sec-104-1">Tom Kha Gai soup</h3>
-<div class="outline-text-3" id="text-104-1">
+<div id="outline-container-sec-106-1" class="outline-3">
+<h3 id="sec-106-1">Tom Kha Gai soup</h3>
+<div class="outline-text-3" id="text-106-1">
 <ul class="org-ul">
 <li>Chicken or Prawns
 </li>
@@ -2360,9 +2522,9 @@ $ ./build.sh --clang-completer
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-104-2" class="outline-3">
-<h3 id="sec-104-2">Veg-Fruit juice</h3>
-<div class="outline-text-3" id="text-104-2">
+<div id="outline-container-sec-106-2" class="outline-3">
+<h3 id="sec-106-2">Veg-Fruit juice</h3>
+<div class="outline-text-3" id="text-106-2">
 <ul class="org-ul">
 <li>Lime
 </li>
@@ -2381,9 +2543,9 @@ $ ./build.sh --clang-completer
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-104-3" class="outline-3">
-<h3 id="sec-104-3">Berry Hempster</h3>
-<div class="outline-text-3" id="text-104-3">
+<div id="outline-container-sec-106-3" class="outline-3">
+<h3 id="sec-106-3">Berry Hempster</h3>
+<div class="outline-text-3" id="text-106-3">
 <ul class="org-ul">
 <li>Hemp milk
 </li>
@@ -2398,12 +2560,12 @@ $ ./build.sh --clang-completer
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-104-4" class="outline-3">
-<h3 id="sec-104-4">How to cook <a href="https://www.youtube.com/watch?v=DaN4ifTG3H0">Beef Chow Fun</a>.</h3>
+<div id="outline-container-sec-106-4" class="outline-3">
+<h3 id="sec-106-4">How to cook <a href="https://www.youtube.com/watch?v=DaN4ifTG3H0">Beef Chow Fun</a>.</h3>
 </div>
 </div>
 <div id="outline-container-music-backlog" class="outline-2">
-<h2 id="music-backlog"><a id="sec-105" name="sec-105"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#music-backlog">#</a> Music backlog</h2>
+<h2 id="music-backlog"><a id="sec-107" name="sec-107"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-07 Sat]</span></span> <a href="#music-backlog">#</a> Music backlog</h2>
 <div class="outline-text-2" id="text-music-backlog">
 <ul class="org-ul">
 <li><a href="http://www.archiveofindianmusic.org/">Archive of Indian music</a>.
@@ -2434,7 +2596,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-ux-scrapbook-bookmarks" class="outline-2">
-<h2 id="ux-scrapbook-bookmarks"><a id="sec-106" name="sec-106"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#ux-scrapbook-bookmarks">#</a> UX scrapbook bookmarks</h2>
+<h2 id="ux-scrapbook-bookmarks"><a id="sec-108" name="sec-108"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#ux-scrapbook-bookmarks">#</a> UX scrapbook bookmarks</h2>
 <div class="outline-text-2" id="text-ux-scrapbook-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-05-25 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -2476,7 +2638,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-travel-bookmarks" class="outline-2">
-<h2 id="travel-bookmarks"><a id="sec-107" name="sec-107"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#travel-bookmarks">#</a> Travel bookmarks</h2>
+<h2 id="travel-bookmarks"><a id="sec-109" name="sec-109"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#travel-bookmarks">#</a> Travel bookmarks</h2>
 <div class="outline-text-2" id="text-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -2546,7 +2708,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-startup-bookmarks" class="outline-2">
-<h2 id="startup-bookmarks"><a id="sec-108" name="sec-108"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#startup-bookmarks">#</a> Startup bookmarks</h2>
+<h2 id="startup-bookmarks"><a id="sec-110" name="sec-110"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#startup-bookmarks">#</a> Startup bookmarks</h2>
 <div class="outline-text-2" id="text-startup-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-11 Sat]  updated  </em></span>
 <ul class="org-ul">
@@ -2690,7 +2852,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-romania-travel-bookmarks" class="outline-2">
-<h2 id="romania-travel-bookmarks"><a id="sec-109" name="sec-109"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <i>#</i> Romania travel bookmarks</h2>
+<h2 id="romania-travel-bookmarks"><a id="sec-111" name="sec-111"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <i>#</i> Romania travel bookmarks</h2>
 <div class="outline-text-2" id="text-romania-travel-bookmarks">
 <ul class="org-ul">
 <li><a href="http://bran-castle.com/">Bran Castle</a>.
@@ -2699,7 +2861,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-productivity-bookmarks" class="outline-2">
-<h2 id="productivity-bookmarks"><a id="sec-110" name="sec-110"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#productivity-bookmarks">#</a> Productivity bookmarks</h2>
+<h2 id="productivity-bookmarks"><a id="sec-112" name="sec-112"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#productivity-bookmarks">#</a> Productivity bookmarks</h2>
 <div class="outline-text-2" id="text-productivity-bookmarks">
 <ul class="org-ul">
 <li><a href="http://10fastfingers.com/">10 fast fingers</a> (improve typing skills).
@@ -2720,7 +2882,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-privacy-bookmarks" class="outline-2">
-<h2 id="privacy-bookmarks"><a id="sec-111" name="sec-111"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#privacy-bookmarks">#</a> Privacy bookmarks</h2>
+<h2 id="privacy-bookmarks"><a id="sec-113" name="sec-113"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#privacy-bookmarks">#</a> Privacy bookmarks</h2>
 <div class="outline-text-2" id="text-privacy-bookmarks">
 <ul class="org-ul">
 <li><a href="http://digital-era.net/">Digital Era</a>.
@@ -2733,7 +2895,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-mindfulness-bookmarks" class="outline-2">
-<h2 id="mindfulness-bookmarks"><a id="sec-112" name="sec-112"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#mindfulness-bookmarks">#</a> Mindfulness bookmarks</h2>
+<h2 id="mindfulness-bookmarks"><a id="sec-114" name="sec-114"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#mindfulness-bookmarks">#</a> Mindfulness bookmarks</h2>
 <div class="outline-text-2" id="text-mindfulness-bookmarks">
 <ul class="org-ul">
 <li><a href="https://en.wikipedia.org/wiki/Aimless_wandering">Aimless Wandering</a>.
@@ -2762,7 +2924,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-lifestyle-bookmarks" class="outline-2">
-<h2 id="lifestyle-bookmarks"><a id="sec-113" name="sec-113"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#lifestyle-bookmarks">#</a> Lifestyle bookmarks</h2>
+<h2 id="lifestyle-bookmarks"><a id="sec-115" name="sec-115"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#lifestyle-bookmarks">#</a> Lifestyle bookmarks</h2>
 <div class="outline-text-2" id="text-lifestyle-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-05-25 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -2794,7 +2956,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-ios-imaging-bookmarks" class="outline-2">
-<h2 id="ios-imaging-bookmarks"><a id="sec-114" name="sec-114"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#ios-imaging-bookmarks">#</a> iOS imaging bookmarks</h2>
+<h2 id="ios-imaging-bookmarks"><a id="sec-116" name="sec-116"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#ios-imaging-bookmarks">#</a> iOS imaging bookmarks</h2>
 <div class="outline-text-2" id="text-ios-imaging-bookmarks">
 <ul class="org-ul">
 <li><a href="https://developer.apple.com/library/ios/samplecode/PhotoScroller/Introduction/Intro.html">Apple's PhotoScroller</a>.
@@ -2831,7 +2993,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-graphics-bookmarks" class="outline-2">
-<h2 id="graphics-bookmarks"><a id="sec-115" name="sec-115"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#graphics-bookmarks">#</a> Graphics bookmarks</h2>
+<h2 id="graphics-bookmarks"><a id="sec-117" name="sec-117"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#graphics-bookmarks">#</a> Graphics bookmarks</h2>
 <div class="outline-text-2" id="text-graphics-bookmarks">
 <ul class="org-ul">
 <li><a href="http://jnordberg.github.io/gif.js/">gif.js</a>.
@@ -2848,7 +3010,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-go-bookmarks" class="outline-2">
-<h2 id="go-bookmarks"><a id="sec-116" name="sec-116"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#go-bookmarks">#</a> Go bookmarks</h2>
+<h2 id="go-bookmarks"><a id="sec-118" name="sec-118"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#go-bookmarks">#</a> Go bookmarks</h2>
 <div class="outline-text-2" id="text-go-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-26 Fri]  updated  </em></span>
 <ul class="org-ul">
@@ -2908,7 +3070,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-github" class="outline-2">
-<h2 id="github"><a id="sec-117" name="sec-117"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#github">#</a> GitHub</h2>
+<h2 id="github"><a id="sec-119" name="sec-119"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#github">#</a> GitHub</h2>
 <div class="outline-text-2" id="text-github">
 <ul class="org-ul">
 <li><a href="https://help.github.com/articles/adding-a-cname-file-to-your-repository/">Adding a CNAME file to your repository</a>.
@@ -2923,7 +3085,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-courses-bookmarks" class="outline-2">
-<h2 id="courses-bookmarks"><a id="sec-118" name="sec-118"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#courses-bookmarks">#</a> Courses bookmarks</h2>
+<h2 id="courses-bookmarks"><a id="sec-120" name="sec-120"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-06 Fri]</span></span> <a href="#courses-bookmarks">#</a> Courses bookmarks</h2>
 <div class="outline-text-2" id="text-courses-bookmarks">
 <ul class="org-ul">
 <li><a href="http://www.chesscademy.com">Chessacademy</a>.
@@ -2938,7 +3100,7 @@ $ ./build.sh --clang-completer
 </div>
 </div>
 <div id="outline-container-reload-inputrc" class="outline-2">
-<h2 id="reload-inputrc"><a id="sec-119" name="sec-119"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#reload-inputrc">#</a> Reload inputrc</h2>
+<h2 id="reload-inputrc"><a id="sec-121" name="sec-121"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#reload-inputrc">#</a> Reload inputrc</h2>
 <div class="outline-text-2" id="text-reload-inputrc">
 <p>
 Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/bash/manual/bashref.html#Miscellaneous-Commands">More at bashref manual</a>.
@@ -2946,7 +3108,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </div>
 </div>
 <div id="outline-container-learning-emacs-lisp" class="outline-2">
-<h2 id="learning-emacs-lisp"><a id="sec-120" name="sec-120"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#learning-emacs-lisp">#</a> Learning Emacs lisp</h2>
+<h2 id="learning-emacs-lisp"><a id="sec-122" name="sec-122"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#learning-emacs-lisp">#</a> Learning Emacs lisp</h2>
 <div class="outline-text-2" id="text-learning-emacs-lisp">
 <br><span class="modified-timestamp">  <em>[2015-04-13 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -3292,7 +3454,7 @@ If FROM or TO is negative, it counts from the end.
 </div>
 </div>
 <div id="outline-container-ios-bookmarks" class="outline-2">
-<h2 id="ios-bookmarks"><a id="sec-121" name="sec-121"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#ios-bookmarks">#</a> iOS bookmarks</h2>
+<h2 id="ios-bookmarks"><a id="sec-123" name="sec-123"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#ios-bookmarks">#</a> iOS bookmarks</h2>
 <div class="outline-text-2" id="text-ios-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-06 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -3410,7 +3572,7 @@ If FROM or TO is negative, it counts from the end.
 </div>
 </div>
 <div id="outline-container-india-travel-bookmarks" class="outline-2">
-<h2 id="india-travel-bookmarks"><a id="sec-122" name="sec-122"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#india-travel-bookmarks">#</a> India travel bookmarks</h2>
+<h2 id="india-travel-bookmarks"><a id="sec-124" name="sec-124"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 Thu]</span></span> <a href="#india-travel-bookmarks">#</a> India travel bookmarks</h2>
 <div class="outline-text-2" id="text-india-travel-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-06-21 Sun]  updated  </em></span>
 <ul class="org-ul">
@@ -3446,7 +3608,7 @@ If FROM or TO is negative, it counts from the end.
 </div>
 </div>
 <div id="outline-container-git-bookmarks" class="outline-2">
-<h2 id="git-bookmarks"><a id="sec-123" name="sec-123"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 thu]</span></span> <a href="#git-bookmarks">#</a> git bookmarks</h2>
+<h2 id="git-bookmarks"><a id="sec-125" name="sec-125"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-05 thu]</span></span> <a href="#git-bookmarks">#</a> git bookmarks</h2>
 <div class="outline-text-2" id="text-git-bookmarks">
 <ul class="org-ul">
 <li><a href="http://wildlyinaccurate.com/a-hackers-guide-to-git">a hackers guide to git</a>
@@ -3474,7 +3636,7 @@ If FROM or TO is negative, it counts from the end.
 </div>
 
 <div id="outline-container-language-learning-bookmarks" class="outline-2">
-<h2 id="language-learning-bookmarks"><a id="sec-124" name="sec-124"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-04 wed]</span></span> <a href="#language-learning-bookmarks">#</a> language learning bookmarks</h2>
+<h2 id="language-learning-bookmarks"><a id="sec-126" name="sec-126"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-03-04 wed]</span></span> <a href="#language-learning-bookmarks">#</a> language learning bookmarks</h2>
 <div class="outline-text-2" id="text-language-learning-bookmarks">
 <ul class="org-ul">
 <li>hn's comments on <a href="https://news.ycombinator.com/item?id=8806678">learning laguages</a>.
@@ -3483,7 +3645,7 @@ If FROM or TO is negative, it counts from the end.
 </div>
 </div>
 <div id="outline-container-git-conflict-resolution-deja-vu" class="outline-2">
-<h2 id="git-conflict-resolution-deja-vu"><a id="sec-125" name="sec-125"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-02-18 wed]</span></span> <a href="#git-conflict-resolution-deja-vu">#</a> git conflict resolution déjà vu?</h2>
+<h2 id="git-conflict-resolution-deja-vu"><a id="sec-127" name="sec-127"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-02-18 wed]</span></span> <a href="#git-conflict-resolution-deja-vu">#</a> git conflict resolution déjà vu?</h2>
 <div class="outline-text-2" id="text-git-conflict-resolution-deja-vu">
 <p>
 use git <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. here's a <a href="https://medium.com/@porteneuve/fix-conflicts-only-once-with-git-rerere-7d116b2cec67">post</a>.
@@ -3491,7 +3653,7 @@ use git <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. her
 </div>
 </div>
 <div id="outline-container-graphics-design-tools" class="outline-2">
-<h2 id="graphics-design-tools"><a id="sec-126" name="sec-126"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-01-17 sat]</span></span> <a href="#graphics-design-tools">#</a> graphics design tools</h2>
+<h2 id="graphics-design-tools"><a id="sec-128" name="sec-128"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-01-17 sat]</span></span> <a href="#graphics-design-tools">#</a> graphics design tools</h2>
 <div class="outline-text-2" id="text-graphics-design-tools">
 <ul class="org-ul">
 <li><a href="http://leaverou.github.io/contrast-ratio">contrast ratio</a>.
@@ -3520,34 +3682,34 @@ use git <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. her
 </div>
 </div>
 <div id="outline-container-emacs-key-bindings-and-maps" class="outline-2">
-<h2 id="emacs-key-bindings-and-maps"><a id="sec-127" name="sec-127"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-23 thu]</span></span> <a href="#emacs-key-bindings-and-maps">#</a> emacs key bindings and maps</h2>
+<h2 id="emacs-key-bindings-and-maps"><a id="sec-129" name="sec-129"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-23 thu]</span></span> <a href="#emacs-key-bindings-and-maps">#</a> emacs key bindings and maps</h2>
 <div class="outline-text-2" id="text-emacs-key-bindings-and-maps">
 </div>
-<div id="outline-container-sec-127-1" class="outline-3">
-<h3 id="sec-127-1">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
+<div id="outline-container-sec-129-1" class="outline-3">
+<h3 id="sec-129-1">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
 </div>
-<div id="outline-container-sec-127-2" class="outline-3">
-<h3 id="sec-127-2">bonus tip</h3>
-<div class="outline-text-3" id="text-127-2">
+<div id="outline-container-sec-129-2" class="outline-3">
+<h3 id="sec-129-2">bonus tip</h3>
+<div class="outline-text-3" id="text-129-2">
 <p>
 prefix key, followed by c-h, lists keys in prefix.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-127-3" class="outline-3">
-<h3 id="sec-127-3">keymap</h3>
-<div class="outline-text-3" id="text-127-3">
+<div id="outline-container-sec-129-3" class="outline-3">
+<h3 id="sec-129-3">keymap</h3>
+<div class="outline-text-3" id="text-129-3">
 <p>
 maps key to action.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-127-4" class="outline-3">
-<h3 id="sec-127-4">keymap found in buffer and most major modes.</h3>
+<div id="outline-container-sec-129-4" class="outline-3">
+<h3 id="sec-129-4">keymap found in buffer and most major modes.</h3>
 </div>
-<div id="outline-container-sec-127-5" class="outline-3">
-<h3 id="sec-127-5">keys</h3>
-<div class="outline-text-3" id="text-127-5">
+<div id="outline-container-sec-129-5" class="outline-3">
+<h3 id="sec-129-5">keys</h3>
+<div class="outline-text-3" id="text-129-5">
 <ul class="org-ul">
 <li>undefined: self explanatory.
 </li>
@@ -3558,9 +3720,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-6" class="outline-3">
-<h3 id="sec-127-6">mapping</h3>
-<div class="outline-text-3" id="text-127-6">
+<div id="outline-container-sec-129-6" class="outline-3">
+<h3 id="sec-129-6">mapping</h3>
+<div class="outline-text-3" id="text-129-6">
 <ul class="org-ul">
 <li>(define-key keymap key def): add to current buffer map.
 </li>
@@ -3575,9 +3737,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-7" class="outline-3">
-<h3 id="sec-127-7">key codes</h3>
-<div class="outline-text-3" id="text-127-7">
+<div id="outline-container-sec-129-7" class="outline-3">
+<h3 id="sec-129-7">key codes</h3>
+<div class="outline-text-3" id="text-129-7">
 <ul class="org-ul">
 <li>kbd: macro transaltes human-readable key to emacs readable.
 </li>
@@ -3588,9 +3750,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-8" class="outline-3">
-<h3 id="sec-127-8">remapping</h3>
-<div class="outline-text-3" id="text-127-8">
+<div id="outline-container-sec-129-8" class="outline-3">
+<h3 id="sec-129-8">remapping</h3>
+<div class="outline-text-3" id="text-129-8">
 <ul class="org-ul">
 <li>use remap to replace mapping (ie. kill-line with my/kill-line).
 </li>
@@ -3599,9 +3761,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-9" class="outline-3">
-<h3 id="sec-127-9">reserved keys</h3>
-<div class="outline-text-3" id="text-127-9">
+<div id="outline-container-sec-129-9" class="outline-3">
+<h3 id="sec-129-9">reserved keys</h3>
+<div class="outline-text-3" id="text-129-9">
 <ul class="org-ul">
 <li>"c-c ?" generally reserved for you, but third party packages use it.
 </li>
@@ -3612,9 +3774,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-10" class="outline-3">
-<h3 id="sec-127-10">lookup order</h3>
-<div class="outline-text-3" id="text-127-10">
+<div id="outline-container-sec-129-10" class="outline-3">
+<h3 id="sec-129-10">lookup order</h3>
+<div class="outline-text-3" id="text-129-10">
 <ul class="org-ul">
 <li>in a nutshell: minor mode keys, local keys, global keys.
 </li>
@@ -3641,9 +3803,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-127-11" class="outline-3">
-<h3 id="sec-127-11">mode hooks</h3>
-<div class="outline-text-3" id="text-127-11">
+<div id="outline-container-sec-129-11" class="outline-3">
+<h3 id="sec-129-11">mode hooks</h3>
+<div class="outline-text-3" id="text-129-11">
 <ul class="org-ul">
 <li>(local-set-key (kbd "c-c q") 'my-awesome-method)) in hook-method.
 </li>
@@ -3654,39 +3816,39 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-video-backlog" class="outline-2">
-<h2 id="video-backlog"><a id="sec-128" name="sec-128"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#video-backlog">#</a> video backlog</h2>
+<h2 id="video-backlog"><a id="sec-130" name="sec-130"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#video-backlog">#</a> video backlog</h2>
 <div class="outline-text-2" id="text-video-backlog">
 </div>
-<div id="outline-container-sec-128-1" class="outline-3">
-<h3 id="sec-128-1"><span class="todo TODO">TODO</span> <a href="http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm">the emacs of distros</a>.</h3>
+<div id="outline-container-sec-130-1" class="outline-3">
+<h3 id="sec-130-1"><span class="todo TODO">TODO</span> <a href="http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm">the emacs of distros</a>.</h3>
 </div>
-<div id="outline-container-sec-128-2" class="outline-3">
-<h3 id="sec-128-2"><span class="todo TODO">TODO</span> <a href="http://www.nfb.ca/film/griefwalker?utm_content=buffer24b02&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer">griefwalker</a>.</h3>
+<div id="outline-container-sec-130-2" class="outline-3">
+<h3 id="sec-130-2"><span class="todo TODO">TODO</span> <a href="http://www.nfb.ca/film/griefwalker?utm_content=buffer24b02&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer">griefwalker</a>.</h3>
 </div>
-<div id="outline-container-sec-128-3" class="outline-3">
-<h3 id="sec-128-3"><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=bkdt9bfh5gs">frugal fire 002: justin mccurry (rootofgood)</a>.</h3>
+<div id="outline-container-sec-130-3" class="outline-3">
+<h3 id="sec-130-3"><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=bkdt9bfh5gs">frugal fire 002: justin mccurry (rootofgood)</a>.</h3>
 </div>
-<div id="outline-container-sec-128-4" class="outline-3">
-<h3 id="sec-128-4"><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=a5sxax2cve0">bbc's secret of levitation</a>.</h3>
+<div id="outline-container-sec-130-4" class="outline-3">
+<h3 id="sec-130-4"><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=a5sxax2cve0">bbc's secret of levitation</a>.</h3>
 </div>
-<div id="outline-container-sec-128-5" class="outline-3">
-<h3 id="sec-128-5"><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=8crol-ydfmi">this is water, commencement speech</a>.</h3>
+<div id="outline-container-sec-130-5" class="outline-3">
+<h3 id="sec-130-5"><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=8crol-ydfmi">this is water, commencement speech</a>.</h3>
 </div>
-<div id="outline-container-sec-128-6" class="outline-3">
-<h3 id="sec-128-6"><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=dkyjvv7huzw">this is water</a>.</h3>
+<div id="outline-container-sec-130-6" class="outline-3">
+<h3 id="sec-130-6"><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=dkyjvv7huzw">this is water</a>.</h3>
 </div>
-<div id="outline-container-sec-128-7" class="outline-3">
-<h3 id="sec-128-7"><span class="todo TODO">TODO</span> Graham Hancock – The War on Consciousness.</h3>
+<div id="outline-container-sec-130-7" class="outline-3">
+<h3 id="sec-130-7"><span class="todo TODO">TODO</span> Graham Hancock – The War on Consciousness.</h3>
 </div>
-<div id="outline-container-sec-128-8" class="outline-3">
-<h3 id="sec-128-8"><span class="todo TODO">TODO</span> Rupert Sheldrake – The Science of Delusion.</h3>
+<div id="outline-container-sec-130-8" class="outline-3">
+<h3 id="sec-130-8"><span class="todo TODO">TODO</span> Rupert Sheldrake – The Science of Delusion.</h3>
 </div>
-<div id="outline-container-sec-128-9" class="outline-3">
-<h3 id="sec-128-9"><span class="todo TODO">TODO</span> Nick Hanauer – Rich People Don’t Create Jobs.</h3>
+<div id="outline-container-sec-130-9" class="outline-3">
+<h3 id="sec-130-9"><span class="todo TODO">TODO</span> Nick Hanauer – Rich People Don’t Create Jobs.</h3>
 </div>
 </div>
 <div id="outline-container-travel-gear" class="outline-2">
-<h2 id="travel-gear"><a id="sec-129" name="sec-129"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#travel-gear">#</a> travel gear</h2>
+<h2 id="travel-gear"><a id="sec-131" name="sec-131"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#travel-gear">#</a> travel gear</h2>
 <div class="outline-text-2" id="text-travel-gear">
 <ul class="org-ul">
 <li><a href="http://www.goruck.com/en">goruck bag</a>.
@@ -3697,7 +3859,7 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-movie-backlog" class="outline-2">
-<h2 id="movie-backlog"><a id="sec-130" name="sec-130"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#movie-backlog">#</a> movie backlog</h2>
+<h2 id="movie-backlog"><a id="sec-132" name="sec-132"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#movie-backlog">#</a> movie backlog</h2>
 <div class="outline-text-2" id="text-movie-backlog">
 <ul class="org-ul">
 <li>akira kurosawa director.
@@ -3742,7 +3904,7 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-books-backlog" class="outline-2">
-<h2 id="books-backlog"><a id="sec-131" name="sec-131"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#books-backlog">#</a> books backlog</h2>
+<h2 id="books-backlog"><a id="sec-133" name="sec-133"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 tue]</span></span> <a href="#books-backlog">#</a> books backlog</h2>
 <div class="outline-text-2" id="text-books-backlog">
 <ul class="org-ul">
 <li><a href="http://www.amazon.com/great-curries-india-camellia-panjabi/dp/1904920357">50 great curries of india</a>.
@@ -3767,7 +3929,7 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-spotted" class="outline-2">
-<h2 id="spotted"><a id="sec-132" name="sec-132"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-29 mon]</span></span> <a href="#spotted">#</a> spotted</h2>
+<h2 id="spotted"><a id="sec-134" name="sec-134"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-29 mon]</span></span> <a href="#spotted">#</a> spotted</h2>
 <div class="outline-text-2" id="text-spotted">
 <ul class="org-ul">
 <li><a href="http://www.ravpower.com/">ravpower</a>.
@@ -3778,44 +3940,44 @@ maps key to action.
 </div>
 </div>
 <div id="outline-container-emacs-tips-backlog" class="outline-2">
-<h2 id="emacs-tips-backlog"><a id="sec-133" name="sec-133"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-03 wed]</span></span> <a href="#emacs-tips-backlog">#</a> Emacs tips backlog</h2>
+<h2 id="emacs-tips-backlog"><a id="sec-135" name="sec-135"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-03 wed]</span></span> <a href="#emacs-tips-backlog">#</a> Emacs tips backlog</h2>
 <div class="outline-text-2" id="text-emacs-tips-backlog">
 </div>
-<div id="outline-container-sec-133-1" class="outline-3">
-<h3 id="sec-133-1">delete-duplicate-lines</h3>
-<div class="outline-text-3" id="text-133-1">
+<div id="outline-container-sec-135-1" class="outline-3">
+<h3 id="sec-135-1">delete-duplicate-lines</h3>
+<div class="outline-text-3" id="text-135-1">
 <p>
 Delete all but one copy of any identical lines in the region. Duplicates may or may not be adjacent.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-2" class="outline-3">
-<h3 id="sec-133-2">artbollocks-mode and writegood</h3>
-<div class="outline-text-3" id="text-133-2">
+<div id="outline-container-sec-135-2" class="outline-3">
+<h3 id="sec-135-2">artbollocks-mode and writegood</h3>
+<div class="outline-text-3" id="text-135-2">
 <p>
 Both help avoid writing pitfalls. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-3" class="outline-3">
-<h3 id="sec-133-3">org-multiple-keymap</h3>
-<div class="outline-text-3" id="text-133-3">
+<div id="outline-container-sec-135-3" class="outline-3">
+<h3 id="sec-135-3">org-multiple-keymap</h3>
+<div class="outline-text-3" id="text-135-3">
 <p>
 A minor-mode to apply different keymaps per org element. More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-4" class="outline-3">
-<h3 id="sec-133-4">org-ioslide</h3>
-<div class="outline-text-3" id="text-133-4">
+<div id="outline-container-sec-135-4" class="outline-3">
+<h3 id="sec-135-4">org-ioslide</h3>
+<div class="outline-text-3" id="text-135-4">
 <p>
 create presentations in org and export via <a href="https://coldnew.github.io/slides/org-ioslide">org-ioslide</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-5" class="outline-3">
-<h3 id="sec-133-5">yasnippet mirrors with transformations</h3>
-<div class="outline-text-3" id="text-133-5">
+<div id="outline-container-sec-135-5" class="outline-3">
+<h3 id="sec-135-5">yasnippet mirrors with transformations</h3>
+<div class="outline-text-3" id="text-135-5">
 <p>
 for example:
 </p>
@@ -3839,255 +4001,255 @@ more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.ht
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-6" class="outline-3">
-<h3 id="sec-133-6">symon</h3>
-<div class="outline-text-3" id="text-133-6">
+<div id="outline-container-sec-135-6" class="outline-3">
+<h3 id="sec-135-6">symon</h3>
+<div class="outline-text-3" id="text-135-6">
 <p>
 Graphical system monitor. See <a href="https://github.com/zk-phi/symon">symon</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-7" class="outline-3">
-<h3 id="sec-133-7">rewrite git logs</h3>
-<div class="outline-text-3" id="text-133-7">
+<div id="outline-container-sec-135-7" class="outline-3">
+<h3 id="sec-135-7">rewrite git logs</h3>
+<div class="outline-text-3" id="text-135-7">
 <p>
 see <a href="http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/">emacs magit tutorial | rewrite older commit</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-8" class="outline-3">
-<h3 id="sec-133-8">elmacro</h3>
-<div class="outline-text-3" id="text-133-8">
+<div id="outline-container-sec-135-8" class="outline-3">
+<h3 id="sec-135-8">elmacro</h3>
+<div class="outline-text-3" id="text-135-8">
 <p>
 <a href="https://github.com/silex/elmacro">elmacro</a> shows keyboard macros or latest interactive commands as emacs lisp.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-9" class="outline-3">
-<h3 id="sec-133-9">weather package</h3>
-<div class="outline-text-3" id="text-133-9">
+<div id="outline-container-sec-135-9" class="outline-3">
+<h3 id="sec-135-9">weather package</h3>
+<div class="outline-text-3" id="text-135-9">
 <p>
 see <a href="https://github.com/aaronbieber/sunshine.el">sunshine.el</a>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-10" class="outline-3">
-<h3 id="sec-133-10">monitor clipboard and automatically paste to buffer</h3>
-<div class="outline-text-3" id="text-133-10">
+<div id="outline-container-sec-135-10" class="outline-3">
+<h3 id="sec-135-10">monitor clipboard and automatically paste to buffer</h3>
+<div class="outline-text-3" id="text-135-10">
 <p>
 see <a href="https://github.com/bburns/clipmon">clipmon</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-11" class="outline-3">
-<h3 id="sec-133-11">try out stock-ticker</h3>
+<div id="outline-container-sec-135-11" class="outline-3">
+<h3 id="sec-135-11">try out stock-ticker</h3>
 </div>
-<div id="outline-container-sec-133-12" class="outline-3">
-<h3 id="sec-133-12">try out ibuffer-vc</h3>
+<div id="outline-container-sec-135-12" class="outline-3">
+<h3 id="sec-135-12">try out ibuffer-vc</h3>
 </div>
-<div id="outline-container-sec-133-13" class="outline-3">
-<h3 id="sec-133-13">sort python imports</h3>
-<div class="outline-text-3" id="text-133-13">
+<div id="outline-container-sec-135-13" class="outline-3">
+<h3 id="sec-135-13">sort python imports</h3>
+<div class="outline-text-3" id="text-135-13">
 <p>
 see <a href="https://github.com/emacs-pe/pyimpsort.el">pyimpsort</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-14" class="outline-3">
-<h3 id="sec-133-14">private configuration</h3>
-<div class="outline-text-3" id="text-133-14">
+<div id="outline-container-sec-135-14" class="outline-3">
+<h3 id="sec-135-14">private configuration</h3>
+<div class="outline-text-3" id="text-135-14">
 <p>
 see <a href="https://github.com/cheunghy/private">private</a> package.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-15" class="outline-3">
-<h3 id="sec-133-15">unify mechanism to open files</h3>
-<div class="outline-text-3" id="text-133-15">
+<div id="outline-container-sec-135-15" class="outline-3">
+<h3 id="sec-135-15">unify mechanism to open files</h3>
+<div class="outline-text-3" id="text-135-15">
 <p>
 see <a href="https://github.com/damiencassou/unify-opening">unify-opening</a>
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-16" class="outline-3">
-<h3 id="sec-133-16">export ascii art</h3>
-<div class="outline-text-3" id="text-133-16">
+<div id="outline-container-sec-135-16" class="outline-3">
+<h3 id="sec-135-16">export ascii art</h3>
+<div class="outline-text-3" id="text-135-16">
 <p>
 with <a href="http://www.lysator.liu.se/~tab/artist/">artist mode</a> + <a href="http://ditaa.sourceforge.net">ditaa</a> for uml. demo <a href="https://www.youtube.com/watch?v=ciux87xo8fc">video</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-17" class="outline-3">
-<h3 id="sec-133-17">speed up window handling</h3>
-<div class="outline-text-3" id="text-133-17">
+<div id="outline-container-sec-135-17" class="outline-3">
+<h3 id="sec-135-17">speed up window handling</h3>
+<div class="outline-text-3" id="text-135-17">
 <p>
 see <a href="https://github.com/abo-abo/ace-window">ace-window</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-18" class="outline-3">
-<h3 id="sec-133-18">mac os clipboard support (from terminal)</h3>
-<div class="outline-text-3" id="text-133-18">
+<div id="outline-container-sec-135-18" class="outline-3">
+<h3 id="sec-135-18">mac os clipboard support (from terminal)</h3>
+<div class="outline-text-3" id="text-135-18">
 <p>
 see <a href="https://github.com/jkp/pbcopy.el">pbcopy</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-19" class="outline-3">
-<h3 id="sec-133-19">speedtype</h3>
-<div class="outline-text-3" id="text-133-19">
+<div id="outline-container-sec-135-19" class="outline-3">
+<h3 id="sec-135-19">speedtype</h3>
+<div class="outline-text-3" id="text-135-19">
 <p>
 see <a href="https://github.com/hagleitn/speed-type">speedtype</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-20" class="outline-3">
-<h3 id="sec-133-20">jumping around tips</h3>
-<div class="outline-text-3" id="text-133-20">
+<div id="outline-container-sec-135-20" class="outline-3">
+<h3 id="sec-135-20">jumping around tips</h3>
+<div class="outline-text-3" id="text-135-20">
 <p>
 see <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-21" class="outline-3">
-<h3 id="sec-133-21">use-package post</h3>
-<div class="outline-text-3" id="text-133-21">
+<div id="outline-container-sec-135-21" class="outline-3">
+<h3 id="sec-135-21">use-package post</h3>
+<div class="outline-text-3" id="text-135-21">
 <p>
 at <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-22" class="outline-3">
-<h3 id="sec-133-22">static blog</h3>
-<div class="outline-text-3" id="text-133-22">
+<div id="outline-container-sec-135-22" class="outline-3">
+<h3 id="sec-135-22">static blog</h3>
+<div class="outline-text-3" id="text-135-22">
 <p>
 see <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-23" class="outline-3">
-<h3 id="sec-133-23">youtube-dl for emacs</h3>
-<div class="outline-text-3" id="text-133-23">
+<div id="outline-container-sec-135-23" class="outline-3">
+<h3 id="sec-135-23">youtube-dl for emacs</h3>
+<div class="outline-text-3" id="text-135-23">
 <p>
 see <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-24" class="outline-3">
-<h3 id="sec-133-24">clang indexing tool</h3>
-<div class="outline-text-3" id="text-133-24">
+<div id="outline-container-sec-135-24" class="outline-3">
+<h3 id="sec-135-24">clang indexing tool</h3>
+<div class="outline-text-3" id="text-135-24">
 <p>
 see <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-25" class="outline-3">
-<h3 id="sec-133-25">project management for c/c++</h3>
-<div class="outline-text-3" id="text-133-25">
+<div id="outline-container-sec-135-25" class="outline-3">
+<h3 id="sec-135-25">project management for c/c++</h3>
+<div class="outline-text-3" id="text-135-25">
 <p>
 see <a href="https://github.com/lefterisjp/malinka">malinka</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-26" class="outline-3">
-<h3 id="sec-133-26">git modes</h3>
-<div class="outline-text-3" id="text-133-26">
+<div id="outline-container-sec-135-26" class="outline-3">
+<h3 id="sec-135-26">git modes</h3>
+<div class="outline-text-3" id="text-135-26">
 <p>
 see <a href="https://github.com/magit/git-modes">git-modes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-27" class="outline-3">
-<h3 id="sec-133-27">lots of org links</h3>
-<div class="outline-text-3" id="text-133-27">
+<div id="outline-container-sec-135-27" class="outline-3">
+<h3 id="sec-135-27">lots of org links</h3>
+<div class="outline-text-3" id="text-135-27">
 <p>
 found at <a href="http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/">dain.io</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-28" class="outline-3">
-<h3 id="sec-133-28">create custom theme</h3>
-<div class="outline-text-3" id="text-133-28">
+<div id="outline-container-sec-135-28" class="outline-3">
+<h3 id="sec-135-28">create custom theme</h3>
+<div class="outline-text-3" id="text-135-28">
 <p>
 see trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-29" class="outline-3">
-<h3 id="sec-133-29">gtd emacs workflow</h3>
-<div class="outline-text-3" id="text-133-29">
+<div id="outline-container-sec-135-29" class="outline-3">
+<h3 id="sec-135-29">gtd emacs workflow</h3>
+<div class="outline-text-3" id="text-135-29">
 <p>
 see charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-30" class="outline-3">
-<h3 id="sec-133-30">simplify file transformations</h3>
-<div class="outline-text-3" id="text-133-30">
+<div id="outline-container-sec-135-30" class="outline-3">
+<h3 id="sec-135-30">simplify file transformations</h3>
+<div class="outline-text-3" id="text-135-30">
 <p>
 see <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-31" class="outline-3">
-<h3 id="sec-133-31">lisp editing</h3>
-<div class="outline-text-3" id="text-133-31">
+<div id="outline-container-sec-135-31" class="outline-3">
+<h3 id="sec-135-31">lisp editing</h3>
+<div class="outline-text-3" id="text-135-31">
 <p>
 see <a href="https://github.com/abo-abo/lispy">lispy</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-32" class="outline-3">
-<h3 id="sec-133-32">continue comment blocks</h3>
-<div class="outline-text-3" id="text-133-32">
+<div id="outline-container-sec-135-32" class="outline-3">
+<h3 id="sec-135-32">continue comment blocks</h3>
+<div class="outline-text-3" id="text-135-32">
 <p>
 m-j (indent-new-comment-line).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-33" class="outline-3">
-<h3 id="sec-133-33">o(1) link jump</h3>
-<div class="outline-text-3" id="text-133-33">
+<div id="outline-container-sec-135-33" class="outline-3">
+<h3 id="sec-135-33">o(1) link jump</h3>
+<div class="outline-text-3" id="text-135-33">
 <p>
 see <a href="http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link">ace-link</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-34" class="outline-3">
-<h3 id="sec-133-34">choosing magit repo</h3>
-<div class="outline-text-3" id="text-133-34">
+<div id="outline-container-sec-135-34" class="outline-3">
+<h3 id="sec-135-34">choosing magit repo</h3>
+<div class="outline-text-3" id="text-135-34">
 <p>
 c-u c-x g (magit-status).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-35" class="outline-3">
-<h3 id="sec-133-35">project templates</h3>
-<div class="outline-text-3" id="text-133-35">
+<div id="outline-container-sec-135-35" class="outline-3">
+<h3 id="sec-135-35">project templates</h3>
+<div class="outline-text-3" id="text-135-35">
 <p>
 see <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-36" class="outline-3">
-<h3 id="sec-133-36">melpa recipe format</h3>
-<div class="outline-text-3" id="text-133-36">
+<div id="outline-container-sec-135-36" class="outline-3">
+<h3 id="sec-135-36">melpa recipe format</h3>
+<div class="outline-text-3" id="text-135-36">
 <p>
 see <a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-37" class="outline-3">
-<h3 id="sec-133-37">emacs regex</h3>
-<div class="outline-text-3" id="text-133-37">
+<div id="outline-container-sec-135-37" class="outline-3">
+<h3 id="sec-135-37">emacs regex</h3>
+<div class="outline-text-3" id="text-135-37">
 <p>
 see <a href="http://ergoemacs.org/emacs/emacs_regex.html">emacs: text pattern matching (regex) tutorial</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-38" class="outline-3">
-<h3 id="sec-133-38">naturaldocs for javascript in emacs</h3>
-<div class="outline-text-3" id="text-133-38">
+<div id="outline-container-sec-135-38" class="outline-3">
+<h3 id="sec-135-38">naturaldocs for javascript in emacs</h3>
+<div class="outline-text-3" id="text-135-38">
 <p>
 see <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">vineet's post</a>.
 <code>=====</code>
@@ -4095,217 +4257,217 @@ At <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-39" class="outline-3">
-<h3 id="sec-133-39">Static blog</h3>
-<div class="outline-text-3" id="text-133-39">
+<div id="outline-container-sec-135-39" class="outline-3">
+<h3 id="sec-135-39">Static blog</h3>
+<div class="outline-text-3" id="text-135-39">
 <p>
 See <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-40" class="outline-3">
-<h3 id="sec-133-40">youtube-dl for Emacs</h3>
-<div class="outline-text-3" id="text-133-40">
+<div id="outline-container-sec-135-40" class="outline-3">
+<h3 id="sec-135-40">youtube-dl for Emacs</h3>
+<div class="outline-text-3" id="text-135-40">
 <p>
 See <a href="http://oremacs.com/2015/01/05/youtube-dl/">Or emacs</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-41" class="outline-3">
-<h3 id="sec-133-41">Clang indexing tool</h3>
-<div class="outline-text-3" id="text-133-41">
+<div id="outline-container-sec-135-41" class="outline-3">
+<h3 id="sec-135-41">Clang indexing tool</h3>
+<div class="outline-text-3" id="text-135-41">
 <p>
 See <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-42" class="outline-3">
-<h3 id="sec-133-42">Project management for C/C++</h3>
-<div class="outline-text-3" id="text-133-42">
+<div id="outline-container-sec-135-42" class="outline-3">
+<h3 id="sec-135-42">Project management for C/C++</h3>
+<div class="outline-text-3" id="text-135-42">
 <p>
 See <a href="https://github.com/LefterisJP/malinka">Malinka</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-43" class="outline-3">
-<h3 id="sec-133-43">Git modes</h3>
-<div class="outline-text-3" id="text-133-43">
+<div id="outline-container-sec-135-43" class="outline-3">
+<h3 id="sec-135-43">Git modes</h3>
+<div class="outline-text-3" id="text-135-43">
 <p>
 See <a href="https://github.com/magit/git-modes">git-modes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-44" class="outline-3">
-<h3 id="sec-133-44">Lots of org links</h3>
-<div class="outline-text-3" id="text-133-44">
+<div id="outline-container-sec-135-44" class="outline-3">
+<h3 id="sec-135-44">Lots of org links</h3>
+<div class="outline-text-3" id="text-135-44">
 <p>
 Found at <a href="http://dain.io/blog/2014/12/31/why-should-developers-and-managers-use-emacs/">dain.io</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-45" class="outline-3">
-<h3 id="sec-133-45">Create custom theme</h3>
-<div class="outline-text-3" id="text-133-45">
+<div id="outline-container-sec-135-45" class="outline-3">
+<h3 id="sec-135-45">Create custom theme</h3>
+<div class="outline-text-3" id="text-135-45">
 <p>
 See Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-46" class="outline-3">
-<h3 id="sec-133-46">GTD Emacs workflow</h3>
-<div class="outline-text-3" id="text-133-46">
+<div id="outline-container-sec-135-46" class="outline-3">
+<h3 id="sec-135-46">GTD Emacs workflow</h3>
+<div class="outline-text-3" id="text-135-46">
 <p>
 See Charles Cave's <a href="http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html">notes</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-47" class="outline-3">
-<h3 id="sec-133-47">Simplify file transformations</h3>
-<div class="outline-text-3" id="text-133-47">
+<div id="outline-container-sec-135-47" class="outline-3">
+<h3 id="sec-135-47">Simplify file transformations</h3>
+<div class="outline-text-3" id="text-135-47">
 <p>
 See <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-48" class="outline-3">
-<h3 id="sec-133-48">LISP editing</h3>
-<div class="outline-text-3" id="text-133-48">
+<div id="outline-container-sec-135-48" class="outline-3">
+<h3 id="sec-135-48">LISP editing</h3>
+<div class="outline-text-3" id="text-135-48">
 <p>
 See <a href="https://github.com/abo-abo/lispy">lispy</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-49" class="outline-3">
-<h3 id="sec-133-49">Continue comment blocks</h3>
-<div class="outline-text-3" id="text-133-49">
+<div id="outline-container-sec-135-49" class="outline-3">
+<h3 id="sec-135-49">Continue comment blocks</h3>
+<div class="outline-text-3" id="text-135-49">
 <p>
 M-j (indent-new-comment-line).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-50" class="outline-3">
-<h3 id="sec-133-50">O(1) link jump</h3>
-<div class="outline-text-3" id="text-133-50">
+<div id="outline-container-sec-135-50" class="outline-3">
+<h3 id="sec-135-50">O(1) link jump</h3>
+<div class="outline-text-3" id="text-135-50">
 <p>
 See <a href="http://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/ace-link">ace-link</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-51" class="outline-3">
-<h3 id="sec-133-51">Choosing magit repo</h3>
-<div class="outline-text-3" id="text-133-51">
+<div id="outline-container-sec-135-51" class="outline-3">
+<h3 id="sec-135-51">Choosing magit repo</h3>
+<div class="outline-text-3" id="text-135-51">
 <p>
 C-u C-x g (magit-status).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-52" class="outline-3">
-<h3 id="sec-133-52">Project templates</h3>
-<div class="outline-text-3" id="text-133-52">
+<div id="outline-container-sec-135-52" class="outline-3">
+<h3 id="sec-135-52">Project templates</h3>
+<div class="outline-text-3" id="text-135-52">
 <p>
 See <a href="https://github.com/chrisbarrett/skeletor.el">Skeletor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-53" class="outline-3">
-<h3 id="sec-133-53">Melpa recipe format</h3>
-<div class="outline-text-3" id="text-133-53">
+<div id="outline-container-sec-135-53" class="outline-3">
+<h3 id="sec-135-53">Melpa recipe format</h3>
+<div class="outline-text-3" id="text-135-53">
 <p>
 See <a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-54" class="outline-3">
-<h3 id="sec-133-54">NaturalDocs for JavaScript in Emacs</h3>
-<div class="outline-text-3" id="text-133-54">
+<div id="outline-container-sec-135-54" class="outline-3">
+<h3 id="sec-135-54">NaturalDocs for JavaScript in Emacs</h3>
+<div class="outline-text-3" id="text-135-54">
 <p>
 See <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-55" class="outline-3">
-<h3 id="sec-133-55">checkdoc</h3>
-<div class="outline-text-3" id="text-133-55">
+<div id="outline-container-sec-135-55" class="outline-3">
+<h3 id="sec-135-55">checkdoc</h3>
+<div class="outline-text-3" id="text-135-55">
 <p>
 checks buffer for doc strings file errors.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-56" class="outline-3">
-<h3 id="sec-133-56">check out <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a></h3>
-<div class="outline-text-3" id="text-133-56">
+<div id="outline-container-sec-135-56" class="outline-3">
+<h3 id="sec-135-56">check out <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a></h3>
+<div class="outline-text-3" id="text-135-56">
 <p>
 <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-57" class="outline-3">
-<h3 id="sec-133-57">toggling key bingings</h3>
-<div class="outline-text-3" id="text-133-57">
+<div id="outline-container-sec-135-57" class="outline-3">
+<h3 id="sec-135-57">toggling key bingings</h3>
+<div class="outline-text-3" id="text-135-57">
 <p>
 see <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-58" class="outline-3">
-<h3 id="sec-133-58">squashing commits with magit</h3>
-<div class="outline-text-3" id="text-133-58">
+<div id="outline-container-sec-135-58" class="outline-3">
+<h3 id="sec-135-58">squashing commits with magit</h3>
+<div class="outline-text-3" id="text-135-58">
 <p>
 see <a href="http://howardism.org/technical/emacs/magit-squashing.html">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-59" class="outline-3">
-<h3 id="sec-133-59">editing colors</h3>
-<div class="outline-text-3" id="text-133-59">
+<div id="outline-container-sec-135-59" class="outline-3">
+<h3 id="sec-135-59">editing colors</h3>
+<div class="outline-text-3" id="text-135-59">
 <p>
 see <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-60" class="outline-3">
-<h3 id="sec-133-60">hide lines longer than</h3>
-<div class="outline-text-3" id="text-133-60">
+<div id="outline-container-sec-135-60" class="outline-3">
+<h3 id="sec-135-60">hide lines longer than</h3>
+<div class="outline-text-3" id="text-135-60">
 <p>
 see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/selective-display.html">selective display</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-61" class="outline-3">
-<h3 id="sec-133-61">export org to reveal.js</h3>
-<div class="outline-text-3" id="text-133-61">
+<div id="outline-container-sec-135-61" class="outline-3">
+<h3 id="sec-135-61">export org to reveal.js</h3>
+<div class="outline-text-3" id="text-135-61">
 <p>
 see <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-62" class="outline-3">
-<h3 id="sec-133-62">beautify org</h3>
-<div class="outline-text-3" id="text-133-62">
+<div id="outline-container-sec-135-62" class="outline-3">
+<h3 id="sec-135-62">beautify org</h3>
+<div class="outline-text-3" id="text-135-62">
 <p>
 <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-63" class="outline-3">
-<h3 id="sec-133-63">minimalist appearance</h3>
-<div class="outline-text-3" id="text-133-63">
+<div id="outline-container-sec-135-63" class="outline-3">
+<h3 id="sec-135-63">minimalist appearance</h3>
+<div class="outline-text-3" id="text-135-63">
 <p>
 see <a href="https://github.com/dandavison/minimal">minimal</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-64" class="outline-3">
-<h3 id="sec-133-64">want buffer local cursor color?</h3>
-<div class="outline-text-3" id="text-133-64">
+<div id="outline-container-sec-135-64" class="outline-3">
+<h3 id="sec-135-64">want buffer local cursor color?</h3>
+<div class="outline-text-3" id="text-135-64">
 <p>
 see <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-65" class="outline-3">
-<h3 id="sec-133-65">narrowing regions</h3>
-<div class="outline-text-3" id="text-133-65">
+<div id="outline-container-sec-135-65" class="outline-3">
+<h3 id="sec-135-65">narrowing regions</h3>
+<div class="outline-text-3" id="text-135-65">
 <ul class="org-ul">
 <li>c-x n n (narrow-to-region).
 </li>
@@ -4314,17 +4476,17 @@ see <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-66" class="outline-3">
-<h3 id="sec-133-66">linux system-wide emacs keybindings</h3>
-<div class="outline-text-3" id="text-133-66">
+<div id="outline-container-sec-135-66" class="outline-3">
+<h3 id="sec-135-66">linux system-wide emacs keybindings</h3>
+<div class="outline-text-3" id="text-135-66">
 <p>
 see <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">how to get emacs key bindings in ubuntu</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-67" class="outline-3">
-<h3 id="sec-133-67">org protocol</h3>
-<div class="outline-text-3" id="text-133-67">
+<div id="outline-container-sec-135-67" class="outline-3">
+<h3 id="sec-135-67">org protocol</h3>
+<div class="outline-text-3" id="text-135-67">
 <ul class="org-ul">
 <li>see irreal's <a href="http://irreal.org/blog/?p=3594">post</a>.
 </li>
@@ -4333,42 +4495,42 @@ see <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindin
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-68" class="outline-3">
-<h3 id="sec-133-68">Editing XML?</h3>
-<div class="outline-text-3" id="text-133-68">
+<div id="outline-container-sec-135-68" class="outline-3">
+<h3 id="sec-135-68">Editing XML?</h3>
+<div class="outline-text-3" id="text-135-68">
 <p>
 Try out <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-69" class="outline-3">
-<h3 id="sec-133-69">Move by parens</h3>
-<div class="outline-text-3" id="text-133-69">
+<div id="outline-container-sec-135-69" class="outline-3">
+<h3 id="sec-135-69">Move by parens</h3>
+<div class="outline-text-3" id="text-135-69">
 <p>
 For example, C-M-u moves backward out of one level of parentheses. More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-70" class="outline-3">
-<h3 id="sec-133-70">Debug expanded elisp macros</h3>
-<div class="outline-text-3" id="text-133-70">
+<div id="outline-container-sec-135-70" class="outline-3">
+<h3 id="sec-135-70">Debug expanded elisp macros</h3>
+<div class="outline-text-3" id="text-135-70">
 <p>
 See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-71" class="outline-3">
-<h3 id="sec-133-71">Working with Java</h3>
-<div class="outline-text-3" id="text-133-71">
+<div id="outline-container-sec-135-71" class="outline-3">
+<h3 id="sec-135-71">Working with Java</h3>
+<div class="outline-text-3" id="text-135-71">
 <ul class="org-ul">
 <li><a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>.
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-72" class="outline-3">
-<h3 id="sec-133-72">Describe bindings</h3>
-<div class="outline-text-3" id="text-133-72">
+<div id="outline-container-sec-135-72" class="outline-3">
+<h3 id="sec-135-72">Describe bindings</h3>
+<div class="outline-text-3" id="text-135-72">
 <ul class="org-ul">
 <li>C-h b lists all bindings.
 </li>
@@ -4377,9 +4539,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-73" class="outline-3">
-<h3 id="sec-133-73">Shell commands</h3>
-<div class="outline-text-3" id="text-133-73">
+<div id="outline-container-sec-135-73" class="outline-3">
+<h3 id="sec-135-73">Shell commands</h3>
+<div class="outline-text-3" id="text-135-73">
 <ul class="org-ul">
 <li>C-u M-! (inline shell-command).
 </li>
@@ -4388,9 +4550,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-74" class="outline-3">
-<h3 id="sec-133-74">Search manuals</h3>
-<div class="outline-text-3" id="text-133-74">
+<div id="outline-container-sec-135-74" class="outline-3">
+<h3 id="sec-135-74">Search manuals</h3>
+<div class="outline-text-3" id="text-135-74">
 <ul class="org-ul">
 <li>info-apropos (lookup subject in all manuals).
 </li>
@@ -4399,9 +4561,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-75" class="outline-3">
-<h3 id="sec-133-75">Recursive query/replace</h3>
-<div class="outline-text-3" id="text-133-75">
+<div id="outline-container-sec-135-75" class="outline-3">
+<h3 id="sec-135-75">Recursive query/replace</h3>
+<div class="outline-text-3" id="text-135-75">
 <ul class="org-ul">
 <li>M-x find-dired RET.
 </li>
@@ -4422,9 +4584,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-133-76" class="outline-3">
-<h3 id="sec-133-76">Disable furniture</h3>
-<div class="outline-text-3" id="text-133-76">
+<div id="outline-container-sec-135-76" class="outline-3">
+<h3 id="sec-135-76">Disable furniture</h3>
+<div class="outline-text-3" id="text-135-76">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(menu-bar-mode -1)
@@ -4434,17 +4596,17 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 </div>
 </div>
 </div>
-<div id="outline-container-sec-133-77" class="outline-3">
-<h3 id="sec-133-77">Repeat last command</h3>
-<div class="outline-text-3" id="text-133-77">
+<div id="outline-container-sec-135-77" class="outline-3">
+<h3 id="sec-135-77">Repeat last command</h3>
+<div class="outline-text-3" id="text-135-77">
 <p>
 C-x z (and just z threreafter).
 </p>
 </div>
 </div>
-<div id="outline-container-sec-133-78" class="outline-3">
-<h3 id="sec-133-78">Replace char with a newline</h3>
-<div class="outline-text-3" id="text-133-78">
+<div id="outline-container-sec-135-78" class="outline-3">
+<h3 id="sec-135-78">Replace char with a newline</h3>
+<div class="outline-text-3" id="text-135-78">
 <ul class="org-ul">
 <li>M-x replace-string RET ; RET C-q C-j.
 </li>
@@ -4457,7 +4619,7 @@ C-x z (and just z threreafter).
 </div>
 </div>
 <div id="outline-container-installing-emacs--on-linux" class="outline-2">
-<h2 id="installing-emacs--on-linux"><a id="sec-134" name="sec-134"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-linux">#</a> Installing Emacs 24.4 on Linux</h2>
+<h2 id="installing-emacs--on-linux"><a id="sec-136" name="sec-136"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-linux">#</a> Installing Emacs 24.4 on Linux</h2>
 <div class="outline-text-2" id="text-installing-emacs--on-linux">
 <div class="org-src-container">
 
@@ -4467,7 +4629,7 @@ C-x z (and just z threreafter).
 </div>
 </div>
 <div id="outline-container-installing-emacs--on-mac-ox-x" class="outline-2">
-<h2 id="installing-emacs--on-mac-ox-x"><a id="sec-135" name="sec-135"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-mac-ox-x">#</a> Installing Emacs 24.4 on Mac OX X</h2>
+<h2 id="installing-emacs--on-mac-ox-x"><a id="sec-137" name="sec-137"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-07-09 Thu]</span></span> <a href="#installing-emacs-on-mac-ox-x">#</a> Installing Emacs 24.4 on Mac OX X</h2>
 <div class="outline-text-2" id="text-installing-emacs--on-mac-ox-x">
 <p>
 See Yamamoto's Mac OS X <a href="https://github.com/railwaycat/emacs-mac-port">port</a>. To install:
@@ -4481,15 +4643,15 @@ $ brew install emacs-mac
 </div>
 </div>
 <div id="outline-container-xcode6-tips" class="outline-2">
-<h2 id="xcode6-tips"><a id="sec-136" name="sec-136"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-11-02 Sun]</span></span> <a href="#xcode6-tips">#</a> Xcode6 tips</h2>
+<h2 id="xcode6-tips"><a id="sec-138" name="sec-138"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-11-02 Sun]</span></span> <a href="#xcode6-tips">#</a> Xcode6 tips</h2>
 <div class="outline-text-2" id="text-xcode6-tips">
 <p>
 From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-tricks-tech-talk-video">tech talk</a> And <a href="http://www.raywenderlich.com/72021/supercharging-xcode-efficiency">supercharging Your Xcode Efficiency (by Jack Wu)</a>.
 </p>
 </div>
-<div id="outline-container-sec-136-1" class="outline-3">
-<h3 id="sec-136-1">Shortcuts</h3>
-<div class="outline-text-3" id="text-136-1">
+<div id="outline-container-sec-138-1" class="outline-3">
+<h3 id="sec-138-1">Shortcuts</h3>
+<div class="outline-text-3" id="text-138-1">
 <ul class="org-ul">
 <li>⌘⇧o Fuzzy file search.
 </li>
@@ -4516,9 +4678,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-136-2" class="outline-3">
-<h3 id="sec-136-2">Xcode features</h3>
-<div class="outline-text-3" id="text-136-2">
+<div id="outline-container-sec-138-2" class="outline-3">
+<h3 id="sec-138-2">Xcode features</h3>
+<div class="outline-text-3" id="text-138-2">
 <ul class="org-ul">
 <li>Snippets.
 </li>
@@ -4532,9 +4694,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 
-<div id="outline-container-sec-136-3" class="outline-3">
-<h3 id="sec-136-3">Plugins of interest</h3>
-<div class="outline-text-3" id="text-136-3">
+<div id="outline-container-sec-138-3" class="outline-3">
+<h3 id="sec-138-3">Plugins of interest</h3>
+<div class="outline-text-3" id="text-138-3">
 <ul class="org-ul">
 <li>Fuzzy autocomplete.
 </li>
@@ -4549,7 +4711,7 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-emacs-lisp-bookmarks" class="outline-2">
-<h2 id="emacs-lisp-bookmarks"><a id="sec-137" name="sec-137"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-20 Sat]</span></span> <a href="#emacs-lisp-bookmarks">#</a> Emacs lisp bookmarks</h2>
+<h2 id="emacs-lisp-bookmarks"><a id="sec-139" name="sec-139"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-20 Sat]</span></span> <a href="#emacs-lisp-bookmarks">#</a> Emacs lisp bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-lisp-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-06 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -4607,9 +4769,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-emacs-bookmarks" class="outline-2">
-<h2 id="emacs-bookmarks"><a id="sec-138" name="sec-138"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-19 Fri]</span></span> <a href="#emacs-bookmarks">#</a> Emacs bookmarks</h2>
+<h2 id="emacs-bookmarks"><a id="sec-140" name="sec-140"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-19 Fri]</span></span> <a href="#emacs-bookmarks">#</a> Emacs bookmarks</h2>
 <div class="outline-text-2" id="text-emacs-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-07-11 Sat]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-07-16 Thu]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="http://blog.aaronbieber.com">Aaron Bieber's blog</a>.
 </li>
@@ -4685,6 +4847,8 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </li>
 <li><a href="http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/">Git diffs using Emacs ediff</a>.
 </li>
+<li><a href="https://github.com/benma/go-dlv.el">Go Delve - Debug Go programs interactively with the GUD</a>.
+</li>
 <li><a href="http://doc.rix.si/org/fsem.html">Hardcore Freestyle Emacs</a>.
 </li>
 <li><a href="https://github.com/bbatsov/projectile">Helm Projectile</a>: Is awesome for finding files in emacs.
@@ -4759,12 +4923,12 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 <div id="outline-container-resetting-gnome-terminal-preferences" class="outline-2">
-<h2 id="resetting-gnome-terminal-preferences"><a id="sec-139" name="sec-139"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-11 Thu]</span></span> <a href="#resetting-gnome-terminal-preferences">#</a> Resetting gnome-terminal preferences</h2>
+<h2 id="resetting-gnome-terminal-preferences"><a id="sec-141" name="sec-141"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-09-11 Thu]</span></span> <a href="#resetting-gnome-terminal-preferences">#</a> Resetting gnome-terminal preferences</h2>
 <div class="outline-text-2" id="text-resetting-gnome-terminal-preferences">
 </div>
-<div id="outline-container-sec-139-1" class="outline-3">
-<h3 id="sec-139-1">Resetting preferences</h3>
-<div class="outline-text-3" id="text-139-1">
+<div id="outline-container-sec-141-1" class="outline-3">
+<h3 id="sec-141-1">Resetting preferences</h3>
+<div class="outline-text-3" id="text-141-1">
 <div class="org-src-container">
 
 <pre class="src src-sh">gconftool --recursive-unset /apps/gnome-terminal
@@ -4772,9 +4936,9 @@ From Ray Wenderlich's <a href="http://www.raywenderlich.com/85999/xcode-6-tips-t
 </div>
 </div>
 </div>
-<div id="outline-container-sec-139-2" class="outline-3">
-<h3 id="sec-139-2">Want 256 colors?</h3>
-<div class="outline-text-3" id="text-139-2">
+<div id="outline-container-sec-141-2" class="outline-3">
+<h3 id="sec-141-2">Want 256 colors?</h3>
+<div class="outline-text-3" id="text-141-2">
 <p>
 Edit .bash_profile
 </p>
@@ -4783,9 +4947,9 @@ export TERM="screen-256color"
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-139-3" class="outline-3">
-<h3 id="sec-139-3">Ensure .bash_profile is loaded</h3>
-<div class="outline-text-3" id="text-139-3">
+<div id="outline-container-sec-141-3" class="outline-3">
+<h3 id="sec-141-3">Ensure .bash_profile is loaded</h3>
+<div class="outline-text-3" id="text-141-3">
 <p>
 From gnome-terminal window:
 </p>
@@ -4799,9 +4963,9 @@ gnome-terminal
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-139-4" class="outline-3">
-<h3 id="sec-139-4">Solarized</h3>
-<div class="outline-text-3" id="text-139-4">
+<div id="outline-container-sec-141-4" class="outline-3">
+<h3 id="sec-141-4">Solarized</h3>
+<div class="outline-text-3" id="text-141-4">
 <p>
 Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs">post</a> to get solarized on gnome-terminal.
 </p>
@@ -4809,7 +4973,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-java-bookmarks" class="outline-2">
-<h2 id="java-bookmarks"><a id="sec-140" name="sec-140"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#java-bookmarks">#</a> Java bookmarks</h2>
+<h2 id="java-bookmarks"><a id="sec-142" name="sec-142"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#java-bookmarks">#</a> Java bookmarks</h2>
 <div class="outline-text-2" id="text-java-bookmarks">
 <ul class="org-ul">
 <li><a href="https://code.google.com/p/lanterna/">Lanterna</a>, a text GUI (a la ncurses) written in Java.
@@ -4822,9 +4986,9 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-html5-bookmarks" class="outline-2">
-<h2 id="html5-bookmarks"><a id="sec-141" name="sec-141"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#html5-bookmarks">#</a> HTML5 bookmarks</h2>
+<h2 id="html5-bookmarks"><a id="sec-143" name="sec-143"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-14 Mon]</span></span> <a href="#html5-bookmarks">#</a> HTML5 bookmarks</h2>
 <div class="outline-text-2" id="text-html5-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-07-05 Sun]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-07-16 Thu]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="https://news.ycombinator.com/item?id=9822975">Airbnb JavaScript Style Guide</a>.
 </li>
@@ -4860,11 +5024,13 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </li>
 <li><a href="https://philipwalton.github.io/solved-by-flexbox/">Solved by Flexbox</a>.
 </li>
+<li><a href="http://jonobr1.github.io/two.js">Two.js is a two-dimensional drawing api geared towards modern web browsers</a>.
+</li>
 </ul>
 </div>
 </div>
 <div id="outline-container-python-bookmarks" class="outline-2">
-<h2 id="python-bookmarks"><a id="sec-142" name="sec-142"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#python-bookmarks">#</a> Python bookmarks</h2>
+<h2 id="python-bookmarks"><a id="sec-144" name="sec-144"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#python-bookmarks">#</a> Python bookmarks</h2>
 <div class="outline-text-2" id="text-python-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-11 Sat]  updated  </em></span>
 <ul class="org-ul">
@@ -4894,7 +5060,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-development-bookmarks" class="outline-2">
-<h2 id="development-bookmarks"><a id="sec-143" name="sec-143"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#development-bookmarks">#</a> Development bookmarks</h2>
+<h2 id="development-bookmarks"><a id="sec-145" name="sec-145"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-13 Sun]</span></span> <a href="#development-bookmarks">#</a> Development bookmarks</h2>
 <div class="outline-text-2" id="text-development-bookmarks">
 <br><span class="modified-timestamp">  <em>[2015-07-06 Mon]  updated  </em></span>
 <ul class="org-ul">
@@ -4936,7 +5102,7 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </div>
 </div>
 <div id="outline-container-some-python-idioms" class="outline-2">
-<h2 id="some-python-idioms"><a id="sec-144" name="sec-144"></a><span class="timestamp-wrapper"><span class="timestamp">[2013-11-04 Mon]</span></span> <a href="#some-python-idioms">#</a> Some python idioms</h2>
+<h2 id="some-python-idioms"><a id="sec-146" name="sec-146"></a><span class="timestamp-wrapper"><span class="timestamp">[2013-11-04 Mon]</span></span> <a href="#some-python-idioms">#</a> Some python idioms</h2>
 <div class="outline-text-2" id="text-some-python-idioms">
 <ul class="org-ul">
 <li>Prefer double quotes if escaping single quotes.
