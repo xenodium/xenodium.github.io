@@ -1,6 +1,28 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-09-23 Wed] [[#sync-a-pip-with-mac-os-updates][#]] Sync a pip with Mac OS updates
+  :PROPERTIES:
+  :CUSTOM_ID: sync-a-pip-with-mac-os-updates
+  :END:
+  My pip installation recently broke after a Mac OS update.
+#+BEGIN_EXAMPLE
+  $ pip
+  Traceback (most recent call last):
+    File "/usr/local/bin/pip", line 5, in <module>
+      from pkg_resources import load_entry_point
+    File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 2793, in <module>
+      working_set.require(__requires__)
+    File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 673, in require
+      needed = self.resolve(parse_requirements(requirements))
+    File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 576, in resolve
+      raise DistributionNotFound(req)
+  pkg_resources.DistributionNotFound: pip==1.1
+#+END_EXAMPLE
+  Updating my pip installation fixes the break:
+#+BEGIN_SRC sh
+  $ sudo easy_install -U pip
+#+END_SRC
 * [2015-09-20 Sun] [[#chinatown-treats-review][#]] Chinatown treats review: yay!
   :PROPERTIES:
   :CUSTOM_ID: chinatown-treats-review
