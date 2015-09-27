@@ -1,6 +1,87 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-09-26 Sat] [[#soundclouds-go-best-practices-gophercon-2014][#]] Soundcloud's Go best practices, GopherCon 2014
+  :PROPERTIES:
+  :CUSTOM_ID: soundclouds-go-best-practices-gophercon-2014
+  :END:
+  Having watched the [[https://www.youtube.com/watch?v%3DY1-RLAl7iOI][video]], some takeaways:
+*** Single GOPATH
+***** $GOPATH/src/github.com/soundcloud/foo
+*** Repo structure
+***** github.com/soundcloud/whatever
+******* README.md
+******* Makefile
+******* main.go
+******* support.go
+******* foo
+********* foo.go
+********* bar.go
+******* whatever-server
+********* main.go
+******* wharever-worker
+********* main.go
+*** Formatting and style
+***** Use gofmt.
+***** Google's codereview [[https://github.com/golang/go/wiki/CodeReviewComments][guidelines]].
+***** Avoid named return parameters.
+***** Avoid make and new (unless you know sizes).
+***** Use struct{} for sentinel values: sets, signal chans.
+******* Conveys no information in it this part.
+******* Instead of empty interface.
+******* instead of boolean.
+***** Break long lines at parameters
+******* No need to compact.
+******* Keep trailing coma in last argument.
+***** Flags
+#+BEGIN_SRC go
+  func main() {
+    var (
+      foo = flags.String("foo", "doch", "...")
+      bar = flat.Int("bar", 34, "...")
+    )
+    flag.Parse()
+    // ...
+  }
+#+END_SRC
+***** Logging
+******* package log
+******* Telemetry
+******* Push model (gets expensive over time)
+********* Graphite
+********* Statsd
+********* AirBrake
+******* Pull model (chosen)
+********* expvar
+********* Prometheus
+***** Testing
+******* package testing
+********* Unit tests
+********* reflect.DeepEqual
+******* Integration
+********* Use flags for starting services
+********* // +build integration
+***** Code validation
+******* On Save
+********* Go fmt
+********* Go import (go fmt++)
+******* On Build
+********* Go vet
+********* Golint
+********* Go test
+******* On Deploy
+********* go test -tags=integration
+******* GoCov?
+***** Dependency management
+******* Unimportant projects
+********* go get -d (and hope)
+******* Important
+********* VENDOR (ie. copy into your repo)
+*********** Git submodules (no!).
+*********** Git subtrees (seem OK).
+*********** Tool (godep?).
+*********** Build
+************* For binaries (use _vendor subdir)
 * [2015-09-23 Wed] [[#sync-pip-with-mac-os-updates][#]] Sync pip with Mac OS updates
   :PROPERTIES:
   :CUSTOM_ID: sync-pip-with-mac-os-updates
@@ -258,17 +339,17 @@ file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
 
   Here's my progress:
 
-| WEEK | MON  |   TUE | WED   | THU   | FRI  |   SAT |     SUN |
+| WEEK | MON  |   TUE | WED   | THU   | FRI  | SAT   |     SUN |
 |------+------+-------+-------+-------+------+-------+---------|
 |    1 | Rest |     ✘ | 29:04 | ✔     | Rest | 26:36 |   38:40 |
 |    2 | Rest | 29:11 | 28:50 | ✔     | Rest | 27:07 |   44:55 |
-|    3 | Rest | 40:46 | 26:29 | ✔     | Rest |     ✘ |   57:01 |
+|    3 | Rest | 40:46 | 26:29 | ✔     | Rest | ✘     |   57:01 |
 |    4 | Rest | 46:46 | ✘     | ✘     | Rest | 30:08 | 1:12:10 |
 |    5 | Rest | 46:59 | Rest  | 44:46 | Rest | 24:50 | 1:25:24 |
-|    6 | Rest | 50:02 | Rest  | 46:24 | Rest |     ✘ | 1:37:39 |
-|    7 | Rest | 46:54 | 46:41 |       | Rest |       |         |
+|    6 | Rest | 50:02 | Rest  | 46:24 | Rest | ✘     | 1:37:39 |
+|    7 | Rest | 46:54 | 46:41 | 46:42 | Rest | ✘     | 1:57:57 |
 |    8 | Rest |       | Rest  |       | Rest |       |         |
-|    9 | Rest |       | Rest  |       |      |  Rest |    Race |
+|    9 | Rest |       | Rest  |       |      | Rest  |    Race |
 |------+------+-------+-------+-------+------+-------+---------|
 * [2015-08-11 Tue] [[#][#]] Shanghai travel bookmarks
   :PROPERTIES:
@@ -1825,6 +1906,7 @@ bl
   - [[http://engineering.flipboard.com/2015/02/mobile-web/][60 FPS on mobile web (plus layouts)]].
   - [[http://rix.si/][Another minilimalistic one-pager]].
   - [[https://exposure.co/][Another minimalistic gallery]].
+  - [[http://www.flagofplanetearth.com/#intro-shift][Flag of Planet Earth]].
   - [[https://kevin.is/committed-to-github/][Kevin.is (Simple layout)]].
   - [[http://mengto.com/img/snoflake-menu.jpg][Meng To's I Love Food I]].
   - [[http://mengto.com/img/exp-menu.jpg][Meng To's I Love Food II]].
@@ -2554,7 +2636,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: microservices-bookmarks
   :END:
   - [[http://philcalcado.com/2015/09/08/how_we_ended_up_with_microservices.html][How we ended up with microservices]].
-* [2014-12-30 tue] [[#books-backlog][#]] books backlog
+* [2014-12-30 tue] [[#books-backlog][#]] Books backlog
   :PROPERTIES:
   :CUSTOM_ID: books-backlog
   :END:
@@ -2669,8 +2751,6 @@ If FROM or TO is negative, it counts from the end.
     see [[http://ergoemacs.org/emacs/emacs_regex.html][emacs: text pattern matching (regex) tutorial]].
 *** naturaldocs for javascript in emacs
     see [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][vineet's post]].
-=======
-    At [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][lunaryorn]].
 *** Static blog
     See [[https://github.com/kelvinh/org-page][org-page]].
 *** youtube-dl for Emacs
