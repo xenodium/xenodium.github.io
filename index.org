@@ -1,6 +1,30 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-10-05 Mon] [[#javascript-fetch-node-sample][#]] Javascript fetch node sample
+  :PROPERTIES:
+  :CUSTOM_ID: javascript-fetch-node-sample
+  :END:
+  Playing with node and fetch:
+#+BEGIN_SRC js
+  // Requisite: npm install node-fetch --save
+  // Save to fetch-demo.js
+  // Run: node fetch-demo.js
+
+  var fetch = require('node-fetch');
+
+  fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json", {
+    method: 'GET',
+    timeout: 5000
+  }).then(function(response) {
+    return response.json();
+  }).then(function(response) {
+    console.log('subject: ' + response.subject);
+    console.log('body: ' + response.body);
+  }).catch(function(reason) {
+    console.log(reason);
+  });
+#+END_SRC
 * [2015-10-01 Thu] [[#extract-dominant-colors-in-images][#]] Extract dominant colors in images
   :PROPERTIES:
   :Custom_ID: extract-dominant-colors-in-images
