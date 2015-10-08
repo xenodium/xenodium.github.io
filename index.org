@@ -686,16 +686,22 @@ $ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -outp
   :END:
   Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
 #+BEGIN_SRC sh
-apt-get install ffmpeg imagemagick (linux)
-brew install ffmpeg imagemagick (Mac)
+  apt-get install ffmpeg imagemagick (linux)
+  brew install ffmpeg imagemagick (Mac)
 #+END_SRC
   Convert to gif:
 #+BEGIN_SRC sh
-ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
+  ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
 #+END_SRC
   Optimize with:
 #+BEGIN_SRC sh
-convert -dither none -layers Optimize my.gif my_optimized.gif
+  convert -dither none -layers Optimize my.gif my_optimized.gif
+#+END_SRC
+
+  UPDATE: There's also licecap and subsequently optimize with:
+
+#+BEGIN_SRC sh
+    cat source.gif | gifsicle --colors 256 --optimize=3 --delay=15 > target.gif
 #+END_SRC
 * [2015-07-06 Mon] [[#keyboards-bookmarks][#]] Keyboards bookmarks
   :PROPERTIES:
