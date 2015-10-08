@@ -1,6 +1,42 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-10-08 Thu] [[#change-emacs-shells-cwd-with-helm-projectile][#]] Change Emacs shell's CWD with helm projectile
+  :PROPERTIES:
+  :CUSTOM_ID: change-emacs-shells-cwd-with-helm-projectile
+  :END:
+  If using Emacs shell and helm projectile, you can wire these up to quickly change your current working directory.
+
+[[file:images/change-emacs-shells-cwd-with-helm-projectile/change-cwd-with-helm-projectile.gif]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'helm-projectile)
+
+  (defun ar/shell-cd (dir-path)
+  "Like shell-pop--cd-to-cwd-shell, but without recentering."
+    (unless (string-equal mode-name "Shell")
+      (error "Not in Shell mode"))
+    (message mode-name)
+    (goto-char (point-max))
+    (comint-kill-input)
+    (insert (concat "cd " (shell-quote-argument dir-path)))
+    (let ((comint-process-echoes t))
+      (comint-send-input)))
+
+  (defun ar/helm-projectile-shell-cd ()
+    "Change shell shell current working directory using helm projectile."
+    (interactive)
+    (unless (string-equal mode-name "Shell")
+      (error "Not in Shell mode"))
+    (let ((helm-dir-source (copy-tree  helm-source-projectile-directories-list)))
+      (add-to-list 'helm-dir-source '(action . ar/shell-cd))
+      (add-to-list 'helm-dir-source '(keymap . nil))
+      (add-to-list 'helm-dir-source '(header-line . "cd to directory..."))
+      (helm :sources helm-dir-source
+            :buffer "*helm-dirs*"
+            :candidate-number-limit 10000)))
+
+#+END_SRC
 * [2015-10-07 Wed] [[#thermostat-reset-on-bosch-wkd28350gb][#]] Thermostat reset on Bosch WKD28350GB
   :PROPERTIES:
   :CUSTOM_ID: thermostat-reset-on-bosch-wkd28350gb
