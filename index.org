@@ -1,6 +1,50 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-10-08 Thu] [[#change-emacs-shells-cwd-with-helm-projectile][#]] Change Emacs shell's CWD with helm projectile
+  :PROPERTIES:
+  :CUSTOM_ID: change-emacs-shells-cwd-with-helm-projectile
+  :END:
+  If using Emacs shell and helm projectile, you can wire these up to quickly change your current working directory.
+
+[[file:images/change-emacs-shells-cwd-with-helm-projectile/change-cwd-with-helm-projectile.gif]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'helm-projectile)
+
+  (defun ar/shell-cd (dir-path)
+  "Like shell-pop--cd-to-cwd-shell, but without recentering."
+    (unless (string-equal mode-name "Shell")
+      (error "Not in Shell mode"))
+    (message mode-name)
+    (goto-char (point-max))
+    (comint-kill-input)
+    (insert (concat "cd " (shell-quote-argument dir-path)))
+    (let ((comint-process-echoes t))
+      (comint-send-input)))
+
+  (defun ar/helm-projectile-shell-cd ()
+    "Change shell current working directory using helm projectile."
+    (interactive)
+    (unless (string-equal mode-name "Shell")
+      (error "Not in Shell mode"))
+    (let ((helm-dir-source (copy-tree  helm-source-projectile-directories-list)))
+      (add-to-list 'helm-dir-source '(action . ar/shell-cd))
+      (add-to-list 'helm-dir-source '(keymap . nil))
+      (add-to-list 'helm-dir-source '(header-line . "cd to directory..."))
+      (helm :sources helm-dir-source
+            :buffer "*helm-dirs*"
+            :candidate-number-limit 10000)))
+
+#+END_SRC
+* [2015-10-07 Wed] [[#thermostat-reset-on-bosch-wkd28350gb][#]] Thermostat reset on Bosch WKD28350GB
+  :PROPERTIES:
+  :CUSTOM_ID: thermostat-reset-on-bosch-wkd28350gb
+  :END:
+  My Bosch washer/dryer (WKD28350GB) stopped drying recently. Resetting the dryer's thermostat red breaker did the trick.
+
+[[file:images/thermostat-reset-on-bosch-wkd28350gb/WKD28350GB-01.jpg]] [[file:images/thermostat-reset-on-bosch-wkd28350gb/WKD28350GB-02.jpg]]
+[[file:images/thermostat-reset-on-bosch-wkd28350gb/WKD28350GB-03.jpg]] [[file:images/thermostat-reset-on-bosch-wkd28350gb/WKD28350GB-04.jpg]]
 * [2015-10-05 Mon] [[#javascript-fetch-node-sample][#]] Javascript fetch node sample
   :PROPERTIES:
   :CUSTOM_ID: javascript-fetch-node-sample
@@ -210,12 +254,23 @@
   :PROPERTIES:
   :CUSTOM_ID: react-bookmarks
   :END:
+  :MODIFIED:
+  [2015-10-10 Sat]
+  :END:
+  - [[https://github.com/syrusakbary/react-native-refresher/blob/master/README.md][A pull to refresh ListView for React Native]].
+  - [[http://moduscreate.com/aligning-children-using-flexbox-in-react-native/][Aligning Children using Flexbox in React Native]].
   - [[http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/][ECMAScript 5 Strict Mode, JSON, and More]].
   - [[https://github.com/facebook/react-native/issues/499#issuecomment-128836161][ListView rendering issue]].
   - [[https://corbt.com/posts/2015/09/16/one-day-with-react-native-for-android.html][One day with React Native for Android]].
-  - [[https://github.com/marty-wang/react-native-toolkit][React Native Toolkit (navigation examples)]].
-  - [[http://www.raywenderlich.com/99473/introducing-react-native-building-apps-javascript][React Native Tutorial: Building Apps with JavaScript]].
+  - [[https://github.com/naoufal/react-native-accordion][React native accordion]].
+  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React native Animated ScrollView Row Swipe Actions]].
+  - [[http://moduscreate.com/react-native-layout-system/][React Native Layout System]].
+  - [[http://npm.taobao.org/package/react-native-scrollable-decorator][React native scrollable decorator]].
+  - [[https://github.com/marty-wang/react-native-toolkit][React native Toolkit (navigation examples)]].
+  - [[http://www.raywenderlich.com/99473/introducing-react-native-building-apps-javascript][React native Tutorial: Building Apps with JavaScript]].
+  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React-native Animated ScrollView Row Swipe Actions]].
   - [[http://jlongster.com/Removing-User-Interface-Complexity,-or-Why-React-is-Awesome][Removing User Interface Complexity, or Why React is Awesome]].
+  - [[http://www.schibsted.pl/2015/10/testing-react-native-components-with-jest/][Testing react native with jest]].
   - [[http://blog.zmxv.com/2015/09/what-i-learned-from-building-react.html][What I learned from building with React]].
   - [[http://addyosmani.com/writing-modular-js/][Writing Modular JavaScript With AMD, CommonJS & ES Harmony]].
 * [2015-09-16 Wed] [[#chinese-rice-vinegar][#]] Chinese rice vinegar
@@ -635,16 +690,22 @@ $ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -outp
   :END:
   Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
 #+BEGIN_SRC sh
-apt-get install ffmpeg imagemagick (linux)
-brew install ffmpeg imagemagick (Mac)
+  apt-get install ffmpeg imagemagick (linux)
+  brew install ffmpeg imagemagick (Mac)
 #+END_SRC
   Convert to gif:
 #+BEGIN_SRC sh
-ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
+  ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
 #+END_SRC
   Optimize with:
 #+BEGIN_SRC sh
-convert -dither none -layers Optimize my.gif my_optimized.gif
+  convert -dither none -layers Optimize my.gif my_optimized.gif
+#+END_SRC
+
+  UPDATE: There's also licecap and subsequently optimize with:
+
+#+BEGIN_SRC sh
+    cat source.gif | gifsicle --colors 256 --optimize=3 --delay=15 > target.gif
 #+END_SRC
 * [2015-07-06 Mon] [[#keyboards-bookmarks][#]] Keyboards bookmarks
   :PROPERTIES:
@@ -876,6 +937,10 @@ $ brew cask install wwdc
   :PROPERTIES:
   :CUSTOM_ID: xcode-bookmarks
   :END:
+  :MODIFIED:
+  [2015-10-10 Sat]
+  :END:
+  - [[http://www.amazon.co.uk/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882/ref=sr_1_1?ie=UTF8&qid=1444472656&sr=8-1&keywords=Clean+Code%3A+A+Handbook+of+Agile+Software+Craftsmanship][Clean Code: A Handbook of Agile Software Craftsmanship (Book)]].
   - [[https://github.com/FuzzyAutocomplete/FuzzyAutocompletePlugin/blob/master/README.md][Fuzzy autocomplete for Xcode]].
   - [[http://chen.do/blog/2013/10/22/reverse-engineering-xcode-with-dtrace/][Reverse-engineering Xcode with dtrace]].
 * [2015-06-02 Tue] [[#costa-rica-travel-bookmarks][#]] Costa Rica travel bookmarks
@@ -1234,6 +1299,7 @@ build_clang
       void Dance()
     }
 
+    skinparam monochrome true
     Singer <|-- PopSinger
     Singer <|-- SalsaSinger
 
@@ -1554,13 +1620,14 @@ Generating diagram:
   :CUSTOM_ID: china-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-04 Sun]
+  [2015-10-09 Fri]
   :END:
   - [[http://www.lonelyplanet.com/asia/travel-tips-and-articles/china-for-beginners-7-first-timer-fails-to-avoid-on-your-trip-to-beijing][7 first-timer fails to avoid on your trip to Beijing]].
   - [[http://t.co/1tSn3xxfP7][Beijing on a budget]].
   - [[http://www.lonelyplanet.com/china/travel-tips-and-articles/the-most-incredible-chinese-cities-youve-never-heard-of][Chinese cities you've never heard of]].
   - Ctrip for hotels. Stick to high-rated only.
   - [[http://www.lonelyplanet.com/asia/travel-tips-and-articles/essential-regional-cuisine-of-china][Essential regional cuisine of China]].
+  - [[https://en.wikipedia.org/wiki/Fenghuang_County][Fenghuang ancient town]].
   - [[http://www.youramazingplaces.com/hallelujah-mountains-china/][Hallelujah Mountains]].
   - [[https://goo.gl/maps/yP03w][Houhai Lake]] (Beijing). Miscellaneous bars.
   - [[https://twitter.com/planetepics/status/613968121498632192][Luotuofeng peak, Sichuan]].
@@ -1571,6 +1638,7 @@ Generating diagram:
   - [[http://joi.ito.com/weblog/2014/09/01/shenzhen-trip-r.html][Shenzhen]] (Hong Kong). The worlds manufacturing ecosystem.
   - [[http://arts.cultural-china.com/en/85Arts192.html][Suspended Temple of Mt. Hengshan]].
   - [[http://www.lonelyplanet.com/round-the-world-travel/best-of-round-the-world-travel/content/travel-tips-and-articles/77807][The essential guide to backpacking China's silk road]].
+  - [[https://en.wikipedia.org/wiki/Zhangjiajie_National_Forest_Park][Zhangjiajie National Forest Park]].
 * [2015-03-18 Wed] [[#south-korea-travel-backlog][#]] South Korea travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: south-korea-travel-bookmarks
@@ -1853,13 +1921,14 @@ bl
   - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
   - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
-  - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
   - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
   - [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][Writing Specs with Org-mode]].
 * [2015-03-08 Sun] [[#london-food-backlog][#]] London food backlog
   :PROPERTIES:
   :CUSTOM_ID: london-food-backlog
   :END:
+*** Edware road
+***** TODO GOGI (korean): [[http://gogi-restaurant.com]].
 *** Hammersmith
 ***** DONE [[http://indian-zing.co.uk/][Indian Zing]] (Indian): It was OK.
 *** Islington
@@ -1892,8 +1961,10 @@ bl
   :CUSTOM_ID: ux-bookmarks
   :END:
   :MODIFIED:
-  [2015-07-29 Wed]
+  [2015-10-09 Fri]
   :END:
+  - [[https://99designs.com/designer-blog/2014/01/20/11-kerning-tips/][10 kerning tips for improving your typography]].
+  - [[http://line25.com/inspiration/flat-design-color-palettes][30 Flat Design Color Palettes That Just Work]].
   - [[http://tympanus.net/Development/AnimatedSVGIcons/][Animated SVG icons]].
   - [[https://developer.apple.com/design/tips/][Apple's UI design Dos and Don'ts]].
   - [[https://www.behance.net/gallery/18006477/California-Magazine][California magazine]].
@@ -1901,10 +1972,13 @@ bl
   - [[http://deathtothestockphoto.com/stories/][Death to Stock (stock photos)]].
   - [[http://evil-icons.io][Evil icons]].
   - [[http://www.fontsquirrel.com/][Font squirrel (free fonts for commercial use)]].
+  - [[http://www.underconsideration.com/brandnew/archives/logo_modernism.php#.VhRP_HvoVE4][Logo Modernism (Book)]].
   - [[http://makerbook.net/][Makerbook: A hand-picked directory of the best free resources for creatives]].
   - [[http://www.typewolf.com/blog/most-popular-fonts-of-2014][Ten most popular webfonts of 2014]].
+  - [[http://inkbotdesign.com/100-best-design-blogs/][The 100 Best Design Blogs to Follow]].
   - [[http://www.codelitt.com/blog/the-foundations-of-a-good-ui/][The Foundations of a Good UI]].
   - [[http://www.methodsandtools.com/archive/archive.php?id=126][The Psycology of UX]].
+  - [[http://typographica.org/][Typographica (type reviews, books, commentary)]].
 * [2015-03-07 Sat] [[#unix-linux-tips-backlog][#]] Unix/Linux tips backlog
   :PROPERTIES:
   :CUSTOM_ID: unix-linux-tips-backlog
@@ -1995,18 +2069,24 @@ bl
   - [[http://www.fonts2u.com/raleway-heavy.font][Raleway Font]].
   - [[http://nsainsbury.svbtle.com/java-developers][Svbtle]]: A post on java developers. Enjoyed its minimalistic layout.
   - [[http://whereis-whoishiring-hiring.me/][whereis-whoishiring-hiring.me (minimalistic categorization)]].
+* [2015-10-09 Fri] [[#travel-blog-bookmarks][#]] Travel blog bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: travel-blog-bookmarks
+  :END:
+  - [[http://onestep4ward.com/][One Step 4Ward]].
 * [2015-03-06 Fri] [[#travel-bookmarks][#]] Travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-09-18 Fri]
+  [2015-10-09 Fri]
   :END:
   - [[http://www.buzzfeed.com/ariannarebolini/totally-breathtaking-trails-to-hike-before-you-die#.chOolMjWA][21 Totally Breathtaking Trails]].
   - [[http://cnnespanol.cnn.com/2015/09/15/5-increibles-escapadas-a-islas-que-quizas-nunca-has-considerado/][5 increíbles escapadas a islas que quizás nunca has considerado]].
   - [[http://www.lonelyplanet.com/walking-and-trekking/best-of-walking-and-trekking/content/travel-tips-and-articles/a-beginners-guide-to-the-art-of-hiking][A beginner's guide to the art of hiking]].
   - [[http://abitofculture.net/][abitofculture.net]].
   - [[http://www.alexinwanderland.com/][Alex in wanderland]].
+  - [[http://imgur.com/a/m9YjK][Amazing places around the world]].
   - [[http://www.backpacksandbunkbeds.co.uk/][Backpacks and Bunkbeds]].
   - [[http://beyondblighty.com/][Beyond blighty]].
   - [[http://www.blouinartinfo.com/travel][BLOUINARTINFO+TRAVEL]].
@@ -2014,6 +2094,7 @@ bl
   - [[http://www.girltweetsworld.com/][Girl tweets world]].
   - [[http://www.quora.com/How-does-it-feel-to-travel-alone][How does it feel to travel alone? (Quora)]].
   - [[http://www.lonelyplanet.com/round-the-world-travel/best-of-round-the-world-travel/content/travel-tips-and-articles/how-to-pack-light-tips-from-a-master-packer][How to pack light: tips from a master packer]].
+  - [[http://fourhourworkweek.com/2013/07/14/how-to-travel-21-contrarian-rules/][How to travel: 21 Contrarian rules]].
   - [[http://joestrippin.blogspot.co.uk/][Joe's Trippin' A few tales from the road by a modern day nomad]].
   - [[http://www.legalnomads.com/][Legal nomads]].
   - [[http://www.needanotherholiday.com/][Need another holiday]].
@@ -2032,6 +2113,7 @@ bl
   - [[http://www.travelistly.com/tv][Travelistly TV (high quality travel content)]].
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/tried-and-tested-tips-for-a-trouble-free-road-trip][Tried and tested tips for a trouble free road trip]].
   - [[http://www.two-fortheroad.com/][Two for the road]].
+  - [[https://www.lonelyplanet.com/travel-tips-and-articles/ultimate-travel-list-lonely-planets-top-10-sights-in-the-world][Ultimate travel list: Lonely Planet's top 10 sights in the world]].
   - [[http://vagabondbaker.com/][Vagabond Baker]].
   - [[http://world.dailysecret.com/world/en][World daily secret]].
   - [[https://plus.google.com/collection/IW-dY][World food and drink]].
@@ -2042,10 +2124,10 @@ bl
   :CUSTOM_ID: startup-bookmarks
   :END:
   :MODIFIED:
-  [2015-08-26 Wed]
+  [2015-10-11 Sun]
   :END:
-  - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
   - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (HN)]].
+  - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
   - [[http://sidejobr.com/help/19-amazing-sites-get-free-stock-photos/][19 Amazing Sites To Get Free Stock Photos]].
   - [[https://landscape.io][A Dashboard for your Code]].
   - [[https://news.ycombinator.com/item?id=9923709][A guide to PR for startups (HN)]].
@@ -2055,6 +2137,7 @@ bl
   - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform?utm_campaign=Socialflow&utm_source=Socialflow&utm_medium=Tweet][Answer these questions about potential digital platform]].
   - [[https://appfigures.com/][AppFigures:]] App tracking platform.
   - [[https://github.com/AppScale/appscale][AppScale, The Open Source Implementation of Google App Engine]].
+  - [[https://news.ycombinator.com/item?id=9561127][Ask HN: Simple alternative to Google Analytics]].
   - [[https://news.ycombinator.com/item?id=9667247][Ask HN: What tools do you use to build HTML emails?]]
   - [[https://www.owasp.org/index.php/Authentication_Cheat_Sheet][Authentication Cheet Sheet]].
   - [[https://docs.google.com/spreadsheet/ccc?key%3D0Al7M8fgKPXoidENFa0M5VnJpb3pMeHQtS0RDcHFvY1E&usp%3Dsharing#gid%3D0][BaaS comparison]].
@@ -2086,6 +2169,7 @@ bl
   - [[http://www.looker.com][Looker (Data analysis)]].
   - [[https://lmjabreu.com/][Luis Abreu, iOS Design/UX Specialist]].
   - [[https://www.mapbox.com/][Mapbox. Maps for iOS, Android and Web]].
+  - [[https://github.com/mapsme/omim/blob/master/README.md][MAPS.ME (open sourced)]].
   - [[https://github.com/jessesquires/JSQMessagesViewController][Messaging UI for iOS]].
   - [[http://mobilenighthawk.com/][Nighthawk (Debug iOS apps remotely from your browser)]].
   - [[http://officesnapshots.com/][Office Snapshots]].
@@ -2106,6 +2190,7 @@ bl
   - [[https://www.sendwithus.com/resources/guide/][Send email like a startup]].
   - [[https://shareasimage.com/][Share as image]].
   - [[http://blog.samaltman.com/startup-advice-briefly][Startup advice, briefly]].
+  - [[https://www.firebase.com/docs/android/guide/structuring-data.html][Structuring JSON data in your Firebase database]].
   - [[http://t.co/5WUoz5BwtT][Submit.co: Press coverage for your startup]].
   - [[http://submit.co/][submit.co: Where to get press coverage for your startup]].
   - [[http://swagger.io/][Swagger]]: Represent REST API.
@@ -2143,6 +2228,7 @@ bl
   - [[http://digital-era.net/][Digital Era]].
   - [[http://adi.is/s/cpunk20/#21][New privacy tools]].
   - [[http://digital-era.net/tor-use-best-practices/][Tor use - best practices]].
+  - [[http://www.idealistrevolution.org/google-has-gathered-a-ton-of-info-on-you-heres-how-to-delete-it/][Google Has Gathered A Ton Of Info On You. Here’s How To Delete It]].
 * [2015-03-06 Fri] [[#mindfulness-bookmarks][#]] Mindfulness bookmarks
   :PROPERTIES:
   :CUSTOM_ID: mindfulness-bookmarks
@@ -2213,7 +2299,7 @@ bl
   :CUSTOM_ID: go-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-04 Sun]
+  [2015-10-06 Tue]
   :END:
   - [[http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+spf13+%28Steve+Francia%27s+Blog%29][7 Common mistakes in Go]].
   - [[https://github.com/iangudger/basicGoAPI][BasicGoAPI (ie. REST)]].
@@ -2221,6 +2307,7 @@ bl
   - [[http://blog.wercker.com/2013/08/07/building-an-api-with-golang-rethinkdb-wercker.html][Building an API with Golang, RethinkDB and wercker]].
   - [[https://godoc.org/golang.org/x/tools/cmd/vet][Command vet (reports suspicious constructs)]].
   - [[http://www.kotancode.com/2015/09/10/complex-json-handling-in-go/][Complex json handling in Go]].
+  - [[https://github.com/adrianduke/configr][Configr: abstraction on top of configuration sources]].
   - [[http://biasedbit.com/blog/golang-custom-transports/][Custom transports and timeouts]].
   - [[https://github.com/elcct/defaultproject][defaultproject (REST/web starter)]].
   - [[http://words.volant.is/articles/authentication-golang-web-applications/][End-user authentication for Go web applications]].
@@ -2241,6 +2328,7 @@ bl
   - [[https://golang.org/doc/code.html][How to Write Go Code]].
   - [[https://github.com/kubernetes/kubernetes/blob/master/Godeps/Godeps.json][Kubernetes godeps]].
   - [[http://bouk.co/blog/monkey-patching-in-go/][Monkey Patching in Go]].
+  - [[https://github.com/m3ng9i/ran][Ran: a simple static web server written in Go]].
   - [[http://www.linkedin.com/pulse/restful-webservice-using-golang-sqlite-uttam-gandhi][Restful webservice using golang with sqlite]].
   - [[http://revel.github.io/][Revel:]] A high-productivity web framework for the Go language.
   - [[https://bitbucket.org/seanerussell/sashay][Sashay Go codegen]].
@@ -2464,7 +2552,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2015-08-22 Sat]
+  [2015-10-09 Fri]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
@@ -2511,6 +2599,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://revealapp.com][Reveal]].
   - [[https://github.com/facebook/Shimmer][Shimmer: Shimmer is an easy way to add a shimmering effect to any view in your app]].
   - [[http://subjc.com][Subjective-C]].
+  - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
   - [[http://swiftmonthly.com/][SwiftMothly]].
   - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
   - [[https://github.com/zh-wang/TwitterGifComposer][Twitter GIF composer]].
@@ -2658,13 +2747,15 @@ If FROM or TO is negative, it counts from the end.
   :PROPERTIES:
   :CUSTOM_ID: video-backlog
   :END:
+*** TODO [[https://vimeo.com/139910837?ref%3Dtw-share][12 Challenging Steps to Being a Better Interviewer – Cate Huston at The Lead Developer 2015]].
+*** TODO [[https://www.youtube.com/playlist?list%3DPLBDA2E52FB1EF80C9][John Green's "Crash Course History" videos]].
 *** TODO Graham Hancock – The War on Consciousness.
 *** TODO [[https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N][The Internets own boy]].
 *** TODO Nick Hanauer – Rich People Don’t Create Jobs.
+*** TODO [[https://www.youtube.com/watch?v%3D8o46HH-TfNY][Born Rich: Children Of The Insanely Wealthy]].
 *** TODO Rupert Sheldrake – The Science of Delusion.
 *** TODO [[https://www.youtube.com/watch?v%3DVXTpTRuPiPQ][Surya Namaskar stretches]].
 *** TODO [[https://www.youtube.com/watch?v%3DSwkjqGd8NC4][How to win the loser's game]].
-*** TODO [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
 *** TODO [[http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm][The emacs of distros]].
 *** TODO [[http://www.nfb.ca/film/griefwalker?utm_content%3dbuffer24b02&utm_medium%3dsocial&utm_source%3dtwitter.com&utm_campaign%3dbuffer][Griefwalker]].
 *** TODO [[https://www.youtube.com/watch?v%3dbkdt9bfh5gs][Frugal fire 002: justin mccurry (rootofgood)]].
@@ -2728,6 +2819,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://en.wikipedia.org/wiki/On_the_Road][On the Road, by Jack Kerouac]].
   - [[https://librivox.org/search?primary_key=0&search_category=title&search_page=1&search_form=get_results][Public domain audio books]].
   - [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Royal horticultural society's organic Gardening]].
+  - [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
   - [[http://www.amazon.co.uk/madhur-jaffreys-ultimate-curry-bible/dp/0091874157/ref=sr_1_3?ie=utf8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate curry bible]].
   - [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
   - [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Veg patch]].
@@ -2800,7 +2892,7 @@ If FROM or TO is negative, it counts from the end.
     see [[http://oremacs.com/2015/01/05/youtube-dl/][or emacs]].
 *** clang indexing tool
     see [[http://ffevotte.github.io/clang-tags/][clang-tags]].
-*** project management for c/c++
+*** project management for C/C++
     see [[https://github.com/lefterisjp/malinka][malinka]].
 *** git modes
     see [[https://github.com/magit/git-modes][git-modes]].
@@ -3060,6 +3152,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][Javascript development environment]].
   - [[http://www.lunaryorn.com/][Lunarsite]].
   - [[http://zeekat.nl/articles/making-emacs-work-for-me.html][Making Emacs work for me]].
+  - [[http://endlessparentheses.com/ispell-and-org-mode.html][Making Ispell work with org-mode]].
   - [[http://www.masteringemacs.org][Mastering Emacs]].
   - [[http://truongtx.me/2013/03/10/emacs-setting-up-perfect-environment-for-cc-programming][More emacs C++ goodness]]: More emacs dev environment tips.
   - [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][My Emacs Configuration with use-package]].
@@ -3078,6 +3171,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://sachachua.com][Sachua Chua]].
   - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
   - [[https://www.reddit.com/r/emacs/comments/370k9p/stock_emacs_tips/][Stock Emacs tips (Reddit)]].
+  - [[https://github.com/ananthakumaran/tide][Tide: TypeScript Interactive Development Environment for Emacs]].
   - [[http://truongtx.me/categories.html#emacs-ref][Trần Xuân Trường's Emacs posts]].
   - [[http://tuhdo.github.io/c-ide.html][Tuhdo's C/C++ dev on Emacs]].
   - [[http://tv.uvigo.es/gl/serial/513.html][Universidad de Vigo's Emacs course]].
@@ -3114,6 +3208,11 @@ If FROM or TO is negative, it counts from the end.
 #+END_SRC
 *** Solarized
     Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs][post]] to get solarized on gnome-terminal.
+* [2015-10-09 Fri] [[#cpp-bookmarks][#]] C++ bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: cpp-bookmarks
+  :END:
+  - [[https://github.com/isocpp/CppCoreGuidelines][C++ Core Guidelines]].
 * [2014-07-14 Mon] [[#java-bookmarks][#]] Java bookmarks
   :PROPERTIES:
   :CUSTOM_ID: java-bookmarks
@@ -3125,35 +3224,53 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.odi.ch/prog/design/newbies.php#21][Java anti-patterns]].
   - [[http://www.angelikalanger.com/GenericsFAQ/JavaGenericsFAQ.html][Java Generics FAQs]].
   - [[https://code.google.com/p/lanterna/][Lanterna]], a text GUI (a la ncurses) written in Java.
+* [2014-07-14 Mon] [[#javascript-bookmarks][#]] Javascript bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: javascript-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-10-06 Tue]
+  :END:
+  - [[https://github.com/ivopetkov/responsively-lazy][A better way to lazy load responsive images]].
+  - [[https://news.ycombinator.com/item?id=9822975][Airbnb JavaScript Style Guide]].
+  - [[http://rrees.me/2015/06/04/overview-of-javascript-reactive-frameworks/][An overview of JavaScript reactive frameworks]].
+  - [[https://babeljs.io/][Babel Javascript compiler]].
+  - [[http://www.helloerik.com/the-subtle-magic-behind-why-the-bootstrap-3-grid-works][Bootstrap 3 grid]].
+  - [[https://slides.com/concise/js/fullscreen#/][Concise JavaScript intro]].
+  - [[http://dynamicsjs.com/][Dynamics.js: JavaScript library to create physics-based CSS animations]].
+  - [[http://eloquentjavascript.net][Eloquent JavaScript (Book)]].
+  - [[http://exploringjs.com/][Expliring ES6: Upgrade to the next version of JavaScript (Book)]].
+  - [[http://famous.org/][Famous Javascript library for animations & interfaces]].
+  - [[http://www.sencha.com/blog/hidden-gems-in-chrome-developer-tools/][Hidden gems in Chrome Developer Tools]].
+  - [[https://blog.famous.org/introducing-the-famous-framework/][Introducing the Famous framework]].
+  - [[https://developer.mozilla.org/en-US/Learn][Learning the Web (mozilla.org)]].
+  - [[http://jscs.info/][JSCS linter]].
+  - [[http://www.nateberkopec.com/2015/10/07/frontend-performance-chrome-timeline.html][Ludicrously Fast Page Loads - A Guide for Full-Stack Devs]].
+  - [[http://www.larryullman.com/books/modern-javascript-develop-and-design/table-of-contents/][Modern JavaScript: Develop and Design (book)]].
+  - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
+  - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
+  - [[http://jonobr1.github.io/two.js][Two.js is a two-dimensional drawing api geared towards modern web browsers]].
+  - [[http://bjorn.tipling.com/state-and-regular-expressions-in-javascript][What you should know about JavaScript regular expressions]].
 * [2014-07-14 Mon] [[#html5-bookmarks][#]] HTML5 bookmarks
   :PROPERTIES:
   :CUSTOM_ID: html5-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-08 Thu]
+  [2015-09-19 Sat]
   :END:
-  - [[https://github.com/ivopetkov/responsively-lazy][A better way to lazy load responsive images]].
-  - [[https://news.ycombinator.com/item?id=9822975][Airbnb JavaScript Style Guide]].
-  - [[http://rrees.me/2015/06/04/overview-of-javascript-reactive-frameworks/][An overview of JavaScript reactive frameworks]].
-  - [[http://www.helloerik.com/the-subtle-magic-behind-why-the-bootstrap-3-grid-works][Bootstrap 3 grid]].
   - [[http://blog.chromium.org/2014/06/web-fundamentals-and-web-starter-kit.html][Chromium's web fundamentals and Web Starter Kit]].
-  - [[https://slides.com/concise/js/fullscreen#/][Concise JavaScript intro]].
   - [[http://cssguidelin.es][CSS style guide]].
-  - [[http://dynamicsjs.com/][Dynamics.js: JavaScript library to create physics-based CSS animations]].
-  - [[http://famous.org/][Famous Javascript library for animations & interfaces]].
-  - [[http://www.sencha.com/blog/hidden-gems-in-chrome-developer-tools/][Hidden gems in Chrome Developer Tools]].
   - [[http://blog.ustunozgur.com/javascript/programming/books/videos/2015/06/17/how_to_be_a_great_javascript_software_developer.html][How to Become a Great JavaScript Developer]].
-  - [[https://news.ycombinator.com/item?id%3D9405284][howtocenterincss.com (HN)]].
-  - [[http://howtocenterincss.com/][howtocenterincss.com]].
-  - [[https://blog.famous.org/introducing-the-famous-framework/][Introducing the Famous framework]].
+  - [[https://news.ycombinator.com/item?id%3D9405284][Howtocenterincss.com (HN)]].
+  - [[http://howtocenterincss.com/][Howtocenterincss.com]].
   - [[https://developer.mozilla.org/en-US/Learn][Learning the Web (mozilla.org)]].
-  - [[http://www.nateberkopec.com/2015/10/07/frontend-performance-chrome-timeline.html][Ludicrously Fast Page Loads - A Guide for Full-Stack Devs]].
-  - [[http://www.larryullman.com/books/modern-javascript-develop-and-design/table-of-contents/][Modern JavaScript: Develop and Design (book)]].
-  - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
-  - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
   - [[https://philipwalton.github.io/solved-by-flexbox/][Solved by Flexbox]].
-  - [[http://jonobr1.github.io/two.js][Two.js is a two-dimensional drawing api geared towards modern web browsers]].
   - [[https://gist.github.com/paulirish/5d52fb081b3570c81e3a][What forces a layout / reflow]].
+* [2014-07-14 Mon] [[#networking-bookmarks][#]] Networking bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: networking-bookmarks
+  :END:
+  - [[http://cr.yp.to/djbdns/tools.html][Command-line tools to look up DNS information]].
 * [2014-07-13 Sun] [[#python-bookmarks][#]] Python bookmarks
   :PROPERTIES:
   :CUSTOM_ID: python-bookmarks
@@ -3184,28 +3301,33 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2015-09-18 Fri]
+  [2015-10-10 Sat]
   :END:
   - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
   - [[https://www.expeditedssl.com/aws-in-plain-english][AWS in plain English]].
   - [[http://robertmuth.blogspot.it/2012/08/better-bash-scripting-in-15-minutes.html][Better Bash scripting in 15 Minutes]].
+  - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][Bozhidar Batsov's presentation (lots of great books listed)]].
   - [[http://arturoherrero.com/clean-code/][Clean code]].
   - [[http://kevinlondon.com/2015/05/05/code-review-best-practices.html][Code review best practices]].
   - [[http://www.cs.usfca.edu/~galles/visualization/Algorithms.html][Data structure visualization]].
   - [[https://github.com/rxin/db-readings][Database readings]].
   - [[http://mollyrocket.com/casey/stream_0028.html][Designing and evaluating reusable components]]: Talk by Casey Muratori.
   - [[http://doc.qt.digia.com/qq/qq13-apis.html][Designing Qt-Style C++ APIs]].
+  - [[http://www.amazon.co.uk/Domain-driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=sr_1_1?ie=UTF8&qid=1444472442&sr=8-1&keywords=domain+driven+design][Domain-driven design: Tackling Complexity in the Heart of Software (Book)]].
   - [[https://google-styleguide.googlecode.com/svn/trunk/shell.xml][Google shell style guide]].
   - [[http://hackershelf.com/browse/?popular=1][Hacker shelf: Free software dev books]].
   - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
   - [[http://sheredom.wordpress.com/2014/08/10/how-to-design-api-function-that-creates-something/][How to design API function creating objects]]: By Neil Henning.
   - [[https://github.com/lfit/itpol/blob/master/linux-workstation-security.md][Linux workstation security checklist]].
   - [[http://robertheaton.com/2015/08/31/migrating-bajillions-of-database-records-at-stripe/][Migrating bajillions of database records at Stripe]].
+  - [[https://www.quora.com/How-does-Login-with-Facebook-option-work-on-third-party-websites][OAuth diagram/explanation (Quora)]].
+  - [[http://www.amazon.co.uk/Refactoring-Improving-Design-Existing-Technology/dp/0201485672/ref=sr_1_1?ie=UTF8&qid=1444472751&sr=8-1&keywords=refactoring+improving+the+design+of+existing+code][Refactoring: Improving the design of existing code (Book)]].
   - [[https://bourgeois.me/rest/][Some REST best practices]].
   - [[http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/][Structure and Interpretation of Computer Programs]] (videos).
   - [[http://www.norvig.com/21-days.html][Teach Yourself Programming in Ten Years]].
   - [[https://github.com/jlevy/the-art-of-command-line][The art of command line]].
   - [[http://www4.in.tum.de/~blanchet/api-design.pdf][The Little Manual of API Design (Jasmin Blanchette, Trolltech)]].
+  - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][The passionate programmer]].
   - [[http://robots.thoughtbot.com/a-tmux-crash-course][Tmux crash course]]: By Josh Clayton.
   - [[http://www.comp.nus.edu.sg/~stevenha/visualization/][VisuAlgo.net]]: Visualising data structures and algorithms through animation.
 * [2013-11-04 Mon] [[#some-python-idioms][#]] Some python idioms
