@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-10-17 Sat] [[#get-emacs-to-gather-links-in-posts][#]] Get Emacs to gather links in posts
+  :PROPERTIES:
+  :CUSTOM_ID: get-emacs-to-gather-links-in-posts
+  :END:
+  Comments in posts can be a great source of recommendations. Here's a way to extract post links using Emacs and [[http://github.com/zweifisch/enlive][enlive]].
+
+[[file:images/get-emacs-to-gather-urls-in-posts/emacs-enlive-url-fetch.gif]]
+#+BEGIN_SRC emacs-lisp
+  (require 'enlive)
+  (require 'org)
+
+  (defun ar/url-view-links-at (url)
+    "View external links in HTML at URL location."
+    (interactive "s URL: ")
+    (with-current-buffer (get-buffer-create "*links*")
+      (org-mode)
+      (read-only-mode -1)
+      (erase-buffer)
+      (mapc (lambda (element)
+              (let ((href (enlive-attr element 'href))
+                    (text (enlive-text element)))
+                (when (and href (string-match "^http" href))
+                  (insert (org-make-link-string href text) "\n"))))
+            (enlive-query-all (enlive-fetch url) [a]))
+      (delete-duplicate-lines (point-min) (point-max))
+      (goto-char (point-min))
+      (toggle-truncate-lines +1)
+      (read-only-mode +1)
+      (switch-to-buffer (current-buffer))))
+
+#+END_SRC
 * [2015-10-16 Fri] [[#ux-toolbox-bookmarks][#]] UX toolbox bookmarks
   :PROPERTIES:
   :Custom_ID: ux-toolbox-bookmarks
@@ -260,19 +291,21 @@
   :CUSTOM_ID: react-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-13 Tue]
+  [2015-10-14 Wed]
   :END:
+  - [[https://css-tricks.com/snippets/css/a-guide-to-flexbox/][A Complete Guide to Flexbox]].
   - [[https://github.com/syrusakbary/react-native-refresher/blob/master/README.md][A pull to refresh ListView for React Native]].
   - [[http://moduscreate.com/aligning-children-using-flexbox-in-react-native/][Aligning Children using Flexbox in React Native]].
   - [[https://www.youtube.com/watch?v=xsSnOQynTHs][Dan Abramov - Live React: Hot Reloading with Time Travel at react-europe 2015]].
+  - [[https://medium.com/@shaheenghiassy/deep-diving-react-native-debugging-ea406ed3a691][Deep Diving React Native Debugging]].
   - [[http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/][ECMAScript 5 Strict Mode, JSON, and More]].
   - [[https://github.com/facebook/react-native/issues/499#issuecomment-128836161][ListView rendering issue]].
   - [[https://github.com/geirman/offlineMovies][OfflineMovies: retrieves movies from an api and caches the result offline]].
   - [[https://corbt.com/posts/2015/09/16/one-day-with-react-native-for-android.html][One day with React Native for Android]].
   - [[https://github.com/naoufal/react-native-accordion][React Native accordion]].
   - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React Native Animated ScrollView Row Swipe Actions]].
-  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React Native Animated ScrollView Row Swipe Actions]].
   - [[http://moduscreate.com/react-native-layout-system/][React Native Layout System]].
+  - [[https://github.com/xinthink/react-native-material-kit][React Native Material Design]].
   - [[http://npm.taobao.org/package/react-native-scrollable-decorator][React Native scrollable decorator]].
   - [[https://github.com/marty-wang/react-native-toolkit][React Native Toolkit (navigation examples)]].
   - [[http://www.raywenderlich.com/99473/introducing-react-native-building-apps-javascript][React Native Tutorial: Building Apps with JavaScript]].
@@ -2837,6 +2870,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://en.wikipedia.org/wiki/On_the_Road][On the Road, by Jack Kerouac]].
   - [[https://librivox.org/search?primary_key=0&search_category=title&search_page=1&search_form=get_results][Public domain audio books]].
   - [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Royal horticultural society's organic Gardening]].
+  - [[http://www.salmanrushdie.com/books/][Salman Rushdie books]].
   - [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
   - [[http://www.amazon.co.uk/madhur-jaffreys-ultimate-curry-bible/dp/0091874157/ref=sr_1_3?ie=utf8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate curry bible]].
   - [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
@@ -3320,9 +3354,10 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-10 Sat]
+  [2015-10-13 Tue]
   :END:
   - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
+  - [[http://www.cs.bsu.edu/homepages/pvg/misc/uml/][All the UML you need to know]].
   - [[https://www.expeditedssl.com/aws-in-plain-english][AWS in plain English]].
   - [[http://robertmuth.blogspot.it/2012/08/better-bash-scripting-in-15-minutes.html][Better Bash scripting in 15 Minutes]].
   - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][Bozhidar Batsov's presentation (lots of great books listed)]].
