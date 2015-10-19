@@ -9,27 +9,40 @@
 
 [[file:images/get-emacs-to-gather-urls-in-posts/emacs-enlive-url-fetch.gif]]
 #+BEGIN_SRC emacs-lisp
-  (require 'enlive)
-  (require 'org)
+   (require 'enlive) ;; https://github.com/zweifisch/enlive
+   (require 'org)
 
-  (defun ar/url-view-links-at (url)
-    "View external links in HTML at URL location."
-    (interactive "s URL: ")
-    (with-current-buffer (get-buffer-create "*links*")
-      (org-mode)
-      (read-only-mode -1)
-      (erase-buffer)
-      (mapc (lambda (element)
-              (let ((href (enlive-attr element 'href))
-                    (text (enlive-text element)))
-                (when (and href (string-match "^http" href))
-                  (insert (org-make-link-string href text) "\n"))))
-            (enlive-query-all (enlive-fetch url) [a]))
-      (delete-duplicate-lines (point-min) (point-max))
-      (goto-char (point-min))
-      (toggle-truncate-lines +1)
-      (read-only-mode +1)
-      (switch-to-buffer (current-buffer))))
+
+   (defun ar/input-clipboard-url-or-prompt ()
+     "Return a URL from clipboard or prompt user for one."
+     (let* ((clipboard (current-kill 0))
+            (url (if (string-match "^http://" clipboard)
+                     clipboard
+                   (read-string "URL: "))))
+       (unless (string-match "^http://" url)
+         (error "Not a URL"))
+       url))
+
+   (defun ar/url-view-links-at ()
+     "View external links in HTML from prompted URL or clipboard."
+     (interactive)
+     (with-current-buffer (get-buffer-create "*links*")
+       (org-mode)
+       (read-only-mode -1)
+       (erase-buffer)
+       (mapc (lambda (element)
+               (let ((href (enlive-attr element 'href))
+                     (text (enlive-text element)))
+                 (when (and href (string-match "^http" href))
+                   (insert (org-make-link-string href text) "\n"))))
+             (enlive-query-all
+              (enlive-fetch (ar/input-clipboard-url-or-prompt))
+              [a]))
+       (delete-duplicate-lines (point-min) (point-max))
+       (goto-char (point-min))
+       (toggle-truncate-lines +1)
+       (read-only-mode +1)
+       (switch-to-buffer (current-buffer))))
 
 #+END_SRC
 * [2015-10-16 Fri] [[#ux-toolbox-bookmarks][#]] UX toolbox bookmarks
