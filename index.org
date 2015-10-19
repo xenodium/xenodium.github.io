@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-10-17 Sat] [[#get-emacs-to-gather-links-in-posts][#]] Get Emacs to gather links in posts
+  :PROPERTIES:
+  :CUSTOM_ID: get-emacs-to-gather-links-in-posts
+  :END:
+  Comments in posts can be a great source of recommendations. Here's a way to extract post links using Emacs and [[http://github.com/zweifisch/enlive][enlive]].
+
+[[file:images/get-emacs-to-gather-urls-in-posts/emacs-enlive-url-fetch.gif]]
+#+BEGIN_SRC emacs-lisp
+  (require 'enlive)
+  (require 'org)
+
+  (defun ar/url-view-links-at (url)
+    "View external links in HTML at URL location."
+    (interactive "s URL: ")
+    (with-current-buffer (get-buffer-create "*links*")
+      (org-mode)
+      (read-only-mode -1)
+      (erase-buffer)
+      (mapc (lambda (element)
+              (let ((href (enlive-attr element 'href))
+                    (text (enlive-text element)))
+                (when (and href (string-match "^http" href))
+                  (insert (org-make-link-string href text) "\n"))))
+            (enlive-query-all (enlive-fetch url) [a]))
+      (delete-duplicate-lines (point-min) (point-max))
+      (goto-char (point-min))
+      (toggle-truncate-lines +1)
+      (read-only-mode +1)
+      (switch-to-buffer (current-buffer))))
+
+#+END_SRC
 * [2015-10-08 Thu] [[#change-emacs-shells-cwd-with-helm-projectile][#]] Change Emacs shell's CWD with helm projectile
   :PROPERTIES:
   :CUSTOM_ID: change-emacs-shells-cwd-with-helm-projectile
@@ -255,22 +286,27 @@
   :CUSTOM_ID: react-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-10 Sat]
+  [2015-10-14 Wed]
   :END:
+  - [[https://css-tricks.com/snippets/css/a-guide-to-flexbox/][A Complete Guide to Flexbox]].
   - [[https://github.com/syrusakbary/react-native-refresher/blob/master/README.md][A pull to refresh ListView for React Native]].
   - [[http://moduscreate.com/aligning-children-using-flexbox-in-react-native/][Aligning Children using Flexbox in React Native]].
+  - [[https://www.youtube.com/watch?v=xsSnOQynTHs][Dan Abramov - Live React: Hot Reloading with Time Travel at react-europe 2015]].
+  - [[https://medium.com/@shaheenghiassy/deep-diving-react-native-debugging-ea406ed3a691][Deep Diving React Native Debugging]].
   - [[http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/][ECMAScript 5 Strict Mode, JSON, and More]].
   - [[https://github.com/facebook/react-native/issues/499#issuecomment-128836161][ListView rendering issue]].
+  - [[https://github.com/geirman/offlineMovies][OfflineMovies: retrieves movies from an api and caches the result offline]].
   - [[https://corbt.com/posts/2015/09/16/one-day-with-react-native-for-android.html][One day with React Native for Android]].
-  - [[https://github.com/naoufal/react-native-accordion][React native accordion]].
-  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React native Animated ScrollView Row Swipe Actions]].
+  - [[https://github.com/naoufal/react-native-accordion][React Native accordion]].
+  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React Native Animated ScrollView Row Swipe Actions]].
   - [[http://moduscreate.com/react-native-layout-system/][React Native Layout System]].
-  - [[http://npm.taobao.org/package/react-native-scrollable-decorator][React native scrollable decorator]].
-  - [[https://github.com/marty-wang/react-native-toolkit][React native Toolkit (navigation examples)]].
-  - [[http://www.raywenderlich.com/99473/introducing-react-native-building-apps-javascript][React native Tutorial: Building Apps with JavaScript]].
-  - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React-native Animated ScrollView Row Swipe Actions]].
+  - [[https://github.com/xinthink/react-native-material-kit][React Native Material Design]].
+  - [[http://npm.taobao.org/package/react-native-scrollable-decorator][React Native scrollable decorator]].
+  - [[https://github.com/marty-wang/react-native-toolkit][React Native Toolkit (navigation examples)]].
+  - [[http://www.raywenderlich.com/99473/introducing-react-native-building-apps-javascript][React Native Tutorial: Building Apps with JavaScript]].
+  - [[https://github.com/rackt/redux][Redux: Predictable state container for JavaScript apps]].
   - [[http://jlongster.com/Removing-User-Interface-Complexity,-or-Why-React-is-Awesome][Removing User Interface Complexity, or Why React is Awesome]].
-  - [[http://www.schibsted.pl/2015/10/testing-react-native-components-with-jest/][Testing react native with jest]].
+  - [[http://www.schibsted.pl/2015/10/testing-react-native-components-with-jest/][Testing react Native with jest]].
   - [[http://blog.zmxv.com/2015/09/what-i-learned-from-building-react.html][What I learned from building with React]].
   - [[http://addyosmani.com/writing-modular-js/][Writing Modular JavaScript With AMD, CommonJS & ES Harmony]].
 * [2015-09-16 Wed] [[#chinese-rice-vinegar][#]] Chinese rice vinegar
@@ -428,7 +464,6 @@ file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
   :END:
   - [[https://twitter.com/stevemagness/status/633778359156125696?refsrc%3Demail&s%3D11]["Being good at something is about being curious enough to explore things to a level where most people give up."]]
   - "The world is a book and those who do not travel read only one page." - Augustine of Hippo.
-  - 
 * [2015-08-13 Thu] [[#bhutan-travel-bookmarks][#]] Bhutan travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: bhutan-travel-bookmarks
@@ -1190,7 +1225,7 @@ build_clang
   :PROPERTIES:
   :CUSTOM_ID: programmatic-ios-auto-layout
   :END:
-  Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html][Adopting Auto Layout]] and [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html][Visual Format language]] for reference.
+  Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html][Adopting Auto Layout]] and [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage.html][Visual Format language]] for reference.
 #+BEGIN_SRC objc
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
@@ -1877,6 +1912,7 @@ bl
   :PROPERTIES:
   :CUSTOM_ID: photography-bookmarks
   :END:
+  - [[https://github.com/Jack000/Expose][Exposé, A simple static site generator for photoessays]].
 * [2015-03-08 Sun] [[#paris-travel-backlog][#]] Paris travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: paris-travel-bookmarks
@@ -2247,10 +2283,11 @@ bl
   :CUSTOM_ID: lifestyle-bookmarks
   :END:
   :MODIFIED:
-  [2015-05-25 Mon]
+  [2015-10-12 Mon]
   :END:
   - "Do not spoil what you have by desiring what you have not; what you now have was once among the things you only hoped for." - Epicurus
   - [[http://www.theflowstatecollective.com/flow-habits/a-simple-guide-to-meditation][A simple guide to meditation]].
+  - [[https://www.brainpickings.org/][Brain Pickings]].
   - [[http://camdez.com/blog/2010/01/15/lifehacking-expanded/][Cameron Desautel on lifehacking]].
   - [[http://camdez.com/blog/categories/productivity/][Cameron Desautel on productivity]].
   - [[http://www.mindbodygreen.com/][Mind body green]].
@@ -2552,7 +2589,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-09 Fri]
+  [2015-10-12 Mon]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
@@ -2580,6 +2617,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.bignerdranch.com/we-write/ios-programming.html][iOS Programming]].
   - [[https://www.bignerdranch.com/we-write/ios-programming/][iOS Programming: The Big Nerd Ranch Guide (4th Edition)]].
   - [[https://github.com/stanislaw/iOS-Projects-Catalogue][iOS projects catalogues]].
+  - [[http://www.mysamplecode.com/2012/12/ios-scrollview-example-with-paging.html][iOS ScrollView Example with Paging]].
   - [[https://github.com/phonegap/ios-deploy][ios-deploy: Install and debug iOS apps without using Xcode]].
   - [[http://ios-goodies.com][ios-goodies.com]].
   - [[http://iosdevtips.co][iosdevtips.co]].
@@ -2771,7 +2809,7 @@ If FROM or TO is negative, it counts from the end.
   :END:
   - [[http://www.goruck.com/en][goruck bag]].
   - [[http://www.tombihn.com][tom bihn bags]].
-* [2015-09-18 Fri] [[#origami-bookmarks][#]] Origami bookmarks
+* [2014-09-18 Fri] [[#origami-bookmarks][#]] Origami bookmarks
   :PROPERTIES:
   :CUSTOM_ID: origami-bookmarks
   :END:
@@ -3019,14 +3057,14 @@ If FROM or TO is negative, it counts from the end.
     - M-x replace-string RET ; RET C-q C-j.
     - C-q (quoted-insert).
     - C-j (newline).
-* [2015-07-09 Thu] [[#installing-emacs--on-linux][#]] Installing Emacs 24.4 on Linux
+* [2014-07-09 Thu] [[#installing-emacs--on-linux][#]] Installing Emacs 24.4 on Linux
   :PROPERTIES:
   :CUSTOM_ID: installing-emacs--on-linux
   :END:
 #+BEGIN_SRC sh
   sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
 #+END_SRC
-* [2015-07-09 Thu] [[#installing-emacs--on-mac-ox-x][#]] Installing Emacs 24.4 on Mac OX X
+* [2014-07-09 Thu] [[#installing-emacs--on-mac-ox-x][#]] Installing Emacs 24.4 on Mac OX X
   :PROPERTIES:
   :CUSTOM_ID: installing-emacs--on-mac-ox-x
   :END:
@@ -3068,7 +3106,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
-  [2015-07-06 Mon]
+  [2015-10-08 Thu]
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
@@ -3086,6 +3124,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://thewanderingcoder.com/2015/01/emacs-org-mode-links-and-exported-html/][Links and exported HTML]].
   - [[https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp][Living with Emacs Lisp]].
   - [[http://www.gigamonkeys.com/book/loop-for-black-belts.html][LOOP for Black Belts]].
+  - [[http://www.nongnu.org/emacs-tiny-tools/elisp-coding/][Nongnu elisp guidelines]].
   - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
   - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
   - [[http://nic.ferrier.me.uk/blog/2012_07/tips-and-tricks-for-emacslisp][Tips on Emacs Lisp programming]].
@@ -3100,7 +3139,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-09 Fri]
+  [2015-10-06 Tue]
   :END:
   - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
   - [[https://github.com/baohaojun/ajoke][Ajoke]].
@@ -3146,6 +3185,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/benma/go-dlv.el][Go Delve - Debug Go programs interactively with the GUD]].
   - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
   - [[https://github.com/bbatsov/projectile][Helm Projectile]]: Is awesome for finding files in emacs.
+  - [[http://blog.yitang.uk/2015/09/24/how-to-create-a-screencast-gif-in-emacs/][How to Create a Screencast GIF in Emacs]].
   - [[http://skybert.net/emacs/investigating-emacs-cpu-usage/][investigating Emacs CPU usage]].
   - [[https://github.com/skeeto/javadoc-lookup][javadoc-lookup]].
   - [[http://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][Javascript development environment]].
@@ -3207,7 +3247,7 @@ If FROM or TO is negative, it counts from the end.
 #+END_SRC
 *** Solarized
     Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs][post]] to get solarized on gnome-terminal.
-* [2015-10-09 Fri] [[#cpp-bookmarks][#]] C++ bookmarks
+* [2014-10-09 Fri] [[#cpp-bookmarks][#]] C++ bookmarks
   :PROPERTIES:
   :CUSTOM_ID: cpp-bookmarks
   :END:
@@ -3242,9 +3282,11 @@ If FROM or TO is negative, it counts from the end.
   - [[http://famous.org/][Famous Javascript library for animations & interfaces]].
   - [[http://www.sencha.com/blog/hidden-gems-in-chrome-developer-tools/][Hidden gems in Chrome Developer Tools]].
   - [[https://blog.famous.org/introducing-the-famous-framework/][Introducing the Famous framework]].
+  - [[https://developer.mozilla.org/en-US/Learn][Learning the Web (mozilla.org)]].
   - [[http://jscs.info/][JSCS linter]].
-  - [[http://www.larryullman.com/books/modern-javascript-develop-and-design/table-of-contents/][Modern JavaScript: Develop and Design (Book)]].
-  - [[https://github.com/arscan/pleaserotate.js][Pleaserotate.js]]
+  - [[http://www.nateberkopec.com/2015/10/07/frontend-performance-chrome-timeline.html][Ludicrously Fast Page Loads - A Guide for Full-Stack Devs]].
+  - [[http://www.larryullman.com/books/modern-javascript-develop-and-design/table-of-contents/][Modern JavaScript: Develop and Design (book)]].
+  - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
   - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
   - [[http://jonobr1.github.io/two.js][Two.js is a two-dimensional drawing api geared towards modern web browsers]].
   - [[http://bjorn.tipling.com/state-and-regular-expressions-in-javascript][What you should know about JavaScript regular expressions]].
@@ -3268,14 +3310,14 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: networking-bookmarks
   :END:
   - [[http://cr.yp.to/djbdns/tools.html][Command-line tools to look up DNS information]].
-  - 
 * [2014-07-13 Sun] [[#python-bookmarks][#]] Python bookmarks
   :PROPERTIES:
   :CUSTOM_ID: python-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-02 Fri]
+  [2015-10-05 Mon]
   :END:
+  - [[https://www.continuum.io/why-anaconda][Anaconda Python sandbox]].
   - [[http://mkaz.com/2014/07/26/python-argparse-cookbook/][Argparse cookbook]]: For simple python scripts.
   - [[http://www.diveintopython3.net/][Dive Into Python 3 book]].
   - [[http://www.diveintopython.net/][Dive Into Python book]].
@@ -3298,9 +3340,10 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-10 Sat]
+  [2015-10-13 Tue]
   :END:
   - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
+  - [[http://www.cs.bsu.edu/homepages/pvg/misc/uml/][All the UML you need to know]].
   - [[https://www.expeditedssl.com/aws-in-plain-english][AWS in plain English]].
   - [[http://robertmuth.blogspot.it/2012/08/better-bash-scripting-in-15-minutes.html][Better Bash scripting in 15 Minutes]].
   - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][Bozhidar Batsov's presentation (lots of great books listed)]].
