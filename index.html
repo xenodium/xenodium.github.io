@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-10-19 Mon 11:05 -->
+<!-- 2015-10-19 Mon 23:49 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -268,12 +268,23 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
 </div>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">enlive</span><span style="color: #C4BE89;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">enlive</span><span style="color: #C4BE89;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">https://github.com/zweifisch/enlive</span>
 <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">org</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/url-view-links-at</span> <span style="color: #FD971F;">(</span>url<span style="color: #FD971F;">)</span>
-  <span style="color: #E6DB74; font-style: italic;">"View external links in HTML at URL location."</span>
-  <span style="color: #FD971F;">(</span>interactive <span style="color: #E6DB74;">"s URL: "</span><span style="color: #FD971F;">)</span>
+
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/input-clipboard-url-or-prompt</span> <span style="color: #FD971F;">()</span>
+  <span style="color: #E6DB74; font-style: italic;">"Return a URL from clipboard or prompt user for one."</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let*</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>clipboard <span style="color: #960050;">(</span>current-kill 0<span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+         <span style="color: #F92672;">(</span>url <span style="color: #960050;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #AE81FF;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> clipboard<span style="color: #AE81FF;">)</span>
+                  clipboard
+                <span style="color: #AE81FF;">(</span>read-string <span style="color: #E6DB74;">"URL: "</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">unless</span> <span style="color: #F92672;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> url<span style="color: #F92672;">)</span>
+      <span style="color: #F92672;">(</span><span style="color: #FFFFFF;">error</span> <span style="color: #E6DB74;">"Not a URL"</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    url<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
+
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/url-view-links-at</span> <span style="color: #FD971F;">()</span>
+  <span style="color: #E6DB74; font-style: italic;">"View external links in HTML from prompted URL or clipboard."</span>
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
   <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">with-current-buffer</span> <span style="color: #EF5939;">(</span>get-buffer-create <span style="color: #E6DB74;">"*links*"</span><span style="color: #EF5939;">)</span>
     <span style="color: #EF5939;">(</span>org-mode<span style="color: #EF5939;">)</span>
     <span style="color: #EF5939;">(</span>read-only-mode -1<span style="color: #EF5939;">)</span>
@@ -283,7 +294,9 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
                   <span style="color: #66D9EF;">(</span>text <span style="color: #A6E22E;">(</span>enlive-text element<span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span>
               <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #66D9EF;">(</span>and href <span style="color: #A6E22E;">(</span>string-match <span style="color: #E6DB74;">"^http"</span> href<span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span>
                 <span style="color: #66D9EF;">(</span>insert <span style="color: #A6E22E;">(</span>org-make-link-string href text<span style="color: #A6E22E;">)</span> <span style="color: #E6DB74;">"\n"</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
-          <span style="color: #F92672;">(</span>enlive-query-all <span style="color: #960050;">(</span>enlive-fetch url<span style="color: #960050;">)</span> <span style="color: #960050;">[</span>a<span style="color: #960050;">]</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+          <span style="color: #F92672;">(</span>enlive-query-all
+           <span style="color: #960050;">(</span>enlive-fetch <span style="color: #AE81FF;">(</span>ar/input-clipboard-url-or-prompt<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span>
+           <span style="color: #960050;">[</span>a<span style="color: #960050;">]</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
     <span style="color: #EF5939;">(</span>delete-duplicate-lines <span style="color: #F92672;">(</span>point-min<span style="color: #F92672;">)</span> <span style="color: #F92672;">(</span>point-max<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
     <span style="color: #EF5939;">(</span>goto-char <span style="color: #F92672;">(</span>point-min<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
     <span style="color: #EF5939;">(</span>toggle-truncate-lines +1<span style="color: #EF5939;">)</span>
