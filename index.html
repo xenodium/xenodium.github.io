@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2015-11-04 Wed 03:07 -->
+<!-- 2015-11-04 Wed 09:46 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -347,7 +347,7 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
 <tr>
 <td class="left">&#xa0;</td>
 <td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
+<td class="left">✔</td>
 <td class="left">&#xa0;</td>
 <td class="left">(repeat x 3)</td>
 <td class="left">&#xa0;</td>
@@ -464,13 +464,13 @@ Is read from left to right as:
 <div class="outline-text-2" id="text-find-binary-in-path-using-python">
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #66D9EF; font-weight: bold;">import</span> distutils.spawn
-<span style="color: #66D9EF; font-weight: bold;">print</span> distutils.spawn.find_executable<span style="color: #f8f8f2;">(</span><span style="color: #E6DB74;">'git'</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-python"><span style="color: #66D9EF;">import</span> distutils.spawn
+<span style="color: #66D9EF;">print</span> distutils.spawn.find_executable<span style="color: #C4BE89;">(</span><span style="color: #E6DB74;">'git'</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 
 <pre class="example">
-/usr/bin/git
+/usr/local/git/current/bin/git
 </pre>
 </div>
 </div>
@@ -525,40 +525,40 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
 </div>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">require</span> '<span style="color: #AE81FF;">enlive</span><span style="color: #f8f8f2;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">https://github.com/zweifisch/enlive</span>
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">require</span> '<span style="color: #AE81FF;">org</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">enlive</span><span style="color: #C4BE89;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">https://github.com/zweifisch/enlive</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">org</span><span style="color: #C4BE89;">)</span>
 
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/input-clipboard-url-or-prompt</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/input-clipboard-url-or-prompt</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Return a URL from clipboard or prompt user for one."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">let*</span> <span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span>clipboard <span style="color: #ffb86c;">(</span>current-kill 0<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-         <span style="color: #ff79c6;">(</span>url <span style="color: #ffb86c;">(</span><span style="color: #66D9EF; font-weight: bold;">if</span> <span style="color: #50fa7b;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> clipboard<span style="color: #50fa7b;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let*</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>clipboard <span style="color: #960050;">(</span>current-kill 0<span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+         <span style="color: #F92672;">(</span>url <span style="color: #960050;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #AE81FF;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> clipboard<span style="color: #AE81FF;">)</span>
                   clipboard
-                <span style="color: #50fa7b;">(</span>read-string <span style="color: #E6DB74;">"URL: "</span><span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">unless</span> <span style="color: #ff79c6;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> url<span style="color: #ff79c6;">)</span>
-      <span style="color: #ff79c6;">(</span><span style="color: #FFFFFF; background-color: #373844;">error</span> <span style="color: #E6DB74;">"Not a URL"</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    url<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+                <span style="color: #AE81FF;">(</span>read-string <span style="color: #E6DB74;">"URL: "</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">unless</span> <span style="color: #F92672;">(</span>string-match <span style="color: #E6DB74;">"^http://"</span> url<span style="color: #F92672;">)</span>
+      <span style="color: #F92672;">(</span><span style="color: #FFFFFF;">error</span> <span style="color: #E6DB74;">"Not a URL"</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    url<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/url-view-links-at</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/url-view-links-at</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"View external links in HTML from prompted URL or clipboard."</span>
-  <span style="color: #8be9fd;">(</span>interactive<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">with-current-buffer</span> <span style="color: #bd93f9;">(</span>get-buffer-create <span style="color: #E6DB74;">"*links*"</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>org-mode<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>read-only-mode -1<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>erase-buffer<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>mapc <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">lambda</span> <span style="color: #ffb86c;">(</span>element<span style="color: #ffb86c;">)</span>
-            <span style="color: #ffb86c;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #50fa7b;">(</span><span style="color: #f1fa8c;">(</span>href <span style="color: #0189cc;">(</span>enlive-attr element 'href<span style="color: #0189cc;">)</span><span style="color: #f1fa8c;">)</span>
-                  <span style="color: #f1fa8c;">(</span>text <span style="color: #0189cc;">(</span>enlive-text element<span style="color: #0189cc;">)</span><span style="color: #f1fa8c;">)</span><span style="color: #50fa7b;">)</span>
-              <span style="color: #50fa7b;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> <span style="color: #f1fa8c;">(</span>and href <span style="color: #0189cc;">(</span>string-match <span style="color: #E6DB74;">"^http"</span> href<span style="color: #0189cc;">)</span><span style="color: #f1fa8c;">)</span>
-                <span style="color: #f1fa8c;">(</span>insert <span style="color: #0189cc;">(</span>org-make-link-string href text<span style="color: #0189cc;">)</span> <span style="color: #E6DB74;">"\n"</span><span style="color: #f1fa8c;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-          <span style="color: #ff79c6;">(</span>enlive-query-all
-           <span style="color: #ffb86c;">(</span>enlive-fetch <span style="color: #50fa7b;">(</span>ar/input-clipboard-url-or-prompt<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span>
-           <span style="color: #ffb86c;">[</span>a<span style="color: #ffb86c;">]</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>delete-duplicate-lines <span style="color: #ff79c6;">(</span>point-min<span style="color: #ff79c6;">)</span> <span style="color: #ff79c6;">(</span>point-max<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>goto-char <span style="color: #ff79c6;">(</span>point-min<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>toggle-truncate-lines +1<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>read-only-mode +1<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>switch-to-buffer <span style="color: #ff79c6;">(</span>current-buffer<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">with-current-buffer</span> <span style="color: #EF5939;">(</span>get-buffer-create <span style="color: #E6DB74;">"*links*"</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>org-mode<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>read-only-mode -1<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>erase-buffer<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>mapc <span style="color: #F92672;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #960050;">(</span>element<span style="color: #960050;">)</span>
+            <span style="color: #960050;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">(</span>href <span style="color: #A6E22E;">(</span>enlive-attr element 'href<span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span>
+                  <span style="color: #66D9EF;">(</span>text <span style="color: #A6E22E;">(</span>enlive-text element<span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span>
+              <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #66D9EF;">(</span>and href <span style="color: #A6E22E;">(</span>string-match <span style="color: #E6DB74;">"^http"</span> href<span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span>
+                <span style="color: #66D9EF;">(</span>insert <span style="color: #A6E22E;">(</span>org-make-link-string href text<span style="color: #A6E22E;">)</span> <span style="color: #E6DB74;">"\n"</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+          <span style="color: #F92672;">(</span>enlive-query-all
+           <span style="color: #960050;">(</span>enlive-fetch <span style="color: #AE81FF;">(</span>ar/input-clipboard-url-or-prompt<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span>
+           <span style="color: #960050;">[</span>a<span style="color: #960050;">]</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>delete-duplicate-lines <span style="color: #F92672;">(</span>point-min<span style="color: #F92672;">)</span> <span style="color: #F92672;">(</span>point-max<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>goto-char <span style="color: #F92672;">(</span>point-min<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>toggle-truncate-lines +1<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>read-only-mode +1<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>switch-to-buffer <span style="color: #F92672;">(</span>current-buffer<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -587,31 +587,31 @@ If using Emacs shell and helm projectile, you can wire these up to quickly chang
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">require</span> '<span style="color: #AE81FF;">helm-projectile</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">helm-projectile</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/shell-cd</span> <span style="color: #8be9fd;">(</span>dir-path<span style="color: #8be9fd;">)</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/shell-cd</span> <span style="color: #FD971F;">(</span>dir-path<span style="color: #FD971F;">)</span>
 <span style="color: #E6DB74; font-style: italic;">"Like shell-pop--cd-to-cwd-shell, but without recentering."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">unless</span> <span style="color: #bd93f9;">(</span>string-equal mode-name <span style="color: #E6DB74;">"Shell"</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #FFFFFF; background-color: #373844;">error</span> <span style="color: #E6DB74;">"Not in Shell mode"</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>message mode-name<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>goto-char <span style="color: #bd93f9;">(</span>point-max<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>comint-kill-input<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>insert <span style="color: #bd93f9;">(</span>concat <span style="color: #E6DB74;">"cd "</span> <span style="color: #ff79c6;">(</span>shell-quote-argument dir-path<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span>comint-process-echoes t<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>comint-send-input<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">unless</span> <span style="color: #EF5939;">(</span>string-equal mode-name <span style="color: #E6DB74;">"Shell"</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #FFFFFF;">error</span> <span style="color: #E6DB74;">"Not in Shell mode"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>message mode-name<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>goto-char <span style="color: #EF5939;">(</span>point-max<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>comint-kill-input<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>insert <span style="color: #EF5939;">(</span>concat <span style="color: #E6DB74;">"cd "</span> <span style="color: #F92672;">(</span>shell-quote-argument dir-path<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>comint-process-echoes t<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>comint-send-input<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/helm-projectile-shell-cd</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-projectile-shell-cd</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Change shell current working directory using helm projectile."</span>
-  <span style="color: #8be9fd;">(</span>interactive<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">unless</span> <span style="color: #bd93f9;">(</span>string-equal mode-name <span style="color: #E6DB74;">"Shell"</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #FFFFFF; background-color: #373844;">error</span> <span style="color: #E6DB74;">"Not in Shell mode"</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span>helm-dir-source <span style="color: #ffb86c;">(</span>copy-tree  helm-source-projectile-directories-list<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>add-to-list 'helm-dir-source '<span style="color: #ff79c6;">(</span>action . ar/shell-cd<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>add-to-list 'helm-dir-source '<span style="color: #ff79c6;">(</span>keymap . nil<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>add-to-list 'helm-dir-source '<span style="color: #ff79c6;">(</span>header-line . <span style="color: #E6DB74;">"cd to directory..."</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>helm <span style="color: #A6E22E;">:sources</span> helm-dir-source
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">unless</span> <span style="color: #EF5939;">(</span>string-equal mode-name <span style="color: #E6DB74;">"Shell"</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #FFFFFF;">error</span> <span style="color: #E6DB74;">"Not in Shell mode"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>helm-dir-source <span style="color: #960050;">(</span>copy-tree  helm-source-projectile-directories-list<span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>add-to-list 'helm-dir-source '<span style="color: #F92672;">(</span>action . ar/shell-cd<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>add-to-list 'helm-dir-source '<span style="color: #F92672;">(</span>keymap . nil<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>add-to-list 'helm-dir-source '<span style="color: #F92672;">(</span>header-line . <span style="color: #E6DB74;">"cd to directory..."</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>helm <span style="color: #A6E22E;">:sources</span> helm-dir-source
           <span style="color: #A6E22E;">:buffer</span> <span style="color: #E6DB74;">"*helm-dirs*"</span>
-          <span style="color: #A6E22E;">:candidate-number-limit</span> 10000<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+          <span style="color: #A6E22E;">:candidate-number-limit</span> 10000<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -641,19 +641,19 @@ Playing with node and fetch:
 <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Save to fetch-demo.js</span>
 <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Run: node fetch-demo.js</span>
 
-<span style="color: #66D9EF; font-weight: bold;">var</span> <span style="color: #F92672;">fetch</span> = require<span style="color: #f8f8f2;">(</span><span style="color: #E6DB74;">'node-fetch'</span><span style="color: #f8f8f2;">)</span>;
+<span style="color: #66D9EF;">var</span> <span style="color: #F92672;">fetch</span> = require<span style="color: #C4BE89;">(</span><span style="color: #E6DB74;">'node-fetch'</span><span style="color: #C4BE89;">)</span>;
 
-fetch<span style="color: #f8f8f2;">(</span><span style="color: #E6DB74;">"http://xenodium.com/data/javascript-fetch-node-sample/message.json"</span>, <span style="color: #8be9fd;">{</span>
+fetch<span style="color: #C4BE89;">(</span><span style="color: #E6DB74;">"http://xenodium.com/data/javascript-fetch-node-sample/message.json"</span>, <span style="color: #FD971F;">{</span>
   method: <span style="color: #E6DB74;">'GET'</span>,
   timeout: 5000
-<span style="color: #8be9fd;">}</span><span style="color: #f8f8f2;">)</span>.then<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">function</span><span style="color: #8be9fd;">(</span><span style="color: #F92672;">response</span><span style="color: #8be9fd;">)</span> <span style="color: #8be9fd;">{</span>
-  <span style="color: #66D9EF; font-weight: bold;">return</span> response.json<span style="color: #bd93f9;">()</span>;
-<span style="color: #8be9fd;">}</span><span style="color: #f8f8f2;">)</span>.then<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">function</span><span style="color: #8be9fd;">(</span><span style="color: #F92672;">response</span><span style="color: #8be9fd;">)</span> <span style="color: #8be9fd;">{</span>
-  console.log<span style="color: #bd93f9;">(</span><span style="color: #E6DB74;">'subject: '</span> + response.subject<span style="color: #bd93f9;">)</span>;
-  console.log<span style="color: #bd93f9;">(</span><span style="color: #E6DB74;">'body: '</span> + response.body<span style="color: #bd93f9;">)</span>;
-<span style="color: #8be9fd;">}</span><span style="color: #f8f8f2;">)</span>.<span style="color: #66D9EF; font-weight: bold;">catch</span><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">function</span><span style="color: #8be9fd;">(</span><span style="color: #F92672;">reason</span><span style="color: #8be9fd;">)</span> <span style="color: #8be9fd;">{</span>
-  console.log<span style="color: #bd93f9;">(</span>reason<span style="color: #bd93f9;">)</span>;
-<span style="color: #8be9fd;">}</span><span style="color: #f8f8f2;">)</span>;
+<span style="color: #FD971F;">}</span><span style="color: #C4BE89;">)</span>.then<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">function</span><span style="color: #FD971F;">(</span><span style="color: #F92672;">response</span><span style="color: #FD971F;">)</span> <span style="color: #FD971F;">{</span>
+  <span style="color: #66D9EF;">return</span> response.json<span style="color: #EF5939;">()</span>;
+<span style="color: #FD971F;">}</span><span style="color: #C4BE89;">)</span>.then<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">function</span><span style="color: #FD971F;">(</span><span style="color: #F92672;">response</span><span style="color: #FD971F;">)</span> <span style="color: #FD971F;">{</span>
+  console.log<span style="color: #EF5939;">(</span><span style="color: #E6DB74;">'subject: '</span> + response.subject<span style="color: #EF5939;">)</span>;
+  console.log<span style="color: #EF5939;">(</span><span style="color: #E6DB74;">'body: '</span> + response.body<span style="color: #EF5939;">)</span>;
+<span style="color: #FD971F;">}</span><span style="color: #C4BE89;">)</span>.<span style="color: #66D9EF;">catch</span><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">function</span><span style="color: #FD971F;">(</span><span style="color: #F92672;">reason</span><span style="color: #FD971F;">)</span> <span style="color: #FD971F;">{</span>
+  console.log<span style="color: #EF5939;">(</span>reason<span style="color: #EF5939;">)</span>;
+<span style="color: #FD971F;">}</span><span style="color: #C4BE89;">)</span>;
 </pre>
 </div>
 </div>
@@ -782,14 +782,14 @@ Having watched the <a href="https://www.youtube.com/watch?v=Y1-RLAl7iOI">video</
 <div class="outline-text-4" id="text-16-3-7">
 <div class="org-src-container">
 
-<pre class="src src-go"><span style="color: #66D9EF; font-weight: bold;">func</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">main</span><span style="color: #f8f8f2;">()</span> <span style="color: #f8f8f2;">{</span>
-  <span style="color: #66D9EF; font-weight: bold;">var</span> <span style="color: #8be9fd;">(</span>
-    foo = flags.<span style="color: #F92672; font-weight: bold; font-style: italic;">String</span><span style="color: #bd93f9;">(</span><span style="color: #E6DB74;">"foo"</span>, <span style="color: #E6DB74;">"doch"</span>, <span style="color: #E6DB74;">"..."</span><span style="color: #bd93f9;">)</span>
-    bar = flat.<span style="color: #F92672; font-weight: bold; font-style: italic;">Int</span><span style="color: #bd93f9;">(</span><span style="color: #E6DB74;">"bar"</span>, 34, <span style="color: #E6DB74;">"..."</span><span style="color: #bd93f9;">)</span>
-  <span style="color: #8be9fd;">)</span>
-  flag.<span style="color: #F92672; font-weight: bold; font-style: italic;">Parse</span><span style="color: #8be9fd;">()</span>
+<pre class="src src-go"><span style="color: #66D9EF;">func</span> <span style="color: #F92672; font-style: italic;">main</span><span style="color: #C4BE89;">()</span> <span style="color: #C4BE89;">{</span>
+  <span style="color: #66D9EF;">var</span> <span style="color: #FD971F;">(</span>
+    foo = flags.<span style="color: #F92672; font-style: italic;">String</span><span style="color: #EF5939;">(</span><span style="color: #E6DB74;">"foo"</span>, <span style="color: #E6DB74;">"doch"</span>, <span style="color: #E6DB74;">"..."</span><span style="color: #EF5939;">)</span>
+    bar = flat.<span style="color: #F92672; font-style: italic;">Int</span><span style="color: #EF5939;">(</span><span style="color: #E6DB74;">"bar"</span>, 34, <span style="color: #E6DB74;">"..."</span><span style="color: #EF5939;">)</span>
+  <span style="color: #FD971F;">)</span>
+  flag.<span style="color: #F92672; font-style: italic;">Parse</span><span style="color: #FD971F;">()</span>
   <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">...</span>
-<span style="color: #f8f8f2;">}</span>
+<span style="color: #C4BE89;">}</span>
 </pre>
 </div>
 </div>
@@ -1268,7 +1268,7 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ for i<span style="color: #66D9EF; font-weight: bold;"> in</span> *.png; <span style="color: #66D9EF; font-weight: bold;">do</span> convert -auto-orient <span style="color: #E6DB74;">"$i"</span> <span style="color: #E6DB74;">"$i"</span>; <span style="color: #66D9EF; font-weight: bold;">done</span>
+<pre class="src src-sh">$ for i<span style="color: #66D9EF;"> in</span> *.png; <span style="color: #66D9EF;">do</span> convert -auto-orient <span style="color: #E6DB74;">"$i"</span> <span style="color: #E6DB74;">"$i"</span>; <span style="color: #66D9EF;">done</span>
 </pre>
 </div>
 </div>
@@ -1867,42 +1867,42 @@ Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances a
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defvar</span> <span style="color: #F92672;">ar/project-file-names</span> '<span style="color: #8be9fd;">(</span><span style="color: #E6DB74;">"Makefile"</span> <span style="color: #E6DB74;">"SConstruct"</span> <span style="color: #E6DB74;">"BUILD"</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defvar</span> <span style="color: #F92672;">ar/project-file-names</span> '<span style="color: #FD971F;">(</span><span style="color: #E6DB74;">"Makefile"</span> <span style="color: #E6DB74;">"SConstruct"</span> <span style="color: #E6DB74;">"BUILD"</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/parent-directory</span> <span style="color: #8be9fd;">(</span>path<span style="color: #8be9fd;">)</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/parent-directory</span> <span style="color: #FD971F;">(</span>path<span style="color: #FD971F;">)</span>
   <span style="color: #E6DB74; font-style: italic;">"Get parent directory for PATH."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">unless</span> <span style="color: #bd93f9;">(</span>equal <span style="color: #E6DB74;">"/"</span> path<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>file-name-directory <span style="color: #ff79c6;">(</span>directory-file-name path<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">unless</span> <span style="color: #EF5939;">(</span>equal <span style="color: #E6DB74;">"/"</span> path<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>file-name-directory <span style="color: #F92672;">(</span>directory-file-name path<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/find-upwards</span> <span style="color: #8be9fd;">(</span>path filename<span style="color: #8be9fd;">)</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/find-upwards</span> <span style="color: #FD971F;">(</span>path filename<span style="color: #FD971F;">)</span>
   <span style="color: #E6DB74; font-style: italic;">"Search upwards from PATH for a file named FILENAME."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span>file <span style="color: #ffb86c;">(</span>concat path filename<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-        <span style="color: #ff79c6;">(</span>parent <span style="color: #ffb86c;">(</span>ar/parent-directory <span style="color: #50fa7b;">(</span>expand-file-name path<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">if</span> <span style="color: #ff79c6;">(</span>file-exists-p file<span style="color: #ff79c6;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>file <span style="color: #960050;">(</span>concat path filename<span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+        <span style="color: #F92672;">(</span>parent <span style="color: #960050;">(</span>ar/parent-directory <span style="color: #AE81FF;">(</span>expand-file-name path<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #F92672;">(</span>file-exists-p file<span style="color: #F92672;">)</span>
         file
-      <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> parent
-        <span style="color: #ffb86c;">(</span>ar/find-upwards parent filename<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+      <span style="color: #F92672;">(</span><span style="color: #66D9EF;">when</span> parent
+        <span style="color: #960050;">(</span>ar/find-upwards parent filename<span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/open-closest</span> <span style="color: #8be9fd;">(</span>filename<span style="color: #8be9fd;">)</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/open-closest</span> <span style="color: #FD971F;">(</span>filename<span style="color: #FD971F;">)</span>
   <span style="color: #E6DB74; font-style: italic;">"Open the closest FILENAME in current or parent dirs (handy for finding Makefiles)."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span>closest-file-path <span style="color: #ffb86c;">(</span>ar/find-upwards <span style="color: #50fa7b;">(</span>buffer-file-name<span style="color: #50fa7b;">)</span>
-                                                 filename<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> closest-file-path
-      <span style="color: #ff79c6;">(</span>message closest-file-path<span style="color: #ff79c6;">)</span>
-      <span style="color: #ff79c6;">(</span>switch-to-buffer <span style="color: #ffb86c;">(</span>find-file-noselect closest-file-path<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    closest-file-path<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span>closest-file-path <span style="color: #960050;">(</span>ar/find-upwards <span style="color: #AE81FF;">(</span>buffer-file-name<span style="color: #AE81FF;">)</span>
+                                                 filename<span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">when</span> closest-file-path
+      <span style="color: #F92672;">(</span>message closest-file-path<span style="color: #F92672;">)</span>
+      <span style="color: #F92672;">(</span>switch-to-buffer <span style="color: #960050;">(</span>find-file-noselect closest-file-path<span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    closest-file-path<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/open-build-file</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/open-build-file</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Open the closest project file in current or parent directory.</span>
 <span style="color: #E6DB74; font-style: italic;">For example: Makefile, SConstruct, BUILD, etc.</span>
 <span style="color: #E6DB74; font-style: italic;">Append `</span><span style="color: #AE81FF; font-style: italic;">ar/project-file-names</span><span style="color: #E6DB74; font-style: italic;">' to search for other file names."</span>
-  <span style="color: #8be9fd;">(</span>interactive<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">catch</span> '<span style="color: #AE81FF;">found</span>
-    <span style="color: #bd93f9;">(</span>mapc <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">lambda</span> <span style="color: #ffb86c;">(</span>filename<span style="color: #ffb86c;">)</span>
-            <span style="color: #ffb86c;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> <span style="color: #50fa7b;">(</span>ar/open-closest filename<span style="color: #50fa7b;">)</span>
-              <span style="color: #50fa7b;">(</span><span style="color: #66D9EF; font-weight: bold;">throw</span> '<span style="color: #AE81FF;">found</span> t<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-          ar/project-file-names<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #FFFFFF; background-color: #373844;">error</span> <span style="color: #E6DB74;">"No project file found"</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">catch</span> '<span style="color: #AE81FF;">found</span>
+    <span style="color: #EF5939;">(</span>mapc <span style="color: #F92672;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #960050;">(</span>filename<span style="color: #960050;">)</span>
+            <span style="color: #960050;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #AE81FF;">(</span>ar/open-closest filename<span style="color: #AE81FF;">)</span>
+              <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">throw</span> '<span style="color: #AE81FF;">found</span> t<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+          ar/project-file-names<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #FFFFFF;">error</span> <span style="color: #E6DB74;">"No project file found"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -2038,9 +2038,9 @@ At some point, you may come across a trusted command-line utility prompting you 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>setq comint-password-prompt-regexp <span style="color: #8be9fd;">(</span>concat comint-password-prompt-regexp
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>setq comint-password-prompt-regexp <span style="color: #FD971F;">(</span>concat comint-password-prompt-regexp
                                             <span style="color: #E6DB74;">"</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">|</span><span style="color: #E6DB74;">"</span>
-                                            <span style="color: #E6DB74;">"Password for </span><span style="color: #ffffff; background-color: #ff0000;">red</span><span style="color: #E6DB74;"> alert:"</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+                                            <span style="color: #E6DB74;">"Password for </span><span style="color: #ffffff; background-color: #ff0000;">red</span><span style="color: #E6DB74;"> alert:"</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -2093,8 +2093,8 @@ Converting mp4 to gif is handy for posting short screencasts. You can convert to
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">apt-get install ffmpeg imagemagick <span style="color: #f8f8f2;">(</span>linux<span style="color: #f8f8f2;">)</span>
-brew install ffmpeg imagemagick <span style="color: #f8f8f2;">(</span>Mac<span style="color: #f8f8f2;">)</span>
+<pre class="src src-sh">apt-get install ffmpeg imagemagick <span style="color: #C4BE89;">(</span>linux<span style="color: #C4BE89;">)</span>
+brew install ffmpeg imagemagick <span style="color: #C4BE89;">(</span>Mac<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <p>
@@ -2198,18 +2198,18 @@ Here's the equivalent in Emacs lisp:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">flush-kill-lines</span> <span style="color: #8be9fd;">(</span>regex<span style="color: #8be9fd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">flush-kill-lines</span> <span style="color: #FD971F;">(</span>regex<span style="color: #FD971F;">)</span>
   <span style="color: #E6DB74; font-style: italic;">"Flush lines matching REGEX and append to kill ring.  Restrict to \</span>
 <span style="color: #E6DB74; font-style: italic;">region if active."</span>
-  <span style="color: #8be9fd;">(</span>interactive <span style="color: #E6DB74;">"sFlush kill regex: "</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">save-excursion</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">save-restriction</span>
-      <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> <span style="color: #ffb86c;">(</span>use-region-p<span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>narrow-to-region <span style="color: #50fa7b;">(</span>point<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>mark<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>goto-char 0<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-      <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">while</span> <span style="color: #ffb86c;">(</span>search-forward-regexp regex nil t<span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>move-beginning-of-line nil<span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>kill-whole-line<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>interactive <span style="color: #E6DB74;">"sFlush kill regex: "</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">save-excursion</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">save-restriction</span>
+      <span style="color: #F92672;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #960050;">(</span>use-region-p<span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>narrow-to-region <span style="color: #AE81FF;">(</span>point<span style="color: #AE81FF;">)</span> <span style="color: #AE81FF;">(</span>mark<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>goto-char 0<span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+      <span style="color: #F92672;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #960050;">(</span>search-forward-regexp regex nil t<span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>move-beginning-of-line nil<span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>kill-whole-line<span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -2382,20 +2382,20 @@ Overriding retain/release/autorelease may be handy while debugging:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #f8f8f2;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #f8f8f2;">)</span><span style="color: #F92672; font-weight: bold; font-style: italic;">retain</span> <span style="color: #f8f8f2;">{</span>
-  NSLog<span style="color: #8be9fd;">(</span>@<span style="color: #E6DB74;">"%p, retain"</span>, <span style="color: #66D9EF; font-weight: bold;">self</span><span style="color: #8be9fd;">)</span>;
-  <span style="color: #66D9EF; font-weight: bold;">return</span> <span style="color: #8be9fd; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">super</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">retain</span><span style="color: #8be9fd; background-color: #373844;">]</span>;
-<span style="color: #f8f8f2;">}</span>
+<pre class="src src-objc">- <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #C4BE89;">)</span><span style="color: #F92672; font-style: italic;">retain</span> <span style="color: #C4BE89;">{</span>
+  NSLog<span style="color: #FD971F;">(</span>@<span style="color: #E6DB74;">"%p, retain"</span>, <span style="color: #66D9EF;">self</span><span style="color: #FD971F;">)</span>;
+  <span style="color: #66D9EF;">return</span> <span style="color: #FD971F;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">retain</span><span style="color: #FD971F;">]</span>;
+<span style="color: #C4BE89;">}</span>
 
-- <span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">oneway</span> <span style="color: #66D9EF;">void</span><span style="color: #f8f8f2;">)</span><span style="color: #F92672; font-weight: bold; font-style: italic;">release</span> <span style="color: #f8f8f2;">{</span>
-  NSLog<span style="color: #8be9fd;">(</span>@<span style="color: #E6DB74;">"%p, release"</span>, <span style="color: #66D9EF; font-weight: bold;">self</span><span style="color: #8be9fd;">)</span>;
-  <span style="color: #8be9fd; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">super</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">release</span><span style="color: #8be9fd; background-color: #373844;">]</span>;
-<span style="color: #f8f8f2;">}</span>
+- <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">oneway</span> <span style="color: #66D9EF;">void</span><span style="color: #C4BE89;">)</span><span style="color: #F92672; font-style: italic;">release</span> <span style="color: #C4BE89;">{</span>
+  NSLog<span style="color: #FD971F;">(</span>@<span style="color: #E6DB74;">"%p, release"</span>, <span style="color: #66D9EF;">self</span><span style="color: #FD971F;">)</span>;
+  <span style="color: #FD971F;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">release</span><span style="color: #FD971F;">]</span>;
+<span style="color: #C4BE89;">}</span>
 
-- <span style="color: #f8f8f2;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #f8f8f2;">)</span><span style="color: #F92672; font-weight: bold; font-style: italic;">autorelease</span> <span style="color: #f8f8f2;">{</span>
-  NSLog<span style="color: #8be9fd;">(</span>@<span style="color: #E6DB74;">"%p, autorelease"</span>, <span style="color: #66D9EF; font-weight: bold;">self</span><span style="color: #8be9fd;">)</span>;
-  <span style="color: #66D9EF; font-weight: bold;">return</span> <span style="color: #8be9fd; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">super</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">autorelease</span><span style="color: #8be9fd; background-color: #373844;">]</span>;
-<span style="color: #f8f8f2;">}</span>
+- <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #C4BE89;">)</span><span style="color: #F92672; font-style: italic;">autorelease</span> <span style="color: #C4BE89;">{</span>
+  NSLog<span style="color: #FD971F;">(</span>@<span style="color: #E6DB74;">"%p, autorelease"</span>, <span style="color: #66D9EF;">self</span><span style="color: #FD971F;">)</span>;
+  <span style="color: #66D9EF;">return</span> <span style="color: #FD971F;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">autorelease</span><span style="color: #FD971F;">]</span>;
+<span style="color: #C4BE89;">}</span>
 </pre>
 </div>
 </div>
@@ -2719,10 +2719,10 @@ M-x flush-lines RET ^$ RET
 <div class="outline-text-2" id="text-write-to-temp-ios-snippet">
 <div class="org-src-container">
 
-<pre class="src src-objc"><span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">tempDir</span> = NSTemporaryDirectory<span style="color: #f8f8f2;">()</span>;
-NSLog<span style="color: #f8f8f2;">(</span>@<span style="color: #E6DB74;">"%@"</span>, tempDir<span style="color: #f8f8f2;">)</span>;
-<span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">dataFilePath</span> = <span style="color: #f8f8f2; background-color: #373844;">[</span>tempDir <span style="color: #F92672; font-weight: bold; font-style: italic;">stringByAppendingPathComponent</span>:@<span style="color: #E6DB74;">"my.file"</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
-<span style="color: #f8f8f2; background-color: #373844;">[</span>data <span style="color: #F92672; font-weight: bold; font-style: italic;">writeToFile</span>:dataFilePath <span style="color: #F92672; font-weight: bold; font-style: italic;">atomically</span>:<span style="color: #AE81FF;">YES</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
+<pre class="src src-objc"><span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">tempDir</span> = NSTemporaryDirectory<span style="color: #C4BE89;">()</span>;
+NSLog<span style="color: #C4BE89;">(</span>@<span style="color: #E6DB74;">"%@"</span>, tempDir<span style="color: #C4BE89;">)</span>;
+<span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">dataFilePath</span> = <span style="color: #C4BE89;">[</span>tempDir <span style="color: #F92672; font-style: italic;">stringByAppendingPathComponent</span>:@<span style="color: #E6DB74;">"my.file"</span><span style="color: #C4BE89;">]</span>;
+<span style="color: #C4BE89;">[</span>data <span style="color: #F92672; font-style: italic;">writeToFile</span>:dataFilePath <span style="color: #F92672; font-style: italic;">atomically</span>:<span style="color: #AE81FF;">YES</span><span style="color: #C4BE89;">]</span>;
 </pre>
 </div>
 </div>
@@ -2847,7 +2847,7 @@ Based on instructions from <a href="http://blog.hardcodes.de/articles/63/buildin
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #465457; font-style: italic;">#</span><span style="color: #465457; font-style: italic;">!/bin/</span><span style="color: #66D9EF; font-weight: bold;">bash</span>
+<pre class="src src-sh"><span style="color: #465457; font-style: italic;">#</span><span style="color: #465457; font-style: italic;">!/bin/</span><span style="color: #66D9EF;">bash</span>
 <span style="color: #A6E22E;">set</span> -o nounset
 <span style="color: #A6E22E;">set</span> -o errexit
 
@@ -2856,18 +2856,18 @@ Based on instructions from <a href="http://blog.hardcodes.de/articles/63/buildin
 
 <span style="color: #A6E22E;">readonly</span> <span style="color: #F92672;">LLVM_DIR_PATH</span>=<span style="color: #E6DB74;">'/tmp/llvm'</span>
 
-<span style="color: #F92672; font-weight: bold; font-style: italic;">update_repo</span><span style="color: #f8f8f2;">()</span> <span style="color: #f8f8f2;">{</span>
-  <span style="color: #66D9EF; font-weight: bold;">if</span> <span style="color: #8be9fd;">[</span><span style="color: #bd93f9;">[</span> <span style="color: #bd93f9; font-weight: bold;">!</span> -d $<span style="color: #F92672;">1</span> <span style="color: #bd93f9;">]</span><span style="color: #8be9fd;">]</span>; <span style="color: #66D9EF; font-weight: bold;">then</span>
+<span style="color: #F92672; font-style: italic;">update_repo</span><span style="color: #C4BE89;">()</span> <span style="color: #C4BE89;">{</span>
+  <span style="color: #66D9EF;">if</span> <span style="color: #FD971F;">[</span><span style="color: #EF5939;">[</span> <span style="font-weight: bold;">!</span> -d $<span style="color: #F92672;">1</span> <span style="color: #EF5939;">]</span><span style="color: #FD971F;">]</span>; <span style="color: #66D9EF;">then</span>
     git clone $<span style="color: #F92672;">2</span>
-  <span style="color: #66D9EF; font-weight: bold;">else</span>
+  <span style="color: #66D9EF;">else</span>
     <span style="color: #A6E22E;">cd</span> $<span style="color: #F92672;">1</span>
     git pull
     <span style="color: #A6E22E;">cd</span> ..
-  <span style="color: #66D9EF; font-weight: bold;">fi</span>
+  <span style="color: #66D9EF;">fi</span>
   <span style="color: #A6E22E;">cd</span> ..
-<span style="color: #f8f8f2;">}</span>
+<span style="color: #C4BE89;">}</span>
 
-<span style="color: #F92672; font-weight: bold; font-style: italic;">update_all_repos</span><span style="color: #f8f8f2;">()</span> <span style="color: #f8f8f2;">{</span>
+<span style="color: #F92672; font-style: italic;">update_all_repos</span><span style="color: #C4BE89;">()</span> <span style="color: #C4BE89;">{</span>
   update_repo <span style="color: #E6DB74;">"llvm"</span> <span style="color: #E6DB74;">"http://llvm.org/git/llvm.git"</span>
   <span style="color: #A6E22E;">pushd</span> <span style="color: #E6DB74;">"${LLVM_DIR_PATH}/llvm/tools"</span>
   update_repo <span style="color: #E6DB74;">"clang"</span> <span style="color: #E6DB74;">"http://llvm.org/git/clang.git"</span>
@@ -2875,18 +2875,18 @@ Based on instructions from <a href="http://blog.hardcodes.de/articles/63/buildin
   <span style="color: #A6E22E;">cd</span> <span style="color: #E6DB74;">"../../${LLVM_DIR_PATH}/llvm/tools/clang/tools"</span>
   update_repo <span style="color: #E6DB74;">"clang-tools-extra"</span> <span style="color: #E6DB74;">"http://llvm.org/git/clang-tools-extra.git"</span>
   <span style="color: #A6E22E;">cd</span> <span style="color: #E6DB74;">"../../.."</span>
-<span style="color: #f8f8f2;">}</span>
+<span style="color: #C4BE89;">}</span>
 
-<span style="color: #F92672; font-weight: bold; font-style: italic;">build_clang</span><span style="color: #f8f8f2;">()</span> <span style="color: #f8f8f2;">{</span>
+<span style="color: #F92672; font-style: italic;">build_clang</span><span style="color: #C4BE89;">()</span> <span style="color: #C4BE89;">{</span>
   mkdir -p clang
   mkdir -p build
   <span style="color: #A6E22E;">cd</span> clang
   ../llvm/configure --enable-libcpp --enable-cxx11 --enable-debug-symbols=no --enable-optimized --prefix=<span style="color: #E6DB74;">"${LLVM_DIR_PATH}/build"</span>
   make install
-<span style="color: #f8f8f2;">}</span>
+<span style="color: #C4BE89;">}</span>
 
 mkdir -p $<span style="color: #F92672;">LLVM_DIR_PATH</span>
-<span style="color: #A6E22E;">cd</span> $<span style="color: #f8f8f2;">{</span><span style="color: #F92672;">LLVM_DIR_PATH</span><span style="color: #f8f8f2;">}</span>
+<span style="color: #A6E22E;">cd</span> $<span style="color: #C4BE89;">{</span><span style="color: #F92672;">LLVM_DIR_PATH</span><span style="color: #C4BE89;">}</span>
 update_all_repos
 build_clang
 </pre>
@@ -2919,36 +2919,36 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </p>
 <div class="org-src-container">
 
-<pre class="src src-objc">- <span style="color: #f8f8f2;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #f8f8f2;">)</span><span style="color: #F92672; font-weight: bold; font-style: italic;">initWithFrame</span>:<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF;">CGRect</span><span style="color: #f8f8f2;">)</span><span style="color: #F92672;">frame</span> <span style="color: #f8f8f2;">{</span>
-  <span style="color: #66D9EF; font-weight: bold;">self</span> = <span style="color: #8be9fd; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">super</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">initWithFrame</span>:frame<span style="color: #8be9fd; background-color: #373844;">]</span>;
-  <span style="color: #66D9EF; font-weight: bold;">if</span> <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">self</span><span style="color: #8be9fd;">)</span> <span style="color: #8be9fd;">{</span>
+<pre class="src src-objc">- <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">instancetype</span><span style="color: #C4BE89;">)</span><span style="color: #F92672; font-style: italic;">initWithFrame</span>:<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">CGRect</span><span style="color: #C4BE89;">)</span><span style="color: #F92672;">frame</span> <span style="color: #C4BE89;">{</span>
+  <span style="color: #66D9EF;">self</span> = <span style="color: #FD971F;">[</span><span style="color: #66D9EF;">super</span> <span style="color: #F92672; font-style: italic;">initWithFrame</span>:frame<span style="color: #FD971F;">]</span>;
+  <span style="color: #66D9EF;">if</span> <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">self</span><span style="color: #FD971F;">)</span> <span style="color: #FD971F;">{</span>
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Disable autoresizing mask translation for parent.</span>
-    <span style="color: #66D9EF; font-weight: bold;">self</span>.translatesAutoresizingMaskIntoConstraints = <span style="color: #AE81FF;">NO</span>;
+    <span style="color: #66D9EF;">self</span>.translatesAutoresizingMaskIntoConstraints = <span style="color: #AE81FF;">NO</span>;
 
-    _subview1 = <span style="color: #bd93f9; background-color: #373844;">[</span><span style="color: #ff79c6; background-color: #373844;">[</span><span style="color: #66D9EF;">UIView</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">alloc</span><span style="color: #ff79c6; background-color: #373844;">]</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">init</span><span style="color: #bd93f9; background-color: #373844;">]</span>;
+    _subview1 = <span style="color: #EF5939;">[</span><span style="color: #F92672;">[</span><span style="color: #66D9EF;">UIView</span> <span style="color: #F92672; font-style: italic;">alloc</span><span style="color: #F92672;">]</span> <span style="color: #F92672; font-style: italic;">init</span><span style="color: #EF5939;">]</span>;
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Disable autoresizing mask translation for subview.</span>
     _subview1.translatesAutoresizingMaskIntoConstraints = <span style="color: #AE81FF;">NO</span>;
 
-    _subview1.backgroundColor = <span style="color: #bd93f9; background-color: #373844;">[</span><span style="color: #66D9EF;">UIColor</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">redColor</span><span style="color: #bd93f9; background-color: #373844;">]</span>;
-    <span style="color: #bd93f9; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">self</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">addSubview</span>:_subview1<span style="color: #bd93f9; background-color: #373844;">]</span>;
+    _subview1.backgroundColor = <span style="color: #EF5939;">[</span><span style="color: #66D9EF;">UIColor</span> <span style="color: #F92672; font-style: italic;">redColor</span><span style="color: #EF5939;">]</span>;
+    <span style="color: #EF5939;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addSubview</span>:_subview1<span style="color: #EF5939;">]</span>;
 
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">Creates a dictionary of bindings to be used in visual format.</span>
-    <span style="color: #66D9EF;">NSDictionary</span> *<span style="color: #F92672;">viewBindings</span> = NSDictionaryOfVariableBindings<span style="color: #bd93f9;">(</span>_subview1<span style="color: #bd93f9;">)</span>;
+    <span style="color: #66D9EF;">NSDictionary</span> *<span style="color: #F92672;">viewBindings</span> = NSDictionaryOfVariableBindings<span style="color: #EF5939;">(</span>_subview1<span style="color: #EF5939;">)</span>;
 
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">H: horizontal layout</span>
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">|-50- spacing in relation to superview</span>
     <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">[_subview1(==50)] subview1's width</span>
-    <span style="color: #bd93f9; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">self</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">addConstraints</span>:<span style="color: #ff79c6; background-color: #373844;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"H:|-50-[_subview1(==50)]"</span>
-                                                                 <span style="color: #F92672; font-weight: bold; font-style: italic;">options</span>:0
-                                                                 <span style="color: #F92672; font-weight: bold; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
-                                                                   <span style="color: #F92672; font-weight: bold; font-style: italic;">views</span>:viewBindings<span style="color: #ff79c6; background-color: #373844;">]</span><span style="color: #bd93f9; background-color: #373844;">]</span>;
-    <span style="color: #bd93f9; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">self</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">addConstraints</span>:<span style="color: #ff79c6; background-color: #373844;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"V:[_subview1(==50)]"</span>
-                                                                 <span style="color: #F92672; font-weight: bold; font-style: italic;">options</span>:0
-                                                                 <span style="color: #F92672; font-weight: bold; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
-                                                                   <span style="color: #F92672; font-weight: bold; font-style: italic;">views</span>:viewBindings<span style="color: #ff79c6; background-color: #373844;">]</span><span style="color: #bd93f9; background-color: #373844;">]</span>;
-  <span style="color: #8be9fd;">}</span>
-  <span style="color: #66D9EF; font-weight: bold;">return</span> <span style="color: #66D9EF; font-weight: bold;">self</span>;
-<span style="color: #f8f8f2;">}</span>
+    <span style="color: #EF5939;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addConstraints</span>:<span style="color: #F92672;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"H:|-50-[_subview1(==50)]"</span>
+                                                                 <span style="color: #F92672; font-style: italic;">options</span>:0
+                                                                 <span style="color: #F92672; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
+                                                                   <span style="color: #F92672; font-style: italic;">views</span>:viewBindings<span style="color: #F92672;">]</span><span style="color: #EF5939;">]</span>;
+    <span style="color: #EF5939;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">addConstraints</span>:<span style="color: #F92672;">[</span><span style="color: #66D9EF;">NSLayoutConstraint</span> <span style="color: #F92672; font-style: italic;">constraintsWithVisualFormat</span>:@<span style="color: #E6DB74;">"V:[_subview1(==50)]"</span>
+                                                                 <span style="color: #F92672; font-style: italic;">options</span>:0
+                                                                 <span style="color: #F92672; font-style: italic;">metrics</span>:<span style="color: #AE81FF;">nil</span>
+                                                                   <span style="color: #F92672; font-style: italic;">views</span>:viewBindings<span style="color: #F92672;">]</span><span style="color: #EF5939;">]</span>;
+  <span style="color: #FD971F;">}</span>
+  <span style="color: #66D9EF;">return</span> <span style="color: #66D9EF;">self</span>;
+<span style="color: #C4BE89;">}</span>
 </pre>
 </div>
 </div>
@@ -3084,11 +3084,13 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 <div id="outline-container-uk-travel-bookmarks" class="outline-2">
 <h2 id="uk-travel-bookmarks"><a id="sec-103" name="sec-103"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-04-19 Sun]</span></span> <a href="#uk-travel-bookmarks">#</a> UK travel bookmarks</h2>
 <div class="outline-text-2" id="text-uk-travel-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-09-18 Fri]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2015-11-03 Tue]  updated  </em></span>
 <ul class="org-ul">
 <li><a href="http://www.buzzfeed.com/chelseypippin/25-wanderlust-worthy-day-trips-from-london#.xbkbNaApW">25 stunning british places you can reach from London</a>.
 </li>
 <li><a href="https://en.wikipedia.org/wiki/Dunmore_Pineapple">Dunmore Pinapple</a>.
+</li>
+<li><a href="http://www.hitchinlavender.co.uk/">Hitchin Lavender</a>.
 </li>
 <li><a href="http://www.theguardian.com/travel/2015/may/10/scotland-beach-swimming-wild-camping">In search of Scotland’s best beach</a>.
 </li>
@@ -3218,12 +3220,12 @@ Generating diagram:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #F92672; font-weight: bold; font-style: italic;">iframe</span> <span style="color: #F92672;">width</span>=<span style="color: #E6DB74;">"420"</span>
+<pre class="src src-html">&lt;<span style="color: #F92672; font-style: italic;">iframe</span> <span style="color: #F92672;">width</span>=<span style="color: #E6DB74;">"420"</span>
         <span style="color: #F92672;">height</span>=<span style="color: #E6DB74;">"315"</span>
         <span style="color: #F92672;">src</span>=<span style="color: #E6DB74;">"https://www.youtube.com/embed/QRBcm6jFJ3Q"</span>
         <span style="color: #F92672;">frameborder</span>=<span style="color: #E6DB74;">"0"</span>
         allowfullscreen&gt;
-&lt;/<span style="color: #F92672; font-weight: bold; font-style: italic;">iframe</span>&gt;
+&lt;/<span style="color: #F92672; font-style: italic;">iframe</span>&gt;
 </pre>
 </div>
 <p>
@@ -3265,13 +3267,13 @@ Adopted Tim Pope's Git commit message <a href="http://tbaggery.com/2008/04/19/a-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">use-package</span> <span style="color: #AE81FF;">git-commit-training-wheels-mode</span> <span style="color: #A6E22E;">:ensure</span> t
-  <span style="color: #A6E22E;">:commands</span> <span style="color: #8be9fd;">(</span>git-commit-training-wheels-mode<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">use-package</span> <span style="color: #AE81FF;">git-commit-training-wheels-mode</span> <span style="color: #A6E22E;">:ensure</span> t
+  <span style="color: #A6E22E;">:commands</span> <span style="color: #FD971F;">(</span>git-commit-training-wheels-mode<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">use-package</span> <span style="color: #AE81FF;">git-commit-mode</span> <span style="color: #A6E22E;">:ensure</span> t
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">use-package</span> <span style="color: #AE81FF;">git-commit-mode</span> <span style="color: #A6E22E;">:ensure</span> t
   <span style="color: #A6E22E;">:config</span>
-  <span style="color: #8be9fd;">(</span>add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode<span style="color: #8be9fd;">)</span>
-  <span style="color: #A6E22E;">:commands</span> <span style="color: #8be9fd;">(</span>git-commit-mode<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode<span style="color: #FD971F;">)</span>
+  <span style="color: #A6E22E;">:commands</span> <span style="color: #FD971F;">(</span>git-commit-mode<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <p>
@@ -3287,14 +3289,14 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">org-html-fontify-code</span> <span style="color: #8be9fd;">(</span>code lang<span style="color: #8be9fd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">org-html-fontify-code</span> <span style="color: #FD971F;">(</span>code lang<span style="color: #FD971F;">)</span>
   <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">...</span>
-  <span style="color: #8be9fd;">(</span>funcall lang-mode<span style="color: #8be9fd;">)</span>
+  <span style="color: #FD971F;">(</span>funcall lang-mode<span style="color: #FD971F;">)</span>
 <span style="color: #465457; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">when</span> <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">require</span> '<span style="color: #AE81FF;">fill-column-indicator</span> nil 'noerror<span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>fci-mode -1<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">when</span> <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">fill-column-indicator</span> nil 'noerror<span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>fci-mode -1<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
 <span style="color: #465457; font-style: italic;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
-  <span style="color: #8be9fd;">(</span>insert code<span style="color: #8be9fd;">)</span>
+  <span style="color: #FD971F;">(</span>insert code<span style="color: #FD971F;">)</span>
   <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">...</span>
 </pre>
 </div>
@@ -3462,31 +3464,31 @@ Venturing into Emacs lisp and <a href="https://github.com/emacs-helm/helm">Helm<
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">require</span> '<span style="color: #AE81FF;">goto-addr</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">require</span> '<span style="color: #AE81FF;">goto-addr</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/helm-buffer-url-candidates</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-buffer-url-candidates</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Generate helm candidates for all URLs in buffer."</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">save-excursion</span>
-    <span style="color: #bd93f9;">(</span>goto-char <span style="color: #ff79c6;">(</span>point-min<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">(</span>helm-candidates '<span style="color: #50fa7b;">()</span><span style="color: #ffb86c;">)</span>
-          <span style="color: #ffb86c;">(</span>url<span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-      <span style="color: #ff79c6;">(</span><span style="color: #66D9EF; font-weight: bold;">while</span> <span style="color: #ffb86c;">(</span>re-search-forward goto-address-url-regexp
-                                nil t<span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>setq url
-              <span style="color: #50fa7b;">(</span>buffer-substring-no-properties <span style="color: #f1fa8c;">(</span>match-beginning 0<span style="color: #f1fa8c;">)</span>
-                                              <span style="color: #f1fa8c;">(</span>match-end 0<span style="color: #f1fa8c;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span>
-        <span style="color: #ffb86c;">(</span>add-to-list 'helm-candidates
-                     <span style="color: #50fa7b;">(</span>cons url
-                           url<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-      helm-candidates<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">save-excursion</span>
+    <span style="color: #EF5939;">(</span>goto-char <span style="color: #F92672;">(</span>point-min<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #F92672;">(</span><span style="color: #960050;">(</span>helm-candidates '<span style="color: #AE81FF;">()</span><span style="color: #960050;">)</span>
+          <span style="color: #960050;">(</span>url<span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+      <span style="color: #F92672;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #960050;">(</span>re-search-forward goto-address-url-regexp
+                                nil t<span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>setq url
+              <span style="color: #AE81FF;">(</span>buffer-substring-no-properties <span style="color: #66D9EF;">(</span>match-beginning 0<span style="color: #66D9EF;">)</span>
+                                              <span style="color: #66D9EF;">(</span>match-end 0<span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span>
+        <span style="color: #960050;">(</span>add-to-list 'helm-candidates
+                     <span style="color: #AE81FF;">(</span>cons url
+                           url<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+      helm-candidates<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/helm-buffer-urls</span> <span style="color: #8be9fd;">()</span>
+<span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/helm-buffer-urls</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Narrow down and open a URL in buffer."</span>
-  <span style="color: #8be9fd;">(</span>interactive<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>helm <span style="color: #A6E22E;">:sources</span> `<span style="color: #bd93f9;">(</span><span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">(</span>name . <span style="color: #E6DB74;">"Buffer URLs"</span><span style="color: #ffb86c;">)</span>
-                    <span style="color: #ffb86c;">(</span>candidates . ,<span style="color: #50fa7b;">(</span>ar/helm-buffer-url-candidates<span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span>
-                    <span style="color: #ffb86c;">(</span>action . <span style="color: #50fa7b;">(</span><span style="color: #66D9EF; font-weight: bold;">lambda</span> <span style="color: #f1fa8c;">(</span>url<span style="color: #f1fa8c;">)</span>
-                                <span style="color: #f1fa8c;">(</span>browse-url url<span style="color: #f1fa8c;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>helm <span style="color: #A6E22E;">:sources</span> `<span style="color: #EF5939;">(</span><span style="color: #F92672;">(</span><span style="color: #960050;">(</span>name . <span style="color: #E6DB74;">"Buffer URLs"</span><span style="color: #960050;">)</span>
+                    <span style="color: #960050;">(</span>candidates . ,<span style="color: #AE81FF;">(</span>ar/helm-buffer-url-candidates<span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span>
+                    <span style="color: #960050;">(</span>action . <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #66D9EF;">(</span>url<span style="color: #66D9EF;">)</span>
+                                <span style="color: #66D9EF;">(</span>browse-url url<span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -3595,9 +3597,9 @@ Lots of great tips in <a href="http://sachachua.com/blog/2015/03/emacs-hangout-2
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #50fa7b;">:PRIVATE:</span>
+<pre class="src src-org"><span style="color: #66D9EF;">:PRIVATE:</span>
 My super duper secret text I don't want to export.
-<span style="color: #50fa7b;">:END:</span>
+<span style="color: #66D9EF;">:END:</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -3707,16 +3709,16 @@ My super duper secret text I don't want to export.
 <div class="org-src-container">
 
 <pre class="src src-objc"><span style="color: #66D9EF;">NSString</span> *<span style="color: #F92672;">title</span> = @<span style="color: #E6DB74;">"Sharing on iOS bookmarks."</span>;
-<span style="color: #66D9EF;">NSURL</span> *<span style="color: #F92672;">url</span> = <span style="color: #f8f8f2; background-color: #373844;">[</span>NSURL <span style="color: #F92672; font-weight: bold; font-style: italic;">URLWithString</span>:@<span style="color: #E6DB74;">"http://xenodium.com/#sharing-on-ios"</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
-<span style="color: #66D9EF;">UIImage</span> *<span style="color: #F92672;">image</span> = <span style="color: #f8f8f2; background-color: #373844;">[</span><span style="color: #66D9EF;">UIImage</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">imageNamed</span>:@<span style="color: #E6DB74;">"beautiful-image"</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
+<span style="color: #66D9EF;">NSURL</span> *<span style="color: #F92672;">url</span> = <span style="color: #C4BE89;">[</span>NSURL <span style="color: #F92672; font-style: italic;">URLWithString</span>:@<span style="color: #E6DB74;">"http://xenodium.com/#sharing-on-ios"</span><span style="color: #C4BE89;">]</span>;
+<span style="color: #66D9EF;">UIImage</span> *<span style="color: #F92672;">image</span> = <span style="color: #C4BE89;">[</span><span style="color: #66D9EF;">UIImage</span> <span style="color: #F92672; font-style: italic;">imageNamed</span>:@<span style="color: #E6DB74;">"beautiful-image"</span><span style="color: #C4BE89;">]</span>;
 
 <span style="color: #66D9EF;">UIActivityViewController</span> *<span style="color: #F92672;">controller</span> =
-  <span style="color: #f8f8f2; background-color: #373844;">[</span><span style="color: #8be9fd; background-color: #373844;">[</span><span style="color: #66D9EF;">UIActivityViewController</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">alloc</span><span style="color: #8be9fd; background-color: #373844;">]</span>
-    <span style="color: #F92672; font-weight: bold; font-style: italic;">initWithActivityItems</span>:@<span style="color: #8be9fd;">[</span>title, url, image<span style="color: #8be9fd;">]</span>
-    <span style="color: #F92672; font-weight: bold; font-style: italic;">applicationActivities</span>:<span style="color: #AE81FF;">nil</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
+  <span style="color: #C4BE89;">[</span><span style="color: #FD971F;">[</span><span style="color: #66D9EF;">UIActivityViewController</span> <span style="color: #F92672; font-style: italic;">alloc</span><span style="color: #FD971F;">]</span>
+    <span style="color: #F92672; font-style: italic;">initWithActivityItems</span>:@<span style="color: #FD971F;">[</span>title, url, image<span style="color: #FD971F;">]</span>
+    <span style="color: #F92672; font-style: italic;">applicationActivities</span>:<span style="color: #AE81FF;">nil</span><span style="color: #C4BE89;">]</span>;
 
 <span style="color: #465457; font-style: italic;">// </span><span style="color: #465457; font-style: italic;">self being a UIViewController.</span>
-<span style="color: #f8f8f2; background-color: #373844;">[</span><span style="color: #66D9EF; font-weight: bold;">self</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">presentViewController</span>:controller <span style="color: #F92672; font-weight: bold; font-style: italic;">animated</span>:<span style="color: #AE81FF;">YES</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">completion</span>:<span style="color: #AE81FF;">nil</span><span style="color: #f8f8f2; background-color: #373844;">]</span>;
+<span style="color: #C4BE89;">[</span><span style="color: #66D9EF;">self</span> <span style="color: #F92672; font-style: italic;">presentViewController</span>:controller <span style="color: #F92672; font-style: italic;">animated</span>:<span style="color: #AE81FF;">YES</span> <span style="color: #F92672; font-style: italic;">completion</span>:<span style="color: #AE81FF;">nil</span><span style="color: #C4BE89;">]</span>;
 </pre>
 </div>
 <ul class="org-ul">
@@ -3854,7 +3856,7 @@ Wanted to track down which package was enabling ido-mode on my behalf. debug-on-
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>debug-on-entry 'ido-mode<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>debug-on-entry 'ido-mode<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <p>
@@ -3862,7 +3864,7 @@ When done, use cancel.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>cancel-debug-on-entry 'ido-mode<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -3964,17 +3966,17 @@ The new <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">defun</span> <span style="color: #F92672; font-weight: bold; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #8be9fd;">()</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">defun</span> <span style="color: #F92672; font-style: italic;">ar/prefilled-swiper</span> <span style="color: #FD971F;">()</span>
   <span style="color: #E6DB74; font-style: italic;">"Pre-fill swiper input with region."</span>
-  <span style="color: #8be9fd;">(</span>interactive<span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">if</span> <span style="color: #bd93f9;">(</span>region-active-p<span style="color: #bd93f9;">)</span>
-      <span style="color: #bd93f9;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">(</span>region-text <span style="color: #50fa7b;">(</span>buffer-substring <span style="color: #f1fa8c;">(</span>region-beginning<span style="color: #f1fa8c;">)</span>
-                                           <span style="color: #f1fa8c;">(</span>region-end<span style="color: #f1fa8c;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ffb86c;">)</span><span style="color: #ff79c6;">)</span>
-        <span style="color: #ff79c6;">(</span>swiper region-text<span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span>
-    <span style="color: #bd93f9;">(</span>swiper<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+  <span style="color: #FD971F;">(</span>interactive<span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">if</span> <span style="color: #EF5939;">(</span>region-active-p<span style="color: #EF5939;">)</span>
+      <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #F92672;">(</span><span style="color: #960050;">(</span>region-text <span style="color: #AE81FF;">(</span>buffer-substring <span style="color: #66D9EF;">(</span>region-beginning<span style="color: #66D9EF;">)</span>
+                                           <span style="color: #66D9EF;">(</span>region-end<span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span>
+        <span style="color: #F92672;">(</span>swiper region-text<span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+    <span style="color: #EF5939;">(</span>swiper<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span>global-set-key <span style="color: #8be9fd;">(</span>kbd <span style="color: #E6DB74;">"C-s"</span><span style="color: #8be9fd;">)</span>
-                #'ar/prefilled-swiper<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>global-set-key <span style="color: #FD971F;">(</span>kbd <span style="color: #E6DB74;">"C-s"</span><span style="color: #FD971F;">)</span>
+                #'ar/prefilled-swiper<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -5176,7 +5178,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>setq-local my-clever-var<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>setq-local my-clever-var<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5185,9 +5187,9 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>add-hook 'write-file-hooks
-          <span style="color: #8be9fd;">(</span><span style="color: #66D9EF; font-weight: bold;">lambda</span> <span style="color: #bd93f9;">()</span>
-            <span style="color: #bd93f9;">(</span>message <span style="color: #E6DB74;">"about to save!"</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>add-hook 'write-file-hooks
+          <span style="color: #FD971F;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #EF5939;">()</span>
+            <span style="color: #EF5939;">(</span>message <span style="color: #E6DB74;">"about to save!"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5196,7 +5198,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>make-comint NAME PROGRAM <span style="color: #66D9EF;">&amp;optional</span> STARTFILE <span style="color: #66D9EF;">&amp;rest</span> SWITCHES<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>make-comint NAME PROGRAM <span style="color: #66D9EF;">&amp;optional</span> STARTFILE <span style="color: #66D9EF;">&amp;rest</span> SWITCHES<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5205,14 +5207,14 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>setq my-marker <span style="color: #8be9fd;">(</span>copy-marker <span style="color: #bd93f9;">(</span>point<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>setq my-marker <span style="color: #FD971F;">(</span>copy-marker <span style="color: #EF5939;">(</span>point<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
   #&lt;marker at 10251 in *ielm*&gt;
 
-<span style="color: #f8f8f2;">(</span>marker-buffer my-marker<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>marker-buffer my-marker<span style="color: #C4BE89;">)</span>
   #&lt;buffer *ielm*&gt;
 
-<span style="color: #f8f8f2;">(</span>marker-position my-marker<span style="color: #f8f8f2;">)</span>
-  10251 <span style="color: #f8f8f2;">(</span>#o24013, #x280b, ?&#10251;<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>marker-position my-marker<span style="color: #C4BE89;">)</span>
+  10251 <span style="color: #C4BE89;">(</span>#o24013, #x280b, ?&#10251;<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5221,7 +5223,7 @@ Reload .iputrc from bash prompt: C-x C-r. <a href="http://www.gnu.org/software/b
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>org-get-heading 'no-tags 'no-todo<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>org-get-heading 'no-tags 'no-todo<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5247,7 +5249,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>org-end-of-meta-data-and-drawers<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>org-end-of-meta-data-and-drawers<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5256,7 +5258,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>org-open-link-from-string <span style="color: #E6DB74;">"[[#%exciting-custom-id]]"</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>org-open-link-from-string <span style="color: #E6DB74;">"[[#%exciting-custom-id]]"</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5283,10 +5285,10 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">let</span> <span style="color: #8be9fd;">(</span><span style="color: #bd93f9;">(</span>my-var <span style="color: #ff79c6;">(</span>list <span style="color: #E6DB74;">"val1"</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #FD971F;">(</span><span style="color: #EF5939;">(</span>my-var <span style="color: #F92672;">(</span>list <span style="color: #E6DB74;">"val1"</span>
                     <span style="color: #E6DB74;">"val2"</span>
-                    <span style="color: #E6DB74;">"val3"</span><span style="color: #ff79c6;">)</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>pp-to-string my-var<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+                    <span style="color: #E6DB74;">"val3"</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>pp-to-string my-var<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5295,11 +5297,11 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>re-search-forward <span style="color: #E6DB74;">"needle"</span>
-                   nil t<span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>match-beginning 0<span style="color: #f8f8f2;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">Start location of match from last search.</span>
-<span style="color: #f8f8f2;">(</span>match-end 0<span style="color: #f8f8f2;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">End location of match from last search.</span>
-<span style="color: #f8f8f2;">(</span>replace-match <span style="color: #E6DB74;">"love"</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>re-search-forward <span style="color: #E6DB74;">"needle"</span>
+                   nil t<span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>match-beginning 0<span style="color: #C4BE89;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">Start location of match from last search.</span>
+<span style="color: #C4BE89;">(</span>match-end 0<span style="color: #C4BE89;">)</span> <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">End location of match from last search.</span>
+<span style="color: #C4BE89;">(</span>replace-match <span style="color: #E6DB74;">"love"</span><span style="color: #C4BE89;">)</span>
 
 <span style="color: #465457; font-style: italic;">;; </span><span style="color: #465457; font-style: italic;">needle-in-haystack</span>
 </pre>
@@ -5310,8 +5312,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>narrow-to-region <span style="color: #8be9fd;">(</span>point<span style="color: #8be9fd;">)</span>
-                  <span style="color: #8be9fd;">(</span>point-max<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>narrow-to-region <span style="color: #FD971F;">(</span>point<span style="color: #FD971F;">)</span>
+                  <span style="color: #FD971F;">(</span>point-max<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5320,8 +5322,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">save-restriction</span> <span style="color: #8be9fd;">(</span>narrow-to-region <span style="color: #bd93f9;">(</span>point<span style="color: #bd93f9;">)</span>
-                                    <span style="color: #bd93f9;">(</span>point-max<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">save-restriction</span> <span style="color: #FD971F;">(</span>narrow-to-region <span style="color: #EF5939;">(</span>point<span style="color: #EF5939;">)</span>
+                                    <span style="color: #EF5939;">(</span>point-max<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5330,8 +5332,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">save-excursion</span> <span style="color: #8be9fd;">(</span>goto-char <span style="color: #bd93f9;">(</span>point-max<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-                <span style="color: #8be9fd;">(</span>insert <span style="color: #E6DB74;">"Hello elisp."</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">save-excursion</span> <span style="color: #FD971F;">(</span>goto-char <span style="color: #EF5939;">(</span>point-max<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+                <span style="color: #FD971F;">(</span>insert <span style="color: #E6DB74;">"Hello elisp."</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5340,7 +5342,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>concat <span style="color: #E6DB74;">"Hello "</span> <span style="color: #E6DB74;">"elisp "</span> <span style="color: #E6DB74;">"world."</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>concat <span style="color: #E6DB74;">"Hello "</span> <span style="color: #E6DB74;">"elisp "</span> <span style="color: #E6DB74;">"world."</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5349,9 +5351,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>thing-at-point 'word<span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>thing-at-point 'symbol<span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>thing-at-point 'line<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>thing-at-point 'word<span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>thing-at-point 'symbol<span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>thing-at-point 'line<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5362,8 +5364,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">dolist</span> <span style="color: #8be9fd;">(</span>v '<span style="color: #bd93f9;">(</span><span style="color: #E6DB74;">"a"</span> <span style="color: #E6DB74;">"b"</span> <span style="color: #E6DB74;">"c"</span><span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>print v<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">dolist</span> <span style="color: #FD971F;">(</span>v '<span style="color: #EF5939;">(</span><span style="color: #E6DB74;">"a"</span> <span style="color: #E6DB74;">"b"</span> <span style="color: #E6DB74;">"c"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>print v<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5372,9 +5374,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">with-current-buffer</span> <span style="color: #8be9fd;">(</span>get-buffer-create <span style="color: #E6DB74;">"*some buffer*"</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>princ '<span style="color: #bd93f9;">(</span>some list to print<span style="color: #bd93f9;">)</span>
-         <span style="color: #bd93f9;">(</span>current-buffer<span style="color: #bd93f9;">)</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">with-current-buffer</span> <span style="color: #FD971F;">(</span>get-buffer-create <span style="color: #E6DB74;">"*some buffer*"</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>princ '<span style="color: #EF5939;">(</span>some list to print<span style="color: #EF5939;">)</span>
+         <span style="color: #EF5939;">(</span>current-buffer<span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5383,9 +5385,9 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">with-temp-buffer</span>
-  <span style="color: #8be9fd;">(</span>insert <span style="color: #E6DB74;">"abc"</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>point<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">with-temp-buffer</span>
+  <span style="color: #FD971F;">(</span>insert <span style="color: #E6DB74;">"abc"</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>point<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5396,7 +5398,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>string-match-p REGEXP STRING <span style="color: #66D9EF;">&amp;optional</span> START<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>string-match-p REGEXP STRING <span style="color: #66D9EF;">&amp;optional</span> START<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5405,20 +5407,20 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>setq haystack <span style="color: #E6DB74;">"Always click [[http://reddit.com/r/emacs][here]]."</span><span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>setq needle-re <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>setq haystack <span style="color: #E6DB74;">"Always click [[http://reddit.com/r/emacs][here]]."</span><span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>setq needle-re <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span><span style="color: #C4BE89;">)</span>
   <span style="color: #E6DB74;">"\\[\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]\\[</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">(</span><span style="color: #E6DB74;">.*</span><span style="color: #E6DB74; font-weight: bold;">\\</span><span style="color: #E6DB74; font-weight: bold;">)</span><span style="color: #E6DB74;">]]"</span>
 
-<span style="color: #f8f8f2;">(</span>string-match needle-re haystack<span style="color: #f8f8f2;">)</span>
-  13 <span style="color: #f8f8f2;">(</span>#o15, #xd, ?\C-m<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>string-match needle-re haystack<span style="color: #C4BE89;">)</span>
+  13 <span style="color: #C4BE89;">(</span>#o15, #xd, ?\C-m<span style="color: #C4BE89;">)</span>
 
-<span style="color: #f8f8f2;">(</span>match-string 0 haystack<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>match-string 0 haystack<span style="color: #C4BE89;">)</span>
   <span style="color: #E6DB74;">"[[http://reddit.com/r/emacs][here]]"</span>
 
-<span style="color: #f8f8f2;">(</span>match-string 1 haystack<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>match-string 1 haystack<span style="color: #C4BE89;">)</span>
   <span style="color: #E6DB74;">"http://reddit.com/r/emacs"</span>
 
-<span style="color: #f8f8f2;">(</span>match-string 2 haystack<span style="color: #f8f8f2;">)</span>
+<span style="color: #C4BE89;">(</span>match-string 2 haystack<span style="color: #C4BE89;">)</span>
   <span style="color: #E6DB74;">"here"</span>
 </pre>
 </div>
@@ -5428,7 +5430,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>identity ARG<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>identity ARG<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5437,7 +5439,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>org-insert-time-stamp <span style="color: #8be9fd;">(</span>current-time<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>org-insert-time-stamp <span style="color: #FD971F;">(</span>current-time<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5448,7 +5450,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>car LIST<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>car LIST<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5457,7 +5459,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>cdr LIST<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>cdr LIST<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5466,7 +5468,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>push NEWELT PLACE<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>push NEWELT PLACE<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5475,7 +5477,7 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>mapcar FUNCTION SEQUENCE<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -5484,8 +5486,8 @@ If FROM or TO is negative, it counts from the end.
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span><span style="color: #66D9EF; font-weight: bold;">while</span> <span style="color: #8be9fd;">(</span>search-forward <span style="color: #E6DB74;">"Hello"</span><span style="color: #8be9fd;">)</span>
-  <span style="color: #8be9fd;">(</span>replace-match <span style="color: #E6DB74;">"Bonjour"</span><span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">while</span> <span style="color: #FD971F;">(</span>search-forward <span style="color: #E6DB74;">"Hello"</span><span style="color: #FD971F;">)</span>
+  <span style="color: #FD971F;">(</span>replace-match <span style="color: #E6DB74;">"Bonjour"</span><span style="color: #FD971F;">)</span><span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -6164,16 +6166,16 @@ for example:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #F92672; font-weight: bold; font-style: italic;">-</span> <span style="color: #f8f8f2;">(</span>$<span style="color: #8be9fd;">{</span><span style="color: #F92672;">1</span>:id<span style="color: #8be9fd;">}</span><span style="color: #f8f8f2;">)</span>$<span style="color: #f8f8f2;">{</span><span style="color: #F92672;">2</span>:foo<span style="color: #f8f8f2;">}</span>
-<span style="color: #f8f8f2;">{</span>
-    <span style="color: #66D9EF; font-weight: bold;">return</span> $<span style="color: #F92672;">2</span>;
-<span style="color: #f8f8f2;">}</span>
+<pre class="src src-sh"><span style="color: #F92672; font-style: italic;">-</span> <span style="color: #C4BE89;">(</span>$<span style="color: #FD971F;">{</span><span style="color: #F92672;">1</span>:id<span style="color: #FD971F;">}</span><span style="color: #C4BE89;">)</span>$<span style="color: #C4BE89;">{</span><span style="color: #F92672;">2</span>:foo<span style="color: #C4BE89;">}</span>
+<span style="color: #C4BE89;">{</span>
+    <span style="color: #66D9EF;">return</span> $<span style="color: #F92672;">2</span>;
+<span style="color: #C4BE89;">}</span>
 
-<span style="color: #F92672; font-weight: bold; font-style: italic;">-</span> <span style="color: #f8f8f2;">(</span>void<span style="color: #f8f8f2;">)</span><span style="color: #A6E22E;">set</span>$<span style="color: #f8f8f2;">{</span><span style="color: #F92672;">2</span>:$<span style="color: #8be9fd;">(</span><span style="color: #fa8072;">capitalize</span> yas-text<span style="color: #8be9fd;">)</span><span style="color: #f8f8f2;">}</span>:<span style="color: #f8f8f2;">(</span>$<span style="color: #F92672;">1</span><span style="color: #f8f8f2;">)</span>avalue
-<span style="color: #f8f8f2;">{</span>
-    <span style="color: #8be9fd;">[</span>$<span style="color: #F92672;">2</span> autorelease<span style="color: #8be9fd;">]</span>;
-    $<span style="color: #F92672;">2</span> = <span style="color: #8be9fd;">[</span>avalue retain<span style="color: #8be9fd;">]</span>;
-<span style="color: #f8f8f2;">}</span>
+<span style="color: #F92672; font-style: italic;">-</span> <span style="color: #C4BE89;">(</span>void<span style="color: #C4BE89;">)</span><span style="color: #A6E22E;">set</span>$<span style="color: #C4BE89;">{</span><span style="color: #F92672;">2</span>:$<span style="color: #FD971F;">(</span><span style="color: #fa8072;">capitalize</span> yas-text<span style="color: #FD971F;">)</span><span style="color: #C4BE89;">}</span>:<span style="color: #C4BE89;">(</span>$<span style="color: #F92672;">1</span><span style="color: #C4BE89;">)</span>avalue
+<span style="color: #C4BE89;">{</span>
+    <span style="color: #FD971F;">[</span>$<span style="color: #F92672;">2</span> autorelease<span style="color: #FD971F;">]</span>;
+    $<span style="color: #F92672;">2</span> = <span style="color: #FD971F;">[</span>avalue retain<span style="color: #FD971F;">]</span>;
+<span style="color: #C4BE89;">}</span>
 $<span style="color: #F92672;">0</span>
 </pre>
 </div>
@@ -6768,9 +6770,9 @@ See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to
 <div class="outline-text-3" id="text-189-76">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #f8f8f2;">(</span>menu-bar-mode -1<span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>toggle-scroll-bar -1<span style="color: #f8f8f2;">)</span>
-<span style="color: #f8f8f2;">(</span>tool-bar-mode -1<span style="color: #f8f8f2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>menu-bar-mode -1<span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>toggle-scroll-bar -1<span style="color: #C4BE89;">)</span>
+<span style="color: #C4BE89;">(</span>tool-bar-mode -1<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 </div>
@@ -7446,8 +7448,8 @@ Bonus: See <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-so
 </ul>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #66D9EF; font-weight: bold;">with</span> <span style="color: #A6E22E;">open</span><span style="color: #f8f8f2;">(</span>path, <span style="color: #E6DB74;">'r'</span><span style="color: #f8f8f2;">)</span> <span style="color: #66D9EF; font-weight: bold;">as</span> text_file:
-    <span style="color: #F92672;">text</span> = text_file.read<span style="color: #f8f8f2;">()</span>
+<pre class="src src-python"><span style="color: #66D9EF;">with</span> <span style="color: #A6E22E;">open</span><span style="color: #C4BE89;">(</span>path, <span style="color: #E6DB74;">'r'</span><span style="color: #C4BE89;">)</span> <span style="color: #66D9EF;">as</span> text_file:
+    <span style="color: #F92672;">text</span> = text_file.read<span style="color: #C4BE89;">()</span>
 </pre>
 </div>
 <ul class="org-ul">
