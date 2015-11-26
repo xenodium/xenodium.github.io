@@ -1,6 +1,18 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-11-26 Thu] [[#installing-emacs-25-devel-on-mac-os-x][#]] Installing Emacs 25 devel on Mac OS X
+  :PROPERTIES:
+  :CUSTOM_ID: installing-emacs-25-devel-on-mac-os-x
+  :END:
+  Trying out Emacs 25 dev build. To install:
+#+BEGIN_SRC sh
+$ brew install --devel --with-cocoa --srgb --with-gnutls --with-imagemagick --with-librsvg emacs
+#+END_SRC
+  Had problems loading seq. Removed byte-compiled packages:
+#+BEGIN_SRC sh
+$ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
+#+END_SRC
 * [2015-11-25 Wed] [[#diagram-tools-bookmarks][#]] Diagram tools bookmarks
   :PROPERTIES:
   :Custom_ID: diagram-tools-bookmarks
@@ -76,7 +88,7 @@
   [[https://twitter.com/_wilfredh][Wilfred Hughes]] has a handy [[https://twitter.com/_wilfredh/status/659499112677642242?refsrc%3Demail&s%3D11][tip]] to bail you out of a hung Emacs instance:
 
 #+BEGIN_SRC sh
-  pkill -SIGUSR2 emacs
+pkill -SIGUSR2 emacs
 #+END_SRC
 
   ps. Not had a chance to try it, but next time it happens...
@@ -122,13 +134,13 @@
   :PROPERTIES:
   :Custom_ID: find-binary-in-path-using-python
   :END:
-#+BEGIN_SRC python :exports both :results output
-  import distutils.spawn
-  print distutils.spawn.find_executable('git')
+#+BEGIN_SRC python
+import distutils.spawn
+print distutils.spawn.find_executable('git')
 #+END_SRC
 
 #+RESULTS:
-: /usr/local/git/current/bin/git
+: /usr/bin/git
 
 * [2015-10-22 Thu] [[#indonesia-travel-bookmarks][#]] Indonesia travel bookmarks
   :PROPERTIES:
@@ -166,40 +178,40 @@
 
 [[file:images/get-emacs-to-gather-urls-in-posts/emacs-enlive-url-fetch.gif]]
 #+BEGIN_SRC emacs-lisp
-   (require 'enlive) ;; https://github.com/zweifisch/enlive
-   (require 'org)
+(require 'enlive) ;; https://github.com/zweifisch/enlive
+(require 'org)
 
 
-   (defun ar/input-clipboard-url-or-prompt ()
-     "Return a URL from clipboard or prompt user for one."
-     (let* ((clipboard (current-kill 0))
-            (url (if (string-match "^http://" clipboard)
-                     clipboard
-                   (read-string "URL: "))))
-       (unless (string-match "^http://" url)
-         (error "Not a URL"))
-       url))
+(defun ar/input-clipboard-url-or-prompt ()
+  "Return a URL from clipboard or prompt user for one."
+  (let* ((clipboard (current-kill 0))
+         (url (if (string-match "^http://" clipboard)
+                  clipboard
+                (read-string "URL: "))))
+    (unless (string-match "^http://" url)
+      (error "Not a URL"))
+    url))
 
-   (defun ar/url-view-links-at ()
-     "View external links in HTML from prompted URL or clipboard."
-     (interactive)
-     (with-current-buffer (get-buffer-create "*links*")
-       (org-mode)
-       (read-only-mode -1)
-       (erase-buffer)
-       (mapc (lambda (element)
-               (let ((href (enlive-attr element 'href))
-                     (text (enlive-text element)))
-                 (when (and href (string-match "^http" href))
-                   (insert (org-make-link-string href text) "\n"))))
-             (enlive-query-all
-              (enlive-fetch (ar/input-clipboard-url-or-prompt))
-              [a]))
-       (delete-duplicate-lines (point-min) (point-max))
-       (goto-char (point-min))
-       (toggle-truncate-lines +1)
-       (read-only-mode +1)
-       (switch-to-buffer (current-buffer))))
+(defun ar/url-view-links-at ()
+  "View external links in HTML from prompted URL or clipboard."
+  (interactive)
+  (with-current-buffer (get-buffer-create "*links*")
+    (org-mode)
+    (read-only-mode -1)
+    (erase-buffer)
+    (mapc (lambda (element)
+            (let ((href (enlive-attr element 'href))
+                  (text (enlive-text element)))
+              (when (and href (string-match "^http" href))
+                (insert (org-make-link-string href text) "\n"))))
+          (enlive-query-all
+           (enlive-fetch (ar/input-clipboard-url-or-prompt))
+           [a]))
+    (delete-duplicate-lines (point-min) (point-max))
+    (goto-char (point-min))
+    (toggle-truncate-lines +1)
+    (read-only-mode +1)
+    (switch-to-buffer (current-buffer))))
 
 #+END_SRC
 * [2015-10-16 Fri] [[#ux-toolbox-bookmarks][#]] UX toolbox bookmarks
@@ -216,31 +228,31 @@
 [[file:images/change-emacs-shells-cwd-with-helm-projectile/change-cwd-with-helm-projectile.gif]]
 
 #+BEGIN_SRC emacs-lisp
-  (require 'helm-projectile)
+(require 'helm-projectile)
 
-  (defun ar/shell-cd (dir-path)
-  "Like shell-pop--cd-to-cwd-shell, but without recentering."
-    (unless (string-equal mode-name "Shell")
-      (error "Not in Shell mode"))
-    (message mode-name)
-    (goto-char (point-max))
-    (comint-kill-input)
-    (insert (concat "cd " (shell-quote-argument dir-path)))
-    (let ((comint-process-echoes t))
-      (comint-send-input)))
+(defun ar/shell-cd (dir-path)
+"Like shell-pop--cd-to-cwd-shell, but without recentering."
+  (unless (string-equal mode-name "Shell")
+    (error "Not in Shell mode"))
+  (message mode-name)
+  (goto-char (point-max))
+  (comint-kill-input)
+  (insert (concat "cd " (shell-quote-argument dir-path)))
+  (let ((comint-process-echoes t))
+    (comint-send-input)))
 
-  (defun ar/helm-projectile-shell-cd ()
-    "Change shell current working directory using helm projectile."
-    (interactive)
-    (unless (string-equal mode-name "Shell")
-      (error "Not in Shell mode"))
-    (let ((helm-dir-source (copy-tree  helm-source-projectile-directories-list)))
-      (add-to-list 'helm-dir-source '(action . ar/shell-cd))
-      (add-to-list 'helm-dir-source '(keymap . nil))
-      (add-to-list 'helm-dir-source '(header-line . "cd to directory..."))
-      (helm :sources helm-dir-source
-            :buffer "*helm-dirs*"
-            :candidate-number-limit 10000)))
+(defun ar/helm-projectile-shell-cd ()
+  "Change shell current working directory using helm projectile."
+  (interactive)
+  (unless (string-equal mode-name "Shell")
+    (error "Not in Shell mode"))
+  (let ((helm-dir-source (copy-tree  helm-source-projectile-directories-list)))
+    (add-to-list 'helm-dir-source '(action . ar/shell-cd))
+    (add-to-list 'helm-dir-source '(keymap . nil))
+    (add-to-list 'helm-dir-source '(header-line . "cd to directory..."))
+    (helm :sources helm-dir-source
+          :buffer "*helm-dirs*"
+          :candidate-number-limit 10000)))
 
 #+END_SRC
 * [2015-10-07 Wed] [[#thermostat-reset-on-bosch-wkd28350gb][#]] Thermostat reset on Bosch WKD28350GB
@@ -257,23 +269,23 @@
   :END:
   Playing with node and fetch:
 #+BEGIN_SRC js
-  // Requisite: npm install node-fetch --save
-  // Save to fetch-demo.js
-  // Run: node fetch-demo.js
+// Requisite: npm install node-fetch --save
+// Save to fetch-demo.js
+// Run: node fetch-demo.js
 
-  var fetch = require('node-fetch');
+var fetch = require('node-fetch');
 
-  fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json", {
-    method: 'GET',
-    timeout: 5000
-  }).then(function(response) {
-    return response.json();
-  }).then(function(response) {
-    console.log('subject: ' + response.subject);
-    console.log('body: ' + response.body);
-  }).catch(function(reason) {
-    console.log(reason);
-  });
+fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json", {
+  method: 'GET',
+  timeout: 5000
+}).then(function(response) {
+  return response.json();
+}).then(function(response) {
+  console.log('subject: ' + response.subject);
+  console.log('body: ' + response.body);
+}).catch(function(reason) {
+  console.log(reason);
+});
 #+END_SRC
 * [2015-10-01 Thu] [[#extract-dominant-colors-in-images][#]] Extract dominant colors in images
   :PROPERTIES:
@@ -288,35 +300,35 @@
 
   Installed WordNet on Mac:
 #+BEGIN_SRC sh
-  $ brew install wordnet
+$ brew install wordnet
 #+END_SRC
 
   Want a word ending in "esome"?
 
 #+BEGIN_SRC sh
-  $ wn esome -grepn -grepv -grepa -grepr | egrep -o -e "\w*esome\b" | sort | uniq
+$ wn esome -grepn -grepv -grepa -grepr | egrep -o -e "\w*esome\b" | sort | uniq
 
-  adventuresome
-  awesome
-  blithesome
-  bunglesome
-  cuddlesome
-  esome
-  fivesome
-  gruesome
-  lithesome
-  lonesome
-  lovesome
-  meddlesome
-  mettlesome
-  nettlesome
-  threesome
-  tiresome
-  torturesome
-  troublesome
-  unwholesome
-  venturesome
-  wholesome
+adventuresome
+awesome
+blithesome
+bunglesome
+cuddlesome
+esome
+fivesome
+gruesome
+lithesome
+lonesome
+lovesome
+meddlesome
+mettlesome
+nettlesome
+threesome
+tiresome
+torturesome
+troublesome
+unwholesome
+venturesome
+wholesome
 #+END_SRC
 
 * [2015-09-26 Sat] [[#soundclouds-go-best-practices-gophercon-2014][#]] Soundcloud's Go best practices (GopherCon 2014)
@@ -353,14 +365,14 @@
 ******* Keep trailing coma in last argument.
 ***** Flags
 #+BEGIN_SRC go
-  func main() {
-    var (
-      foo = flags.String("foo", "doch", "...")
-      bar = flat.Int("bar", 34, "...")
-    )
-    flag.Parse()
-    // ...
-  }
+func main() {
+  var (
+    foo = flags.String("foo", "doch", "...")
+    bar = flat.Int("bar", 34, "...")
+  )
+  flag.Parse()
+  // ...
+}
 #+END_SRC
 ***** Logging
 ******* package log
@@ -420,7 +432,7 @@
 #+END_EXAMPLE
   Updating my pip installation fixes the break:
 #+BEGIN_SRC sh
-  $ sudo easy_install -U pip
+$ sudo easy_install -U pip
 #+END_SRC
 * [2015-09-20 Sun] [[#chinatown-treats-review][#]] Chinatown treats review
   :PROPERTIES:
@@ -515,12 +527,12 @@
   :END:
   Using percentage:
 #+BEGIN_SRC sh
-  $ mogrify -resize 10% *.png
+$ mogrify -resize 10% *.png
 #+END_SRC
 
   Using dimensions:
 #+BEGIN_SRC sh
-  $ mogrify -resize 120x120 *.png
+$ mogrify -resize 120x120 *.png
 #+END_SRC
 
   Lots of other alternatives from ImageMagick's [[http://www.imagemagick.org/script/command-line-processing.php#geometry][documentation]]:
@@ -585,7 +597,7 @@ file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
   :END:
   Recently needed to rotate images based on EXIF metadata. ImageMagick to the rescue:
 #+BEGIN_SRC sh
-  $ for i in *.png; do convert -auto-orient "$i" "$i"; done
+$ for i in *.png; do convert -auto-orient "$i" "$i"; done
 #+END_SRC
 * [2015-08-23 Sun] [[#bengali-macher-jhol][#]] Bengali Macher Jhol
   :PROPERTIES:
@@ -805,42 +817,42 @@ file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
   :END:
   Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances are you have to tweak it from time to time. ~ar/open-build-file~ searches your current and parent directories to find a build file.
 #+BEGIN_SRC emacs-lisp
-  (defvar ar/project-file-names '("Makefile" "SConstruct" "BUILD"))
+(defvar ar/project-file-names '("Makefile" "SConstruct" "BUILD"))
 
-  (defun ar/parent-directory (path)
-    "Get parent directory for PATH."
-    (unless (equal "/" path)
-      (file-name-directory (directory-file-name path))))
+(defun ar/parent-directory (path)
+  "Get parent directory for PATH."
+  (unless (equal "/" path)
+    (file-name-directory (directory-file-name path))))
 
-  (defun ar/find-upwards (path filename)
-    "Search upwards from PATH for a file named FILENAME."
-    (let ((file (concat path filename))
-          (parent (ar/parent-directory (expand-file-name path))))
-      (if (file-exists-p file)
-          file
-        (when parent
-          (ar/find-upwards parent filename)))))
+(defun ar/find-upwards (path filename)
+  "Search upwards from PATH for a file named FILENAME."
+  (let ((file (concat path filename))
+        (parent (ar/parent-directory (expand-file-name path))))
+    (if (file-exists-p file)
+        file
+      (when parent
+        (ar/find-upwards parent filename)))))
 
-  (defun ar/open-closest (filename)
-    "Open the closest FILENAME in current or parent dirs (handy for finding Makefiles)."
-    (let ((closest-file-path (ar/find-upwards (buffer-file-name)
-                                                   filename)))
-      (when closest-file-path
-        (message closest-file-path)
-        (switch-to-buffer (find-file-noselect closest-file-path)))
-      closest-file-path))
+(defun ar/open-closest (filename)
+  "Open the closest FILENAME in current or parent dirs (handy for finding Makefiles)."
+  (let ((closest-file-path (ar/find-upwards (buffer-file-name)
+                                                 filename)))
+    (when closest-file-path
+      (message closest-file-path)
+      (switch-to-buffer (find-file-noselect closest-file-path)))
+    closest-file-path))
 
-  (defun ar/open-build-file ()
-    "Open the closest project file in current or parent directory.
-  For example: Makefile, SConstruct, BUILD, etc.
-  Append `ar/project-file-names' to search for other file names."
-    (interactive)
-    (catch 'found
-      (mapc (lambda (filename)
-              (when (ar/open-closest filename)
-                (throw 'found t)))
-            ar/project-file-names)
-      (error "No project file found")))
+(defun ar/open-build-file ()
+  "Open the closest project file in current or parent directory.
+For example: Makefile, SConstruct, BUILD, etc.
+Append `ar/project-file-names' to search for other file names."
+  (interactive)
+  (catch 'found
+    (mapc (lambda (filename)
+            (when (ar/open-closest filename)
+              (throw 'found t)))
+          ar/project-file-names)
+    (error "No project file found")))
 #+END_SRC
 * [2015-07-15 Wed] [[#create-ios-static-fat-libraries][#]] Create iOS static fat libraries
   :PROPERTIES:
@@ -928,22 +940,22 @@ $ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -outp
   :END:
   Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
 #+BEGIN_SRC sh
-  apt-get install ffmpeg imagemagick (linux)
-  brew install ffmpeg imagemagick (Mac)
+apt-get install ffmpeg imagemagick (linux)
+brew install ffmpeg imagemagick (Mac)
 #+END_SRC
   Convert to gif:
 #+BEGIN_SRC sh
-  ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
+ffmpeg -i my.mp4 -pix_fmt rgb24 -r 5 my.gif
 #+END_SRC
   Optimize with:
 #+BEGIN_SRC sh
-  convert -dither none -layers Optimize my.gif my_optimized.gif
+convert -dither none -layers Optimize my.gif my_optimized.gif
 #+END_SRC
 
   UPDATE: There's also licecap and subsequently optimize with:
 
 #+BEGIN_SRC sh
-    cat source.gif | gifsicle --colors 256 --optimize=3 --delay=15 > target.gif
+cat source.gif | gifsicle --colors 256 --optimize=3 --delay=15 > target.gif
 #+END_SRC
 * [2015-07-06 Mon] [[#keyboards-bookmarks][#]] Keyboards bookmarks
   :PROPERTIES:
@@ -1621,26 +1633,26 @@ build_clang
   :CUSTOM_ID: plantuml-example
   :END:
   Played with [[http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf][Plantuml]]. Convenient for generating UML diagrams from text. Here's the [[http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf][Language Reference Guide]]. Here's an example:
-#+BEGIN_SRC plantuml :exports both :file images/plantuml-example/plantuml-singer.png
-  @startuml
-    abstract class Singer {
-      abstract void sing()
-      void Dance()
-    }
+#+BEGIN_SRC plantuml
+@startuml
+  abstract class Singer {
+    abstract void sing()
+    void Dance()
+  }
 
-    skinparam monochrome true
-    Singer <|-- PopSinger
-    Singer <|-- SalsaSinger
+  skinparam monochrome true
+  Singer <|-- PopSinger
+  Singer <|-- SalsaSinger
 
-    class PopSinger {
-      void sing()
-    }
+  class PopSinger {
+    void sing()
+  }
 
-    class SalsaSinger {
-      void sing()
-    }
+  class SalsaSinger {
+    void sing()
+  }
 
-  @enduml
+@enduml
 #+END_SRC
 
 #+RESULTS:
@@ -1648,12 +1660,12 @@ build_clang
 
 Install plantuml on Mac OS X:
 #+BEGIN_SRC sh
-  brew install plantum
+brew install plantum
 #+END_SRC
 
 Generating diagram:
 #+BEGIN_SRC sh
-  $GRAPHVIZ_DOT=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
+$GRAPHVIZ_DOT=~/homebrew/bin/dot java -jar path/to/plantuml.8018.jar diagram.plantuml
 #+END_SRC
 * [2015-04-14 Tue] [[#helm-describe-helm-attribute][#]] Helm-describe-helm-attribute
   :PROPERTIES:
@@ -1674,12 +1686,12 @@ Generating diagram:
   :END:
   [[https://twitter.com/sachachua][Sacha Chua]] and [[https://twitter.com/jwiegley][John Wiegley]] posted a wonderful video on [[http://sachachua.com/blog/2015/04/2015-04-08-emacs-lisp-development-tips-with-john-wiegley][Emacs lisp development tips]]. Embedding the following raw HTML using #+BEGIN_HTML/#+END_HTML:
 #+BEGIN_SRC html
-  <iframe width="420"
-          height="315"
-          src="https://www.youtube.com/embed/QRBcm6jFJ3Q"
-          frameborder="0"
-          allowfullscreen>
-  </iframe>
+<iframe width="420"
+        height="315"
+        src="https://www.youtube.com/embed/QRBcm6jFJ3Q"
+        frameborder="0"
+        allowfullscreen>
+</iframe>
 #+END_SRC
   results in an embedded video when exporting your org file:
 #+BEGIN_HTML
@@ -1707,13 +1719,13 @@ Generating diagram:
   :END:
   Adopted Tim Pope's Git commit message [[http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html][style]]. Also enabled Emacs's git-commit-training-wheels-mode:
 #+BEGIN_SRC emacs-lisp
-  (use-package git-commit-training-wheels-mode :ensure t
-    :commands (git-commit-training-wheels-mode))
+(use-package git-commit-training-wheels-mode :ensure t
+  :commands (git-commit-training-wheels-mode))
 
-  (use-package git-commit-mode :ensure t
-    :config
-    (add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
-    :commands (git-commit-mode))
+(use-package git-commit-mode :ensure t
+  :config
+  (add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
+  :commands (git-commit-mode))
 #+END_SRC
   Another great [[http://chris.beams.io/posts/git-commit/][post]] by Chris Beams.
 * [2015-04-06 Mon] [[#fci-mode-and-org-html-export-to-html-bug][#]] fci-mode and org-html-export-to-html bug
@@ -1722,15 +1734,15 @@ Generating diagram:
   :END:
   Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This [[http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html][thread]] has a workaround:
 #+BEGIN_SRC emacs-lisp
-  (defun org-html-fontify-code (code lang)
-    ;; ...
-    (funcall lang-mode)
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (when (require 'fill-column-indicator nil 'noerror)
-      (fci-mode -1))
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (insert code)
-    ;; ...
+(defun org-html-fontify-code (code lang)
+  ;; ...
+  (funcall lang-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (when (require 'fill-column-indicator nil 'noerror)
+    (fci-mode -1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (insert code)
+  ;; ...
 #+END_SRC
 * [2015-04-03 Fri] [[#try-cocoapods-out][#]] Try cocoapods out
   :PROPERTIES:
@@ -1738,7 +1750,7 @@ Generating diagram:
   :END:
   [[https://github.com/CocoaPods/cocoapods-try][Cocapods try]]:
 #+BEGIN_SRC sh
-  $ pod try POD_NAME
+$ pod try POD_NAME
 #+END_SRC
 * [2015-04-03 Fri] [[#cornwall-travel-bookmarks][#]] Cornwall travel bookmarks
   :PROPERTIES:
@@ -1803,17 +1815,17 @@ Generating diagram:
   :END:      
   Codepen [[http://codepen.io/oisinlavery/pen/Jmjtz][snippet]]:
 #+BEGIN_SRC css
-  div{
-    height: 200px;
-    background: #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+div{
+  height: 200px;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  p{
-    margin: auto
-  }
+p{
+  margin: auto
+}
 #+END_SRC
 * [2015-03-26 Thu] [[#london-diving-schools][#]] London diving schools
   :PROPERTIES:
@@ -1863,7 +1875,7 @@ Generating diagram:
   :CUSTOM_ID: doh-undo-last-git-commit
   :END:
 #+BEGIN_SRC sh
-  $ git reset --soft HEAD~1
+$ git reset --soft HEAD~1
 #+END_SRC
 * [2015-03-22 Sun] [[#resetting-variables-using-defvar][#]] Resetting variables using defvar
   :PROPERTIES:
@@ -1883,8 +1895,8 @@ Generating diagram:
   :END:
   Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPlugInCompatibilityUUIDs is added to the plugin's Info.plist. Get from:
 #+BEGIN_SRC sh
-  $ defaults read \
-      /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+$ defaults read \
+    /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 #+END_SRC
 * [2015-03-22 Sun] [[#born-to-run-references][#]] Born to Run references
   :PROPERTIES:
@@ -1923,9 +1935,9 @@ Generating diagram:
   Lots of great tips in [[http://sachachua.com/blog/2015/03/emacs-hangout-2015-03-18-show-notes/][Emacs Hangout 2015-03-18]]. Favorites:
   - Private org drawer to prevent export:
 #+BEGIN_SRC org
-  :PRIVATE:
-  My super duper secret text I don't want to export.
-  :END:
+:PRIVATE:
+My super duper secret text I don't want to export.
+:END:
 #+END_SRC
   - C-c C-p/C-c C-n Jump over sections.
   - (setq org-hide-leading-stars t).
@@ -1983,17 +1995,17 @@ Generating diagram:
     - Use completionWithItemsHandler on iOS 8.
     - Sample:
 #+BEGIN_SRC objc
-  NSString *title = @"Sharing on iOS bookmarks.";
-  NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
-  UIImage *image = [UIImage imageNamed:@"beautiful-image"];
+NSString *title = @"Sharing on iOS bookmarks.";
+NSURL *url = [NSURL URLWithString:@"http://xenodium.com/#sharing-on-ios"];
+UIImage *image = [UIImage imageNamed:@"beautiful-image"];
 
-  UIActivityViewController *controller =
-    [[UIActivityViewController alloc]
-      initWithActivityItems:@[title, url, image]
-      applicationActivities:nil];
+UIActivityViewController *controller =
+  [[UIActivityViewController alloc]
+    initWithActivityItems:@[title, url, image]
+    applicationActivities:nil];
 
-  // self being a UIViewController.
-  [self presentViewController:controller animated:YES completion:nil];
+// self being a UIViewController.
+[self presentViewController:controller animated:YES completion:nil];
 #+END_SRC
   - Sharing through Mail app on simulator isn't supported.
 #+BEGIN_QUOTE
@@ -2066,11 +2078,11 @@ bl
   :END:
   Wanted to track down which package was enabling ido-mode on my behalf. debug-on-entry to the rescue. Pass the method name in question and you're good to go.
 #+BEGIN_SRC emacs-lisp
-  (debug-on-entry 'ido-mode)
+(debug-on-entry 'ido-mode)
 #+END_SRC
   When done, use cancel.
 #+BEGIN_SRC emacs-lisp
-  (cancel-debug-on-entry 'ido-mode)
+(cancel-debug-on-entry 'ido-mode)
 #+END_SRC
 
 * [2015-03-17 Tue] [[#burma-travel-bookmarks][#]] Burma travel bookmarks
@@ -2097,8 +2109,8 @@ bl
     - Ensure DVTPlugInCompatibilityUUIDs is in Info.plist.
     - Get from:
 #+BEGIN_SRC sh
-  defaults read \
-      /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+defaults read \
+    /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
 #+END_SRC
   - Luis Solanos's [[https://github.com/luisobo/Xcode-RuntimeHeaders][Xcode-RuntimeHeaders]].
   - Boris Bügling's [[https://github.com/neonichu/Xcode-RuntimeHeaders][Xcode-RuntimeHeaders]] fork.
@@ -2113,12 +2125,12 @@ bl
   :CUSTOM_ID: uninstalling-alcatraz-from-xcode
   :END:
 #+BEGIN_SRC sh
-  $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
-  $ rm -rf ~/Library/Application\ Support/Alcatraz
+$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
+$ rm -rf ~/Library/Application\ Support/Alcatraz
 #+END_SRC
   ps. Removing all plugins:
 #+BEGIN_SRC sh
-  $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
+$ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
 #+END_SRC
 * [2015-03-14 Sat] [[#prefill-emacs-swiper-with-current-region][#]] Prefill Emacs swiper with current region
   :PROPERTIES:
@@ -2126,17 +2138,17 @@ bl
   :END:
   The new [[https://github.com/abo-abo/swiper][swiper]] Emacs package is proving to be a great alternative to [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]. Here's how to prefill with current region:
 #+BEGIN_SRC emacs-lisp
-  (defun ar/prefilled-swiper ()
-    "Pre-fill swiper input with region."
-    (interactive)
-    (if (region-active-p)
-        (let ((region-text (buffer-substring (region-beginning)
-                                             (region-end))))
-          (swiper region-text))
-      (swiper)))
+(defun ar/prefilled-swiper ()
+  "Pre-fill swiper input with region."
+  (interactive)
+  (if (region-active-p)
+      (let ((region-text (buffer-substring (region-beginning)
+                                           (region-end))))
+        (swiper region-text))
+    (swiper)))
 
-  (global-set-key (kbd "C-s")
-                  #'ar/prefilled-swiper)
+(global-set-key (kbd "C-s")
+                #'ar/prefilled-swiper)
 #+END_SRC
 * [2015-03-14 Sat] [[#change-mac-os-app-icon][#]] Change Mac OS app icon
   :PROPERTIES:
@@ -2185,15 +2197,15 @@ bl
   :END:
 *** Build
 #+BEGIN_SRC sh
-  $ git clone https://github.com/Valloric/ycmd.git
-  $ cd ycmd
-  $ git submodule update --init --recursive
-  $ ./build.sh --clang-completer
+$ git clone https://github.com/Valloric/ycmd.git
+$ cd ycmd
+$ git submodule update --init --recursive
+$ ./build.sh --clang-completer
 #+END_SRC
 *** Test
 #+BEGIN_SRC sh
-  $ python ycmd
-    serving on http://127.0.0.1:54265
+$ python ycmd
+  serving on http://127.0.0.1:54265
 #+END_SRC
 *** More info
     - [[https://github.com/Valloric/YouCompleteMe/blob/master/README.md][YouCompleteMe README]].
@@ -2346,8 +2358,8 @@ bl
    - [[http://www.slideshare.net/brendangregg/scale2015-linux-perfprofiling][Linux profiling at Netflix]].
    - Partial secure copy with rsync
 #+BEGIN_SRC sh
-  rsync --rsync-path=/usr/local/bin/rsync --partial \
-      --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
+rsync --rsync-path=/usr/local/bin/rsync --partial \
+    --progress --rsh=ssh john@host:/path/to/file path/to/partial/file
 #+END_SRC
 * [2015-03-07 Sat] [[#recipes][#]] Recipes
   :PROPERTIES:
@@ -2754,32 +2766,32 @@ bl
   - Use nreverse and nconc to operate on lists in-place.
   - Set buffer local variables:
 #+BEGIN_SRC emacs-lisp
-  (setq-local my-clever-var)
+(setq-local my-clever-var)
 #+END_SRC
   - Execute before saving buffer:
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'write-file-hooks
-            (lambda ()
-              (message "about to save!")))
+(add-hook 'write-file-hooks
+          (lambda ()
+            (message "about to save!")))
 #+END_SRC
   - Possibly use to start processes and send file content:
 #+BEGIN_SRC emacs-lisp
-  (make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
+(make-comint NAME PROGRAM &optional STARTFILE &rest SWITCHES)
 #+END_SRC
   - Creating markers:
 #+BEGIN_SRC emacs-lisp
-  (setq my-marker (copy-marker (point)))
-    #<marker at 10251 in *ielm*>
+(setq my-marker (copy-marker (point)))
+  #<marker at 10251 in *ielm*>
 
-  (marker-buffer my-marker)
-    #<buffer *ielm*>
+(marker-buffer my-marker)
+  #<buffer *ielm*>
 
-  (marker-position my-marker)
-    10251 (#o24013, #x280b, ?⠋)
+(marker-position my-marker)
+  10251 (#o24013, #x280b, ?⠋)
 #+END_SRC
   - Get org heading at point:
 #+BEGIN_SRC emacs-lisp
-  (org-get-heading 'no-tags 'no-todo)
+(org-get-heading 'no-tags 'no-todo)
 #+END_SRC
   - Remove string text properties. From manual:
 #+BEGIN_QUOTE
@@ -2793,11 +2805,11 @@ If FROM or TO is negative, it counts from the end.
 #+END_QUOTE
   - Skip org entry metadata/drawers:
 #+BEGIN_SRC emacs-lisp
-  (org-end-of-meta-data-and-drawers)
+(org-end-of-meta-data-and-drawers)
 #+END_SRC
   - Random access to org entry using id (or CUSTOM_ID):
 #+BEGIN_SRC emacs-lisp
-  (org-open-link-from-string "[[#%exciting-custom-id]]")
+(org-open-link-from-string "[[#%exciting-custom-id]]")
 #+END_SRC
   - From [[http://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html][Debugging Elisp Part 1: Earn your independence]]:
 #+BEGIN_QUOTE
@@ -2809,112 +2821,112 @@ If FROM or TO is negative, it counts from the end.
 #+END_QUOTE
   - Pretty printing objects:
 #+BEGIN_SRC emacs-lisp
-  (let ((my-var (list "val1"
-                      "val2"
-                      "val3")))
-    (pp-to-string my-var))
+(let ((my-var (list "val1"
+                    "val2"
+                    "val3")))
+  (pp-to-string my-var))
 #+END_SRC
   - Search and/or replace in curent buffer:
 #+BEGIN_SRC emacs-lisp
-  (re-search-forward "needle"
-                     nil t)
-  (match-beginning 0) ;; Start location of match from last search.
-  (match-end 0) ;; End location of match from last search.
-  (replace-match "love")
+(re-search-forward "needle"
+                   nil t)
+(match-beginning 0) ;; Start location of match from last search.
+(match-end 0) ;; End location of match from last search.
+(replace-match "love")
 
-  ;; needle-in-haystack
+;; needle-in-haystack
 #+END_SRC
   - Restrict buffer editing to a region:
 #+BEGIN_SRC emacs-lisp
-  (narrow-to-region (point)
-                    (point-max))
+(narrow-to-region (point)
+                  (point-max))
 #+END_SRC
   - Restore restriction:
 #+BEGIN_SRC emacs-lisp
-  (save-restriction (narrow-to-region (point)
-                                      (point-max))
+(save-restriction (narrow-to-region (point)
+                                    (point-max))
 #+END_SRC
   - Restore point, mark, and current buffer:
 #+BEGIN_SRC emacs-lisp
-  (save-excursion (goto-char (point-max))
-                  (insert "Hello elisp."))
+(save-excursion (goto-char (point-max))
+                (insert "Hello elisp."))
 #+END_SRC
   - Concatenating strings:
 #+BEGIN_SRC emacs-lisp
-  (concat "Hello " "elisp " "world.")
+(concat "Hello " "elisp " "world.")
 #+END_SRC
   - Grabbing thing at point:
 #+BEGIN_SRC emacs-lisp
-  (thing-at-point 'word)
-  (thing-at-point 'symbol)
-  (thing-at-point 'line)
+(thing-at-point 'word)
+(thing-at-point 'symbol)
+(thing-at-point 'line)
 #+END_SRC
   - Unit test with ert.
   - Basic iteration with dolist:
 #+BEGIN_SRC emacs-lisp
-  (dolist (v '("a" "b" "c"))
-    (print v))
+(dolist (v '("a" "b" "c"))
+  (print v))
 #+END_SRC
   - Output to other buffer:
 #+BEGIN_SRC emacs-lisp
-  (with-current-buffer (get-buffer-create "*some buffer*")
-    (princ '(some list to print)
-           (current-buffer)))
+(with-current-buffer (get-buffer-create "*some buffer*")
+  (princ '(some list to print)
+         (current-buffer)))
 #+END_SRC
   - For a temporary buffer, use with-temp-buffer:
 #+BEGIN_SRC emacs-lisp
-  (with-temp-buffer
-    (insert "abc")
-    (point))
+(with-temp-buffer
+  (insert "abc")
+  (point))
 #+END_SRC
   - Cons cells [[http://emacslife.com/read-lisp-tweak-emacs/beginner-2-understand-emacs-lisp.html#sec-4-4][bookmark]].
   - Check for substring:
 #+BEGIN_SRC emacs-lisp
-  (string-match-p REGEXP STRING &optional START)
+(string-match-p REGEXP STRING &optional START)
 #+END_SRC
   - Matching substrings and accessing groups:
 #+BEGIN_SRC emacs-lisp
-  (setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
-  (setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
-    "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
+(setq haystack "Always click [[http://reddit.com/r/emacs][here]].")
+(setq needle-re "\\[\\[\\(.*\\)]\\[\\(.*\\)]]")
+  "\\[\\[\\(.*\\)]\\[\\(.*\\)]]"
 
-  (string-match needle-re haystack)
-    13 (#o15, #xd, ?\C-m)
+(string-match needle-re haystack)
+  13 (#o15, #xd, ?\C-m)
 
-  (match-string 0 haystack)
-    "[[http://reddit.com/r/emacs][here]]"
+(match-string 0 haystack)
+  "[[http://reddit.com/r/emacs][here]]"
 
-  (match-string 1 haystack)
-    "http://reddit.com/r/emacs"
+(match-string 1 haystack)
+  "http://reddit.com/r/emacs"
 
-  (match-string 2 haystack)
-    "here"
+(match-string 2 haystack)
+  "here"
 
 #+END_SRC
   - Return argument unchanged (noop):
 #+BEGIN_SRC emacs-lisp
-  (identity ARG)
+(identity ARG)
 #+END_SRC
   - Org insert today's timestamp
 #+BEGIN_SRC emacs-lisp
-  (org-insert-time-stamp (current-time))
+(org-insert-time-stamp (current-time))
 #+END_SRC
   - [[http://ergoemacs.org/emacs/elisp_determine_OS_version.html][OS version in .emacs]]: Determine OS in emacs lisp.
   - First element
 #+BEGIN_SRC emacs-lisp
-  (car LIST)
+(car LIST)
 #+END_SRC
   - All but first element
 #+BEGIN_SRC emacs-lisp
-  (cdr LIST)
+(cdr LIST)
 #+END_SRC
   - Add NEWELT to front of PLACE
 #+BEGIN_SRC emacs-lisp
-  (push NEWELT PLACE)
+(push NEWELT PLACE)
 #+END_SRC
   - Invoke 'FUNCTION for each in SEQUENCE
 #+BEGIN_SRC emacs-lisp
-  (mapcar FUNCTION SEQUENCE)
+(mapcar FUNCTION SEQUENCE)
 #+END_SRC
   - Search/replace
 #+BEGIN_SRC emacs-lisp
@@ -3256,19 +3268,19 @@ If FROM or TO is negative, it counts from the end.
     create presentations in org and export via [[https://coldnew.github.io/slides/org-ioslide][org-ioslide]].
 *** yasnippet mirrors with transformations
     for example:
-#+begin_src sh
-  - (${1:id})${2:foo}
-  {
-      return $2;
-  }
+#+BEGIN_SRC sh
+- (${1:id})${2:foo}
+{
+    return $2;
+}
 
-  - (void)set${2:$(capitalize yas-text)}:($1)avalue
-  {
-      [$2 autorelease];
-      $2 = [avalue retain];
-  }
-  $0
-#+end_src
+- (void)set${2:$(capitalize yas-text)}:($1)avalue
+{
+    [$2 autorelease];
+    $2 = [avalue retain];
+}
+$0
+#+END_SRC
     more at [[https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6][snippet development]].
 *** symon
     Graphical system monitor. See [[https://github.com/zk-phi/symon][symon]].
@@ -3422,9 +3434,9 @@ If FROM or TO is negative, it counts from the end.
     - C-x s ! (save all).
 *** Disable furniture
 #+BEGIN_SRC emacs-lisp
-  (menu-bar-mode -1)
-  (toggle-scroll-bar -1)
-  (tool-bar-mode -1)
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
 #+END_SRC
 *** Repeat last command
     C-x z (and just z threreafter).
@@ -3437,17 +3449,17 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: installing-emacs--on-linux
   :END:
 #+BEGIN_SRC sh
-  sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
+sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
 #+END_SRC
-* [2014-07-09 Thu] [[#installing-emacs--on-mac-ox-x][#]] Installing Emacs 24.4 on Mac OX X
+* [2014-07-09 Thu] [[#installing-emacs-24-4-on-mac-os-x][#]] Installing Emacs 24.4 on Mac OS X
   :PROPERTIES:
-  :CUSTOM_ID: installing-emacs--on-mac-ox-x
+  :CUSTOM_ID: installing-emacs-24-4-on-mac-os-x
   :END:
   See Yamamoto's Mac OS X [[https://github.com/railwaycat/emacs-mac-port][port]]. To install:
-#+begin_src sh
-  $ brew tap railwaycat/emacsmacport
-  $ brew install emacs-mac
-#+end_src
+#+BEGIN_SRC sh
+$ brew tap railwaycat/emacsmacport
+$ brew install emacs-mac
+#+END_SRC
 * [2014-11-02 Sun] [[#xcode6-tips][#]] Xcode6 tips
   :PROPERTIES:
   :CUSTOM_ID: xcode6-tips
@@ -3607,7 +3619,7 @@ If FROM or TO is negative, it counts from the end.
   :END:
 *** Resetting preferences
 #+BEGIN_SRC sh
-  gconftool --recursive-unset /apps/gnome-terminal
+gconftool --recursive-unset /apps/gnome-terminal
 #+END_SRC
 *** Want 256 colors?
     Edit .bash_profile
@@ -3787,8 +3799,8 @@ If FROM or TO is negative, it counts from the end.
   - Prefer double underscore for privates.
   - Prefer with statement to implicitly close file.
 #+BEGIN_SRC python
-  with open(path, 'r') as text_file:
-      text = text_file.read()
+with open(path, 'r') as text_file:
+    text = text_file.read()
 #+END_SRC
   - Prefer list comprehensions to filter.
   - Prefer using separate modules over classes if only using for separation.
