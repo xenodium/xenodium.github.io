@@ -1,6 +1,41 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-11-29 Sun] [[#package-el-incomprehensible-buffer][#]] package.el incomprehensible buffer
+  :PROPERTIES:
+  :CUSTOM_ID: package-el-incomprehensible-buffer
+  :END:
+  Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml/general/2015-11/msg22232.html][Workaround patch]]:
+#+BEGIN_SRC emacs-lisp
+  --- a/lisp/emacs-lisp/package.el
+  +++ b/lisp/emacs-lisp/package.el
+  @@ -1161,6 +1161,7 @@ package--with-work-buffer
+  (let* ((url (concat ,url-1 ,file))
+         (callback (lambda (status)
+                     (let ((b (current-buffer)))
+  +                    (goto-char (point-min))
+                       (unwind-protect (wrap-errors
+                                        (when-let ((er (plist-get
+                                                        status :error)))
+                                          (error "Error retrieving:
+  %s %S" url er))
+#+END_SRC
+* [2015-04-06 Mon] [[#fci-mode-and-org-html-export-to-html-bug][#]] fci-mode and org-html-export-to-html bug
+  :PROPERTIES:
+  :CUSTOM_ID: fci-mode-and-org-html-export-to-html-bug
+  :END:
+  Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This [[http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html][thread]] has a workaround:
+#+BEGIN_SRC emacs-lisp
+(defun org-html-fontify-code (code lang)
+  ;; ...
+  (funcall lang-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (when (require 'fill-column-indicator nil 'noerror)
+    (fci-mode -1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (insert code)
+  ;; ...
+#+END_SRC
 * [2015-11-29 Sun] [[#leading-bookmarks][#]] Leading bookmarks
   :PROPERTIES:
   :CUSTOM_ID: leading-bookmarks
