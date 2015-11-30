@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-11-30 Mon] [[#installing-emacs-spaceline][#]] Installing Emacs spaceline
+  :PROPERTIES:
+  :CUSTOM_ID: installing-emacs-spaceline
+  :END:
+  Gave [[https://github.com/TheBB/spaceline/][Spaceline]] a try. [[https://github.com/syl20bnr/spacemacs][Spacemacs]]'s powerline theme. Setup was super simple (Thanks [[https://github.com/TheBB/spaceline/][TheBB]] and [[https://github.com/syl20bnr/spacemacs][Sylvain Benner]]):
+
+#+BEGIN_SRC emacs-lisp
+  (use-package spaceline :ensure t
+    :config
+    (use-package spaceline-config
+      :config
+      (spaceline-toggle-minor-modes-off)
+      (spaceline-toggle-buffer-encoding-off)
+      (spaceline-toggle-buffer-encoding-abbrev-off)
+      (setq powerline-default-separator 'rounded)
+      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+      (spaceline-define-segment line-column
+        "The current line and column numbers."
+        "l:%l c:%2c")
+      (spaceline-define-segment time
+        "The current time."
+        (format-time-string "%H:%M"))
+      (spaceline-define-segment date
+        "The current date."
+        (format-time-string "%h %d"))
+      (spaceline-toggle-time-on)
+      (spaceline-emacs-theme 'date 'time))
+#+END_SRC
+
+[[file:images/installing-emacs-spaceline/spaceline.png]]
+
 * [2015-11-29 Sun] [[#package-el-incomprehensible-buffer][#]] package.el incomprehensible buffer
   :PROPERTIES:
   :CUSTOM_ID: package-el-incomprehensible-buffer
@@ -2129,8 +2160,9 @@ bl
   :CUSTOM_ID: italy-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-11-29 Sun]
+  [2015-11-30 Mon]
   :END:
+  - [[http://themindcircle.com/stunning-italy/][22 Towns in Italy That Are Almost Too Perfect Looking]].
   - [[http://www.monte-oliveto.com/][Abbazia di Monte Oliveto Maggiore]].
   - [[http://www.neatorama.com/2015/04/22/Furore-The-Little-Italian-Beach-Hidden-in-a-Fjord/][Amalfi coast's Furore beach]].
   - [[https://en.wikipedia.org/wiki/Boboli_Gardens][Boboli Gardens, Florence]].
@@ -2761,7 +2793,7 @@ rsync --rsync-path=/usr/local/bin/rsync --partial \
   :CUSTOM_ID: go-bookmarks
   :END:
   :MODIFIED:
-  [2015-11-29 Sun]
+  [2015-11-30 Mon]
   :END:
   - [[http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+spf13+%28Steve+Francia%27s+Blog%29][7 Common mistakes in Go]].
   - [[https://github.com/avelino/awesome-go][A curated list of awesome Go packages]].
@@ -2798,6 +2830,7 @@ rsync --rsync-path=/usr/local/bin/rsync --partial \
   - gorepl-mode.
   - [[https://github.com/levigross/grequests][GRequests: A Go "clone" of the great and famous Requests library]].
   - [[https://golang.org/doc/code.html][How to Write Go Code]].
+  - [[http://www.gohugo.io/][HUGO: a static website engine in Go]].
   - [[http://nathanleclaire.com/blog/2015/10/10/interfaces-and-composition-for-effective-unit-testing-in-golang/][Interfaces and Composition for Effective Unit Testing in Golang]].
   - [[https://github.com/kubernetes/kubernetes/blob/master/Godeps/Godeps.json][Kubernetes godeps]].
   - [[http://dave.cheney.net/2015/11/05/lets-talk-about-logging][Let's talk about logging]].
