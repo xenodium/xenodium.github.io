@@ -1,6 +1,42 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-12-07 Mon] [[#playing-with-darts-analysis-server][#]] Playing with Dart's analysis server
+  :PROPERTIES:
+  :Custom_ID: playing-with-darts-analysis-server
+  :END:
+  Dart SDK ships with an [[https://github.com/dart-lang/sdk/tree/master/pkg/analysis_server][analysis server]]. Very handy if you'd like to write a completion plugin for your favorite editor. The API is well [[http://htmlpreview.github.io/?https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/doc/api.html][documented]].
+#+BEGIN_SRC sh
+  $ dart path/to/bin/snapshots/analysis_server.dart.snapshot  --sdk=path/to/dart-sdk
+#+END_SRC
+  NOTE: The server reads requests from standard input. Either escape or execute the following as one-liner json requests.
+#+BEGIN_SRC json
+  {
+    "id": "1",
+    "method": "analysis.setAnalysisRoots",
+    "params": {
+      "included": [
+        "path/to/your/dart/project"
+      ],
+      "excluded": []
+    }
+  }
+#+END_SRC
+#+BEGIN_SRC json
+  {
+    "id": "3",
+    "method": "completion.getSuggestions",
+    "params": {
+      "file": "path/to/some/file.dart",
+      "offset": 673
+    }
+  }
+#+END_SRC
+* [2015-12-07 Mon] [[#dart-bookmarks][#]] Dart bookmarks
+  :PROPERTIES:
+  :Custom_ID: dart-bookmarks
+  :END:
+    - [[http://htmlpreview.github.io/?https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/doc/api.html][Analysis server API]].
 * [2015-12-07 Mon] [[#ios-awesome-libs-bookmarks][#]] iOS app awesome libs bookmarks
   :PROPERTIES:
   :CUSTOM_ID: ios-awesome-libs-bookmarks
