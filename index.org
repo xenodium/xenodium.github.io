@@ -1,6 +1,154 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-12-19 Sat] [[#view-dicom-files-from-your-x-ray][#]] View DICOM files from your X-ray
+  :PROPERTIES:
+  :CUSTOM_ID: view-dicom-files-from-your-x-ray
+  :END:
+  Got a CD with my chest X-ray from the hospital. Was expecting a pdf or an image of sorts, but the CD content was rather different. For starters, it was targeted at Windows users (AUTORUN.INF, MediaViewerLauncher.EXE and a bunch of DLLs):
+
+#+BEGIN_SRC text
+$ find . -exec file --mime-type '{}' \;
+
+./AUTORUN.INF: text/plain
+./DICOMDIR: application/dicom
+./MediaViewerLauncher.EXE: application/octet-stream
+...
+./Libraries/BASEPRINTER.DLL: application/octet-stream
+./Libraries/CDDATABURNER.DLL: application/octet-stream
+./Libraries/COM.DLL: application/octet-stream
+...
+./Libraries/ACE.DLL: application/octet-stream
+./Libraries/ACE_SSL.DLL: application/octet-stream
+./Libraries/ATL90.DLL: application/octet-stream
+...
+./DICOM/PAT_0000: application/x-directory
+./DICOM/PAT_0000/STD_0000/SER_0000/OBJ_0001/IM_0001: application/dicom
+./DICOM/PAT_0000/STD_0000/SER_0001/OBJ_0001/ED_0001: application/dicom
+./DICOM/PAT_0000/STD_0000/SER_0002/OBJ_0001/ED_0001: application/dicom
+./Worklist/ClinicalInfo/067eccde-b299-e511-9114-005056ad3afe.mht: text/html
+./Worklist/Report/067eccde-b299-e511-9114-005056ad3afe.mht: text/html
+./Worklist/Worklist.wl: application/octet-stream
+#+END_SRC
+
+  I'm on a Mac, so most of these files were not useful to me. The more interesting files were IM_0001 and ED_0001 with "application/dicom" MIME type. [[https://en.wikipedia.org/wiki/DICOM][DICOM]] files stand for Digital Imaging and Communications in Medicine. How to view these on a Mac? [[http://www.osirix-viewer.com/Downloads.html][OsiriX viewer]] is an option. OsiriX, though on the heavy side (100.7MB download), it rendered the X-ray successfully.
+
+[[file:images/view-dicom-files-from-your-x-ray/2015-12-03-osirix-x-ray-small.png]]
+
+  Unsurprisingly, ImageMagick's [[http://www.imagemagick.org/script/convert.php][convert]] utility also handles DICOM files. Converting to PNG worked well.
+
+#+BEGIN_SRC sh
+  $ convert ./DICOM/PAT_0000/STD_0000/SER_0001/OBJ_0001/ED_0001 ED_0001.png
+#+END_SRC
+
+[[file:images/view-dicom-files-from-your-x-ray/2015-12-03-imagemagick-x-ray-small.png]]
+
+
+  DICOM files also hold patient's metadata and optional reports. The file format is [[http://cabiatl.com/mricro/dicom/index.html][well known]]. OsiriX gives you access to it, but a few lines of python can also extract it for you. First install the pydicom package:
+
+#+BEGIN_SRC sh
+  $ sudo pip install pydicom
+#+END_SRC
+
+  Running the python interpreter is enough to peak at the metadata:
+
+#+BEGIN_SRC python
+  >>> import dicom
+  >>> ds = dicom.read_file("./DICOM/PAT_0000/STD_0000/SER_0000/OBJ_0001/IM_0001")
+  >>> ds
+#+END_SRC
+
+#+BEGIN_SRC text
+(0008, 0000) Group Length                        UL: 400
+(0008, 0005) Specific Character Set              CS: 'ISO_IR 100'
+(0008, 0016) SOP Class UID                       UI: Computed Radiography Image Storage
+(0008, 0020) Study Date                          DA: '20151203'
+(0008, 0021) Series Date                         DA: '20151203'
+(0008, 0023) Content Date                        DA: '20151203'
+(0008, 0030) Study Time                          TM: '120519.000000'
+(0008, 0031) Series Time                         TM: '120520.000000'
+(0008, 0033) Content Time                        TM: '120643.000000'
+(0008, 0060) Modality                            CS: 'CR'
+(0008, 0070) Manufacturer                        LO: 'Canon Inc.'
+...
+#+END_SRC
+
+  There were other DICOM files with a report:
+
+#+BEGIN_SRC python
+  >>> import dicom
+  >>> ds = dicom.read_file("./DICOM/PAT_0000/STD_0000/SER_0001/OBJ_0001/ED_0001")
+  >>> ds
+#+END_SRC
+
+#+BEGIN_SRC text
+(0008, 0005) Specific Character Set              CS: 'ISO_IR 100'
+(0008, 0016) SOP Class UID                       UI: Encapsulated PDF Storage
+...
+(0042, 0012) MIME Type of Encapsulated Document  LO: 'application/pdf'
+#+END_SRC
+
+  [[http://dcmtk.org/dcmtk.php.en][DCMTK]] is another alternative tool to extract DICOM metadata. The source is available and can be built:
+
+#+BEGIN_SRC sh
+  $ tar xf dcmtk-3.6.0.tar.gz
+  $ cd dcmtk-3.6.0
+  $ cmake .
+  $ make
+#+END_SRC
+
+  Or installed via homebrew:
+
+#+BEGIN_SRC sh
+  $ brew install dcmtk
+#+END_SRC
+
+  DCMTK includes dcmdump. You can use it to dump DICOM files:
+
+#+BEGIN_SRC sh
+  $ dcmdata/apps/dcmdump DICOM/PAT_0000/STD_0000/SER_0000/OBJ_0001/IM_0001
+#+END_SRC
+
+#+BEGIN_SRC text
+  # Dicom-File-Format
+
+  # Dicom-Meta-Information-Header
+  # Used TransferSyntax: Little Endian Explicit
+  (0002,0000) UL 192                                      #   4, 1 FileMetaInformationGroupLength
+  (0002,0001) OB 01\00                                    #   2, 1 FileMetaInformationVersion
+  (0002,0002) UI =ComputedRadiographyImageStorage         #  26, 1 MediaStorageSOPClassUID
+  (0002,0003) UI [1.2.392.200046.100.2.1.1.42667.20151203120519.1.1.1] #  52, 1 MediaStorageSOPInstanceUID
+  (0002,0010) UI =LittleEndianExplicit                    #  20, 1 TransferSyntaxUID
+  (0002,0012) UI [1.3.46.670589.42.1.4.4.5]               #  24, 1 ImplementationClassUID
+  (0002,0013) SH [PhilipsISPACS445]                       #  16, 1 ImplementationVersionName
+  ...
+#+END_SRC
+
+  Of interest, David Clunie's [[http://www.dclunie.com/][Medical Image Format Site]].
+* [2015-12-18 Fri] [[#tip-googletranslate-your-spreadsheet][#]] Tip: GOOGLETRANSLATE your Spreadsheet
+  :PROPERTIES:
+  :CUSTOM_ID: tip-googletranslate-your-spreadsheet
+  :END:
+  Examples from [[https://support.google.com/docs/answer/3093331][reference]]:
+
+#+BEGIN_SRC text
+  =GOOGLETRANSLATE("Hello World","en","es")
+  =GOOGLETRANSLATE(A2,B2,C2)
+  =GOOGLETRANSLATE(A2)
+#+END_SRC
+* [2015-12-18 Fri] [[#organize-your-data-with-camlistore][#]] Organize your data with camlistore
+  :PROPERTIES:
+  :CUSTOM_ID: organize-your-data-with-camlistore
+  :END:
+  Checking out [[https://camlistore.org][camlistore]] to organize all sorts of data. [[https://www.scaleway.com/imagehub/camlistore/][Scaleway]] enables you to deploy camlistore servers.
+* [2015-12-17 Thu] [[#open-street-maps-bookmarks][#]] Open Street Maps bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: open-street-maps-bookmarks
+  :END:
+  - [[http://wiki.openstreetmap.org/wiki/Planet.osm][OSM data in one file]].
+  - [[http://wiki.openstreetmap.org/wiki/OSM_on_Paper][OSM on paper]].
+  - [[http://download.osmand.net/rawindexes/][OSM raw indices]].
+  - [[http://news.spatialdev.com/portable-open-street-map/][Portable OSM]].
 * [2015-12-17 Thu] [[#use-imagemagick-to-convert-image-to-grayscale][#]] Use ImageMagick to convert image to grayscale
   :PROPERTIES:
   :CUSTOM_ID: use-imagemagick-to-convert-image-to-grayscale
@@ -243,10 +391,11 @@
   :MODIFIED:
   [2015-12-12 Sat]
   :END:
+  - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
+  - [[https://autotools.io/index.html][Autotools Mythbuster]].
+  - [[http://www.unixwiz.net/techtips/chroot-practices.html][Best Practices for UNIX chroot]].
   - [[http://stackoverflow.com/questions/3519939/make-curl-follow-redirects][Make cURL follow redirects]].
   - [[http://unixmages.com/ufbm.pdf][Unix for the Beginning Mage]].
-  - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
-  - [[http://www.unixwiz.net/techtips/chroot-practices.html][Best Practices for UNIX chroot]].
 * [2015-11-26 Thu] [[#couchbase-react-native-bookmarks][#]] Couchbase React Native bookmarks
   :PROPERTIES:
   :Custom_ID: couchbase-react-native-bookmarks
@@ -432,6 +581,7 @@ print distutils.spawn.find_executable('git')
   :END:
   - [[http://barefootrunning.fas.harvard.edu/6FAQ.html][Harvard's Running barefoot or in minimal footwear FAQ]].
   - [[http://www.time-to-run.com/training/10k/sub50.htm][Training towards a sub 50 minute 10K]].
+  - [[http://www.dcrainmaker.com/2015/11/garmin-fr230-fr235-review.html][Garmin Forerunner 230 & 235 In-Depth Review (DC Rainmaker)]].
 * [2015-10-22 Thu] [[#media-player-bookmarks][#]] Media player bookmarks
   :PROPERTIES:
   :CUSTOM_ID: media-player-bookmarks
@@ -1540,9 +1690,10 @@ $ brew cask install wwdc
   :CUSTOM_ID: bash-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-15 Tue]
+  [2015-12-18 Fri]
   :END:
   - [[http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming][Defensive bash programming]].
+  - [[http://www.etalabs.net/sh_tricks.html][Rich’s sh (POSIX shell) tricks]].
   - [[http://bash.academy][The Bash Academy]].
 * [2015-05-25 Mon] [[#restclient.el][#]] restclient.el
   :PROPERTIES:
@@ -2591,6 +2742,8 @@ $ python ycmd
 ******* TODO [[http://delhigrill.com][Delhi Grill]] (Indian), try chicken makhani and naan.
 ******* TODO [[http://rootsatn1.com][Roots N1]] (Indian).
 ******* TODO [[http://www.thepigandbutcher.co.uk/][The pig and butcher]] (sunday roast).
+*** Oxford street
+******* TODO Roti Chai (Indian).
 *** Marylebone
 ******* TODO [[http://www.timeout.com/london/restaurants/fischers][Fischer's]] (Austrian).
 ******* TODO Nambutei (Sushi).
@@ -2657,6 +2810,8 @@ $ python ycmd
   :PROPERTIES:
   :CUSTOM_ID: unix-linux-tips-backlog
   :END:
+*** TODO [[http://www.softether.org][SoftEther VPN]].
+*** TODO [[http://git-annex.branchable.com/assistant/][git-annex]].
 *** TODO [[https://github.com/clvv/fasd][fasd a command-line productivity booster]].
 *** TODO [[http://bryan-murdock.blogspot.co.uk/2015/12/linux-environment-management.html][Linux environment management]].
 *** TODO ASCII art text with [[http://www.figlet.org][figlet]].
@@ -2804,7 +2959,7 @@ $ python ycmd
   :CUSTOM_ID: startup-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-15 Tue]
+  [2015-12-18 Fri]
   :END:
   - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
   - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -2812,6 +2967,7 @@ $ python ycmd
   - [[https://landscape.io][A Dashboard for your Code]].
   - [[https://news.ycombinator.com/item?id=9923709][A guide to PR for startups (Hacker News)]].
   - [[http://www.craigkerstiens.com/2015/07/21/An-intro-PR-guide-for-startups/][A guide to PR for startups]].
+  - [[https://airtable.com/][Airtable: cloud DB with a spreadsheet web UI]].
   - [[https://github.com/abaraka/RESTClient][An iOS REST Client that is based on MVVM using ReactiveCocoa]].
   - [[http://www.raywenderlich.com/55384/ios-7-best-practices-part-1][An iOS Weather app case study]].
   - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform][Answer these questions about potential digital platform]].
@@ -2835,6 +2991,7 @@ $ python ycmd
   - [[https://github.com/sag333ar/SRKLocationManager][Detect iOS Device location in just one line]].
   - [[https://niltalk.com/][Disposable chats in Go]] (more links [[https://news.ycombinator.com/item?id%3D9372918][here]]).
   - [[https://speakerdeck.com/appltn/done-is-better-than-perfect][Done is better than perfect]].
+  - [[https://fieldbook.com][fieldbook: Create a database, as easily as a spreadsheet]].
   - [[https://rivalseek.com/][Find your competition]].
   - [[http://flagtheory.com/][Flag Theory: Freedom, Privacy and Wealth]].
   - [[http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for][Free tools for startups (Shyahi blog)]].
@@ -2861,6 +3018,7 @@ $ python ycmd
   - [[http://mobilenighthawk.com/][Nighthawk (Debug iOS apps remotely from your browser)]].
   - [[http://officesnapshots.com/][Office Snapshots]].
   - [[http://blog.fogcreek.com/how-to-onboard-software-engineers-interview-with-kate-heddleston/][Onboarding engineers]].
+  - [[https://www.openhunt.co/][Open Hunt: an open and community-run alternative to Product Hunt.]].
   - [[https://medium.com/@sgblank/organizational-debt-is-like-technical-debt-but-worse-3c0c86eae3eb][Organizational Debt is Like Technical debt — But Worse]].
   - [[http://facebook.github.io/origami/examples/][Origami for UI patterns and interactions]].
   - [[http://www.paintcodeapp.com][PaintCode (drawings into ObjC code)]] - [[bit.ly/PaintCodeRocks][coupon]].
@@ -2872,6 +3030,7 @@ $ python ycmd
   - [[http://permutive.com/][Permutive (ad-server for sponsored content)]].
   - [[https://news.ycombinator.com/item?id=10381584][Pragmatic app pricing (Hacker News)]].
   - [[http://www.marco.org/2015/10/13/pragmatic-pricing][Pragmatic app pricing ]].
+  - [[https://www.producthunt.com/][Product Hunt: a curation of the best new products, every day]].
   - [[http://www.theatlantic.com/business/archive/2015/01/the-psychological-difference-between-1200-and-1167/384993/?single_page=true][Psychological differences in price]].
   - [[http://www.quora.com/What-are-the-best-productivity-tools-for-entrepreneurs][Quora: What are the best productivity tools for entrepreneurs]]?
   - [[http://rethinkdb.com/faq/][RethinkDB FAQ]].
@@ -3366,10 +3525,11 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: india-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-08 Tue]
+  [2015-12-19 Sat]
   :END:
   - [[http://www.theguardian.com/travel/2012/mar/01/10-best-street-food-mumbai-india][10 of the best food in Mumbai]].
   - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
+  - [[https://en.wikipedia.org/wiki/Akshardham_%28Delhi%29][Akshardham (Delhi)]].
   - [[https://www.google.com/culturalinstitute/browse/?f.media_type=museumview&q.8129907598665562501=139704082&q.openid=media_type][Archeological survey of india sites]].
   - [[https://en.wikipedia.org/wiki/bhaja_caves][Bhaja caves, pune, maharashtra]].
   - [[http://en.wikipedia.org/wiki/bhang][Bhang]].
@@ -3380,6 +3540,7 @@ If FROM or TO is negative, it counts from the end.
   - Chandipur Beach.
   - [[https://duckduckgo.com/?q=Chittorgarh&t=ffab&ia=images][Chittorgarh]].
   - [[https://en.wikipedia.org/wiki/Daulatabad,_Maharashtra][Daulatabad fort]].
+  - [[http://www.lonelyplanet.com/india/mumbai-bombay/travel-tips-and-articles/eat-mumbai-make-the-most-of-indias-foodie-capital][Eat Mumbai – make the most of India's foodie capital]].
   - Emergencies: +1-650-253-5555.
   - Gaya, Bihar.
   - [[https://india.zeef.com/gautam.garg][India on zeef]].
@@ -3393,8 +3554,12 @@ If FROM or TO is negative, it counts from the end.
   - Mahabaleshwar.
   - [[https://en.wikipedia.org/wiki/Manali,_Himachal_Pradesh][Manali, Himachal Pradesh]].
   - Mumbai - Bademita: chicken tikka.
+  - Mumbai - Bagdadi restaurant.
+  - Mumbai - Banaganga lake (Banganga cross lane).
   - Mumbai - Bhel puri (find in stalls).
+  - Mumbai - Cafe Britannia (Kumtha St or Adi Murzaban Path with Shahid Bhaghat Singh Rd).
   - Mumbai - Crawford market: revivat Indian thali.
+  - Mumbai - Elephanta caves.
   - Mumbai - The times of India: masala dosa.
   - Mumbai - Vada pav (find in stalls).
   - Mumbai - Victoria station: chai.
@@ -3404,12 +3569,16 @@ If FROM or TO is negative, it counts from the end.
   - [[https://en.wikipedia.org/wiki/pandavleni_caves][Pandavleni caves, nashik, maharashtra]].
   - [[https://en.wikipedia.org/wiki/havelock_island][Radhanagar beach]].
   - [[https://en.m.wikipedia.org/wiki/Rishikesh][Rishikesh]].
+  - University of Mumbai - Mumbai.
   - Varanasi.
   - [[https://duckduckgo.com/?q%3dvipassana%2bpagoda&iax%3d1&ia%3dimages][Vipassana pagoda]].
   - [[https://en.wikipedia.org/wiki/Western_Ghats][Western Ghats]].
 * [2015-03-05 Thu] [[#git-bookmarks][#]] Git bookmarks
   :PROPERTIES:
   :CUSTOM_ID: git-bookmarks
+  :END:
+  :MODIFIED:
+  [2015-12-18 Fri]
   :END:
   - [[http://wildlyinaccurate.com/a-hackers-guide-to-git][a hackers guide to git]]
   - [[http://nakkaya.com/2009/09/24/git-delete-last-commit/][delete last commit]]
@@ -3421,7 +3590,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://ndpsoftware.com/git-cheatsheet.html][ndp software's git cheatsheet]]
   - [[http://git-scm.com/blog/2010/03/08/rerere.html][rerere: reuse recorded resolution]].
   - [[http://www.matheuslima.com/things-you-didnt-know-about-git][things you didn't know about git]].
-
+  - [[https://upcase.com/mastering-git][Upcase's mastering Git course]].
 * [2015-03-04 Wed] [[#language-learning-bookmarks][#]] Language learning bookmarks
   :PROPERTIES:
   :CUSTOM_ID: language-learning-bookmarks
@@ -3609,7 +3778,7 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/steckerhalter/emacs-fasd][Emacs fasd support]].
 ******* TODO [[https://github.com/benma/visual-regexp.el][visual-regexp]].
 ******* TODO [[http://emacsredux.com/blog/2014/05/16/opening-large-files/][Open large files]].
-******* TODO [[https://github.com/nathankot/company-sourcekit][company-sourcekit]] (completion for Swift projects via SourceKit).
+******* TODO [[https://github.com/nathankot/company-sourcekit][company-sourcekit]] (Swift completion): [[https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24][sample config]].
 ******* TODO [[https://github.com/dakrone/emacs-java-imports][emacs-java-imports]].
 ******* TODO [[https://github.com/ananthakumaran/tide][TypeScript Interactive Development Environment for Emacs]].
 ******* TODO append-to-buffer.
@@ -3797,7 +3966,7 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-15 Tue]
+  [2015-12-17 Thu]
   :END:
   - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
   - [[https://github.com/baohaojun/ajoke][Ajoke]].
@@ -3869,6 +4038,7 @@ $ brew install emacs-mac
   - [[http://www.philandstuff.com/][Philip Potter Emacs blog]].
   - [[https://github.com/bbatsov/prelude][Prelude emacs distribution]].
   - [[http://punchagan.muse-amuse.in/posts/index.html][Punchagan's blog]].
+  - [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bframeworks/react/README.org][React contribution layer for Spacemacs]].
   - [[http://draketo.de/light/english/free-software/read-your-python-module-documentation-emacs][Read your python module documentation from Emacs]].
   - [[http://rubikitch.com/][Rubikitch]].
   - [[http://sachachua.com][Sachua Chua]].
