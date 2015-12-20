@@ -1,6 +1,41 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2015-12-20 Sun] [[#search-bash-history-with-emacs-helm][#]] Search bash history with Emacs helm
+  :PROPERTIES:
+  :CUSTOM_ID: search-bash-history-with-emacs-helm
+  :END:
+  Following up from [[#change-emacs-shells-cwd-with-helm-projectile][changing CWD with helm projectile]], here's a way to search your bash history with helm:
+
+[[file:images/search-bash-history-with-emacs-helm/helm-bash-history.gif]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun ar/helm-helm (title candidates on-select-function)
+    "Helm with TITLE CANDIDATES and ON-SELECT-FUNCTION."
+    (helm :sources `((name . ,title)
+                     (candidates . ,candidates)
+                     (action . ,on-select-function))
+          :buffer "*helm-exec*"
+          :candidate-number-limit 10000))
+
+  (defun ar/shell-send-command (command)
+    "Send COMMAND to shell mode."
+    (assert (string-equal mode-name "Shell") nil "Not in Shell mode")
+    (goto-char (point-max))
+    (comint-kill-input)
+    (insert command)
+    (comint-send-input))
+
+  (defun ar/helm-shell-search-history ()
+    "Narrow down bash history with helm."
+    (interactive)
+    (assert (string-equal mode-name "Shell") nil "Not in Shell mode")
+    (ar/helm-helm "bash history"
+                  (with-temp-buffer
+                    (insert-file-contents "~/.bash_history")
+                    (delete-dups (split-string (buffer-string) "\n")))
+                  #'ar/shell-send-command))
+#+END_SRC
 * [2015-12-19 Sat] [[#view-dicom-files-from-your-x-ray][#]] View DICOM files from your X-ray
   :PROPERTIES:
   :CUSTOM_ID: view-dicom-files-from-your-x-ray
@@ -44,7 +79,7 @@ $ find . -exec file --mime-type '{}' \;
 [[file:images/view-dicom-files-from-your-x-ray/2015-12-03-imagemagick-x-ray-small.png]]
 
 
-  DICOM files also hold patient's metadata and optional reports. The file format is [[http://cabiatl.com/mricro/dicom/index.html][well known]]. OsiriX gives you access to it, but a few lines of python can also extract it for you. First install the pydicom package:
+  DICOM files also hold patient's metadata and optional reports. The file format is [[http://cabiatl.com/mricro/dicom/index.html][well known]]. OsiriX gives you access to it, but a few lines of python can also extract it for you. First install the [[https://github.com/darcymason/pydicom][pydicom]] package:
 
 #+BEGIN_SRC sh
   $ sudo pip install pydicom
@@ -352,13 +387,14 @@ $ find . -exec file --mime-type '{}' \;
   :PROPERTIES:
   :CUSTOM_ID: online-reading-backlog
   :END:
-******* TODO [[http://www.gatesnotes.com/Books/Mindset-The-New-Psychology-of-Success][Mindset: What You Believe Affects What You Achieve (Gates Notes)]].
-******* TODO [[http://www.gatesnotes.com/Books/Thing-Explainer][Thing Explainer: A Basic Guide for Curious Minds (Gates Notes)]].
-******* TODO [[https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/][The Ultimate Guide to Personal Productivity Methods]].
 ******* TODO [[https://hbr.org/2013/11/be-grateful-more-often][Be Grateful More Often]].
+******* TODO [[http://heydave.org/post/24286720323/gtd-sucks-for-creative-work-heres-an-alternative][GTD sucks for creative work]].
 ******* TODO [[http://continuations.com/post/131372549150/land-capital-attention-this-time-it-is-the-same][Land, Capital, Attention: This Time it Is the Same]].
-******* TODO [[http://www.theatlantic.com/business/archive/2015/10/get-rid-borders-completely/409501/?single_page%3Dtrue][The Case for Getting Rid of Borders—Completely]].
+******* TODO [[http://www.gatesnotes.com/Books/Mindset-The-New-Psychology-of-Success][Mindset: What You Believe Affects What You Achieve (Gates Notes)]].
 ******* TODO [[https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree][Redux: The Single Immutable State Tree screencast]].
+******* TODO [[http://www.theatlantic.com/business/archive/2015/10/get-rid-borders-completely/409501/?single_page%3Dtrue][The Case for Getting Rid of Borders—Completely]].
+******* TODO [[https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/][The Ultimate Guide to Personal Productivity Methods]].
+******* TODO [[http://www.gatesnotes.com/Books/Thing-Explainer][Thing Explainer: A Basic Guide for Curious Minds (Gates Notes)]].
 ******* TODO [[https://www.ted.com/talks/amy_cuddy_your_body_language_shapes_who_you_are?language%3Den][Your body language shapes who you are]].
 * [2015-11-29 Sun] [[#travel-apps-bookmarks][#]] Travel apps bookmarks
   :PROPERTIES:
@@ -379,10 +415,11 @@ $ find . -exec file --mime-type '{}' \;
   - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
   - [[http://waveuptravel.com][waveUPtravel]].
   - [[https://www.quora.com/What-are-the-best-ways-to-earn-money-while-traveling-around-the-world][What are the best ways to earn money while traveling around the world? (Quora)]].
-* [2015-11-26 Thu] [[#sqlite-bookmarks][#]] SQLite bookmarks
+* [2015-11-26 Thu] [[#sql-bookmarks][#]] SQL bookmarks
   :PROPERTIES:
-  :CUSTOM_ID: sqlite-bookmarks
+  :CUSTOM_ID: sql-bookmarks
   :END:
+  - [[https://modern-sql.com/use-case/literate-sql][Literate SQL]].
   - [[http://ericsink.com/entries/rss_cat_3.html][Zumero: Efficient sync by using multiple SQLite files]].
 * [2015-11-26 Thu] [[#unix-linux-tools-bookmarks][#]] Unix/Linux tools bookmarks
   :PROPERTIES:
@@ -1644,6 +1681,7 @@ $ brew cask install wwdc
   :END:
   - [[http://www.lonelyplanet.com/australia/sydney/travel-tips-and-articles/australias-best-food-experiences-state-by-state][Australia's best food experiences: state by state]].
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/best-queensland-island-escapes-for-small-budgets][Best Queensland island escapes for small budgets]].
+  - The Butler Potts Point (bar & restaurant).
 * [2015-06-02 Tue] [[#samoa-travel-bookmarks][#]] Samoa travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: samoa-travel-bookmarks
@@ -3775,6 +3813,7 @@ If FROM or TO is negative, it counts from the end.
   :PROPERTIES:
   :CUSTOM_ID: emacs-tips-backlog
   :END:
+******* TODO [[https://github.com/swank-js/swank-js][swank-js]].
 ******* TODO [[https://github.com/steckerhalter/emacs-fasd][Emacs fasd support]].
 ******* TODO [[https://github.com/benma/visual-regexp.el][visual-regexp]].
 ******* TODO [[http://emacsredux.com/blog/2014/05/16/opening-large-files/][Open large files]].
