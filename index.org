@@ -1,6 +1,152 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-01-01 Fri] [[#first-meal-of-2016][#]] First meal of 2016
+  :PROPERTIES:
+  :CUSTOM_ID: first-meal-of-2016
+  :END:
+
+*** Pancakes
+
+  - 1 teaspoon of salt.
+  - 1.5 cups of milk.
+  - 2 cups of flour.
+  - 2 eggs.
+  - 2 tablespoons sugar.
+  - 4 tablespoons of melted butter.
+  - 6 teaspoons of baking powder.
+
+  Makes 10/11 pancakes.
+
+[[file:images/first-meal-of-2016/shortstack.jpg]]
+
+* [2016-01-01 Fri] [[#last-meal-of-2015][#]] Last meal of 2015
+  :PROPERTIES:
+  :CUSTOM_ID: last-meal-of-2015
+  :END:
+
+  For our last meal of 2015, I contributed dal and rotis. This is my first attempt at making either one of these. Both recipes based on Anupy Singla's [[http://www.amazon.co.uk/Indian-Everyone-Anupy-Singla/dp/1572841621][Indian for Everyone]].
+
+*** Dal Makhani (Buttered black lentils)
+
+[[file:images/last-meal-of-2015/dal-grid.png]]
+[[file:images/last-meal-of-2015/dal.jpg]]
+
+*** Roti-Chapati-Phulka
+
+[[file:images/last-meal-of-2015/roti-grid.png]]
+[[file:images/last-meal-of-2015/roti.jpg]]
+
+* [2015-12-30 Wed] [[#find-in-path-with-type-and-which][#]] Find in $PATH with type and which
+  :PROPERTIES:
+  :CUSTOM_ID: find-in-path-with-type-and-which
+  :END:
+  I typically use /which/ to figure out the first binary found in $PATH:
+#+BEGIN_SRC sh :results output :exports both
+  which -a emacsclient
+#+END_SRC
+
+#+RESULTS:
+: /Users/user/homebrew/bin/emacsclient
+: /usr/bin/emacsclient
+
+  I always forget about /type/ though:
+
+#+BEGIN_SRC sh :results output :exports both
+  type -a emacsclient
+#+END_SRC
+
+#+RESULTS:
+: emacsclient is /Users/user/homebrew/bin/emacsclient
+: emacsclient is /usr/bin/emacsclient
+
+* [2015-12-30 Wed] [[#npm-basics][#]] npm basics
+  :PROPERTIES:
+  :CUSTOM_ID: npm-basics
+  :END:
+*** Global vs local package installation location
+#+BEGIN_QUOTE
+  {prefix}/lib/node_modules
+#+END_QUOTE
+    vs
+#+BEGIN_QUOTE
+  path/to/project/node_modules
+#+END_QUOTE
+*** View npm config
+#+BEGIN_SRC sh :results output :exports both
+  npm config list
+#+END_SRC
+
+#+RESULTS:
+: ; cli configs
+: user-agent = "npm/2.14.2 node/v4.0.0 darwin x64"
+: 
+: ; node bin location = /Users/user/.nvm/versions/node/v4.0.0/bin/node
+: ; cwd = /Users/user/stuff/active/blog
+: ; HOME = /Users/user
+: ; 'npm config ls -l' to show all defaults.
+: 
+
+*** Get config value
+#+BEGIN_SRC sh :results output :exports both
+  npm config get prefix
+#+END_SRC
+
+#+RESULTS:
+: /Users/user/.nvm/versions/node/v4.0.0
+
+*** Set config value
+#+BEGIN_SRC sh
+   npm config set prefix=$HOME/some/location
+#+END_SRC
+
+*** Install package globally
+#+BEGIN_SRC sh
+  node install --global <package-name>
+#+END_SRC
+    or
+#+BEGIN_SRC sh
+  node install -g <package-name>
+#+END_SRC
+*** List global packages
+#+BEGIN_SRC sh :results output :exports both
+  npm list --global
+#+END_SRC
+    You can also use --depth=0 to make less verbose.
+#+RESULTS:
+#+begin_example
+/Users/user/.nvm/versions/node/v4.0.0/lib
+├─┬ babel-eslint@4.1.3
+│ ├── acorn-to-esprima@1.0.4
+│ ├─┬ babel-core@5.8.25
+│ │ ├── babel-plugin-constant-folding@1.0.1
+│ │ ├── babel-plugin-dead-code-elimination@1.0.2
+...
+#+end_example
+
+*** Install local package
+#+BEGIN_SRC sh
+  npm install <package-name> --save
+#+END_SRC
+    --save will add <package-name> dependency to your package.json.
+*** package.json
+    See [[https://docs.npmjs.com/getting-started/using-a-package.json][using a package.json]].
+*** Uninstall package
+#+BEGIN_SRC sh
+  npm uninstall <package-name>
+#+END_SRC
+    
+*** Install package at version
+#+BEGIN_SRC sh
+  npm install <package-name>@1.7.0
+#+END_SRC
+
+*** Search packages
+#+BEGIN_SRC sh
+  npm search linter
+#+END_SRC
+*** Online documentation
+    Online documentation is great so far. More at [[https://docs.npmjs.com][docs.npmjs.com]].
 * [2015-12-25 Fri] [[#clojure-bookmarks][#]] Clojure bookmarks
   :PROPERTIES:
   :CUSTOM_ID: clojure-bookmarks
@@ -607,7 +753,7 @@ pkill -SIGUSR2 emacs
   :PROPERTIES:
   :Custom_ID: find-binary-in-path-using-python
   :END:
-#+BEGIN_SRC python
+#+BEGIN_SRC python :results output :exports both
 import distutils.spawn
 print distutils.spawn.find_executable('git')
 #+END_SRC
@@ -2134,7 +2280,7 @@ build_clang
   :CUSTOM_ID: plantuml-example
   :END:
   Played with [[http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf][Plantuml]]. Convenient for generating UML diagrams from text. Here's the [[http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf][Language Reference Guide]]. Here's an example:
-#+BEGIN_SRC plantuml
+#+BEGIN_SRC plantuml :file images/plantuml-example/plantuml-singer.png
 @startuml
   abstract class Singer {
     abstract void sing()
@@ -4153,7 +4299,7 @@ gconftool --recursive-unset /apps/gnome-terminal
 #+END_SRC
 *** Want 256 colors?
     Edit .bash_profile
-#+BEGIN_SRC
+#+BEGIN_SRC sh
   export TERM="screen-256color"
 #+END_SRC
 *** Ensure .bash_profile is loaded
