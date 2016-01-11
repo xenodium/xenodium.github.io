@@ -17,7 +17,41 @@
 #+BEGIN_SRC sh
   $ gnome-settings-daemon
 #+END_SRC
-  More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]].
+  More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]] and [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get Emacs key bindings in Ubuntu]].
+* [2016-01-08 Fri] [[#emacs-objective-c-completion][#]] Emacs Objective-C completion
+  :PROPERTIES:
+  :Custom_ID: emacs-objective-c-completion
+  :END:
+*** Install libclang on Mac
+#+BEGIN_SRC sh
+  brew install llvm --with-clang
+#+END_SRC
+*** Configure Emacs
+#+BEGIN_SRC emacs-lisp
+  (use-package irony :ensure t
+    :config
+    (add-hook  'objc-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (use-package company-irony :ensure t
+    :config
+    (add-hook  'objc-mode-hook (lambda ()
+                                 (setq-local company-backends '((company-irony)))))
+    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+#+END_SRC
+*** Compilation database
+***** Install xctool
+#+BEGIN_SRC sh
+  brew install xctool
+#+END_SRC
+***** Generate compilation database
+#+BEGIN_SRC sh
+    xctool -scheme SomeScheme -reporter json-compilation-database:compile_commands.json clean build
+#+END_SRC
+*** Set Irony's database path
+#+BEGIN_QUOTE
+  M-x irony-cdb-json-add-compile-commands-path
+#+END_QUOTE
 * [2016-01-07 Thu] [[#finland-travel-bookmarks][#]] Finland travel bookmarks
   :PROPERTIES:
   :Custom_ID: finland-travel-bookmarks
@@ -4200,7 +4234,6 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/Fuco1/dired-hacks][dired-hacks]].
 ******* TODO emacs-index-search (lookup subject in Emacs manual).
 ******* TODO gtd emacs workflow: Charles cave's [[http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html][notes]].
-******* TODO [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
 ******* TODO info-apropos (lookup subject in all manuals).
 ******* TODO Jumping around tips: [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
 ******* TODO Mac OS clipboard support (from terminal): [[https://github.com/jkp/pbcopy.el][pbcopy]].
@@ -4222,6 +4255,7 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/mineo/yatemplate][yatemplate]].
 ******* TODO [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
 ******* TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+******* DONE [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
 ******* DONE [[https://github.com/calvinwyoung/org-autolist][org-autolist]].
 ******* DONE Move up by parens: More at the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html][manual]].
 ******* DONE sunrise-sunset.
