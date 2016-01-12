@@ -17,7 +17,41 @@
 #+BEGIN_SRC sh
   $ gnome-settings-daemon
 #+END_SRC
-  More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]].
+  More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]] and [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get Emacs key bindings in Ubuntu]].
+* [2016-01-08 Fri] [[#emacs-objective-c-completion][#]] Emacs Objective-C completion
+  :PROPERTIES:
+  :Custom_ID: emacs-objective-c-completion
+  :END:
+*** Install libclang on Mac
+#+BEGIN_SRC sh
+  brew install llvm --with-clang
+#+END_SRC
+*** Configure Emacs
+#+BEGIN_SRC emacs-lisp
+  (use-package irony :ensure t
+    :config
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (use-package company-irony :ensure t
+    :config
+    (add-hook  'objc-mode-hook (lambda ()
+                                 (setq-local company-backends '((company-irony)))))
+    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+#+END_SRC
+*** Compilation database
+***** Install xctool
+#+BEGIN_SRC sh
+  brew install xctool
+#+END_SRC
+***** Generate compilation database
+#+BEGIN_SRC sh
+    xctool -scheme SomeScheme -reporter json-compilation-database:compile_commands.json clean build
+#+END_SRC
+*** Set Irony's database path
+#+BEGIN_QUOTE
+  M-x irony-cdb-json-add-compile-commands-path
+#+END_QUOTE
 * [2016-01-07 Thu] [[#finland-travel-bookmarks][#]] Finland travel bookmarks
   :PROPERTIES:
   :Custom_ID: finland-travel-bookmarks
@@ -2168,8 +2202,21 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
   :MODIFIED:
   [2015-09-18 Fri]
   :END:
+  - [[http://www.gertenbach.info/e_reisen_2010.htm][An Iceland travel log]].
+  - [[http://www.apartmenthouse.is/][Apartmenthouse.is]] for local flats.
+  - Blue lagoon spa.
+  - [[http://citywalk.is/][citywalk.is]]: Free walking tour.
+  - [[https://www.google.co.uk/maps/place/Efstidalur/@64.2428231,-20.5525875,17z/data%3D!3m1!4b1!4m2!3m1!1s0x48d699ea8baff6ab:0x9c26aa93153abbec?hl%3Den][Efstidalur]]: farm to table restaurant.
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/eight-must-see-spots-in-icelands-wild-west][Eight must-see spots in Iceland's wild west]].
+  - [[http://www.fridrikv.is/en/][Fridrikv restaurant]].
+  - Golden circle's waterfalls and geysers.
+  - [[http://www.grillmarkadurinn.is/][grillmarkadurinn.is]] restaurant.
+  - [[http://www.smaratun.is/][Horse farm hotel]].
   - [[http://www.lonelyplanet.com/iceland/travel-tips-and-articles/how-to-have-a-budget-break-in-iceland][How to have a budget break in iceland]].
+  - [[https://drive.google.com/a/google.com/file/d/0B_7OFb4eNjNWeEFzM29maE9EUkU/view][Iceland itinerary]].
+  - [[http://www.lebowskibar.is/][Lebowski Bar]] seriously?
+  - Noodle Station.
+  - South coast's waterfalls and caves.
 * [2015-04-30 Thu] [[#building-clang-format][#]] Building clang-format
   :PROPERTIES:
   :CUSTOM_ID: building-clang-format
@@ -2847,6 +2894,13 @@ bl
   - [[http://www.lonelyplanet.com/italy/travel-tips-and-articles/italys-six-best-road-trips][Italy's six best road trips]].
   - [[http://www.lonelyplanet.com/italy/amalfi-coast/travel-tips-and-articles/76904][Live the good life: 12 local experiences on the Amalfi Coast]].
   - [[https://en.wikipedia.org/wiki/Manarola][Manarola]].
+  - Milan - Deus cafe.
+  - Milan - [[https://www.google.co.uk/search?sa%3DG&hl%3Den&q%3Dgelateria%2Bmilano&npsic%3D0&rflfq%3D1&tbm%3Dlcl&ved%3D0ahUKEwjx8vuA353KAhWIOhoKHaFNDq0QjGoIPQ&biw%3D1600&bih%3D789][Gelato joints]].
+  - Milan - [[http://www.ilmangione.it/][Il mangione]] to find restaurants.
+  - Milan - Mercato Metropolitani.
+  - Milan - Navigli and eat at "el brellin".
+  - Milan - [[http://www.taveggia.it][Taveggia]] for hot chocolate.
+  - Milan - [[http://www.msadventuresinitaly.com/blog/2008/04/14/where-to-go-to-aperitivo-in-milan-italy/][Where to go for aperitivo in Milan]].
   - [[https://en.wikipedia.org/wiki/Montalcino][Montalcino, and Brunello wine]].
   - [[https://en.wikipedia.org/wiki/Piazza_dei_Miracoli#Duomo][Piazza dei Miracoli]].
   - [[https://en.wikipedia.org/wiki/Piedmont][Piedmont]].
@@ -4170,6 +4224,7 @@ If FROM or TO is negative, it counts from the end.
   :END:
 ******* TODO [[https://github.com/niku/markdown-preview-eww][markdown-preview-eww]].
 ******* TODO [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
+******* TODO [[https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el][Peek at peteyy's Javascript config]].
 ******* TODO [[http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1][ediff-revision and magit-find-file to compare branches]].
 ******* TODO [[https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md][Flycheck linter for sh using checkbashisms]].
 ******* TODO [[http://draketo.de/light/english/free-software/el-kanban-org-table][El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables]].
@@ -4202,7 +4257,6 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/Fuco1/dired-hacks][dired-hacks]].
 ******* TODO emacs-index-search (lookup subject in Emacs manual).
 ******* TODO gtd emacs workflow: Charles cave's [[http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html][notes]].
-******* TODO [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
 ******* TODO info-apropos (lookup subject in all manuals).
 ******* TODO Jumping around tips: [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
 ******* TODO Mac OS clipboard support (from terminal): [[https://github.com/jkp/pbcopy.el][pbcopy]].
@@ -4224,6 +4278,7 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/mineo/yatemplate][yatemplate]].
 ******* TODO [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
 ******* TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+******* DONE [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
 ******* DONE [[https://github.com/calvinwyoung/org-autolist][org-autolist]].
 ******* DONE Move up by parens: More at the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html][manual]].
 ******* DONE sunrise-sunset.
