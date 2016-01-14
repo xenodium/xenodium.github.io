@@ -62,6 +62,19 @@
                                  (setq-local company-backends '((company-irony)))))
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 #+END_SRC
+*** install irony server
+    Run:
+#+BEGIN_SRC
+  M-x irony-install-server
+#+END_SRC
+   NOTE: Needs libclang: Install with "brew install llvm --with-clang" By default, irony-install-server did not find libclang on Mac OS. /irony-install-server/ invokes cmake for you. Work around by adding:
+#+BEGIN_SRC
+   -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm
+#+END_SRC
+   For example:
+#+BEGIN_SRC
+   cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTALL_PREFIX\=/Users/your-user-name/.emacs.d/irony/ /Users/your-user-name/.emacs.d/elpa/irony-20160106.1223/server && cmake --build . --use-stderr --config Release --target install
+#+END_SRC
 *** Compilation database
 ***** Install xctool
 #+BEGIN_SRC sh
