@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Álvaro Ramírez</title>
-<!-- 2016-01-12 Tue 21:21 -->
+<!-- 2016-01-13 Wed 21:57 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Alvaro Ramirez" />
@@ -352,11 +352,34 @@ More at <a href="http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gno
 </div>
 </div>
 <div id="outline-container-sec-4-3" class="outline-3">
-<h3 id="sec-4-3">Compilation database</h3>
+<h3 id="sec-4-3">install irony server</h3>
 <div class="outline-text-3" id="text-4-3">
-</div><div id="outline-container-sec-4-3-1" class="outline-4">
-<h4 id="sec-4-3-1">Install xctool</h4>
-<div class="outline-text-4" id="text-4-3-1">
+<p>
+Run:
+</p>
+<pre class="example">
+M-x irony-install-server
+</pre>
+<p>
+NOTE: Needs libclang: Install with "brew install llvm &#x2013;with-clang" By default, irony-install-server did not find libclang on Mac OS. <i>irony-install-server</i> invokes cmake for you. Work around by adding:
+</p>
+<pre class="example">
+-DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm
+</pre>
+<p>
+For example:
+</p>
+<pre class="example">
+cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTALL_PREFIX\=/Users/your-user-name/.emacs.d/irony/ /Users/your-user-name/.emacs.d/elpa/irony-20160106.1223/server &amp;&amp; cmake --build . --use-stderr --config Release --target install
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4">Compilation database</h3>
+<div class="outline-text-3" id="text-4-4">
+</div><div id="outline-container-sec-4-4-1" class="outline-4">
+<h4 id="sec-4-4-1">Install xctool</h4>
+<div class="outline-text-4" id="text-4-4-1">
 <div class="org-src-container">
 
 <pre class="src src-sh">brew install xctool
@@ -364,9 +387,9 @@ More at <a href="http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gno
 </div>
 </div>
 </div>
-<div id="outline-container-sec-4-3-2" class="outline-4">
-<h4 id="sec-4-3-2">Generate compilation database</h4>
-<div class="outline-text-4" id="text-4-3-2">
+<div id="outline-container-sec-4-4-2" class="outline-4">
+<h4 id="sec-4-4-2">Generate compilation database</h4>
+<div class="outline-text-4" id="text-4-4-2">
 <div class="org-src-container">
 
 <pre class="src src-sh">xctool -scheme SomeScheme -reporter json-compilation-database:compile_commands.json clean build
@@ -375,9 +398,9 @@ More at <a href="http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gno
 </div>
 </div>
 </div>
-<div id="outline-container-sec-4-4" class="outline-3">
-<h3 id="sec-4-4">Set Irony's database path</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5">Set Irony's database path</h3>
+<div class="outline-text-3" id="text-4-5">
 <blockquote>
 <p>
 M-x irony-cdb-json-add-compile-commands-path
@@ -880,7 +903,7 @@ Online documentation is great so far. More at <a href="https://docs.npmjs.com">d
 <h2 id="mac-os-x-tips-backlog"><a id="sec-17" name="sec-17"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-12-21 Mon]</span></span> <a href="#mac-os-x-tips-backlog">#</a> Mac OS X tips backlog</h2>
 <div class="outline-text-2" id="text-mac-os-x-tips-backlog">
 </div>
-<ul class="org-ul"><li><a id="sec-17-0-0-1" name="sec-17-0-0-1"></a><span class="done DONE">DONE</span> Turn off shadows with <a href="https://github.com/ocodo/ShadowToggle">ShadowToggle</a>.<br  /></li></ul>
+<ul class="org-ul"><li><a id="sec-17-0-0-1" name="sec-17-0-0-1"></a><span class="todo DONE">DONE</span> Turn off shadows with <a href="https://github.com/ocodo/ShadowToggle">ShadowToggle</a>.<br  /></li></ul>
 </div>
 <div id="outline-container-search-bash-history-with-emacs-helm" class="outline-2">
 <h2 id="search-bash-history-with-emacs-helm"><a id="sec-18" name="sec-18"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-12-20 Sun]</span></span> <a href="#search-bash-history-with-emacs-helm">#</a> Search bash history with Emacs helm</h2>
@@ -4186,8 +4209,12 @@ Installed <a href="https://github.com/pashky/restclient.el">Pashky's</a> <a href
 <div id="outline-container-berlin-travel-bookmarks" class="outline-2">
 <h2 id="berlin-travel-bookmarks"><a id="sec-138" name="sec-138"></a><span class="timestamp-wrapper"><span class="timestamp">[2015-05-25 Mon]</span></span> <a href="#berlin-travel-bookmarks">#</a> Berlin travel bookmarks</h2>
 <div class="outline-text-2" id="text-berlin-travel-bookmarks">
-<br><span class="modified-timestamp">  <em>[2015-08-08 Sat]  updated  </em></span>
+<br><span class="modified-timestamp">  <em>[2016-01-12 Tue]  updated  </em></span>
 <ul class="org-ul">
+<li><a href="http://www.topinspired.com/top-10-things-to-do-in-berlin/">10 things to do in Berlin</a>.
+</li>
+<li><a href="http://www.angloitalianfollowus.com/berlin-on-a-budget">Berlin On A Budget: Our Slow Travel Guide</a>.
+</li>
 <li><a href="http://www.lonelyplanet.com/travel-tips-and-articles/69756">Perfect day in Berlin</a>.
 </li>
 <li><a href="http://www.lonelyplanet.com/germany/berlin/travel-tips-and-articles/75972">The best of hidden Berlin</a>.
@@ -5888,8 +5915,8 @@ $ ./build.sh --clang-completer
 <h3 id="sec-207-3">Covent Garden</h3>
 <div class="outline-text-3" id="text-207-3">
 </div><ul class="org-ul"><li><a id="sec-207-3-0-1" name="sec-207-3-0-1"></a><span class="todo TODO">TODO</span> <a href="http://www.punjab.co.uk/">Punjab</a> (Punjabi).<br  /></li>
-<li><a id="sec-207-3-0-2" name="sec-207-3-0-2"></a><span class="done DONE">DONE</span> Dishoom (Indian), try Lamb raan.<br  /></li>
-<li><a id="sec-207-3-0-3" name="sec-207-3-0-3"></a><span class="done DONE">DONE</span> <a href="http://www.sagarveg.co.uk">Sagar</a> (South Indian): Great food!<br  /></li></ul>
+<li><a id="sec-207-3-0-2" name="sec-207-3-0-2"></a><span class="todo DONE">DONE</span> Dishoom (Indian), try Lamb raan.<br  /></li>
+<li><a id="sec-207-3-0-3" name="sec-207-3-0-3"></a><span class="todo DONE">DONE</span> <a href="http://www.sagarveg.co.uk">Sagar</a> (South Indian): Great food!<br  /></li></ul>
 </div>
 <div id="outline-container-sec-207-4" class="outline-3">
 <h3 id="sec-207-4">Ealing</h3>
@@ -5925,7 +5952,7 @@ $ ./build.sh --clang-completer
 <div id="outline-container-sec-207-10" class="outline-3">
 <h3 id="sec-207-10">Hammersmith</h3>
 <div class="outline-text-3" id="text-207-10">
-</div><ul class="org-ul"><li><a id="sec-207-10-0-1" name="sec-207-10-0-1"></a><span class="done DONE">DONE</span> <a href="http://indian-zing.co.uk/">Indian Zing</a> (Indian): It was OK.<br  /></li></ul>
+</div><ul class="org-ul"><li><a id="sec-207-10-0-1" name="sec-207-10-0-1"></a><span class="todo DONE">DONE</span> <a href="http://indian-zing.co.uk/">Indian Zing</a> (Indian): It was OK.<br  /></li></ul>
 </div>
 <div id="outline-container-sec-207-11" class="outline-3">
 <h3 id="sec-207-11">Hamstead</h3>
@@ -5999,7 +6026,7 @@ $ ./build.sh --clang-completer
 <div id="outline-container-sec-207-23" class="outline-3">
 <h3 id="sec-207-23">Tottenham Court Road.</h3>
 <div class="outline-text-3" id="text-207-23">
-</div><ul class="org-ul"><li><a id="sec-207-23-0-1" name="sec-207-23-0-1"></a><span class="done DONE">DONE</span> <a href="https://www.kanada-ya.com/">Kanada-Ya</a> (rammen): Not bad.<br  /></li></ul>
+</div><ul class="org-ul"><li><a id="sec-207-23-0-1" name="sec-207-23-0-1"></a><span class="todo DONE">DONE</span> <a href="https://www.kanada-ya.com/">Kanada-Ya</a> (rammen): Not bad.<br  /></li></ul>
 </div>
 <div id="outline-container-sec-207-24" class="outline-3">
 <h3 id="sec-207-24">Tower Hill</h3>
@@ -7789,11 +7816,11 @@ maps key to action.
 <li><a id="sec-239-0-0-18" name="sec-239-0-0-18"></a><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=VXTpTRuPiPQ">Surya Namaskar stretches</a>.<br  /></li>
 <li><a id="sec-239-0-0-19" name="sec-239-0-0-19"></a><span class="todo TODO">TODO</span> <a href="http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm">The Emacs of distros</a>.<br  /></li>
 <li><a id="sec-239-0-0-20" name="sec-239-0-0-20"></a><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=17jymDn0W6U&sns=em">The Known Universe by AMNH</a>.<br  /></li>
-<li><a id="sec-239-0-0-21" name="sec-239-0-0-21"></a><span class="done DONE">DONE</span> <a href="https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N">The Internets own boy</a>.<br  /></li>
-<li><a id="sec-239-0-0-22" name="sec-239-0-0-22"></a><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=Fw8BV4VFOwM">BBC's secret of levitation</a>.<br  /></li>
-<li><a id="sec-239-0-0-23" name="sec-239-0-0-23"></a><span class="done DONE">DONE</span> <a href="https://vimeo.com/15351476">Hold Fast</a>.<br  /></li>
-<li><a id="sec-239-0-0-24" name="sec-239-0-0-24"></a><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=8crol-ydfmi">This is water, commencement speech</a>.<br  /></li>
-<li><a id="sec-239-0-0-25" name="sec-239-0-0-25"></a><span class="done DONE">DONE</span> <a href="https://www.youtube.com/watch?v=dkyjvv7huzw">This is water</a>.<br  /></li></ul>
+<li><a id="sec-239-0-0-21" name="sec-239-0-0-21"></a><span class="todo DONE">DONE</span> <a href="https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N">The Internets own boy</a>.<br  /></li>
+<li><a id="sec-239-0-0-22" name="sec-239-0-0-22"></a><span class="todo DONE">DONE</span> <a href="https://www.youtube.com/watch?v=Fw8BV4VFOwM">BBC's secret of levitation</a>.<br  /></li>
+<li><a id="sec-239-0-0-23" name="sec-239-0-0-23"></a><span class="todo DONE">DONE</span> <a href="https://vimeo.com/15351476">Hold Fast</a>.<br  /></li>
+<li><a id="sec-239-0-0-24" name="sec-239-0-0-24"></a><span class="todo DONE">DONE</span> <a href="https://www.youtube.com/watch?v=8crol-ydfmi">This is water, commencement speech</a>.<br  /></li>
+<li><a id="sec-239-0-0-25" name="sec-239-0-0-25"></a><span class="todo DONE">DONE</span> <a href="https://www.youtube.com/watch?v=dkyjvv7huzw">This is water</a>.<br  /></li></ul>
 </div>
 <div id="outline-container-travel-gear" class="outline-2">
 <h2 id="travel-gear"><a id="sec-240" name="sec-240"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-30 Tue]</span></span> <a href="#travel-gear">#</a> Travel gear</h2>
@@ -7841,11 +7868,11 @@ maps key to action.
 <li><a id="sec-242-0-0-20" name="sec-242-0-0-20"></a><span class="todo TODO">TODO</span> <a href="http://www.imdb.com/title/tt0078269/?ref_=fn_al_tt_1">The Silent Partner</a>.<br  /></li>
 <li><a id="sec-242-0-0-21" name="sec-242-0-0-21"></a><span class="todo TODO">TODO</span> Uncle boonmee who can recall his past lives, by apichatpong weerasethakul.<br  /></li>
 <li><a id="sec-242-0-0-22" name="sec-242-0-0-22"></a><span class="todo TODO">TODO</span> Waking life, by rickard linklater.<br  /></li>
-<li><a id="sec-242-0-0-23" name="sec-242-0-0-23"></a><span class="done DONE">DONE</span> <a href="http://www.awaketheyoganandamovie.com/">Awake, the life of yogananda</a>.<br  /></li>
-<li><a id="sec-242-0-0-24" name="sec-242-0-0-24"></a><span class="done DONE">DONE</span> <a href="http://www.imdb.com/title/tt2562232/">Birdman</a>.<br  /></li>
-<li><a id="sec-242-0-0-25" name="sec-242-0-0-25"></a><span class="done DONE">DONE</span> <a href="http://www.imdb.com/title/tt1065073/">Boyhood</a>.<br  /></li>
-<li><a id="sec-242-0-0-26" name="sec-242-0-0-26"></a><span class="done DONE">DONE</span> She A Chinese.<br  /></li>
-<li><a id="sec-242-0-0-27" name="sec-242-0-0-27"></a><span class="done DONE">DONE</span> <a href="http://www.imdb.com/title/tt0243655/">Wet Hot American Summer</a>.<br  /></li></ul>
+<li><a id="sec-242-0-0-23" name="sec-242-0-0-23"></a><span class="todo DONE">DONE</span> <a href="http://www.awaketheyoganandamovie.com/">Awake, the life of yogananda</a>.<br  /></li>
+<li><a id="sec-242-0-0-24" name="sec-242-0-0-24"></a><span class="todo DONE">DONE</span> <a href="http://www.imdb.com/title/tt2562232/">Birdman</a>.<br  /></li>
+<li><a id="sec-242-0-0-25" name="sec-242-0-0-25"></a><span class="todo DONE">DONE</span> <a href="http://www.imdb.com/title/tt1065073/">Boyhood</a>.<br  /></li>
+<li><a id="sec-242-0-0-26" name="sec-242-0-0-26"></a><span class="todo DONE">DONE</span> She A Chinese.<br  /></li>
+<li><a id="sec-242-0-0-27" name="sec-242-0-0-27"></a><span class="todo DONE">DONE</span> <a href="http://www.imdb.com/title/tt0243655/">Wet Hot American Summer</a>.<br  /></li></ul>
 </div>
 <div id="outline-container-microservices-bookmarks" class="outline-2">
 <h2 id="microservices-bookmarks"><a id="sec-243" name="sec-243"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-12-29 Mon]</span></span> <a href="#microservices-bookmarks">#</a> Microservices bookmarks</h2>
@@ -7904,74 +7931,76 @@ maps key to action.
 <div class="outline-text-2" id="text-emacs-tips-backlog">
 <br><span class="modified-timestamp">  <em>[2016-01-12 Tue]  updated  </em></span>
 </div>
-<ul class="org-ul"><li><a id="sec-246-0-0-1" name="sec-246-0-0-1"></a><span class="todo TODO">TODO</span> <a href="https://github.com/niku/markdown-preview-eww">markdown-preview-eww</a>.<br  /></li>
-<li><a id="sec-246-0-0-2" name="sec-246-0-0-2"></a><span class="todo TODO">TODO</span> <a href="https://github.com/lujun9972/yahoo-weather-mode">yahoo-weather-mode</a>.<br  /></li>
-<li><a id="sec-246-0-0-3" name="sec-246-0-0-3"></a><span class="todo TODO">TODO</span> <a href="https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el">Peek at peteyy's Javascript config</a>.<br  /></li>
-<li><a id="sec-246-0-0-4" name="sec-246-0-0-4"></a><span class="todo TODO">TODO</span> <a href="http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1">ediff-revision and magit-find-file to compare branches</a>.<br  /></li>
-<li><a id="sec-246-0-0-5" name="sec-246-0-0-5"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md">Flycheck linter for sh using checkbashisms</a>.<br  /></li>
-<li><a id="sec-246-0-0-6" name="sec-246-0-0-6"></a><span class="todo TODO">TODO</span> <a href="http://draketo.de/light/english/free-software/el-kanban-org-table">El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables</a>.<br  /></li>
-<li><a id="sec-246-0-0-7" name="sec-246-0-0-7"></a><span class="todo TODO">TODO</span> <a href="http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511">Emacs iOS development (qiita)</a>.<br  /></li>
-<li><a id="sec-246-0-0-8" name="sec-246-0-0-8"></a><span class="todo TODO">TODO</span> <a href="http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/">Emacs iOS development (fujimisakari)</a>.<br  /></li>
-<li><a id="sec-246-0-0-9" name="sec-246-0-0-9"></a><span class="todo TODO">TODO</span> <a href="https://github.com/trotzig/import-js">import-js</a>.<br  /></li>
-<li><a id="sec-246-0-0-10" name="sec-246-0-0-10"></a><span class="todo TODO">TODO</span> <a href="http://orgmode.org/worg/org-tutorials/encrypting-files.html">encrypting org files</a>.<br  /></li>
-<li><a id="sec-246-0-0-11" name="sec-246-0-0-11"></a><span class="todo TODO">TODO</span> <a href="https://github.com/flycheck/flycheck-pos-tip">flycheck-pos-tip</a>.<br  /></li>
-<li><a id="sec-246-0-0-12" name="sec-246-0-0-12"></a><span class="todo TODO">TODO</span> <a href="https://github.com/CodyReichert/es6-snippets">ES6 yasnippets</a>.<br  /></li>
-<li><a id="sec-246-0-0-13" name="sec-246-0-0-13"></a><span class="todo TODO">TODO</span> <a href="http://tiborsimko.org/emacs-epydoc-snippets.html">Writing Python Docstrings with Emacs</a>.<br  /></li>
-<li><a id="sec-246-0-0-14" name="sec-246-0-0-14"></a><span class="todo TODO">TODO</span> <a href="https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac">Try Completion for Objective-C (Github diff)</a>.<br  /></li>
-<li><a id="sec-246-0-0-15" name="sec-246-0-0-15"></a><span class="todo TODO">TODO</span> <a href="https://github.com/swank-js/swank-js">swank-js</a>.<br  /></li>
-<li><a id="sec-246-0-0-16" name="sec-246-0-0-16"></a><span class="todo TODO">TODO</span> <a href="https://github.com/steckerhalter/emacs-fasd">Emacs fasd support</a>.<br  /></li>
-<li><a id="sec-246-0-0-17" name="sec-246-0-0-17"></a><span class="todo TODO">TODO</span> <a href="https://github.com/benma/visual-regexp.el">visual-regexp</a>.<br  /></li>
-<li><a id="sec-246-0-0-18" name="sec-246-0-0-18"></a><span class="todo TODO">TODO</span> <a href="http://emacsredux.com/blog/2014/05/16/opening-large-files/">Open large files</a>.<br  /></li>
-<li><a id="sec-246-0-0-19" name="sec-246-0-0-19"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nathankot/company-sourcekit">company-sourcekit</a> (Swift completion): <a href="https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24">sample config</a>.<br  /></li>
-<li><a id="sec-246-0-0-20" name="sec-246-0-0-20"></a><span class="todo TODO">TODO</span> <a href="https://github.com/dakrone/emacs-java-imports">emacs-java-imports</a>.<br  /></li>
-<li><a id="sec-246-0-0-21" name="sec-246-0-0-21"></a><span class="todo TODO">TODO</span> <a href="https://github.com/ananthakumaran/tide">TypeScript Interactive Development Environment for Emacs</a>.<br  /></li>
-<li><a id="sec-246-0-0-22" name="sec-246-0-0-22"></a><span class="todo TODO">TODO</span> append-to-buffer.<br  /></li>
-<li><a id="sec-246-0-0-23" name="sec-246-0-0-23"></a><span class="todo TODO">TODO</span> <a href="https://github.com/wavexx/python-x.el">python-x: extras for interactive evaluation</a>.<br  /></li>
-<li><a id="sec-246-0-0-24" name="sec-246-0-0-24"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsmirror/outlined-elisp-mode">outlined-elisp-mode</a>.<br  /></li>
-<li><a id="sec-246-0-0-25" name="sec-246-0-0-25"></a><span class="todo TODO">TODO</span> <a href="https://github.com/tj64/outline-magic">outlien-magic</a>.<br  /></li>
-<li><a id="sec-246-0-0-26" name="sec-246-0-0-26"></a><span class="todo TODO">TODO</span> Gutter and linum+ config (see <a href="https://github.com/zvlex/dotfiles">zvlex/dotfiles</a>).<br  /></li>
-<li><a id="sec-246-0-0-27" name="sec-246-0-0-27"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>: Editing color.<br  /></li>
-<li><a id="sec-246-0-0-28" name="sec-246-0-0-28"></a><span class="todo TODO">TODO</span> artbollocks-mode and writegood. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.<br  /></li>
-<li><a id="sec-246-0-0-29" name="sec-246-0-0-29"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html">auto-insert-mode</a>.<br  /></li>
-<li><a id="sec-246-0-0-30" name="sec-246-0-0-30"></a><span class="todo TODO">TODO</span> Buffer local cursor color: <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.<br  /></li>
-<li><a id="sec-246-0-0-31" name="sec-246-0-0-31"></a><span class="todo TODO">TODO</span> clang indexing tool: <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.<br  /></li>
-<li><a id="sec-246-0-0-32" name="sec-246-0-0-32"></a><span class="todo TODO">TODO</span> Create custom theme: Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.<br  /></li>
-<li><a id="sec-246-0-0-33" name="sec-246-0-0-33"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Fuco1/dired-hacks">dired-hacks</a>.<br  /></li>
-<li><a id="sec-246-0-0-34" name="sec-246-0-0-34"></a><span class="todo TODO">TODO</span> emacs-index-search (lookup subject in Emacs manual).<br  /></li>
-<li><a id="sec-246-0-0-35" name="sec-246-0-0-35"></a><span class="todo TODO">TODO</span> gtd emacs workflow: Charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.<br  /></li>
-<li><a id="sec-246-0-0-36" name="sec-246-0-0-36"></a><span class="todo TODO">TODO</span> info-apropos (lookup subject in all manuals).<br  /></li>
-<li><a id="sec-246-0-0-37" name="sec-246-0-0-37"></a><span class="todo TODO">TODO</span> Jumping around tips: <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.<br  /></li>
-<li><a id="sec-246-0-0-38" name="sec-246-0-0-38"></a><span class="todo TODO">TODO</span> Mac OS clipboard support (from terminal): <a href="https://github.com/jkp/pbcopy.el">pbcopy</a>.<br  /></li>
-<li><a id="sec-246-0-0-39" name="sec-246-0-0-39"></a><span class="todo TODO">TODO</span> <a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>: For Java.<br  /></li>
-<li><a id="sec-246-0-0-40" name="sec-246-0-0-40"></a><span class="todo TODO">TODO</span> Melpa recipe format:<a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.<br  /></li>
-<li><a id="sec-246-0-0-41" name="sec-246-0-0-41"></a><span class="todo TODO">TODO</span> Naturaldocs for javascript: <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.<br  /></li>
-<li><a id="sec-246-0-0-42" name="sec-246-0-0-42"></a><span class="todo TODO">TODO</span> Org protocol: see irreal's <a href="http://irreal.org/blog/?p=3594">post</a> and oremacs's <a href="http://oremacs.com/2015/01/07/org-protocol-1/">part 1</a> and <a href="http://oremacs.com/2015/01/08/org-protocol-2/">part 2</a>.<br  /></li>
-<li><a id="sec-246-0-0-43" name="sec-246-0-0-43"></a><span class="todo TODO">TODO</span> org-multiple-keymap.  More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.<br  /></li>
-<li><a id="sec-246-0-0-44" name="sec-246-0-0-44"></a><span class="todo TODO">TODO</span> <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>: Export org to reveal.js.<br  /></li>
-<li><a id="sec-246-0-0-45" name="sec-246-0-0-45"></a><span class="todo TODO">TODO</span> Practice touch/speed typing: <a href="https://github.com/hagleitn/speed-type">speedtype</a>.<br  /></li>
-<li><a id="sec-246-0-0-46" name="sec-246-0-0-46"></a><span class="todo TODO">TODO</span> private configuration: <a href="https://github.com/cheunghy/private">private</a>.<br  /></li>
-<li><a id="sec-246-0-0-47" name="sec-246-0-0-47"></a><span class="todo TODO">TODO</span> project management for C/C++: <a href="https://github.com/lefterisjp/malinka">malinka</a>.<br  /></li>
-<li><a id="sec-246-0-0-48" name="sec-246-0-0-48"></a><span class="todo TODO">TODO</span> Project templates: <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.<br  /></li>
-<li><a id="sec-246-0-0-49" name="sec-246-0-0-49"></a><span class="todo TODO">TODO</span> Rewrite git logs. See <a href="http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/">emacs magit tutorial | rewrite older commit</a>.<br  /></li>
-<li><a id="sec-246-0-0-50" name="sec-246-0-0-50"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html">Selective display</a>: Hide lines longer than.<br  /></li>
-<li><a id="sec-246-0-0-51" name="sec-246-0-0-51"></a><span class="todo TODO">TODO</span> shell-command-on-region: Print inline with C-u M-|.<br  /></li>
-<li><a id="sec-246-0-0-52" name="sec-246-0-0-52"></a><span class="todo TODO">TODO</span> shell-command: Print output inline with C-u M-!.<br  /></li>
-<li><a id="sec-246-0-0-53" name="sec-246-0-0-53"></a><span class="todo TODO">TODO</span> Simplify media file transformations: <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.<br  /></li>
-<li><a id="sec-246-0-0-54" name="sec-246-0-0-54"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mineo/yatemplate">yatemplate</a>.<br  /></li>
-<li><a id="sec-246-0-0-55" name="sec-246-0-0-55"></a><span class="todo TODO">TODO</span> <a href="https://github.com/kelvinh/org-page">org-page</a>: Static blog.<br  /></li>
-<li><a id="sec-246-0-0-56" name="sec-246-0-0-56"></a><span class="todo TODO">TODO</span> <a href="https://github.com/fujimisakari/emacs-helm-xcdoc">emacs-helm-xcdoc</a>.<br  /></li>
-<li><a id="sec-246-0-0-57" name="sec-246-0-0-57"></a><span class="done DONE">DONE</span> <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">How to get emacs key bindings in Ubuntu</a>.<br  /></li>
-<li><a id="sec-246-0-0-58" name="sec-246-0-0-58"></a><span class="done DONE">DONE</span> <a href="https://github.com/calvinwyoung/org-autolist">org-autolist</a>.<br  /></li>
-<li><a id="sec-246-0-0-59" name="sec-246-0-0-59"></a><span class="done DONE">DONE</span> Move up by parens: More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.<br  /></li>
-<li><a id="sec-246-0-0-60" name="sec-246-0-0-60"></a><span class="done DONE">DONE</span> sunrise-sunset.<br  /></li>
-<li><a id="sec-246-0-0-61" name="sec-246-0-0-61"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/ace-window">ace-window</a>.<br  /></li>
-<li><a id="sec-246-0-0-62" name="sec-246-0-0-62"></a><span class="done DONE">DONE</span> Checkdoc.<br  /></li>
-<li><a id="sec-246-0-0-63" name="sec-246-0-0-63"></a><span class="done DONE">DONE</span> Choose magit repo c-u c-x g (magit-status).<br  /></li>
-<li><a id="sec-246-0-0-64" name="sec-246-0-0-64"></a><span class="done DONE">DONE</span> continue comment blocks: m-j (indent-new-comment-line).<br  /></li>
-<li><a id="sec-246-0-0-65" name="sec-246-0-0-65"></a><span class="done DONE">DONE</span> Debug expanded elisp macros: See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.<br  /></li>
-<li><a id="sec-246-0-0-66" name="sec-246-0-0-66"></a><span class="done DONE">DONE</span> delete-duplicate-lines<br  /></li>
-<li><a id="sec-246-0-0-67" name="sec-246-0-0-67"></a><span class="done DONE">DONE</span> Describe bindings: C-h b lists all bindings.<br  /></li>
-<li><a id="sec-246-0-0-68" name="sec-246-0-0-68"></a><span class="done DONE">DONE</span> Disable furniture<br  /><div class="outline-text-5" id="text-246-0-0-68">
+<ul class="org-ul"><li><a id="sec-246-0-0-1" name="sec-246-0-0-1"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices">Adapting code using the old defadvice</a>.<br  /></li>
+<li><a id="sec-246-0-0-2" name="sec-246-0-0-2"></a><span class="todo TODO">TODO</span> <a href="https://github.com/jorgenschaefer/emacs-buttercup">buttercup</a>.<br  /></li>
+<li><a id="sec-246-0-0-3" name="sec-246-0-0-3"></a><span class="todo TODO">TODO</span> <a href="https://github.com/niku/markdown-preview-eww">markdown-preview-eww</a>.<br  /></li>
+<li><a id="sec-246-0-0-4" name="sec-246-0-0-4"></a><span class="todo TODO">TODO</span> <a href="https://github.com/lujun9972/yahoo-weather-mode">yahoo-weather-mode</a>.<br  /></li>
+<li><a id="sec-246-0-0-5" name="sec-246-0-0-5"></a><span class="todo TODO">TODO</span> <a href="https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el">Peek at peteyy's Javascript config</a>.<br  /></li>
+<li><a id="sec-246-0-0-6" name="sec-246-0-0-6"></a><span class="todo TODO">TODO</span> <a href="http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1">ediff-revision and magit-find-file to compare branches</a>.<br  /></li>
+<li><a id="sec-246-0-0-7" name="sec-246-0-0-7"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md">Flycheck linter for sh using checkbashisms</a>.<br  /></li>
+<li><a id="sec-246-0-0-8" name="sec-246-0-0-8"></a><span class="todo TODO">TODO</span> <a href="http://draketo.de/light/english/free-software/el-kanban-org-table">El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables</a>.<br  /></li>
+<li><a id="sec-246-0-0-9" name="sec-246-0-0-9"></a><span class="todo TODO">TODO</span> <a href="http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511">Emacs iOS development (qiita)</a>.<br  /></li>
+<li><a id="sec-246-0-0-10" name="sec-246-0-0-10"></a><span class="todo TODO">TODO</span> <a href="http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/">Emacs iOS development (fujimisakari)</a>.<br  /></li>
+<li><a id="sec-246-0-0-11" name="sec-246-0-0-11"></a><span class="todo TODO">TODO</span> <a href="https://github.com/trotzig/import-js">import-js</a>.<br  /></li>
+<li><a id="sec-246-0-0-12" name="sec-246-0-0-12"></a><span class="todo TODO">TODO</span> <a href="http://orgmode.org/worg/org-tutorials/encrypting-files.html">encrypting org files</a>.<br  /></li>
+<li><a id="sec-246-0-0-13" name="sec-246-0-0-13"></a><span class="todo TODO">TODO</span> <a href="https://github.com/flycheck/flycheck-pos-tip">flycheck-pos-tip</a>.<br  /></li>
+<li><a id="sec-246-0-0-14" name="sec-246-0-0-14"></a><span class="todo TODO">TODO</span> <a href="https://github.com/CodyReichert/es6-snippets">ES6 yasnippets</a>.<br  /></li>
+<li><a id="sec-246-0-0-15" name="sec-246-0-0-15"></a><span class="todo TODO">TODO</span> <a href="http://tiborsimko.org/emacs-epydoc-snippets.html">Writing Python Docstrings with Emacs</a>.<br  /></li>
+<li><a id="sec-246-0-0-16" name="sec-246-0-0-16"></a><span class="todo TODO">TODO</span> <a href="https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac">Try Completion for Objective-C (Github diff)</a>.<br  /></li>
+<li><a id="sec-246-0-0-17" name="sec-246-0-0-17"></a><span class="todo TODO">TODO</span> <a href="https://github.com/swank-js/swank-js">swank-js</a>.<br  /></li>
+<li><a id="sec-246-0-0-18" name="sec-246-0-0-18"></a><span class="todo TODO">TODO</span> <a href="https://github.com/steckerhalter/emacs-fasd">Emacs fasd support</a>.<br  /></li>
+<li><a id="sec-246-0-0-19" name="sec-246-0-0-19"></a><span class="todo TODO">TODO</span> <a href="https://github.com/benma/visual-regexp.el">visual-regexp</a>.<br  /></li>
+<li><a id="sec-246-0-0-20" name="sec-246-0-0-20"></a><span class="todo TODO">TODO</span> <a href="http://emacsredux.com/blog/2014/05/16/opening-large-files/">Open large files</a>.<br  /></li>
+<li><a id="sec-246-0-0-21" name="sec-246-0-0-21"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nathankot/company-sourcekit">company-sourcekit</a> (Swift completion): <a href="https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24">sample config</a>.<br  /></li>
+<li><a id="sec-246-0-0-22" name="sec-246-0-0-22"></a><span class="todo TODO">TODO</span> <a href="https://github.com/dakrone/emacs-java-imports">emacs-java-imports</a>.<br  /></li>
+<li><a id="sec-246-0-0-23" name="sec-246-0-0-23"></a><span class="todo TODO">TODO</span> <a href="https://github.com/ananthakumaran/tide">TypeScript Interactive Development Environment for Emacs</a>.<br  /></li>
+<li><a id="sec-246-0-0-24" name="sec-246-0-0-24"></a><span class="todo TODO">TODO</span> append-to-buffer.<br  /></li>
+<li><a id="sec-246-0-0-25" name="sec-246-0-0-25"></a><span class="todo TODO">TODO</span> <a href="https://github.com/wavexx/python-x.el">python-x: extras for interactive evaluation</a>.<br  /></li>
+<li><a id="sec-246-0-0-26" name="sec-246-0-0-26"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsmirror/outlined-elisp-mode">outlined-elisp-mode</a>.<br  /></li>
+<li><a id="sec-246-0-0-27" name="sec-246-0-0-27"></a><span class="todo TODO">TODO</span> <a href="https://github.com/tj64/outline-magic">outlien-magic</a>.<br  /></li>
+<li><a id="sec-246-0-0-28" name="sec-246-0-0-28"></a><span class="todo TODO">TODO</span> Gutter and linum+ config (see <a href="https://github.com/zvlex/dotfiles">zvlex/dotfiles</a>).<br  /></li>
+<li><a id="sec-246-0-0-29" name="sec-246-0-0-29"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>: Editing color.<br  /></li>
+<li><a id="sec-246-0-0-30" name="sec-246-0-0-30"></a><span class="todo TODO">TODO</span> artbollocks-mode and writegood. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.<br  /></li>
+<li><a id="sec-246-0-0-31" name="sec-246-0-0-31"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html">auto-insert-mode</a>.<br  /></li>
+<li><a id="sec-246-0-0-32" name="sec-246-0-0-32"></a><span class="todo TODO">TODO</span> Buffer local cursor color: <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.<br  /></li>
+<li><a id="sec-246-0-0-33" name="sec-246-0-0-33"></a><span class="todo TODO">TODO</span> clang indexing tool: <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.<br  /></li>
+<li><a id="sec-246-0-0-34" name="sec-246-0-0-34"></a><span class="todo TODO">TODO</span> Create custom theme: Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.<br  /></li>
+<li><a id="sec-246-0-0-35" name="sec-246-0-0-35"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Fuco1/dired-hacks">dired-hacks</a>.<br  /></li>
+<li><a id="sec-246-0-0-36" name="sec-246-0-0-36"></a><span class="todo TODO">TODO</span> emacs-index-search (lookup subject in Emacs manual).<br  /></li>
+<li><a id="sec-246-0-0-37" name="sec-246-0-0-37"></a><span class="todo TODO">TODO</span> gtd emacs workflow: Charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.<br  /></li>
+<li><a id="sec-246-0-0-38" name="sec-246-0-0-38"></a><span class="todo TODO">TODO</span> info-apropos (lookup subject in all manuals).<br  /></li>
+<li><a id="sec-246-0-0-39" name="sec-246-0-0-39"></a><span class="todo TODO">TODO</span> Jumping around tips: <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.<br  /></li>
+<li><a id="sec-246-0-0-40" name="sec-246-0-0-40"></a><span class="todo TODO">TODO</span> Mac OS clipboard support (from terminal): <a href="https://github.com/jkp/pbcopy.el">pbcopy</a>.<br  /></li>
+<li><a id="sec-246-0-0-41" name="sec-246-0-0-41"></a><span class="todo TODO">TODO</span> <a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>: For Java.<br  /></li>
+<li><a id="sec-246-0-0-42" name="sec-246-0-0-42"></a><span class="todo TODO">TODO</span> Melpa recipe format:<a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.<br  /></li>
+<li><a id="sec-246-0-0-43" name="sec-246-0-0-43"></a><span class="todo TODO">TODO</span> Naturaldocs for javascript: <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.<br  /></li>
+<li><a id="sec-246-0-0-44" name="sec-246-0-0-44"></a><span class="todo TODO">TODO</span> Org protocol: see irreal's <a href="http://irreal.org/blog/?p=3594">post</a> and oremacs's <a href="http://oremacs.com/2015/01/07/org-protocol-1/">part 1</a> and <a href="http://oremacs.com/2015/01/08/org-protocol-2/">part 2</a>.<br  /></li>
+<li><a id="sec-246-0-0-45" name="sec-246-0-0-45"></a><span class="todo TODO">TODO</span> org-multiple-keymap.  More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.<br  /></li>
+<li><a id="sec-246-0-0-46" name="sec-246-0-0-46"></a><span class="todo TODO">TODO</span> <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>: Export org to reveal.js.<br  /></li>
+<li><a id="sec-246-0-0-47" name="sec-246-0-0-47"></a><span class="todo TODO">TODO</span> Practice touch/speed typing: <a href="https://github.com/hagleitn/speed-type">speedtype</a>.<br  /></li>
+<li><a id="sec-246-0-0-48" name="sec-246-0-0-48"></a><span class="todo TODO">TODO</span> private configuration: <a href="https://github.com/cheunghy/private">private</a>.<br  /></li>
+<li><a id="sec-246-0-0-49" name="sec-246-0-0-49"></a><span class="todo TODO">TODO</span> project management for C/C++: <a href="https://github.com/lefterisjp/malinka">malinka</a>.<br  /></li>
+<li><a id="sec-246-0-0-50" name="sec-246-0-0-50"></a><span class="todo TODO">TODO</span> Project templates: <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.<br  /></li>
+<li><a id="sec-246-0-0-51" name="sec-246-0-0-51"></a><span class="todo TODO">TODO</span> Rewrite git logs. See <a href="http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/">emacs magit tutorial | rewrite older commit</a>.<br  /></li>
+<li><a id="sec-246-0-0-52" name="sec-246-0-0-52"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html">Selective display</a>: Hide lines longer than.<br  /></li>
+<li><a id="sec-246-0-0-53" name="sec-246-0-0-53"></a><span class="todo TODO">TODO</span> shell-command-on-region: Print inline with C-u M-|.<br  /></li>
+<li><a id="sec-246-0-0-54" name="sec-246-0-0-54"></a><span class="todo TODO">TODO</span> shell-command: Print output inline with C-u M-!.<br  /></li>
+<li><a id="sec-246-0-0-55" name="sec-246-0-0-55"></a><span class="todo TODO">TODO</span> Simplify media file transformations: <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.<br  /></li>
+<li><a id="sec-246-0-0-56" name="sec-246-0-0-56"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mineo/yatemplate">yatemplate</a>.<br  /></li>
+<li><a id="sec-246-0-0-57" name="sec-246-0-0-57"></a><span class="todo TODO">TODO</span> <a href="https://github.com/kelvinh/org-page">org-page</a>: Static blog.<br  /></li>
+<li><a id="sec-246-0-0-58" name="sec-246-0-0-58"></a><span class="todo TODO">TODO</span> <a href="https://github.com/fujimisakari/emacs-helm-xcdoc">emacs-helm-xcdoc</a>.<br  /></li>
+<li><a id="sec-246-0-0-59" name="sec-246-0-0-59"></a><span class="todo DONE">DONE</span> <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">How to get emacs key bindings in Ubuntu</a>.<br  /></li>
+<li><a id="sec-246-0-0-60" name="sec-246-0-0-60"></a><span class="todo DONE">DONE</span> <a href="https://github.com/calvinwyoung/org-autolist">org-autolist</a>.<br  /></li>
+<li><a id="sec-246-0-0-61" name="sec-246-0-0-61"></a><span class="todo DONE">DONE</span> Move up by parens: More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.<br  /></li>
+<li><a id="sec-246-0-0-62" name="sec-246-0-0-62"></a><span class="todo DONE">DONE</span> sunrise-sunset.<br  /></li>
+<li><a id="sec-246-0-0-63" name="sec-246-0-0-63"></a><span class="todo DONE">DONE</span> <a href="https://github.com/abo-abo/ace-window">ace-window</a>.<br  /></li>
+<li><a id="sec-246-0-0-64" name="sec-246-0-0-64"></a><span class="todo DONE">DONE</span> Checkdoc.<br  /></li>
+<li><a id="sec-246-0-0-65" name="sec-246-0-0-65"></a><span class="todo DONE">DONE</span> Choose magit repo c-u c-x g (magit-status).<br  /></li>
+<li><a id="sec-246-0-0-66" name="sec-246-0-0-66"></a><span class="todo DONE">DONE</span> continue comment blocks: m-j (indent-new-comment-line).<br  /></li>
+<li><a id="sec-246-0-0-67" name="sec-246-0-0-67"></a><span class="todo DONE">DONE</span> Debug expanded elisp macros: See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.<br  /></li>
+<li><a id="sec-246-0-0-68" name="sec-246-0-0-68"></a><span class="todo DONE">DONE</span> delete-duplicate-lines<br  /></li>
+<li><a id="sec-246-0-0-69" name="sec-246-0-0-69"></a><span class="todo DONE">DONE</span> Describe bindings: C-h b lists all bindings.<br  /></li>
+<li><a id="sec-246-0-0-70" name="sec-246-0-0-70"></a><span class="todo DONE">DONE</span> Disable furniture<br  /><div class="outline-text-5" id="text-246-0-0-70">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span style="color: #C4BE89;">(</span>menu-bar-mode -1<span style="color: #C4BE89;">)</span>
@@ -7981,8 +8010,8 @@ maps key to action.
 </div>
 </div>
 </li>
-<li><a id="sec-246-0-0-69" name="sec-246-0-0-69"></a><span class="done DONE">DONE</span> <a href="https://github.com/silex/elmacro">elmacro</a> shows keyboard as emacs lisp.<br  /></li>
-<li><a id="sec-246-0-0-70" name="sec-246-0-0-70"></a><span class="done DONE">DONE</span> yasnippet mirrors with transformations more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6">snippet development</a>.<br  /><div class="outline-text-5" id="text-246-0-0-70">
+<li><a id="sec-246-0-0-71" name="sec-246-0-0-71"></a><span class="todo DONE">DONE</span> <a href="https://github.com/silex/elmacro">elmacro</a> shows keyboard as emacs lisp.<br  /></li>
+<li><a id="sec-246-0-0-72" name="sec-246-0-0-72"></a><span class="todo DONE">DONE</span> yasnippet mirrors with transformations more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6">snippet development</a>.<br  /><div class="outline-text-5" id="text-246-0-0-72">
 <p>
 For example:
 </p>
@@ -8003,11 +8032,11 @@ $<span style="color: #F92672;">0</span>
 </div>
 </div>
 </li>
-<li><a id="sec-246-0-0-71" name="sec-246-0-0-71"></a><span class="done DONE">DONE</span> Emacs regex: <a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs: text pattern matching (regex) tutorial</a>.<br  /></li>
-<li><a id="sec-246-0-0-72" name="sec-246-0-0-72"></a><span class="done DONE">DONE</span> export ascii art: <a href="http://www.lysator.liu.se/~tab/artist/">artist mode</a> + <a href="http://ditaa.sourceforge.net">ditaa</a> for uml. demo <a href="https://www.youtube.com/watch?v=ciux87xo8fc">video</a>.<br  /></li>
-<li><a id="sec-246-0-0-73" name="sec-246-0-0-73"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/lispy">lispy</a>.<br  /></li>
-<li><a id="sec-246-0-0-74" name="sec-246-0-0-74"></a><span class="done DONE">DONE</span> <a href="https://github.com/dandavison/minimal">minimal</a>: minimalist appearance.<br  /></li>
-<li><a id="sec-246-0-0-75" name="sec-246-0-0-75"></a><span class="done DONE">DONE</span> Narrowing regions<br  /><div class="outline-text-5" id="text-246-0-0-75">
+<li><a id="sec-246-0-0-73" name="sec-246-0-0-73"></a><span class="todo DONE">DONE</span> Emacs regex: <a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs: text pattern matching (regex) tutorial</a>.<br  /></li>
+<li><a id="sec-246-0-0-74" name="sec-246-0-0-74"></a><span class="todo DONE">DONE</span> export ascii art: <a href="http://www.lysator.liu.se/~tab/artist/">artist mode</a> + <a href="http://ditaa.sourceforge.net">ditaa</a> for uml. demo <a href="https://www.youtube.com/watch?v=ciux87xo8fc">video</a>.<br  /></li>
+<li><a id="sec-246-0-0-75" name="sec-246-0-0-75"></a><span class="todo DONE">DONE</span> <a href="https://github.com/abo-abo/lispy">lispy</a>.<br  /></li>
+<li><a id="sec-246-0-0-76" name="sec-246-0-0-76"></a><span class="todo DONE">DONE</span> <a href="https://github.com/dandavison/minimal">minimal</a>: minimalist appearance.<br  /></li>
+<li><a id="sec-246-0-0-77" name="sec-246-0-0-77"></a><span class="todo DONE">DONE</span> Narrowing regions<br  /><div class="outline-text-5" id="text-246-0-0-77">
 <ul class="org-ul">
 <li>c-x n n (narrow-to-region).
 </li>
@@ -8016,9 +8045,9 @@ $<span style="color: #F92672;">0</span>
 </ul>
 </div>
 </li>
-<li><a id="sec-246-0-0-76" name="sec-246-0-0-76"></a><span class="done DONE">DONE</span> <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.<br  /></li>
-<li><a id="sec-246-0-0-77" name="sec-246-0-0-77"></a><span class="done DONE">DONE</span> <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.<br  /></li>
-<li><a id="sec-246-0-0-78" name="sec-246-0-0-78"></a><span class="done DONE">DONE</span> Recursive query/replace<br  /><div class="outline-text-5" id="text-246-0-0-78">
+<li><a id="sec-246-0-0-78" name="sec-246-0-0-78"></a><span class="todo DONE">DONE</span> <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.<br  /></li>
+<li><a id="sec-246-0-0-79" name="sec-246-0-0-79"></a><span class="todo DONE">DONE</span> <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.<br  /></li>
+<li><a id="sec-246-0-0-80" name="sec-246-0-0-80"></a><span class="todo DONE">DONE</span> Recursive query/replace<br  /><div class="outline-text-5" id="text-246-0-0-80">
 <ul class="org-ul">
 <li>M-x find-dired RET.
 </li>
@@ -8039,8 +8068,8 @@ $<span style="color: #F92672;">0</span>
 </ul>
 </div>
 </li>
-<li><a id="sec-246-0-0-79" name="sec-246-0-0-79"></a><span class="done DONE">DONE</span> Repeat last command: C-x z (and just z threreafter).<br  /></li>
-<li><a id="sec-246-0-0-80" name="sec-246-0-0-80"></a><span class="done DONE">DONE</span> Replace char with a newline<br  /><div class="outline-text-5" id="text-246-0-0-80">
+<li><a id="sec-246-0-0-81" name="sec-246-0-0-81"></a><span class="todo DONE">DONE</span> Repeat last command: C-x z (and just z threreafter).<br  /></li>
+<li><a id="sec-246-0-0-82" name="sec-246-0-0-82"></a><span class="todo DONE">DONE</span> Replace char with a newline<br  /><div class="outline-text-5" id="text-246-0-0-82">
 <ul class="org-ul">
 <li>M-x replace-string RET ; RET C-q C-j.
 </li>
@@ -8051,12 +8080,12 @@ $<span style="color: #F92672;">0</span>
 </ul>
 </div>
 </li>
-<li><a id="sec-246-0-0-81" name="sec-246-0-0-81"></a><span class="done DONE">DONE</span> <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a>, <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.<br  /></li>
-<li><a id="sec-246-0-0-82" name="sec-246-0-0-82"></a><span class="done DONE">DONE</span> Toggling key bingings: <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.<br  /></li>
-<li><a id="sec-246-0-0-83" name="sec-246-0-0-83"></a><span class="done DONE">DONE</span> <a href="https://github.com/damiencassou/unify-opening">unify-opening</a><br  /></li>
-<li><a id="sec-246-0-0-84" name="sec-246-0-0-84"></a><span class="done DONE">DONE</span> use-package: <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.<br  /></li>
-<li><a id="sec-246-0-0-85" name="sec-246-0-0-85"></a><span class="done DONE">DONE</span> <a href="https://github.com/aaronbieber/sunshine.el">sunshine.el</a>.<br  /></li>
-<li><a id="sec-246-0-0-86" name="sec-246-0-0-86"></a><span class="done DONE">DONE</span> youtube-dl: <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.<br  /></li></ul>
+<li><a id="sec-246-0-0-83" name="sec-246-0-0-83"></a><span class="todo DONE">DONE</span> <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a>, <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.<br  /></li>
+<li><a id="sec-246-0-0-84" name="sec-246-0-0-84"></a><span class="todo DONE">DONE</span> Toggling key bingings: <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.<br  /></li>
+<li><a id="sec-246-0-0-85" name="sec-246-0-0-85"></a><span class="todo DONE">DONE</span> <a href="https://github.com/damiencassou/unify-opening">unify-opening</a><br  /></li>
+<li><a id="sec-246-0-0-86" name="sec-246-0-0-86"></a><span class="todo DONE">DONE</span> use-package: <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.<br  /></li>
+<li><a id="sec-246-0-0-87" name="sec-246-0-0-87"></a><span class="todo DONE">DONE</span> <a href="https://github.com/aaronbieber/sunshine.el">sunshine.el</a>.<br  /></li>
+<li><a id="sec-246-0-0-88" name="sec-246-0-0-88"></a><span class="todo DONE">DONE</span> youtube-dl: <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.<br  /></li></ul>
 </div>
 <div id="outline-container-installing-emacs--on-linux" class="outline-2">
 <h2 id="installing-emacs--on-linux"><a id="sec-247" name="sec-247"></a><span class="timestamp-wrapper"><span class="timestamp">[2014-07-09 Thu]</span></span> <a href="#installing-emacs-on-linux">#</a> Installing Emacs 24.4 on Linux</h2>
