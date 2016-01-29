@@ -1,6 +1,28 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-01-29 Fri] [[#serializing-to-json-on-ios][#]] Serializing to JSON on iOS
+  :PROPERTIES:
+  :CUSTOM_ID: serializing-to-json-on-ios
+  :END:
+#+BEGIN_SRC objc
+  NSDictionary *dictionary = @{
+    @"key1" : @"val1",
+    @"key2" : @"val2",
+    @"key3" : @"val3",
+    @"key4" : @"val4",
+    @"key5" : @"val5",
+    @"key6" : @"val6",
+  };
+  NSError *error;
+  NSData *jsonData =
+      [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];
+  if (error) {
+    // noooooooooo!
+  }
+  NSString *json =
+      [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+#+END_SRC
 * [2016-01-25 Mon] [[#fischers-london-yes-but][#]] Fischer's London: yes, but...
   :PROPERTIES:
   :CUSTOM_ID: fischers-london-yes-but
