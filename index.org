@@ -1,6 +1,34 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Alvaro Ramirez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-02-02 Tue] [[#hiding-html-elememts][#]] Hiding HTML elememts
+  :PROPERTIES:
+  :CUSTOM_ID: hiding-html-elememts
+  :END:
+  Hide with [[https://developer.mozilla.org/en-US/docs/Web/CSS/display][display:none]] (exclude from layout) and [[https://developer.mozilla.org/en-US/docs/Web/CSS/visibility][visibility:hidden]] (include in layout).
+* [2016-02-01 Mon] [[#echo-emacs-keybiding-from-function-name][#]] Echo Emacs keybiding from function name
+  :PROPERTIES:
+  :CUSTOM_ID: echo-emacs-keybiding-from-function-name
+  :END:
+  Picked up via Emacs Redux's [[http://emacsredux.com/blog/2016/02/01/display-the-keybinding-for-a-command-with-substitute-command-keys/][Display the Keybinding for a Command With Substitute-command-keys]], with my own example:
+#+BEGIN_SRC emacs-lisp :exports both
+  (message (substitute-command-keys "Press \\[ar/ox-html-export] to export org file"))
+#+END_SRC
+
+#+RESULTS:
+: Press <f6> to export org file
+
+* [2016-02-01 Mon] [[#emacs-dired-for-batch-byte-compilation][#]] Emacs dired for batch byte compilation
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-dired-for-batch-byte-compilation
+  :END:
+  Recently updated org-mode and started seeing an invalid function error:
+
+#+BEGIN_QUOTE
+  Error (use-package): ob :config: Invalid function: org-babel-header-args-safe-fn
+#+END_QUOTE
+
+  Just learned dired enables you to mark files and byte compile via /M-x dired-do-byte-compile/.
 * [2016-01-29 Fri] [[#serializing-to-json-on-ios][#]] Serializing to JSON on iOS
   :PROPERTIES:
   :CUSTOM_ID: serializing-to-json-on-ios
@@ -139,15 +167,14 @@
   :Custom_ID: import-uikit-for-simpler-debugging
   :END:
   I bookmarked [[http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/][An @import-ant Change in Xcode]] and immediately forgot about it. The gist is to import UIKit to simplify inspecting objects during an lldb session:
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
   (lldb) expr @import UIKit
-#+END_SRC
+#+END_EXAMPLE
   Shorten typing by creating aliases in ~/.lldbinit:
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
   command alias uikit expr @import UIKit
   command alias foundation expr @import Foundation
-#+END_SRC
-
+#+END_EXAMPLE
 * [2016-01-12 Tue] [[#ios-development-tips-backlog][#]] iOS development tips backlog
   :PROPERTIES:
   :Custom_ID: ios-development-tips-backlog
@@ -200,17 +227,17 @@
 #+END_SRC
 *** install irony server
     Run:
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
   M-x irony-install-server
-#+END_SRC
+#+END_EXAMPLE
    NOTE: Needs libclang: Install with "brew install llvm --with-clang" By default, irony-install-server did not find libclang on Mac OS. /irony-install-server/ invokes cmake for you. Work around by adding:
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
    -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm
-#+END_SRC
+#+END_EXAMPLE
    For example:
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
    cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTALL_PREFIX\=/Users/your-user-name/.emacs.d/irony/ /Users/your-user-name/.emacs.d/elpa/irony-20160106.1223/server && cmake --build . --use-stderr --config Release --target install
-#+END_SRC
+#+END_EXAMPLE
 *** Compilation database
 ***** Install xctool
 #+BEGIN_SRC sh
@@ -1163,7 +1190,7 @@ print distutils.spawn.find_executable('git')
 
 * [2015-10-22 Thu] [[#malaysia-travel-bookmarks][#]] Malaysia travel bookmarks
   :PROPERTIES:
-  :CUSTOM_ID: indonesia-travel-bookmarks
+  :CUSTOM_ID: malaysia-travel-bookmarks
   :END:
   :MODIFIED:
   [2015-12-06 Sun]
@@ -2678,7 +2705,7 @@ build_clang
   :CUSTOM_ID: japan-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-01-04 Mon]
+  [2016-02-02 Tue]
   :END:
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
   - 7 day Japan Rail pass (first class?), possibly only sold outside Japan.
@@ -2701,6 +2728,7 @@ build_clang
   - [[http://www.japan-guide.com/e/e2361.html][Japan Rail Pass]].
   - [[http://www.mext.go.jp/english/highered/1303739.htm][Japan Study Program]].
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/the-other-japan-okinawas-secret-beaches][Japanese beaches]].
+  - [[http://japaneseruleof7.com/][Japanese rule of 7]].
   - [[http://www.japanonwheels.com/kawachi_fujien.html][Kawachi Fujien 河内藤園 (Kawachi Wisteria Garden)]].
   - [[http://eng.shukubo.net/][Koyasan (needs booking)]].
   - [[http://www.insidekyoto.com/kyoto-itineraries][Kyoto itineraries]].
@@ -2745,7 +2773,7 @@ build_clang
   :Custom_ID: tokyo-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-11-22 Sun]
+  [2016-02-02 Tue]
   :END:
   - Akihabara: Electronics district, arcades and comic stores.
   - [[https://www.hokke.co.jp/english/asakusa/][Asakusa hotel]].
@@ -2768,6 +2796,7 @@ build_clang
   - Shimokitazawa (thirft stores, music bands, pubs, and cafes).
   - [[http://www.japan-guide.com/e/e3029.html][Takaosan (Mount Takao)]].
   - Tokyo Municipal Government building: Only for observation deck with view to Fuji (if clear day).
+  - [[http://japaneseruleof7.com/tokyo-salaries-all-you-need-to-know][Tokyo Salaries: all you need to know]].
   - Tokyo station: Friendly JR office (english spoken). They help book all trips/tickets/reservations.
   - Tokyo Station: Massive station. Lots of restaurants and shops (check out ramen street).
   - Tokyu Hands and Loft (shops in Shibuya).
@@ -3867,7 +3896,7 @@ $ python ycmd
   - [[https://www.openhunt.co/][Open Hunt: an open and community-run alternative to Product Hunt.]].
   - [[https://medium.com/@sgblank/organizational-debt-is-like-technical-debt-but-worse-3c0c86eae3eb][Organizational Debt is Like Technical debt — But Worse]].
   - [[http://facebook.github.io/origami/examples/][Origami for UI patterns and interactions]].
-  - [[http://www.paintcodeapp.com][PaintCode (drawings into ObjC code)]] - [[bit.ly/PaintCodeRocks][coupon]].
+  - [[http://www.paintcodeapp.com][PaintCode (drawings into ObjC code)]] - [[http://bit.ly/PaintCodeRocks][coupon]].
   - [[http://eatcodeplay.com/why-we-killed-off-code-reviews/][Pair programming over code-reviews]].
   - [[https://www.parse.com][parse.com]].
   - [[http://paymentfont.io/][paymentfont.io (Payment icons)]].
@@ -4316,16 +4345,22 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2016-01-25 Mon]
+  [2016-02-01 Mon]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
+  - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
+  - [[https://developer.apple.com/library/ios/technotes/tn2259/_index.html][Adding in-app purchase]].
   - [[http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/][An @import-ant Change in Xcode]].
+  - [[https://developer.apple.com/library/ios/documentation/General/Conceptual/DevPedia-CocoaCore/AppID.html][App IDs]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
   - [[https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html#//apple_ref/doc/uid/20001282-BCIGIJJF][Apple's coding guidelines for Cocoa]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Initialization/Initialization.html#//apple_ref/doc/uid/TP40010810-CH6-SW3][Apple's Concepts in Objective-C programming]].
   - [[https://developer.apple.com/library/ios/documentation/userexperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556][Apple's mogile HIG guidelines]].
+  - [[https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/AttributedStrings/AttributedStrings.pdf][Attributed String Programming Guide]].
   - [[https://www.behance.net/search?search=ios&utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][Behance]].
+  - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/TestingYouriOSApp/TestingYouriOSApp.html#//apple_ref/doc/uid/TP40012582-CH8-SW1][Beta testing your app]].
+  - [[https://github.com/steventroughtonsmith/cartool][Cartool (Inspect car files)]].
   - [[http://clang.llvm.org/docs/Block-ABI-Apple.html][Clang 3.7 documentation BLOCK IMPLEMENTATION SPECIFICATION]].
   - [[https://github.com/luisobo/clean-architecture][Clean architecture for iOS]].
   - [[http://cocoadocs.org/][Cocoadocs]].
@@ -4335,12 +4370,17 @@ If FROM or TO is negative, it counts from the end.
   - [[https://www.codeschool.com/paths/ios][Code School iOS courses]].
   - [[http://componentkit.org/][ComponentKit is an Objective-C++ view framework for iOS that is heavily inspired by React]].
   - [[http://www.cakesolutions.net/teamblogs/2014/03/08/cmsamplebufferref-from-cgimageref][Create a CMSampleBufferRef from CGImageRef]].
+  - [[https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide/Chapters/CreatingiTunesConnectRecord.html][Creating iTunes Connect Record]].
   - [[http://www.davemark.com/?p=1829][DaveLots of iOS resources]].
+  - [[https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/UsingTextClasses/UsingTextClasses.html][Displaying Text Content in iOS]].
   - [[https://cocoapods.org/pods/DJKFlipper][DJKFlipper]].
   - [[http://spin.atomicobject.com/2016/01/25/ios-memory-leak-xcode/#.VqaGcF_w1AE.hackernews][Finding iOS memory leaks with Xcode's Instruments]].
+  - [[http://www.objc.io/issue-5/getting-to-know-textkit.html][Getting to know TextKit]].
   - [[http://giorgiocalderolla.com/blog.html][Giorgio Calderolla]].
   - [[http://goshdarnblocksyntax.com/][How do I declare a block in Objcetive-C?]]
   - [[http://easynativeextensions.com/how-to-launch-your-app-from-the-ios-8-share-menu/][How to launch your app from the iOS 8 Share Menu – updated for iOS 8.4]].
+  - [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html][Icon Matrix]].
+  - [[https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW10][Info PList key reference]].
   - [[http://injectionforxcode.com][Injection for Xcode]].
   - [[https://medium.com/ios-apprentice/the-valuable-toolset-for-ios-development-ba312d12577d][iOS Apprentice]].
   - [[http://ios.devtools.me][iOS Dev Tools]].
@@ -4354,6 +4394,8 @@ If FROM or TO is negative, it counts from the end.
   - [[http://ios-goodies.com][ios-goodies.com]].
   - [[http://iosdevtips.co][iosdevtips.co]].
   - [[http://joppar.com/mobile-app-development-resources-guide/][joppar.com]].
+  - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
+  - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
   - [[http://iphone.meer.li/designs/featured?page=3][Meerli]].
   - [[https://www.mikeash.com/book.html][Mike Ash]].
   - [[https://github.com/2359media/ios-dev-guide/blob/master/iOS%20Topics%20and%20References.md][More aggregation of awesomeness on github]].
@@ -4374,11 +4416,15 @@ If FROM or TO is negative, it counts from the end.
   - [[http://subjc.com][Subjective-C]].
   - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
   - [[http://iosdevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html][The Complete Tutorial on iOS/iPhone Custom URL Schemes]].
+  - [[https://developer.apple.com/library/mac/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html][Transitioning to ARC]].
   - [[https://github.com/zh-wang/TwitterGifComposer][Twitter GIF composer]].
   - [[http://masilotti.com/ui-testing-xcode-7/][UI Testing in Xcode 7]].
+  - [[http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions][Ultimate guide to resolutions]].
   - [[https://itunesconnect.apple.com/docs/UsingApplicationLoader.pdf][Using Application Loader]].
+  - [[https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/CustomTextProcessing/CustomTextProcessing.html][Using Text Kit to Draw and Manage Text]].
   - [[https://github.com/ColinEberhardt/VCTransitionsLibrary][VCTransitionsLibrary]].
-  - [[%20http://nsscreencast.com][Weekly bite-sized screencasts on iOS dev]].
+  - [[http://nsscreencast.com][Weekly bite-sized screencasts on iOS dev]].
+  - [[https://developer.apple.com/library/ios/qa/qa1713/_index.html][When to use App ID wildcards]].
   - [[https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html][Working with blocks]].
   - [[https://developer.apple.com/videos/wwdc/2012/][WWDC 2012 Xcode tips]].
   - [[https://developer.apple.com/videos/wwdc/2014/][WWDC 2014]].
@@ -4669,7 +4715,7 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO How to talk to anyone (Leil Lowndes).
 ******* TODO [[http://www.gutenberg.org/ebooks/1091?msg=welcome_stranger][On Heroes, Hero-Worship, and the Heroic in History by Thomas Carlyle]].
 ******* TODO [[http://www.amazon.com/Light-Asia-Sir-Edwin-Arnold/dp/1491290447/ref=sr_1_1?s=books&ie=UTF8&qid=1451846351&sr=1-1&keywords=the+light+of+asia+by+sir+edwin+arnold][Edwin Sir Arnold's The Light of Asia]].
-******* TODO [[www.amazon.com/Song-Celestial-Bhagavad-Gita-From-Mahabharata/dp/1848301596][Edwin Sir Arnold's The Song Celestial or Bhagavad-Gita]].
+******* TODO [[http://www.amazon.com/Song-Celestial-Bhagavad-Gita-From-Mahabharata/dp/1848301596][Edwin Sir Arnold's The Song Celestial or Bhagavad-Gita]].
 ******* TODO [[http://www.amazon.com/great-curries-india-camellia-panjabi/dp/1904920357][50 great curries of india]].
 ******* TODO [[http://www.amazon.com/gp/product/034549802X?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D034549802X][8 Week to optimum health]].
 ******* TODO [[http://www.amazon.com/Guide-Good-Life-Ancient-Stoic/dp/0195374614][A Guide to the Good Life: The Ancient Art of Stoic Joy]].
@@ -4707,8 +4753,10 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-tips-backlog
   :END:
   :MODIFIED:
-  [2016-01-27 Wed]
+  [2016-01-29 Fri]
   :END:
+******* TODO [[https://github.com/alexmurray/cstyle][cstyle]].
+******* TODO [[https://github.com/lvillani/metafmt][metafmt]].
 ******* TODO [[https://github.com/nicklanasa/xcode-mode/blob/master/README.md][xcode-mode]].
 ******* TODO [[https://github.com/yuutayamada/commenter][commenter]].
 ******* TODO [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
@@ -5044,14 +5092,14 @@ gconftool --recursive-unset /apps/gnome-terminal
 #+END_SRC
 *** Ensure .bash_profile is loaded
     From gnome-terminal window:
-#+BEGIN_SRC
+#+BEGIN_QUOTE
   gnome-terminal
     Edit
       Profiles...
         Edit
           Title and Command
             X Run command as login shell
-#+END_SRC
+#+END_QUOTE
 *** Solarized
     Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs][post]] to get solarized on gnome-terminal.
 
