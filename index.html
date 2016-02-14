@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-02-14 Sun 22:57 -->
+<!-- 2016-02-14 Sun 23:01 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="viewport" content="width=device-width, initial-scale=1" />
 <title>Álvaro Ramírez</title>
@@ -297,7 +297,7 @@ for the JavaScript code in this tag.
 <h2 id="defined-elisp-variables-matching-regexp"><a id="orgheadline1"></a><span class="timestamp-wrapper"><span class="timestamp">14 February 2016</span></span> <a href="#defined-elisp-variables-matching-regexp">#</a> Defined elisp variables matching regexp</h2>
 <div class="outline-text-2" id="text-defined-elisp-variables-matching-regexp">
 <p>
-You can use "M-x <i>apropos-variable</i>" to get documentation for variables matching a pattern. For more flexibility, you can get a list of all variables matching a regexp:
+You can use "M-x <i>apropos-variable</i>" to get documentation for variables matching a pattern. For more flexibility, some elisp can help with getting a list of all variables matching a regexp:
 </p>
 
 <div class="org-src-container">
@@ -315,17 +315,38 @@ You can use "M-x <i>apropos-variable</i>" to get documentation for variables mat
 
 <span style="color: #C4BE89;">(</span><span style="color: #66D9EF;">let</span> <span style="color: #FD971F;">(</span><span style="color: #EF5939;">(</span>variables <span style="color: #E6DB74;">""</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
   <span style="color: #FD971F;">(</span>mapc <span style="color: #EF5939;">(</span><span style="color: #66D9EF;">lambda</span> <span style="color: #F92672;">(</span>variable-symbol<span style="color: #F92672;">)</span>
-          <span style="color: #F92672;">(</span>setq variables <span style="color: #960050;">(</span>concat variables
-                                  <span style="color: #AE81FF;">(</span>format <span style="color: #E6DB74;">"%s =&gt; %s\n"</span>
-                                          <span style="color: #66D9EF;">(</span>symbol-name variable-symbol<span style="color: #66D9EF;">)</span>
-                                          <span style="color: #66D9EF;">(</span>symbol-value variable-symbol<span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
+          <span style="color: #F92672;">(</span>setq variables
+                <span style="color: #960050;">(</span>concat variables
+                        <span style="color: #AE81FF;">(</span>format <span style="color: #E6DB74;">"%s =&gt; %s\n"</span>
+                                <span style="color: #66D9EF;">(</span>symbol-name variable-symbol<span style="color: #66D9EF;">)</span>
+                                <span style="color: #66D9EF;">(</span>symbol-value variable-symbol<span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span><span style="color: #960050;">)</span><span style="color: #F92672;">)</span><span style="color: #EF5939;">)</span>
         <span style="color: #EF5939;">(</span>ar/variables-matching-pattern <span style="color: #E6DB74;">"^tern-.*"</span><span style="color: #EF5939;">)</span><span style="color: #FD971F;">)</span>
   variables<span style="color: #C4BE89;">)</span>
 </pre>
 </div>
 
 <pre class="example">
-((tern-mode-keymap keymap (3 keymap (4 . tern-get-docs) (3 . tern-get-type) (18 . tern-rename-variable)) (27 keymap (44 . tern-pop-find-definition) (67108910 . tern-find-definition-by-name) (46 . tern-find-definition))) (tern-update-argument-hints-async) (tern-known-port) (tern-mode) (tern-activity-since-command . -1) (tern-project-dir) (tern-last-point-pos) (tern-last-completions) (tern-explicit-port) (tern-idle-time . 2.5) (tern-find-definition-stack) (tern-last-argument-hints) (tern-idle-timer) (tern-server) (tern-last-docs-url) (tern-buffer-is-dirty) (tern-command-generation . 0) (tern-flash-timeout . 0.5) (tern-update-argument-hints-timer . 500) (tern-mode-hook) (tern-command tern))
+tern-mode-keymap =&gt; (keymap (3 keymap (4 . tern-get-docs) (3 . tern-get-type) (18 . tern-rename-variable)) (27 keymap (44 . tern-pop-find-definition) (67108910 . tern-find-definition-by-name) (46 . tern-find-definition)))
+tern-update-argument-hints-async =&gt; nil
+tern-known-port =&gt; nil
+tern-mode =&gt; nil
+tern-activity-since-command =&gt; -1
+tern-project-dir =&gt; nil
+tern-last-point-pos =&gt; nil
+tern-last-completions =&gt; nil
+tern-explicit-port =&gt; nil
+tern-idle-time =&gt; 2.5
+tern-find-definition-stack =&gt; nil
+tern-last-argument-hints =&gt; nil
+tern-idle-timer =&gt; nil
+tern-server =&gt; nil
+tern-last-docs-url =&gt; nil
+tern-buffer-is-dirty =&gt; nil
+tern-command-generation =&gt; 0
+tern-flash-timeout =&gt; 0.5
+tern-update-argument-hints-timer =&gt; 500
+tern-mode-hook =&gt; nil
+tern-command =&gt; (tern)
 </pre>
 </div>
 </div>
