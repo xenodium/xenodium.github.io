@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-02-14 Sun] [[#defined-elisp-variables-matching-regexp][#]] Defined elisp variables matching regexp
+  :PROPERTIES:
+  :CUSTOM_ID: defined-elisp-variables-matching-regexp
+  :END:
+  You can use "M-x /apropos-variable/" to get documentation for variables matching a pattern. For more flexibility, you can get a list of all variables matching a regexp:
+
+#+BEGIN_SRC emacs-lisp :exports both
+  (defun ar/variables-matching-pattern (pattern)
+    "Get a list of all variables matching PATTERN."
+    (let ((matched-variables '()))
+      (mapatoms
+       (lambda (symbol)
+         ;; Symbol is variable?
+         (when (and (boundp symbol)
+                    (string-match pattern (symbol-name symbol)))
+           (add-to-list 'matched-variables symbol))))
+      matched-variables))
+
+  (let ((variables ""))
+    (mapc (lambda (variable-symbol)
+            (setq variables (concat variables
+                                    (format "%s => %s\n"
+                                            (symbol-name variable-symbol)
+                                            (symbol-value variable-symbol)))))
+          (ar/variables-matching-pattern "^tern-.*"))
+    variables)
+#+END_SRC
+
+#+RESULTS:
+: ((tern-mode-keymap keymap (3 keymap (4 . tern-get-docs) (3 . tern-get-type) (18 . tern-rename-variable)) (27 keymap (44 . tern-pop-find-definition) (67108910 . tern-find-definition-by-name) (46 . tern-find-definition))) (tern-update-argument-hints-async) (tern-known-port) (tern-mode) (tern-activity-since-command . -1) (tern-project-dir) (tern-last-point-pos) (tern-last-completions) (tern-explicit-port) (tern-idle-time . 2.5) (tern-find-definition-stack) (tern-last-argument-hints) (tern-idle-timer) (tern-server) (tern-last-docs-url) (tern-buffer-is-dirty) (tern-command-generation . 0) (tern-flash-timeout . 0.5) (tern-update-argument-hints-timer . 500) (tern-mode-hook) (tern-command tern))
+
 * [2016-02-13 Sat] [[#proselint-via-emacs-flycheck][#]] Proselint via Emacs flycheck
   :PROPERTIES:
   :CUSTOM_ID: proselint-via-emacs-flycheck
