@@ -1,6 +1,30 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-02-15 Mon] [[#generating-random-mac-address][#]] Generating random MAC address
+  :PROPERTIES:
+  :CUSTOM_ID: generating-random-mac-address
+  :END:
+  As some point I had to generate a random MAC address. This is the snippet I used:
+
+#+BEGIN_SRC python :results output :exports both
+  import random
+
+  def randomMAC():
+    mac = [0x00, 0x16, 0x3e,
+           random.randint(0x00, 0x7f),
+           random.randint(0x00, 0xff),
+           random.randint(0x00, 0xff),
+    ]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
+
+  print randomMAC()
+
+#+END_SRC
+
+#+RESULTS:
+: 00:16:3e:30:d1:34
+
 * [2016-02-14 Sun] [[#defined-elisp-variables-matching-regexp][#]] Defined elisp variables matching regexp
   :PROPERTIES:
   :CUSTOM_ID: defined-elisp-variables-matching-regexp
