@@ -1,6 +1,114 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-02-15 Mon] [[#generating-random-mac-address][#]] Generating random MAC address
+  :PROPERTIES:
+  :CUSTOM_ID: generating-random-mac-address
+  :END:
+  As some point I had to generate a random MAC address. This is the snippet I used:
+
+#+BEGIN_SRC python :results output :exports both
+  import random
+
+  def randomMAC():
+    mac = [0x00, 0x16, 0x3e,
+           random.randint(0x00, 0x7f),
+           random.randint(0x00, 0xff),
+           random.randint(0x00, 0xff),
+    ]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
+
+  print 'MAC => %s' % randomMAC()
+
+#+END_SRC
+
+#+RESULTS:
+: MAC => 00:16:3e:7e:f7:fa
+
+* [2016-02-14 Sun] [[#defined-elisp-variables-matching-regexp][#]] Defined elisp variables matching regexp
+  :PROPERTIES:
+  :CUSTOM_ID: defined-elisp-variables-matching-regexp
+  :END:
+  You can use "M-x /apropos-variable/" to get documentation for variables matching a pattern. For more flexibility, some elisp can help with getting a list of all variables matching a regexp:
+
+#+BEGIN_SRC emacs-lisp :exports both
+  (defun ar/variables-matching-pattern (pattern)
+    "Get a list of all variables matching PATTERN."
+    (let ((matched-variables '()))
+      (mapatoms
+       (lambda (symbol)
+         ;; Symbol is variable?
+         (when (and (boundp symbol)
+                    (string-match pattern (symbol-name symbol)))
+           (add-to-list 'matched-variables symbol))))
+      matched-variables))
+
+  (let ((variables ""))
+    (mapc (lambda (variable-symbol)
+            (setq variables
+                  (concat variables
+                          (format "%s => %s\n"
+                                  (symbol-name variable-symbol)
+                                  (symbol-value variable-symbol)))))
+          (ar/variables-matching-pattern "^tern-.*"))
+    variables)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+tern-mode-keymap => (keymap (3 keymap (4 . tern-get-docs) (3 . tern-get-type) (18 . tern-rename-variable)) (27 keymap (44 . tern-pop-find-definition) (67108910 . tern-find-definition-by-name) (46 . tern-find-definition)))
+tern-update-argument-hints-async => nil
+tern-known-port => nil
+tern-mode => nil
+tern-activity-since-command => -1
+tern-project-dir => nil
+tern-last-point-pos => nil
+tern-last-completions => nil
+tern-explicit-port => nil
+tern-idle-time => 2.5
+tern-find-definition-stack => nil
+tern-last-argument-hints => nil
+tern-idle-timer => nil
+tern-server => nil
+tern-last-docs-url => nil
+tern-buffer-is-dirty => nil
+tern-command-generation => 0
+tern-flash-timeout => 0.5
+tern-update-argument-hints-timer => 500
+tern-mode-hook => nil
+tern-command => (tern)
+#+end_example
+
+* [2016-02-13 Sat] [[#proselint-via-emacs-flycheck][#]] Proselint via Emacs flycheck
+  :PROPERTIES:
+  :CUSTOM_ID: proselint-via-emacs-flycheck
+  :END:
+  Based on [[http://unconj.ca/blog/linting-prose-in-emacs.html][Linting Prose in Emacs]]...
+
+  Needs proselint installed:
+
+#+BEGIN_SRC sh
+   pip install proselint
+#+END_SRC
+
+  Also needs a flycheck checker defined:
+
+#+BEGIN_SRC emacs-lisp
+  (flycheck-define-checker proselint
+    "A linter for prose."
+    :command ("proselint" source-inplace)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": "
+              (id (one-or-more (not (any " "))))
+              (message) line-end))
+    :modes (gfm-mode
+            markdown-mode
+            org-mode
+            text-mode))
+
+  (add-to-list 'flycheck-checkers 'proselint)
+#+END_SRC
+
 * [2016-02-11 Thu] [[#generate-go-struct-definition-from-json-file][#]] Generate go struct definition from json file
   :PROPERTIES:
   :CUSTOM_ID: generate-go-struct-definition-from-json-file
@@ -58,6 +166,10 @@
   :PROPERTIES:
   :CUSTOM_ID: javascript-tips-backlog
   :END:
+  :MODIFIED:
+  [2016-02-13 Sat]
+  :END:
+******* TODO [[https://vinta.ws/code/tern-js-with-atom.html][Tern.js with Atom]].
 ******* TODO [[https://github.com/sebmarkbage/ecmascript-rest-spread][Object spread syntax proposed for ES7]].
 ******* TODO if (typeof myvar === 'undefined') ...
 ******* TODO copy object  and set with Object.assign({}, state, {property: newValue}).
@@ -69,8 +181,9 @@
   :CUSTOM_ID: emacs-lisp-tips-backlog
   :END:
   :MODIFIED:
-  [2016-02-10 Wed]
+  [2016-02-13 Sat]
   :END:
+******* TODO [[http://puntoblogspot.blogspot.co.uk/2016/02/with-this-little-trick-helm-dash-gets.html?m=1][Helm-dash find-as-you-type]].
 ******* TODO [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][Org mode - Parsing rich HTML directly when pasting? (Stack Overflow)]].
 ******* TODO From [[https://twitter.com/_wilfredh/status/694643167056916480][@_wilfredh]], use (interactive "*") for commands that edit the buffer, so they show a helpful error if the buffer is read only.
 
@@ -3551,12 +3664,13 @@ UIActivityViewController *controller =
   :CUSTOM_ID: italy-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-02 Tue]
+  [2016-02-13 Sat]
   :END:
   - [[http://themindcircle.com/stunning-italy/][22 Towns in Italy That Are Almost Too Perfect Looking]].
   - [[http://www.monte-oliveto.com/][Abbazia di Monte Oliveto Maggiore]].
   - [[http://www.neatorama.com/2015/04/22/Furore-The-Little-Italian-Beach-Hidden-in-a-Fjord/][Amalfi coast's Furore beach]].
   - [[https://en.wikipedia.org/wiki/Boboli_Gardens][Boboli Gardens, Florence]].
+  - [[http://italychronicles.com/heavenly-beauty-braies-lake-italy/][Braie lake]].
   - [[http://www.caffemeletti.it/][Caffe Meletti]].
   - [[https://en.wikipedia.org/wiki/Cinque_Terre][Cinque Terre]].
   - [[https://en.wikipedia.org/wiki/Emilia-Romagna][Emilia Romagna]]. (foood!).
@@ -3842,8 +3956,9 @@ $ python ycmd
 *** Liverpool street
 ******* TODO [[http://www.gunpowderlondon.com][Gunpowder]] (Indian).
 *** Marylebone
-******* TODO [[http://www.timeout.com/london/restaurants/fischers][Fischer's]] (Austrian).
+******* DONE [[http://www.timeout.com/london/restaurants/fischers][Fischer's]] (Austrian). Great atmosphere and schnitzel. Not cheap.
 ******* TODO Nambutei (Sushi).
+******* TODO [[http://www.lurra.co.uk/][Lurra]] (Basque).
 *** Mayfair
 ******* TODO [[http://www.mayfairchippy.com][Mayfair chippy]] (Fish and chips).
 ******* TODO [[http://www.ikedarestaurant.com/][Ikeda]] (Japanese).
@@ -5056,7 +5171,6 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/tj64/outline-magic][outlien-magic]].
 ******* TODO Gutter and linum+ config (see [[https://github.com/zvlex/dotfiles][zvlex/dotfiles]]).
 ******* TODO [[https://github.com/emacsfodder/kurecolor][kurecolor]]: Editing color.
-******* TODO artbollocks-mode and writegood. More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
 ******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html][auto-insert-mode]].
 ******* TODO Buffer local cursor color: [[https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org][ccc]].
 ******* TODO clang indexing tool: [[http://ffevotte.github.io/clang-tags/][clang-tags]].
@@ -5084,6 +5198,8 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO Simplify media file transformations: [[https://github.com/abo-abo/make-it-so][make-it-so]].
 ******* TODO [[https://github.com/mineo/yatemplate][yatemplate]].
 ******* TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+******* DONE artbollocks-mode and writegood. More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
+******* DONE comint-prompt-read-only for making shell prompts read-only.
 ******* DONE [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
 ******* DONE [[https://www.reddit.com/r/emacs/comments/43b42y/i_just_realized_emacs_has_a_fast_infix_calculator/][I just realized Emacs has a fast infix calculator that's not calc or quick-calc... (Reddit)]].
 ******* DONE [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
