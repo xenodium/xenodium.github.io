@@ -1,6 +1,64 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-03-28 Mon] [[#emacs-objective-c-tagging-with-rtags][#]] Emacs Objective-C tagging with RTags
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-objective-c-tagging-with-rtags
+  :END:
+*** Install libclang on Mac
+#+BEGIN_SRC sh
+  brew install llvm --with-clang
+#+END_SRC
+
+*** Install RTags
+#+BEGIN_SRC sh
+  git clone --recursive https://github.com/Andersbakken/rtags.git
+  cd rtags
+  cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .
+  make
+#+END_SRC
+
+*** Start RTags daemon
+#+BEGIN_SRC sh
+  path/to/rtags/bin/rdm 2> /tmp/rdm.log
+#+END_SRC
+
+*** Compilation database
+***** Install xctool
+#+BEGIN_SRC sh
+  brew install xctool
+#+END_SRC
+***** Generate a compilation database
+#+BEGIN_SRC sh
+  cd path/to/your/objc-project
+  xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
+#+END_SRC
+
+*** Load compilation database
+#+BEGIN_SRC sh
+  path/to/rtags/bin/rc -J path/to/your/objc-project/compile_commands.json
+#+END_SRC
+
+*** Install RTags Emacs package
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rtags :ensure t
+    :config
+    (setq rtags-use-helm t) ;; Optional. Enable if helm fan (I am!).
+    (setq rtags-path "path/to/rtags/bin/"))
+#+END_SRC
+
+*** Ready to go
+    Use any of the rtags interactive commands. For example:
+
+#+BEGIN_EXAMPLE
+  M-x rtags-find-symbol
+#+END_EXAMPLE
+
+*** References
+    - [[https://github.com/Andersbakken/rtags#tldr-quickstart][RTags TLDR Quickstart]].
+    - [[http://syamajala.github.io/c-ide.html][Emacs as C++ IDE]].
+
 * [2016-03-10 Thu] [[#database-bookmarks][#]] Database bookmarks
   :PROPERTIES:
   :CUSTOM_ID: database-bookmarks
@@ -656,9 +714,9 @@ tern-command => (tern)
 #+END_SRC
   More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]] and [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get Emacs key bindings in Ubuntu]].
 
-* [2016-01-08 Fri] [[#emacs-objective-c-completion][#]] Emacs Objective-C completion
+* [2016-01-08 Fri] [[#emacs-objective-c-completion-with-irony][#]] Emacs Objective-C completion with Irony
   :PROPERTIES:
-  :Custom_ID: emacs-objective-c-completion
+  :Custom_ID: emacs-objective-c-completion-with-irony
   :END:
 *** Install libclang on Mac
 #+BEGIN_SRC sh
