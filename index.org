@@ -1,6 +1,69 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-03-28 Mon] [[#emacs-objective-c-tagging-with-rtags][#]] Emacs Objective-C tagging with RTags
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-objective-c-tagging-with-rtags
+  :END:
+*** Install libclang on Mac
+#+BEGIN_SRC sh
+  brew install llvm --with-clang
+#+END_SRC
+
+*** Install RTags
+#+BEGIN_SRC sh
+  git clone --recursive https://github.com/Andersbakken/rtags.git
+  cd rtags
+  cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .
+  make
+#+END_SRC
+
+*** Start RTags daemon
+#+BEGIN_SRC sh
+  path/to/rtags/bin/rdm 2> /tmp/rdm.log
+#+END_SRC
+
+*** Compilation database
+***** Install xctool
+#+BEGIN_SRC sh
+  brew install xctool
+#+END_SRC
+***** Generate a compilation database
+#+BEGIN_SRC sh
+  cd path/to/your/objc-project
+  xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
+#+END_SRC
+
+*** Load compilation database
+#+BEGIN_SRC sh
+  path/to/rtags/bin/rc -J path/to/your/objc-project/compile_commands.json
+#+END_SRC
+
+*** Install RTags Emacs package
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rtags :ensure t
+    :config
+    (setq rtags-use-helm t) ;; Optional. Enable if helm fan (I am!).
+    (setq rtags-path "path/to/rtags/bin/"))
+#+END_SRC
+
+*** Ready to go
+    Use any of the rtags interactive commands. For example:
+
+#+BEGIN_EXAMPLE
+  M-x rtags-find-symbol
+#+END_EXAMPLE
+
+*** References
+    - [[https://github.com/Andersbakken/rtags#tldr-quickstart][RTags TLDR Quickstart]].
+    - [[http://syamajala.github.io/c-ide.html][Emacs as C++ IDE]].
+
+* [2016-03-10 Thu] [[#database-bookmarks][#]] Database bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: database-bookmarks
+  :END:
+  - [[http://grimoire.ca/mysql/choose-something-else][Considering MySQL? Use something else]].
 * [2016-03-06 Sun] [[#python-tips-backlog][#]] Python tips backlog
   :PROPERTIES:
   :CUSTOM_ID: python-tips-backlog
@@ -12,7 +75,7 @@
   :END:
   - [[http://www.assietteblanche.be/][assietteblanche.be]].
   - Beer flavored meals at Den Dyver.
-  - [[bistrozwarthuis.be][bistrozwarthuis.be]].
+  - [[http://bistrozwarthuis.be][bistrozwarthuis.be]].
   - Eat fries in front of the belfry and climb it.
   - [[http://www.kok-au-vin.be][kok-au-vin.be]].
   - [[http://www.kurtspan.be/][kurtspan.be]].
@@ -30,11 +93,18 @@
   :PROPERTIES:
   :CUSTOM_ID: emacs-lisp-recipes
   :END:
-*** Find file upwards, up parents, up hierarchy:
+*** Find file upwards, up parents, up hierarchy
 #+BEGIN_SRC emacs-lisp
   (locate-dominating-file FILE NAME)
 #+END_SRC
-
+*** Find executable in PATH
+#+BEGIN_SRC emacs-lisp
+  (executable-find COMMAND)
+#+END_SRC
+*** Read string with completion (helm/ido/ivy friendly)
+#+BEGIN_SRC emacs-lisp
+  (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
+#+END_SRC
 * [2016-02-29 Mon] [[#ios-development-books-bookmarks][#]] iOS development books bookmarks
   :PROPERTIES:
   :CUSTOM_ID: ios-development-books-bookmarks
@@ -240,6 +310,7 @@ tern-command => (tern)
   - [[https://gist.github.com/brentvatne/52af349a6b6ef2ee1b06][NavigationExperimental notes]].
   - [[https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.plqwdhbyo][Presentational and Container Components]].
   - [[https://github.com/rackt/react-redux][React-redux official bindings]].
+  - [[http://lucamezzalira.com/2016/03/08/reactive-programming-with-rxjs/][Reactive Programming with RxJS]].
   - [[http://redux.js.org/docs/advanced/AsyncActions.html][Redux async actions]].
   - [[https://medium.com/lexical-labs-engineering/redux-best-practices-64d59775802e#.7y43ask6a][Redux best practices]].
   - [[http://redux.js.org/docs/introduction/Examples.html#real-world][Redux code examples]].
@@ -271,7 +342,9 @@ tern-command => (tern)
   [2016-02-18 Thu]
   :END:
 ******* TODO [[http://endlessparentheses.com/new-in-emacs-25-1-map-el-library.html][map.el for map-like collections built-in as of 25.1]].
+******* TODO [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/map.el][Standard library for key/value data structures]].
 ******* TODO [[http://oremacs.com/2015/01/11/pretty-elisp-regex/][Making Elisp regex look nicer]].
+******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices][Adapting code using the old defadvice]].
 ******* TODO [[http://endlessparentheses.com/new-on-elpa-and-in-emacs-25-1-seq-el.html][seq.el sequence library built-in as of 25.1]].
 ******* TODO [[https://github.com/syohex/emacs-parson][Binding of parson JSON parser]].
 ******* TODO [[http://puntoblogspot.blogspot.co.uk/2016/02/with-this-little-trick-helm-dash-gets.html?m=1][Helm-dash find-as-you-type]].
@@ -641,9 +714,9 @@ tern-command => (tern)
 #+END_SRC
   More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Emacs Keybindings in Chrome Without Gnome]] and [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get Emacs key bindings in Ubuntu]].
 
-* [2016-01-08 Fri] [[#emacs-objective-c-completion][#]] Emacs Objective-C completion
+* [2016-01-08 Fri] [[#emacs-objective-c-completion-with-irony][#]] Emacs Objective-C completion with Irony
   :PROPERTIES:
-  :Custom_ID: emacs-objective-c-completion
+  :Custom_ID: emacs-objective-c-completion-with-irony
   :END:
 *** Install libclang on Mac
 #+BEGIN_SRC sh
@@ -682,7 +755,7 @@ tern-command => (tern)
 #+END_SRC
 ***** Generate compilation database
 #+BEGIN_SRC sh
-    xctool -scheme SomeScheme -reporter json-compilation-database:compile_commands.json clean build
+    xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
 #+END_SRC
 *** Set Irony's database path
 #+BEGIN_QUOTE
@@ -5253,6 +5326,9 @@ If FROM or TO is negative, it counts from the end.
   :MODIFIED:
   [2016-03-17 Thu]
   :END:
+******* TODO [[https://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/go-guru][Integration of the Go 'guru' analysis tool into Emacs]].
+******* TODO (setq projectile-use-git-grep t).
+******* TODO [[https://github.com/company-mode/company-statistics][company-mode/company-statistics: Sort completion candidates by previous completion choices]].
 ******* TODO rats for Go testing.
 ******* TODO go-impl.
 ******* TODO go-gopath to guess GOPATH.
@@ -5277,11 +5353,8 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[http://elpa.gnu.org/packages/tramp-theme.html][tramp-theme]].
 ******* TODO [[http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/][Why are you changing gc-cons-threshold?]].
 ******* TODO [[https://github.com/syohex/emacs-qrencode/blob/master/README.md][Emacs qrencode]].
-******* TODO [[https://github.com/Alexander-Miller/company-shell][company-shell]].
 ******* TODO [[https://github.com/Fuco1/smartparens][Smartparens]].
 ******* TODO [[https://github.com/nivekuil/corral][Corral]].
-******* TODO [[https://github.com/HKey/dired-atool][Pack/unpack files with atool on dired]].
-******* TODO [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/map.el][Standard library for key/value data structures]].
 ******* TODO [[https://gist.github.com/syohex/626af66ba3650252b0a2][Hash region]].
 ******* TODO [[https://github.com/alexmurray/cstyle][cstyle]].
 ******* TODO [[https://github.com/lvillani/metafmt][metafmt]].
@@ -5289,14 +5362,12 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[https://github.com/yuutayamada/commenter][commenter]].
 ******* TODO [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
 ******* TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer?]].
-******* TODO [[https://github.com/syohex/emacs-helm-ispell][helm-ispell]].
 ******* TODO [[https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el][A go Emacs config]].
 ******* TODO [[http://clubctrl.com/org/prog/howto.html][Try out ox-twbs]].
 ******* TODO [[http://ergoemacs.org/emacs/function-frequency.html][Emacs Lisp function frequency]].
 ******* TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer? (Stack Exchange)]].
 ******* TODO [[https://github.com/nekop/yasnippet-java-mode/blob/master/java-snippets.el][yasnippet-java-mode/java-snippets.el]].
 ******* TODO [[https://github.com/Lindydancer/font-lock-studio][font-lock-studio]].
-******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices][Adapting code using the old defadvice]].
 ******* TODO [[https://github.com/jorgenschaefer/emacs-buttercup][buttercup]].
 ******* TODO [[https://github.com/niku/markdown-preview-eww][markdown-preview-eww]].
 ******* TODO [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
@@ -5352,6 +5423,9 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO Simplify media file transformations: [[https://github.com/abo-abo/make-it-so][make-it-so]].
 ******* TODO [[https://github.com/mineo/yatemplate][yatemplate]].
 ******* TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+******* DONE [[https://github.com/syohex/emacs-helm-ispell][helm-ispell]].
+******* DONE [[https://github.com/HKey/dired-atool][Pack/unpack files with atool on dired]].
+******* DONE [[https://github.com/Alexander-Miller/company-shell][company-shell]].
 ******* DONE artbollocks-mode and writegood. More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
 ******* DONE comint-prompt-read-only for making shell prompts read-only.
 ******* DONE [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
@@ -5518,12 +5592,13 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-02 Tue]
+  [2016-03-10 Thu]
   :END:
   - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
   - [[https://github.com/baohaojun/ajoke][Ajoke]].
   - [[http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git][An introduction to Magit, an Emacs mode for Git]].
   - [[http://m00natic.github.io/emacs/emacs-wiki.html][Andrey's Opionated Emacs Guide]].
+  - [[https://mail.google.com/mail/u/0/#search/is%3Aunread+in%3Ainbox/153503f4a1e06878][Animated guide to paredit]].
   - [[https://github.com/emacs-tw/awesome-emacs/blob/master/README.org][Awesome Emacs]].
   - [[https://www.reddit.com/r/emacs/comments/3r9fic/best_practicestip_for_companymode_andor_yasnippet/][Best practices/tip for Companymode and/or YASnippet]].
   - [[http://bzg.fr/blogging-from-emacs.html][Blogging from org-mode + rss]].
@@ -5808,6 +5883,7 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[http://hackershelf.com/browse/?popular=1][Hacker shelf: Free software dev books]].
   - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
   - [[http://sheredom.wordpress.com/2014/08/10/how-to-design-api-function-that-creates-something/][How to design API function creating objects]]: By Neil Henning.
+  - [[http://blog.triplebyte.com/how-to-pass-a-programming-interview][How to pass a programming interview]].
   - [[https://paragonie.com/blog/2015/09/how-to-safely-implement-cryptography-in-any-application][How to Safely Implement Cryptography Features in Any Application]].
   - [[https://github.com/lfit/itpol/blob/master/linux-workstation-security.md][Linux workstation security checklist]].
   - [[http://robertheaton.com/2015/08/31/migrating-bajillions-of-database-records-at-stripe/][Migrating bajillions of database records at Stripe]].
