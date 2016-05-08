@@ -1,6 +1,27 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-05-08 Sun] [[#routinghttpserver-snippet][#]] RoutingHTTPServer snippet
+  :PROPERTIES:
+  :CUSTOM_ID: routinghttpserver-snippet
+  :END:
+  Snippet from [[https://github.com/mattstevens/RoutingHTTPServer][RoutingHTTPServer]]:
+
+#+BEGIN_SRC objc
+  RoutingHTTPServer *routingHTTPServer = [[RoutingHTTPServer alloc] init];
+  [routingHTTPServer setPort:8000];
+  [routingHTTPServer setDefaultHeader:@"Server" value:@"YourAwesomeApp/1.0"];
+  [routingHTTPServer handleMethod:@"GET"
+                          withPath:@"/hello"
+                             block:^(RouteRequest *request, RouteResponse *response) {
+      [response setHeader:@"Content-Type" value:@"text/plain"];
+      [response respondWithString:@"Hello!"];
+    }];
+  NSError *error = nil;
+  if (![routingHTTPServer start:&error]) {
+    NSLog(@"Error starting HTTP Server: %@", error);
+   }
+#+END_SRC
 
 * [2016-05-06 Fri] [[#alaska-travel-bookmarks][#]] Alaska travel bookmarks
   :PROPERTIES:
