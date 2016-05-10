@@ -21,7 +21,39 @@ _inclusive_; that is, it includes the days specified by mark and point.
 [[file:images/emacs-find-number-of-days-between-dates/emacs-days-between-dates.gif]]
 
 /Note: you can use the mouse to jump to another date, or "g d" (calendar-goto-date)./
+* [2016-05-08 Sun] [[#routinghttpserver-snippet][#]] RoutingHTTPServer snippet
+  :PROPERTIES:
+  :CUSTOM_ID: routinghttpserver-snippet
+  :END:
+  [[https://github.com/mattstevens/RoutingHTTPServer][RoutingHTTPServer]] snippet:
 
+#+BEGIN_SRC objc
+  RoutingHTTPServer *routingHTTPServer = [[RoutingHTTPServer alloc] init];
+  [routingHTTPServer setPort:8000];
+  [routingHTTPServer setDefaultHeader:@"Server" value:@"YourAwesomeApp/1.0"];
+  [routingHTTPServer handleMethod:@"GET"
+                          withPath:@"/hello"
+                             block:^(RouteRequest *request, RouteResponse *response) {
+      [response setHeader:@"Content-Type" value:@"text/plain"];
+      [response respondWithString:@"Hello!"];
+    }];
+  NSError *error = nil;
+  if (![routingHTTPServer start:&error]) {
+    NSLog(@"Error starting HTTP Server: %@", error);
+   }
+#+END_SRC
+
+* [2016-05-06 Fri] [[#alaska-travel-bookmarks][#]] Alaska travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: alaska-travel-bookmarks
+  :END:
+  - Anchorage.
+  - Denali NP.
+  - Exit Glacier / Kenai Fjord NP.
+  - Ice Falls Hike.
+  - Iditarod race husky camp.
+  - Seward: Kenai Fjord Wildlife cruise (Major Marine cruises).
+  - Talkeetna fishing.
 * [2016-05-06 Fri] [[#on-uiviewcontroller-madness-reading-backlog][#]] On UIViewController madness (reading backlog)
   :PROPERTIES:
   :CUSTOM_ID: on-uiviewcontroller-madness-reading-backlog
@@ -30,13 +62,19 @@ _inclusive_; that is, it includes the days specified by mark and point.
 ******* TODO [[http://inessential.com/2016/04/08/comparing_reactive_and_traditional][Comparing Reactive and Traditional]].
 ******* TODO [[https://github.com/sahandnayebaziz/StateView/blob/master/readme.md][StateView is a UIView substitute that automatically updates itself when data changes]].
 ******* TODO [[http://inessential.com/2016/04/11/the_objective-c_version][The Objective-C version to "Comparing Reactive and Traditional"]].
-
+******* TODO [[https://realm.io/news/andy-matuschak-refactor-mega-controller][Let's Play: Refactor the Mega Controller!]].
+******* TODO [[https://github.com/jlyman/RN-NavigationExperimental-Redux-Example][How to use Redux to manage navigation state in a React Native]].
+******* TODO [[https://github.com/sahandnayebaziz/StateView][StateView: UIView substitute automatically updating itself when data changes.]]
+******* TODO [[https://developer.apple.com/videos/play/wwdc2015/219/][Mysteries of Auto Layout, Part 2]].
+******* TODO [[https://www.youtube.com/watch?v=COviCoUtwx4][Netflix JavaScript Talks - RxJS Version 5]].
+******* TODO [[http://www.reactive-streams.org][Reactive Streams]].
+******* TODO [[http://akarnokd.blogspot.co.uk/2016/04/google-agera-vs-reactivex.html?m=1][Google Agera vs. ReactiveX]].
 * [2016-05-03 Tue] [[#when-ooo-impulse-kicks-in][#]] When OOO impulse kicks in...
   :PROPERTIES:
   :CUSTOM_ID: when-ooo-impulse-kicks-in
   :END:
   - You start moving trivial bits of code into classes, with the anticipation that you might use it one day. Stop.
-  - On naming, clarity over brevity. Yup, the verbosity may be worth it.
+  - On naming, semantic clarity trumps brevity. Yup, the verbosity may be worth it.
 * [2016-05-02 Mon] [[#pakistan-travel-bookmarks][#]] Pakistan travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: pakistan-travel-bookmarks
@@ -945,6 +983,7 @@ tern-command => (tern)
   :END:
   - [[http://blog.jenkster.com/2015/12/what-is-functional-programming.html][What is functional programming?]]
   - [[http://blog.jenkster.com/2015/12/which-programming-languages-are-functional.html][Which programming languages are functional?]]
+  - [[http://www.russbishop.net/monoids-monads-and-functors][Functors, Applicatives, and Monads in Plain English]].
 
 * [2016-01-02 Sat] [[#9-productivity-tips][#]] 9 Productivity tips
   :PROPERTIES:
@@ -5036,7 +5075,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2016-03-30 Wed]
+  [2016-05-06 Fri]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
@@ -5068,6 +5107,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://spin.atomicobject.com/2016/01/25/ios-memory-leak-xcode/#.VqaGcF_w1AE.hackernews][Finding iOS memory leaks with Xcode's Instruments]].
   - [[http://www.objc.io/issue-5/getting-to-know-textkit.html][Getting to know TextKit]].
   - [[http://giorgiocalderolla.com/blog.html][Giorgio Calderolla]].
+  - [[http://www.emdentec.com/blog/2014/2/25/hacking-uinavigationbar][Hacking UINavigationBar]].
   - [[http://goshdarnblocksyntax.com/][How do I declare a block in Objcetive-C?]]
   - [[http://easynativeextensions.com/how-to-launch-your-app-from-the-ios-8-share-menu/][How to launch your app from the iOS 8 Share Menu – updated for iOS 8.4]].
   - [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html][Icon Matrix]].
@@ -5110,6 +5150,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://subjc.com][Subjective-C]].
   - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
   - [[http://iosdevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html][The Complete Tutorial on iOS/iPhone Custom URL Schemes]].
+  - [[http://savvyapps.com/blog/ultimate-guide-choosing-objective-c-or-swift][The Ultimate Guide to Choosing Objective-C or Swift for Your Project]].
   - [[https://developer.apple.com/library/mac/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html][Transitioning to ARC]].
   - [[https://github.com/zh-wang/TwitterGifComposer][Twitter GIF composer]].
   - [[http://masilotti.com/ui-testing-xcode-7/][UI Testing in Xcode 7]].
@@ -5460,8 +5501,9 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-tips-backlog
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-05-06 Fri]
   :END:
+******* TODO [[https://github.com/PythonNut/company-flx][company-flx: fuzzy matching to company]].
 ******* TODO [[https://vxlabs.com/2016/04/11/step-by-step-guide-to-c-navigation-and-completion-with-emacs-and-the-clang-based-rtags/][Step-by-step guide to C++ navigation and completion with Emacs and the Clang-based rtags]].
 ******* TODO [[https://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/go-guru][Integration of the Go 'guru' analysis tool into Emacs]].
 ******* TODO (setq projectile-use-git-grep t).
