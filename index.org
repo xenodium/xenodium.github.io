@@ -1,6 +1,41 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-06-17 Fri] [[#emacs-and-emotional-vocab][#]] Emacs and emotional vocab
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-and-emotional-vocab
+  :END:
+  Having read [[http://www.nytimes.com/2016/06/05/opinion/sunday/are-you-in-despair-thats-good.html][Are You in Despair? That’s Good]], I was encouraged to expand my emotional vocabulary. As a [[https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el][zone.el]] fan (checkout [[https://github.com/wasamasa/zone-nyan][nyan]], [[https://github.com/kawabata/zone-sl][sl]], and [[https://github.com/kawabata/zone-rainbow][rainbow]]), I looked into writing a zone [[https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el#L52][program]]. When /zone-when-idle/ is set, zone acts as a screensaver of sorts, potentially displaying random emotional vocab. Let's get to it...
+
+  Zone keeps a list of programs to choose from when kicked off. Below is a basic /zone-hello/ program, along with an interactive command for previewing. Not much to it. The tiny program prepares the screen for zoning and inserts text while no input is pending.
+
+#+BEGIN_SRC emacs-lisp
+  (defun zone-hello ()
+    (delete-other-windows)
+    (setq mode-line-format nil)
+    (zone-fill-out-screen (window-width) (window-height))
+    (delete-region (point-min) (point-max))
+    (goto-char (point-min))
+    (while (not (input-pending-p))
+      (insert "hello zone\n")
+      (zone-park/sit-for (point-min) 0.2)))
+
+  (defun zone-hello-preview ()
+    (interactive)
+    (let ((zone-programs [zone-hello]))
+      (zone)))
+#+END_SRC
+
+Here's what /zone-hello/ looks like:
+
+[[file:images/emacs-and-emotional-vocab/minimal-zone.gif]]
+
+Back to improving our emotional vocabulary, we'll need a dictionary. A quick search yields a potential list of [[http://www.psychpage.com/learning/library/assess/feelings.html][words]]. We can use [[http://wordnet.princeton.edu/][WordNet]] to define them while offline. We tie it all together in [[https://github.com/xenodium/dotfiles/blob/master/emacs/ar/zone-words.el][zone-words.el]] and the result looks as follow:
+
+[[file:images/emacs-and-emotional-vocab/emotions.gif]]
+
+
+
 * [2016-05-10 Tue] [[#emacs-find-number-of-days-between-dates][#]] Emacs: Find number of days between dates
   :PROPERTIES:
   :CUSTOM_ID: emacs-find-number-of-days-between-dates
@@ -1569,7 +1604,11 @@ $ find . -exec file --mime-type '{}' \;
   :PROPERTIES:
   :CUSTOM_ID: swift-bookmarks
   :END:
+  :MODIFIED:
+  [2016-06-17 Fri]
+  :END:
   - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
+  - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
   - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
   - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
   - [[http://swiftmonthly.com/][SwiftMothly]].
@@ -5149,7 +5188,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-06 Fri]
+  [2016-06-17 Fri]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
@@ -5202,6 +5241,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://ios-goodies.com][ios-goodies.com]].
   - [[http://iosdevtips.co][iosdevtips.co]].
   - [[http://joppar.com/mobile-app-development-resources-guide/][joppar.com]].
+  - [[https://github.com/JiriTrecak/Laurine][Laurine: Localization code generator]].
   - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
   - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
   - [[http://khanlou.com/2016/02/many-controllers/][Many Controllers Make Light Work (Analytics)]].
@@ -5223,6 +5263,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/ShareSDKPlatform/ShareSDK][ShareSDK is the most comprehensive Social SDK]].
   - [[http://www.atomicbird.com/blog/sharing-with-app-extensions][Sharing data between iOS apps and app extensions]].
   - [[https://github.com/facebook/Shimmer][Shimmer: Shimmer is an easy way to add a shimmering effect to any view in your app]].
+  - [[https://blog.goposse.com/simpleanimatingwithsnapkit-e38ed2980ac2#.n6gzo6syp][Simple Animation With SnapKit]].
   - [[http://subjc.com][Subjective-C]].
   - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
   - [[http://iosdevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html][The Complete Tutorial on iOS/iPhone Custom URL Schemes]].
@@ -5240,6 +5281,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://developer.apple.com/videos/wwdc/2012/][WWDC 2012 Xcode tips]].
   - [[https://developer.apple.com/videos/wwdc/2014/][WWDC 2014]].
   - [[https://github.com/ohoachuck/wwdc-downloader][WWDC 2015, 2014, 2013 and Tech-talks 2013 (videos and pdf downloader)]].
+  - [[https://developer.apple.com/reference/xctest][XCTest documentation]].
   - [[https://github.com/KonradCLAPP/YawImageViewer][YawImageViewer]].
   - [[http://bpoplauschi.wordpress.com][Yet another iOS Blog]].
 
