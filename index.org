@@ -161,9 +161,9 @@ _inclusive_; that is, it includes the days specified by mark and point.
 |    2 | Rest | 7 Km        | 5 Km  | +Cycle+ | Rest | 5 Km  | 10 Km     |
 |      |      | 41:36       | 27:52 |       |      | 28:23 | 59:17     |
 |    3 | Rest | +8 Km+ 8.1 Km | 5 Km  | +Cycle+ | Rest | 5 Km  | 12 Km     |
-|      |      | 49:29       | 29:33 |       |      |       |           |
+|      |      | 49:29       | 29:33 |       |      | 27:50 | 1:06      |
 |    4 | Rest | 8 Km        | Rest  | 8 Km  | Rest | 5 Km  | 14 Km     |
-|      |      |             |       |       |      |       |           |
+|      |      | 46:39       |       | 49:28 |      | 29:40 |           |
 |    5 | Rest | 8 Km        | Rest  | 8 Km  | Rest | 6 Km  | 16 Km     |
 |      |      |             |       |       |      |       |           |
 |    6 | Rest | 8 Km        | 8 Km  | 8 Km  | Rest | 8 Km  | 19 Km     |
@@ -301,11 +301,22 @@ _inclusive_; that is, it includes the days specified by mark and point.
 #+BEGIN_SRC emacs-lisp
   (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 #+END_SRC
-*** COMMENT Execute command/process and return list
+*** Execute command/process and return list
 #+BEGIN_SRC emacs-lisp
   (process-lines PROGRAM &rest ARGS)
 #+END_SRC
-
+*** Iterating org buffer
+#+BEGIN_SRC emacs-lisp
+(org-element-map (org-element-parse-buffer) '(headline link)
+  (lambda (element)
+    (cond
+     ((and (eq (org-element-type element) 'headline)
+           (= (org-element-property :level element) 1))
+      (print "headline"))
+     ((eq (org-element-type element) 'link)
+      (print "link")))
+    nil))
+#+END_SRC
 * [2016-02-29 Mon] [[#ios-development-books-bookmarks][#]] iOS development books bookmarks
   :PROPERTIES:
   :CUSTOM_ID: ios-development-books-bookmarks
@@ -5887,11 +5898,12 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-07 Sun]
+  [2016-07-03 Sun]
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
   - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
+  - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
   - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
   - [[https://github.com/caiorss/Emacs-Elisp-Programming][Emacs - Elisp Programming and Customization]].
   - [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
