@@ -25,6 +25,95 @@
   - Stable Cafe.
   - Sugar lump coffee lounge.
 
+* [2016-07-25 Mon] [[#moscow-travel-bookmarks][#]] Moscow travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: moscow-travel-bookmarks
+  :END:
+  - [[http://www.drzhivago.ru/en/][Drюzhivago (restaurant)]].
+  - [[http://park-gorkogo.com/][Gorky park]].
+  - [[http://www.kremlin-izmailovo.com/o-kremle/kreml-segodnja][Izmailovo]].
+  - [[http://mgomz.com/][Kolomenskoe (park)]].
+  - [[http://www.kreml.ru/en-Us/museums-moscow-kremlin][Kremlin]].
+  - [[http://kuskovo.ru/en][Kuskovo (park)]].
+  - [[https://www.mariinsky.ru/en/][Mariinsky (see ballet or opera)]].
+  - [[https://themoscowtimes.com/][Moskow times (check for events)]].
+  - [[http://strelka.com/en/bar][Strelka (lectures, cocktails and dances)]].
+  - [[https://www.tarasbulba.ru/main-menu.html][Tarasbulba (food)]].
+  - [[http://www.tsaritsyno-museum.ru/index.php?lang=en][Tsaritsyno park]].
+
+* [2016-07-24 Sun] [[#vietnam-travel-bookmarks][#]] Vietnam travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: vietnam-travel-bookmarks
+  :END:
+  - [[https://www.lonelyplanet.com/vietnam/con-son/travel-tips-and-articles/exploring-vietnams-remote-con-dao-islands][Exploring Vietnam's remote Con Dao Islands]].
+
+* [2016-07-19 Tue] [[#pokemon-go-bookmarks][#]] Pokémon Go bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: pokemon-go-bookmarks
+  :END:
+  :MODIFIED:
+  [2016-07-24 Sun]
+  :END:
+  - [[https://www.reddit.com/r/pokemon/comments/4ruand/pok%25C3%25A9mon_go_lengthy_introduction_guide][Pokémon GO Lengthy Introduction Guide (Reddit)]].
+  - [[https://rankedboost.com/pokemon-go/catching-locations/][Pokémon locations]].
+  - [[https://www.reddit.com/r/pokemongo/comments/4rlnmc/some_tips_from_my_last_days_playing][Some tips from my last days playing (Reddit)]].
+  - [[https://www.reddit.com/r/pokemongo/comments/4srsiu/yet_another_tips_and_tricks_from_a_level_20][Yet another "Tips and Tricks" from a level 20+ (Reddit)]].
+
+* [2016-07-03 Sun] [[#coffee-bookmarks][#]] Coffee bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: coffee-bookmarks
+  :END:
+  - [[http://www.idosi.org/wasj/wasj2(5)/17.pdf][Changes properties of coffee brew during roasting]].
+  - [[http://www.coffeegeek.com/guides/aeropresscoldbrew][Aeropress Iced Coffee]].
+
+* [2016-07-03 Sun] [[#machine-learning-bookmarks][#]] Machine learning bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: machine-learning-bookmarks
+  :END:
+  :MODIFIED:
+  [2016-07-13 Wed]
+  :END:
+  - [[https://news.ycombinator.com/item?id=12083124][A Course in Machine Learning (Hacker News)]].
+  - [[https://news.ycombinator.com/item?id=11985709][How to start learning deep learning (Hacker News)]].
+  - [[http://ofir.io/How-to-Start-Learning-Deep-Learning][How to start learning deep learning]].
+  - [[https://medium.com/@ageitgey/machine-learning-is-fun-80ea3ec3c471#.tg3yzvbep][Machine Learning is Fun! The world’s easiest introduction to Machine Learning]].
+  - [[https://www.quora.com/What-are-the-best-ways-to-pick-up-Deep-Learning-skills-as-an-engineer/answer/Greg-Brockman?srid=cgo&share=d1ac0da2][What are the best ways to pick up Deep Learning skills as an engineer? (Quora)]].
+
+* [2016-06-17 Fri] [[#emacs-and-emotional-vocab][#]] Emacs and emotional vocab
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-and-emotional-vocab
+  :END:
+  Having read [[http://www.nytimes.com/2016/06/05/opinion/sunday/are-you-in-despair-thats-good.html][Are You in Despair? That’s Good]], I was encouraged to expand my emotional vocabulary. As a [[https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el][zone.el]] fan (checkout [[https://github.com/wasamasa/zone-nyan][nyan]], [[https://github.com/kawabata/zone-sl][sl]], and [[https://github.com/kawabata/zone-rainbow][rainbow]]), I looked into writing a zone [[https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el#L52][program]]. When /zone-when-idle/ is set, zone acts as a screensaver of sorts. We can use this to display random emotional vocab whenever Emacs is idle for a period of time. Let's get to it...
+
+  Zone keeps a list of programs to choose from when kicked off. Below is a basic /zone-hello/ program, along with an interactive command for previewing. Not much to these. The tiny program prepares the screen for zoning and inserts text while no input is pending.
+
+#+BEGIN_SRC emacs-lisp
+  (defun zone-hello ()
+    (delete-other-windows)
+    (setq mode-line-format nil)
+    (zone-fill-out-screen (window-width) (window-height))
+    (delete-region (point-min) (point-max))
+    (goto-char (point-min))
+    (while (not (input-pending-p))
+      (insert "hello zone\n")
+      (zone-park/sit-for (point-min) 0.2)))
+
+  (defun zone-hello-preview ()
+    (interactive)
+    (let ((zone-programs [zone-hello]))
+      (zone)))
+#+END_SRC
+
+Here's what /zone-hello/ looks like:
+
+[[file:images/emacs-and-emotional-vocab/minimal-zone.gif]]
+
+Back to improving our emotional vocabulary, we'll need a dictionary for our goal. A quick search yields a potential list of [[http://www.psychpage.com/learning/library/assess/feelings.html][words]]. We can use [[http://wordnet.princeton.edu/][WordNet]] to define them while offline. These two sources will do for now. We tie it all together in [[https://github.com/xenodium/dotfiles/blob/master/emacs/ar/zone-words.el][zone-words.el]] and the resulting zone program looks as follow:
+
+[[file:images/emacs-and-emotional-vocab/emotions.gif]]
+
+UPDATE: Just came across [[http://blog.josephwilk.net/art/emacs-animation.html][Animations With Emacs]]. A post with awesome zone examples.
+
 * [2016-05-10 Tue] [[#emacs-find-number-of-days-between-dates][#]] Emacs: Find number of days between dates
   :PROPERTIES:
   :CUSTOM_ID: emacs-find-number-of-days-between-dates
@@ -120,21 +209,30 @@ _inclusive_; that is, it includes the days specified by mark and point.
   :PROPERTIES:
   :CUSTOM_ID: mac-os-x-software-bookmarks
   :END:
+  :MODIFIED:
+  [2016-07-13 Wed]
+  :END:
   - [[https://www.obdev.at/products/littlesnitch/index.html][Little Snitch]].
+  - [[https://github.com/kasper/phoenix][Phoenix: A lightweight macOS window and app manager scriptable with JavaScript]].
 
 * [2016-05-02 Mon] [[#st-petersburg-travel-bookmarks][#]] St. Petersburg travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: st-petersburg-travel-bookmarks
   :END:
   - [[http://www.stolle.ru/en/menu/saint-petersburg][Stolle (pie shop)]].
+  - [[http://www.hermitagemuseum.org/wps/portal/hermitage/?lng=en][Hermitage Museum]].
+  - [[http://eng.cathedral.ru/spasa_na_krovi/][Savior on the Spilled Blood Church]].
+  - [[http://fabergemuseum.ru/][Faberge Muse]].
 
 * [2016-05-02 Mon] [[#ios-github-bookmarks][#]] iOS github bookmarks
   :PROPERTIES:
   :CUSTOM_ID: ios-github-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-24 Sun]
   :END:
+  - [[https://github.com/iosphere/ISHHoverBar][A floating UIToolBar replacement as seen in the iOS 10 Maps app]].
+  - [[https://github.com/Ekhoo/Translucid][Translucid: Simple and light weight UIView that animate text with an image]].
   - [[https://github.com/YouXianMing/Animations][YouXianMing's animation collection]].
   - [[https://github.com/zhhlmr/ZHPopupView][ZHPopupView]].
 * [2016-05-02 Mon] [[#8-week-half-marathon-training][#]] 8 week half-marathon training
@@ -143,38 +241,39 @@ _inclusive_; that is, it includes the days specified by mark and point.
   :END:
   An 8-week training schedule:
 
-| WEEK | MON  | TUE  | WED  | THU   | FRI  | SAT  | SUN   |
-|------+------+------+------+-------+------+------+-------|
-|    1 | Rest | 5 Km | 5 Km | Cycle | Rest | 5 Km | 8 Km  |
-|      |      |      |      |       |      |      |       |
-|    2 | Rest | 7 Km | 5 Km | Cycle | Rest | 5 Km | 10 Km |
-|      |      |      |      |       |      |      |       |
-|    3 | Rest | 8 Km | 5 Km | Cycle | Rest | 5 Km | 12 Km |
-|      |      |      |      |       |      |      |       |
-|    4 | Rest | 8 Km | Rest | 8 Km  | Rest | 5 Km | 14 Km |
-|      |      |      |      |       |      |      |       |
-|    5 | Rest | 8 Km | Rest | 8 Km  | Rest | 6 Km | 16 Km |
-|      |      |      |      |       |      |      |       |
-|    6 | Rest | 8 Km | 8 Km | 8 Km  | Rest | 8 Km | 19 Km |
-|      |      |      |      |       |      |      |       |
-|    7 | Rest | 8 Km | Rest | 12 Km | Rest | 8 Km | 16 Km |
-|      |      |      |      |       |      |      |       |
-|    8 | Rest | 8 Km | Rest | 5 Km  | 5 K  | Rest | Race  |
-|      |      |      |      |       |      |      |       |
-|------+------+------+------+-------+------+------+-------|
+| WEEK | MON  | TUE           | WED    | THU     | FRI  | SAT    | SUN           |
+|------+------+---------------+--------+---------+------+--------+---------------|
+|    1 | Rest | 5 Km          | 5 Km   | +Cycle+ | Rest | 5 Km   | +8 Km+ 9 Km   |
+|      |      | 29:56         | 29:54  |         |      | 29:45  | 1:00:55       |
+|    2 | Rest | 7 Km          | 5 Km   | +Cycle+ | Rest | 5 Km   | 10 Km         |
+|      |      | 41:36         | 27:52  |         |      | 28:23  | 59:17         |
+|    3 | Rest | +8 Km+ 8.1 Km | 5 Km   | +Cycle+ | Rest | 5 Km   | 12 Km         |
+|      |      | 49:29         | 29:33  |         |      | 27:50  | 1:06          |
+|    4 | Rest | 8 Km          | Rest   | 8 Km    | Rest | 5 Km   | 14 Km         |
+|      |      | 46:39         |        | 49:28   |      | 29:40  |               |
+|    5 | Rest | 8 Km          | Rest   | +8 Km+  | Rest | +6 Km+ | +16 Km+ 10 Km |
+|      |      | 48:50         |        |         |      |        | 53:38         |
+|    6 | Rest | +8 Km+        | +8 Km+ | 8 Km    | Rest | 8 Km   | 19 Km         |
+|      |      |               |        | 51:39   |      | 37:09  | 2:02          |
+|    7 | Rest | 8 Km          | Rest   | 12 Km   | Rest | 8 Km   | 16 Km         |
+|      |      | 52:55         |        |         |      |        |               |
+|    8 | Rest | 8 Km          | Rest   | 5 Km    | 5 K  | Rest   | Race          |
+|      |      |               |        |         |      |        |               |
+|------+------+---------------+--------+---------+------+--------+---------------|
 
 * [2016-05-02 Mon] [[#haskell-bookmarks][#]] Haskell bookmarks
   :PROPERTIES:
   :CUSTOM_ID: haskell-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-06-19 Sun]
   :END:
   - [[https://news.ycombinator.com/item?id=11606290][A Haskell Reading List (Hacker News)]].
   - [[http://www.stephendiehl.com/posts/essential_haskell.html][A Haskell Reading List]].
   - [[https://www.goodreads.com/book/show/25587599-haskell-programming][Haskell Programming: From First Principles]].
   - [[http://learnyouahaskell.com/higher-order-functions][Higher order functions]].
   - [[http://people.cs.aau.dk/~normark/prog3-03/html/notes/higher-order-fu_themes-intr-section.html][Introduction to higher-order functions]].
+  - [[https://begriffs.com/posts/2016-05-14-pragmatic-haskell-1.html][Pragmatic Haskell for Beginners, Lecture 1]].
 
 * [2016-04-17 Sun] [[#haskell-notes][#]] Haskell notes
   :PROPERTIES:
@@ -289,11 +388,22 @@ _inclusive_; that is, it includes the days specified by mark and point.
 #+BEGIN_SRC emacs-lisp
   (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 #+END_SRC
-*** COMMENT Execute command/process and return list
+*** Execute command/process and return list
 #+BEGIN_SRC emacs-lisp
   (process-lines PROGRAM &rest ARGS)
 #+END_SRC
-
+*** Iterating org buffer
+#+BEGIN_SRC emacs-lisp
+(org-element-map (org-element-parse-buffer) '(headline link)
+  (lambda (element)
+    (cond
+     ((and (eq (org-element-type element) 'headline)
+           (= (org-element-property :level element) 1))
+      (print "headline"))
+     ((eq (org-element-type element) 'link)
+      (print "link")))
+    nil))
+#+END_SRC
 * [2016-02-29 Mon] [[#ios-development-books-bookmarks][#]] iOS development books bookmarks
   :PROPERTIES:
   :CUSTOM_ID: ios-development-books-bookmarks
@@ -490,14 +600,16 @@ tern-command => (tern)
   :CUSTOM_ID: redux-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-16 Tue]
+  [2016-07-13 Wed]
   :END:
   - [[https://medium.com/@spitzwegerich/a-different-way-of-supplying-react-components-with-state-1093f8f79802#.n1ffge76m][A different way of supplying React-components with state]].
-  - [[https://medium.com/@matt.krick/introducing-redux-operations-332ab56e468b#.buk8m7oug][Introducing Redux operations]].
+  - [[https://news.ycombinator.com/item?id=11890229][A SoundCloud client in React and Redux (Hacker News)]].
   - [[https://github.com/xgrommx/awesome-redux][Awesome redux]] (collection of libraries in ecosystem).
+  - [[https://news.ycombinator.com/item?id=11886662][Building React Applications with idiomatic redux (Hacker News)]].
   - [[https://blog.boldlisting.com/connecting-redux-to-your-api-eac51ad9ff89#.nu7dpwklf][Connecting Redux to your API]].
   - [[https://github.com/acdlite/redux-actions][Flux Standard Action utilities for Redux]].
   - [[http://stackoverflow.com/questions/33992812/how-to-integrate-redux-with-very-large-data-sets-and-indexeddb][How to integrate Redux with very large data-sets and IndexedDB? (Stack Overflow)]].
+  - [[https://medium.com/@matt.krick/introducing-redux-operations-332ab56e468b#.buk8m7oug][Introducing Redux operations]].
   - [[https://blog.madewithlove.be/post/redux/][Managing data flow on the client-side]].
   - [[http://redux.js.org/docs/introduction/Motivation.html][Motivation for flux]].
   - [[https://gist.github.com/brentvatne/52af349a6b6ef2ee1b06][NavigationExperimental notes]].
@@ -512,6 +624,8 @@ tern-command => (tern)
   - [[http://stackoverflow.com/questions/33726644/redux-state-persistence-with-a-database][Redux state persistence with a database (State Overflow)]].
   - [[https://github.com/gaearon/redux-thunk][Redux thunk]].
   - [[http://stackoverflow.com/questions/32949859/redux-opinions-examples-of-how-to-do-backend-persistence/33055146][Redux: Opinions/examples of how to do backend persistence? (Stack Overflow)]].
+  - [[https://github.com/guangmingzizai/RefluxCocoa][RefluxCocoa: an implementation of Reflux in Objective-C]].
+  - [[http://jaysoo.ca/2016/02/28/organizing-redux-application/][Rules for structuring (redux) applications ]].
   - [[https://medium.com/swlh/the-case-for-flux-379b7d1982c6#.7tcw9qi01][The case for flux]].
   - [[http://jlongster.com/Two-Weird-Tricks-with-Redux][Two weird tricks with redux]].
   - [[https://github.com/ServiceStackApps/typescript-redux][TypeScript Redux]].
@@ -529,6 +643,10 @@ tern-command => (tern)
 ******* TODO copy object  and set with Object.assign({}, state, {property: newValue}).
 ******* TODO Use ES6 computed property syntax.
 ******* TODO ES6 syntas: import * as reducers from './reducers'.
+******* TODO Emacs Javascript setup (work in progress)
+        brew install homebrew/emacs/tern
+        npm install -g js-beautify
+        js-beautify -f index.ios.js -r
 
 * [2016-02-06 Sat] [[#emacs-lisp-tips-backlog][#]] Emacs lisp tips backlog
   :PROPERTIES:
@@ -904,7 +1022,8 @@ tern-command => (tern)
   [2016-01-12 Tue]
   :END:
 ******* TODO [[http://ruenzuo.github.io/static-analysis-on-ios-part-ii/][Static Analysis on iOS - Part II]].
-******* TODO [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset]]. 
+******* TODO [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset]].
+******* TODO [[https://github.com/dsmelov/simsim][SimSim: access to application data folders]].
 ******* TODO [[https://github.com/supermarin/xcpretty][xcpretty]].
 ******* DONE [[https://github.com/facebook/xctool][xctool]].
 
@@ -978,6 +1097,10 @@ tern-command => (tern)
   :PROPERTIES:
   :Custom_ID: finland-travel-bookmarks
   :END:
+  :MODIFIED:
+  [2016-07-13 Wed]
+  :END:
+  - [[http://www.nytimes.com/interactive/2016/07/07/travel/what-to-do-36-hours-helsinki-finland.html?smid=tw-nytimestravel&smtyp=cur][36 Hours in Helsinki]].
   - Boat to the Baltics; Tallinn (Estonia).
   - Helsinki - Suomenlinna (former maritime fortress).
   - Lapland (husky sledding, reindeer, Santa Claus village).
@@ -1057,9 +1180,10 @@ tern-command => (tern)
   :PROPERTIES:
   :CUSTOM_ID: functional-programming-bookmarks
   :END:
+  - [[http://www.russbishop.net/monoids-monads-and-functors][Functors, Applicatives, and Monads in Plain English]].
+  - [[http://blog.tomduncalf.com/posts/functional-programming-fundamentals-talk][Tom Ducalf's Programming Fundamentals Talk]].
   - [[http://blog.jenkster.com/2015/12/what-is-functional-programming.html][What is functional programming?]]
   - [[http://blog.jenkster.com/2015/12/which-programming-languages-are-functional.html][Which programming languages are functional?]]
-  - [[http://www.russbishop.net/monoids-monads-and-functors][Functors, Applicatives, and Monads in Plain English]].
 
 * [2016-01-02 Sat] [[#9-productivity-tips][#]] 9 Productivity tips
   :PROPERTIES:
@@ -1431,14 +1555,19 @@ $ find . -exec file --mime-type '{}' \;
   :END:
   Checking out [[https://camlistore.org][camlistore]] to organize all sorts of data. [[https://www.scaleway.com/imagehub/camlistore/][Scaleway]] enables you to deploy camlistore servers.
 
-* [2015-12-17 Thu] [[#open-street-maps-bookmarks][#]] Open Street Maps bookmarks
+* [2015-12-17 Thu] [[#maps-dev-bookmarks][#]] Maps dev bookmarks
   :PROPERTIES:
-  :CUSTOM_ID: open-street-maps-bookmarks
+  :CUSTOM_ID: maps-dev-bookmarks
   :END:
+  - [[https://www.locationtech.org][Location Tech]].
+  - [[https://openaddresses.io/][Open Addresses]].
   - [[http://wiki.openstreetmap.org/wiki/Planet.osm][OSM data in one file]].
   - [[http://wiki.openstreetmap.org/wiki/OSM_on_Paper][OSM on paper]].
   - [[http://download.osmand.net/rawindexes/][OSM raw indices]].
   - [[http://news.spatialdev.com/portable-open-street-map/][Portable OSM]].
+  - [[https://mapzen.com][Mapzen]].
+  - [[https://www.mapbox.com/][Mapbox]].
+  - [[https://medium.com/tag/mapping][Medium's mapping tag]].
 
 * [2015-12-17 Thu] [[#use-imagemagick-to-convert-image-to-grayscale][#]] Use ImageMagick to convert image to grayscale
   :PROPERTIES:
@@ -1586,7 +1715,11 @@ $ find . -exec file --mime-type '{}' \;
   :PROPERTIES:
   :CUSTOM_ID: swift-bookmarks
   :END:
+  :MODIFIED:
+  [2016-06-17 Fri]
+  :END:
   - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
+  - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
   - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
   - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
   - [[http://swiftmonthly.com/][SwiftMothly]].
@@ -1687,10 +1820,11 @@ $ find . -exec file --mime-type '{}' \;
   - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
   - [[https://medium.com/ohmygeorge-blog/bootstrapping-in-bangkok-is-the-best-option-c70e98f2b781#.2qbxef7oa][Bootstrapping in Bangkok is the best option]].
   - [[http://www.goruck.com/en][goruck bag]].
+  - [[https://news.ycombinator.com/item?id=11890991][Show HN: I made a database of remote companies (Hacker News)]].
   - [[http://www.tombihn.com][tom bihn bags]].
   - [[http://waveuptravel.com][waveUPtravel]].
   - [[https://www.quora.com/What-are-the-best-ways-to-earn-money-while-traveling-around-the-world][What are the best ways to earn money while traveling around the world? (Quora)]].
-
+  - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
 * [2015-11-26 Thu] [[#sql-bookmarks][#]] SQL bookmarks
   :PROPERTIES:
   :CUSTOM_ID: sql-bookmarks
@@ -1703,12 +1837,15 @@ $ find . -exec file --mime-type '{}' \;
   :Custom_ID: unix-linux-tools-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-07 Sun]
+  [2016-07-24 Sun]
   :END:
   - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
+  - [[https://news.ycombinator.com/item?id=12137576][A practical proposal for migrating to safe long sessions on the web (Hacker News)]].
+  - [[https://news.ycombinator.com/item?id=12140477][A practical security guide for web developers (Hacker News)]].
   - [[https://autotools.io/index.html][Autotools Mythbuster]].
   - [[http://www.unixwiz.net/techtips/chroot-practices.html][Best Practices for UNIX chroot]].
   - [[http://stackoverflow.com/questions/3519939/make-curl-follow-redirects][Make cURL follow redirects]].
+  - [[https://news.ycombinator.com/item?id=11909543][My First 10 Minutes on a Server (Hacker News)]].
   - [[https://blog.0xbadc0de.be/archives/300][SSH: Best practices]].
   - [[http://unixmages.com/ufbm.pdf][Unix for the Beginning Mage]].
 
@@ -1813,13 +1950,15 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
   :CUSTOM_ID: mac-os-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-04 Thu]
+  [2016-07-03 Sun]
   :END:
   - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
   - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
   - [[https://www.daisydiskapp.com/][DaisyDisk]] (what's taking up your disk space).
   - [[http://flummox-engineering.blogspot.com/2014/06/getting-absolute-path-in-bash-in-osx.html][Getting absolute path in Bash in OSX]].
-
+  - [[http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf][Guide to Securing Apple OS X]].
+  - [[http://www.manpagez.com/man/8/kextstat/][kextstat]].
+  - [[https://objective-see.com/products/kextviewr.html][KextViewr: View all modules on that are loaded in the OS kernel]].
 * [2015-11-21 Sat] [[#easy_install-pip-conda][#]] easy_install->pip->conda
   :PROPERTIES:
   :CUSTOM_ID: easy_install-pip-conda
@@ -2265,7 +2404,7 @@ $ sudo easy_install -U pip
   :CUSTOM_ID: react-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-24 Sun]
   :END:
   - [[https://news.ycombinator.com/item?id=10962784][9 things every React.js beginner should know (Hacker News)]].
   - [[https://camjackson.net/post/9-things-every-reactjs-beginner-should-know][9 things every React.js beginner should know]].
@@ -2275,12 +2414,16 @@ $ sudo easy_install -U pip
   - [[http://nerds.airbnb.com/facebook-react-native/][Adam Wolf's React Native talk]].
   - [[http://akarnokd.blogspot.co.uk/2016/04/google-agera-vs-reactivex.html?m=1][Advanced RxJava: Google Agera vs. ReactiveX]].
   - [[http://moduscreate.com/aligning-children-using-flexbox-in-react-native/][Aligning Children using Flexbox in React Native]].
+  - [[https://egghead.io/lessons/react-applying-basic-styles-in-react-native][Applying baisc styles in react native (video)]].
+  - [[https://egghead.io/lessons/react-applying-basic-styles-in-react-native][Applying Basic Styles in React Native]].
   - [[https://twitter.com/floydophone/status/649786438330945536][Avoid premature fluxing]].
   - [[https://github.com/enaqx/awesome-react/][Awesome React: a collection of awesome things regarding React ecosystem]].
   - [[https://github.com/babel/babel-eslint][babel-eslint]].
   - [[https://medium.com/infinite-red/beginner-s-guide-to-using-cocoapods-with-react-native-46cb4d372995#.i87ebbwl0][Beginner’s Guide to Using CocoaPods with React Native]].
   - [[https://medium.com/delivery-com-engineering/react-native-in-an-existing-ios-app-delivered-874ba95a3c52#.kin2ke23s][Beyong React Native's "getting started guide"]].
+  - [[http://blog.bonnieeisenman.com/][Bonnie Eisenman's blog (some react)]].
   - [[https://corbt.com/posts/2015/12/22/breaking-up-heavy-processing-in-react-native.html][Breaking up Heavy Processing in React Native (Blog post)]].
+  - [[https://www.youtube.com/watch?v=cI9bDvDEsYE][Brent Vatne - Building li.st for Android with Exponent and React Native at react-europe 2016]].
   - [[http://tadeuzagallo.com/blog/react-native-bridge/][Bridging in React Native: An in-depth look into React Native's core]].
   - [[http://tech.taskrabbit.com/blog/2015/10/18/building-react-native-apps/][Building React Native Apps]].
   - [[http://makeitopen.com/tutorials/building-the-f8-app][Bulding the F8 app]].
@@ -2290,6 +2433,7 @@ $ sudo easy_install -U pip
   - [[https://www.youtube.com/watch?v=xsSnOQynTHs][Dan Abramov - Live React: Hot Reloading with Time Travel at react-europe 2015]].
   - [[https://medium.com/@shaheenghiassy/deep-diving-react-native-debugging-ea406ed3a691][Deep Diving React Native Debugging]].
   - [[http://ilikekillnerds.com/2015/02/developing-react-js-components-using-es6/][Developing React.js Components Using ES6]].
+  - [[https://github.com/rebeccahughes/react-native-device-info][Device Information for React Native iOS and Android]].
   - [[http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/][ECMAScript 5 Strict Mode, JSON, and More]].
   - [[https://github.com/Intellicode/eslint-plugin-react-native][ESLint plugin for React Native]].
   - [[https://github.com/gcazaciuc/eslint-plugin-flowtype][eslint-plugin-flowtype]].
@@ -2297,11 +2441,14 @@ $ sudo easy_install -U pip
   - [[https://github.com/coodoo/flowery][Flowery: prettifies the result generated by Facebook Flow]].
   - [[http://blog.krawaller.se/img/flux-diagram.png][Flux diagram]].
   - [[https://egghead.io/series/getting-started-with-redux][Getting Started with Redux (30 lessons)]].
+  - [[https://gist.github.com/joshdover/235714771d94509a83609b16d232014a][Idiomatic React Testing Patterns]].
   - [[https://github.com/facebook/react-native/commit/1303e6d0392e8bc4da1198c98fc8cd7ad488b81c][Implement XHR timeout for Android and IOS natively]].
   - [[https://github.com/facebook/react-native/commit/e4c53c28aea7e067e48f5c8c0100c7cafc031b06][Improved shadow performance on iOS]].
   - [[https://news.ycombinator.com/item?id=11093275][Learn Raw React – No JSX, No Flux, No ES6, No Webpack (Hacker News)]].
   - [[https://github.com/DianQK/LearnRxSwift/blob/master/README.md][LearnRxSwift]].
   - [[https://github.com/facebook/react-native/issues/499#issuecomment-128836161][ListView rendering issue]].
+  - [[https://github.com/marcshilling/react-native-image-picker][Native image/photo picker for react native]].
+  - [[https://www.youtube.com/watch?v=dOSwHABLvdM][Native react navigation in every platform]].
   - [[https://github.com/geirman/offlineMovies][OfflineMovies: retrieves movies from an api and caches the result offline]].
   - [[https://corbt.com/posts/2015/09/16/one-day-with-react-native-for-android.html][One day with React Native for Android]].
   - [[https://www.youtube.com/watch?v%3Dfh_Y4mPivuM][Optimizing React Native views (Screencast)]].
@@ -2310,6 +2457,7 @@ $ sudo easy_install -U pip
   - [[https://medium.com/@sharathprabhal/progressive-image-loading-in-react-native-ecc88e724343#.ffudiaxf3][Progressive image loading]].
   - [[https://github.com/kriasoft/react-component-starter][React Component Starter Kit]].
   - [[http://iamdustan.com/2016/01/18/react-custom-renderers/][React Custom Renderers (Blog post)]].
+  - [[https://facebook.github.io/react/contributing/design-principles.html][React Design Principles]].
   - [[https://github.com/naoufal/react-native-accordion][React Native accordion]].
   - [[https://github.com/mastermoo/react-native-action-button][React Native action button]].
   - [[http://browniefed.com/blog/2015/08/01/react-native-animated-listview-row-swipe/][React Native Animated ScrollView Row Swipe Actions]].
@@ -2317,6 +2465,7 @@ $ sudo easy_install -U pip
   - [[https://github.com/ericvicenti/react-native-community/][React Native in the Github Community]].
   - [[http://moduscreate.com/react-native-layout-system/][React Native Layout System]].
   - [[https://github.com/lelandrichardson/react-native-maps][React Native maps]].
+  - [[https://github.com/lelandrichardson/react-native-maps][React Native Mapview component for iOS + Android]].
   - [[https://github.com/react-native-material-design/react-native-material-design][React Native Material Design (react-native-material-design)]].
   - [[https://github.com/xinthink/react-native-material-kit][React Native Material Design (xinthink)]].
   - [[http://us10.campaign-archive2.com/?u%3Ddb0dd948e2b729ee62625b1a8&id%3Dfbfe8b6010&e%3Dc7b5ce9f56][React Native Newsletter - Issue #24]].
@@ -2336,6 +2485,7 @@ $ sudo easy_install -U pip
   - [[https://github.com/rackt/redux][Redux: Predictable state container for JavaScript apps]].
   - [[http://jlongster.com/Removing-User-Interface-Complexity,-or-Why-React-is-Awesome][Removing User Interface Complexity, or Why React is Awesome]].
   - [[https://medium.com/@elieslama/responsive-design-in-react-native-876ea9cd72a8#.cjpedynak][Responsive Design in React Native]].
+  - [[https://rnplay.org/][rnplay.org: Test and share React Native code samples]].
   - [[https://github.com/bartonhammond/snowflake][Snowflake (React iOS/Android + Redux + Jest testable + parse.com + bitrise.io)]].
   - [[http://hharnisc.github.io/2015/04/15/react-native-and-meteor.html][Some Thoughts On Gluing React Native and Meteor (Blog post)]].
   - [[http://www.schibsted.pl/2015/10/testing-react-native-components-with-jest/][Testing react Native with jest]].
@@ -2345,6 +2495,7 @@ $ sudo easy_install -U pip
   - [[http://www.reactivemanifesto.org/][The reactive manifesto]].
   - [[https://facebook.github.io/react/docs/thinking-in-react.html][Thinking in React]].
   - [[https://getsiphon.com/blog/2016/01/20/future-of-app-development/][Thoughts on the future of mobile app development (Blog post)]].
+  - [[https://medium.com/the-react-native-log/tips-for-styling-your-react-native-apps-3f61608655eb#.tg2qh13vd][Tips for styling your React Native apps]].
   - [[http://stanleycyang.github.io/technology/reactjs/native/ios/2015/10/04/react-native-tutorial-with-navigation-and-animation.html][Tutorial: Handcrafting an iOS Application with React Native (and lots of love)]].
   - [[https://medium.com/@jcfrancisco/unit-testing-react-native-components-a-firsthand-guide-cea561df242b#.arff9dygw][Unit Testing React Native Components: A Firsthand Guide]].
   - [[https://medium.com/infinite-red/using-redux-saga-to-simplify-your-growing-react-native-codebase-2b8036f650de#.382a5inf8][Using redux-saga To Simplify Your Growing React Native Codebase]].
@@ -2436,6 +2587,7 @@ file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
   [2016-01-25 Mon]
   :END:
   - [[http://www.chgt.org.uk][Chiswick House & Gardens]].
+  - [[http://www.londonlibrary.co.uk/][London Library (book your free tour)]].
   - [[http://www.sohotheatre.com/][Soho Theatre]] (not tried yet).
 
 * [2015-08-23 Sun] [[#use-imagemagick-to-auto-orient-images][#]] Use ImageMagick to auto-orient images
@@ -2496,12 +2648,13 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
   :CUSTOM_ID: learning-bookmarks
   :END:
   :MODIFIED:
-  [2015-09-18 Fri]
+  [2016-07-07 Thu]
   :END:
   - [[http://www.quora.com/What-are-the-best-YouTube-channels-for-learning-growth-and-development][Best YouTube channels for learning (Quora)]].
   - [[https://news.ycombinator.com/item?id=7826745][HN's comments on learning languages]].
   - [[https://news.ycombinator.com/item?id=6522901][HN's comments on memory]].
   - [[http://fourhourworkweek.com/2012/12/11/how-to-play-the-guitar/][How to Finally Play the Guitar: 80/20 Guitar and Minimalist Music]].
+  - [[http://betterexplained.com/articles/adept-method/][Learn Difficult Concepts with the ADEPT Method]].
   - [[https://www.youtube.com/playlist?list=PL2FF649D0C4407B30][Learning to learn]].
   - [[http://betterexplained.com/articles/intuition-isnt-optional/][Learning to Learn: Intuition Isn’t Optional | BetterExplained]].
   - [[http://fourhourworkweek.com/2009/07/30/speed-reading-and-accelerated-learning/][Scientific Speed Reading: How to Read 300% Faster in 20 Minutes]].
@@ -2545,14 +2698,18 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
   :CUSTOM_ID: cooking-bookmarks
   :END:
   :MODIFIED:
-  [2015-08-23 Sun]
+  [2016-07-07 Thu]
   :END:
+  - [[http://drinks.seriouseats.com/2013/05/25-essential-cocktails-everyone-should-know-cocktail-101-easy-mixed-drink-recipes-classic-cocktail-guide.html][25 Cocktails Everyone Should Know]].
   - [[http://www.world-of-crepes.com/cast-iron-fry-pans.html][Cast Iron Fry Pans]].
   - [[https://www.youtube.com/watch?v=-suTmUX4Vbk][Equipment Review: Best Carbon-Steel Skillets (YouTube)]].
   - [[http://www.seriouseats.com/2010/06/how-to-buy-season-clean-maintain-cast-iron-pans.html][Equipment: How to Buy, Season, and Maintain Cast Iron Cookware]].
+  - [[https://www.amazon.co.uk/Imperia-Italian-Double-Cutter-Machine/dp/B0001IXA0I][Imperia Italian Double Cutter Pasta Machine]].
+  - [[https://www.amazon.co.uk/Marcato-machine-Chrome-Silver-Wellness/dp/B0009U5OSO/][Marcato Atlas 150 pasta machine Chrome, Silver Wellness]].
   - [[http://ohsheglows.com/2013/01/24/my-favourite-homemade-almond-milk-step-by-step-photos/][My Favourite Homemade Almond Milk + Step By Step Photos]].
   - [[http://cooking.nytimes.com/][New York Times cooking]].
   - [[http://www.amazon.com/The-Ringer-Cleaner-Stainless-Chainmail/dp/B00FKBR1ZG][The Ringer Cast Iron Cleaner XL 8x6 Inch Stainless Steel Chainmail (Amazon)]].
+  - [[http://www.seriouseats.com/2014/11/the-truth-about-cast-iron.html][The Truth About Cast Iron Pans: 7 Myths That Need To Go Away]].
   - [[http://www.cooksillustrated.com/how_tos/5820-the-ultimate-way-to-season-cast-iron][The ultimate way to season cast iron]].
 
 * [2015-08-11 Tue] [[#9-week-half-marathon-training][#]] 9 week half-marathon training
@@ -2634,6 +2791,9 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
   :PROPERTIES:
   :CUSTOM_ID: travel-tools-bookmarks
   :END:
+  :MODIFIED:
+  [2016-07-13 Wed]
+  :END:
   - [[http://www.cool-cities.com/][Cool cities, a visual city guide]].
   - [[https://www.producthunt.com/tech/detour-2-0][Detour 2.0]].
   - [[https://play.google.com/store/apps/details?id%3Dco.dojoapp.dojo&hl%3Den_GB][Dojo: Best stuff to do in London]].
@@ -2645,6 +2805,7 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
   - [[https://izi.travel/en][IziTravel: audio guides and city/museum tours]].
   - [[http://www.jetsetter.com][Jet Setter]].
   - [[http://us.louisvuitton.com/eng-us/men/books/city-guides][Louis Vuitton city guide]].
+  - [[http://mapiac.com/travel-map/][Mapiac: discover hidden wonders]].
   - [[http://www.roadsharing.com][roadsharing.com]].
   - [[https://tripcast.co/][Tripcast]].
   - [[https://www.triposo.com/][Triposo]].
@@ -3204,12 +3365,12 @@ $ brew cask install wwdc
   :CUSTOM_ID: bash-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-18 Fri]
+  [2016-06-19 Sun]
   :END:
+  - [[https://news.ycombinator.com/item?id=11832941][Common shell script mistakes (Hacker News)]].
   - [[http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming][Defensive bash programming]].
   - [[http://www.etalabs.net/sh_tricks.html][Rich’s sh (POSIX shell) tricks]].
   - [[http://bash.academy][The Bash Academy]].
-
 * [2015-05-25 Mon] [[#restclient.el][#]] restclient.el
   :PROPERTIES:
   :CUSTOM_ID: restclient.el
@@ -3317,12 +3478,13 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
   :CUSTOM_ID: thailand-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-09-18 Fri]
+  [2016-07-07 Thu]
   :END:
   - [[http://www.thebuddhism.net/2012/07/11/buddha-statue-in-forest-pak-chong-thailand/][Buddha Statue in Forest Pak Chong]].
   - [[http://en.wikipedia.org/wiki/Phanom_Rung_Historical_Park][Phanom Rung Historical Park]].
   - [[https://twitter.com/archpics/status/607334981971623936/photo/1][Rama IX park, Bangkok]].
   - [[https://duckduckgo.com/?q=Sanctuary+of+truth%2C+Thailand+&t=ffsb&iax=1&ia=images][Sanctuary of Truth]].
+  - [[https://www.quora.com/What-makes-Bangkok-so-popular][What makes Bangkok so popular? (Quora)]].
 
 * [2015-05-04 Mon] [[#madagascar-travel-bookmarks][#]] Madagascar travel bookmarks
   :PROPERTIES:
@@ -3493,7 +3655,7 @@ build_clang
   :CUSTOM_ID: japan-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-24 Sun]
   :END:
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
   - 7 day Japan Rail pass (first class?), possibly only sold outside Japan.
@@ -3502,6 +3664,7 @@ build_clang
   - [[http://ignition.co/398][A Moss Girl’s Guide to Japanese Moss Viewing]].
   - [[http://www.lonelyplanet.com/japan/travel-tips-and-articles/77501][A no-sushi guide to food in Japan]].
   - [[http://www.quora.com/How-does-it-feel-to-travel-alone#__w2_kxAuQyJ_answer_content][A trip to Japan (Quora answer)]].
+  - [[http://www.insidekyoto.com/arashiyama-bamboo-grove][Arashiyama Bamboo Grove]].
   - [[http://jnto.org.au/autumn-leaves-in-hokkaido/][Autumn Leaves in Hokkaido]].
   - [[http://www.amazon.co.uk/Drinking-Japan-Alcoholic-Beverages-Establishments/dp/4805310545][Drinking Japan]].
   - [[http://www.independent.co.uk/travel/asia/five-best-japanese-ryokan-406127.html][Five Best: Japanese Ryokan]].
@@ -3525,12 +3688,15 @@ build_clang
   - [[https://www.flickr.com/photos/26608745@N05/2845439357/][Monument in front of the Shin-Yatsushiro Station]].
   - [[https://duckduckgo.com/?q=Nagakushiyama+park%2C+Japan+&t=ffsb&iax=1&ia=images][Nagakushiyama park]].
   - [[https://en.wikipedia.org/wiki/Nagoya][Nagoya]].
+  - Natadera Temple in winter.
+  - [[https://www.lonelyplanet.com/japan/okinawa-and-the-southwest-islands/okinawa-honto/travel-tips-and-articles/the-other-japan-okinawas-secret-beaches][Okinawa: secrets for a long and happy life]].
   - Onsen.
   - [[http://www.quora.com/What-are-some-of-Japans-best-kept-secrets][Quora: What are some of Japans best kept secrets]]?
   - [[http://marc.merlins.org/perso/japan2013/links.html][Table of Content for japan2013]].
   - [[http://marc.merlins.org/perso/japan2014/links.html][Table of Content for japan2014]].
   - [[http://marc.merlins.org/perso/japan2015/links.html][Table of Content for japan2015]].
   - [[http://jpninfo.com/13012][The village of living water]].
+  - [[https://www.quora.com/What-are-the-most-inconvenient-things-foreign-tourists-who-travel-to-Japan-experience][Things to look out for in Japan (Quora)]].
   - [[http://tokyocheapo.com/][TokyoCheapo]].
   - [[http://ignition.co/395][Top 10 Japanese Stationery Items for Foreign Tourists]].
   - [[https://docs.google.com/document/d/1wjqJKYEKbHSUTsj8Lxj8OCn0gSOXOpf_SroyBEjLbKY/edit][Uncharted Tokyo]].
@@ -3563,7 +3729,7 @@ build_clang
   :Custom_ID: tokyo-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-02 Tue]
+  [2016-07-03 Sun]
   :END:
   - Akihabara: Electronics district, arcades and comic stores.
   - [[https://www.hokke.co.jp/english/asakusa/][Asakusa hotel]].
@@ -3576,6 +3742,7 @@ build_clang
   - [[http://unmissabletokyo.com/golden-gai][Golden Gai (lots tiny bars)]].
   - [[http://g.co/maps/4zmg][Hazelburn]].
   - Imperial Palace: Book to go inside. Beautiful park, great for pictures.
+  - [[http://openbuildings.com/buildings/mikimoto-ginza-2-profile-2818][Mikimoto building in Ginza]].
   - [[http://www.mori.art.museum/eng/index.html][Mori Art museum]].
   - [[https://en.wikipedia.org/wiki/Nezu_Museum][Nezu museum]].
   - Omoide yokocho: Alleyway  next to Shinjuku station. Lots of yakitori restaurants.
@@ -4156,11 +4323,15 @@ UIActivityViewController *controller =
   :PROPERTIES:
   :CUSTOM_ID: burma-travel-bookmarks
   :END:
-  - [[https://en.wikipedia.org/wiki/Ngapali_Beach][Ngapali beach]].
+  :MODIFIED:
+  [2016-06-19 Sun]
+  :END:
   - Bagan and Inle lake are the "touristy" areas.
+  - [[http://balloonsoverbagan.com/home][Balloons over Bagan]].
   - For Bagan, get bicycles.
-  - Shwesandaw at sunset.
   - Inle lake guided boat tour.
+  - [[https://en.wikipedia.org/wiki/Ngapali_Beach][Ngapali beach]].
+  - Shwesandaw at sunset.
   - [[http://imgur.com/a/D1EQJ][zyklusdiewelt's Myanmar's photos]].
 
 * [2015-03-16 Mon] [[#os-x-screencasts-to-animated-gif][#]] OS X Screencasts to animated GIF
@@ -4302,16 +4473,16 @@ $ python ycmd
   :END:
   - [[https://github.com/Jack000/Expose][Exposé, A simple static site generator for photoessays]].
   - [[http://gakuran.com/category/haikyo-ruins/][Michael Gakuran's Gakuranman]].
+  - [[http://www.techradar.com/how-to/photography-video-capture/cameras/77-photography-techniques-tips-and-tricks-for-taking-pictures-of-anything-1320768/][77 photography techniques, tips and tricks for taking pictures of anything]].
 
 * [2015-03-08 Sun] [[#paris-travel-bookmarks][#]] Paris travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: paris-travel-bookmarks
   :END:
   :MODIFIED:
-  [2015-08-27 Thu]
+  [2016-07-13 Wed]
   :END:
   - [[http://www.ateliermaitrealbert.com/][Atelier Maitre Albert (known for its rotisserie chicken)]].
-  - [[http://www.lereminet.com][Le Reminet]] (Paris restaurant).
   - Au Passage. Small plates in fun atmosphere.
   - Berthillon Ice Cream.
   - [[http://www.yelp.com/biz/breizh-caf%C3%A9-paris-2][Breizh Café (traditional gallete, savory buckwheat crepes)]].
@@ -4324,6 +4495,7 @@ $ python ycmd
   - L'Office. Wine bar/bistrot.
   - Le Barav'.
   - Le Petit Poucet (restaurant next to Place de Clichy, Paris).
+  - [[http://www.lereminet.com][Le Reminet]] (Paris restaurant).
   - Marché d'Aligre. Authentic neighbourhood market.
   - Marché des Enfants Rouge. Small covered market. Eat at food stalls.
   - Mosquee de Paris. City mosque. Drink mint tea at courtyard under olive trees or eat in restaurant inside. North African food.
@@ -4333,6 +4505,10 @@ $ python ycmd
   - RATP for transport info including the "carnet" of 10 tickets.
   - Rodin Museum.
   - [[http://www.yelp.com/biz/west-country-girl-paris][West Country Girl (crepes)]].
+  - [[https://www.quora.com/What-are-the-best-boulangeries-and-patisseries-in-Paris-for-each-arrondissement][What are the best boulangeries and patisseries in Paris for each arrondissement? (Quora)]].
+  - [[https://www.quora.com/What-are-the-best-places-to-buy-cheese-in-Paris][What are the best places to buy cheese in Paris? (Quora)]].
+  - [[https://www.quora.com/Where-are-best-vintage-stores-in-Paris][Where are best vintage stores in Paris? (Quora)]].
+  - [[https://www.quora.com/Where-are-the-best-flea-markets-in-Paris][Where are the best flea markets in Paris? (Quora)]].
 
 * [2015-03-08 Sun] [[#org-mode-bookmarks][#]] Org mode bookmarks
   :PROPERTIES:
@@ -4365,10 +4541,16 @@ $ python ycmd
 ******* TODO [[http://pocotapasbar.com/][Poco]] (Tapas bar).
 *** Camberwell
 ******* TODO [[http://suncamberwell.com][Sun of Camberwell]] (Roast beef, Yorkshire, and sticky toffee pudding).
+*** Canada Water
+******* TODO [[http://www.chuckburgerbar.com/#canadawater][Chuck burger (truck)]].
 *** Covent Garden
 ******* TODO [[http://www.punjab.co.uk/][Punjab]] (Punjabi).
+******* TODO [[http://www.duendelondon.com/][Duende]] (modern Spanish).
+******* TODO [[http://rockandsoleplaice.com][Rock & Sole Plaice]] (fish and chips).
 ******* DONE Dishoom (Indian), try Lamb raan.
 ******* DONE [[http://www.sagarveg.co.uk][Sagar]] (South Indian): Great food!
+*** Claphap
+******* TODO [[http://www.joepublicpizza.com][Joe Public Pizza]].
 *** Ealing
 ******* TODO Kiraku (Sushi).
 *** Edware road
@@ -4382,24 +4564,30 @@ $ python ycmd
 ******* TODO [[http://www.indianymca.org/][Indian YMCA]] (inexpensive Indian).
 *** Golders Green
 ******* TODO Cafe Japan (Sushi).
+*** Hackney
+******* TODO [[http://www.pidginlondon.com][Pidgin]].
 *** Hammersmith
 ******* DONE [[http://indian-zing.co.uk/][Indian Zing]] (Indian): It was OK (not great).
 *** Hamstead
 ******* TODO [[http://www.jinkichi.com/][Jin Kichi]] (Japanese).
 *** Harrow
 ******* TODO [[http://mazarafghanrestaurant.co.uk/contact/][Mazar]] (Afghan).
+*** Hatch End
+******* TODO [[http://www.chuckburgerbar.com/][Chuck Burger]].
 *** Holloway Road
 ******* TODO Xi'an impression (Xi'an)
 *** Islington
 ******* TODO [[http://delhigrill.com][Delhi Grill]] (Indian), try chicken makhani and naan.
 ******* TODO [[http://rootsatn1.com][Roots N1]] (Indian).
 ******* TODO [[http://www.thepigandbutcher.co.uk/][The pig and butcher]] (sunday roast).
+******* TODO [[http://busanbbq.co.uk][Busan BBQ]] (Korean meets American diner/burgers and fried chicken).
 *** Kensington
 ******* TODO Clarke's, try the burger.
 *** Kensal Green
 ******* TODO [[http://www.tripadvisor.com/Restaurant_Review-g186338-d3531042-Reviews-Centro_Galego_de_Londres-London_England.html][Centro Galego de Londres]] (Gallician).
 *** King's Cross
 ******* TODO [[http://www.germangymnasium.com/][German Gymnasium]].
+******* TODO [[http://starofkings.co.uk/food-and-drink/][Yeah! Burger at Star of Kings]].
 *** Liverpool street
 ******* TODO [[http://www.gunpowderlondon.com][Gunpowder]] (Indian).
 *** Marylebone
@@ -4420,6 +4608,7 @@ $ python ycmd
 *** Soho
 ******* TODO [[http://baolondon.com][BAO]] (Bao buns! enough said).
 ******* TODO [[http://pizzapilgrims.co.uk/][Pizza Pilgrims]].
+******* TODO [[http://www.goldenunion.co.uk][Golden Union]] (fish bar).
 ******* TODO [[http://meltroom.com/][Melt Room]] (Cheese toasties).
 ******* TODO [[http://said.it/en/london/][SAID]] (italian chocolate shop).
 ******* TODO [[http://shotgunbbq.com/][Shotgun]] (BBQ).
@@ -4427,8 +4616,12 @@ $ python ycmd
 ******* TODO [[http://www.atariya.co.uk/restaurants/][Atari Ya]] (Sushi).
 ******* TODO [[http://www.darjeeling-express.com/][Darjeeling Express]] (Indian).
 ******* TODO [[http://www.hopperslondon.com][Hoppers]] Dosas, Rice, Roast, Kothu & Arrack (Sri Lanka and Tamil Nadu).
+*** Southhall
+***** TODO [[http://brilliantrestaurant.com][Brilliant restaurant]] (healthier Indian).
 *** South Kensington
 ******* TODO Hour Glass (Pub restaurant).
+*** Smithfield
+******* TODO [[http://birdofsmithfield.com][Bird of Smithfield]] (Sheppherd's pie, ox cheek, cheesecake).
 *** Tottenham Court Road.
 ******* DONE [[https://www.kanada-ya.com/][Kanada-Ya]] (rammen): Not bad.
 *** Tower Hill
@@ -4436,6 +4629,8 @@ $ python ycmd
 ******* TODO [[https://www.google.co.uk/search?q=maltby+street+market&rlz=1C1FLDB_enGB546GB546&espv=2&biw=1449&bih=913&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwj1nrGQvYvLAhUF2hoKHeaQDQsQsAQIOg&dpr=1][Maltby street market]].
 *** Tufnell Park
 ******* TODO Monsoon (Indian), try lamb naga.
+*** Walthamstow
+******* TODO [[https://grillstock.co.uk][Grillstock BBQ]].
 *** Waterloo
 ******* TODO  [[http://thelaughinggravy.co.uk][The Laughing Gravy]].
 *** West Hamstead
@@ -4451,13 +4646,15 @@ $ python ycmd
   :CUSTOM_ID: ux-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-24 Sun]
   :END:
   - [[https://99designs.com/designer-blog/2014/01/20/11-kerning-tips/][10 kerning tips for improving your typography]].
   - [[http://line25.com/inspiration/flat-design-color-palettes][30 Flat Design Color Palettes That Just Work]].
   - [[http://tympanus.net/Development/AnimatedSVGIcons/][Animated SVG icons]].
   - [[https://developer.apple.com/design/tips/][Apple's UI design Dos and Don'ts]].
+  - [[https://www.behance.net/][behance (Showcase & Discover Creative Work)]].
   - [[https://www.behance.net/gallery/18006477/California-Magazine][California magazine]].
+  - [[http://capptivate.co][capptivate.co (features mobile UIs)]].
   - [[https://lmjabreu.com/post/creating-badass-users/][Creating badass users]].
   - [[http://deathtothestockphoto.com/stories/][Death to Stock (stock photos)]].
   - [[https://www.designernews.co/][Designer News]].
@@ -4468,11 +4665,14 @@ $ python ycmd
   - [[http://www.underconsideration.com/brandnew/archives/logo_modernism.php#.VhRP_HvoVE4][Logo Modernism (Book)]].
   - [[http://makerbook.net/][Makerbook: A hand-picked directory of the best free resources for creatives]].
   - [[https://github.com/google/material-design-icons/releases/tag/1.0.0][Material Design icons]].
+  - [[http://www.mobile-patterns.com/][mobile-patterns.com (UX mobile patterns)]].
+  - [[http://pttrns.com/][pttrns.com (mobile UX patterns)]].
   - [[http://www.typewolf.com/blog/most-popular-fonts-of-2014][Ten most popular webfonts of 2014]].
   - [[http://inkbotdesign.com/100-best-design-blogs/][The 100 Best Design Blogs to Follow]].
   - [[http://www.codelitt.com/blog/the-foundations-of-a-good-ui/][The Foundations of a Good UI]].
   - [[http://www.methodsandtools.com/archive/archive.php?id=126][The Psycology of UX]].
   - [[http://typographica.org/][Typographica (type reviews, books, commentary)]].
+  - [[https://dribbble.com/][What are you working on? Dribbble is show and tell for designers.]].
   - [[https://blog.prototypr.io/why-showing-your-process-is-so-important-1e4129a5f5d2#.7o5bfjwd7][Why Showing Your Process is So Important!]].
 
 * [2015-03-07 Sat] [[#unix-linux-tips-backlog][#]] Unix/Linux tips backlog
@@ -4584,10 +4784,11 @@ $ python ycmd
   :CUSTOM_ID: travel-blog-bookmarks
   :END:
   :MODIFIED:
-  [2015-10-22 Thu]
+  [2016-07-04 Mon]
   :END:
   - [[http://hiddentraveltreasures.com/][Hidden Travel Treasures]].
   - [[http://onestep4ward.com/][One Step 4Ward]].
+  - [[http://tigrest.com][Tigrest Travel Blog]].
 
 * [2015-03-06 Fri] [[#travel-bookmarks][#]] Travel bookmarks
   :PROPERTIES:
@@ -4647,7 +4848,7 @@ $ python ycmd
   :CUSTOM_ID: startup-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-07 Thu]
   :END:
   - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
   - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -4681,6 +4882,7 @@ $ python ycmd
   - [[https://speakerdeck.com/appltn/done-is-better-than-perfect][Done is better than perfect]].
   - [[https://fieldbook.com][fieldbook: Create a database, as easily as a spreadsheet]].
   - [[https://rivalseek.com/][Find your competition]].
+  - [[https://www.fiverr.com/][Fiverr (logos, graphic design, etc)]].
   - [[http://flagtheory.com/][Flag Theory: Freedom, Privacy and Wealth]].
   - [[http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for][Free tools for startups (Shyahi blog)]].
   - [[http://www.freevectors.net/][Free vectors]].
@@ -4709,6 +4911,7 @@ $ python ycmd
   - [[http://blog.fogcreek.com/how-to-onboard-software-engineers-interview-with-kate-heddleston/][Onboarding engineers]].
   - [[https://onesignal.com/][OneSignal]].
   - [[https://www.openhunt.co/][Open Hunt: an open and community-run alternative to Product Hunt.]].
+  - [[http://serverfault.com/questions/219620/which-is-the-best-webserver-for-serving-static-content-and-load-balancing][Options to serve static content]].
   - [[https://medium.com/@sgblank/organizational-debt-is-like-technical-debt-but-worse-3c0c86eae3eb][Organizational Debt is Like Technical debt — But Worse]].
   - [[http://facebook.github.io/origami/examples/][Origami for UI patterns and interactions]].
   - [[http://www.paintcodeapp.com][PaintCode (drawings into ObjC code)]] - [[http://bit.ly/PaintCodeRocks][coupon]].
@@ -4728,10 +4931,12 @@ $ python ycmd
   - [[https://www.sendwithus.com/resources/guide/][Send email like a startup]].
   - [[https://shareasimage.com/][Share as image]].
   - [[http://blog.samaltman.com/startup-advice-briefly][Startup advice, briefly]].
+  - [[https://github.com/leonar15/startup-checklist][Startup Incorporation Checklist]].
   - [[https://www.firebase.com/docs/android/guide/structuring-data.html][Structuring JSON data in your Firebase database]].
   - [[http://t.co/5WUoz5BwtT][Submit.co: Press coverage for your startup]].
   - [[http://submit.co/][submit.co: Where to get press coverage for your startup]].
   - [[http://swagger.io/][Swagger]]: Represent REST API.
+  - [[https://news.ycombinator.com/item?id=11964763][Telephony, SMS, and MMS APIs (Hacker News)]].
   - [[http://textbelt.com/][TextBelt:]] A free, open source API for outgoing texts..
   - [[https://medium.com/fluxx-studio-notes/the-first-rule-of-pricing-is-you-do-not-talk-about-pricing-1875caa39b89#.exvbm4vfa][The first rule of pricing is: you do not talk about pricing]].
   - [[http://thenounproject.com/][The noun project (more icons)]].
@@ -4790,12 +4995,17 @@ $ python ycmd
   :PROPERTIES:
   :CUSTOM_ID: mindfulness-bookmarks
   :END:
+  :MODIFIED:
+  [2016-07-07 Thu]
+  :END:
   - [[https://en.wikipedia.org/wiki/Aimless_wandering][Aimless Wandering]].
+  - [[http://www.nytimes.com/2016/06/05/opinion/sunday/are-you-in-despair-thats-good.html][Are You in Despair? That’s Good (NY Times)]].
   - [[http://lesswrong.com/lw/3w3/how_to_beat_procrastination/][Beating procrastination]].
   - [[http://theenergyproject.com/blog/take-back-your-life-ten-steps][Best 10 life changes]].
   - [[https://hbr.org/2014/02/how-to-make-yourself-work-when-you-just-dont-want-to/][How to Make Yourself Work When You Just Don’t Want To]].
   - [[http://www.ludism.org/mentat/][Ludism's memory techniques]].
   - [[http://www.memrise.com/blog/][Memreise's blog]].
+  - [[https://medium.com/@yegg/mental-models-i-find-repeatedly-useful-936f1cc405d#.g0gjbdp8z][Mental Models I Find Repeatedly Useful]].
   - [[https://thebuddhistcentre.com/text/mindfulness-breathing][Mindfulness breathing]].
   - [[https://hbr.org/2014/12/mindfulness-mitigates-biases-you-may-not-know-you-have][Mindfulness Mitigates Biases You May Not Know You Have]].
   - [[http://theenergyproject.com/blog][The Energy Project blog]].
@@ -4815,7 +5025,6 @@ $ python ycmd
   - [[http://camdez.com/blog/categories/productivity/][Cameron Desautel on productivity]].
   - [[https://www.youtube.com/watch?v=j2C8MkY7Co8&feature=youtu.be][Dr. Hamilton Demonstrates "The Hold" - How To Calm A Crying Baby (YouTube)]].
   - [[http://www.mindbodygreen.com/][Mind body green]].
-  - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
   - [[http://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html][Quiz: The 36 Questions That Lead to Love]].
   - [[http://www.quora.com/What-methods-can-I-use-to-avoid-getting-so-tired-when-I-do-the-same-amount-of-a-work-as-my-peers-who-do-not-get-so-tired][Quora on increasing energy levels]].
   - [[http://articles.mercola.com/sites/articles/archive/2011/08/16/dirty-little-secret-orange-juice-is-artificially-flavored-to-taste-like-oranges.aspx][The Shocking Truth About Freshly Squeezed Orange Juice]].
@@ -5164,13 +5373,14 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-06 Fri]
+  [2016-07-24 Sun]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
   - [[https://developer.apple.com/library/ios/technotes/tn2259/_index.html][Adding in-app purchase]].
   - [[http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/][An @import-ant Change in Xcode]].
   - [[https://developer.apple.com/library/ios/documentation/General/Conceptual/DevPedia-CocoaCore/AppID.html][App IDs]].
+  - [[https://devimages.apple.com.edgekey.net/app-store/review/guidelines/App-Review-Guidelines-The-Comic-Book.pdf][App review guidelines (comic book)]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
   - [[https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html#//apple_ref/doc/uid/20001282-BCIGIJJF][Apple's coding guidelines for Cocoa]].
   - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Initialization/Initialization.html#//apple_ref/doc/uid/TP40010810-CH6-SW3][Apple's Concepts in Objective-C programming]].
@@ -5180,6 +5390,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/steventroughtonsmith/cartool][Cartool (Inspect car files)]].
   - [[http://clang.llvm.org/docs/Block-ABI-Apple.html][Clang 3.7 documentation BLOCK IMPLEMENTATION SPECIFICATION]].
   - [[https://github.com/luisobo/clean-architecture][Clean architecture for iOS]].
+  - [[https://www.cocoacontrols.com/][Cocoa controls]].
   - [[http://cocoadocs.org/][Cocoadocs]].
   - [[http://www.objc.io/issue-6/cocoapods-under-the-hood.html][Cocoapods under the hood]].
   - [[http://cocoapods.org/][Cocoapods]].
@@ -5203,6 +5414,8 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/indragiek/INDANCSClient][INDANCSClient: Objective-C Apple Notification Center Service Implementation (Bluetooth LE)]].
   - [[https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW10][Info PList key reference]].
   - [[http://injectionforxcode.com][Injection for Xcode]].
+  - [[https://developer.apple.com/videos/play/wwdc2016/413][Introduction to Xcode (Apple WWDC 2016)]].
+  - [[http://puzzles.design/][iOS 10 UI]].
   - [[https://medium.com/ios-apprentice/the-valuable-toolset-for-ios-development-ba312d12577d][iOS Apprentice]].
   - [[https://iosdev.tools/][iOS Dev Tools]].
   - [[http://ios.devtools.me][iOS Dev Tools]].
@@ -5216,6 +5429,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://ios-goodies.com][ios-goodies.com]].
   - [[http://iosdevtips.co][iosdevtips.co]].
   - [[http://joppar.com/mobile-app-development-resources-guide/][joppar.com]].
+  - [[https://github.com/JiriTrecak/Laurine][Laurine: Localization code generator]].
   - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
   - [[https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html][Maintaining profiles]].
   - [[http://khanlou.com/2016/02/many-controllers/][Many Controllers Make Light Work (Analytics)]].
@@ -5237,6 +5451,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://github.com/ShareSDKPlatform/ShareSDK][ShareSDK is the most comprehensive Social SDK]].
   - [[http://www.atomicbird.com/blog/sharing-with-app-extensions][Sharing data between iOS apps and app extensions]].
   - [[https://github.com/facebook/Shimmer][Shimmer: Shimmer is an easy way to add a shimmering effect to any view in your app]].
+  - [[https://blog.goposse.com/simpleanimatingwithsnapkit-e38ed2980ac2#.n6gzo6syp][Simple Animation With SnapKit]].
   - [[http://subjc.com][Subjective-C]].
   - [[http://www.invisionapp.com/tethr?utm_source=ios%20dev%20tools&utm_medium=website&utm_campaign=ios%20dev%20tools&at=11lvzs&ct=ios%20dev%20tools][TETHR]].
   - [[http://iosdevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html][The Complete Tutorial on iOS/iPhone Custom URL Schemes]].
@@ -5254,6 +5469,7 @@ If FROM or TO is negative, it counts from the end.
   - [[https://developer.apple.com/videos/wwdc/2012/][WWDC 2012 Xcode tips]].
   - [[https://developer.apple.com/videos/wwdc/2014/][WWDC 2014]].
   - [[https://github.com/ohoachuck/wwdc-downloader][WWDC 2015, 2014, 2013 and Tech-talks 2013 (videos and pdf downloader)]].
+  - [[https://developer.apple.com/reference/xctest][XCTest documentation]].
   - [[https://github.com/KonradCLAPP/YawImageViewer][YawImageViewer]].
   - [[http://bpoplauschi.wordpress.com][Yet another iOS Blog]].
 
@@ -5438,8 +5654,9 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: online-video-backlog
   :END:
   :MODIFIED:
-  [2016-02-29 Mon]
+  [2016-06-19 Sun]
   :END:
+******* TODO [[https://www.youtube.com/watch?v=HHYs78uIx3M][An exclusive seminar with Julian Assange]].
 ******* TODO [[https://www.youtube.com/watch?v=LrObZ_HZZUc][The (Secret) City of London, Part 1: History]].
 ******* TODO [[https://www.youtube.com/watch?v=z1ROpIKZe-c][The (Secret) City of London, Part 2: History]].
 ******* TODO [[https://www.youtube.com/watch?v=kXBJLH2xrBM][The UK Gold]].
@@ -5484,6 +5701,10 @@ If FROM or TO is negative, it counts from the end.
   :PROPERTIES:
   :CUSTOM_ID: movie-backlog
   :END:
+  :MODIFIED:
+  [2016-06-22 Wed]
+  :END:
+******* TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
 ******* TODO Spotlight.
 ******* TODO Creed.
 ******* TODO Innocence of memories.
@@ -5532,9 +5753,11 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: books-backlog
   :END:
   :MODIFIED:
-  [2016-02-28 Sun]
+  [2016-07-24 Sun]
   :END:
+******* TODO [[http://www.harukimurakami.com/library/][Haruki Murakami]].
 ******* TODO [[https://en.wikipedia.org/wiki/The_Prime_of_Miss_Jean_Brodie_%2528novel%2529][The Prime of Miss Jean Brodie (novel)]].
+******* TODO [[https://www.goodreads.com/book/show/53849.Plan_B][Plan B]].
 ******* TODO [[http://www.amazon.com/Deskbound-Standing-Up-Sitting-World/dp/1628600586][Deskbound]].
 ******* TODO [[http://www.amazon.com/The-Way-Wanderlust-Writing-Travelers/dp/1609521056][The Way of Wanderlust: The Best Travel Writing of Don George (Travelers' Tales)]].
 ******* TODO [[https://en.m.wikipedia.org/wiki/We_%28novel%29][We (novel)]].
@@ -5573,10 +5796,10 @@ If FROM or TO is negative, it counts from the end.
 ******* TODO [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
 ******* TODO [[http://www.amazon.co.uk/Thing-Explainer-Complicated-Stuff-Simple/dp/1473620910][Thing Explainer: Complicated Stuff in Simple Words]].
 ******* TODO [[http://www.amazon.co.uk/madhur-jaffreys-ultimate-curry-bible/dp/0091874157/ref=sr_1_3?ie=utf8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate curry bible]].
-******* TODO [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
 ******* TODO [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Veg patch]].
 ******* TODO [[http://www.amazon.co.uk/JavaScript-Developer-ECMAScript-OdeToCode-Programming-ebook/dp/B018D12X0C][What Every JavaScript Developer Should Know About ECMAScript 2015]].
 ******* TODO [[http://camdez.com/blog/2016/01/02/2016-reading-list/][Cameron Desautels's 2016 reading list]].
+******* DONE [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
 
 * [2014-12-29 mon] [[#gardening-bookmarks][#]] Gardening bookmarks
   :PROPERTIES:
@@ -5589,8 +5812,13 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: emacs-tips-backlog
   :END:
   :MODIFIED:
-  [2016-05-21 Sat]
+  [2016-07-13 Wed]
   :END:
+******* TODO [[https://github.com/mrkkrp/typit][Typit: typing game for Emacs]].
+******* TODO [[https://github.com/jekor/hidepw][hidepw - an Emacs minor mode for hiding passwords]].
+******* TODO [[https://github.com/Wilfred/pyimport][pyimports]].
+******* TODO [[https://github.com/syohex/emacs-quickrun][quickrun.el]].
+******* TODO [[http://sriramkswamy.github.io/dotemacs/][Sriram Krishnaswamy's init]].
 ******* TODO [[https://github.com/zakame/emacs-for-javascript][Emacs for JavaScript]].
 ******* TODO [[http://williambert.online/2014/02/using-a-node-repl-with-emacs/][Using a Node repl in Emacs with nvm and npm]].
 ******* TODO [[https://github.com/iced/go-gopath/blob/master/README.md][go-gopath]].
@@ -5827,11 +6055,12 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
-  [2016-02-07 Sun]
+  [2016-07-03 Sun]
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
   - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
+  - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
   - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
   - [[https://github.com/caiorss/Emacs-Elisp-Programming][Emacs - Elisp Programming and Customization]].
   - [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
@@ -5866,8 +6095,9 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-07-20 Wed]
   :END:
+  - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
   - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
   - [[https://github.com/baohaojun/ajoke][Ajoke]].
   - [[http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git][An introduction to Magit, an Emacs mode for Git]].
@@ -5882,6 +6112,7 @@ $ brew install emacs-mac
   - [[http://www.thinknix.net/2015/02/19/cross-platform-system-wide-org-capture/][Cross Platform System-wide Org-Capture]].
   - [[https://emacs.zeef.com/ehartc][Curated list of packages by Ernst de Hart]].
   - [[http://emacs-fu.blogspot.co.uk/2011/08/customizing-mode-line.html][Customizing emacs mode line]].
+  - [[http://irreal.org/blog/?p=5380][Directory-Local Variables]].
   - [[http://www.masteringemacs.org/articles/2011/01/14/effective-editing-movement/][Effective editing I:Movement]]
   - [[http://ergoemacs.org/emacs/effective_emacs.html][Effective emacs tips]]: From ergoemacs.
   - [[https://sites.google.com/site/steveyegge2/effective-emacs][Effective emacs]]: Steve Yegge's effective emacs tips.
@@ -5902,6 +6133,7 @@ $ brew install emacs-mac
   - [[http://emacsredux.com/][Emacs redux]].
   - [[http://emacsrocks.com][Emacs rocks]].
   - [[http://bzg.fr/emacs-strip-tease.html][Emacs striptease (removing furniture)]].
+  - [[http://planet.emacsen.org/][Emacs workshop]].
   - [[http://lavnir.be/wp/][Emacs | less]].
   - [[http://emacslife.com/][Emacslife]].
   - [[https://github.com/jonnay/emagicians-starter-kit][Emagicians starter kit]].
@@ -5956,6 +6188,7 @@ $ brew install emacs-mac
   - [[http://whattheemacsd.com/][What the Emacsd]].
   - [[http://wikemacs.org/wiki/TRAMP][WikEmacs - TRAMP]].
   - [[http://www.wisdomandwonder.com/][Wisdom and Wonder]].
+  - [[http://ergoemacs.org/emacs/emacs_list_and_set_font.html][Xah Lee's Emacs: Set Font]].
   - [[http://www.xref.sk/xrefactory/main.html][Xrefactory: A C/C++ Refactoring Browser for Emacs and XEmacs]].
   - [[https://github.com/zegal/yasobjc][Yasnippet generator for Cocoa iphone SDK]].
   - [[https://yoo2080.wordpress.com/category/emacs/][Yoo Box's Emacs category]].
@@ -5992,13 +6225,14 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: cpp-bookmarks
   :END:
   :MODIFIED:
-  [2016-01-24 Sun]
+  [2016-07-03 Sun]
   :END:
   - [[http://nickdesaulniers.github.io/blog/2015/07/23/additional-c-slash-c-plus-plus-tooling/][Additional C/C++ Tooling]].
   - [[https://github.com/isocpp/CppCoreGuidelines][C++ Core Guidelines]].
   - [[http://cppreference.com][cppreference.com]].
   - [[https://github.com/Dobiasd/FunctionalPlus][FunctionalPlus: helps you write concise and readable C++ code]].
   - [[http://www.murrayc.com/permalink/2015/12/05/modern-c-variadic-template-parameters-and-tuples/][Modern C++: Variadic template parameters and tuples]].
+  - [[http://www.artima.com/cppsource/top_cpp_aha_moments.html][My Most Important C++ Aha! Moments...Ever]].
   - [[http://www.amazon.co.uk/Programming-Principles-Practice-Using-C/dp/0321992784][Programming: Principles and Practice Using C++ Paperback]].
   - [[https://samthursfield.wordpress.com/2015/10/20/some-cmake-tips/][Some CMake tips]].
   - [[http://vitiy.info/Slides/MeetingCPP2015/MeetingCPP2015Complexity.pdf][The ways to avoid complexity in modern C++]].
@@ -6067,6 +6301,7 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[http://www.larryullman.com/books/modern-javascript-develop-and-design/table-of-contents/][Modern JavaScript: Develop and Design (book)]].
   - [[https://medium.com/javascript-scene/must-see-javascript-dev-tools-that-put-other-dev-tools-to-shame-aca6d3e3d925#.bcntoj3kq][Must See JavaScript Dev Tools That Put Other Dev Tools to Shame]].
   - [[http://mrale.ph/blog/2014/07/30/constructor-vs-objectcreate.html][new vs Object.create]].
+  - [[https://github.com/uber/npm-shrinkwrap][npm-shrinkwrap]].
   - [[https://github.com/arscan/pleaserotate.js][pleaserotate.js]]
   - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
   - [[https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree][Redux: The Single Immutable State Tree]].
@@ -6107,10 +6342,11 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: python-bookmarks
   :END:
   :MODIFIED:
-  [2016-03-21 Mon]
+  [2016-06-21 Tue]
   :END:
   - [[https://www.continuum.io/why-anaconda][Anaconda Python sandbox]].
   - [[http://mkaz.com/2014/07/26/python-argparse-cookbook/][Argparse cookbook]]: For simple python scripts.
+  - [[http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html][Code Like a Pythonista: Idiomatic Python]].
   - [[https://github.com/pudo/dataset][Dataset: databases for lazy people]].
   - [[http://www.diveintopython3.net/][Dive Into Python 3 book]].
   - [[http://www.diveintopython.net/][Dive Into Python book]].
