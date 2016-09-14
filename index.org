@@ -1,6 +1,26 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-09-15 Thu] [[#fuzzy-search-emacs-compile-history][#]] Fuzzy search Emacs compile history
+  :PROPERTIES:
+  :CUSTOM_ID: fuzzy-search-emacs-compile-history
+  :END:
+
+  I wrote about [[#search-bash-history-with-emacs-helm][searching bash history with Emacs Helm]] some time ago. Since then, I've learned about /completing-read/ to generically handle simple Emacs completions (very handy for supporting Helm, Ivy, and Ido completions).
+
+  Here's a simple way to combine /completing-read/ and the /compile/ command to enable fuzzy searching your compile history:
+
+[[file:images/fuzzy-search-emacs-compile-history/fuzzy_compile.gif]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun ar/compile-completing ()
+    "Compile with completing options."
+    (interactive)
+    (let ((compile-command (completing-read "Compile command: " compile-history)))
+      (compile compile-command)
+      (add-to-list 'compile-history compile-command)))
+#+END_SRC
+
 * [2016-09-05 Mon] [[#jumping-on-emacs-25-bandwagon][#]] Jumping on the Emacs 25 bandwagon
   :PROPERTIES:
   :CUSTOM_ID: jumping-on-emacs-25-bandwagon
