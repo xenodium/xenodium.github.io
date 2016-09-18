@@ -1,6 +1,82 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-09-18 Sun] [[#api-design-bookmarks][#]] API design bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: api-design-bookmarks
+  :END:
+  :MODIFIED:
+  [2016-09-18 Sun]
+  :END:
+  - [[http://blog.madewithlove.be/post/birdseye-view-on-api/][A bird's eye view on API development]].
+  - [[https://msdn.microsoft.com/en-us/library/dd203052.aspx][A Guide to Designing and Building RESTful Web Services with WCF 3.5 (Microsoft)]].
+  - [[http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api][Best Practices for Designing a Pragmatic RESTful API]].
+  - [[https://apisyouwonthate.com/][Build APIs You Won't Hate]].
+  - [[https://mollyrocket.com/casey/stream_0028.html][Designing and Evaluating Reusable Components]].
+  - [[http://harrymoreno.com/2016/03/31/API-design-link-roundup.html][Harry Moreno | API Design Link Roundup]].
+  - [[https://ozlabs.org/~rusty/index.cgi/tech/2008-03-30.html][How Do I Make This Hard to Misuse?]].
+  - [[http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/32713.pdf][How to Design a Good API and Why it Matters (Google)]].
+  - [[https://www.youtube.com/watch?v=aAb7hSCtvGw][How To Design A Good API and Why it Matters - YouTube]].
+  - [[http://sheredom.wordpress.com/2014/08/10/how-to-design-api-function-that-creates-something/][How to design API function creating objects]]: By Neil Henning.
+  - [[https://geemus.gitbooks.io/http-api-design/content/en/index.html][HTTP API Design Guide]].
+  - [[http://jsonapi.org/][JSON API — A specification for building APIs in JSON]].
+  - [[https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md][Microsoft REST API Guidelines]].
+  - [[http://wooptoo.com/blog/notes-on-restful-apis/][Notes on RESTful APIs (Updated)]].
+  - [[https://bocoup.com/weblog/documenting-your-api][REST API Documentation Best Practices]].
+  - [[http://www.restapitutorial.com/][REST API Tutorial]].
+  - [[https://www.youtube.com/watch?v=hdSrT4yjS1g][REST+JSON API Design - Best Practices for Developers - YouTube]].
+  - [[https://drive.google.com/a/xenodium.com/file/d/0B8qU9uFznmLsUEZ3TEFMbDZQcUE/view][RESTful Service Design - UC Berkeley]].
+  - [[http://sweng.the-davies.net/Home/rustys-api-design-manifesto][Rusty's API Design Manifesto]].
+  - [[http://www.aristeia.com/Papers/IEEE_Software_JulAug_2004_revised.htm][Scott Meyers: The Most Important Design Guideline?]].
+  - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
+  - [[http://www.slideshare.net/landlessness/teach-a-dog-to-rest][Teach a Dog to REST]].
+  - [[https://bradfults.com/the-best-api-documentation-b9e46400379a#.a7k8edhyc][The Best API Documentation]].
+  - [[http://www4.in.tum.de/~blanchet/api-design.pdf][The Little Manual of API Design (Jasmin Blanchette, Trolltech)]].
+  - [[https://drive.google.com/a/xenodium.com/file/d/0B8qU9uFznmLsdFBHS1I2c1ZLRkE/view][Web API Design - Crafting interfaces that developers love]].
+  - [[http://programmingisterrible.com/post/139222674273/write-code-that-is-easy-to-delete-not-easy-to][Write code that is easy to delete, not easy to extend]].
+* [2016-09-18 Sun] [[#handy-pdf-utilities][#]] Handy pdf utilities
+  :PROPERTIES:
+  :CUSTOM_ID: handy-pdf-utilities
+  :END:
+  Straight out of [[http://jvns.ca/blog/2016/08/29/how-i-made-a-zine][How (and why) I made a zine]], some handy utilities for generating pdfs...
+
+*** Convert pngs to pdfs
+#+BEGIN_SRC sh
+  # start with a bunch of PNG images of your zine pages
+  # convert them all to PDF
+  for i in *.png
+     do
+        # imagemagick is the best thing in the world
+        convert $i $i.pdf
+     done
+#+END_SRC
+
+*** Combine pdfs
+#+BEGIN_SRC sh
+  # pdftk is awesome for combining pdfs into a single pdf
+  pdftk *.pdf cat output zine.pdf
+#+END_SRC
+
+*** Reorder pdf pages
+#+BEGIN_SRC sh
+  # pdfmod is a GUI that lets you reorder pages
+  pdfmod zine.pdf
+#+END_SRC
+
+*** Add margins to pdf
+#+BEGIN_SRC sh
+  # pdfcrop lets you add margins to the pdf. this is good because otherwise the
+  # printer will cut off stuff at the edges
+  pdfcrop --margin '29 29 29 29' zine.pdf zine-intermediate.pdf
+#+END_SRC
+
+*** Turn pdf into booklet
+#+BEGIN_SRC sh
+  # pdfjam is this wizard tool that lets you take a normal ordered pdf and turn
+  # it into something you can print as a booklet on a regular printer.
+  # no more worrying about photocopying machines
+  pdfjam --booklet true --landscape --suffix book --letterpaper --signature 12 --booklet true --landscape zine-intermediate.pdf -o zine-booklet.pdf
+#+END_SRC
 * [2016-09-15 Thu] [[#fuzzy-search-emacs-compile-history][#]] Fuzzy search Emacs compile history
   :PROPERTIES:
   :CUSTOM_ID: fuzzy-search-emacs-compile-history
@@ -261,9 +337,10 @@ _inclusive_; that is, it includes the days specified by mark and point.
   :CUSTOM_ID: ios-github-bookmarks
   :END:
   :MODIFIED:
-  [2016-07-24 Sun]
+  [2016-09-18 Sun]
   :END:
   - [[https://github.com/iosphere/ISHHoverBar][A floating UIToolBar replacement as seen in the iOS 10 Maps app]].
+  - [[https://github.com/mattt/FormatterKit][FormatterKit: a collection of well-crafted NSFormatter subclasses for things like units of information, distance, and relative time intervals]].
   - [[https://github.com/Ekhoo/Translucid][Translucid: Simple and light weight UIView that animate text with an image]].
   - [[https://github.com/YouXianMing/Animations][YouXianMing's animation collection]].
   - [[https://github.com/zhhlmr/ZHPopupView][ZHPopupView]].
@@ -1591,15 +1668,19 @@ $ find . -exec file --mime-type '{}' \;
   :PROPERTIES:
   :CUSTOM_ID: maps-dev-bookmarks
   :END:
+  :MODIFIED:
+  [2016-09-18 Sun]
+  :END:
   - [[https://www.locationtech.org][Location Tech]].
+  - [[https://www.mapbox.com/][Mapbox]].
+  - [[https://mapzen.com][Mapzen]].
+  - [[https://medium.com/tag/mapping][Medium's mapping tag]].
   - [[https://openaddresses.io/][Open Addresses]].
+  - [[https://www.openstreetmap.org/user/mvexel/diary/39274][OpenStreetMap: Introducing OpenStreetView]].
   - [[http://wiki.openstreetmap.org/wiki/Planet.osm][OSM data in one file]].
   - [[http://wiki.openstreetmap.org/wiki/OSM_on_Paper][OSM on paper]].
   - [[http://download.osmand.net/rawindexes/][OSM raw indices]].
   - [[http://news.spatialdev.com/portable-open-street-map/][Portable OSM]].
-  - [[https://mapzen.com][Mapzen]].
-  - [[https://www.mapbox.com/][Mapbox]].
-  - [[https://medium.com/tag/mapping][Medium's mapping tag]].
 
 * [2015-12-17 Thu] [[#use-imagemagick-to-convert-image-to-grayscale][#]] Use ImageMagick to convert image to grayscale
   :PROPERTIES:
@@ -1870,16 +1951,19 @@ $ find . -exec file --mime-type '{}' \;
   :Custom_ID: unix-linux-tools-bookmarks
   :END:
   :MODIFIED:
-  [2016-07-24 Sun]
+  [2016-09-18 Sun]
   :END:
   - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
   - [[https://news.ycombinator.com/item?id=12137576][A practical proposal for migrating to safe long sessions on the web (Hacker News)]].
   - [[https://news.ycombinator.com/item?id=12140477][A practical security guide for web developers (Hacker News)]].
+  - [[https://news.ycombinator.com/item?id=12364077][A Unix Utility to Know About: lsof (2009) (Hacker News)]].
   - [[https://autotools.io/index.html][Autotools Mythbuster]].
   - [[http://www.unixwiz.net/techtips/chroot-practices.html][Best Practices for UNIX chroot]].
+  - [[https://github.com/jkbrzt/httpie][httpie: Command line HTTP client, a user-friendly curl alternative]].
   - [[http://stackoverflow.com/questions/3519939/make-curl-follow-redirects][Make cURL follow redirects]].
   - [[https://news.ycombinator.com/item?id=11909543][My First 10 Minutes on a Server (Hacker News)]].
   - [[https://blog.0xbadc0de.be/archives/300][SSH: Best practices]].
+  - [[https://www.cis.upenn.edu/~bcpierce/unison/][Unison File Synchronizer]].
   - [[http://unixmages.com/ufbm.pdf][Unix for the Beginning Mage]].
 
 * [2015-11-26 Thu] [[#couchbase-react-native-bookmarks][#]] Couchbase React Native bookmarks
@@ -4557,11 +4641,12 @@ $ python ycmd
   :CUSTOM_ID: org-mode-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-15 Tue]
+  [2016-09-18 Sun]
   :END:
   - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
   - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
   - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
+  - [[https://www.miskatonic.org/2016/08/25/image-display-size-in-org/][Image display size in Org]].
   - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
   - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
   - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
@@ -4640,7 +4725,7 @@ $ python ycmd
 *** Kensal Green
 ******* TODO [[http://www.tripadvisor.com/Restaurant_Review-g186338-d3531042-Reviews-Centro_Galego_de_Londres-London_England.html][Centro Galego de Londres]] (Gallician).
 *** Kentish town
-******* TODO [[www.timeout.com/london/restaurants/the-fields-beneath][The Fields Beneath]] (coffee, working).
+******* TODO [[http://www.timeout.com/london/restaurants/the-fields-beneath][The Fields Beneath]] (coffee, working).
 *** King's Cross
 ******* TODO [[http://www.germangymnasium.com/][German Gymnasium]].
 ******* TODO [[http://starofkings.co.uk/food-and-drink/][Yeah! Burger at Star of Kings]].
@@ -4928,6 +5013,7 @@ $ python ycmd
   - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform][Answer these questions about potential digital platform]].
   - [[https://appfigures.com/][AppFigures:]] App tracking platform.
   - [[https://github.com/AppScale/appscale][AppScale, The Open Source Implementation of Google App Engine]].
+  - [[https://news.ycombinator.com/item?id=12376596][Ask HN: How do you handle DDoS attacks? (Hacker News)]].
   - [[https://news.ycombinator.com/item?id=9561127][Ask HN: Simple alternative to Google Analytics]].
   - [[https://news.ycombinator.com/item?id=9667247][Ask HN: What tools do you use to build HTML emails?]]
   - [[https://www.owasp.org/index.php/Authentication_Cheat_Sheet][Authentication Cheet Sheet]].
@@ -4961,6 +5047,7 @@ $ python ycmd
   - [[https://github.com/facebook/graphql][GraphQL, a query language and execution engine tied to any backend service]].
   - [[https://news.ycombinator.com/item?id=9865338][HN: Things to Know When Making a Web Application in 2015]].
   - [[http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app][How I got to the app store top with a simple currency app]].
+  - [[https://crew.co/backstage/blog/the-psychology-of-pricing][How to price anything: The psychology of why we’ll pay what we pay]].
   - [[https://www.sendwithus.com/resources/guide][How to Send Email Like a Startup]].
   - [[http://startupclass.samaltman.com/][How to start a startup lectures]].
   - [[http://www.iconarchive.com/][Icon archive]].
@@ -4968,6 +5055,7 @@ $ python ycmd
   - [[https://layer.com][Layer, messaging platform]].
   - [[http://blog.sueraisty.com/lessons-learned-from-co-founding-a-tech-startup/][Lessons I learned from Co-Founding a startup]].
   - [[https://github.com/neiesc/ListOfMinimalistFrameworks][List of Minimal frameworks]].
+  - [[http://logodust.com/][Logodust: Free Logo Designs For Your Startup]].
   - [[http://www.looker.com][Looker (Data analysis)]].
   - [[https://lmjabreu.com/][Luis Abreu, iOS Design/UX Specialist]].
   - [[https://www.mapbox.com/][Mapbox. Maps for iOS, Android and Web]].
@@ -5443,7 +5531,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2016-07-24 Sun]
+  [2016-09-18 Sun]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
@@ -5478,6 +5566,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.objc.io/issue-5/getting-to-know-textkit.html][Getting to know TextKit]].
   - [[http://giorgiocalderolla.com/blog.html][Giorgio Calderolla]].
   - [[http://www.emdentec.com/blog/2014/2/25/hacking-uinavigationbar][Hacking UINavigationBar]].
+  - [[https://realm.io/news/altconf-conrad-kramer-writing-iOS-sdk/][How (Not) to Write an iOS SDK]].
   - [[http://goshdarnblocksyntax.com/][How do I declare a block in Objcetive-C?]]
   - [[http://easynativeextensions.com/how-to-launch-your-app-from-the-ios-8-share-menu/][How to launch your app from the iOS 8 Share Menu – updated for iOS 8.4]].
   - [[https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html][Icon Matrix]].
@@ -5562,7 +5651,7 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: india-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-09-18 Sun]
   :END:
   - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
   - [[https://en.wikipedia.org/wiki/Akshardham_%28Delhi%29][Akshardham (Delhi)]].
@@ -5609,6 +5698,7 @@ If FROM or TO is negative, it counts from the end.
   - Mumbai - Vada pav (find in stalls).
   - Mumbai - Victoria station: chai.
   - Mumbai- [[http://www.theguardian.com/travel/2012/mar/01/10-best-street-food-mumbai-india][10 of the best food in Mumbai]].
+  - [[http://hippie-inheels.com/india-travel-bucket-list/][My India travel Bucket List]].
   - Nagpur.
   - [[https://duckduckgo.com/?q=Orchha&t=ffab&ia=images][Orchha]].
   - Panchgani.
@@ -5775,6 +5865,7 @@ If FROM or TO is negative, it counts from the end.
   [2016-06-22 Wed]
   :END:
 ******* TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
+******* TODO [[https://en.wikipedia.org/wiki/Kubo_and_the_Two_Strings][Kubo and the two strings]].
 ******* TODO Spotlight.
 ******* TODO Creed.
 ******* TODO Innocence of memories.
@@ -5827,6 +5918,7 @@ If FROM or TO is negative, it counts from the end.
   [2016-07-24 Sun]
   :END:
 ******* TODO [[http://www.harukimurakami.com/library/][Haruki Murakami]].
+******* TODO [[https://news.ycombinator.com/item?id=12365693][Show HN: Top books mentioned in comments on Hacker News]].
 ******* TODO [[https://en.wikipedia.org/wiki/The_Prime_of_Miss_Jean_Brodie_%2528novel%2529][The Prime of Miss Jean Brodie (novel)]].
 ******* TODO [[https://www.goodreads.com/book/show/53849.Plan_B][Plan B]].
 ******* TODO [[http://www.amazon.com/Deskbound-Standing-Up-Sitting-World/dp/1628600586][Deskbound]].
@@ -6395,8 +6487,9 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: html5-bookmarks
   :END:
   :MODIFIED:
-  [2015-12-06 Sun]
+  [2016-09-18 Sun]
   :END:
+  - [[https://hacks.mozilla.org/2016/08/a-few-html-tips/][A few HTML tips (Mozilla)]].
   - [[http://mo.github.io/2015/10/19/chrome-devtools.html][Chrome Devtools Tips & Tricks]].
   - [[https://news.ycombinator.com/item?id=10416062][Chrome Devtools Tips and Tricks (Hacker News)]].
   - [[http://blog.chromium.org/2014/06/web-fundamentals-and-web-starter-kit.html][Chromium's web fundamentals and Web Starter Kit]].
@@ -6449,12 +6542,11 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2016-05-02 Mon]
+  [2016-09-18 Sun]
   :END:
   - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
   - [[https://quickleft.com/blog/8-tips-get-started-existing-codebase/][8 Tips To Get Started In An Existing Codebase]].
   - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
-  - [[http://blog.madewithlove.be/post/birdseye-view-on-api/][A bird's eye view on API development]].
   - [[http://www.cs.bsu.edu/homepages/pvg/misc/uml/][All the UML you need to know]].
   - [[https://news.ycombinator.com/item?id=11005003][Ask HN: What's the most elegant piece of code you've seen? (Hacker News)]].
   - [[https://www.expeditedssl.com/aws-in-plain-english][AWS in plain English]].
@@ -6471,7 +6563,6 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[https://google-styleguide.googlecode.com/svn/trunk/shell.xml][Google shell style guide]].
   - [[http://hackershelf.com/browse/?popular=1][Hacker shelf: Free software dev books]].
   - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
-  - [[http://sheredom.wordpress.com/2014/08/10/how-to-design-api-function-that-creates-something/][How to design API function creating objects]]: By Neil Henning.
   - [[http://blog.triplebyte.com/how-to-pass-a-programming-interview][How to pass a programming interview]].
   - [[https://paragonie.com/blog/2015/09/how-to-safely-implement-cryptography-in-any-application][How to Safely Implement Cryptography Features in Any Application]].
   - [[https://github.com/lfit/itpol/blob/master/linux-workstation-security.md][Linux workstation security checklist]].
@@ -6483,7 +6574,6 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/][Structure and Interpretation of Computer Programs]] (videos).
   - [[http://www.norvig.com/21-days.html][Teach Yourself Programming in Ten Years]].
   - [[https://github.com/jlevy/the-art-of-command-line][The art of command line]].
-  - [[http://www4.in.tum.de/~blanchet/api-design.pdf][The Little Manual of API Design (Jasmin Blanchette, Trolltech)]].
   - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][The passionate programmer]].
   - [[https://github.com/jbranchaud/til][TIL: today I learned]].
   - [[http://robots.thoughtbot.com/a-tmux-crash-course][Tmux crash course]]: By Josh Clayton.
