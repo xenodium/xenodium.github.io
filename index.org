@@ -1,6 +1,35 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2016-12-01 Thu] [[#go-snippets][#]] Go snippets
+  :PROPERTIES:
+  :CUSTOM_ID: go-snippets
+  :END:
+*** Command-line flags
+#+BEGIN_SRC go
+import (
+	"flag"
+)
+
+type args struct {
+	flag1  string
+	flag2  string
+}
+
+func parseArgs() args {
+	args := args{}
+	flag.StringVar(&args.flag1, "flag1", "", "some flag 1")
+	flag.StringVar(&args.flag2, "flag2", "", "some flag 2")
+
+	flag.Parse()
+
+	if flag.NFlag() != 2 {
+		flag.Usage()
+		os.Exit(1)e
+	}
+	return args
+}
+#+END_SRC
 * [2016-11-27 Sun] [[#sydney-travel-bookmarks][#]] Sydney travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: sydney-travel-bookmarks
@@ -528,9 +557,9 @@ _inclusive_; that is, it includes the days specified by mark and point.
   - Try out Straffe Hendrik beer at brewery terrace.
   - Walk behind Gruuthuse over the little Saint Bonifaas bridge.
 
-* [2016-03-02 Wed] [[#emacs-lisp-recipes][#]] Emacs lisp recipes
+* [2016-03-02 Wed] [[#emacs-lisp-snippets][#]] Emacs lisp snippets
   :PROPERTIES:
-  :CUSTOM_ID: emacs-lisp-recipes
+  :CUSTOM_ID: emacs-lisp-snippets
   :END:
 *** Find file upwards, up parents, up hierarchy
 #+BEGIN_SRC emacs-lisp
