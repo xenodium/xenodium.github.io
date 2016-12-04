@@ -5,7 +5,18 @@
   :PROPERTIES:
   :CUSTOM_ID: singapore-notes
   :END:
+  - Hotel Mono, 18 Mosque street #01-04.
+  - Buddha tooth relic museum.
   - [[http://www.telegraph.co.uk/travel/picturegalleries/8308524/Singapores-best-hawker-centres.html][Best Hawker centers]].
+  - Kong Meng San Phor Kark See Monastery.
+  - [[http://gothere.sg][Go there (figure out fastest MRT route)]].
+  - [[http://2bearbear.com/what-to-eat-at-abc-market-hawker-centre-abc-brickworks-food-centre/][What to eat at ABC Market (Hawker Centre) aka ABC Brickworks Food Centre?]].
+  - Curry puffs (see [[http://www.hungrygowhere.com/gallery/taste-test-crisp-curry-puffs-*gid-39443101/][Taste test: Crisp curry puffs]]).
+  - [[http://thepeakmagazine.com.sg/2016/07/its-official-here-are-singapores-17-michelin-rated-hawker-stalls-in-2016/][Singapore’s 17 Michelin-rated Hawker Stalls in 2016]].
+  - Temples
+    - [[http://burmesebuddhisttemple.org.sg/index.htm][Sasanaramsi Burmese temple (14, Tai Gin Road, Singapore 327873)]].
+    - [[https://en.wikipedia.org/wiki/Thian_Hock_Keng][Thian Hock Keng temple]].
+    - [[http://sultanmosque.sg][Sultan Mosque]].
   - Hawkers
     - Mr and Mrs Mohgan's Super Crispy Roti Prata ([[http://www.hungrygowhere.com/gallery/hgw-s-best-hawker-food-for-2015-*gid-75813101/16560200][source]]) on Crane Road. Dhal/fish/mutton curry side.
     - Roast Paradise (maybe)
@@ -37,6 +48,8 @@
     - Chong Yu Wanton Mee (Tiong Bahru Market And Food Centre #02-30, 30 Seng Poh Road, [[http://www.timeout.com/singapore/restaurants-and-cafes/chong-yu-wanton-mee#tab_panel_2][source]]).
     - old-fashioned treats at Tiong Bahru Galicier (55 Tiong Bahru Rd).
   - Chinatown
+    - Pek Sin Choon Tea: Oldest team merchants.
+    - Ang Mo Kio: Sri Mariamman Hindu temple.
     - Strangelets: quirky stuff from around the world.
     - 40 Hands: Allegedly one of most popular coffee joints.
     - BooksActually: Coolest book shop.
@@ -98,17 +111,27 @@ import (
 type args struct {
 	flag1  string
 	flag2  string
+        arg    string
 }
 
 func parseArgs() args {
 	args := args{}
-	flag.StringVar(&args.flag1, "flag1", "", "some flag 1")
-	flag.StringVar(&args.flag2, "flag2", "", "some flag 2")
+
+	flag.StringVar(&args.flag1, "flag1", "", "some flag 1 with sample `value`")
+	flag.StringVar(&args.flag2, "flag2", "", "some flag 2 with sample `value`")
+
+	flag.CommandLine.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "\n  myarg\n\n")
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
 
-	if flag.NFlag() != 2 {
-		flag.Usage()
+	args.arg = flag.Arg(0)
+
+	if args.flag1 == "" || args.flag2 == "" || args.arg == "" {
+		flag.CommandLine.Usage()
 		os.Exit(1)
 	}
 	return args
