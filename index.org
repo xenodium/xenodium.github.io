@@ -1,6 +1,36 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-04-23 Sun] [[#gnupg-and-macos][#]] GnuPG and macOS
+  :PROPERTIES:
+  :CUSTOM_ID: gnupg-and-macos
+  :END:
+Had problems installing and using GnuPG on macOS, primarily for Emacs use:
+
+#+BEGIN_EXAMPLE
+gpg: problem with the agent: Inappropriate ioctl for device
+gpg: error creating passphrase: Operation cancelled
+gpg: symmetric encryption of '[stdin]' failed: Operation cancelled
+#+END_EXAMPLE
+
+Basic installation required:
+
+#+BEGIN_SRC sh
+brew install gnupg
+#+END_SRC
+
+But worked around the error above by using pinentry-mac (UI), instead of Emacs prompts.
+
+#+BEGIN_SRC sh
+brew install pinentry-mac
+#+END_SRC
+
+Edited ~/.gnupg/gpg-agent.conf with:
+
+#+BEGIN_EXAMPLE
+pinentry-program path/to/homebrew/bin/pinentry-mac
+#+END_EXAMPLE
+
 * [2017-03-13 Mon] [[#installing-gnuplot-on-macos][#]] Installing gnuplot on macOS
   :PROPERTIES:
   :CUSTOM_ID: installing-gnuplot-on-macos
@@ -2313,7 +2343,7 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
   :CUSTOM_ID: mac-os-bookmarks
   :END:
   :MODIFIED:
-  [2016-12-10 Sat]
+  [2017-04-22 Sat]
   :END:
   - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
   - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
@@ -2325,6 +2355,7 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
   - [[https://objective-see.com/products/kextviewr.html][KextViewr: View all modules on that are loaded in the OS kernel]].
   - [[https://www.obdev.at/products/littlesnitch/index.html][Little Snitch]].
   - [[https://github.com/kasper/phoenix][Phoenix: A lightweight macOS window and app manager scriptable with JavaScript]].
+  - [[https://apple.stackexchange.com/questions/82/which-os-x-applications-do-you-find-indispensable/][Which OS X Applications do you find indispensable? (Stack Exchange)]].
 * [2015-11-21 Sat] [[#easy_install-pip-conda][#]] easy_install->pip->conda
   :PROPERTIES:
   :CUSTOM_ID: easy_install-pip-conda
