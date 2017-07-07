@@ -10,6 +10,16 @@
 [[file:images/search-and-insert-one-liners-with-helm-ag/helm-ag-insert.gif]]
 
 #+BEGIN_SRC emacs-lisp
+(defun ar/helm-ag (arg)
+  "Helm-ag search remembering last location.  With ARG, forget the last location."
+  (interactive "P")
+  (defvar ar/helm-ag--default-locaction nil)
+  (setq ar/helm-ag--default-locaction
+                 (read-directory-name "search in: " (if arg
+                                                        default-directory
+                                                      ar/helm-ag--default-locaction) nil t))
+  (helm-do-ag ar/helm-ag--default-locaction))
+
 (defun ar/helm-ag-insert (arg)
   ;; Helm-ag and insert match.
   (interactive "P")
