@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-07-07 Fri] [[#search-and-insert-one-liners-with-helm-ag][#]] Search and insert one-liners with helm-ag
+  :PROPERTIES:
+  :CUSTOM_ID: search-and-insert-one-liners-with-helm-ag
+  :END:
+  Emacs [[https://github.com/emacs-helm/helm][helm]] is awesome. [[https://github.com/syohex/emacs-helm-ag][helm-ag]] is double awesome. Searching for one-liners in your codebase, narrowing down with helm, and easily inserting is triple awesome.
+
+[[file:images/search-and-insert-one-liners-with-helm-ag/helm-ag-insert.gif]]
+
+#+BEGIN_SRC emacs-lisp
+(defun ar/helm-ag-insert (arg)
+  ;; Helm-ag and insert match.
+  (interactive "P")
+  (let* ((actions (helm-make-actions
+                   "Insert"
+                   (lambda (candidate)
+                     ;; Drop file:line:column. For example:
+                     ;; arc_hostlink.c:13:2:#include <linux/fs.h>
+                     ;; => #include <linux/fs.h>
+                     (insert (replace-regexp-in-string "^[^ ]*:" "" candidate)))))
+         (helm-source-do-ag (helm-build-async-source "The Silver Searcher"
+                              :init 'helm-ag--do-ag-set-command
+                              :candidates-process 'helm-ag--do-ag-candidate-process
+                              :persistent-action  'helm-ag--persistent-action
+                              :action actions
+                              :nohighlight t
+                              :requires-pattern 3
+                              :candidate-number-limit 9999
+                              :keymap helm-do-ag-map
+                              :follow (and helm-follow-mode-persistent 1))))
+    (call-interactively #'ar/helm-ag)))
+#+END_SRC
 * [2017-05-29 Mon] [[#sleep-bookmarks][#]] Sleep bookmarks
   :PROPERTIES:
   :CUSTOM_ID: sleep-bookmarks
