@@ -1,6 +1,45 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-08-09 Wed] [[#creating-icns-icons][#]] Creating icns icons
+  :PROPERTIES:
+  :CUSTOM_ID: creating-icns-icons
+  :END:
+  Stack overflow yields [[https://stackoverflow.com/questions/12437433/where-can-i-find-icon-composer-on-mac][Where can i find Icon Composer on Mac?]] when I did a quick search to convert a png to icns. For future reference:
+#+BEGIN_SRC sh
+  #!/bin/bash -e
+
+  set -e
+  set -o pipefail
+
+  if [ "$#" -ne 1 ]; then
+   echo "\nusage: to_icns.sh path/to/image.png\n"
+   exit 1
+  fi
+
+  readonly IMAGE_FPATH=$1
+  readonly BASENAME=$(basename ${IMAGE_FPATH%.*})
+
+  mkdir ${BASENAME}.iconset
+
+  sips -z 16 16   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_16x16.png"
+  sips -z 32 32   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_16x16@2x.png"
+  sips -z 32 32   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_32x32.png"
+  sips -z 64 64   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_32x32@2x.png"
+  sips -z 128 128 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_128x128.png"
+  sips -z 256 256 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_128x128@2x.png"
+  sips -z 256 256 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_256x256.png"
+  sips -z 512 512 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_256x256@2x.png"
+  sips -z 512 512 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_512x512.png"
+
+  cp $IMAGE_FPATH "${BASENAME}.iconset/icon_512x512@2x.png"
+
+  iconutil -c icns ${BASENAME}.iconset
+
+  rm -R ${BASENAME}.iconset
+
+  echo Wrote ${BASENAME}.icns
+#+END_SRC
 * [2017-08-06 Sun] [[#forcing-aptx-on-macos-bluetooth-audio][#]] Forcing aptX on MacOS bluetooth audio
   :PROPERTIES:
   :CUSTOM_ID: forcing-aptx-on-macos-bluetooth-audio
