@@ -47,10 +47,10 @@
                      (string-match-p (regexp-quote
                                       search-term)
                                      path))
-                   (append
+                   (-snoc
                     (projectile-current-project-dirs)
                     ;; Throw project root in there also.
-                    (list (projectile-project-root))))))))
+                    (projectile-project-root)))))))
 
   (defun company-projectile-cd--expand-inserted-path (path)
     "Replace relative PATH insertion with its absolute equivalent if needed."
@@ -63,7 +63,6 @@
     (projectile-reset-cached-project-root)
     (when (projectile-project-p)
       (projectile-project-root)))
-
 #+END_SRC
 
 * [2017-08-09 Wed] [[#creating-icns-icons][#]] Creating icns icons
