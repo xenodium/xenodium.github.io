@@ -5,9 +5,67 @@
   :PROPERTIES:
   :CUSTOM_ID: projectile-shell-dir-company-completion
   :END:
-  Projectile and company are just amazing Emacs packages. Both an integral part of my dev workflow. Projectile gives me random access to files, while company completes well... anything. I also run (e)shell-mode for most of my shell needs.
+  [[https://github.com/bbatsov/projectile][Projectile]] and [[https://company-mode.github.io][company]] are just amazing Emacs packages. Projectile gives random access to files, while company completes well... anything. For shells, Emacs has a handful of options.
 
-  Standing on the shoulders of package giants and some elisp, we can bring random access to project directories from the shell.
+  Standing on the shoulders of package giants ([[https://github.com/magnars/dash.el][dash]] and [[https://github.com/rejeep/f.el][f]] included) and some elisp, we can bring random access to project directories from the shell.
+
+[[file:images/projectile-shell-dir-company-completion/company-projectile-cd.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+  (require 'company)
+  (require 'dash)
+  (require 'f)
+  (require 'projectile)
+
+  (defvar-local company-projectile-cd-prefix "cd ")
+
+  (defun company-projectile-cd (command &optional arg &rest ignored)
+    "Company shell completion for any projectile path."
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'company-projectile-cd))
+      (prefix
+       (company-grab-symbol-cons company-projectile-cd-prefix
+                                 (length company-projectile-cd-prefix)))
+      (candidates
+       (company-projectile-cd--candidates
+        (company-grab-symbol-cons company-projectile-cd-prefix
+                                  (length company-projectile-cd-prefix))))
+      (post-completion
+       (company-projectile-cd--expand-inserted-path arg))))
+
+  (defun company-projectile-cd--candidates (input)
+    "Return candidates for given INPUT."
+    (company-projectile-cd--reset-root)
+    (when (and (projectile-project-p) (consp input))
+      (let ((search-term (substring-no-properties
+                          (car input) 0 (length (car input))))
+            (prefix-found (cdr input)))
+        (when prefix-found
+          (-filter (lambda (path)
+                     (string-match-p (regexp-quote
+                                      search-term)
+                                     path))
+                   (append
+                    (projectile-current-project-dirs)
+                    ;; Throw project root in there also.
+                    (list (projectile-project-root))))))))
+
+  (defun company-projectile-cd--expand-inserted-path (path)
+    "Replace relative PATH insertion with its absolute equivalent if needed."
+    (unless (f-exists-p path)
+      (delete-region (point) (- (point) (length path)))
+      (insert (concat (projectile-project-root) path))))
+
+  (defun company-projectile-cd--reset-root ()
+    "Reset project root. Useful when cd'ing in and out of projects."
+    (projectile-reset-cached-project-root)
+    (when (projectile-project-p)
+      (projectile-project-root)))
+
+#+END_SRC
+
 * [2017-08-09 Wed] [[#creating-icns-icons][#]] Creating icns icons
   :PROPERTIES:
   :CUSTOM_ID: creating-icns-icons
@@ -4626,7 +4684,7 @@ $ pod try POD_NAME
   - [[https://github.com/Droogans/.emacs.d/blob/mac/init.el][Andrew's .emacs]].
   - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
   - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
-  - [[%0Ahttps://github.com/eastwood/config/blob/master/emacs.d/org-init.org][Clinton Ryan's init (JS config)]].
+  - [[https://github.com/eastwood/config/blob/master/emacs.d/org-init.org][Clinton Ryan's init (JS config)]].
   - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
   - [[https://github.com/grettke/home/blob/master/ALEC.txt][Grant Rettke's literate config]].
   - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
