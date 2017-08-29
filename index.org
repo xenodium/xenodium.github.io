@@ -1,6 +1,151 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-08-19 Sat] [[#projectile-shell-dir-company-completion][#]] Projectile shell dir company completion
+  :PROPERTIES:
+  :CUSTOM_ID: projectile-shell-dir-company-completion
+  :END:
+  [[https://github.com/bbatsov/projectile][Projectile]] and [[https://company-mode.github.io][company]] are just amazing Emacs packages. Projectile gives random access to files, while company completes well... anything. For shells, Emacs has a handful of options.
+
+  Standing on the shoulders of package giants ([[https://github.com/magnars/dash.el][dash]] and [[https://github.com/rejeep/f.el][f]] included) and some elisp, we can bring random access to project directories from the shell.
+
+[[file:images/projectile-shell-dir-company-completion/company-projectile-cd.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+  (require 'company)
+  (require 'dash)
+  (require 'f)
+  (require 'projectile)
+
+  (defvar-local company-projectile-cd-prefix "cd ")
+
+  (defun company-projectile-cd (command &optional arg &rest ignored)
+    "Company shell completion for any projectile path."
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'company-projectile-cd))
+      (prefix
+       (company-grab-symbol-cons company-projectile-cd-prefix
+                                 (length company-projectile-cd-prefix)))
+      (candidates
+       (company-projectile-cd--candidates
+        (company-grab-symbol-cons company-projectile-cd-prefix
+                                  (length company-projectile-cd-prefix))))
+      (post-completion
+       (company-projectile-cd--expand-inserted-path arg))))
+
+  (defun company-projectile-cd--candidates (input)
+    "Return candidates for given INPUT."
+    (company-projectile-cd--reset-root)
+    (when (consp input)
+      (let ((search-term (substring-no-properties
+                          (car input) 0 (length (car input))))
+            (prefix-found (cdr input)))
+        (when prefix-found
+          (if (projectile-project-p)
+              (company-projectile-cd--projectile search-term)
+            (company-projectile-cd--find-fallback search-term))))))
+
+  (defun company-projectile-cd--projectile (search-term)
+    (-filter (lambda (path)
+               (string-match-p (regexp-quote
+                                search-term)
+                               path))
+             (-snoc
+              (projectile-current-project-dirs)
+              ;; Throw project root in there also.
+              (projectile-project-root))))
+
+  (defun company-projectile-cd--find-fallback (search-term)
+    (ignore-errors
+      (-map (lambda (path)
+              (string-remove-prefix "./" path))
+            (apply #'process-lines
+                   (list "find" "." "-type" "d"  "-maxdepth" "2" "-iname"
+                         (format "\*%s\*" search-term))))))
+
+  (defun company-projectile-cd--expand-inserted-path (path)
+    "Replace relative PATH insertion with its absolute equivalent if needed."
+    (unless (f-exists-p path)
+      (delete-region (point) (- (point) (length path)))
+      (insert (concat (projectile-project-root) path))))
+
+  (defun company-projectile-cd--reset-root ()
+    "Reset project root. Useful when cd'ing in and out of projects."
+    (projectile-reset-cached-project-root)
+    (when (projectile-project-p)
+      (projectile-project-root)))
+
+#+END_SRC
+
+* [2017-08-09 Wed] [[#creating-icns-icons][#]] Creating icns icons
+  :PROPERTIES:
+  :CUSTOM_ID: creating-icns-icons
+  :END:
+  Stack overflow yields [[https://stackoverflow.com/questions/12437433/where-can-i-find-icon-composer-on-mac][Where can i find Icon Composer on Mac?]] when I did a quick search to convert a png to icns. For future reference:
+#+BEGIN_SRC sh
+  #!/bin/bash -e
+
+  set -e
+  set -o pipefail
+
+  if [ "$#" -ne 1 ]; then
+   echo "\nusage: to_icns.sh path/to/image.png\n"
+   exit 1
+  fi
+
+  readonly IMAGE_FPATH=$1
+  readonly BASENAME=$(basename ${IMAGE_FPATH%.*})
+
+  mkdir ${BASENAME}.iconset
+
+  sips -z 16 16   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_16x16.png"
+  sips -z 32 32   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_16x16@2x.png"
+  sips -z 32 32   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_32x32.png"
+  sips -z 64 64   $IMAGE_FPATH --out "${BASENAME}.iconset/icon_32x32@2x.png"
+  sips -z 128 128 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_128x128.png"
+  sips -z 256 256 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_128x128@2x.png"
+  sips -z 256 256 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_256x256.png"
+  sips -z 512 512 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_256x256@2x.png"
+  sips -z 512 512 $IMAGE_FPATH --out "${BASENAME}.iconset/icon_512x512.png"
+
+  cp $IMAGE_FPATH "${BASENAME}.iconset/icon_512x512@2x.png"
+
+  iconutil -c icns ${BASENAME}.iconset
+
+  rm -R ${BASENAME}.iconset
+
+  echo Wrote ${BASENAME}.icns
+#+END_SRC
+* [2017-08-06 Sun] [[#forcing-aptx-on-macos-bluetooth-audio][#]] Forcing aptX on MacOS bluetooth audio
+  :PROPERTIES:
+  :CUSTOM_ID: forcing-aptx-on-macos-bluetooth-audio
+  :END:
+  Bought a pair of QuietComfort 35. Audio quality on MacOS was lagging compared to iOS. Googling led to different posts suggesting the use of Bluetooth Explorer to force aptX usage. Did the trick for me.
+
+  *Bluetooth Explorer* can be downloaded from https://developer.apple.com/download/more. Search for Hardware IO tools:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/forcing-aptx-on-macos-bluetooth-audio/download-bluetooth-explorer.png]]
+
+  Open *Hardware_IO_Tools_for_Xcode_7.3.dmg* and launch *Bluetooth Explorer*:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/forcing-aptx-on-macos-bluetooth-audio/tools-image.png]]
+
+  Select *Audio Options*:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/forcing-aptx-on-macos-bluetooth-audio/audio-options.png]]
+
+  Check *Force use of aptX*:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/forcing-aptx-on-macos-bluetooth-audio/force-aptx.png]]
+
+  Don't forget to disconnect and reconnect your Bluetooth device.
+
 * [2017-07-10 Mon] [[#hungary-travel-bookmarks][#]] Hungary travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: hungary-travel-bookmarks
@@ -836,7 +981,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 #+BEGIN_SRC emacs-lisp
   (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 #+END_SRC
-*** Execute command/process and return list
+*** Execute command/process and return list (similar to shell-command-to-string)
 #+BEGIN_SRC emacs-lisp
   (process-lines PROGRAM &rest ARGS)
 #+END_SRC
@@ -1732,12 +1877,12 @@ tern-command => (tern)
 #+RESULTS:
 : ; cli configs
 : user-agent = "npm/2.14.2 node/v4.0.0 darwin x64"
-: 
+:
 : ; node bin location = /Users/user/.nvm/versions/node/v4.0.0/bin/node
 : ; cwd = /Users/user/stuff/active/blog
 : ; HOME = /Users/user
 : ; 'npm config ls -l' to show all defaults.
-: 
+:
 
 *** Get config value
 #+BEGIN_SRC sh :results output :exports both
@@ -1787,7 +1932,7 @@ tern-command => (tern)
 #+BEGIN_SRC sh
   npm uninstall <package-name>
 #+END_SRC
-    
+
 *** Install package at version
 #+BEGIN_SRC sh
   npm install <package-name>@1.7.0
@@ -4557,6 +4702,7 @@ $ pod try POD_NAME
   - [[https://github.com/Droogans/.emacs.d/blob/mac/init.el][Andrew's .emacs]].
   - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
   - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
+  - [[https://github.com/eastwood/config/blob/master/emacs.d/org-init.org][Clinton Ryan's init (JS config)]].
   - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
   - [[https://github.com/grettke/home/blob/master/ALEC.txt][Grant Rettke's literate config]].
   - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
@@ -7089,6 +7235,7 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[https://gist.github.com/andymatuschak/d5f0a8730ad601bcccae97e8398e25b2][A composable pattern for pure state machines with effects]].
   - [[https://www.coursera.org/learn/algorithms-part1#syllabus][Algorithms, Part I - Princeton University (Coursera)]].
   - [[http://www.cs.bsu.edu/homepages/pvg/misc/uml/][All the UML you need to know]].
+  - [[https://nicoleorchard.com/blog/compilers][An intro to compilers]].
   - [[https://news.ycombinator.com/item?id=12702651][Ask HN: What is your favorite YouTube channel for developers? (Hacker News)]].
   - [[https://news.ycombinator.com/item?id=11005003][Ask HN: What's the most elegant piece of code you've seen? (Hacker News)]].
   - [[https://github.com/sindresorhus/awesome/blob/master/readme.md][Awesome lists of everything (Github)]].
