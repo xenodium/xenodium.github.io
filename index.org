@@ -1,6 +1,43 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-09-10 Sun] [[#basic-imenu-in-helpful-mode][#]] Basic imenu in helpful-mode
+  :PROPERTIES:
+  :CUSTOM_ID: basic-imenu-in-helpful-mode
+  :END:
+  I'm finding Wilfred Hughes's [[https://github.com/Wilfred/helpful][helpful-mode]], well... rather helpful. However, I'm missing imenu support. Here's a hacky way to get basic support.
+
+[[file:images/basic-imenu-for-helpful-mode/helpful-imenu.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun helpful--create-imenu-index ()
+    "Create an `imenu' index for helpful."
+    (beginning-of-buffer)
+    (let ((imenu-items '()))
+      (while (progn
+               (beginning-of-line)
+               ;; Not great, but determine if looking at heading:
+               ;; 1. if it has bold face.
+               ;; 2. if it is capitalized.
+               (when (and (eq 'bold (face-at-point))
+                          (string-match-p
+                           "[A-Z]"
+                           (buffer-substring (line-beginning-position)
+                                             (line-end-position))))
+                 (add-to-list 'imenu-items
+                              (cons (buffer-substring (line-beginning-position)
+                                                      (line-end-position))
+                                    (line-beginning-position))))
+               (= 0 (forward-line 1))))
+      imenu-items))
+
+  (defun helpful-mode-hook-function ()
+    "A hook function for `helpful-mode'."
+    (setq imenu-create-index-function #'helpful--create-imenu-index))
+
+  (add-hook 'helpful-mode-hook
+            #'helpful-mode-hook-function)
+#+END_SRC
 * [2017-08-19 Sat] [[#projectile-shell-dir-company-completion][#]] Projectile shell dir company completion
   :PROPERTIES:
   :CUSTOM_ID: projectile-shell-dir-company-completion
