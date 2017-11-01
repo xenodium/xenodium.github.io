@@ -1,6 +1,41 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-11-01 Wed] [[#eshell-pcomplete-company-completion][#]] Eshell pcomplete company completion
+  :PROPERTIES:
+  :CUSTOM_ID: eshell-pcomplete-company-completion
+  :END:
+  Howard Abrams's [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Introduction to eshell video]] prompted me to poke at eshell some more. This time, I got eshell context aware completion by glueing the excellent [[https://company-mode.github.io][company]] and [[https://masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][pcomplete]] packages.
+
+[[file:images/eshell-pcomplete-company-completion/company-pcomplete.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+  (require 'company)
+  (require 'pcomplete)
+
+  (defun company-pcomplete--candidates ()
+    "Get candidates company completion backed by `pcomplete'."
+    (all-completions "" (pcomplete-completions)))
+
+  (defun company-pcomplete (command &optional arg &rest ignored)
+    "Complete using pcomplete. See `company''s COMMAND ARG and IGNORED for details."
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'company-pcomplete))
+      (prefix (company-grab-symbol))
+      (candidates
+       (company-pcomplete--candidates))))
+
+  (provide 'company-pcomplete)
+#+END_SRC
+
+  Don't forget to add /company-pcomplete/ to /company-backends,/ and if you want an explicit binding, use something like:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "<backtab>" #'company-complete eshell-mode-map)
+#+END_SRC
+
 * [2017-09-10 Sun] [[#basic-imenu-in-helpful-mode][#]] Basic imenu in helpful-mode
   :PROPERTIES:
   :CUSTOM_ID: basic-imenu-in-helpful-mode
