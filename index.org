@@ -1,6 +1,66 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+
+* [2017-11-16 Thu] [[#org-babel-objective-c-support][#]] org-babel Objective-C support
+  :PROPERTIES:
+  :CUSTOM_ID: org-babel-objective-c-support
+  :END:
+  Wanted to quickly execute an Objective-C snippet. org-babel didn't support it out of the box, but adding it was straightforward (looked at ob-C.el and ob-java.el):
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ob)
+
+  (defcustom org-babel-objc-compile-command "clang -x objective-c -framework Foundation"
+    "For example: \"clang -x objective-c -framework Foundation\"."
+    :group 'org-babel
+    :version "24.3"
+    :type 'string)
+
+  (defun org-babel-execute:objc (body params)
+    "Compile Objective-C BODY with org PARAMS and execute binary."
+    (let* ((src-file "org-babel-objc-block.m")
+           (cmpflag (or (cdr (assq :cmpflag params)) ""))
+           (full-body (org-babel-expand-body:generic body params))
+           (bin-file
+            (org-babel-process-file-name
+             (org-babel-temp-file "org-babel-objc-block" org-babel-exeext))))
+      (with-temp-file src-file (insert full-body))
+      (org-babel-eval
+       (concat org-babel-objc-compile-command " " cmpflag " " src-file " " "-o" " " bin-file) "")
+
+      ;; Using 2>&1 since org babel does not include stderr in output from NSLog.
+      (let ((results (org-babel-eval (concat (org-babel-process-file-name bin-file) " 2>&1")  "")))
+        (org-babel-reassemble-table
+         (org-babel-result-cond (cdr (assq :result-params params))
+           (org-babel-read results)
+           (let ((tmp-file (org-babel-temp-file "c-")))
+             (with-temp-file tmp-file (insert results))
+             (org-babel-import-elisp-from-file tmp-file)))
+         (org-babel-pick-name
+          (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+         (org-babel-pick-name
+          (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))
+
+  (provide 'ob-objc)
+#+END_SRC
+
+Add /objc/ to /org-babel-load-languages/, and you can subsequently compile and run Objective-C blocks like:
+
+#+BEGIN_SRC objc :results verbatim
+
+#import <Foundation/Foundation.h>
+
+int main() {
+  NSLog(@"Hello World");
+  return 0;
+}
+
+#+END_SRC
+
+#+RESULTS:
+: 2017-11-16 01:47:28.923 org-babel-objc-block-Aai8ux[15319:346480] Hello World
+
 * [2017-11-12 Sun] [[#ios-dev-command-line-goodies][#]] iOS dev command-line goodies
   :PROPERTIES:
   :CUSTOM_ID: ios-dev-command-line-goodies
