@@ -1,6 +1,197 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+
+* [2017-11-16 Thu] [[#org-babel-objective-c-support][#]] org-babel Objective-C support
+  :PROPERTIES:
+  :CUSTOM_ID: org-babel-objective-c-support
+  :END:
+  Wanted to quickly execute an Objective-C snippet. org-babel didn't support it out of the box, but adding it was straightforward (looked at ob-C.el and ob-java.el):
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ob)
+
+  (defcustom org-babel-objc-compile-command "clang -x objective-c -framework Foundation"
+    "For example: \"clang -x objective-c -framework Foundation\"."
+    :group 'org-babel
+    :version "24.3"
+    :type 'string)
+
+  (defun org-babel-execute:objc (body params)
+    "Compile Objective-C BODY with org PARAMS and execute binary."
+    (let* ((src-file "org-babel-objc-block.m")
+           (cmpflag (or (cdr (assq :cmpflag params)) ""))
+           (full-body (org-babel-expand-body:generic body params))
+           (bin-file
+            (org-babel-process-file-name
+             (org-babel-temp-file "org-babel-objc-block" org-babel-exeext))))
+      (with-temp-file src-file (insert full-body))
+      (org-babel-eval
+       (concat org-babel-objc-compile-command " " cmpflag " " src-file " " "-o" " " bin-file) "")
+
+      ;; Using 2>&1 since org babel does not include stderr in output from NSLog.
+      (let ((results (org-babel-eval (concat (org-babel-process-file-name bin-file) " 2>&1")  "")))
+        (org-babel-reassemble-table
+         (org-babel-result-cond (cdr (assq :result-params params))
+           (org-babel-read results)
+           (let ((tmp-file (org-babel-temp-file "c-")))
+             (with-temp-file tmp-file (insert results))
+             (org-babel-import-elisp-from-file tmp-file)))
+         (org-babel-pick-name
+          (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+         (org-babel-pick-name
+          (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))
+
+  (provide 'ob-objc)
+#+END_SRC
+
+Add /objc/ to /org-babel-load-languages/, and you can subsequently compile and run Objective-C blocks like:
+
+#+BEGIN_SRC objc :results verbatim
+
+#import <Foundation/Foundation.h>
+
+int main() {
+  NSLog(@"Hello World");
+  return 0;
+}
+
+#+END_SRC
+
+#+RESULTS:
+: 2017-11-16 01:47:28.923 org-babel-objc-block-Aai8ux[15319:346480] Hello World
+
+* [2017-11-12 Sun] [[#ios-dev-command-line-goodies][#]] iOS dev command-line goodies
+  :PROPERTIES:
+  :CUSTOM_ID: ios-dev-command-line-goodies
+  :END:
+*** Install ipa on device
+    Get utility with:
+#+BEGIN_SRC sh
+  npm install -g ipa-deploy
+#+END_SRC
+    Install ipa on connected iPhone:
+#+BEGIN_SRC sh
+  ipa-deploy path/to/your/App.ipa
+#+END_SRC
+*** Install app on booted simulator
+    Install ipa on connected iPhone:
+#+BEGIN_SRC sh
+  xcrun simctl install booted path/to/your/App.app
+#+END_SRC
+*** Install ipa on booted simulator
+#+BEGIN_SRC sh
+  #!/bin/bash
+
+  # Unzip ipa, install app, and run on booted simulator.
+
+  set -o nounset
+  set -o errexit
+
+  readonly IPA_PATH=$1
+  readonly TEMP_DIR_PATH=$(mktemp -d)
+  readonly BASENAME=$(basename ${IPA_PATH})
+  readonly NAME=${BASENAME%.*}
+  readonly APP_DIR_PATH="${TEMP_DIR_PATH}/Payload/${NAME}.app"
+  readonly PLIST_FILE_PATH="${APP_DIR_PATH}/Info.plist"
+
+  trap "rm -rf ${TEMP_DIR_PATH}" EXIT
+
+  unzip -o "${IPA_PATH=}" -d "${TEMP_DIR_PATH}"
+
+  readonly BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" ${PLIST_FILE_PATH})
+
+  xcrun simctl install booted "${APP_DIR_PATH}"
+  xcrun simctl launch booted "${BUNDLE_ID}"
+#+END_SRC
+* [2017-11-01 Wed] [[#eshell-pcomplete-company-completion][#]] Eshell pcomplete company completion
+  :PROPERTIES:
+  :CUSTOM_ID: eshell-pcomplete-company-completion
+  :END:
+  Howard Abrams's [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Introduction to eshell video]] prompted me to poke at eshell some more. This time, I got eshell context aware completion by glueing the excellent [[https://company-mode.github.io][company]] and [[https://masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][pcomplete]] packages.
+
+[[file:images/eshell-pcomplete-company-completion/company-pcomplete.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+  (require 'company)
+  (require 'dash)
+  (require 'pcomplete)
+  (require 's)
+
+  (defun company-pcomplete--overlap-tail (a b)
+    "When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."
+    (let ((prefix a)
+          (remaining nil))
+      (while (and (not remaining) (> (length prefix) 0))
+        (when (s-starts-with? prefix b)
+          (setq remaining (substring b (length prefix))))
+        (setq prefix (substring prefix 1)))
+      remaining))
+
+  (defun company-pcomplete--candidates (prefix)
+    "Get candidates for PREFIX company completion using `pcomplete'."
+    ;; When prefix is: "~/Down" and completion is "Downloads", need
+    ;; to find common string and join into "~/Downloads/".
+    (-map (lambda (item)
+            (if (s-starts-with? prefix item)
+                item
+              (concat prefix (company-pcomplete--overlap-tail prefix item))))
+          (all-completions prefix (pcomplete-completions))))
+
+  (defun company-pcomplete (command &optional arg &rest ignored)
+    "Complete using pcomplete. See `company''s COMMAND ARG and IGNORED for details."
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'company-pcomplete))
+      (prefix (company-grab-symbol))
+      (candidates
+       (company-pcomplete--candidates arg))))
+#+END_SRC
+
+  Don't forget to add /company-pcomplete/ to /company-backends,/ and if you want an explicit binding, use something like:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "<backtab>" #'company-complete eshell-mode-map)
+#+END_SRC
+
+* [2017-09-10 Sun] [[#basic-imenu-in-helpful-mode][#]] Basic imenu in helpful-mode
+  :PROPERTIES:
+  :CUSTOM_ID: basic-imenu-in-helpful-mode
+  :END:
+  I'm finding Wilfred Hughes's [[https://github.com/Wilfred/helpful][helpful-mode]], well... rather helpful. However, I'm missing imenu support. Here's a hacky way to get basic imenu.
+
+[[file:images/basic-imenu-for-helpful-mode/helpful-imenu.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun helpful--create-imenu-index ()
+    "Create an `imenu' index for helpful."
+    (beginning-of-buffer)
+    (let ((imenu-items '()))
+      (while (progn
+               (beginning-of-line)
+               ;; Not great, but determine if looking at heading:
+               ;; 1. if it has bold face.
+               ;; 2. if it is capitalized.
+               (when (and (eq 'bold (face-at-point))
+                          (string-match-p
+                           "[A-Z]"
+                           (buffer-substring (line-beginning-position)
+                                             (line-end-position))))
+                 (add-to-list 'imenu-items
+                              (cons (buffer-substring (line-beginning-position)
+                                                      (line-end-position))
+                                    (line-beginning-position))))
+               (= 0 (forward-line 1))))
+      imenu-items))
+
+  (defun helpful-mode-hook-function ()
+    "A hook function for `helpful-mode'."
+    (setq imenu-create-index-function #'helpful--create-imenu-index))
+
+  (add-hook 'helpful-mode-hook
+            #'helpful-mode-hook-function)
+#+END_SRC
 * [2017-08-19 Sat] [[#projectile-shell-dir-company-completion][#]] Projectile shell dir company completion
   :PROPERTIES:
   :CUSTOM_ID: projectile-shell-dir-company-completion
@@ -5244,7 +5435,7 @@ $ python ycmd
 *** Angel
 ******* TODO [[http://www.shawarmabar.co.uk/][Shawarma Bar - Berber and Q]].
 *** Barbican
-******* TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advace)]].
+******* TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advance)]].
 *** Barnsbury
 ******* TODO Sunday (breakfast, cafe, working).
 *** Brick Lane
@@ -5258,8 +5449,6 @@ $ python ycmd
 ******* TODO [[http://www.nanban.co.uk/][Nanban]] (Japanese soul food).
 *** Borough
 ******* TODO [[http://padella.co][Padella]] (try ragu).
-*** Broadway Market
-******* TODO [[http://pocotapasbar.com/][Poco]] (Tapas bar).
 *** Camberwell
 ******* TODO [[http://suncamberwell.com][Sun of Camberwell]] (Roast beef, Yorkshire, and sticky toffee pudding).
 ******* TODO [[http://www.timeout.com/london/restaurants/silk-road][Silk Road (Chinese, Lamb/cumin skewers)]].
@@ -5336,7 +5525,6 @@ $ python ycmd
 *** Old Street
 ******* TODO [[http://sardine.london][Sardine]] (French).
 ******* TODO [[http://sasukeramen.co.uk/][Sasuke]] (ramen).
-******* TODO [[http://hkklondon.com][HKK]] (Cherry Wood Peking Duck).
 *** Olympia
 ******* TODO Aborz (Iranian).
 *** Oxford street
@@ -6248,6 +6436,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.objc.io/][Objc.io]].
   - [[http://oclint.org/][Objective-C linter]].
   - [[http://www.osstatus.com/?utm_campaign=iOS%2BDev%2BWeekly&utm_medium=email&utm_source=iOS_Dev_Weekly_Issue_201][OSStatus: Lookup Apple API errors fast]].
+  - [[http://phatblat.com/2016/05/10/uisearchcontroller.html][phatblat's post on UISearchController]].
   - [[http://sugartin.info/2011/10/13/sending-a-mail-useing-gmail/][Programatically send an email using CFNetwork and GMail]].
   - [[https://github.com/mattneub/Programming-iOS-Book-Examples][Programming iOS Book examples]].
   - [[http://www.raywenderlich.com/tutorials][Ray Wendelich]].
@@ -6525,6 +6714,10 @@ If FROM or TO is negative, it counts from the end.
   :MODIFIED:
   [2016-10-01 Sat]
   :END:
+******* TODO Wild Tales.
+******* TODO The Road.
+******* TODO Moon.
+******* TODO Who am I.
 ******* TODO [[http://www.openculture.com/2010/07/tarkovksy.html][Tarkovsky films]].
 ******* TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
 ******* TODO [[https://en.wikipedia.org/wiki/Kubo_and_the_Two_Strings][Kubo and the two strings]].
@@ -6975,6 +7168,7 @@ $ brew install emacs-mac
   - [[http://endlessparentheses.com][Endless parenthesis]].
   - [[http://www.skybert.net/emacs/java/][Enterprise Java Development in Emacs]].
   - [[http://www.misshula.org/category/tutorials.html][Evan Misshula (lots of great tutorials)]].
+  - [[http://edkolev.github.io/posts/2017-09-10-travis-for-emacs-packages.html][Evgeni Kolev Blog - Travis CI integration for emacs packages]].
   - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
   - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
   - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
