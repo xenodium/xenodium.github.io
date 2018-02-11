@@ -1,6 +1,224 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2017-12-16 Sat] [[#magit-amend-commit-author][#]] Magit amend commit author
+  :PROPERTIES:
+  :CUSTOM_ID: magit-amend-commit-author
+  :END:
+  Rarely use it, but handy. Use Magit to amend git commit author.
+
+  - Rebase interactively (r, i).
+  - Move point to commit to ammend.
+  - Execute command (x).
+#+BEGIN_SRC sh
+  git commit --amend --author="name <email>"
+#+END_SRC
+  - Commit (c, c).
+[[file:images/amend-git-commit-author-on-magit/amending.gif]]
+* [2017-12-13 Wed] [[#homebrew-install-from-cache][#]] Homebrew install from cache
+  :PROPERTIES:
+  :CUSTOM_ID: homebrew-install-from-cache
+  :END:
+  Came across a 404 while installing graphviz-2.40.1.tar.gz via homebrew. If you can find the package elsewhere, copy over to homebrew's cache directory.
+
+#+BEGIN_SRC sh
+  brew --cache
+#+END_SRC
+
+#+RESULTS:
+/Users/User/Library/Caches/Homebrew
+
+* [2017-11-16 Thu] [[#org-babel-objective-c-support][#]] org-babel Objective-C support
+  :PROPERTIES:
+  :CUSTOM_ID: org-babel-objective-c-support
+  :END:
+  Wanted to quickly execute an Objective-C snippet. org-babel didn't support it out of the box, but adding it was straightforward (looked at ob-C.el and ob-java.el):
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ob)
+
+  (defcustom org-babel-objc-compile-command "clang -x objective-c -framework Foundation"
+    "For example: \"clang -x objective-c -framework Foundation\"."
+    :group 'org-babel
+    :version "24.3"
+    :type 'string)
+
+  (defun org-babel-execute:objc (body params)
+    "Compile Objective-C BODY with org PARAMS and execute binary."
+    (let* ((src-file (org-babel-temp-file "org-babel-objc-block-" ".m"))
+           (cmpflag (or (cdr (assq :cmpflag params)) ""))
+           (full-body (org-babel-expand-body:generic body params))
+           (bin-file
+            (org-babel-process-file-name
+             (org-babel-temp-file "org-babel-objc-block" org-babel-exeext))))
+      (with-temp-file src-file (insert full-body))
+      (org-babel-eval
+       (concat org-babel-objc-compile-command " " cmpflag " " src-file " " "-o" " " bin-file) "")
+
+      ;; Using 2>&1 since org babel does not include stderr in output from NSLog.
+      (let ((results (org-babel-eval (concat (org-babel-process-file-name bin-file) " 2>&1")  "")))
+        (org-babel-reassemble-table
+         (org-babel-result-cond (cdr (assq :result-params params))
+           (org-babel-read results)
+           (let ((tmp-file (org-babel-temp-file "c-")))
+             (with-temp-file tmp-file (insert results))
+             (org-babel-import-elisp-from-file tmp-file)))
+         (org-babel-pick-name
+          (cdr (assq :colname-names params)) (cdr (assq :colnames params)))
+         (org-babel-pick-name
+          (cdr (assq :rowname-names params)) (cdr (assq :rownames params)))))))
+
+  (provide 'ob-objc)
+#+END_SRC
+
+Add /objc/ to /org-babel-load-languages/, and you can subsequently compile and run Objective-C blocks like:
+
+#+BEGIN_SRC objc :results verbatim
+
+#import <Foundation/Foundation.h>
+
+int main() {
+  NSLog(@"Hello World");
+  return 0;
+}
+
+#+END_SRC
+
+#+RESULTS:
+: 2017-11-16 01:47:28.923 org-babel-objc-block-Aai8ux[15319:346480] Hello World
+
+* [2017-11-12 Sun] [[#ios-dev-command-line-goodies][#]] iOS dev command-line goodies
+  :PROPERTIES:
+  :CUSTOM_ID: ios-dev-command-line-goodies
+  :END:
+*** Install ipa on device
+    Get utility with:
+#+BEGIN_SRC sh
+  npm install -g ipa-deploy
+  npm install -g ios-deploy
+#+END_SRC
+    Install ipa on connected iPhone:
+#+BEGIN_SRC sh
+  ipa-deploy path/to/your/App.ipa
+#+END_SRC
+*** Install app on booted simulator
+    Install ipa on connected iPhone:
+#+BEGIN_SRC sh
+  xcrun simctl install booted path/to/your/App.app
+#+END_SRC
+*** Install ipa on booted simulator
+#+BEGIN_SRC sh
+  #!/bin/bash
+
+  # Unzip ipa, install app, and run on booted simulator.
+
+  set -o nounset
+  set -o errexit
+
+  readonly IPA_PATH=$1
+  readonly TEMP_DIR_PATH=$(mktemp -d)
+  readonly BASENAME=$(basename ${IPA_PATH})
+  readonly NAME=${BASENAME%.*}
+  readonly APP_DIR_PATH="${TEMP_DIR_PATH}/Payload/${NAME}.app"
+  readonly PLIST_FILE_PATH="${APP_DIR_PATH}/Info.plist"
+
+  trap "rm -rf ${TEMP_DIR_PATH}" EXIT
+
+  unzip -o "${IPA_PATH=}" -d "${TEMP_DIR_PATH}"
+
+  readonly BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" ${PLIST_FILE_PATH})
+
+  xcrun simctl install booted "${APP_DIR_PATH}"
+  xcrun simctl launch booted "${BUNDLE_ID}"
+#+END_SRC
+* [2017-11-01 Wed] [[#eshell-pcomplete-company-completion][#]] Eshell pcomplete company completion
+  :PROPERTIES:
+  :CUSTOM_ID: eshell-pcomplete-company-completion
+  :END:
+  Howard Abrams's [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Introduction to eshell video]] prompted me to poke at eshell some more. This time, I got eshell context aware completion by glueing the excellent [[https://company-mode.github.io][company]] and [[https://masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][pcomplete]] packages.
+
+[[file:images/eshell-pcomplete-company-completion/company-pcomplete.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cl-lib)
+  (require 'company)
+  (require 'dash)
+  (require 'pcomplete)
+  (require 's)
+
+  (defun company-pcomplete--overlap-tail (a b)
+    "When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."
+    (let ((prefix a)
+          (remaining nil))
+      (while (and (not remaining) (> (length prefix) 0))
+        (when (s-starts-with? prefix b)
+          (setq remaining (substring b (length prefix))))
+        (setq prefix (substring prefix 1)))
+      remaining))
+
+  (defun company-pcomplete--candidates (prefix)
+    "Get candidates for PREFIX company completion using `pcomplete'."
+    ;; When prefix is: "~/Down" and completion is "Downloads", need
+    ;; to find common string and join into "~/Downloads/".
+    (-map (lambda (item)
+            (if (s-starts-with? prefix item)
+                item
+              (concat prefix (company-pcomplete--overlap-tail prefix item))))
+          (all-completions prefix (pcomplete-completions))))
+
+  (defun company-pcomplete (command &optional arg &rest ignored)
+    "Complete using pcomplete. See `company''s COMMAND ARG and IGNORED for details."
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'company-pcomplete))
+      (prefix (company-grab-symbol))
+      (candidates
+       (company-pcomplete--candidates arg))))
+#+END_SRC
+
+  Don't forget to add /company-pcomplete/ to /company-backends,/ and if you want an explicit binding, use something like:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "<backtab>" #'company-complete eshell-mode-map)
+#+END_SRC
+
+* [2017-09-10 Sun] [[#basic-imenu-in-helpful-mode][#]] Basic imenu in helpful-mode
+  :PROPERTIES:
+  :CUSTOM_ID: basic-imenu-in-helpful-mode
+  :END:
+  I'm finding Wilfred Hughes's [[https://github.com/Wilfred/helpful][helpful-mode]], well... rather helpful. However, I'm missing imenu support. Here's a hacky way to get basic imenu.
+
+[[file:images/basic-imenu-for-helpful-mode/helpful-imenu.png]]
+
+#+BEGIN_SRC emacs-lisp
+  (defun helpful--create-imenu-index ()
+    "Create an `imenu' index for helpful."
+    (beginning-of-buffer)
+    (let ((imenu-items '()))
+      (while (progn
+               (beginning-of-line)
+               ;; Not great, but determine if looking at heading:
+               ;; 1. if it has bold face.
+               ;; 2. if it is capitalized.
+               (when (and (eq 'bold (face-at-point))
+                          (string-match-p
+                           "[A-Z]"
+                           (buffer-substring (line-beginning-position)
+                                             (line-end-position))))
+                 (add-to-list 'imenu-items
+                              (cons (buffer-substring (line-beginning-position)
+                                                      (line-end-position))
+                                    (line-beginning-position))))
+               (= 0 (forward-line 1))))
+      imenu-items))
+
+  (defun helpful-mode-hook-function ()
+    "A hook function for `helpful-mode'."
+    (setq imenu-create-index-function #'helpful--create-imenu-index))
+
+  (add-hook 'helpful-mode-hook
+            #'helpful-mode-hook-function)
+#+END_SRC
 * [2017-08-19 Sat] [[#projectile-shell-dir-company-completion][#]] Projectile shell dir company completion
   :PROPERTIES:
   :CUSTOM_ID: projectile-shell-dir-company-completion
@@ -2324,10 +2542,11 @@ $ find . -exec file --mime-type '{}' \;
   :CUSTOM_ID: swift-bookmarks
   :END:
   :MODIFIED:
-  [2017-04-27 Thu]
+  [2017-12-14 Thu]
   :END:
   - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
   - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
+  - [[https://talk.objc.io/episodes][All Episodes · Swift Talk · objc.io]].
   - [[https://github.com/Awesome-Server-Side-Swift/TheList][Awesome server side swift]].
   - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
   - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
@@ -2568,11 +2787,12 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
   :CUSTOM_ID: mac-os-bookmarks
   :END:
   :MODIFIED:
-  [2017-04-22 Sat]
+  [2017-07-21 Fri]
   :END:
   - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
   - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
   - [[https://www.daisydiskapp.com/][DaisyDisk]] (what's taking up your disk space).
+  - [[https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html][DTrace: {even better than} strace for OS X | 8th Light]].
   - [[http://flummox-engineering.blogspot.com/2014/06/getting-absolute-path-in-bash-in-osx.html][Getting absolute path in Bash in OSX]].
   - [[http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf][Guide to Securing Apple OS X]].
   - [[http://www.hammerspoon.org][Hammerspoon]].
@@ -2687,7 +2907,11 @@ print distutils.spawn.find_executable('git')
   :PROPERTIES:
   :CUSTOM_ID: mongolia-travel-bookmarks
   :END:
+  :MODIFIED:
+  [2017-07-21 Fri]
+  :END:
   - [[http://www.lonelyplanet.com/mongolia/travel-tips-and-articles/beyond-the-dunes-road-tripping-mongolias-gobi-desert][Beyond the dunes: road-tripping Mongolia's Gobi Desert]].
+  - [[https://twitter.com/archpics/status/881270695614967808][Terra cotta warriors at Mount Khan, Inner Mongolia]].
 
 * [2015-10-22 Thu] [[#running-bookmarks][#]] Running bookmarks
   :PROPERTIES:
@@ -4321,9 +4545,10 @@ build_clang
   :CUSTOM_ID: japan-travel-bookmarks
   :END:
   :MODIFIED:
-  [2017-06-24 Sat]
+  [2017-12-03 Sun]
   :END:
   - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
+  - [[http://www.tokyoweekender.com/2017/11/6-tokyo-travel-tips-to-help-you-get-around-the-city/][6 Tokyo Travel Tips to Help You Get Around the City | Tokyo Weekender]].
   - 7 day Japan Rail pass (first class?), possibly only sold outside Japan.
   - [[https://publishizer.com/8020-japanese/][80/20 Japanese]].
   - [[http://luckypeach.com/a-guide-to-the-regional-ramen-of-japan/][A Guide to the regional ramen of Japan]].
@@ -4342,6 +4567,7 @@ build_clang
   - [[http://www.hiiragiya.co.jp/][Hiiragiya ryokan]].
   - [[https://en.wikipedia.org/wiki/Himeji_Castle][Himeji Castle]].
   - Hokkaido summer flowers.
+  - [[http://en.blog.govoyagin.com/post/102416291251/how-to-spend-a-magical-christmas-in-tokyo][How to spend a magical Christmas in Tokyo - Voyagin blog]].
   - [[http://www.hyperdia.com/en/][Hypermedia (internal travel website)]].
   - [[http://www.jalan.net/en/japan_hotels_ryokan/?cc%3Deng_banner][jalan.net (travel booking site)]].
   - [[http://www.japan-guide.com][Japan guide]].
@@ -4374,6 +4600,7 @@ build_clang
   - [[http://ignition.co/395][Top 10 Japanese Stationery Items for Foreign Tourists]].
   - [[https://en.wikipedia.org/wiki/Sukiyaki][Try out sukiyaki]].
   - [[https://docs.google.com/document/d/1wjqJKYEKbHSUTsj8Lxj8OCn0gSOXOpf_SroyBEjLbKY/edit][Uncharted Tokyo]].
+  - [[https://www.vitra.com/en-gb/magazine/details/the-hill-of-the-buddha][Vitra | The Hill of the Buddha]].
   - [[http://www.mymodernmet.com/profiles/blogs/zao-fox-village-miyagi-japan][Zao Fox Village]].
 
 * [2015-10-21 Wed] [[#kyoto-travel-bookmarks][#]] Kyoto travel bookmarks
@@ -4404,7 +4631,7 @@ build_clang
   :Custom_ID: tokyo-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-10-16 Sun]
+  [2017-12-03 Sun]
   :END:
   - [[http://globalhelpswap.com/5-alternative-things-to-do-in-tokyo/][5 alternative things to do in Tokyo (by globalhelpswap)]].
   - Akihabara: Electronics district, arcades and comic stores.
@@ -4413,8 +4640,9 @@ build_clang
   - [[http://bar-navi.suntory.co.jp/shop/0334413588/index.html][Bar Epilogue]].
   - [[http://authenticbar.com/odin/yebisu.html][Bar Odin]].
   - Bentomi (Sushi).
-  - [[http://tabelog.com/en/tokyo/A1313/A131301/13002389/][Daiwasushi (food)]].
+  - [[http://tabelog.com/en/tokyo/A1313/A131301/13002389/][Daiwasushi (food)]]. An account [[http://mjkobb.com/Prattling%20on/6570A66F-8F2F-49FD-912C-4A5D0C3862C8.html][here]].
   - Fish market (6am sushi).
+  - [[https://en.rocketnews24.com/2017/10/11/five-of-the-worst-areas-to-live-in-and-around-tokyo/?utm_content=buffer38deb&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer][Five of the worst areas to live in and around Tokyo | SoraNews24]].
   - [[http://www.ghibli-museum.jp/en/welcome][Ghibli museum]] (book in advance or try [[http://www.lawson.co.jp/ghibli/museum/ticket/english.html][lawson]]).
   - Ginza.
   - [[http://tabelog.com/en/tokyo/A1301/A130103/13002611/][Ginzakyuubee (food)]].
@@ -4444,7 +4672,9 @@ build_clang
   - [[http://www.japan-guide.com/e/e3029.html][Takaosan (Mount Takao)]].
   - [[http://tabelog.com/en/tokyo/A1303/A130301/13001783/][Tenkazushi (food)]].
   - [[http://www.ytravelblog.com/things-to-do-in-tokyo-japan/][Things to Do in Tokyo Japan - Sunday Spotlight]].
+  - [[https://www.lonelyplanet.com/japan/travel-tips-and-articles/tokyo-in-winter-what-to-see-do-and-eat/40625c8c-8a11-5710-a052-1479d276b0f5][Tokyo in winter: what to see, do and eat (Lonely Planet)]].
   - Tokyo Municipal Government building: Only for observation deck with view to Fuji (if clear day).
+  - [[https://www.lonelyplanet.com/japan/tokyo/travel-tips-and-articles/tokyo-on-a-budget-tips-for-making-your-yen-go-further/40625c8c-8a11-5710-a052-1479d2775214?utm_campaign=article&utm_medium=social&utm_source=twitter&utm_content=Tokyo%20on%20a%20budget:%20tips%20for%20making%20your%20yen%20go%20further][Tokyo on a budget: tips for making your yen go further (Lonely Planet)]].
   - [[http://tokyoplaying.blogspot.co.uk/][Tokyo play blog]].
   - [[http://japaneseruleof7.com/tokyo-salaries-all-you-need-to-know][Tokyo Salaries: all you need to know]].
   - Tokyo station: Friendly JR office (english spoken). They help book all trips/tickets/reservations.
@@ -4453,8 +4683,8 @@ build_clang
   - [[http://coffeeandpassport.com/tokyo-travel-tips/][Tokyo Travel Tips: 5 Things You Need In Japan]].
   - Tokyu Hands and Loft (shops in Shibuya).
   - Toritake (yakitori at Shibuya).
-  - Tsukiji Fish Market: Sushi bars and food vendors (get there early, visitor numbers restricted).
   - [[http://www.tsukiji-market.or.jp/etc/calendar/2016.html][Tsukiji Fish Market calendar]].
+  - Tsukiji Fish Market: Sushi bars and food vendors (get there early, visitor numbers restricted).
   - Viron Bakery (in Shibuya).
   - [[http://tabelog.com/en/tokyo/A1303/A130301/13058009/][婁熊東京 (raw and grilled pork)]].
   - [[http://r.tabelog.com/tokyo/A1307/A130701/13041724/][酒友]] (Sake & good Shabushabu), Roppongi.
@@ -5239,7 +5469,7 @@ $ python ycmd
 *** Angel
 ******* TODO [[http://www.shawarmabar.co.uk/][Shawarma Bar - Berber and Q]].
 *** Barbican
-******* TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advace)]].
+******* TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advance)]].
 *** Barnsbury
 ******* TODO Sunday (breakfast, cafe, working).
 *** Brick Lane
@@ -5253,8 +5483,6 @@ $ python ycmd
 ******* TODO [[http://www.nanban.co.uk/][Nanban]] (Japanese soul food).
 *** Borough
 ******* TODO [[http://padella.co][Padella]] (try ragu).
-*** Broadway Market
-******* TODO [[http://pocotapasbar.com/][Poco]] (Tapas bar).
 *** Camberwell
 ******* TODO [[http://suncamberwell.com][Sun of Camberwell]] (Roast beef, Yorkshire, and sticky toffee pudding).
 ******* TODO [[http://www.timeout.com/london/restaurants/silk-road][Silk Road (Chinese, Lamb/cumin skewers)]].
@@ -5338,7 +5566,6 @@ $ python ycmd
 *** Old Street
 ******* TODO [[http://sardine.london][Sardine]] (French).
 ******* TODO [[http://sasukeramen.co.uk/][Sasuke]] (ramen).
-******* TODO [[http://hkklondon.com][HKK]] (Cherry Wood Peking Duck).
 *** Olympia
 ******* TODO Aborz (Iranian).
 *** Oxford street
@@ -6257,6 +6484,7 @@ If FROM or TO is negative, it counts from the end.
   - [[http://www.objc.io/][Objc.io]].
   - [[http://oclint.org/][Objective-C linter]].
   - [[http://www.osstatus.com/?utm_campaign=iOS%2BDev%2BWeekly&utm_medium=email&utm_source=iOS_Dev_Weekly_Issue_201][OSStatus: Lookup Apple API errors fast]].
+  - [[http://phatblat.com/2016/05/10/uisearchcontroller.html][phatblat's post on UISearchController]].
   - [[http://sugartin.info/2011/10/13/sending-a-mail-useing-gmail/][Programatically send an email using CFNetwork and GMail]].
   - [[https://github.com/mattneub/Programming-iOS-Book-Examples][Programming iOS Book examples]].
   - [[http://www.raywenderlich.com/tutorials][Ray Wendelich]].
@@ -6377,9 +6605,10 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: git-bookmarks
   :END:
   :MODIFIED:
-  [2016-10-30 Sun]
+  [2017-07-21 Fri]
   :END:
   - [[http://wildlyinaccurate.com/a-hackers-guide-to-git][a hackers guide to git]]
+  - [[https://blog.scottnonnenberg.com/better-git-configuration/][Better Git configuration | Scott Nonnenberg]].
   - [[http://nakkaya.com/2009/09/24/git-delete-last-commit/][delete last commit]]
   - [[http://jr0cket.co.uk/slides/getting-started-with-git.html#/][Getting Started with Git & Github]].
   - [[https://easyengine.io/tutorials/git/git-resolve-merge-conflicts/][Git - Quickest Way to Resolve Most Merge Conflicts]].
@@ -6533,6 +6762,10 @@ If FROM or TO is negative, it counts from the end.
   :MODIFIED:
   [2016-10-01 Sat]
   :END:
+******* TODO Wild Tales.
+******* TODO The Road.
+******* TODO Moon.
+******* TODO Who am I.
 ******* TODO [[http://www.openculture.com/2010/07/tarkovksy.html][Tarkovsky films]].
 ******* TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
 ******* TODO [[https://en.wikipedia.org/wiki/Kubo_and_the_Two_Strings][Kubo and the two strings]].
@@ -6649,6 +6882,7 @@ If FROM or TO is negative, it counts from the end.
   :MODIFIED:
   [2017-06-18 Sun]
   :END:
+******* TODO Try out [[https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el][cquery]], [[https://github.com/emacs-lsp/lsp-mode][emacs-lsp]], and [[https://github.com/tigersoldier/company-lsp][company-lsp]].
 ******* TODO [[https://github.com/facetframer/orgnav][Drill down org files using orgnav (helm-based)]].
 ******* TODO [[https://github.com/prettier/prettier-emacs][Pretier emacs]].
 ******* TODO [[http://amitp.blogspot.co.uk/search/label/emacs][Spaceline walkthrough]].
@@ -6983,6 +7217,7 @@ $ brew install emacs-mac
   - [[http://endlessparentheses.com][Endless parenthesis]].
   - [[http://www.skybert.net/emacs/java/][Enterprise Java Development in Emacs]].
   - [[http://www.misshula.org/category/tutorials.html][Evan Misshula (lots of great tutorials)]].
+  - [[http://edkolev.github.io/posts/2017-09-10-travis-for-emacs-packages.html][Evgeni Kolev Blog - Travis CI integration for emacs packages]].
   - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
   - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
   - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
@@ -7235,7 +7470,7 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2017-04-03 Mon]
+  [2017-08-29 Tue]
   :END:
   - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
   - [[https://quickleft.com/blog/8-tips-get-started-existing-codebase/][8 Tips To Get Started In An Existing Codebase]].
@@ -7265,6 +7500,7 @@ gconftool --recursive-unset /apps/gnome-terminal
   - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
   - [[http://blog.triplebyte.com/how-to-pass-a-programming-interview][How to pass a programming interview]].
   - [[https://paragonie.com/blog/2015/09/how-to-safely-implement-cryptography-in-any-application][How to Safely Implement Cryptography Features in Any Application]].
+  - [[http://staff.polito.it/silvano.rivoira/HowToWriteYourOwnCompiler.htm][How to write your own compiler]].
   - [[http://joeduffyblog.com/2016/02/07/the-error-model/][Joe Duffy - The Error Model]].
   - [[https://github.com/lfit/itpol/blob/master/linux-workstation-security.md][Linux workstation security checklist]].
   - [[http://robertheaton.com/2015/08/31/migrating-bajillions-of-database-records-at-stripe/][Migrating bajillions of database records at Stripe]].
