@@ -1,6 +1,72 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-03-31 Sat] [[#trying-out-chunkwm][#]] Trying out chunkwm
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-chunkwm
+  :END:
+
+***** Intalling Chunkwm
+
+    #+BEGIN_SRC sh
+      $ brew tap crisidev/homebrew-chunkwm
+      $ brew install --HEAD --with-tmp-logging chunkwm
+    #+END_SRC
+
+    Add a configuration file. Started off from this [[https://gist.github.com/shihanng/65b73712df2e51d4d78cc27c218bac35#file-chunkwmrc][example]].
+
+    #+BEGIN_QUOTE
+      ~/.chunkwmrc
+    #+END_QUOTE
+
+    Start chunkwmrc service.
+
+    #+BEGIN_SRC sh
+      $ brew services start crisidev/chunkwm/chunkwm
+    #+END_SRC
+
+***** Installing skhd (a hotkey daemon)
+
+    #+BEGIN_SRC sh
+      $ brew install --HEAD --with-logging  koekeishiya/formulae/skhd
+    #+END_SRC
+
+    Start skhd service.
+
+    #+BEGIN_SRC sh
+      $ brew services start koekeishiya/formulae/skhd
+    #+END_SRC
+
+    Skhd logs location.
+
+    #+BEGIN_SRC sh
+      /Users/you/homebrew/var/log/skhd/skhd.[out|err].log
+    #+END_SRC
+
+    Add a configuration file. Started off from this [[https://raw.githubusercontent.com/koekeishiya/chunkwm/master/src/plugins/tiling/examples/khdrc][example]].
+
+   #+BEGIN_SRC sh
+     ~/.skhdrc
+   #+END_SRC
+
+***** Installing khd (easily invoke hotkeys from terminal)
+   #+BEGIN_SRC sh
+     $ brew install khd
+     $ brew services restart chunkwm
+   #+END_SRC
+
+* [2018-03-31 Sat] [[#trying-out-emacs-plus-build][#]] Trying out Emacs Plus build
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-emacs-plus-build
+  :END:
+  Seen positive comments when running Emacs Plus builds on MacOS. Trying it out.
+
+  To install:
+
+#+BEGIN_SRC sh
+  $ brew tap d12frosted/emacs-plus
+  $ brew install emacs-plus  --with-24bit-color --with-natural-title-bar
+#+END_SRC
 * [2018-02-06 Tue] [[#building-bazel-on-macos][#]] Building bazel on macOS
   :PROPERTIES:
   :CUSTOM_ID: building-bazel-on-macos
