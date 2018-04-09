@@ -1,6 +1,180 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-04-09 Mon] [[#trying-out-tesseract][#]] Trying out tesseract
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-tesseract
+  :END:
+  As part of going paperless, looking into OCR. Trying out tesseract.
+
+  Install
+
+#+BEGIN_SRC sh
+  $ brew install gs
+  $ brew install imagemagick
+  $ brew install tesseract
+#+END_SRC
+
+#+BEGIN_SRC sh
+  $ convert -density 300 -depth 8 receipt.pdf receipt.png
+  $ tesseract receipt.png receipt.png.txt
+#+END_SRC
+
+* [2018-04-08 Sun] [[#sapporo-travel-bookmarks][#]] Sapporo travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: sapporo-travel-bookmarks
+  :END:
+  - [[https://www.vitra.com/en-gb/magazine/details/the-hill-of-the-buddha][The Hill of the Buddha]].
+* [2018-04-08 Sun] [[#ffmpeg-bookmarks][#]] ffmpeg bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ffmpeg-bookmarks
+  :END:
+  - [[https://news.ycombinator.com/item?id=16192813][Learn FFmpeg the hard way (Hacker News)]].
+* [2018-04-08 Sun] [[#gif-bookmarks][#]] Gif bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: gif-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-04-08 Sun]
+  :END:
+  - [[https://gif.ski/][gifski — highest-quality GIF converter]].
+  - [[https://github.com/phw/peek][phw/peek: Simple animated GIF screen recorder for Linux]].
+* [2018-04-08 Sun] [[#trying-out-shellcheck][#]] Trying out ShellCheck
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-shellcheck
+  :END:
+  [[https://github.com/koalaman/shellcheck][ShellCheck]] gives you automatic warnings/suggestions in bash/sh shell scripts.
+
+#+BEGIN_SRC sh
+  $ brew install shellcheck
+#+END_SRC
+
+  Bonus: If using Emacs's [[https://github.com/flycheck/flycheck][flycheck]], you get ShellCheck support out of the box.
+* [2018-04-08 Sun] [[#imagemagick-bookmarks][#]] Imagemagick bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: imagemagick-bookmarks
+  :END:
+  - [[https://news.ycombinator.com/item?id=16668254][Fred's ImageMagick Scripts (Hacker News)]].
+* [2018-04-05 Thu] [[#buying-matcha-powder-online][#]] Buying matcha powder online
+  :PROPERTIES:
+  :CUSTOM_ID: buying-matcha-powder-online
+  :END:
+
+  From Reddit's [[https://www.reddit.com/r/tea/comments/6qbh4l/matcha/][thread]]:
+
+  - https://yunomi.life
+  - https://shop.ippodo-tea.co.jp/kyoto/shopf/index.html
+  - https://www.o-cha.com
+  - http://hojotea.com/categ_e/viewe.htm
+  - http://yuuki-cha.com
+  - http://www.hibiki-an.com/index.php
+  - http://www.thes-du-japon.com/index.php?main_page=index
+  - https://www.chadoteahouse.com
+  - https://www.denstea.com
+  - https://www.sazentea.com/en
+  - http://www.ujicha-kanbayashi.co.jp
+  - http://www.marukyu-koyamaen.co.jp/products.html
+  - http://www.fukumotoen.co.jp/shop/
+  - http://www.myokoen.com/shop/index.html
+
+* [2018-04-04 Wed] [[#getting-macos-app-bundle-id][#]] Getting macOS app bundle ID
+  :PROPERTIES:
+  :CUSTOM_ID: getting-macos-app-bundle-id
+  :END:
+  From [[https://stackoverflow.com/questions/39464668/how-to-get-bundle-id-of-mac-application#39464824][stack overflow]]:
+
+  Option 1
+
+#+BEGIN_SRC sh
+  osascript -e 'id of app "Emacs"'
+#+END_SRC
+
+  Option 2
+
+#+BEGIN_SRC sh
+  mdls -name kMDItemCFBundleIdentifier -r SomeApp.app
+#+END_SRC
+
+* [2018-03-31 Sat] [[#trying-out-chunkwm][#]] Trying out chunkwm
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-chunkwm
+  :END:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/trying-out-chunkwm/chunkwm.png]]
+
+***** Installing [[https://github.com/koekeishiya/chunkwm][Chunkwm]]
+
+    #+BEGIN_SRC sh
+      $ brew tap crisidev/homebrew-chunkwm
+      $ brew install --HEAD --with-tmp-logging chunkwm
+    #+END_SRC
+
+    Add a configuration file. Started off from this [[https://gist.github.com/shihanng/65b73712df2e51d4d78cc27c218bac35#file-chunkwmrc][example]].
+
+    #+BEGIN_QUOTE
+      ~/.chunkwmrc
+      chmod +x ~/.chunkwmrc
+    #+END_QUOTE
+
+    *Note*: Ensure core::plugin_dir matches homebrew's plugin directory. Typically something like: //path/to/homebrew/opt/chunkwm/share/chunkwm/plugins/
+
+    Start chunkwmrc service.
+
+    #+BEGIN_SRC sh
+      $ brew services start crisidev/chunkwm/chunkwm
+    #+END_SRC
+
+***** Installing [[https://github.com/koekeishiya/skhd][skhd]] (a hotkey daemon)
+
+    #+BEGIN_SRC sh
+      $ brew install --HEAD --with-logging  koekeishiya/formulae/skhd
+    #+END_SRC
+
+    Start skhd service.
+
+    #+BEGIN_SRC sh
+      $ brew services start koekeishiya/formulae/skhd
+    #+END_SRC
+
+    Skhd logs location.
+
+    #+BEGIN_SRC sh
+      /Users/you/homebrew/var/log/skhd/skhd.[out|err].log
+    #+END_SRC
+
+    Add a configuration file. Started off from this [[https://raw.githubusercontent.com/koekeishiya/chunkwm/master/src/plugins/tiling/examples/khdrc][example]].
+
+   #+BEGIN_SRC sh
+     ~/.skhdrc
+     chmod +x ~/.skhdrc
+   #+END_SRC
+
+***** Installing [[https://github.com/koekeishiya/skhd][khd]] (easily invoke hotkeys from terminal)
+   #+BEGIN_SRC sh
+     $ brew install khd
+   #+END_SRC
+
+   Some additional Mission Control and keyboard shortcut preferences:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/trying-out-chunkwm/mission_control.png]]
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/trying-out-chunkwm/keyboard_shortcuts.png]]
+
+* [2018-03-31 Sat] [[#trying-out-emacs-plus-build][#]] Trying out Emacs Plus build
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-emacs-plus-build
+  :END:
+  Seen positive comments when running Emacs Plus builds on MacOS. Trying it out.
+
+  To install:
+
+#+BEGIN_SRC sh
+  $ brew tap d12frosted/emacs-plus
+  $ brew install emacs-plus  --with-24bit-color --with-natural-title-bar
+#+END_SRC
 * [2018-02-06 Tue] [[#building-bazel-on-macos][#]] Building bazel on macOS
   :PROPERTIES:
   :CUSTOM_ID: building-bazel-on-macos
@@ -465,6 +639,10 @@ int main() {
   :PROPERTIES:
   :CUSTOM_ID: sleep-bookmarks
   :END:
+  :MODIFIED:
+  [2018-04-08 Sun]
+  :END:
+  - [[https://news.ycombinator.com/item?id=15997016][Algorithmic Solution to My Insomnia (Hacker News)]].
   - [[https://www.gwern.net/Melatonin][Melatonin - Gwern.net]].
 * [2017-05-28 Sun] [[#tea-bookmarks][#]] Tea bookmarks
   :PROPERTIES:
@@ -505,6 +683,12 @@ Edited ~/.gnupg/gpg-agent.conf with:
 #+BEGIN_EXAMPLE
 pinentry-program path/to/homebrew/bin/pinentry-mac
 #+END_EXAMPLE
+
+May need to kill gpg-agent to reload config.
+
+#+BEGIN_SRC sh
+gpgconf --kill gpg-agent
+#+END_SRC
 
 * [2017-03-13 Mon] [[#installing-gnuplot-on-macos][#]] Installing gnuplot on macOS
   :PROPERTIES:
@@ -896,6 +1080,7 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   :CUSTOM_ID: vietnam-travel-bookmarks
   :END:
   - [[https://www.lonelyplanet.com/vietnam/con-son/travel-tips-and-articles/exploring-vietnams-remote-con-dao-islands][Exploring Vietnam's remote Con Dao Islands]].
+  - [[http://www.weloveeattravel.com/list-locations-somebody-feed-phil-saigon-vietnam/][Somebody Feed Phil, List of Locations: Ho Chi Minh City]].
 
 * [2016-07-19 Tue] [[#pokemon-go-bookmarks][#]] Pokémon Go bookmarks
   :PROPERTIES:
@@ -1115,10 +1300,11 @@ _inclusive_; that is, it includes the days specified by mark and point.
   :CUSTOM_ID: haskell-bookmarks
   :END:
   :MODIFIED:
-  [2016-06-19 Sun]
+  [2018-02-10 Sat]
   :END:
   - [[https://news.ycombinator.com/item?id=11606290][A Haskell Reading List (Hacker News)]].
   - [[http://www.stephendiehl.com/posts/essential_haskell.html][A Haskell Reading List]].
+  - [[https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/][An opinionated guide to Haskell in 2018]].
   - [[https://www.goodreads.com/book/show/25587599-haskell-programming][Haskell Programming: From First Principles]].
   - [[http://learnyouahaskell.com/higher-order-functions][Higher order functions]].
   - [[http://people.cs.aau.dk/~normark/prog3-03/html/notes/higher-order-fu_themes-intr-section.html][Introduction to higher-order functions]].
@@ -1875,10 +2061,10 @@ tern-command => (tern)
   :MODIFIED:
   [2016-01-12 Tue]
   :END:
-******* TODO [[http://ruenzuo.github.io/static-analysis-on-ios-part-ii/][Static Analysis on iOS - Part II]].
-******* TODO [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset]].
-******* TODO [[https://github.com/dsmelov/simsim][SimSim: access to application data folders]].
-******* TODO [[https://github.com/supermarin/xcpretty][xcpretty]].
+******* DONE [[http://ruenzuo.github.io/static-analysis-on-ios-part-ii/][Static Analysis on iOS - Part II]].
+******* DONE [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset (unmaintained)]].
+******* DONE [[https://github.com/dsmelov/simsim][SimSim: access to application data folders]].
+******* DONE [[https://github.com/supermarin/xcpretty][xcpretty (fast and flexible formatter/prettifier for xcodebuild output)]].
 ******* DONE [[https://github.com/facebook/xctool][xctool]].
 
 * [2016-01-11 Mon] [[#basic-emacs-keybindings-on-linux-desktop][#]] Basic Emacs keybindings on Linux desktop
@@ -2584,13 +2770,14 @@ $ find . -exec file --mime-type '{}' \;
   :CUSTOM_ID: swift-bookmarks
   :END:
   :MODIFIED:
-  [2017-12-14 Thu]
+  [2018-02-10 Sat]
   :END:
   - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
   - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
   - [[https://talk.objc.io/episodes][All Episodes · Swift Talk · objc.io]].
   - [[https://github.com/Awesome-Server-Side-Swift/TheList][Awesome server side swift]].
   - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
+  - [[https://github.com/raywenderlich/swift-algorithm-club][GitHub - raywenderlich/swift-algorithm-club: Swift Algorithm Club]].
   - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
   - [[https://medium.com/ios-os-x-development/optionals-in-swift-for-newbies-7199a30707d5][Optionals in Swift for newbies]].
   - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
@@ -2692,13 +2879,14 @@ $ find . -exec file --mime-type '{}' \;
   [2015-12-06 Sun]
   :END:
   - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
+  - [[https://www.your-rv-lifestyle.com/travel-tips.html][50 Best Travel Tips from 10 Years of Travel - Your RV Lifestyle]].
   - [[https://medium.com/ohmygeorge-blog/bootstrapping-in-bangkok-is-the-best-option-c70e98f2b781#.2qbxef7oa][Bootstrapping in Bangkok is the best option]].
   - [[http://www.goruck.com/en][goruck bag]].
+  - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
   - [[https://news.ycombinator.com/item?id=11890991][Show HN: I made a database of remote companies (Hacker News)]].
   - [[http://www.tombihn.com][tom bihn bags]].
   - [[http://waveuptravel.com][waveUPtravel]].
   - [[https://www.quora.com/What-are-the-best-ways-to-earn-money-while-traveling-around-the-world][What are the best ways to earn money while traveling around the world? (Quora)]].
-  - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
 * [2015-11-26 Thu] [[#sql-bookmarks][#]] SQL bookmarks
   :PROPERTIES:
   :CUSTOM_ID: sql-bookmarks
@@ -2711,12 +2899,13 @@ $ find . -exec file --mime-type '{}' \;
   :Custom_ID: unix-linux-tools-bookmarks
   :END:
   :MODIFIED:
-  [2017-04-23 Sun]
+  [2018-04-08 Sun]
   :END:
   - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
   - [[https://news.ycombinator.com/item?id=12137576][A practical proposal for migrating to safe long sessions on the web (Hacker News)]].
   - [[https://news.ycombinator.com/item?id=12140477][A practical security guide for web developers (Hacker News)]].
   - [[https://news.ycombinator.com/item?id=12364077][A Unix Utility to Know About: lsof (2009) (Hacker News)]].
+  - [[https://news.ycombinator.com/item?id=16612580][Announcing gRPC Support in Nginx (Hacker News)]].
   - [[https://autotools.io/index.html][Autotools Mythbuster]].
   - [[http://www.unixwiz.net/techtips/chroot-practices.html][Best Practices for UNIX chroot]].
   - [[https://github.com/jkbrzt/httpie][httpie: Command line HTTP client, a user-friendly curl alternative]].
@@ -2766,6 +2955,7 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
   :PROPERTIES:
   :Custom_ID: diagram-tools-bookmarks
   :END:
+  - [[https://www.worthe-it.co.za/programming/2017/09/19/quick-introduction-to-graphviz.html][A Quick Introduction to Graphviz]].
   - [[http://soc.if.usp.br/manual/graphviz/html/info/shapes.html][Graphviz node shapes]].
   - [[http://www.texample.net/tikz/examples/tag/graphs/][TeXample.net (TeX examples)]].
 
@@ -3698,7 +3888,12 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
   :PROPERTIES:
   :CUSTOM_ID: germany-travel-bookmarks
   :END:
+  :MODIFIED:
+  [2018-04-05 Thu]
+  :END:
   - [[https://en.wikipedia.org/wiki/Azalea_and_Rhododendron_Park_Kromlau][Azalea and Rhododendron Park Kromlau]].
+  - [[https://kerriescupoftea.blogspot.co.uk/2014/10/lai-fufu-in-munich-germany.html][Kerrie's Cup of Tea: lai fufu in Munich Germany]].
+  - [[https://www.laifufu.de/][Laifufu Teesalon - Teezeremonie - Tee - Oolong - München - Laifufu Teesalon]].
 
 * [2015-08-08 Sat] [[#menorca-travel-bookmarks][#]] Menorca travel bookmarks
   :PROPERTIES:
@@ -4410,8 +4605,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
   :CUSTOM_ID: thailand-travel-bookmarks
   :END:
   :MODIFIED:
-  [2016-07-07 Thu]
+  [2018-04-08 Sun]
   :END:
+  - [[http://www.traveller.com.au/bangkok-street-food-restaurant-raan-jay-fai-awarded-with-michelin-star-h03h7v][Best Thai street food: Bangkok stall Raan Jay Fai awarded with Michelin star]].
   - [[http://www.thebuddhism.net/2012/07/11/buddha-statue-in-forest-pak-chong-thailand/][Buddha Statue in Forest Pak Chong]].
   - [[http://en.wikipedia.org/wiki/Phanom_Rung_Historical_Park][Phanom Rung Historical Park]].
   - [[https://twitter.com/archpics/status/607334981971623936/photo/1][Rama IX park, Bangkok]].
@@ -5681,7 +5877,7 @@ $ python ycmd
   :CUSTOM_ID: ux-bookmarks
   :END:
   :MODIFIED:
-  [2016-12-10 Sat]
+  [2018-04-08 Sun]
   :END:
   - [[https://99designs.com/designer-blog/2014/01/20/11-kerning-tips/][10 kerning tips for improving your typography]].
   - [[http://line25.com/inspiration/flat-design-color-palettes][30 Flat Design Color Palettes That Just Work]].
@@ -5710,6 +5906,7 @@ $ python ycmd
   - [[http://www.methodsandtools.com/archive/archive.php?id=126][The Psycology of UX]].
   - [[http://typographica.org/][Typographica (type reviews, books, commentary)]].
   - [[https://news.ycombinator.com/item?id=12887416][Unsplash – Beautiful photos free to use under the Unsplash License (Hacker News)]].
+  - [[https://uxplanet.org/][UX Planet]].
   - [[https://dribbble.com/][What are you working on? Dribbble is show and tell for designers.]].
   - [[https://blog.prototypr.io/why-showing-your-process-is-so-important-1e4129a5f5d2#.7o5bfjwd7][Why Showing Your Process is So Important!]].
 
@@ -6456,9 +6653,10 @@ If FROM or TO is negative, it counts from the end.
   :CUSTOM_ID: ios-bookmarks
   :END:
   :MODIFIED:
-  [2017-07-06 Thu]
+  [2018-02-17 Sat]
   :END:
   - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
+  - [[https://medium.com/flawless-app-stories/30-great-ui-kits-for-ios-engineers-41b2732896b9][30 great UI Kits for iOS engineers – Flawless App Stories – Medium]].
   - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
   - [[https://developer.apple.com/library/ios/technotes/tn2259/_index.html][Adding in-app purchase]].
   - [[http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/][An @import-ant Change in Xcode]].
@@ -6807,6 +7005,18 @@ If FROM or TO is negative, it counts from the end.
   :MODIFIED:
   [2016-10-01 Sat]
   :END:
+******* TODO Ichi teh killer
+******* TODO Audition
+******* TODO The Happiness of the Katakuris
+******* TODO Agitator
+******* TODO Gozu
+******* TODO Outrage
+******* TODO Minbo
+******* TODO Blues harp
+******* TODO Goyokin
+******* TODO The hidden blade
+******* TODO 13 Assasins
+******* TODO 7 Samurai
 ******* TODO Wild Tales.
 ******* TODO The Road.
 ******* TODO Moon.
@@ -7175,7 +7385,7 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-lisp-bookmarks
   :END:
   :MODIFIED:
-  [2016-07-03 Sun]
+  [2018-02-10 Sat]
   :END:
   - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
   - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
@@ -7201,6 +7411,7 @@ $ brew install emacs-mac
   - [[http://thewanderingcoder.com/2015/02/refactoring-beginning-emacs-lisp-i-adding-tests/][Refactoring “Beginning Emacs Lisp”: I: Adding Tests]].
   - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
   - [[http://nic.ferrier.me.uk/blog/2012_07/tips-and-tricks-for-emacslisp][Tips on Emacs Lisp programming]].
+  - [[http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html][Understanding letf and how it replaces flet · Endless Parentheses]].
   - [[https://www.reddit.com/r/emacs/comments/43nh3h/whats_the_best_practice_to_write_emacslispat_2016/][What's the best practice to write emacs-lisp (at 2016)? (Reddit)]].
   - [[http://wikemacs.org/wiki/Emacs_Lisp_Cookbook][Wikemacs's Emacs Lisp Cookbook]].
   - [[https://www.youtube.com/watch?v=XjKtkEMUYGc&feature=youtu.be][Writing a Spotify Client]].
@@ -7215,7 +7426,7 @@ $ brew install emacs-mac
   :CUSTOM_ID: emacs-bookmarks
   :END:
   :MODIFIED:
-  [2018-01-01 Mon]
+  [2018-04-08 Sun]
   :END:
   - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
   - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
@@ -7223,6 +7434,7 @@ $ brew install emacs-mac
   - [[http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git][An introduction to Magit, an Emacs mode for Git]].
   - [[http://m00natic.github.io/emacs/emacs-wiki.html][Andrey's Opionated Emacs Guide]].
   - [[https://mail.google.com/mail/u/0/#search/is%3Aunread+in%3Ainbox/153503f4a1e06878][Animated guide to paredit]].
+  - [[https://vxlabs.com/2018/03/30/asynchronous-rsync-with-emacs-dired-and-tramp/][Asynchronous rsync with Emacs, dired and tramp. – vxlabs]].
   - [[https://github.com/emacs-tw/awesome-emacs/blob/master/README.org][Awesome Emacs]].
   - [[https://github.com/bzg/emacs-training][Bastien's Emacs training]].
   - [[https://www.reddit.com/r/emacs/comments/3r9fic/best_practicestip_for_companymode_andor_yasnippet/][Best practices/tip for Companymode and/or YASnippet]].
@@ -7269,6 +7481,7 @@ $ brew install emacs-mac
   - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
   - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
   - [[http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/][Git diffs using Emacs ediff]].
+  - [[https://github.com/AndreaCrotti/yasnippet-snippets][GitHub - AndreaCrotti/yasnippet-snippets: a collection of yasnippet]].
   - [[https://github.com/kensanata/ggg][Gmail, Gnus and GPG guide]].
   - [[https://github.com/benma/go-dlv.el][Go Delve - Debug Go programs interactively with the GUD]].
   - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
@@ -7300,6 +7513,7 @@ $ brew install emacs-mac
   - [[http://www.philandstuff.com/][Philip Potter Emacs blog]].
   - [[https://github.com/bbatsov/prelude][Prelude emacs distribution]].
   - [[http://punchagan.muse-amuse.in/posts/index.html][Punchagan's blog]].
+  - [[https://vxlabs.com/2017/06/03/querying-restful-webservices-into-emacs-orgmode-tables/][Querying RESTful webservices into Emacs orgmode tables]].
   - [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bframeworks/react/README.org][React contribution layer for Spacemacs]].
   - [[http://draketo.de/light/english/free-software/read-your-python-module-documentation-emacs][Read your python module documentation from Emacs]].
   - [[http://rubikitch.com/][Rubikitch]].
@@ -7517,9 +7731,10 @@ gconftool --recursive-unset /apps/gnome-terminal
   :CUSTOM_ID: development-bookmarks
   :END:
   :MODIFIED:
-  [2017-08-29 Tue]
+  [2018-04-08 Sun]
   :END:
   - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
+  - [[https://guifroes.com/2018/03/23/3-books-that-will-take-you-to-the-next-level/][3 books that will take you to the next level – Gui Froes]].
   - [[https://quickleft.com/blog/8-tips-get-started-existing-codebase/][8 Tips To Get Started In An Existing Codebase]].
   - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
   - [[https://gist.github.com/andymatuschak/d5f0a8730ad601bcccae97e8398e25b2][A composable pattern for pure state machines with effects]].
