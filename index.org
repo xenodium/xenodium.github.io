@@ -1,6 +1,39 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-04-30 Mon] [[#pre-commit-hooks-to-save-you-from-yourself][#]] Pre-commit hooks to save you from yourself
+  :PROPERTIES:
+  :CUSTOM_ID: pre-commit-hooks-to-save-you-from-yourself
+  :END:
+  Want to try out some code, but want to ensure it's never checked in. Git pre-commit hooks are handy in this space. Add the follwing script to scan for either @COMMITFAIL or @NOCOMMIT in the staged files. If found, attempts to commit fail.
+
+  Based on https://gist.github.com/rex/223b4be50285f6b8b3e06dea50d15887:
+
+#+BEGIN_SRC sh
+  #!/bin/bash
+
+  set -o nounset
+  set -o errexit
+
+  echo "Arguments:"
+  echo "$@"
+  echo "---"
+
+  readonly FILES_PATTERN='(\..+)?$'
+  readonly FORBIDDEN='(@?NOCOMMIT|@?COMMITFAIL)'
+
+  if ( git diff --cached --name-only | grep -E "$FILES_PATTERN" | xargs grep -E --with-filename -n "$FORBIDDEN" ); then
+    echo "ERROR: @COMMITFAIL or @NOCOMMIT found. Exiting to save you from yourself."
+    exit 1
+  fi
+#+END_SRC
+
+  Save to a file and create a symbolic link to your .git/hooks directory:
+
+#+BEGIN_SRC sh
+  ln -s ../../git/commit-fail-pre-hook.sh .git/hooks/pre-commit
+#+END_SRC
+
 * [2018-04-19 Thu] [[#azores-travel-bookmarks][#]] Azores travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: azores-travel-bookmarks
@@ -6908,6 +6941,7 @@ If FROM or TO is negative, it counts from the end.
 - [[https://en.wikipedia.org/wiki/havelock_island][Radhanagar beach]].
 - [[https://en.m.wikipedia.org/wiki/Rishikesh][Rishikesh]].
 - [[https://en.wikipedia.org/wiki/Sabarmati_Ashram][Sabarmati Ashram]].
+- [[http://satyagrahabali.org/Satyagraha_brochure_email_English.pdf][Satyagraha Ashram]] (founded by Gandhi).
 - [[https://www.quora.com/What-are-the-best-places-in-Pune-for-couples-to-spend-whole-day][Things to do in Pune (Quora)]].
 - Varanasi.
 - [[https://duckduckgo.com/?q%3dvipassana%2bpagoda&iax%3d1&ia%3dimages][Vipassana pagoda]].
