@@ -1,6 +1,203 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-05-28 Mon] [[#trying-out-mu4e-and-offlineimap][#]] Trying out mu4e and offlineimap
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-mu4e-and-offlineimap
+  :END:
+Managing Email from Emacs. Surely that's crazy-talk, but hey... let's give it a try.
+
+*** Install offlineimap
+Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
+
+#+BEGIN_SRC sh
+  brew install offlineimap
+#+END_SRC
+
+Before can configure offlineimap, we'll need to handle a few things first.
+
+*** Get a cert fingerprint
+
+Use openssl for getting a certificate fingerprint. From offlineimap's [[http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint][FAQ:]]
+
+#+BEGIN_SRC sh
+  SSL_CERT_DIR="" openssl s_client -connect imap.migadu.com:993 < /dev/null 2>/dev/null | openssl x509 -fingerprint -noout -text -in /dev/stdin
+#+END_SRC
+
+Should give you something like:
+
+#+BEGIN_QUOTE
+  SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
+#+END_QUOTE
+
+*** Encrypt password
+Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
+
+#+BEGIN_SRC sh
+  brew install gnupg
+#+END_SRC
+
+If you haven't already, generate a key
+
+#+BEGIN_SRC sh
+  gpg --full-gen-key
+#+END_SRC
+
+Generate an offlineimap account password file.
+
+#+BEGIN_SRC sh
+  echo "YourPassword" | gpg --encrypt --recipient "Your Name" -o ~/.offlineimap_accountname.gpg
+#+END_SRC
+
+*** Python password  wrapper
+
+Based on Fabian's [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html][Encrypt OfflineIMAP and msmtp password with GnuPG]], I created ~/.read_password.py with:
+
+#+BEGIN_SRC python
+  import os
+  import subprocess
+
+  def read_password(path):
+    return subprocess.check_output(["gpg", "--quiet", "--batch", "-d", os.path.expanduser(path)]).strip()
+#+END_SRC
+
+*** Configure offlineimap
+
+Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
+
+#+BEGIN_SRC
+[general]
+accounts = Personal
+
+# Load this python file.
+pythonfile = ~/.read_password.py
+
+[Account Personal]
+localrepository = Personal-Local
+
+remoterepository = Personal-Remote
+
+# After syncing, let mu index it.
+postsynchook = mu index --maildir ~/stuff/active/Mail
+
+# Sync imap every 5 minutes.
+autorefresh = 5
+
+# Alternate between 10 quick syncs and full syncs.
+quick = 10
+
+[Repository Personal-Local]
+type = Maildir
+localfolders = ~/stuff/active/Mail/Personal
+
+[Repository Personal-Remote]
+type = IMAP
+remotehost = some.imap.host.com
+remoteuser = your_user_name
+
+# Use function defined in .read_password.py to read the password.
+remotepasseval = read_password("~/.offlineimap_personal_account_password.gpg")
+
+# Use the SHA1 fingerprint retrieved with openssl.
+cert_fingerprint = aabbccddeeddffaa00aa2aaaaaaaa82080aaa2aa
+#+END_SRC
+
+***** Cert file
+
+You can use macOS's certificates from Keychain Access -> System Roots -> Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
+
+#+BEGIN_QUOTE
+sslcacertfile = /path/to/certs.pem
+#+END_QUOTE
+
+Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate ca-bundle.crt, using certdata.txt from Mozilla's source tree.
+
+*** Install mu4e
+Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
+
+#+BEGIN_SRC sh
+  brew edit mu
+#+END_SRC
+
+Changed the one line:
+
+#+BEGIN_QUOTE
+- ENV["EMACS"] = "no" if build.without? "emacs"
++ ENV["EMACS"] = "/Users/alvaro/homebrew/Cellar/emacs-plus/26.1-rc1_2/bin/emacs"
+#+END_QUOTE
+
+Finally installed mu4e:
+
+#+BEGIN_SRC sh
+  brew install mu
+#+END_SRC
+
+*** Configure mu4e
+
+Lastly, configure mu4e:
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path
+               (expand-file-name "~/homebrew/share/emacs/site-lisp/mu/mu4e"))
+  (use-package mu4e
+    :config
+    ;; Update mail using 'U' in main view:
+    (csetq mu4e-get-mail-command "offlineimap")
+    (csetq mu4e-view-show-addresses t)
+    (csetq mu4e-attachment-dir (expand-file-name "~/Downloads/"))
+    (csetq mu4e-maildir "~/stuff/active/Mail")
+    (csetq mu4e-html2text-command "w3m -T text/html") ;; alternatively "textutil -stdin -format html -convert txt -stdout"
+    (csetq mu4e-user-mail-address-list '("myself@domain1.com"
+                                         "myself@domain2.com"))
+    (csetq mu4e-context-policy 'pick-first)
+    (csetq mu4e-compose-context-policy 'always-ask)
+    (setq mu4e-contexts
+          (list
+           (make-mu4e-context
+            :name "domain1"
+            :enter-func (lambda () (mu4e-message "Entering context myself@domain1.com"))
+            :leave-func (lambda () (mu4e-message "Leaving context myself@domain1.com"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
+                             msg '(:from :to :cc :bcc) "myself@domain1.com")))
+            :vars '((user-mail-address . "myself@domain1.com")
+                    (user-full-name . "Álvaro Ramírez")
+                    (mu4e-sent-folder . "/Domain1/Sent")
+                    (mu4e-drafts-folder . "/Domain1/Drafts")
+                    (mu4e-trash-folder . "/Domain1/Trash")
+                    (mu4e-compose-signature . nil)
+                    (mu4e-compose-format-flowed . nil)))
+           (make-mu4e-context
+            :name "domain2"
+            :enter-func (lambda () (mu4e-message "Entering context myself@domain2.com"))
+            :leave-func (lambda () (mu4e-message "Leaving context myself@domain2.com"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
+                             msg '(:from :to :cc :bcc) "myself@domain2.com")))
+            :vars '((user-mail-address . "myself@domain2.com")
+                    (user-full-name . "Álvaro Ramírez")
+                    (mu4e-sent-folder . "/Domain2/Sent")
+                    (mu4e-drafts-folder . "/Domain2/Drafts")
+                    (mu4e-trash-folder . "/Domain2/Trash")
+                    (mu4e-compose-signature . nil)
+                    (mu4e-compose-format-flowed . nil))))))
+#+END_SRC
+*** References
+- [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-][A Complete Guide to Email in Emacs using Mu and Mu4e]].
+- [[http://pragmaticemacs.com/mu4e-tutorials/][Pragmatic Emacs's mu4e tutorials]].
+- [[http://wenshanren.org/?p=111][mu4e: an E-mail Client for Emacs]].
+- [[http://www.djcbsoftware.nl/code/mu][Mu's site]].
+- [[http://www.kirang.in/2014/11/13/emacs-as-email-client-with-offlineimap-and-mu4e-on-osx][Emacs as email client with offlineimap and mu4e on OS X]].
+- [[https://blog.danielgempesaw.com/post/43467552978/installing-mu-and-mu4e-with-homebrew-with-emacs][Installing mu and mu4e with homebrew with emacs]].
+- [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html][Encrypt OfflineIMAP and msmtp password with GnuPG]].
+- [[https://github.com/djcb/mu][Mu's github]].
+- [[https://github.com/zamansky/using-emacs/blob/master/mu4econfig-sample.el][Zamansky mu4e's sample config]].
+- [[https://lars.ingebrigtsen.no/2014/12/01/the-emacs-network-security-manager][The Emacs Network Security Manager]].
+- [[https://vxlabs.com/2014/06/06/configuring-emacs-mu4e-with-nullmailer-offlineimap-and-multiple-identities/][Configuring Emacs mu4e with nullmailer, offlineimap and multiple identities]].
+- [[https://www.reddit.com/r/emacs/comments/73a3gp/using_emacs_to_read_gmail/][Using Emacs to read gmail (Emacs subreddit)]].
+
 * [2018-05-24 Thu] [[#transparent-emacs-titlebars-on-macos][#]] Transparent Emacs titlebars on macOS
   :PROPERTIES:
   :CUSTOM_ID: transparent-emacs-titlebars-on-macos
@@ -4734,11 +4931,12 @@ Emacs is amazingly alive. New packages are regularly listed on [[http://melpa.or
 :CUSTOM_ID: bash-bookmarks
 :END:
 :MODIFIED:
-[2018-05-15 Tue]
+[2018-05-28 Mon]
 :END:
 - [[https://www.gnu.org/software/bash/manual/bashref.html][Bash Reference Manual]].
 - [[https://news.ycombinator.com/item?id=11832941][Common shell script mistakes (Hacker News)]].
 - [[http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming][Defensive bash programming]].
+- [[https://www.cyberciti.biz/faq/linux-unix-bash-for-loop-one-line-command/][HowTo: Use bash For Loop In One Line - nixCraft]].
 - [[http://www.etalabs.net/sh_tricks.html][Rich’s sh (POSIX shell) tricks]].
 - [[https://github.com/anordal/shellharden/blob/master/how_to_do_things_safely_in_bash.md][Safe ways to do things in bash]].
 - [[https://github.com/koalaman/shellcheck][shellcheck: ShellCheck, a static analysis tool for shell scripts]].
@@ -7678,7 +7876,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-05-26 Sat]
+[2018-05-29 Tue]
 :END:
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
 - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
@@ -7710,6 +7908,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://realpython.com/blog/python/emacs-the-best-python-editor/?utm_content=buffer661a4&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer][Emacs - the Best Python Editor?]].
 - [[https://joshwolfe.ca/post/emacs-for-csharp/][Emacs as a C# development environment - Josh Wolfe]].
 - [[https://forums.unrealengine.com/showthread.php?52891-Emacs-as-my-UE4-IDE-with-intellisense][Emacs as my UE4 IDE with intellisense]].
+- [[https://lars.ingebrigtsen.no/2016/06/28/emacs-can-haz-fancy-meme/][EMACS CAN HAZ FANCY MEME – Random Thoughts]].
 - [[http://www.swaroopch.com/2013/10/17/emacs-configuration-tutorial][Emacs configuration]]: Simplify package management with cask.
 - [[http://emacsfodder.github.io/][Emacs Fodder]].
 - [[https://sites.google.com/site/drielsma/xcodeplusemacs][Emacs for Cocoa development]].
@@ -7757,6 +7956,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://zeekat.nl/articles/making-emacs-work-for-me.html][Making Emacs work for me]].
 - [[http://endlessparentheses.com/ispell-and-org-mode.html][Making Ispell work with org-mode]].
 - [[http://www.masteringemacs.org][Mastering Emacs]].
+- [[https://lars.ingebrigtsen.no/2017/10/15/meme-x-giffy/][meme x giffy – Random Thoughts]].
 - [[http://truongtx.me/2013/03/10/emacs-setting-up-perfect-environment-for-cc-programming][More emacs C++ goodness]]: More emacs dev environment tips.
 - [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][My Emacs Configuration with use-package]].
 - [[http://www.pygopar.com/my-java-android-and-eclim-setup/][My Java, Android and Eclim Setup]].
