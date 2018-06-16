@@ -1,6 +1,112 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-06-15 Fri] [[#trying-out-mbsync-with-mu4e][#]] Trying out mbsync with mu4e
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-mbsync-with-mu4e
+  :END:
+The email fun in Emacs continues. Mu4e and offlineimap are awesome. Let's try mbsync as a possible offlineimap replacement.
+
+*** Install isync (for mbsync)
+
+#+BEGIN_SRC sh
+  brew install isync
+#+END_SRC
+
+*** Configure mbsync
+
+Mbsync uses ~~/.mbsyncrc~ for configuration. Migrate values from the previous [[#trying-out-mu4e-and-offlineimap][~/.offlineimaprc]]:
+
+#+BEGIN_SRC conf
+  IMAPAccount Personal
+  Host some.imap.host.com
+  User your_user_name
+  PassCmd "gpg --quiet --batch -d ~/.offlineimap_accountname.gpg"
+  Port 993
+  SSLType IMAPS
+  AuthMechs Login
+  CertificateFile  ~/.offlineimapcerts.pem
+  # My IMAP provider doesn't handle concurrent IMAP commands.
+  PipelineDepth 1
+
+  IMAPStore Personal-remote
+  Account Personal
+
+  MaildirStore Personal-local
+  Path ~/IMAP/Personal/
+  Inbox ~/IMAP/Personal/INBOX
+
+  Channel Personal
+  Master :Personal-remote:
+  Slave :Personal-local:
+  Patterns *
+  Create Slave
+  Sync All
+  Expunge Both
+  SyncState *
+#+END_SRC
+*** No concurrent IMAP commands supported
+
+My IMAP provider doesn't handle concurrent IMAP commands. [[https://kdecherf.com/blog/2017/05/01/mbsync-and-office-365/][mbsync and Office 365]] had the answer:
+
+#+BEGIN_SRC conf
+  PipelineDepth 1
+#+END_SRC
+
+*** Initial sync
+
+Run initial from the command line sync:
+
+#+BEGIN_SRC sh
+  mbsync -Va
+#+END_SRC
+
+While syncing my largest inbox, sometimes received an unexpected EOF error:
+
+#+BEGIN_SRC
+  IMAP error: unexpected EOF from some.imap.host.com (1.2.3.4:993)
+#+END_SRC
+
+First few times, I restarted the syncing manually, but then used a loop to automatically restart it:
+
+#+BEGIN_SRC
+  while true; do mbsync -V Xenodium; sleep 5; done
+#+END_SRC
+
+*** Create mu index
+
+Reindex using mu, but first remove existing index for offlineimap messages:
+
+#+BEGIN_SRC sh
+  rm -rf ~/.mu
+#+END_SRC
+
+Ok, do index now:
+
+#+BEGIN_SRC sh
+  mu index --maildir=~/IMAP
+#+END_SRC
+
+*** Mu4e tweaks
+
+The get mail command should now point to mbsync.
+
+#+BEGIN_SRC emacs-lisp
+  (csetq mu4e-get-mail-command "mbsync -Va")
+#+END_SRC
+
+I had issues with duplicate IDs after moving and deleting messages from mu4e. [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e]] had the answer:
+
+#+BEGIN_SRC emacs-lisp
+  (csetq mu4e-change-filenames-when-moving t)
+#+END_SRC
+
+*** References
+- [[https://webgefrickel.de/blog/a-modern-mutt-setup][A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel]].
+- [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs]].
+- [[https://copyninja.info/blog/email_setup.html][My personal Email setup - Notmuch, mbsync, postfix and dovecot]].
+- [[http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html][Reading IMAP Mail in Emacs on OSX]].
+
 * [2018-06-15 Fri] [[#sticky-function-keys-on-touch-bar][#]] Sticky function keys on touch bar
   :PROPERTIES:
   :CUSTOM_ID: sticky-function-keys-on-touch-bar
@@ -143,7 +249,7 @@ ps. Alternatively, see [[http://stevelosh.com/blog/2012/10/the-homely-mutt/#retr
 
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 
-#+BEGIN_SRC
+#+BEGIN_SRC conf
 [general]
 accounts = Personal
 
