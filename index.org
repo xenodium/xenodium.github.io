@@ -1,11 +1,11 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2018-06-15 Fri] [[#trying-out-mbsync-with-mu4e][#]] Trying out mbsync with mu4e
+* [2018-06-17 Sun] [[#trying-out-mu4e-with-mbsync][#]] Trying out mu4e with mbsync
   :PROPERTIES:
-  :CUSTOM_ID: trying-out-mbsync-with-mu4e
+  :CUSTOM_ID: trying-out-mu4e-with-mbsync
   :END:
-The email fun in Emacs continues. Mu4e and offlineimap are awesome. Let's try mbsync as a possible offlineimap replacement.
+The email fun in Emacs continues. After a few weeks since I [[#trying-out-mu4e-and-offlineimap][started using mu4e and offlineimap]], I'm sold. Both are awesome. [[http://isync.sourceforge.net/mbsync.html][Mbsync]] is an [[http://www.offlineimap.org/][offlineimap]] alternative. Despite resyncing all my mail, the transition was fairly smooth. Here's how...
 
 *** Install isync (for mbsync)
 
@@ -15,7 +15,7 @@ The email fun in Emacs continues. Mu4e and offlineimap are awesome. Let's try mb
 
 *** Configure mbsync
 
-Mbsync uses ~~/.mbsyncrc~ for configuration. Migrate values from the previous [[#trying-out-mu4e-and-offlineimap][~/.offlineimaprc]]:
+Mbsync uses ~~/.mbsyncrc~ for configuration. Migrating [[#trying-out-mu4e-and-offlineimap][~/.offlineimaprc]] to ~~/.mbsyncrc~ looks like:
 
 #+BEGIN_SRC conf
   IMAPAccount Personal
@@ -61,7 +61,7 @@ Run initial from the command line sync:
   mbsync -Va
 #+END_SRC
 
-While syncing my largest inbox, sometimes received an unexpected EOF error:
+While syncing my largest inbox, it sometimes received an unexpected EOF error:
 
 #+BEGIN_SRC
   IMAP error: unexpected EOF from some.imap.host.com (1.2.3.4:993)
@@ -89,7 +89,7 @@ Ok, do index now:
 
 *** Mu4e tweaks
 
-The get mail command should now point to mbsync.
+The /get mail/ command should now point to mbsync.
 
 #+BEGIN_SRC emacs-lisp
   (csetq mu4e-get-mail-command "mbsync -Va")
@@ -101,7 +101,7 @@ I had issues with duplicate IDs after moving and deleting messages from mu4e. [[
   (csetq mu4e-change-filenames-when-moving t)
 #+END_SRC
 
-*** References
+*** Helpful references
 - [[https://webgefrickel.de/blog/a-modern-mutt-setup][A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel]].
 - [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs]].
 - [[https://copyninja.info/blog/email_setup.html][My personal Email setup - Notmuch, mbsync, postfix and dovecot]].
@@ -379,7 +379,7 @@ machine smtp.host2.com login account2@host2.com password somepassword2
 
 Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~/.authinfo.
 
-*** References
+*** Helpful references
 - [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-][A Complete Guide to Email in Emacs using Mu and Mu4e]].
 - [[https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/][A year with Notmuch mail - a super-fast email client available on Emacs]].
 - [[https://gist.github.com/areina/3879626][areina's Manage your email in emacs with mu4e]].
