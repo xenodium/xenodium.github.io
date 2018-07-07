@@ -38,7 +38,7 @@ If you're a tinkerer, you'd enjoy the powerful [[http://hammerspoon.org/][Hammer
 #+END_SRC
 
 #+ATTR_HTML: :width 75% :height 75%
-[[file:images/modal-ivy-and-your-os/chooser.png]]
+[[file:images/emacs-utilities-for-your-os/chooser.png]]
 
 Howard Abrams's post on [[http://howardism.org/Technical/Emacs/capturing-content.html][Capturing Content for Emacs]] inspired me to look at gluing Emacs and macOS to launch my own cross-platform narrowing utilities. This was a great opportunity to look into Oleh Krehel's package [[https://github.com/abo-abo/swiper][ivy: flexible, simple tools for minibuffer completion in Emacs]]. I can use it to build a macOS utility.
 
@@ -53,7 +53,7 @@ Ivy is remarkably easy to use. Turns out, [[http://oremacs.com/swiper/#api][ivy-
 #+END_SRC
 
 #+ATTR_HTML: :width 50% :height 50%
-[[file:images/modal-ivy-and-your-os/simple_ivy.png]]
+[[file:images/emacs-utilities-for-your-os/simple_ivy.png]]
 
 Pretty nifty. Let's make this completion more accessible from the rest of the OS. To do so, we create a separate Emacs frame and make it purrrty. We also want it to interact with the OS. We'll use /ivy-read/'s /:action/ to invoke a tiny bit of AppleScript. Oh and we'll also use some funny quotes teasing us of our beloved editor.
 
@@ -119,17 +119,29 @@ Pretty nifty. Let's make this completion more accessible from the rest of the OS
                   :action (lambda (funny-quote)
                             (async-shell-command (format "osascript -e 'tell app \"System Events\" to display dialog \"%s\" buttons {\"OK\"}'" funny-quote)))
                   :unwind (lambda ()
+                            (shell-command "/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/ipc/bin/hs -c 'backFromEmacs()'")
                             (delete-frame)
                             (other-window 1))))))
 #+END_SRC
 
 #+ATTR_HTML: :width 100% :height 100%
-[[file:images/modal-ivy-and-your-os/ivy_frame.png]]
+[[file:images/emacs-utilities-for-your-os/ivy_frame.gif]]
+
+So where's all this going? I wrote a utility to extract all links from [[https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/index.org][this page's org file]] and make them easily searchable from anywhere on macOS by invoking *⌥-W*.
+
+The keys are bound using Lua, Hammerspoon, and emacsclient. This works well on macOS, but there are alternatives for other operating systems.
+
+#+BEGIN_SRC lua
+  hs.execute("emacsclient -ne \""..elisp.."\" -s /tmp/emacs*/server")
+#+END_SRC
+
+Here's the resulting utility in action:
 
 #+ATTR_HTML: :width 100% :height 100%
-[[file:images/modal-ivy-and-your-os/ivy_frame_dialog.png]]
+[[file:images/emacs-utilities-for-your-os/ivy_links.gif]]
 
-So where's all this going? I wrote a utility to extract all links from [[https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/index.org][this page's org file]] and makes them easily searchable from anywhere on macOS.
+These integrations look promising. They enable me to bring cross-platform Emacs utilities into areas I hadn't considered.
+
 * [2018-07-01 Sun] [[#web-serving-tools-bookmarks][#]] Web serving tools bookmarks
   :PROPERTIES:
   :CUSTOM_ID: web-serving-tools-bookmarks
