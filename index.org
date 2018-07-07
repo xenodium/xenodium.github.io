@@ -1,6 +1,135 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-07-07 Sat] [[#emacs-utilities-for-your-os][#]] Emacs utilities for your OS
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-utilities-for-your-os
+  :END:
+Narrowing utilities are a wonderful way of increasing productivity. I have a few workflows using Emacs [[https://github.com/emacs-helm/helm][Helm]] framework.
+
+There are great productivity boosters like [[https://www.alfredapp.com/][Alfred]] and [[https://qsapp.com/][Quicksilver]] for macOS, with batteries included.
+
+If you're a tinkerer, you'd enjoy the powerful [[http://hammerspoon.org/][Hammerspoon]]. Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. You can build your own narrowing utilities using [[http://www.hammerspoon.org/docs/hs.chooser.html][chooser]] and a little Lua.
+
+#+BEGIN_SRC lua
+  local chooser = hs.chooser.new(function(choice)
+        hs.alert.show(choice['text'])
+  end)
+
+  chooser:choices({
+        {
+           ["text"] = "Alfred",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Quicksilver",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Hammerspoon",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Emacs",
+           ["subText"] = "is everywhere :)",
+        },
+  })
+  chooser:show()
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/modal-ivy-and-your-os/chooser.png]]
+
+Howard Abrams's post on [[http://howardism.org/Technical/Emacs/capturing-content.html][Capturing Content for Emacs]] inspired me to look at gluing Emacs and macOS to launch my own cross-platform narrowing utilities. This was a great opportunity to look into Oleh Krehel's package [[https://github.com/abo-abo/swiper][ivy: flexible, simple tools for minibuffer completion in Emacs]]. I can use it to build a macOS utility.
+
+Ivy is remarkably easy to use. Turns out, [[http://oremacs.com/swiper/#api][ivy-read]] is all you need. A simple Emacs completion can be accomplished with little elisp.
+
+#+BEGIN_SRC emacs-lisp
+  (ivy-read "Hello ivy: "
+            '("One "
+              "Two "
+              "Three "
+              "Four "))
+#+END_SRC
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/modal-ivy-and-your-os/simple_ivy.png]]
+
+Pretty nifty. Let's make this completion more accessible from the rest of the OS. To do so, we create a separate Emacs frame and make it purrrty. We also want it to interact with the OS. We'll use /ivy-read/'s /:action/ to invoke a tiny bit of AppleScript. Oh and we'll also use some funny quotes teasing us of our beloved editor.
+
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*modal-ivy*")
+    (let ((frame (make-frame '((auto-raise . t)
+                               (background-color . "DeepSkyBlue3")
+                               (cursor-color . "MediumPurple1")
+                               (font . "Menlo 15")
+                               (foreground-color . "#eeeeec")
+                               (height . 20)
+                               (internal-border-width . 20)
+                               (left . 0.33)
+                               (left-fringe . 0)
+                               (line-spacing . 3)
+                               (menu-bar-lines . 0)
+                               (minibuffer . only)
+                               (right-fringe . 0)
+                               (tool-bar-lines . 0)
+                               (top . 48)
+                               (undecorated . t)
+                               (unsplittable . t)
+                               (vertical-scroll-bars . nil)
+                               (width . 110)))))
+      (set-face-attribute 'ivy-minibuffer-match-face-1 frame
+                          :background nil
+                          :foreground nil)
+      (set-face-attribute 'ivy-minibuffer-match-face-2 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-minibuffer-match-face-3 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-minibuffer-match-face-4 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-current-match frame
+                          :background "#ffc911"
+                          :foreground "red")
+      (set-face-attribute 'minibuffer-prompt frame
+                          :foreground "grey")
+      (let ((ivy-height 20)
+            (ivy-count-format ""))
+        (ivy-read "Emacs acronyms: "
+                  '(" Emacs: Escape-Meta-Alt-Control-Shift "
+                    " Emacs: Eight Megabytes And Constantly Swapping "
+                    " Emacs: Even a Master of Arts Comes Simpler "
+                    " Emacs: Each Manual's Audience is Completely Stupified "
+                    " Emacs: Eventually Munches All Computer Storage "
+                    " Emacs: Eradication of Memory Accomplished with Complete Simplicity "
+                    " Emacs: Easily Maintained with the Assistance of Chemical Solutions "
+                    " Emacs: Extended Macros Are Considered Superfluous "
+                    " Emacs: Every Mode Accelerates Creation of Software "
+                    " Emacs: Elsewhere Maybe All Commands are Simple "
+                    " Emacs: Emacs Makes All Computing Simple "
+                    " Emacs: Emacs Masquerades As Comfortable Shell "
+                    " Emacs: Emacs My Alternative Computer Story "
+                    " Emacs: Emacs Made Almost Completely Screwed "
+                    " Emacs: Each Mail A Continued Surprise "
+                    " Emacs: Eating Memory And Cycle-Sucking "
+                    " Emacs: Elvis Masterminds All Computer Software "
+                    " Emacs: Emacs Makes A Computer Slow" )
+                  :action (lambda (funny-quote)
+                            (async-shell-command (format "osascript -e 'tell app \"System Events\" to display dialog \"%s\" buttons {\"OK\"}'" funny-quote)))
+                  :unwind (lambda ()
+                            (delete-frame)
+                            (other-window 1))))))
+#+END_SRC
+
+#+ATTR_HTML: :width 100% :height 100%
+[[file:images/modal-ivy-and-your-os/ivy_frame.png]]
+
+#+ATTR_HTML: :width 100% :height 100%
+[[file:images/modal-ivy-and-your-os/ivy_frame_dialog.png]]
+
+So where's all this going? I wrote a utility to extract all links from [[https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/index.org][this page's org file]] and makes them easily searchable from anywhere on macOS.
 * [2018-07-01 Sun] [[#web-serving-tools-bookmarks][#]] Web serving tools bookmarks
   :PROPERTIES:
   :CUSTOM_ID: web-serving-tools-bookmarks
@@ -8166,8 +8295,9 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-07-01 Sun]
+[2018-07-07 Sat]
 :END:
+- [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
 - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
 - [[https://scripter.co/accessing-devdocs-from-emacs/][Accessing Devdocs from Emacs]].
@@ -8206,6 +8336,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://sites.google.com/site/drielsma/xcodeplusemacs][Emacs for Cocoa development]].
 - [[https://github.com/pierre-lecocq/emacs4developers][Emacs for developers]].
 - [[http://roupam.github.io/][Emacs for Xcode+ios Development]].
+- [[https://huytd.github.io/emacs-from-scratch.html][Emacs from scratch (huytd)]].
 - [[http://www.reddit.com/r/emacs/comments/1rck3u/what_do_you_use_to_navigate_code][Emacs goodies]]: Emacs post with tips for navigating code.
 - [[http://emacshorrors.com][Emacs horrors]].
 - [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-en.org][Emacs in one year]]: Someone's emacs experience over a year.
