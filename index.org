@@ -5,7 +5,7 @@
   :PROPERTIES:
   :CUSTOM_ID: emacs-utilities-for-your-os
   :END:
-Narrowing utilities are a wonderful way of increasing productivity. I have a few workflows using Emacs [[https://github.com/emacs-helm/helm][Helm]] framework.
+Narrowing utilities are a wonderful way of increasing productivity. I have a few workflows using Emacs's [[https://github.com/emacs-helm/helm][Helm]] framework.
 
 There are great productivity boosters like [[https://www.alfredapp.com/][Alfred]] and [[https://qsapp.com/][Quicksilver]] for macOS, with batteries included.
 
@@ -40,7 +40,9 @@ If you're a tinkerer, you'd enjoy the powerful [[http://hammerspoon.org/][Hammer
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/emacs-utilities-for-your-os/chooser.png]]
 
-Howard Abrams's post on [[http://howardism.org/Technical/Emacs/capturing-content.html][Capturing Content for Emacs]] inspired me to look at gluing Emacs and macOS to launch my own cross-platform narrowing utilities. This was a great opportunity to look into Oleh Krehel's package [[https://github.com/abo-abo/swiper][ivy: flexible, simple tools for minibuffer completion in Emacs]]. I can use it to build a macOS utility.
+Howard Abrams's post on [[http://howardism.org/Technical/Emacs/capturing-content.html][Capturing Content for Emacs]] inspired me to look at gluing Emacs and macOS to launch my own cross-platform narrowing utilities.
+
+I've also taken this opportunity to look at Oleh Krehel's wonderful completion package: [[https://github.com/abo-abo/swiper][Ivy]]. We can use it to build a macOS narrowing utility.
 
 Ivy is remarkably easy to use. Turns out, [[http://oremacs.com/swiper/#api][ivy-read]] is all you need. A simple Emacs completion can be accomplished with little elisp.
 
@@ -55,7 +57,9 @@ Ivy is remarkably easy to use. Turns out, [[http://oremacs.com/swiper/#api][ivy-
 #+ATTR_HTML: :width 50% :height 50%
 [[file:images/emacs-utilities-for-your-os/simple_ivy.png]]
 
-Pretty nifty. Let's make this completion more accessible from the rest of the OS. To do so, we create a separate Emacs frame and make it purrrty. We also want it to interact with the OS. We'll use /ivy-read/'s /:action/ to invoke a tiny bit of AppleScript. Oh and we'll also use some funny quotes teasing us of our beloved editor.
+Pretty nifty. Let's make this completion more accessible from the rest of the OS. To do so, we create a separate Emacs frame and make it pretty. We also want it to interact with the OS. We'll use /ivy-read/'s /:action/ to invoke a tiny bit of AppleScript.
+
+Oh and we'll also use some funny quotes teasing us about our beloved editor.
 
 #+BEGIN_SRC emacs-lisp
   (with-current-buffer (get-buffer-create "*modal-ivy*")
