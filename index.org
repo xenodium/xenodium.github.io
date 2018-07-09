@@ -1,11 +1,298 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-07-08 Sun] [[#pipestatus-for-all-return-codes][#]] PIPESTATUS for all return codes
+  :PROPERTIES:
+  :CUSTOM_ID: pipestatus-for-all-return-codes
+  :END:
+From [[https://twitter.com/saruspete][@saruspete]]'s [[https://twitter.com/saruspete/status/1014801074794979335?s=12][tweet]], ${PIPESTATUS[@]} gives ya all piped commands' return codes:
+
+#+BEGIN_SRC sh :results verbatim
+  echo foo | grep bar | tr z a | cat
+  echo ${PIPESTATUS[@]}
+#+END_SRC
+
+#+RESULTS:
+: 0 1 0 0
+
+* [2018-07-07 Sat] [[#emacs-utilities-for-your-os][#]] Emacs utilities for your OS
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-utilities-for-your-os
+  :END:
+Narrowing utilities are a wonderful way of increasing productivity. I have a few workflows using Emacs's [[https://github.com/emacs-helm/helm][Helm]] framework.
+
+There are great productivity boosters like [[https://www.alfredapp.com/][Alfred]] and [[https://qsapp.com/][Quicksilver]] for macOS, with batteries included.
+
+If you're a tinkerer, you'd enjoy the powerful [[http://hammerspoon.org/][Hammerspoon]]. Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. You can build your own narrowing utilities using [[http://www.hammerspoon.org/docs/hs.chooser.html][chooser]] and a little Lua.
+
+#+BEGIN_SRC lua
+  local chooser = hs.chooser.new(function(choice)
+        hs.alert.show(choice['text'])
+  end)
+
+  chooser:choices({
+        {
+           ["text"] = "Alfred",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Quicksilver",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Hammerspoon",
+           ["subText"] = "macOS only",
+        },
+        {
+           ["text"] = "Emacs",
+           ["subText"] = "is everywhere :)",
+        },
+  })
+  chooser:show()
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-utilities-for-your-os/chooser.png]]
+
+Howard Abrams's post on [[http://howardism.org/Technical/Emacs/capturing-content.html][Capturing Content for Emacs]] inspired me to look at gluing Emacs and macOS to launch my own cross-platform narrowing utilities.
+
+I've also taken this opportunity to look at Oleh Krehel's wonderful completion package: [[https://github.com/abo-abo/swiper][Ivy]]. We can use it to build a macOS narrowing utility.
+
+Ivy is remarkably easy to use. Turns out, [[http://oremacs.com/swiper/#api][ivy-read]] is all you need. A simple Emacs completion can be accomplished with little elisp.
+
+#+BEGIN_SRC emacs-lisp
+  (ivy-read "Hello ivy: "
+            '("One "
+              "Two "
+              "Three "
+              "Four "))
+#+END_SRC
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-utilities-for-your-os/simple_ivy.png]]
+
+Pretty nifty. Let's make this completion more accessible from the rest of the OS. To do so, we create a separate Emacs frame and make it pretty. We also want it to interact with the OS. We'll use /ivy-read/'s /:action/ to invoke a tiny bit of AppleScript.
+
+Oh and we'll also use some funny quotes to tease ourselves about our beloved editor.
+
+#+BEGIN_SRC emacs-lisp
+  (with-current-buffer (get-buffer-create "*modal-ivy*")
+    (let ((frame (make-frame '((auto-raise . t)
+                               (background-color . "DeepSkyBlue3")
+                               (cursor-color . "MediumPurple1")
+                               (font . "Menlo 15")
+                               (foreground-color . "#eeeeec")
+                               (height . 20)
+                               (internal-border-width . 20)
+                               (left . 0.33)
+                               (left-fringe . 0)
+                               (line-spacing . 3)
+                               (menu-bar-lines . 0)
+                               (minibuffer . only)
+                               (right-fringe . 0)
+                               (tool-bar-lines . 0)
+                               (top . 48)
+                               (undecorated . t)
+                               (unsplittable . t)
+                               (vertical-scroll-bars . nil)
+                               (width . 110)))))
+      (set-face-attribute 'ivy-minibuffer-match-face-1 frame
+                          :background nil
+                          :foreground nil)
+      (set-face-attribute 'ivy-minibuffer-match-face-2 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-minibuffer-match-face-3 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-minibuffer-match-face-4 frame
+                          :background nil
+                          :foreground "orange1")
+      (set-face-attribute 'ivy-current-match frame
+                          :background "#ffc911"
+                          :foreground "red")
+      (set-face-attribute 'minibuffer-prompt frame
+                          :foreground "grey")
+      (let ((ivy-height 20)
+            (ivy-count-format ""))
+        (ivy-read "Emacs acronyms: "
+                  '(" Emacs: Escape-Meta-Alt-Control-Shift "
+                    " Emacs: Eight Megabytes And Constantly Swapping "
+                    " Emacs: Even a Master of Arts Comes Simpler "
+                    " Emacs: Each Manual's Audience is Completely Stupified "
+                    " Emacs: Eventually Munches All Computer Storage "
+                    " Emacs: Eradication of Memory Accomplished with Complete Simplicity "
+                    " Emacs: Easily Maintained with the Assistance of Chemical Solutions "
+                    " Emacs: Extended Macros Are Considered Superfluous "
+                    " Emacs: Every Mode Accelerates Creation of Software "
+                    " Emacs: Elsewhere Maybe All Commands are Simple "
+                    " Emacs: Emacs Makes All Computing Simple "
+                    " Emacs: Emacs Masquerades As Comfortable Shell "
+                    " Emacs: Emacs My Alternative Computer Story "
+                    " Emacs: Emacs Made Almost Completely Screwed "
+                    " Emacs: Each Mail A Continued Surprise "
+                    " Emacs: Eating Memory And Cycle-Sucking "
+                    " Emacs: Elvis Masterminds All Computer Software "
+                    " Emacs: Emacs Makes A Computer Slow" )
+                  :action (lambda (funny-quote)
+                            (async-shell-command (format "osascript -e 'tell app \"System Events\" to display dialog \"%s\" buttons {\"OK\"}'" funny-quote)))
+                  :unwind (lambda ()
+                            (shell-command "/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/ipc/bin/hs -c 'backFromEmacs()'")
+                            (delete-frame)
+                            (other-window 1))))))
+#+END_SRC
+
+#+ATTR_HTML: :width 100% :height 100%
+[[file:images/emacs-utilities-for-your-os/ivy_frame.gif]]
+
+So where's all this going? I wrote a utility to extract all links from [[https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/index.org][this page's org file]] and make them easily searchable from anywhere on macOS by invoking *⌥-W*.
+
+The keys are bound using Lua, Hammerspoon, and emacsclient. This works well on macOS, but there are alternatives for other operating systems.
+
+#+BEGIN_SRC lua
+  hs.execute("emacsclient -ne \""..elisp.."\" -s /tmp/emacs*/server")
+#+END_SRC
+
+Here's the resulting utility in action:
+
+#+ATTR_HTML: :width 100% :height 100%
+[[file:images/emacs-utilities-for-your-os/ivy_links.gif]]
+
+These integrations look promising. They enable me to bring cross-platform Emacs utilities into areas I hadn't considered.
+
+* [2018-07-01 Sun] [[#web-serving-tools-bookmarks][#]] Web serving tools bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: web-serving-tools-bookmarks
+  :END:
+- [[http://irreal.org/blog/?p=7306][HTTPS Is Easy (Irreal)]].
+* [2018-06-24 Sun] [[#url-shortener-bookmarks][#]] URL shortener bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: url-shortener-bookmarks
+  :END:
+- [[https://github.com/kellegous/go][go: Another Google-like Go short link service]].
+- [[https://github.com/issmirnov/zap][zap: Blazing fast web shortcuts]].
+* [2018-06-17 Sun] [[#trying-out-mu4e-with-mbsync][#]] Trying out mu4e with mbsync
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-mu4e-with-mbsync
+  :END:
+The email fun in Emacs continues. After a few weeks since I [[#trying-out-mu4e-and-offlineimap][started using mu4e and offlineimap]], I'm sold. Both are awesome. [[http://isync.sourceforge.net/mbsync.html][Mbsync]] is an [[http://www.offlineimap.org/][offlineimap]] alternative. Despite resyncing all my mail, the transition was fairly smooth. Here's how...
+
+*** Install isync (for mbsync)
+
+#+BEGIN_SRC sh
+  brew install isync
+#+END_SRC
+
+*** Configure mbsync
+
+Mbsync uses ~~/.mbsyncrc~ for configuration. Migrating [[#trying-out-mu4e-and-offlineimap][~/.offlineimaprc]] to ~~/.mbsyncrc~ looks like:
+
+#+BEGIN_SRC conf
+  IMAPAccount Personal
+  Host some.imap.host.com
+  User your_user_name
+  PassCmd "gpg --quiet --batch -d ~/.offlineimap_accountname.gpg"
+  Port 993
+  SSLType IMAPS
+  AuthMechs Login
+  CertificateFile  ~/.offlineimapcerts.pem
+  # My IMAP provider doesn't handle concurrent IMAP commands.
+  PipelineDepth 1
+
+  IMAPStore Personal-remote
+  Account Personal
+
+  MaildirStore Personal-local
+  Path ~/IMAP/Personal/
+  Inbox ~/IMAP/Personal/INBOX
+
+  Channel Personal
+  Master :Personal-remote:
+  Slave :Personal-local:
+  Patterns *
+  Create Slave
+  Sync All
+  Expunge Both
+  SyncState *
+#+END_SRC
+*** No concurrent IMAP commands supported
+
+My IMAP provider doesn't handle concurrent IMAP commands. [[https://kdecherf.com/blog/2017/05/01/mbsync-and-office-365/][mbsync and Office 365]] had the answer:
+
+#+BEGIN_SRC conf
+  PipelineDepth 1
+#+END_SRC
+
+*** Initial sync
+
+Run initial from the command line sync:
+
+#+BEGIN_SRC sh
+  mbsync -Va
+#+END_SRC
+
+While syncing my largest inbox, it sometimes received an unexpected EOF error:
+
+#+BEGIN_SRC
+  IMAP error: unexpected EOF from some.imap.host.com (1.2.3.4:993)
+#+END_SRC
+
+First few times, I restarted the syncing manually, but then used a loop to automatically restart it:
+
+#+BEGIN_SRC
+  while true; do mbsync -V Xenodium; sleep 5; done
+#+END_SRC
+
+*** Create mu index
+
+Reindex using mu, but first remove existing index for offlineimap messages:
+
+#+BEGIN_SRC sh
+  rm -rf ~/.mu
+#+END_SRC
+
+Ok, do index now:
+
+#+BEGIN_SRC sh
+  mu index --maildir=~/IMAP
+#+END_SRC
+
+*** Mu4e tweaks
+
+The /get mail/ command should now point to mbsync.
+
+#+BEGIN_SRC emacs-lisp
+  (csetq mu4e-get-mail-command "mbsync -Va")
+#+END_SRC
+
+I had issues with duplicate IDs after moving and deleting messages from mu4e. [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e]] had the answer:
+
+#+BEGIN_SRC emacs-lisp
+  (csetq mu4e-change-filenames-when-moving t)
+#+END_SRC
+
+*** Helpful references
+- [[https://webgefrickel.de/blog/a-modern-mutt-setup][A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel]].
+- [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs]].
+- [[https://copyninja.info/blog/email_setup.html][My personal Email setup - Notmuch, mbsync, postfix and dovecot]].
+- [[http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html][Reading IMAP Mail in Emacs on OSX]].
+
+* [2018-06-15 Fri] [[#sticky-function-keys-on-touch-bar][#]] Sticky function keys on touch bar
+  :PROPERTIES:
+  :CUSTOM_ID: sticky-function-keys-on-touch-bar
+  :END:
+Visible (and sticky) function keys are not the touch bar default for Emacs. Let's change that:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/sticky-function-keys-on-touch-bar/touchbar_function_keys.png]]
+
 * [2018-06-13 Wed] [[#gnu-find-on-macos][#]] GNU find on macOS
   :PROPERTIES:
   :CUSTOM_ID: gnu-find-on-macos
   :END:
-At times, you may need GNU versions of command line utilities on macOS. For example, GNU find. As usual, Homebrew saves the day. Install with:
+At times, you may need GNU versions of command line utilities on macOS. For example, GNU find.
+
+As usual, Homebrew saves the day. Install with:
 
 #+BEGIN_SRC sh
   brew install findutils
@@ -27,7 +314,7 @@ Unless you install with --with-default-names (I don't), GNU utilities will be pr
 : Written by Eric B. Decker, James Youngman, and Kevin Dalley.
 : Features enabled: D_TYPE O_NOFOLLOW(enabled) LEAF_OPTIMISATION FTS(FTS_CWDFD) CBO(level=2)
 
-If you need more, there are others. For example:
+If you need more, there are others:
 
 #+BEGIN_SRC sh
   brew install binutils
@@ -48,6 +335,11 @@ If you need more, there are others. For example:
   brew install wget
 #+END_SRC
 
+* [2018-06-13 Wed] [[#plantuml-bookmarks][#]] PlantUML bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: plantuml-bookmarks
+  :END:
+  - [[https://scripter.co/notes/plantuml][Collection of PlantUML snippets from Scripter.co]].
 * [2018-05-29 Tue] [[#adding-mu4e-maildirs-extension][#]] Adding mu4e maildirs extension
   :PROPERTIES:
   :CUSTOM_ID: adding-mu4e-maildirs-extension
@@ -127,7 +419,7 @@ ps. Alternatively, see [[http://stevelosh.com/blog/2012/10/the-homely-mutt/#retr
 
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 
-#+BEGIN_SRC
+#+BEGIN_SRC conf
 [general]
 accounts = Personal
 
@@ -257,7 +549,7 @@ machine smtp.host2.com login account2@host2.com password somepassword2
 
 Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~/.authinfo.
 
-*** References
+*** Helpful references
 - [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-][A Complete Guide to Email in Emacs using Mu and Mu4e]].
 - [[https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/][A year with Notmuch mail - a super-fast email client available on Emacs]].
 - [[https://gist.github.com/areina/3879626][areina's Manage your email in emacs with mu4e]].
@@ -265,20 +557,25 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 - [[http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html][Drowning in Email; mu4e to the Rescue]].
 - [[http://www.kirang.in/2014/11/13/emacs-as-email-client-with-offlineimap-and-mu4e-on-osx][Emacs as email client with offlineimap and mu4e on OS X]].
 - [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html][Encrypt OfflineIMAP and msmtp password with GnuPG]].
+- [[https://github.com/OfflineIMAP/imapfw][GitHub - OfflineIMAP/imapfw: imapfw (IMAP/mail framework)]].
 - [[https://github.com/kensanata/ggg][Gmail Gnus GPG Guide (GGGG)]].
 - [[https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/][Handling Email with Emacs]] (helm included).
 - [[https://www.reddit.com/r/emacs/comments/5hfcid/i_got_mu4e_working/][I got mu4e working! (Reddit)]].
 - [[https://blog.danielgempesaw.com/post/43467552978/installing-mu-and-mu4e-with-homebrew-with-emacs][Installing mu and mu4e with homebrew with emacs]].
+- [[https://github.com/iqbalansari/dotEmacs/blob/master/config/mail.org][Iqbal Ansari's mail config]].
 - [[https://github.com/djcb/mu][Mu's github mirror]].
 - [[http://www.djcbsoftware.nl/code/mu][Mu's page]].
 - [[http://wenshanren.org/?p=111][mu4e: an E-mail Client for Emacs]].
-- [[http://rudolfochrist.github.io/blog/2015/03/21/offlineimap-with-ssl-files-on-osx/][Offlineimap with SSL files on OSX - Sebastian Christ]].
+- [[http://rudolfochrist.github.io/blog/2015/03/21/offlineimap-with-ssl-files-on-osx/][OfflineIMAP with SSL files on OSX - Sebastian Christ]].
+- [[https://news.ycombinator.com/item?id=14221501][OfflineIMAP: sync and backup tool for IMAP (Hacker News) and mbsync in comments]].
+- [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org][Practical guide to use Gnus with Gmail]].
 - [[http://pragmaticemacs.com/mu4e-tutorials/][Pragmatic Emacs's mu4e tutorials]].
 - [[http://ict4g.net/adolfo/notes/2014/12/27/emacs-imap.html][Reading IMAP Mail in Emacs on OSX]].
 - [[https://lars.ingebrigtsen.no/2014/12/01/the-emacs-network-security-manager][The Emacs Network Security Manager]].
 - [[http://tech.memoryimprintstudio.com/the-ultimate-emailing-agent-with-mu4e-and-emacs][The Ultimate Emailing Agent with Mu4e and Emacs]].
 - [[https://www.reddit.com/r/emacs/comments/8q84dl/tip_how_to_easily_manage_your_emails_with_mu4e/][TIP: How to easily manage your emails with mu4e (Reddit)]].
 - [[https://www.reddit.com/r/emacs/comments/73a3gp/using_emacs_to_read_gmail/][Using Emacs to read gmail (Emacs subreddit)]].
+- [[http://www.brool.com/post/using-mu4e/][Using mu4e (Brool blog)]].
 - [[https://github.com/zamansky/using-emacs/blob/master/mu4econfig-sample.el][Zamansky mu4e's sample config]].
 - [[https://www.youtube.com/watch?v=newRHXKm4H4][Zamansky's video on mu4e]].
 
@@ -1712,7 +2009,6 @@ _inclusive_; that is, it includes the days specified by mark and point.
 ******* TODO [[https://developer.apple.com/videos/play/wwdc2015/219/][Mysteries of Auto Layout, Part 2]].
 ******* TODO [[https://www.youtube.com/watch?v=COviCoUtwx4][Netflix JavaScript Talks - RxJS Version 5]].
 ******* TODO [[http://www.reactive-streams.org][Reactive Streams]].
-******* TODO [[http://akarnokd.blogspot.co.uk/2016/04/google-agera-vs-reactivex.html?m=1][Google Agera vs. ReactiveX]].
 * [2016-05-03 Tue] [[#when-ooo-impulse-kicks-in][#]] When OOO impulse kicks in...
 :PROPERTIES:
 :CUSTOM_ID: when-ooo-impulse-kicks-in
@@ -2479,9 +2775,10 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :CUSTOM_ID: parenting-bookmarks
 :END:
 :MODIFIED:
-[2018-05-26 Sat]
+[2018-07-08 Sun]
 :END:
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
+- [[https://news.ycombinator.com/item?id=17435671][How to get kids to pay attention (Hacker News)]].
 - [[https://aeon.co/essays/do-people-have-a-moral-duty-to-have-children-if-they-can][Is it OK to have kids?]].
 - [[https://www.techwillsaveus.com/][Tech kits for bright sparks (from techwillsaveus)]].
 - [[http://www.theglobeandmail.com/life/parenting/the-disintegration-of-the-parent-child-bond/article28191786/][The disintegration of the parent-child bond]].
@@ -2956,6 +3253,11 @@ Bonus: Replace existing M-r binding to use ar/helm-shell-search-history.
   (bind-key "M-r" #'ar/helm-shell-search-history shell-mode-map)
 #+END_SRC
 
+* [2015-12-19 Sat] [[#medicine-bookmarks][#]] Medicine bookmarks
+:PROPERTIES:
+:CUSTOM_ID: medicine-bookmarks
+:END:
+- [[https://sciencebasedmedicine.org/][Science-Based Medicine – Exploring issues and controversies in science and technology]].
 * [2015-12-19 Sat] [[#view-dicom-files-from-your-x-ray][#]] View DICOM files from your X-ray
 :PROPERTIES:
 :CUSTOM_ID: view-dicom-files-from-your-x-ray
@@ -3104,7 +3406,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 :CUSTOM_ID: maps-dev-bookmarks
 :END:
 :MODIFIED:
-[2018-04-14 Sat]
+[2018-06-16 Sat]
 :END:
 - [[https://github.com/ue4plugins/StreetMap/blob/master/README.md][Import OpenStreetMap XML data into your Unreal Engine 4]].
 - [[https://www.locationtech.org][Location Tech]].
@@ -3117,6 +3419,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 - [[http://wiki.openstreetmap.org/wiki/OSM_on_Paper][OSM on paper]].
 - [[http://download.osmand.net/rawindexes/][OSM raw indices]].
 - [[http://news.spatialdev.com/portable-open-street-map/][Portable OSM]].
+- [[https://developer.mapquest.com/documentation/static-map-api/v5/][Static Map API - Overview | MapQuest API Documentation]].
 - [[http://www.mostlymaths.net/2015/06/using-qgis-to-create-custom-map.html][Using QGIS to create a custom map]].
 
 * [2015-12-17 Thu] [[#use-imagemagick-to-convert-image-to-grayscale][#]] Use ImageMagick to convert image to grayscale
@@ -3144,6 +3447,39 @@ JCS, from [[http://irreal.org/blog][Irreal]], recently [[http://irreal.org/blog/
 
 [[file:images/drill-down-emacs-dired-with-dired-subtree/dired-subtree.gif]]
 
+* [2015-12-14 Mon] [[#gpg-examples][#]] GPG examples
+:PROPERTIES:
+:CUSTOM_ID: gpg-examples
+:END:
+Export private key
+#+BEGIN_SRC sh
+  gpg --export-secret-key -a <keyid> > <private.asc>
+#+END_SRC
+
+Import key
+#+BEGIN_SRC sh
+  gpg --import < <private.asc>
+#+END_SRC
+
+Delete public key
+#+BEGIN_SRC sh
+  gpg --delete-keys <keyid>
+#+END_SRC
+
+Delete private key
+#+BEGIN_SRC sh
+  gpg --delete-secret-keys <keyid>
+#+END_SRC
+
+Edit key
+
+#+BEGIN_SRC sh
+  gpg --edit-key <keyid>
+  gpg> uid (lists IDs)
+  gpg> uid 2 (marks ID)
+  gpg> deluid (deletes marked ID)
+  Really remove this user ID? (y/N) y
+#+END_SRC
 * [2015-12-14 Mon] [[#css-bookmarks][#]] CSS bookmarks
 :PROPERTIES:
 :CUSTOM_ID: css-bookmarks
@@ -3271,7 +3607,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2018-06-12 Tue]
+[2018-06-16 Sat]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
@@ -3279,13 +3615,18 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://github.com/Awesome-Server-Side-Swift/TheList][Awesome server side swift]].
 - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
 - [[https://github.com/mpangburn/FunctionKit/blob/master/README.md][FunctionKit/README.md at master · mpangburn/FunctionKit · GitHub]].
+- [[http://rshankar.com/get-your-current-address-in-swift/][Get your current address in Swift – Ravi Shankar]].
 - [[https://github.com/Raizlabs/BonMot][GitHub - Raizlabs/BonMot: Beautiful, easy attributed strings in Swift]].
 - [[https://github.com/raywenderlich/swift-algorithm-club][GitHub - raywenderlich/swift-algorithm-club: Swift Algorithm Club]].
 - [[https://github.com/saoudrizwan/Disk][GitHub - saoudrizwan/Disk: Delightful framework for iOS to easily  persist strcts, images, and data]].
 - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
 - [[https://twitter.com/olebegemann/status/1004458683428950018?s=12][I made a “What’s new in Swift 4.2” playground]].
+- [[https://medium.com/@PavelGnatyuk/large-title-and-search-in-ios-11-514d5e020cee][Large Title and Search in iOS 11 – Pavel Gnatyuk – Medium]].
+- [[https://github.com/hyperoslo/Lightbox][Lightbox is a convenient and easy to use image viewer for your iOS app]].
+- [[https://github.com/netguru/swift-style-guide][Netguru's Swift Style Guide]].
 - [[https://medium.com/ios-os-x-development/optionals-in-swift-for-newbies-7199a30707d5][Optionals in Swift for newbies]].
 - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
+- [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[http://swiftmonthly.com/][SwiftMothly]].
 - [[https://www.youtube.com/user/TheSwiftLanguage][The Shift Language (YouTube)]].
@@ -3516,6 +3857,19 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 - [[https://en.wikipedia.org/wiki/K%25C5%258Dfuku-ji][Kōfuku-ji]].
 - [[https://en.wikipedia.org/wiki/T%C5%8Ddai-ji][Nara Buddha temple]].
 
+* [2015-11-21 Sat] [[#kubernetes-bookmarks][#]] Kubernetes bookmarks
+:PROPERTIES:
+:CUSTOM_ID: kubernetes-bookmarks
+:END:
+:MODIFIED:
+[2018-07-08 Sun]
+:END:
+- [[https://news.ycombinator.com/item?id=17462043][A Tutorial Introduction to Kubernetes (Hacker News)]].
+- [[https://news.ycombinator.com/item?id=11216020][Borg, Omega, Kubernetes: Lessons learned from container management over a decade (Hacker News)]].
+- [[http://fabric8.io/][Fabric8 is an integrated open source DevOps and Integration Platform (Kubernetes or OpenShift)]].
+- [[https://news.ycombinator.com/item?id=14452819][Kubernetes by Example | Hacker News]].
+- [[https://news.ycombinator.com/item?id%3D10438273][Swarm vs. Fleet vs. Kubernetes vs. Mesos (Hacker News)]].
+- [[https://news.ycombinator.com/item?id%3D10438273][Swarm vs. Fleet vs. Kubernetes vs. Mesos]].
 * [2015-11-21 Sat] [[#docker-bookmarks][#]] Docker bookmarks
 :PROPERTIES:
 :CUSTOM_ID: docker-bookmarks
@@ -3523,15 +3877,9 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 :MODIFIED:
 [2016-01-25 Mon]
 :END:
-- [[https://news.ycombinator.com/item?id=11216020][Borg, Omega, Kubernetes: Lessons learned from container management over a decade (Hacker News)]].
 - [[https://news.ycombinator.com/item?id%3D10890233][Docker for Beginners (Hacker News)]].
 - [[http://prakhar.me/docker-curriculum/][Docker for Beginners]].
-- [[http://fabric8.io/][Fabric8 is an integrated open source DevOps and Integration Platform (Kubernetes or OpenShift)]].
-- [[https://news.ycombinator.com/item?id=14452819][Kubernetes by Example | Hacker News]].
 - [[https://news.ycombinator.com/item?id%3D10969052][Simplifying Dowcker on OS X (Hacker News)]].
-- [[https://news.ycombinator.com/item?id%3D10438273][Swarm vs. Fleet vs. Kubernetes vs. Mesos (Hacker News)]].
-- [[https://news.ycombinator.com/item?id%3D10438273][Swarm vs. Fleet vs. Kubernetes vs. Mesos]].
-
 * [2015-11-21 Sat] [[#angular-bookmarks][#]] Angular bookmarks
 :PROPERTIES:
 :CUSTOM_ID: angular-bookmarks
@@ -3543,13 +3891,14 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 :CUSTOM_ID: mac-os-bookmarks
 :END:
 :MODIFIED:
-[2017-07-21 Fri]
+[2018-06-24 Sun]
 :END:
 - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
 - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
 - [[https://www.daisydiskapp.com/][DaisyDisk]] (what's taking up your disk space).
 - [[https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html][DTrace: {even better than} strace for OS X | 8th Light]].
 - [[http://flummox-engineering.blogspot.com/2014/06/getting-absolute-path-in-bash-in-osx.html][Getting absolute path in Bash in OSX]].
+- [[https://github.com/fitztrev/shuttle][GitHub - fitztrev/shuttle: A simple SSH shortcut menu for macOS]].
 - [[http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf][Guide to Securing Apple OS X]].
 - [[http://www.hammerspoon.org][Hammerspoon]].
 - [[http://www.manpagez.com/man/8/kextstat/][kextstat]].
@@ -3675,11 +4024,12 @@ Is read from left to right as:
 :CUSTOM_ID: running-bookmarks
 :END:
 :MODIFIED:
-[2016-10-02 Sun]
+[2018-07-01 Sun]
 :END:
 - [[http://www.dcrainmaker.com/2015/11/garmin-fr230-fr235-review.html][Garmin Forerunner 230 & 235 In-Depth Review (DC Rainmaker)]].
 - [[http://barefootrunning.fas.harvard.edu/6FAQ.html][Harvard's Running barefoot or in minimal footwear FAQ]].
 - [[http://www.npr.org/sections/13.7/2016/09/14/493803246/is-running-good-or-bad-for-your-health][Is Running Good Or Bad For Your Health?]].
+- [[http://ironrosey.com/blog-posts/review-newton-gravity-iv-motion-iv/][Review : Newton Gravity IV & Motion IV | Ramblings of an IronRose]].
 - [[http://www.time-to-run.com/training/10k/sub50.htm][Training towards a sub 50 minute 10K]].
 
 * [2015-10-22 Thu] [[#media-player-bookmarks][#]] Media player bookmarks
@@ -4021,7 +4371,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
 - [[http://mrn.js.org/][A Material Design style React Native component library]].
 - [[https://github.com/syrusakbary/react-native-refresher/blob/master/README.md][A pull to refresh ListView for React Native]].
 - [[http://nerds.airbnb.com/facebook-react-native/][Adam Wolf's React Native talk]].
-- [[http://akarnokd.blogspot.co.uk/2016/04/google-agera-vs-reactivex.html?m=1][Advanced RxJava: Google Agera vs. ReactiveX]].
 - [[http://moduscreate.com/aligning-children-using-flexbox-in-react-native/][Aligning Children using Flexbox in React Native]].
 - [[https://egghead.io/lessons/react-applying-basic-styles-in-react-native][Applying baisc styles in react native (video)]].
 - [[https://egghead.io/lessons/react-applying-basic-styles-in-react-native][Applying Basic Styles in React Native]].
@@ -4259,6 +4608,15 @@ My friend Sakhya brought me the wonderful [[http://www.nitamehta.com/Cookbook-of
 - [[http://www.dhanakosa.com/retreat/2015/opening-life-0][Opening to life @ Dhanakosa Buddhist Retreat Centre]].
 - [[http://www.samyeling.org/][Samye Ling (Tibetan- buddhist monastery)]].
 
+* [2018-07-08 Sun] [[#human-memory-bookmarks][#]] Human memory bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: human-memory-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-07-08 Sun]
+  :END:
+- [[http://augmentingcognition.com/ltm.html][Augmenting Long-term Memory (Michael Nielsen)]].
+- [[http://www.ludism.org/mentat/][Ludism's memory techniques]].
 * [2015-08-22 Sat] [[#meditation-bookmarks][#]] Meditation bookmarks
 :PROPERTIES:
 :CUSTOM_ID: meditation-bookmarks
@@ -4274,7 +4632,6 @@ My friend Sakhya brought me the wonderful [[http://www.nitamehta.com/Cookbook-of
 - [[https://hbr.org/2014/02/how-to-make-yourself-work-when-you-just-dont-want-to/][How to Make Yourself Work When You Just Don’t Want To]].
 - [[http://www.tricycle.com/blog/how-sit-zen-and-stretching-excercises-full-lotus][How to sit Zen]].
 - [[http://jonathanfoust.libsyn.com/webpage][Jonathan Foust's talks]].
-- [[http://www.ludism.org/mentat/][Ludism's memory techniques]].
 - [[http://www.theguardian.com/lifeandstyle/2011/jan/22/meditation-centres-uk][Meditation centres around the UK]].
 - [[http://www.memrise.com/blog/][Memreise's blog]].
 - [[https://medium.com/@yegg/mental-models-i-find-repeatedly-useful-936f1cc405d#.g0gjbdp8z][Mental Models I Find Repeatedly Useful]].
@@ -5716,7 +6073,7 @@ Note to self. Open with Alt-f2.
 :CUSTOM_ID: emacs-init.el-bookmarks
 :END:
 :MODIFIED:
-[2018-06-10 Sun]
+[2018-07-08 Sun]
 :END:
 - [[https://github.com/daschwa/emacs.d][Adam Schwartz's init]].
 - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
@@ -5725,12 +6082,14 @@ Note to self. Open with Alt-f2.
 - [[https://github.com/ikame/.emacs.d-literate][Anler Hernandez's literate config]].
 - [[https://github.com/redguardtoo/emacs.d/][Chen Bin's init.el]].
 - [[https://github.com/eastwood/config/blob/master/emacs.d/org-init.org][Clinton Ryan's init (JS config)]].
+- [[https://github.com/iocanel/dotfiles/blob/master/.config/emacs/config.org][dotfiles/config.org at master · iocanel/dotfiles · GitHub (mu4e config)]].
 - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
 - [[https://github.com/Fuco1/.emacs.d][GitHub - Fuco1/.emacs.d: My emacs config]].
 - [[https://github.com/zamansky/emacs.dz][GitHub - zamansky/emacs.dz: Awesome emacs config files]].
 - [[https://github.com/grettke/home/blob/master/ALEC.txt][Grant Rettke's literate config]].
 - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
 - [[https://github.com/huseyinyilmaz/emacs-config/blob/master/lisp/user-init.el][Huseyin Yilmaz]].
+- [[http://www.john2x.com/emacs.html][John's Emacs Config (mu4e and ledger usage)]].
 - [[https://github.com/msparks/dotfiles/blob/master/.emacs][Mark Sparks's init.el]].
 - [[https://github.com/CQQL/dotfiles/blob/master/src/.emacs.d/init.el][Marten Lienen's init.el]].
 - [[http://writequit.org/org/settings.html][Mathew Lee Hinman's Emacs settings file]].
@@ -6246,8 +6605,9 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2018-05-26 Sat]
+[2018-06-13 Wed]
 :END:
+- [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
 - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
 - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
@@ -6651,7 +7011,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2018-04-15 Sun]
+[2018-07-08 Sun]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -6664,6 +7024,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://github.com/abaraka/RESTClient][An iOS REST Client that is based on MVVM using ReactiveCocoa]].
 - [[http://www.raywenderlich.com/55384/ios-7-best-practices-part-1][An iOS Weather app case study]].
 - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform][Answer these questions about potential digital platform]].
+- [[https://github.com/aphyr/distsys-class][aphyr/distsys-class: Class materials for a distributed systems lecture]].
 - [[https://appfigures.com/][AppFigures:]] App tracking platform.
 - [[https://github.com/AppScale/appscale][AppScale, The Open Source Implementation of Google App Engine]].
 - [[https://news.ycombinator.com/item?id=14146850][Ask HN: Best business advice for software developers (Hacker News)]].
@@ -6705,6 +7066,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://news.ycombinator.com/item?id=9865338][HN: Things to Know When Making a Web Application in 2015]].
 - [[http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app][How I got to the app store top with a simple currency app]].
   - [[http://bulgerpartners.com/how-to-be-prepared-for-technical-due-diligence-what-to-anticipate-and-how-to-excel/][How to Be Prepared for Technical Due Diligence: What to Anticipate and How to Excel]].
+- [[http://www.sentia.com.au/blog/how-much-does-it-cost-to-build-an-app][How much does it cost to build an app? (Sentia Blog)]].
 - [[https://crew.co/backstage/blog/the-psychology-of-pricing][How to price anything: The psychology of why we’ll pay what we pay]].
 - [[https://www.sendwithus.com/resources/guide][How to Send Email Like a Startup]].
 - [[http://startupclass.samaltman.com/][How to start a startup lectures]].
@@ -6809,10 +7171,11 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2018-05-29 Tue]
+[2018-06-24 Sun]
 :END:
+- [[https://github.com/yishilin14/asc-key-to-qr-code-gif][asc-key-to-qr-code-gif: Convert ASCII-armored PGP keys to animated QR code]].
 - [[http://digital-era.net/][Digital Era]].
-- [[http://www.idealistrevolution.org/google-has-gathered-a-ton-of-info-on-you-heres-how-to-delete-it/][Google Has Gathered A Ton Of Info On You. Here’s How To Delete It]].
+- [[https://github.com/mssun/passforios/wiki#importing-ascii-armor-encrypted-key][mssun/passforios Wiki]].
 - [[http://adi.is/s/cpunk20/#21][New privacy tools]].
 - [[https://www.privacytools.io/][Privacy Tools - Encryption Against Global Mass Surveillance]].
 - [[https://medium.com/@ahawkins/securing-my-digital-life-gpg-yubikey-ssh-on-macos-5f115cb01266][Securing My Digital Life: GPG, Yubikey, & SSH on macOS]].
@@ -6885,7 +7248,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: golang-bookmarks
 :END:
 :MODIFIED:
-[2018-05-19 Sat]
+[2018-06-14 Thu]
 :END:
 - [[http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+spf13+%28Steve+Francia%27s+Blog%29][7 Common mistakes in Go]].
 - [[https://github.com/mingrammer/commonregex][A collection of common regular expressions for Go]].
@@ -6978,6 +7341,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://golangcookbook.com/][The Go Cookbook]].
 - [[http://go-talks.appspot.com/github.com/ChrisHines/talks/structured-logging/structured-logging.slide#1][The Hunt for a Logger Interface]].
 - [[http://openmymind.net/Things-I-Wish-Someone-Had-Told-Me-About-Go/][Things I wish someone told me about Go]].
+- [[https://scripter.co/time-formatting-in-go/][Time formatting in Go ❚ A Scripter's Notes]].
 - [[http://divan.github.io/posts/go_concurrency_visualize/][Visualizing Concurrency in Go]].
 - [[https://groups.google.com/forum/#!msg/golang-nuts/R7ryo7RdBPY/t7XFNGyRDQAJ][What's So Bad About Stdlib's Log Package? (Groups discussion)]].
 - [[https://www.youtube.com/watch?v=YmbbmyxSlcg][Writing Unit Tests for your net/http Handlers]].
@@ -7331,12 +7695,13 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: india-travel-bookmarks
 :END:
 :MODIFIED:
-[2016-12-10 Sat]
+[2018-06-17 Sun]
 :END:
 - [[https://news.ycombinator.com/item?id=13119986][A Guide to the Breads of India (Hacker News)]].
 - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
 - [[https://en.wikipedia.org/wiki/Akshardham_%28Delhi%29][Akshardham (Delhi)]].
 - [[https://www.google.com/culturalinstitute/browse/?f.media_type=museumview&q.8129907598665562501=139704082&q.openid=media_type][Archeological survey of india sites]].
+- [[https://duckduckgo.com/?q=belur+mysore&t=ffab&iax=images&ia=images][Belur temple mysore]].
 - [[https://en.wikipedia.org/wiki/bhaja_caves][Bhaja caves, pune, maharashtra]].
 - [[http://en.wikipedia.org/wiki/bhang][Bhang]].
 - [[http://en.wikipedia.org/wiki/bodh_gaya][Bodh gaya]].
@@ -7353,6 +7718,7 @@ If FROM or TO is negative, it counts from the end.
 - Emergencies: +1-650-253-5555.
 - Gaya, Bihar.
 - [[https://en.wikipedia.org/wiki/Gwalior][Gwalior]].
+- [[https://duckduckgo.com/?q=halibid+temple&t=ffab&iax=images&ia=images][Halibid temple]].
 - [[https://en.wikipedia.org/wiki/Hampi][Hampi]].
 - [[https://india.zeef.com/gautam.garg][India on zeef]].
 - [[http://www.irctctourism.com/][IRCTC Tourism (A government of India enterprise)]].
@@ -7983,14 +8349,16 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-06-12 Tue]
+[2018-07-08 Sun]
 :END:
+- [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
 - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
+- [[https://scripter.co/accessing-devdocs-from-emacs/][Accessing Devdocs from Emacs]].
 - [[https://github.com/baohaojun/ajoke][Ajoke]].
 - [[http://www.masteringemacs.org/article/introduction-magit-emacs-mode-git][An introduction to Magit, an Emacs mode for Git]].
 - [[http://m00natic.github.io/emacs/emacs-wiki.html][Andrey's Opionated Emacs Guide]].
-- [[https://mail.google.com/mail/u/0/#search/is%3Aunread+in%3Ainbox/153503f4a1e06878][Animated guide to paredit]].
+- [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][Animated guide to paredit]].
 - [[https://vxlabs.com/2018/03/30/asynchronous-rsync-with-emacs-dired-and-tramp/][Asynchronous rsync with Emacs, dired and tramp. – vxlabs]].
 - [[https://github.com/emacs-tw/awesome-emacs/blob/master/README.org][Awesome Emacs]].
 - [[https://github.com/bzg/emacs-training][Bastien's Emacs training]].
@@ -8008,6 +8376,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.modernemacs.com/post/major-mode-part-1/][Deep diving into a major mode - Part 1 | Modern Emacs]] (handy for writing a REPL).
 - [[http://www.modernemacs.com/post/major-mode-part-2/][Deep diving into a major mode - Part 2 (IDE Features) | Modern Emacs]].
 - [[http://irreal.org/blog/?p=5380][Directory-Local Variables]].
+- [[https://scripter.co/do-ediff-as-i-mean/][Ediff DWIM function by scripter.co]].
 - [[https://emacsnotes.wordpress.com/2018/05/14/editing-html-textareas-with-emacs-bye-bye-its-all-text-hello-textern/][Editing HTML Textareas with Emacs: Bye, bye “It’s All Text! “, Hello “Textern"]].
 - [[http://www.masteringemacs.org/articles/2011/01/14/effective-editing-movement/][Effective editing I:Movement]]
 - [[http://ergoemacs.org/emacs/effective_emacs.html][Effective emacs tips]]: From ergoemacs.
@@ -8021,12 +8390,14 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://sites.google.com/site/drielsma/xcodeplusemacs][Emacs for Cocoa development]].
 - [[https://github.com/pierre-lecocq/emacs4developers][Emacs for developers]].
 - [[http://roupam.github.io/][Emacs for Xcode+ios Development]].
+- [[https://huytd.github.io/emacs-from-scratch.html][Emacs from scratch (huytd)]].
 - [[http://www.reddit.com/r/emacs/comments/1rck3u/what_do_you_use_to_navigate_code][Emacs goodies]]: Emacs post with tips for navigating code.
 - [[http://emacshorrors.com][Emacs horrors]].
 - [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-en.org][Emacs in one year]]: Someone's emacs experience over a year.
 - [[http://emacs.sexy/][Emacs is sexy]].
 - [[https://gist.github.com/avendael/7028579][Emacs keybindings for vimium]].
 - [[http://overtone.github.io/emacs-live/][Emacs live]].
+- [[https://tuhdo.github.io/emacs-tutor3.html][Tuhdo's Emacs Mini Manual (PART 3) - CUSTOMIZING AND EXTENDING EMACS]].
 - [[http://www.emacswiki.org/emacs/EmacsNiftyTricks][Emacs Nifty tricks]]: Another source of emacs goodness.
 - [[http://emacsnyc.org/videos.html][Emacs NYC videos]].
 - [[http://emacsredux.com/][Emacs redux]].
@@ -8044,18 +8415,24 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
 - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
 - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
+- [[https://github.com/GhostText/GhostText/blob/master/README.md][GhostText: Use Emacs to write in your browser]].
 - [[http://whatworks4me.wordpress.com/2011/04/13/view-git-diffs-in-emacs-using-ediff/][Git diffs using Emacs ediff]].
 - [[https://github.com/AndreaCrotti/yasnippet-snippets][GitHub - AndreaCrotti/yasnippet-snippets: a collection of yasnippet]].
 - [[https://github.com/bzg/emacs-training][GitHub - bzg/emacs-training: Emacs training]].
+- [[https://github.com/dieggsy/esh-autosuggest][GitHub - dieggsy/esh-autosuggest: Fish-like autosuggestions in eshell.]].
+- [[https://github.com/mmontone/template-overlays][GitHub - mmontone/template-overlays: Emacs overlays for template files]].
 - [[https://github.com/sebastiencs/company-box][GitHub - sebastiencs/company-box: A company front-end with icons]].
 - [[https://github.com/kensanata/ggg][Gmail, Gnus and GPG guide]].
 - [[https://github.com/benma/go-dlv.el][Go Delve - Debug Go programs interactively with the GUD]].
 - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
 - [[https://github.com/bbatsov/projectile][Helm Projectile]]: Is awesome for finding files in emacs.
 - [[http://blog.yitang.uk/2015/09/24/how-to-create-a-screencast-gif-in-emacs/][How to Create a Screencast GIF in Emacs]].
+- [[https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org][Howard Abrams's eshell config]].
 - [[https://github.com/chrisbarrett/swift-mode][hrisbarrett/swift-mode]].
 - [[https://github.com/iamleeg/swift-mode][iamleeg/swift-mode]].
 - [[http://skybert.net/emacs/investigating-emacs-cpu-usage/][investigating Emacs CPU usage]].
+- [[https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html][Ivy, Counsel and Swiper (writequit.org)]].
+- [[https://github.com/Yevgnen/ivy-rich/][ivy-rich: An ivy wrapper providing additional customizations ]].
 - [[https://github.com/skeeto/javadoc-lookup][javadoc-lookup]].
 - [[http://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][Javascript development environment]].
 - [[http://www.xiangji.me/][JI Xiang]].
@@ -8083,18 +8460,21 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://vxlabs.com/2017/06/03/querying-restful-webservices-into-emacs-orgmode-tables/][Querying RESTful webservices into Emacs orgmode tables]].
 - [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bframeworks/react/README.org][React contribution layer for Spacemacs]].
 - [[http://draketo.de/light/english/free-software/read-your-python-module-documentation-emacs][Read your python module documentation from Emacs]].
+- [[http://pragmaticemacs.com/category/elfeed/][Read your RSS feeds in emacs with elfeed]].
 - [[http://rubikitch.com/][Rubikitch]].
 - [[http://sachachua.com][Sachua Chua]].
 - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
 - [[http://stackoverflow.com/questions/673554/how-can-i-refactor-c-source-code-using-emacs][SO: How can I refactor C++ source code using emacs?]].
 - [[http://psung.blogspot.co.uk/2010/03/some-emacs-macro-tricks.html][Some Emacs macro tricks]].
 - [[https://www.reddit.com/r/emacs/comments/370k9p/stock_emacs_tips/][Stock Emacs tips (Reddit)]].
+- [[http://pragmaticemacs.com/emacs/super-spotlight-search-with-counsel/][Super spotlight search with ivy/counsel (Pragmatic Emacs)]].
 - [[https://www.wisdomandwonder.com/article/10474/techne-emacs-friendly-keyboard-operations-keys][Techne (Emacs Friendly Keyboard): Operations Keys | Wisdom and Wonder]].
 - [[http://batsov.com/articles/2011/11/30/the-ultimate-collection-of-emacs-resources/][The Ultimate Collection of Emacs Resources]].
 - [[https://github.com/ananthakumaran/tide][Tide: TypeScript Interactive Development Environment for Emacs]].
 - [[http://truongtx.me/categories.html#emacs-ref][Trần Xuân Trường's Emacs posts]].
 - [[http://tuhdo.github.io/c-ide.html][Tuhdo's C/C++ dev on Emacs]].
 - [[http://tv.uvigo.es/gl/serial/513.html][Universidad de Vigo's Emacs course]].
+- [[https://www.johndcook.com/blog/2018/01/27/emacs-features-that-use-regular-expressions/][Uses of regular expressions in Emacs (John D. Cook)]].
 - [[http://dance.computer.dance/posts/2015/04/using-ctags-on-modern-javascript.html][Using ctags on modern Javascript (handy for Emacs)]].
 - [[http://www.pygopar.com/using-emacs-and-eclim-for-android-development/][Using Emacs and Eclim for Android Development]].
 - [[http://emacs.stackexchange.com/questions/2571/what-emacs-communities-exist][What Emacs communities exist?]]
@@ -8299,13 +8679,14 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: development-bookmarks
 :END:
 :MODIFIED:
-[2018-06-12 Tue]
+[2018-07-08 Sun]
 :END:
 - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
 - [[https://guifroes.com/2018/03/23/3-books-that-will-take-you-to-the-next-level/][3 books that will take you to the next level – Gui Froes]].
 - [[https://quickleft.com/blog/8-tips-get-started-existing-codebase/][8 Tips To Get Started In An Existing Codebase]].
 - [[http://sahandsaba.com/nine-anti-patterns-every-programmer-should-be-aware-of-with-examples.html][9 Anti-Patterns]].
 - [[https://gist.github.com/andymatuschak/d5f0a8730ad601bcccae97e8398e25b2][A composable pattern for pure state machines with effects]].
+- [[https://increment.com/programming-languages/crash-course-in-compilers/][A crash course in compilers – Increment: Programming Languages]].
 - [[https://www.coursera.org/learn/algorithms-part1#syllabus][Algorithms, Part I - Princeton University (Coursera)]].
 - [[http://www.cs.bsu.edu/homepages/pvg/misc/uml/][All the UML you need to know]].
 - [[https://nicoleorchard.com/blog/compilers][An intro to compilers]].
