@@ -1,6 +1,70 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-07-11 Wed] [[#fitbit-api-org-babel-and-gnuplot][#]] fitbit API, org babel, and gnuplot
+  :PROPERTIES:
+  :CUSTOM_ID: fitbit-api-org-babel-and-gnuplot
+  :END:
+Retook running recently. Took the dust off my aria scale and used the opportunity to check out fitbit's API.
+
+First register an app at [[https://dev.fitbit.com/apps/new][dev.fitbit.com/apps/new]] and get a client_id=AABBCC and get your USER_ID, from your Fitbit profile.
+
+Now get a token. I used the [[https://dev.fitbit.com/build/reference/web-api/oauth2/][implicit grant flow]] URL in my browser and extracted access_token=to.kk.en. Now let's wire up two source blocks to fetch the data nd subsequently plot using gnuplot.
+
+#+NAME: weight-data
+#+BEGIN_SRC sh :results table
+curl -s -H "Authorization: Bearer to.kk.en" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
+#+END_SRC
+
+#+RESULTS: weight-data
+| 2018-06-09 | 65.753 |
+| 2018-06-10 | 65.762 |
+| 2018-06-11 | 65.771 |
+| 2018-06-12 |  65.78 |
+| 2018-06-13 | 65.789 |
+| 2018-06-14 | 65.798 |
+| 2018-06-15 | 65.807 |
+| 2018-06-16 | 65.816 |
+| 2018-06-17 | 65.825 |
+| 2018-06-18 |  65.85 |
+| 2018-06-19 |  65.96 |
+| 2018-06-20 |   64.1 |
+| 2018-06-21 |  65.64 |
+| 2018-06-22 |  65.47 |
+| 2018-06-23 | 65.515 |
+| 2018-06-24 |  65.56 |
+| 2018-06-25 | 65.605 |
+| 2018-06-26 |  65.65 |
+| 2018-06-27 |  65.18 |
+| 2018-06-28 |  64.49 |
+| 2018-06-29 |  64.49 |
+| 2018-06-30 |  64.41 |
+| 2018-07-01 |  64.33 |
+| 2018-07-02 |  64.25 |
+| 2018-07-03 |  64.17 |
+| 2018-07-04 |  64.55 |
+| 2018-07-05 |  64.39 |
+| 2018-07-06 |  64.33 |
+| 2018-07-07 |  65.06 |
+| 2018-07-08 |  63.28 |
+| 2018-07-09 |   63.4 |
+| 2018-07-10 |  64.22 |
+| 2018-07-11 |  63.95 |
+
+#+BEGIN_SRC gnuplot :var data=weight-data :exports code :file images/fitbit-api-org-babel-and-gnuplot/weight.png
+reset
+set title "My recent weight"
+set xdata time
+set timefmt '%Y-%m-%d'
+set format x "%y/%m/%d"
+set term png
+set xrange ['2018-06-09':'2018-07-11']
+plot data u 1:2 with linespoints title 'Weight in Kg'
+#+END_SRC
+
+#+RESULTS:
+[[file:images/fitbit-api-org-babel-and-gnuplot/weight.png]]
+
 * [2018-07-08 Sun] [[#pipestatus-for-all-return-codes][#]] PIPESTATUS for all return codes
   :PROPERTIES:
   :CUSTOM_ID: pipestatus-for-all-return-codes
@@ -6605,15 +6669,17 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2018-06-13 Wed]
+[2018-07-11 Wed]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
 - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
 - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
+- [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle:  Rifle through your Org buffers and acquire your target]].
 - [[https://www.miskatonic.org/2016/08/25/image-display-size-in-org/][Image display size in Org]].
 - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
 - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+- [[https://www.offerzen.com/blog/literate-programming-empower-your-writing-with-emacs-org-mode][Literate Programming: Empower Your Writing with Emacs Org-Mode]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
@@ -7695,7 +7761,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: india-travel-bookmarks
 :END:
 :MODIFIED:
-[2018-06-17 Sun]
+[2018-07-11 Wed]
 :END:
 - [[https://news.ycombinator.com/item?id=13119986][A Guide to the Breads of India (Hacker News)]].
 - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
@@ -7759,6 +7825,7 @@ If FROM or TO is negative, it counts from the end.
 - [[http://satyagrahabali.org/Satyagraha_brochure_email_English.pdf][Satyagraha Ashram]] (founded by Gandhi).
 - [[https://www.quora.com/What-are-the-best-places-in-Pune-for-couples-to-spend-whole-day][Things to do in Pune (Quora)]].
 - Varanasi.
+- [[https://twitter.com/archpics/status/1016803768413949952][Vijaya Nagara, India Centuries-old temples and statues surround Hampi, in southwest India, making up what’s left of the once-powerful city.]].
 - [[https://duckduckgo.com/?q%3dvipassana%2bpagoda&iax%3d1&ia%3dimages][Vipassana pagoda]].
 - [[https://en.wikipedia.org/wiki/Western_Ghats][Western Ghats]].
 * [2015-03-05 Thu] [[#git-bookmarks][#]] Git bookmarks
@@ -8306,11 +8373,12 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2018-05-13 Sun]
+[2018-07-11 Wed]
 :END:
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
 - Abo abo's [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
 - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
+- [[https://github.com/alphapapa/emacs-package-dev-handbook][alphapapa's The Emacs Package Developer’s Handbook]].
 - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
 - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
@@ -8349,7 +8417,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-07-08 Sun]
+[2018-07-11 Wed]
 :END:
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
@@ -8397,7 +8465,6 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://emacs.sexy/][Emacs is sexy]].
 - [[https://gist.github.com/avendael/7028579][Emacs keybindings for vimium]].
 - [[http://overtone.github.io/emacs-live/][Emacs live]].
-- [[https://tuhdo.github.io/emacs-tutor3.html][Tuhdo's Emacs Mini Manual (PART 3) - CUSTOMIZING AND EXTENDING EMACS]].
 - [[http://www.emacswiki.org/emacs/EmacsNiftyTricks][Emacs Nifty tricks]]: Another source of emacs goodness.
 - [[http://emacsnyc.org/videos.html][Emacs NYC videos]].
 - [[http://emacsredux.com/][Emacs redux]].
@@ -8446,6 +8513,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][My Emacs Configuration with use-package]].
 - [[http://www.pygopar.com/my-java-android-and-eclim-setup/][My Java, Android and Eclim Setup]].
 - [[http://bbbscarter.wordpress.com/category/coding/emacs/][Nerdgasms's Emacs tips]].
+- [[https://github.com/codesuki/bazel-mode][Neri Marschik's bazel-mode: Basic Bazel support for Emacs]].
 - [[http://was.tl/projects/nimble/][Nimble (markdown replacement)]].
 - [[http://angelic-sedition.github.io/][Nocturnal Artifice]].
 - [[http://renard.github.io/o-blog-v2/][o-blog]].
@@ -8461,6 +8529,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bframeworks/react/README.org][React contribution layer for Spacemacs]].
 - [[http://draketo.de/light/english/free-software/read-your-python-module-documentation-emacs][Read your python module documentation from Emacs]].
 - [[http://pragmaticemacs.com/category/elfeed/][Read your RSS feeds in emacs with elfeed]].
+- [[https://github.com/brown/bazel-mode][Robert Brown's bazel-mode: GNU Emacs mode for editing Bazel BUILD files]].
 - [[http://rubikitch.com/][Rubikitch]].
 - [[http://sachachua.com][Sachua Chua]].
 - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
@@ -8473,6 +8542,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/ananthakumaran/tide][Tide: TypeScript Interactive Development Environment for Emacs]].
 - [[http://truongtx.me/categories.html#emacs-ref][Trần Xuân Trường's Emacs posts]].
 - [[http://tuhdo.github.io/c-ide.html][Tuhdo's C/C++ dev on Emacs]].
+- [[https://tuhdo.github.io/emacs-tutor3.html][Tuhdo's Emacs Mini Manual (PART 3) - CUSTOMIZING AND EXTENDING EMACS]].
 - [[http://tv.uvigo.es/gl/serial/513.html][Universidad de Vigo's Emacs course]].
 - [[https://www.johndcook.com/blog/2018/01/27/emacs-features-that-use-regular-expressions/][Uses of regular expressions in Emacs (John D. Cook)]].
 - [[http://dance.computer.dance/posts/2015/04/using-ctags-on-modern-javascript.html][Using ctags on modern Javascript (handy for Emacs)]].
