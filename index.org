@@ -7,15 +7,27 @@
   :END:
 Retook running recently. Took the dust off my aria scale and used the opportunity to check out fitbit's API.
 
-First register an app at [[https://dev.fitbit.com/apps/new][dev.fitbit.com/apps/new]] and get a client_id=AABBCC and get your USER_ID, from your Fitbit profile.
+First register your app at [[https://dev.fitbit.com/apps/new][dev.fitbit.com/apps/new]] and get a client_id=AABBCC.
 
-Now get a token. I used the [[https://dev.fitbit.com/build/reference/web-api/oauth2/][implicit grant flow]] URL in my browser and extracted access_token=to.kk.en.
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/fitbit-api-org-babel-and-gnuplot/fitbitapp.png]]
 
-Now let's wire up two source blocks to fetch the data nd subsequently plot using gnuplot. Pretty neat, you can take the resulting data from one source block and use it as input to another.
+You'll also need your USER_ID, from your Fitbitx user profile.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/fitbit-api-org-babel-and-gnuplot/fitbituser.png]]
+
+We'll also need a token. I used the [[https://dev.fitbit.com/build/reference/web-api/oauth2/][implicit grant flow]] URL in my browser and extracted access_token=TOKEN.
+
+Now let's wire up two org source blocks to fetch the data and subsequently plot using gnuplot.
+
+It's pretty neat. You can take the resulting data from one source block and use it as input to another.
+
+We use curl to fetch data from API and pipe through [[https://stedolan.github.io/jq/][jq]] and sed to massage the output format into two columns.
 
 #+NAME: weight-data
 #+BEGIN_SRC sh :results table
-curl -s -H "Authorization: Bearer to.kk.en" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
+curl -s -H "Authorization: Bearer TOKEN" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
 #+END_SRC
 
 #+RESULTS: weight-data
@@ -53,6 +65,8 @@ curl -s -H "Authorization: Bearer to.kk.en" https://api.fitbit.com/1/user/USER_I
 | 2018-07-10 |  64.22 |
 | 2018-07-11 |  63.95 |
 
+Now feed the two column data to gnuplot.
+
 #+BEGIN_SRC gnuplot :var data=weight-data :exports code :file images/fitbit-api-org-babel-and-gnuplot/weight.png
 reset
 set title "My recent weight"
@@ -67,6 +81,7 @@ plot data u 1:2 with linespoints title 'Weight in Kg'
 #+RESULTS:
 [[file:images/fitbit-api-org-babel-and-gnuplot/weight.png]]
 
+Fetching data and plotting through org babel and gnuplot is pretty sweet. I've barely scratched the surface. There's more at [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html][Org-babel-gnuplot]] and [[https://orgmode.org/worg/org-tutorials/org-plot.html][Plotting tables in Org-Mode using org-plot]]. Either way, this is another Emacs super power to keep in the toolbox.
 * [2018-07-08 Sun] [[#pipestatus-for-all-return-codes][#]] PIPESTATUS for all return codes
   :PROPERTIES:
   :CUSTOM_ID: pipestatus-for-all-return-codes
