@@ -38,6 +38,18 @@ It's pretty neat. You can take the output from one source block and use it as in
 
 We use curl to fetch data from fitbit's API and pipe through [[https://stedolan.github.io/jq/][jq]] and sed to massage the output format into two columns.
 
+*Note:* Before using gnuplot in org babel, you'll need to install the gnuplot package and add to babel languages.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnuplot :ensure t)
+
+  (use-package ob
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((gnuplot . t))))
+#+END_SRC
+
 #+NAME: weight-data
 #+BEGIN_SRC sh :results table
 curl -s -H "Authorization: Bearer TOKEN" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
