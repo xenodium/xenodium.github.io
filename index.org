@@ -1,6 +1,64 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-07-25 Wed] [[#marking-20k-emails-as-read][#]] Marking 20k emails as read
+  :PROPERTIES:
+  :CUSTOM_ID: marking-20k-emails-as-read
+  :End:
+[[http://isync.sourceforge.net/][Mbsync]] and [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu4e]] are great for syncing and handling IMAP email. I've now migrated 4 email addresses, including an old Yahoo account.
+
+I wanted to mark all my Yahoo unread emails as read. Yahoo's webmail enables marking 500 emails at a time, making the process a little tedious.
+
+[[https://groups.google.com/forum/#!forum/mu-discuss][Mu-discuss]] has handy [[https://groups.google.com/d/msg/mu-discuss/zaA394sH1Ow/QSVPXS22BQAJ][thread]], highlighting that moving/renaming synced messages (in your local file system) would do the job. This worked well for me.
+
+Let's do just that...
+
+*WARNING:* Copy a small sample of your mails to a separate directory and run some trials until you feel comfortable.
+
+Find your mail directory.
+
+#+BEGIN_SRC sh
+  cd path/to/mail
+#+END_SRC
+
+Peek at the messages you'd like to mark unread:
+
+#+BEGIN_SRC sh
+  ls -1 new/
+#+END_SRC
+
+#+RESULTS:
+  1529958027.57518_11.mbp,U=8415:2,
+  1531346210.38822_3.mbp,U=8741:2,
+  1532464801.21057_1.mbp,U=9028:2,
+  1532464801.21057_2.mbp,U=9029:2,
+
+Rename message files by appending "S" to their filename and moving from new/ to cur/ directory.
+
+#+BEGIN_SRC sh
+  for FILE in new/*; do mv "${FILE}" cur/$(basename "${FILE}")S; done;
+#+END_SRC
+
+We can verify the move.
+
+#+BEGIN_SRC sh
+  ls -1 cur/
+#+END_SRC
+
+#+RESULTS:
+  1529958027.57518_11.mbp,U=8415:2,S
+  1531346210.38822_3.mbp,U=8741:2,S
+  1532464801.21057_1.mbp,U=9028:2,S
+  1532464801.21057_2.mbp,U=9029:2,S
+
+Let's sync the local changes.
+
+#+BEGIN_SRC sh
+  mbsync -Va
+#+END_SRC
+
+...and we're done ;)
+
 * [2018-07-24 Tue] [[#show-ios-simulator-touches][#]] Show iOS simulator touches
   :PROPERTIES:
   :CUSTOM_ID: show-ios-simulator-touches
