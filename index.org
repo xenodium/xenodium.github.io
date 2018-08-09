@@ -1,6 +1,179 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-07-25 Wed] [[#marking-20k-emails-as-read][#]] Marking 20k emails as read
+  :PROPERTIES:
+  :CUSTOM_ID: marking-20k-emails-as-read
+  :End:
+[[http://isync.sourceforge.net/][Mbsync]] and [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu4e]] are great for syncing and handling IMAP email. I've now migrated 4 email addresses, including an old Yahoo account.
+
+I wanted to mark all my Yahoo unread emails as read. Yahoo's webmail enables marking 500 emails at a time, making the process a little tedious.
+
+[[https://groups.google.com/forum/#!forum/mu-discuss][Mu-discuss]] has a handy [[https://groups.google.com/d/msg/mu-discuss/zaA394sH1Ow/QSVPXS22BQAJ][thread]], highlighting that moving/renaming synced messages (in your local file system) would do the job. This worked well for me.
+
+Let's do just that...
+
+*WARNING:* Copy a small sample of your mails to a separate directory and run some trials until you feel comfortable.
+
+Find your mail directory.
+
+#+BEGIN_SRC sh
+  cd path/to/mail
+#+END_SRC
+
+Peek at the messages you'd like to mark unread:
+
+#+BEGIN_SRC sh
+  ls -1 new/
+#+END_SRC
+
+#+RESULTS:
+  1529958027.57518_11.mbp,U=8415:2,
+  1531346210.38822_3.mbp,U=8741:2,
+  1532464801.21057_1.mbp,U=9028:2,
+  1532464801.21057_2.mbp,U=9029:2,
+
+Rename message files by appending "S" to their filename and moving from new/ to cur/ directory.
+
+#+BEGIN_SRC sh
+  for FILE in new/*; do mv "${FILE}" cur/$(basename "${FILE}")S; done;
+#+END_SRC
+
+We can verify the move.
+
+#+BEGIN_SRC sh
+  ls -1 cur/
+#+END_SRC
+
+#+RESULTS:
+  1529958027.57518_11.mbp,U=8415:2,S
+  1531346210.38822_3.mbp,U=8741:2,S
+  1532464801.21057_1.mbp,U=9028:2,S
+  1532464801.21057_2.mbp,U=9029:2,S
+
+Let's sync the local changes.
+
+#+BEGIN_SRC sh
+  mbsync -Va
+#+END_SRC
+
+...and we're done ;)
+
+* [2018-07-24 Tue] [[#show-ios-simulator-touches][#]] Show iOS simulator touches
+  :PROPERTIES:
+  :CUSTOM_ID: show-ios-simulator-touches
+  :END:
+TIL from [[https://twitter.com/liamnichols_/status/1018812142693253120?s=12][this tweet]], that you can enable showing touches on iOS simulator. This is handy for making nicer screencasts.
+
+#+BEGIN_SRC sh
+  defaults write http://com.apple .iphonesimulator ShowSingleTouches 1
+#+END_SRC
+* [2018-07-15 Sun] [[#amsterdam-travel-bookmarks][#]] Amsterdam travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: amsterdam-travel-bookmarks
+  :END:
+- [[https://belowthesurface.amsterdam/en/][Below the Surface: The archaeological finds of the North / Southline in Amsterdam]].
+* [2018-07-14 Sat] [[#hardware-bookmarks][#]] Hardware bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: hardware-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-07-15 Sun]
+  :END:
+- [[https://www.romanzolotarev.com/setup.html][Roman Zolotarev's OpenBSD on my fanless desktop computer (really sweet setup)]].
+* [2018-07-11 Wed] [[#fitbit-api-org-babel-and-gnuplot][#]] fitbit API, org babel, and gnuplot
+  :PROPERTIES:
+  :CUSTOM_ID: fitbit-api-org-babel-and-gnuplot
+  :END:
+Retook running recently. Took the dust off my aria scale and used the opportunity to check out fitbit's API.
+
+First register your app at [[https://dev.fitbit.com/apps/new][dev.fitbit.com/apps/new]] and get a client_id=AABBCC.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/fitbit-api-org-babel-and-gnuplot/fitbitapp.png]]
+
+You'll also need your USER_ID, from your Fitbitx user profile.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/fitbit-api-org-babel-and-gnuplot/fitbituser.png]]
+
+We'll also need a token. I used the [[https://dev.fitbit.com/build/reference/web-api/oauth2/][implicit grant flow]] URL in my browser and extracted access_token=TOKEN.
+
+Now let's wire up two org source blocks to fetch the data and subsequently plot using gnuplot.
+
+It's pretty neat. You can take the output from one source block and use it as input to another.
+
+We use curl to fetch data from fitbit's API and pipe through [[https://stedolan.github.io/jq/][jq]] and sed to massage the output format into two columns.
+
+*Note:* Before using gnuplot in org babel, you'll need to install the gnuplot package and add to babel languages.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnuplot :ensure t)
+
+  (use-package ob
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((gnuplot . t))))
+#+END_SRC
+
+#+NAME: weight-data
+#+BEGIN_SRC sh :results table
+curl -s -H "Authorization: Bearer TOKEN" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
+#+END_SRC
+
+#+RESULTS: weight-data
+| 2018-06-09 | 65.753 |
+| 2018-06-10 | 65.762 |
+| 2018-06-11 | 65.771 |
+| 2018-06-12 |  65.78 |
+| 2018-06-13 | 65.789 |
+| 2018-06-14 | 65.798 |
+| 2018-06-15 | 65.807 |
+| 2018-06-16 | 65.816 |
+| 2018-06-17 | 65.825 |
+| 2018-06-18 |  65.85 |
+| 2018-06-19 |  65.96 |
+| 2018-06-20 |   64.1 |
+| 2018-06-21 |  65.64 |
+| 2018-06-22 |  65.47 |
+| 2018-06-23 | 65.515 |
+| 2018-06-24 |  65.56 |
+| 2018-06-25 | 65.605 |
+| 2018-06-26 |  65.65 |
+| 2018-06-27 |  65.18 |
+| 2018-06-28 |  64.49 |
+| 2018-06-29 |  64.49 |
+| 2018-06-30 |  64.41 |
+| 2018-07-01 |  64.33 |
+| 2018-07-02 |  64.25 |
+| 2018-07-03 |  64.17 |
+| 2018-07-04 |  64.55 |
+| 2018-07-05 |  64.39 |
+| 2018-07-06 |  64.33 |
+| 2018-07-07 |  65.06 |
+| 2018-07-08 |  63.28 |
+| 2018-07-09 |   63.4 |
+| 2018-07-10 |  64.22 |
+| 2018-07-11 |  63.95 |
+
+Now feed the two column data to gnuplot.
+
+#+BEGIN_SRC gnuplot :var data=weight-data :exports code :file images/fitbit-api-org-babel-and-gnuplot/weight.png
+reset
+set title "My recent weight"
+set xdata time
+set timefmt '%Y-%m-%d'
+set format x "%d/%m/%y"
+set term png
+set xrange ['2018-06-09':'2018-07-11']
+plot data u 1:2 with linespoints title 'Weight in Kg'
+#+END_SRC
+
+#+RESULTS:
+[[file:images/fitbit-api-org-babel-and-gnuplot/weight.png]]
+
+Fetching data and plotting through org babel and gnuplot is pretty sweet. I've barely scratched the surface. There's more at [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html][Org-babel-gnuplot]] and [[https://orgmode.org/worg/org-tutorials/org-plot.html][Plotting tables in Org-Mode using org-plot]]. Either way, this is another Emacs super power to keep in the toolbox.
 * [2018-07-08 Sun] [[#pipestatus-for-all-return-codes][#]] PIPESTATUS for all return codes
   :PROPERTIES:
   :CUSTOM_ID: pipestatus-for-all-return-codes
@@ -164,7 +337,12 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   :PROPERTIES:
   :CUSTOM_ID: web-serving-tools-bookmarks
   :END:
+  :MODIFIED:
+  [2018-07-24 Tue]
+  :END:
+- [[https://certbot.eff.org/][Certbot: Automatically enable HTTPS on your website, deploying Let's Encrypt certificates.]].
 - [[http://irreal.org/blog/?p=7306][HTTPS Is Easy (Irreal)]].
+- [[https://mirage.io/][MirageOS: high-performance network applications across a variety of cloud computing and mobile platforms]].
 * [2018-06-24 Sun] [[#url-shortener-bookmarks][#]] URL shortener bookmarks
   :PROPERTIES:
   :CUSTOM_ID: url-shortener-bookmarks
@@ -1059,7 +1237,6 @@ Wanted to quickly execute an Objective-C snippet. org-babel didn't support it ou
 Add /objc/ to /org-babel-load-languages/, and you can subsequently compile and run Objective-C blocks like:
 
 #+BEGIN_SRC objc :results verbatim
-
   #import <Foundation/Foundation.h>
 
   int main() {
@@ -2252,6 +2429,9 @@ M-x rtags-find-symbol
 :PROPERTIES:
 :CUSTOM_ID: reactflux-ios-implementation-bookmarks
 :END:
+:MODIFIED:
+[2018-08-02 Thu]
+:END:
 - [[https://github.com/clayallsopp/CLAFluxDispatcher][CLAFluxDispatcher: A port of Facebook's Flux Dispatcher to Objective-C]].
 - [[http://componentkit.org/][ComponentKit]].
 - [[https://speakerdeck.com/sergeyzenchenko/flux-for-ios][Flux for iOS by Sergey Zenchenko]].
@@ -2775,8 +2955,9 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :CUSTOM_ID: parenting-bookmarks
 :END:
 :MODIFIED:
-[2018-07-08 Sun]
+[2018-07-18 Wed]
 :END:
+- [[http://www.janetlansbury.com/2018/07/a-toddlers-do-it-myself-attitude-ends-in-tantrums/][A Toddler's Do-It-Myself Attitude Ends In Tantrums - Janet Lansbury]].
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=17435671][How to get kids to pay attention (Hacker News)]].
 - [[https://aeon.co/essays/do-people-have-a-moral-duty-to-have-children-if-they-can][Is it OK to have kids?]].
@@ -3406,8 +3587,9 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 :CUSTOM_ID: maps-dev-bookmarks
 :END:
 :MODIFIED:
-[2018-06-16 Sat]
+[2018-07-23 Mon]
 :END:
+- [[https://www.inderapotheke.de/blog/farewell-google-maps][Farewell, Google Maps (In der Apotheke)]].
 - [[https://github.com/ue4plugins/StreetMap/blob/master/README.md][Import OpenStreetMap XML data into your Unreal Engine 4]].
 - [[https://www.locationtech.org][Location Tech]].
 - [[https://www.mapbox.com/][Mapbox]].
@@ -3607,13 +3789,16 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2018-06-16 Sat]
+[2018-08-02 Thu]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
+- [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
 - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
 - [[https://talk.objc.io/episodes][All Episodes · Swift Talk · objc.io]].
 - [[https://github.com/Awesome-Server-Side-Swift/TheList][Awesome server side swift]].
 - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
+- [[https://davedelong.com/blog/2018/07/25/conditional-compilation-in-swift-part-1/][Conditional Compilation in Swift, Part 1 (Dave DeLong)]].
+- [[https://swiftunboxed.com/protocols/equatable/][Equatable - Swift Unboxed]].
 - [[https://github.com/mpangburn/FunctionKit/blob/master/README.md][FunctionKit/README.md at master · mpangburn/FunctionKit · GitHub]].
 - [[http://rshankar.com/get-your-current-address-in-swift/][Get your current address in Swift – Ravi Shankar]].
 - [[https://github.com/Raizlabs/BonMot][GitHub - Raizlabs/BonMot: Beautiful, easy attributed strings in Swift]].
@@ -3623,7 +3808,9 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://twitter.com/olebegemann/status/1004458683428950018?s=12][I made a “What’s new in Swift 4.2” playground]].
 - [[https://medium.com/@PavelGnatyuk/large-title-and-search-in-ios-11-514d5e020cee][Large Title and Search in iOS 11 – Pavel Gnatyuk – Medium]].
 - [[https://github.com/hyperoslo/Lightbox][Lightbox is a convenient and easy to use image viewer for your iOS app]].
+- [[https://oleb.net/2018/objc-swift-transition/][Migrating an Objective-C class to Swift: a piecemeal approach – Ole Begemann]].
 - [[https://github.com/netguru/swift-style-guide][Netguru's Swift Style Guide]].
+- [[https://nshipster.com/never/][Never: Eliminating Impossible States in Swift Generic Types - NSHipster]].
 - [[https://medium.com/ios-os-x-development/optionals-in-swift-for-newbies-7199a30707d5][Optionals in Swift for newbies]].
 - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
@@ -3723,12 +3910,13 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: travel-lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2015-12-06 Sun]
+[2018-07-31 Tue]
 :END:
 - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
 - [[https://www.your-rv-lifestyle.com/travel-tips.html][50 Best Travel Tips from 10 Years of Travel - Your RV Lifestyle]].
 - [[https://medium.com/ohmygeorge-blog/bootstrapping-in-bangkok-is-the-best-option-c70e98f2b781#.2qbxef7oa][Bootstrapping in Bangkok is the best option]].
 - [[http://www.goruck.com/en][goruck bag]].
+- [[https://www.quora.com/My-partner-I-want-to-backpack-around-as-much-of-the-world-as-we-can-for-6-12-months-What-surprises-did-you-learn-on-the-way-I-should-plan-for][My partner & I want to backpack around as much of the world as we can for 6-12 months. What surprises did you learn on the way I should plan for?]].
 - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
 - [[https://news.ycombinator.com/item?id=11890991][Show HN: I made a database of remote companies (Hacker News)]].
 - [[http://www.tombihn.com][tom bihn bags]].
@@ -3891,7 +4079,7 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 :CUSTOM_ID: mac-os-bookmarks
 :END:
 :MODIFIED:
-[2018-06-24 Sun]
+[2018-08-02 Thu]
 :END:
 - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
 - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
@@ -3904,6 +4092,9 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 - [[http://www.manpagez.com/man/8/kextstat/][kextstat]].
 - [[https://objective-see.com/products/kextviewr.html][KextViewr: View all modules on that are loaded in the OS kernel]].
 - [[https://www.obdev.at/products/littlesnitch/index.html][Little Snitch]].
+- [[https://www.raywenderlich.com/151741/macos-development-beginners-part-1][macOS Development for Beginners: Part 1]].
+- [[https://www.raywenderlich.com/151746/macos-development-beginners-part-2][macOS Development for Beginners: Part 2]].
+- [[https://www.raywenderlich.com/151748/macos-development-beginners-part-3][macOS Development for Beginners: Part 3]].
 - [[https://github.com/kasper/phoenix][Phoenix: A lightweight macOS window and app manager scriptable with JavaScript]].
 - [[https://apple.stackexchange.com/questions/82/which-os-x-applications-do-you-find-indispensable/][Which OS X Applications do you find indispensable? (Stack Exchange)]].
 * [2015-11-21 Sat] [[#easy_install-pip-conda][#]] easy_install->pip->conda
@@ -4361,7 +4552,7 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
 :CUSTOM_ID: react-bookmarks
 :END:
 :MODIFIED:
-[2017-04-23 Sun]
+[2018-07-12 Thu]
 :END:
 - [[https://medium.com/dailyjs/11-mistakes-ive-made-during-react-native-redux-app-development-8544e2be9a9][11 mistakes I’ve made during React Native / Redux app development]].
 - [[https://news.ycombinator.com/item?id=10962784][9 things every React.js beginner should know (Hacker News)]].
@@ -4393,6 +4584,7 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
 - [[https://medium.com/@shaheenghiassy/deep-diving-react-native-debugging-ea406ed3a691][Deep Diving React Native Debugging]].
 - [[http://ilikekillnerds.com/2015/02/developing-react-js-components-using-es6/][Developing React.js Components Using ES6]].
 - [[https://github.com/rebeccahughes/react-native-device-info][Device Information for React Native iOS and Android]].
+- [[https://engineering.hexacta.com/didact-learning-how-react-works-by-building-it-from-scratch-51007984e5c5][Didact: a DIY guide to build your own React – Hexacta Engineering]].
 - [[http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/][ECMAScript 5 Strict Mode, JSON, and More]].
 - [[https://github.com/Intellicode/eslint-plugin-react-native][ESLint plugin for React Native]].
 - [[https://github.com/gcazaciuc/eslint-plugin-flowtype][eslint-plugin-flowtype]].
@@ -5058,8 +5250,9 @@ UPDATE: [[https://gist.github.com/dergachev/4627207][Also consider for .mov]]:
 :CUSTOM_ID: united-states-travel-bookmarks
 :END:
 :MODIFIED:
-[2015-11-04 Wed]
+[2018-07-24 Tue]
 :END:
+- [[https://en.wikipedia.org/wiki/Antelope_Canyon][Antelope Canyon (Arizona)]].
 - [[https://duckduckgo.com/?q=Supai%252C+Arizona&t=ffab&iax=1&ia=images][Supai, Arizona]].
 - [[https://duckduckgo.com/?q%3DTurnip%2BRock%2Bin%2BPort%2BAustin%252C%2BMichigan&t%3Dffab&iax%3D1&ia%3Dimages][Turnip Rock in Port Austin, Michigan]].
 - [[https://twitter.com/EarthPix/status/613912754227965952/photo/1][Vance Creek Bridge in Washington]].
@@ -6605,21 +6798,25 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2018-06-13 Wed]
+[2018-07-12 Thu]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
 - [[http://thewanderingcoder.com/2015/03/automating-boilerplate-in-org-mode-journalling/][Automating boilerplate in org-mode journalling]].
+- [[https://zzamboni.org/post/beautifying-org-mode-in-emacs][Beautifying Org Mode in Emacs]].
 - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
+- [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle:  Rifle through your Org buffers and acquire your target]].
 - [[https://www.miskatonic.org/2016/08/25/image-display-size-in-org/][Image display size in Org]].
 - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
 - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+- [[https://www.offerzen.com/blog/literate-programming-empower-your-writing-with-emacs-org-mode][Literate Programming: Empower Your Writing with Emacs Org-Mode]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples]].
 - [[https://gist.github.com/drj42/1755992][Org mode reference card]].
 - [[https://github.com/flexibeast/org-vcard/][org-mode support for vCard export and import]].
 - [[http://doc.norang.ca/org-mode.html][Organize your life in plain text]].
+- [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][Rainer König's OrgMode YouTube tutorials]].
 - [[http://cestlaz.github.io/posts/using-emacs-24-capture-2/#.WTtEbXWw5pg][Using Emacs - 24 - Org Capture 2]].
 - [[http://www.diegoberrocal.com/blog/2015/08/19/org-protocol/][Using org-capture with org-protocol be like - Diego Berrocal]].
 - [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][Writing Specs with Org-mode]].
@@ -7569,7 +7766,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: ios-bookmarks
 :END:
 :MODIFIED:
-[2018-02-17 Sat]
+[2018-08-02 Thu]
 :END:
 - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
 - [[https://medium.com/flawless-app-stories/30-great-ui-kits-for-ios-engineers-41b2732896b9][30 great UI Kits for iOS engineers – Flawless App Stories – Medium]].
@@ -7604,6 +7801,7 @@ If FROM or TO is negative, it counts from the end.
 - [[http://spin.atomicobject.com/2016/01/25/ios-memory-leak-xcode/#.VqaGcF_w1AE.hackernews][Finding iOS memory leaks with Xcode's Instruments]].
 - [[http://www.objc.io/issue-5/getting-to-know-textkit.html][Getting to know TextKit]].
 - [[http://giorgiocalderolla.com/blog.html][Giorgio Calderolla]].
+- [[https://github.com/WeTransfer/WeScan][GitHub - WeTransfer/WeScan: Document Scanning Made Easy for iOS]].
 - [[http://www.emdentec.com/blog/2014/2/25/hacking-uinavigationbar][Hacking UINavigationBar]].
 - [[https://realm.io/news/altconf-conrad-kramer-writing-iOS-sdk/][How (Not) to Write an iOS SDK]].
 - [[http://goshdarnblocksyntax.com/][How do I declare a block in Objcetive-C?]]
@@ -7649,6 +7847,7 @@ If FROM or TO is negative, it counts from the end.
 - [[https://medium.com/@alexdunn/replace-xcode-with-neovim-c81f89a50a23][Replace Xcode with Neovim]].
 - [[http://revealapp.com][Reveal]].
 - [[http://rypress.com/tutorials/objective-c/functions][Ry’s Objective-C Tutorial: Functions]].
+- [[https://blog.alltheflow.com/scrollable-uistackview/][Scrollable UIStackView]].
 - [[https://blog.frozenfirestudios.com/setting-up-a-cloudkit-project-ca9ac1883511][Setting up a CloudKit Project – Frozen Fire Studios]].
 - [[https://github.com/ShareSDKPlatform/ShareSDK][ShareSDK is the most comprehensive Social SDK]].
 - [[http://www.atomicbird.com/blog/sharing-with-app-extensions][Sharing data between iOS apps and app extensions]].
@@ -7695,7 +7894,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: india-travel-bookmarks
 :END:
 :MODIFIED:
-[2018-06-17 Sun]
+[2018-07-11 Wed]
 :END:
 - [[https://news.ycombinator.com/item?id=13119986][A Guide to the Breads of India (Hacker News)]].
 - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
@@ -7759,6 +7958,7 @@ If FROM or TO is negative, it counts from the end.
 - [[http://satyagrahabali.org/Satyagraha_brochure_email_English.pdf][Satyagraha Ashram]] (founded by Gandhi).
 - [[https://www.quora.com/What-are-the-best-places-in-Pune-for-couples-to-spend-whole-day][Things to do in Pune (Quora)]].
 - Varanasi.
+- [[https://twitter.com/archpics/status/1016803768413949952][Vijaya Nagara, India Centuries-old temples and statues surround Hampi, in southwest India, making up what’s left of the once-powerful city.]].
 - [[https://duckduckgo.com/?q%3dvipassana%2bpagoda&iax%3d1&ia%3dimages][Vipassana pagoda]].
 - [[https://en.wikipedia.org/wiki/Western_Ghats][Western Ghats]].
 * [2015-03-05 Thu] [[#git-bookmarks][#]] Git bookmarks
@@ -7923,8 +8123,9 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2016-10-01 Sat]
+[2018-07-26 Thu]
 :END:
+******* TODO [[https://en.wikipedia.org/wiki/The_Story_of_Stuff][The story of stuff]].
 ******* TODO [[https://www.imdb.com/title/tt0120894/?ref_=nm_flmg_act_42][Immortality]].
 ******* TODO Ichi teh killer
 ******* TODO Audition
@@ -8306,11 +8507,12 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2018-05-13 Sun]
+[2018-07-12 Thu]
 :END:
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
 - Abo abo's [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
 - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
+- [[https://github.com/alphapapa/emacs-package-dev-handbook][alphapapa's The Emacs Package Developer’s Handbook]].
 - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
 - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
@@ -8319,6 +8521,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.emacswiki.org/emacs/EmacsSymbolNotation][Emacs symbol notation]].
 - [[https://curiousprogrammer.wordpress.com/2009/06/08/error-handling-in-emacs-lisp/][Error Handling in Emacs Lisp]].
 - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
+- [[https://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][Harry R. Schwartz's An Introduction to Emacs Lisp]].
 - [[https://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix][How to choose Emacs Lisp package namespace prefix]].
 - [[http://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode]].
 - [[http://emacslife.com/how-to-read-emacs-lisp.html][How to read emacs lisp]].
@@ -8368,6 +8571,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://cachestocaches.com/2015/8/c-completion-emacs/][C/C++ Completion in Emacs]].
 - [[https://www.reddit.com/r/emacs/comments/66pq04/cant_get_tern_mode_to_work_properly/][Can't get Tern mode to work properly (Reddit)]].
 - [[http://irreal.org/blog/?p=7207][Capturing Code Snippets]].
+- [[https://ddavis.fyi/blog/2018-07-07-emacs-cpp-ide/][Clangd based Emacs C++ IDE (Doug Davis)]].
 - [[http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html][Configuring emacs to use eslint and babel with flycheck for javascript and React.js JSX]].
 - [[http://mbork.pl/Content_AND_Presentation][Content AND Presentation]].
 - [[http://www.thinknix.net/2015/02/19/cross-platform-system-wide-org-capture/][Cross Platform System-wide Org-Capture]].
@@ -8412,6 +8616,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.misshula.org/category/tutorials.html][Evan Misshula (lots of great tutorials)]].
 - [[http://edkolev.github.io/posts/2017-09-10-travis-for-emacs-packages.html][Evgeni Kolev Blog - Travis CI integration for emacs packages]].
 - [[http://mitchfincher.blogspot.co.uk/2017/03/example-of-syntax-highlighting-with.html][Example of Syntax Highlighting]].
+- [[http://irreal.org/blog/?p=7359][Find Commits Affecting a Function (Irreal)]].
 - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
 - [[https://github.com/lewang/flx][Flx for emacs]]: Sublime-style searching for emacs.
 - [[http://fukuyama.co][Fukuyama's Emacs/iOS]].
@@ -8426,6 +8631,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/benma/go-dlv.el][Go Delve - Debug Go programs interactively with the GUD]].
 - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
 - [[https://github.com/bbatsov/projectile][Helm Projectile]]: Is awesome for finding files in emacs.
+- [[https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast][How is Doom’s startup so fast?]]
 - [[http://blog.yitang.uk/2015/09/24/how-to-create-a-screencast-gif-in-emacs/][How to Create a Screencast GIF in Emacs]].
 - [[https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org][Howard Abrams's eshell config]].
 - [[https://github.com/chrisbarrett/swift-mode][hrisbarrett/swift-mode]].
@@ -8437,15 +8643,18 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][Javascript development environment]].
 - [[http://www.xiangji.me/][JI Xiang]].
 - [[http://www.lunaryorn.com/][Lunarsite]].
+- [[https://magit.vc/manual/magit/Wip-Modes.html][Magit User Manual: Wip Modes]].
 - [[http://www.lunaryorn.com/posts/make-your-emacs-mode-line-more-useful.html][Make your Emacs Mode Line more useful - Sebastian Wiesner]].
 - [[http://zeekat.nl/articles/making-emacs-work-for-me.html][Making Emacs work for me]].
 - [[http://endlessparentheses.com/ispell-and-org-mode.html][Making Ispell work with org-mode]].
 - [[http://www.masteringemacs.org][Mastering Emacs]].
 - [[https://lars.ingebrigtsen.no/2017/10/15/meme-x-giffy/][meme x giffy – Random Thoughts]].
 - [[http://truongtx.me/2013/03/10/emacs-setting-up-perfect-environment-for-cc-programming][More emacs C++ goodness]]: More emacs dev environment tips.
+- [[http://www.macs.hw.ac.uk/~rs46/posts/2014-11-16-mu4e-signatures.html][Multiple Email Signatures with mu4e]].
 - [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][My Emacs Configuration with use-package]].
 - [[http://www.pygopar.com/my-java-android-and-eclim-setup/][My Java, Android and Eclim Setup]].
 - [[http://bbbscarter.wordpress.com/category/coding/emacs/][Nerdgasms's Emacs tips]].
+- [[https://github.com/codesuki/bazel-mode][Neri Marschik's bazel-mode: Basic Bazel support for Emacs]].
 - [[http://was.tl/projects/nimble/][Nimble (markdown replacement)]].
 - [[http://angelic-sedition.github.io/][Nocturnal Artifice]].
 - [[http://renard.github.io/o-blog-v2/][o-blog]].
@@ -8454,6 +8663,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/al-skobelev/objc-yassnippets][Objective-C snippets #3]].
 - [[https://github.com/bodil/ohai-emacs][Ohai Emacs]].
 - [[http://oremacs.com/][Or Emacs]].
+- [[https://stuff.mit.edu/iap/2007/emacs/emacs-slides-1.pdf][Phil Sung's Emacs slides]].
 - [[http://www.philandstuff.com/][Philip Potter Emacs blog]].
 - [[https://github.com/bbatsov/prelude][Prelude emacs distribution]].
 - [[http://punchagan.muse-amuse.in/posts/index.html][Punchagan's blog]].
@@ -8461,6 +8671,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bframeworks/react/README.org][React contribution layer for Spacemacs]].
 - [[http://draketo.de/light/english/free-software/read-your-python-module-documentation-emacs][Read your python module documentation from Emacs]].
 - [[http://pragmaticemacs.com/category/elfeed/][Read your RSS feeds in emacs with elfeed]].
+- [[https://github.com/brown/bazel-mode][Robert Brown's bazel-mode: GNU Emacs mode for editing Bazel BUILD files]].
 - [[http://rubikitch.com/][Rubikitch]].
 - [[http://sachachua.com][Sachua Chua]].
 - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
@@ -8564,7 +8775,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: javascript-bookmarks
 :END:
 :MODIFIED:
-[2017-03-15 Wed]
+[2018-07-22 Sun]
 :END:
 - [[https://github.com/ivopetkov/responsively-lazy][A better way to lazy load responsive images]].
 - [[https://news.ycombinator.com/item?id=9822975][Airbnb JavaScript Style Guide]].
@@ -8607,6 +8818,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://pathgather.github.io/please-wait/][PleaseWait.js]]
 - [[https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree][Redux: The Single Immutable State Tree]].
 - [[https://www.youtube.com/watch?v=3LKMwkuK0ZE&feature=youtu.be][RxJS 5 Thinking Reactively | Ben Lesh - YouTube]].
+- [[https://medium.com/@benlesh/rxjs-observable-interop-with-promises-and-async-await-bebb05306875][RxJS Observable interop with Promises and Async-Await]].
 - [[https://news.ycombinator.com/item?id=13031492][Show HN: A visual guide to the most popular CSS properties (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=12954540][Show HN: JavaScript books, free online (Hacker News)]].
 - [[http://snapsvg.io/][Snap.svg: the JavaScript SVG library for the modern web]].
@@ -8680,7 +8892,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: development-bookmarks
 :END:
 :MODIFIED:
-[2018-07-08 Sun]
+[2018-07-24 Tue]
 :END:
 - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
 - [[https://guifroes.com/2018/03/23/3-books-that-will-take-you-to-the-next-level/][3 books that will take you to the next level – Gui Froes]].
@@ -8700,6 +8912,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][Bozhidar Batsov's presentation (lots of great books listed)]].
 - [[http://arturoherrero.com/clean-code/][Clean code]].
 - [[http://kevinlondon.com/2015/05/05/code-review-best-practices.html][Code review best practices]].
+- [[https://dev.to/vonheikemen/code-style-rules-that-are-actually-useful-3igf][Code style rules that are actually useful (DEV Community)]].
 - [[https://news.ycombinator.com/item?id=12687711][Command line interface best practices (Hacker News)]].
 - [[http://www.cs.usfca.edu/~galles/visualization/Algorithms.html][Data structure visualization]].
 - [[https://github.com/rxin/db-readings][Database readings]].
@@ -8722,9 +8935,11 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://quickleft.com/blog/readme-love-quick-easy-tips/][README Love: Quick and easy tips]].
 - [[http://www.amazon.co.uk/Refactoring-Improving-Design-Existing-Technology/dp/0201485672/ref=sr_1_1?ie=UTF8&qid=1444472751&sr=8-1&keywords=refactoring+improving+the+design+of+existing+code][Refactoring: Improving the design of existing code (Book)]].
 - [[https://twitter.com/sarahmei/status/783340259073335296][Sarah Mei on livable coebases]].
+- [[https://semver.org/][Semantic Versioning 2.0.0 (Semantic Versioning)]].
 - [[https://bourgeois.me/rest/][Some REST best practices]].
 - [[http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/][Structure and Interpretation of Computer Programs]] (videos).
 - [[http://www.norvig.com/21-days.html][Teach Yourself Programming in Ten Years]].
+- [[http://technosophos.com/2018/07/04/be-nice-and-write-stable-code.html][TechnoSophos: Be Nice And Write Stable Code (versioning scheme)]].
 - [[https://github.com/jlevy/the-art-of-command-line][The art of command line]].
 - [[https://news.ycombinator.com/item?id=14020796][The Debugging Mindset (Hacker News)]].
 - [[http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written][The Hardest Program I've Ever Written (a code formatter)]].
