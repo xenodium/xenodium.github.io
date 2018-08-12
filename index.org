@@ -1,6 +1,39 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-08-12 Sun] [[#m-r-history-search-in-git-commit-mode][#]] M-r history search in git-commit-mode
+  :PROPERTIES:
+  :CUSTOM_ID: m-r-history-search-in-git-commit-mode
+  :END:
+I've grown accustomed to M-r bindings to search Emacs history. Been wanting similar functionality to search commit message history. Turns out /log-edit-comment-ring/ has some of my local commit message history. Feeding it to /completing-read/ gives me an easily searchable history when using a completing framework like ivy or helm:
+
+#+BEGIN_SRC emacs-lisp
+  (defun ar/git-commit-search-message-history ()
+    "Search and insert commit message from history."
+    (interactive)
+    (insert (completing-read "History: "
+                             ;; Remove unnecessary newlines from beginning and end.
+                             (mapcar (lambda (text)
+                                       (string-trim text))
+                                     (ring-elements log-edit-comment-ring)))))
+#+END_SRC
+
+Now we bind it to /M-r/ and we're good to go:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "M-r" #'ar/git-commit-search-message-history git-commit-mode-map)
+#+END_SRC
+
+May also want to persist /log-edit-comment-ring/ across Emacs sessions by adding /log-edit-comment-ring/ to savehist variables. Also ensure /savehist-mode/ is enabled:
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'savehist-additional-variables log-edit-comment-ring)
+  (savehist-mode +1)
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/m-r-history-search-in-git-commit-mode/m-r-commit-history.png]]
+
 * [2018-08-09 Thu] [[#morning-smoothie][#]] Morning smoothie
   :PROPERTIES:
   :CUSTOM_ID: morning-smoothie
