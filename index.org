@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-08-22 Wed] [[#actionable-urls-in-emacs-buffers][#]] Actionable URLs in Emacs buffers
+  :PROPERTIES:
+  :CUSTOM_ID: actionable-urls-in-emacs-buffers
+  :END:
+  Should have enabled actionable URLs in my Emacs buffers long ago. Can now click or press return to follow links. It's great on eshell, compilation buffers, async shell commands, code, etc.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package goto-addr
+    :hook ((compilation-mode . goto-address-mode)
+           (prog-mode . goto-address-prog-mode)
+           (eshell-mode . goto-address-mode)
+           (shell-mode . goto-address-mode))
+    :bind (:map goto-address-highlight-keymap
+                ("<RET>" . goto-address-at-point)
+                ("M-<RET>" . newline))
+    :commands (goto-address-prog-mode
+               goto-address-mode))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/actionable-urls-in-emacs-buffers/goto-address.png]]
+
+* [2018-08-22 Wed] [[#bazel-bookmarks][#]] Bazel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: bazel-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-08-22 Wed]
+  :END:
+- [[https://tulipemoutarde.be/posts/bazel-for-mobile-apps-part-2/][Build mobile apps with Bazel. Part 2: iOS]].
+- [[https://github.com/jin/awesome-bazel][GitHub - jin/awesome-bazel: A curated list of Bazel rules, tooling and resources]].
 * [2018-08-18 Sat] [[#palestine-travel-bookmarks][#]] Palestine travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: palestine-travel-bookmarks
@@ -500,13 +531,14 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   :CUSTOM_ID: web-serving-tools-bookmarks
   :END:
   :MODIFIED:
-  [2018-08-05 Sun]
+  [2018-08-19 Sun]
   :END:
 - [[https://certbot.eff.org/][Certbot: Automatically enable HTTPS on your website, deploying Let's Encrypt certificates.]].
 - [[https://www.timdoug.com/log/2018/08/04/#wireguard_macos][How to configure WireGuard to tunnel traffic from a macOS client through a Debian server with IPv4 and IPv6]].
 - [[http://irreal.org/blog/?p=7306][HTTPS Is Easy (Irreal)]].
 - [[https://news.ycombinator.com/item?id=17689188][I made my own WireGuard VPN server (Hacker News)]].
 - [[https://mirage.io/][MirageOS: high-performance network applications across a variety of cloud computing and mobile platforms]].
+- [[https://idiallo.com/blog/handling-1-million-web-request][Poor man's way of handling 1.3 million web request]].
 * [2018-06-24 Sun] [[#url-shortener-bookmarks][#]] URL shortener bookmarks
   :PROPERTIES:
   :CUSTOM_ID: url-shortener-bookmarks
@@ -7027,7 +7059,9 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ***** [[https://www.bombaybustle.com][Bombay Bustle (Indian), Mayfair]].
 ***** [[https://dumlondon.com/][DUM biryani (Indian), Soho]].
 ***** [[https://www.kyseri.co.uk][Kyseri (modern turkish), Fitzrovia]].
-***** [[https://www.flourandgrape.com][Flour and Grape (Pasta), Bermondsey]].s
+***** [[https://www.flourandgrape.com][Flour and Grape (Pasta), Bermondsey]].
+***** [[https://www.honipoke.com/][Honi Pokē (poke), Soho]].
+***** [[http://zialucia.com/][ZIA LUCIA (pizza), Highbury Islington]].
 *** Angel
 ******* TODO [[http://www.shawarmabar.co.uk/][Shawarma Bar - Berber and Q]].
 *** Barbican
