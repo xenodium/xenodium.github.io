@@ -1,6 +1,61 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-11-06 Tue] [[#working-with-vultrs-ipv6-only-instances][#]] Working with vultr's ipv6-only instances
+  :PROPERTIES:
+  :CUSTOM_ID: working-with-vultrs-ipv6-only-instances
+  :END:
+Having recently read [[https://www.amazon.co.uk/Transforming-Relationship-Achieving-Financial-Independence/dp/0143115766/][Your Money or Your Life]], I've been cutting down on personal expenses wherever possible. Specially recurring expenses which include monthly charges from VPS hosting. Let's reduce those charges...
+
+My VPS needs are fairly small (mostly hobby and tinkering). [[https://www.vultr.com/?ref=7579034][Vultr]]† has a plan for $2.50/month (not seen anything cheaper). The caveat for the price, you get ipv6 access only (ie. 0000:1111:2222:3333:4444:5555:6666:7777:8888).
+
+So far so good, but my ISP doesn't yet support ipv6:
+
+#+BEGIN_SRC sh
+$ ping6 0000:1111:2222:3333:4444:5555:6666:7777:8888
+$ ping6: UDP connect: No route to host
+#+END_SRC
+
+Fortunately, we can still work with ipv6 by using a tunnel (TIL about [[https://tunnelbroker.net][Hurricane Electric's tunnel broker]]). After signing up and creating a tunnel, they conveniently show you "Example Configurations" from the "Tunnel Details" menu. In my case, macOS:
+
+#+BEGIN_SRC sh
+  ifconfig gif0 create
+  ifconfig gif0 tunnel <ipv4 client broker IP or DCHP internal IP> <ipv4 server IP>
+  ifconfig gif0 inet6 <ipv6 client broker IP> <ipv6 server IP> prefixlen 128
+  route -n add -inet6 default <ipv6 server IP>
+#+END_SRC
+
+Note: If behind router, use the DHCP internal IP.
+
+After configuring with ifconfig, all is good. Yay!
+
+#+BEGIN_SRC sh
+  $ ping6 0000:1111:2222:3333:4444:5555:6666:7777:8888
+  PING6(56=40+8+8 bytes) 2001:111:22:aaa::2 --> 0000:1111:2222:3333:4444:5555:6666:7777:8888
+  16 bytes from 0000:1111:2222:3333:4444:5555:6666:7777:8888, icmp_seq=0 hlim=52 time=270.019 ms
+  16 bytes from 0000:1111:2222:3333:4444:5555:6666:7777:8888, icmp_seq=1 hlim=52 time=290.834 ms
+  16 bytes from 0000:1111:2222:3333:4444:5555:6666:7777:8888, icmp_seq=2 hlim=52 time=311.960 ms
+  16 bytes from 0000:1111:2222:3333:4444:5555:6666:7777:8888, icmp_seq=3 hlim=52 time=330.902 ms
+#+END_SRC
+
+† I get $10 credit if you use this affiliate link. Thank you.
+
+* [2018-11-04 Sun] [[#shaving-bookmarks][#]] Shaving bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: shaving-bookmarks
+  :END:
+- [[https://www.independent.co.uk/extras/indybest/fashion-beauty/mens-grooming/best-safety-razors-for-beginners-sensitive-skin-10111508.html][8 best safety razors (The Independent)]].
+* [2018-11-04 Sun] [[#buy-it-for-life-bookmarks][#]] Buy it for life bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: buy-it-for-life-bookmarks
+  :END:
+- [[https://www.fjallraven.com][Fjällräven jackets]].
+- [[https://www.etsy.com/uk/market/gillette_slim][Gillette slim (Etsy)]].
+* [2018-10-29 Mon] [[#rust-bookmarks][#]] Rust bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: rust-bookmarks
+  :END:
+- [[https://www.snoyman.com/blog/2018/10/introducing-rust-crash-course][Introducing the Rust crash course]].
 * [2018-10-28 Sun] [[#fonts-bookmarks][#]] Fonts bookmarks
   :PROPERTIES:
   :CUSTOM_ID: fonts-bookmarks
@@ -2609,9 +2664,10 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2018-10-29 Mon]
+[2018-11-04 Sun]
 :END:
 - [[http://monevator.com/category/investing/passive-investing-investing/][A guide to passive investing in the UK]].
+- [[https://www.amazon.com/How-Interview-Financial-Advisor-Piaw-ebook/dp/B00GXDT9LY][Amazon.com: How to Interview a Financial Advisor eBook: Piaw Na: Kindle Store]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9edd3m/any_critique_against_the_vanguard_ftse_global_all/][Any critique against the Vanguard FTSE global all cap index? : UKPersonalFinance]].
 - [[https://www.fca.org.uk/firms/authorised-recognised-funds][Authorised and recognised funds (FCA)]].
 - [[https://www.bankaccountsavings.co.uk/calculator][Bank Account Savings: Open up multiple accounts to maximise your savings]].
@@ -2623,6 +2679,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.coursera.org/learn/financial-markets-global/reviews][Coursera (Online Courses From Top Universities. Join for Free)]].
 - [[http://www.cfiresim.com/][Crowdsourced Financial Independence and Early Retirement Simulator/Calculator]].
 - [[https://news.ycombinator.com/item?id=17930318][Don't Steal Money from Day Traders Before They Lose It (Hacker News)]].
+- [[https://twitter.com/ericajoy/status/1057774364181987328?s=12][EricaJoy on Twitter: what is the process for finding a financial advisor/accountant/etc]].
 - [[https://www.madfientist.com/podcast][Financial Independence Podcast]].
 - [[https://www.reddit.com/r/FIREUK/][Financial Independence Retiring Early UK (r/fireuk)]].
 - [[https://www.financialsamurai.com/wp-content/uploads/2018/08/reasons-to-sell.jpg][Financial Samurai png (typical reasons to sell assets in short term = bad idea long term)]].
@@ -4286,14 +4343,16 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2018-10-13 Sat]
+[2018-11-04 Sun]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
 - [[https://github.com/CosmicMind/Material][A beautiful graphics framework for Material Design in Swift]].
 - [[https://talk.objc.io/episodes][All Episodes · Swift Talk · objc.io]].
+- [[https://www.objc.io/books/app-architecture/][App Architecture (objc.io)]].
 - [[https://github.com/Awesome-Server-Side-Swift/TheList][Awesome server side swift]].
 - [[https://github.com/hsavit1/Awesome-Swift-Education][Awesome-Swift-Education]].
+- [[https://www.swiftbysundell.com/posts/building-dsls-in-swift][Building DSLs in Swift (Swift by Sundell)]].
 - [[https://davedelong.com/blog/2018/07/25/conditional-compilation-in-swift-part-1/][Conditional Compilation in Swift, Part 1 (Dave DeLong)]].
 - [[https://swiftunboxed.com/protocols/equatable/][Equatable - Swift Unboxed]].
 - [[https://github.com/mpangburn/FunctionKit/blob/master/README.md][FunctionKit/README.md at master · mpangburn/FunctionKit · GitHub]].
@@ -4312,6 +4371,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://medium.com/ios-os-x-development/optionals-in-swift-for-newbies-7199a30707d5][Optionals in Swift for newbies]].
 - [[https://github.com/seorenn/SRChoco][SRChoco: Seorenn's Development Libraries for OS X and iOS (github)]].
 - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
+- [[https://pragprog.com/book/esswift2/swift-style-second-edition][Swift Style, Second Edition: An Opinionated Guide to an Opinionated Language by Erica Sadun (The Pragmatic Bookshelf)]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[http://swiftmonthly.com/][SwiftMothly]].
@@ -4429,9 +4489,10 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: sql-bookmarks
 :END:
 :MODIFIED:
-[2018-10-10 Wed]
+[2018-11-02 Fri]
 :END:
 - [[https://modern-sql.com/use-case/literate-sql][Literate SQL]].
+- [[https://news.ycombinator.com/item?id=18335723][Show HN: SQL Trainer – Learn SQL by doing live data exercises (Hacker News)]].
 - [[https://simonwillison.net/2018/Oct/4/datasette-ideas/][The interesting ideas in Datasette]].
 - [[http://ericsink.com/entries/rss_cat_3.html][Zumero: Efficient sync by using multiple SQLite files]].
 
@@ -5885,7 +5946,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 :CUSTOM_ID: portugal-travel-bookmarks
 :END:
 :MODIFIED:
-[2015-07-05 Sun]
+[2018-11-01 Thu]
 :END:
 - [[https://duckduckgo.com/?q=avenida+dos+platanos&ia=images][Avenida dos Platanos]].
 - Boca do inferno.
@@ -5920,6 +5981,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 - Sé (Lisbon Cathedral).
 - [[https://twitter.com/lonelyplanet/status/612282216635363328/photo/1][The best beaches in Portugal's Algarve]].
 - Torre Belem (Lisbon).
+- [[https://www.eventbrite.com/e/web-summit-ladies-craft-night-tote-bag-embroidery-workshop-tickets-51503431149][Web Summit Ladies Craft Night - Tote Bag Embroidery Workshop Tickets, Tue, Nov 6, 2018 at 7:00 PM (Eventbrite)]].
 
 * [2015-06-21 Sun] [[#bulgaria-travel-bookmarks][#]] Bulgaria travel bookmarks
 :PROPERTIES:
@@ -7376,7 +7438,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2018-10-07 Sun]
+[2018-10-30 Tue]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
@@ -7393,6 +7455,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.miskatonic.org/2016/08/25/image-display-size-in-org/][Image display size in Org]].
 - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
 - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
+- [[http://cachestocaches.com/2018/6/org-literate-programming/][Literate Programming with Org-mode]].
 - [[https://www.offerzen.com/blog/literate-programming-empower-your-writing-with-emacs-org-mode][Literate Programming: Empower Your Writing with Emacs Org-Mode]].
 - [[http://mbork.pl/2018-08-18_Embedding_files_in_Org-mode_revisited][Marcin Borkowski: 2018-08-18 Embedding files in Org-mode revisited]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
@@ -7549,6 +7612,8 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO Roti Chai (Indian).
 *** Peckham
 ******* TODO [[http://www.ganapatirestaurant.com][Ganapati]] (South Indian).
+*** Putney
+******* TODO [[https://www.tripadvisor.co.uk/ShowUserReviews-g186338-d807103-r176708451-Tomoe-London_England.html][authentic Japanese restaurant in Putney - Tomoe, London Traveller Reviews - TripAdvisor]].
 *** Shoreditch
 ******* TODO [[http://mastbrothers.com/pages/london][Mast Brothers chocolate makers]].
 ******* TODO [[http://www.sagardi.co.uk/en/][Sagardi]] (basque).
@@ -7994,13 +8059,14 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: productivity-bookmarks
 :END:
 :MODIFIED:
-[2018-10-13 Sat]
+[2018-10-29 Mon]
 :END:
 - [[http://10fastfingers.com/][10 fast fingers]] (improve typing skills).
 - [[http://dayoneapp.com/][Day One Journal]]
 - [[http://yanpritzker.com/2011/11/17/dotfiles-for-ultimate-productivity-in-bash-and-vim/ ][Dotfiles for insane productivity in bash, git, and vim]].
 - [[https://news.ycombinator.com/item?id=18179972][How to Get Things Done When You Don't Feel Like It (Hacker News)]].
 - [[http://maebert.github.io/jrnl/][jrnl]]: Likely what I've been looking for journaling from command line.
+- [[https://app.getpocket.com/][Pocket]].
 - [[https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/][The Ultimate Guide to Personal Productivity Methods]].
 - [[https://github.com/skwp/dotfiles][Yan's dot files]]: For peaking.
 - [[http://yanpritzker.com/2006/10/03/five-ways-to-get-insane-productivity-boosts/][Yan's productivity tips]]: Also to try.
@@ -8011,12 +8077,13 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2018-10-12 Fri]
+[2018-10-29 Mon]
 :END:
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
 - [[https://news.ycombinator.com/item?id=17896692][An Intensive Introduction to Cryptography (Hacker News)]].
 - [[https://github.com/yishilin14/asc-key-to-qr-code-gif][asc-key-to-qr-code-gif: Convert ASCII-armored PGP keys to animated QR code]].
 - [[https://nullprogram.com/blog/2018/09/06/][Brute Force Incognito Browsing « null program]].
+- [[https://crypt.ee][Cryptee (Private, Secure, Encrypted Documents & Photos)]].
 - [[http://digital-era.net/][Digital Era]].
 - [[https://news.ycombinator.com/item?id=18100243][DuckDuckGo Traffic (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=17737148][K-anonymity (Hacker News)]].
@@ -8659,13 +8726,14 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: language-learning-bookmarks
 :END:
 :MODIFIED:
-[2018-09-30 Sun]
+[2018-10-30 Tue]
 :END:
 - [[https://www.hackingchinese.com/about/practical-guide-to-learning-mandarin/][Hacking Chinese: A Practical Guide to Learning Mandarin (Hacking Chinese)]].
 - HN's comments on [[https://news.ycombinator.com/item?id%3d8806678][learning laguages]].
 - [[https://www.michelthomas.com/how-it-works.php][How it Works - Language Learning with The Michel Thomas Method]].
 - [[http://fourhourworkweek.com/2007/11/07/how-to-learn-but-not-master-any-language-in-1-hour-plus-a-favor/][How to learn (But Not Master) Any Language in 1 Hour (Plus: A Favor)]].
 - [[https://reader.manabi.io/][Manabi Reader – Learn Japanese by Reading on iOS]].
+- [[https://woodypianoshack.com/][Welcome - Woody Piano Shack]].
 
 * [2015-02-18 Wed] [[#git-conflict-resolution-deja-vu][#]] Git conflict resolution déjà vu?
 :PROPERTIES:
@@ -8803,13 +8871,17 @@ maps key to action.
   :CUSTOM_ID: frugal-bookmarks
   :END:
   :MODIFIED:
-  [2018-09-29 Sat]
+  [2018-10-29 Mon]
   :END:
 - [[https://mobile.asda.com/][Asda Mobile | Pay as you go SIM (Order your free SIM)]].
+- [[https://www.getrichslowly.org/best-cheap-coffee/][Beating the latte factor: My quest for the best cheap coffee]].
 - [[https://www.biggreensmile.com/departments/dishwashing.aspx?deptid=DISHES][Big green smile (eco bulk buys)]].
+- [[https://www.reddit.com/r/BuyItForLife/][Buy it for life: Durable, Quality, Practical (Reddit)]].
 - [[https://frugalmoneyman.com/2018/03/23/emergency-fund-before-yolo/][Emergency Fund Before YOLO - Frugal Money Man]].
 - [[https://www.reddit.com/r/FreeEBOOKS][FreeEBOOKS (subreddit)]].
+- [[https://www.getrichslowly.org/best-quality-for-less/][How to find the best quality for less, but it for life, (Get Rich Slowly)]].
 - [[https://thehumblepenny.com/][The Humble Penny (Create Financial Joy)]].
+- [[https://www.choosefi.com/want-to-buy-it-for-life-consider-this/][Want To Buy It For Life? (lots of item suggestions)]].
 * [2014-09-18 Thu] [[#charities-bookmarks][#]] Charities bookmarks
   :PROPERTIES:
   :CUSTOM_ID: charities-bookmarks
@@ -8826,8 +8898,9 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2018-10-05 Fri]
+[2018-10-31 Wed]
 :END:
+******* TODO [[http://www.theyshootpictures.com/21stcentury.htm][The 21st Century’s Most Acclaimed Films (including films from 2000)]].
 ******* TODO [[https://en.wikipedia.org/wiki/Koyaanisqatsi][Koyaanisqatsi]].
 ******* TODO [[https://www.imdb.com/title/tt4000670/][Mifune: The Last Samurai (2015) - IMDb]].
 ******* TODO [[https://www.imdb.com/title/tt1322313/][Sunshine Superman (2014) - IMDb]].
@@ -9277,8 +9350,9 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-10-29 Mon]
+[2018-11-04 Sun]
 :END:
+- [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
 - [[https://spin.atomicobject.com/2016/05/27/write-emacs-package/][A Simple Guide to Writing & Publishing Emacs Packages]].
@@ -9637,7 +9711,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: development-bookmarks
 :END:
 :MODIFIED:
-[2018-10-05 Fri]
+[2018-10-30 Tue]
 :END:
 - [[http://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python)):  parse, tokenize, read from tokens, environments, eval, and repl ]].
 - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
@@ -9666,6 +9740,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://doc.qt.digia.com/qq/qq13-apis.html][Designing Qt-Style C++ APIs]].
 - [[http://www.amazon.co.uk/Domain-driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=sr_1_1?ie=UTF8&qid=1444472442&sr=8-1&keywords=domain+driven+design][Domain-driven design: Tackling Complexity in the Heart of Software (Book)]].
 - [[http://s9w.io/font_compare][Font compare]].
+- [[https://github.com/fdiskyou/Zines][GitHub - fdiskyou/Zines: hacking Zines mirror for the lulz and nostalgy]].
 - [[https://github.com/kilimchoi/engineering-blogs][GitHub - kilimchoi/engineering-blogs: A curated list of engineering blogs]].
 - [[https://google-styleguide.googlecode.com/svn/trunk/shell.xml][Google shell style guide]].
 - [[http://hackershelf.com/browse/?popular=1][Hacker shelf: Free software dev books]].
