@@ -1,6 +1,53 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-11-10 Sat] [[#faster-junk-mail-deletion-with-mu4e][#]] Faster junk mail deletion with mu4e
+  :PROPERTIES:
+  :CUSTOM_ID: faster-junk-mail-deletion-with-mu4e
+  :END:
+It's been roughly 5 months since [[http://xenodium.com/#trying-out-mu4e-and-offlineimap][my mu4e email migration]]. Happy with my choice. [[http://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]] is awesome.
+
+I now have 4 email accounts managed by mu4e, and unfortunately attracting lots of junk mail. I regularly peek at junk folders for false positives and delete permanently. I've been wanting a quick way to glance at junk mail and easily delete page by page.
+
+Deleting emails page by page is not supported in mu4e by default. /Fortunately, this is Emacs and we can change that™./
+
+There's a handy package called [[http://github.com/rolandwalker/window-end-visible][window-end-visible]]. We can use it to select mu4e emails by page and subsequently glue it all together to enable deleting emails by page.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'mu4e)
+  (require 'window-end-visible)
+
+  (defmacro with-marked-visible-buffer (f)
+    "Mark all visible lines in buffer. Unlike `mark-whole-buffer',
+   invisible lines are not marked."
+    (interactive)
+    ;; Delay, in case invoking via helm/ivy and window is temporarily smaller.
+    `(run-with-timer 0.001 nil
+                     (lambda ()
+                       (set-mark (window-start))
+                       (goto-char (window-end-visible))
+                       (activate-mark)
+                       (funcall ,f))))
+
+  (defun mu4e-delete-page ()
+      (interactive)
+      (with-marked-visible-buffer
+       (lambda ()
+         (mu4e-headers-mark-for-trash)
+         (mu4e-mark-execute-all t))))
+#+END_SRC
+
+I'm a [[https://github.com/jwiegley/use-package][use-package]] fan. I use it to bind the "v" key to delete /visible emails (by page/).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package mu4e
+    :bind (:map mu4e-headers-mode-map
+           ("v" . mu4e-delete-page))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/faster-junk-mail-deletion-with-mu4e/delete-junk.gif]]
+
 * [2018-11-06 Tue] [[#working-with-vultrs-ipv6-only-instances][#]] Working with vultr's ipv6-only instances
   :PROPERTIES:
   :CUSTOM_ID: working-with-vultrs-ipv6-only-instances
@@ -348,13 +395,13 @@ May also want to persist /log-edit-comment-ring/ across Emacs sessions by adding
   :END:
 Big fan of my morning power smoothie. Best deals I've found so far:
 
-- Almonds (BuyWhileFoodsOnline.co.uk, [[https://www.amazon.co.uk/gp/product/B004XJ72HI][£1.06/100g @ Amazon]]).
+- Almonds (BuyWholeFoodsOnline.co.uk, [[https://www.amazon.co.uk/gp/product/B004XJ72HI][£1.06/100g @ Amazon]]).
 - Banana.
 - Blueberries.
-- Chia seeds (Active foods, [[https://www.bulkpowders.co.uk/chia-seeds.html][£7.59/Kg @ Bulk Powders]]).
+- Chia seeds ([[https://www.realfoodsource.com/product/whole-natural-dark-chia-seeds/][£4.99/Kg @ Real Food Source]]).
 - Cocoa powder (Active foods, [[https://www.bulkpowders.co.uk/organic-cacao-powder.html][£ 1.7/100g @ Bulk Powders]]).
 - Coconut water (Innocent, [[https://www.tesco.com/groceries/en-GB/products/288178112][£0.37/100ml @ Tesco]]).
-- Crunchy peanut butter (Active foods [[https://www.bulkpowders.co.uk/peanut-butter.html][£ 5.09/Kg @ Bulk Powders]]).
+- Crunchy peanut butter ([[https://www.realfoodsource.com/product/peanut-butter/][£ 4.99/Kg @ Real Food Source]]).
 - Matcha powder (Active [[https://www.bulkpowders.co.uk/matcha-green-tea-powder.html][£6.8/100g @ Bulk Powders]]).
 - Strawberries.
 
@@ -4142,7 +4189,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 :CUSTOM_ID: maps-dev-bookmarks
 :END:
 :MODIFIED:
-[2018-09-10 Mon]
+[2018-11-06 Tue]
 :END:
 - [[https://www.inderapotheke.de/blog/farewell-google-maps][Farewell, Google Maps (In der Apotheke)]].
 - [[https://github.com/ue4plugins/StreetMap/blob/master/README.md][Import OpenStreetMap XML data into your Unreal Engine 4]].
@@ -4150,6 +4197,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 - [[https://www.mapbox.com/][Mapbox]].
 - [[https://mapzen.com][Mapzen]].
 - [[https://medium.com/tag/mapping][Medium's mapping tag]].
+- [[https://news.ycombinator.com/item?id=18390425][Migrating away from Google Maps and cutting costs by 99% (Hacker News)]].
 - [[https://openaddresses.io/][Open Addresses]].
 - [[https://www.openstreetmap.org/user/mvexel/diary/39274][OpenStreetMap: Introducing OpenStreetView]].
 - [[http://wiki.openstreetmap.org/wiki/Planet.osm][OSM data in one file]].
@@ -7912,7 +7960,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2018-10-29 Mon]
+[2018-11-10 Sat]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -7941,6 +7989,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://barnacl.es/][Barnacles]].
 - [[https://news.ycombinator.com/item?id=10481507][Bayesian ranking of items with up and downvotes or 5 star ratings (Hacker News)]].
 - [[http://julesjacobs.github.io/2015/08/17/bayesian-scoring-of-ratings.html][Bayesian ranking of items with up and downvotes or 5 star ratings]].
+- [[https://en.wikipedia.org/wiki/Bcrypt][bcrypt: password hashing function (Wikipedia)]].
 - [[http://wordsafety.com/][Check for word safety (wordsafety.com)]].
 - [[https://news.ycombinator.com/item?id=17920287][Choosing Your First Marketing Hire (Hacker News)]].
 - [[http://www.clinkhostels.com/london/clink78/][Clink78 hostel]].
@@ -7964,6 +8013,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://creativemarket.com/][Fonts, Graphics, Themes and More ~ Creative Market]].
 - [[https://graphicriver.net/][Fonts, Logos & Icons from GraphicRiver]].
 - [[https://news.ycombinator.com/item?id=17266006][For Static Sites, There’s No Excuse Not to Use a CDN (Hacker News)]].
+- [[https://cruip.com/][Free HTML landing page templates for startups - Cruip]].
 - [[http://blog.shyahi.com/post/62901878131/putting-everything-together-free-tools-for][Free tools for startups (Shyahi blog)]].
 - [[http://www.freevectors.net/][Free vectors]].
 - [[http://www.backa.co/][Gain valuable, actionable feedback on your startup ideas]].
@@ -7976,6 +8026,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app][How I got to the app store top with a simple currency app]].
 - [[http://www.sentia.com.au/blog/how-much-does-it-cost-to-build-an-app][How much does it cost to build an app? (Sentia Blog)]].
 - [[http://bulgerpartners.com/how-to-be-prepared-for-technical-due-diligence-what-to-anticipate-and-how-to-excel/][How to Be Prepared for Technical Due Diligence: What to Anticipate and How to Excel]].
+- [[https://blog.streamroot.io/how-to-implement-a-multi-cdn-strategy-everything-you-need-to-know/][How to implement a multi-CDN strategy: everything you need to know]].
 - [[https://crew.co/backstage/blog/the-psychology-of-pricing][How to price anything: The psychology of why we’ll pay what we pay]].
 - [[https://www.sendwithus.com/resources/guide][How to Send Email Like a Startup]].
 - [[http://startupclass.samaltman.com/][How to start a startup lectures]].
@@ -8018,6 +8069,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.theatlantic.com/business/archive/2015/01/the-psychological-difference-between-1200-and-1167/384993/?single_page=true][Psychological differences in price]].
 - [[http://www.quora.com/What-are-the-best-productivity-tools-for-entrepreneurs][Quora: What are the best productivity tools for entrepreneurs]]?
 - [[https://get.gaug.es/][Real Time Web Analytics & Marketing Attribution Tools - Gauges]].
+- [[https://news.ycombinator.com/item?id=18402411][RemoteMac.io – Dedicated Mac mini (Hacker News)]].
 - [[http://rethinkdb.com/faq/][RethinkDB FAQ]].
 - [[https://news.ycombinator.com/item?id=9185338][RethinkDB HN comments]].
 - [[https://www.sendwithus.com/resources/guide/][Send email like a startup]].
@@ -8912,8 +8964,9 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2018-10-31 Wed]
+[2018-11-06 Tue]
 :END:
+******* TODO [[https://news.ycombinator.com/item?id=18271167][Ask HN: Mind blowing documentaries?]].
 ******* TODO [[http://www.theyshootpictures.com/21stcentury.htm][The 21st Century’s Most Acclaimed Films (including films from 2000)]].
 ******* TODO [[https://en.wikipedia.org/wiki/Koyaanisqatsi][Koyaanisqatsi]].
 ******* TODO [[https://www.imdb.com/title/tt4000670/][Mifune: The Last Samurai (2015) - IMDb]].
@@ -9364,8 +9417,9 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2018-11-04 Sun]
+[2018-11-06 Tue]
 :END:
+- [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
@@ -9562,12 +9616,13 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: cpp-bookmarks
 :END:
 :MODIFIED:
-[2016-07-03 Sun]
+[2018-11-06 Tue]
 :END:
 - [[http://nickdesaulniers.github.io/blog/2015/07/23/additional-c-slash-c-plus-plus-tooling/][Additional C/C++ Tooling]].
 - [[https://github.com/isocpp/CppCoreGuidelines][C++ Core Guidelines]].
 - [[http://cppreference.com][cppreference.com]].
 - [[https://github.com/Dobiasd/FunctionalPlus][FunctionalPlus: helps you write concise and readable C++ code]].
+- [[https://github.com/mozilla/rr][GitHub - mozilla/rr: Record and Replay Framework (debugging)]].
 - [[http://www.murrayc.com/permalink/2015/12/05/modern-c-variadic-template-parameters-and-tuples/][Modern C++: Variadic template parameters and tuples]].
 - [[http://www.artima.com/cppsource/top_cpp_aha_moments.html][My Most Important C++ Aha! Moments...Ever]].
 - [[http://www.amazon.co.uk/Programming-Principles-Practice-Using-C/dp/0321992784][Programming: Principles and Practice Using C++ Paperback]].
