@@ -1,6 +1,33 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-11-13 Tue] [[#faster-elfeed-browsing-with-paging][#]] Faster elfeed browsing with paging
+  :PROPERTIES:
+  :CUSTOM_ID: faster-elfeed-browsing-with-paging
+  :END:
+Following up from [[http://xenodium.com/#faster-junk-mail-deletion-with-mu4e][faster junk mail deletion with mu4e]], elfeed is another candidate for enabling actions on pages. In this case, marking rss entries as read, page by Page.
+
+If on [[https://github.com/jwiegley/use-package][use-package]], it can be wired up with:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :bind (:map elfeed-search-mode-map
+                ("v" . ar/elfeed-mark-visible-as-read))
+    :config
+    (defun ar/elfeed-mark-visible-as-read ()
+      (interactive)
+      (require 'window-end-visible)
+      (set-mark (window-start))
+      (goto-char (window-end-visible))
+      (activate-mark)
+      (elfeed-search-untag-all-unread)
+      (elfeed-search-update--force)
+      (deactivate-mark)))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/faster-elfeed-browsing-with-paging/elfeed-read-by-page.gif]]
 * [2018-11-10 Sat] [[#faster-junk-mail-deletion-with-mu4e][#]] Faster junk mail deletion with mu4e
   :PROPERTIES:
   :CUSTOM_ID: faster-junk-mail-deletion-with-mu4e
@@ -19,24 +46,14 @@ There's a handy package by Roland Walker called [[http://github.com/rolandwalker
   (require 'mu4e)
   (require 'window-end-visible)
 
-  (defmacro with-marked-visible-buffer (f)
-    "Mark all visible lines in buffer. Unlike `mark-whole-buffer',
-   invisible lines are not marked."
+  (defun ar/mu4e-delete-page ()
     (interactive)
-    ;; Delay, in case invoking via helm/ivy and window is temporarily smaller.
-    `(run-with-timer 0.001 nil
-                     (lambda ()
-                       (set-mark (window-start))
-                       (goto-char (window-end-visible))
-                       (activate-mark)
-                       (funcall ,f))))
-
-  (defun mu4e-delete-page ()
-      (interactive)
-      (with-marked-visible-buffer
-       (lambda ()
-         (mu4e-headers-mark-for-trash)
-         (mu4e-mark-execute-all t))))
+    (set-mark (window-start))
+    (goto-char (window-end-visible))
+    (activate-mark)
+    (mu4e-headers-mark-for-trash)
+    (mu4e-mark-execute-all t)
+    (deactivate-mark))
 #+END_SRC
 
 I'm a [[https://github.com/jwiegley/use-package][use-package]] fan, so I use it to bind the "v" key to delete /visible emails (by page/).
@@ -44,7 +61,7 @@ I'm a [[https://github.com/jwiegley/use-package][use-package]] fan, so I use it 
 #+BEGIN_SRC emacs-lisp
   (use-package mu4e
     :bind (:map mu4e-headers-mode-map
-           ("v" . mu4e-delete-page))
+           ("v" . ar/mu4e-delete-page))
 #+END_SRC
 
 #+ATTR_HTML: :width 75% :height 75%
