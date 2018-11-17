@@ -1,6 +1,68 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-11-17 Sat] [[#quickly-swapping-elfeed-filters][#]] Quickly swapping elfeed filters
+  :PROPERTIES:
+  :CUSTOM_ID: quickly-swapping-elfeed-filters
+  :END:
+I seem to be more efficient in getting through rss feeds by individually browsing through related content. That is, I can get through all Emacs entries a lot faster if I look at Emacs content exclusively, instead of mixing with say BBC news. [[https://github.com/skeeto/elfeed][Elfeed]] filters are great for filtering related content.
+
+I wanted a way to easily switch through my typical categories of related content by quickly changing elfeed filters using a completion framework.
+
+Emacs's [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]] plays nicely with your favorite completing framework (mine is [[https://github.com/abo-abo/swiper][ivy]]). With a couple of functions, we can get Emacs to ask us for the filtering category using human-readable options and quickly presenting related content. Binding the new functionality to <tab> is working well for me.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed :ensure t
+    :commands elfeed
+    :bind (:map elfeed-search-mode-map
+                ("<tab>" . ar/elfeed-completing-filter))
+    :config
+    (defun ar/elfeed-filter-results-count (search-filter)
+      "Count results for SEARCH-FILTER."
+      (let* ((filter (elfeed-search-parse-filter search-filter))
+             (head (list nil))
+             (tail head)
+             (count 0))
+        (let ((lexical-binding t)
+              (func (byte-compile (elfeed-search-compile-filter filter))))
+          (with-elfeed-db-visit (entry feed)
+            (when (funcall func entry feed count)
+              (setf (cdr tail) (list entry)
+                    tail (cdr tail)
+                    count (1+ count)))))
+        count))
+
+    (defun ar/elfeed-completing-filter ()
+      "Completing filter."
+      (interactive)
+      (let ((categories (-filter
+                         (lambda (item)
+                           (> (ar/elfeed-filter-results-count (cdr item))
+                              0))
+                         '(("All" . "@6-months-ago +unread")
+                           ("BBC" . "@6-months-ago +unread +bbc")
+                           ("Dev" . "@6-months-ago +unread +dev")
+                           ("Emacs" . "@6-months-ago +unread +emacs")
+                           ("Health" . "@6-months-ago +unread +health")
+                           ("Hacker News" . "@6-months-ago +unread +hackernews")
+                           ("iOS" . "@6-months-ago +unread +ios")
+                           ("Money" . "@6-months-ago +unread +money")))))
+        (if (> (length categories) 0)
+            (progn
+              (ar/elfeed-view-filtered (cdr (assoc (completing-read "Categories: " categories)
+                                                   categories)))
+              (goto-char (window-start)))
+          (message "All caught up \\o/")))))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/quickly-swapping-elfeed-filters/completing-elfeed.gif]]
+
+We don't actually need two functions, but /ar/elfeed-filter-results-count/ enables us to list only those feeds that actually have new content. The list will shrink as we get through our content. When no content is left, we get a little celebratory message.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/quickly-swapping-elfeed-filters/no-left.png]]
+
 * [2018-11-14 Wed] [[#converting-docx-to-pdf-on-macos][#]] Converting docx to pdf on macOS
   :PROPERTIES:
   :CUSTOM_ID: converting-docx-to-pdf-on-macos
