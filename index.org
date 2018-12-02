@@ -1,6 +1,23 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-12-02 Sun] [[#swift-nil-coalescing-operator][#]] Swift nil-coalescing operator
+  :PROPERTIES:
+  :CUSTOM_ID: swift-nil-coalescing-operator
+  :END:
+[[https://twitter.com/twostraws][Paul Hudson]], over at [[https://www.hackingwithswift.com/][Hacking with Swift]], has written [[https://www.hackingwithswift.com/articles/136/the-complete-guide-to-optionals-in-swift][The Complete Guide to Optionals in Swift]]. One of the many highlights is the [[https://docs.swift.org/swift-book/LanguageGuide/BasicOperators.html#ID72][nil-coalescing operator]]. If you're a fan of the [[https://en.wikipedia.org/wiki/Ternary_operation][C-like syntax in ternary operations]], you'd enjoy chaining with Swift's nil-coalescing operator:
+
+#+BEGIN_SRC swift
+  let players = [ "goose": "run!" ]
+  let move = players["duck1"] ?? players["duck2"] ?? players["duck3"] ?? players["goose"]
+  print("\(String(describing: move))")
+#+END_SRC
+
+#+RESULTS:
+: Optional("run!")
+
+ps. Snippet run on Emacs [[https://orgmode.org/worg/org-contrib/babel/intro.html][org babel's]] [[https://github.com/zweifisch/ob-swift][ob-swift]]. See [[#multiline-swift-strings][Multiline Swift strings]] for details.
+
 * [2018-12-01 Sat] [[#ocado-vs-asda-org-table][#]] Ocado vs Asda (org table)
   :PROPERTIES:
   :CUSTOM_ID: ocado-vs-asda-org-table
@@ -109,6 +126,28 @@ Via [[https://twitter.com/objcio][objc.io]] and [[https://twitter.com/mxcl][Max 
 [[https://twitter.com/twostraws][Paul Hudson's]] [[https://twitter.com/twostraws][tweet]] introduced me to Swift's multiline string indentation control using closing quotes. Neat!
 
 Being an org-mode fan, I thought I'd give Swift multiline strings a try using Org [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel's]] [[https://github.com/zweifisch/ob-swift][ob-swift]]. I get to verify it and document at the same time. Win.
+
+Swift org mode source blocks (ie. BEGIN_SRC/END_SRC) can be added as follows:
+
+#+BEGIN_SRC org :exports src
+  ,#+BEGIN_SRC swift :exports both
+    print("""
+         Hello World
+    """)
+
+    print("""
+         Hello World
+         """)
+  ,#+END_SRC
+
+  ,#+RESULTS:
+  :      Hello World
+  : Hello World
+#+END_SRC
+
+By pressing /C-c C-c/ anywhere in the code block, the snippet is executed and its output captured in the /RESULT/ block. Super handy for quickly trying out snippets and keeping as future reference.
+
+As a bonus, the above blocks can be exported to HTML ([[https://orgmode.org/manual/Exporting.html][amongst other formats]]). With some [[https://github.com/xenodium/dotsies/search?q=org-html-head-extra&unscoped_q=org-html-head-extra][styling]], it looks as follows:
 
 #+BEGIN_SRC swift :exports both
   print("""
@@ -4643,7 +4682,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2018-11-26 Mon]
+[2018-12-02 Sun]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -4677,6 +4716,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[http://swiftmonthly.com/][SwiftMothly]].
+- [[https://www.hackingwithswift.com/articles/136/the-complete-guide-to-optionals-in-swift][The Complete Guide to Optionals in Swift – Hacking with Swift]].
 - [[https://www.youtube.com/user/TheSwiftLanguage][The Shift Language (YouTube)]].
 - [[https://troz.net/][TrozWare blogs on Swift]].
 - [[https://medium.com/the-traveled-ios-developers-guide/uilayoutguide-6b3b552b1890][UILayoutGuide – The Traveled iOS Developer’s Guide – Medium]].
@@ -10046,7 +10086,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: development-bookmarks
 :END:
 :MODIFIED:
-[2018-11-17 Sat]
+[2018-12-02 Sun]
 :END:
 - [[http://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python)):  parse, tokenize, read from tokens, environments, eval, and repl ]].
 - [[http://www.exceptionnotfound.net/fundamental-laws-of-software-development/][15 Fundamental Laws of Software Development]].
@@ -10066,6 +10106,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://wincent.com/blog/optimization][Beware of cute optimizations bearing gifts (building fuzzy search) · wincent.com]].
 - [[https://dev.to/metcoder95/big-o-notation-beginners-guide-1h38][Big-O Notation: Beginners Guide - DEV Community]].
 - [[https://speakerdeck.com/bbatsov/knighitie-koito-vsieki-proghramist-triabva-da-prochietie][Bozhidar Batsov's presentation (lots of great books listed)]].
+- [[https://refactoring.com/catalog][Catalog of Refactorings]].
 - [[http://arturoherrero.com/clean-code/][Clean code]].
 - [[http://kevinlondon.com/2015/05/05/code-review-best-practices.html][Code review best practices]].
 - [[https://dev.to/vonheikemen/code-style-rules-that-are-actually-useful-3igf][Code style rules that are actually useful (DEV Community)]].
