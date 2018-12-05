@@ -1,6 +1,27 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-12-05 Wed] [[#diffing-directories-content-size][#]] Diffing directories content size
+  :PROPERTIES:
+  :CUSTOM_ID: diffing-directories-content-size
+  :END:
+Needed to diff two directories, but only interested in file size changes. find, diff, and stat seem to do the job:
+
+#+BEGIN_SRC sh :results verbatim :exports both
+  diff <(find dir1 -type f -exec stat -f '%N %z' '{}' \; | sort) <(find dir2 -type f -exec stat -f '%N %z' '{}' \; | sort)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+1,3c1,2
+< dir1/one.txt 14
+< dir1/subdir/file.txt 5
+< dir1/three.txt 7
+---
+> dir2/one.txt 19
+> dir2/two.txt 0
+#+end_example
+
 * [2018-12-02 Sun] [[#swift-nil-coalescing-operator][#]] Swift nil-coalescing operator
   :PROPERTIES:
   :CUSTOM_ID: swift-nil-coalescing-operator
@@ -7790,7 +7811,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2018-11-24 Sat]
+[2018-12-03 Mon]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
@@ -7810,6 +7831,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps]].
 - [[http://cachestocaches.com/2018/6/org-literate-programming/][Literate Programming with Org-mode]].
 - [[https://www.offerzen.com/blog/literate-programming-empower-your-writing-with-emacs-org-mode][Literate Programming: Empower Your Writing with Emacs Org-Mode]].
+- [[http://irreal.org/blog/?p=7651][Making a Poster with Org-mode (Irreal)]].
 - [[http://mbork.pl/2018-08-18_Embedding_files_in_Org-mode_revisited][Marcin Borkowski: 2018-08-18 Embedding files in Org-mode revisited]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
@@ -9694,7 +9716,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2018-11-18 Sun]
+[2018-12-04 Tue]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -9719,6 +9741,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://thewanderingcoder.com/2015/01/emacs-org-mode-links-and-exported-html/][Links and exported HTML]].
 - [[https://yoo2080.wordpress.com/2013/08/07/living-with-emacs-lisp][Living with Emacs Lisp]].
 - [[http://www.gigamonkeys.com/book/loop-for-black-belts.html][LOOP for Black Belts]].
+- [[http://mbork.pl/2018-12-03_looking-back-p][Marcin Borkowski: 2018-12-03 looking-back-p]].
 - [[http://www.nongnu.org/emacs-tiny-tools/elisp-coding/][Nongnu elisp guidelines]].
 - [[http://newartisans.com/2016/01/pattern-matching-with-pcase/][Pattern matching with pcase]].
 - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
