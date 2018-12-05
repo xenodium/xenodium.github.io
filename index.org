@@ -24,6 +24,61 @@ Needed to diff two directories, but only interested in file size changes. diff, 
 
 /Note: Using diff, find, sort, and stat on macOS./
 
+*** Update 1
+  I've since learned about mtree (thanks [[https://twitter.com/romanzolotarev/status/1070249301815771137][Roman]]!). A nice utility to add the toolbox.
+
+  #+BEGIN_SRC sh
+   mtree -p emacs-25.1 -c -k size -d
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  #	   user: me
+  #	machine: my-machine
+  #	   tree: /path/to/emacs-25.1
+  #	   date: Wed Dec  5 22:21:07 2018
+  # .
+  /set type=dir
+  .               size=1152
+  # ./admin
+  admin           size=960
+  # ./admin/charsets
+  charsets        size=544
+  # ./admin/charsets/glibc
+  glibc           size=3392
+  # ./admin/charsets/glibc
+  ..
+  # ./admin/charsets/mapfiles
+  mapfiles        size=640
+  # ./admin/charsets/mapfiles
+  ..
+  #+end_example
+
+*** Update 2
+  I've added Emacs ediff to the mix:
+
+  #+BEGIN_SRC emacs-lisp
+    (require 'f)
+
+    (defun ar/ediff-dir-content-size ()
+        "Diff all subdirectories (sizes only) in two directories."
+        (interactive)
+        (let* ((dir1-path (read-directory-name "Dir 1: "))
+               (dir2-path (read-directory-name "Dir 2: "))
+               (buf1 (get-buffer-create (format "*Dir 1 (%s)*" (f-base dir1-path))))
+               (buf2 (get-buffer-create (format "*Dir 2 (%s)*" (f-base dir2-path)))))
+          (with-current-buffer buf1
+            (erase-buffer))
+          (with-current-buffer buf2
+            (erase-buffer))
+          (shell-command (format "cd %s; find . -type d | sort | du -h" dir1-path) buf1)
+          (shell-command (format "cd %s; find . -type d | sort | du -h" dir2-path) buf2)
+          (ediff-buffers buf1 buf2)))
+  #+END_SRC
+
+  #+ATTR_HTML: :width 75% :height 75%
+  [[file:images/diffing-directories-content-size/ediff-dir-content-size.png]]
+
 * [2018-12-02 Sun] [[#swift-nil-coalescing-operator][#]] Swift nil-coalescing operator
   :PROPERTIES:
   :CUSTOM_ID: swift-nil-coalescing-operator
