@@ -1,6 +1,40 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-12-08 Sat] [[#dwim-ivy-quit][#]] DWIM ivy quit
+  :PROPERTIES:
+  :CUSTOM_ID: dwim-ivy-quit
+  :END:
+"Do-what-I-mean" (DWIM) functions enable us to introduce new Emacs powers to existing workflows without incurring the typical cost of remembering multiple related functions or introducing yet another key binding. DWIM functions invoke other functions, based on current context.
+
+I wanted a small tweak in Ivy's /`minibuffer-keyboard-quit'/ invocation, commonly invoked via /C-g/ key binding:
+
+1. If we have text selected in minibuffer, deselect it.
+2. If we have any text in minibuffer, clear it.
+3. If no text in minibuffer, quit.
+
+Added /`ar/ivy-keybqoard-quit-dwim'/ for this purpose. Binding it to C-g in /ivy-minibuffer-map/:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :ensure t
+    :bind (:map ivy-minibuffer-map
+                ("C-g" . ar/ivy-keybqoard-quit-dwim))
+    :config
+    (defun ar/ivy-keybqoard-quit-dwim ()
+      "If region active, deactivate. If there's content, minibuffer. Otherwise quit."
+      (interactive)
+      (cond ((and delete-selection-mode (region-active-p))
+             (setq deactivate-mark t))
+            ((> (length ivy-text) 0)
+             (delete-minibuffer-contents))
+            (t
+             (minibuffer-keyboard-quit)))))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/dwim-ivy-quit/ivy-keybqoard-quit-dwim.gif]]
+
 * [2018-12-05 Wed] [[#diffing-directories-content-size][#]] Diffing directories content size
   :PROPERTIES:
   :CUSTOM_ID: diffing-directories-content-size
