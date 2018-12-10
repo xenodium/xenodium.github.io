@@ -13,15 +13,15 @@ I wanted a small tweak in Ivy's /`minibuffer-keyboard-quit'/ invocation, commonl
 2. If we have any text in minibuffer, clear it.
 3. If no text in minibuffer, quit.
 
-Added /`ar/ivy-keybqoard-quit-dwim'/ for this purpose. Binding it to C-g in /ivy-minibuffer-map/:
+Added /`ar/ivy-keyboard-quit-dwim'/ for this purpose. Binding it to C-g in /ivy-minibuffer-map/:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :ensure t
     :bind (:map ivy-minibuffer-map
-                ("C-g" . ar/ivy-keybqoard-quit-dwim))
+                ("C-g" . ar/ivy-keyboard-quit-dwim))
     :config
-    (defun ar/ivy-keybqoard-quit-dwim ()
+    (defun ar/ivy-keyboard-quit-dwim ()
       "If region active, deactivate. If there's content, minibuffer. Otherwise quit."
       (interactive)
       (cond ((and delete-selection-mode (region-active-p))
