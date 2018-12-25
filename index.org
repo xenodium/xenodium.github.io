@@ -1,6 +1,82 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2018-12-25 Tue] [[#using-ocr-to-create-searchable-pdfs-from-images][#]] Using OCR to create searchable pdfs from images
+  :PROPERTIES:
+  :CUSTOM_ID: using-ocr-to-create-searchable-pdfs-from-images
+  :END:
+Used my phone to take a handful of photos of an article from a magazine. Wanted to convert the images to a searchable pdf on macOS.
+
+This was straightforward, having [[#trying-out-tesseract][already installed tesseract]].
+
+#+BEGIN_SRC sh
+  for i in IMG_3*.jpg; do echo $i; tesseract $i $(basename $i .tif) pdf; done
+#+END_SRC
+
+Should now have a handful of OCR'd pdfs:
+
+#+BEGIN_SRC sh :results verbatim :exports both
+  ls *.jpg.pdf
+#+END_SRC
+
+#+RESULTS:
+: IMG_3104.jpg.pdf
+: IMG_3105.jpg.pdf
+: IMG_3106.jpg.pdf
+: IMG_3107.jpg.pdf
+
+Finally, join all pdfs into one. Turns out macOS has a handy python scripts available already installed. We can use it as:
+
+#+BEGIN_SRC sh
+  /usr/bin/python "/System/Library/Automator/Combine PDF Pages.action/Contents/Resources/join.py" -o joined.pdf IMG_*pdf
+#+END_SRC
+
+ps. [[https://pdfgrep.org][pdfgrep]] is handy for searching pdfs.
+
+*** Useful references
+    - [[https://ryanfb.github.io/etc/2014/11/13/command_line_ocr_on_mac_os_x.html][Ryan Baumann's: Command-Line OCR with Tesseract on Mac OS X]].
+
+* [2018-12-25 Tue] [[#audiobook-providers-bookmarks][#]] Audiobook providers bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: audiobook-providers-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-12-25 Tue]
+  :END:
+- [[https://libro.fm/][Libro.fm (Libro.fm, Your Independent Bookstore for Digital Audiobooks)]].
+- [[https://www.thegreatcourses.co.uk/][Online Courses & Lectures for Home Study and Lifelong Learning]].
+- [[http://www.openculture.com/][The best free cultural and educational media on the web (Open Culture)]].
+* [2018-12-25 Tue] [[#cookbook-bookmarks][#]] Cookbook bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: cookbook-bookmarks
+  :END:
+  :MODIFIED:
+  [2018-12-25 Tue]
+  :END:
+- [[https://www.nancysingletonhachisu.com/the-attic-loft/][Japan: The Cookbook (Nancy Singleton Hachisu)]].
+- [[https://www.nancysingletonhachisu.com/the-woodhouse/][Japanese Farm Food (Nancy Singleton Hachisu)]].
+- [[https://www.nancysingletonhachisu.com/the-country-annex/][Preserving the Japanese Way (Nancy Singleton Hachisu)]].
+* [2018-12-25 Tue] [[#emailing-pdfs-to-kindle-from-mu4e][#]] Emailing pdfs to kindle from mu4e
+  :PROPERTIES:
+  :CUSTOM_ID: emailing-pdfs-to-kindle-from-mu4e
+  :END:
+Wanted to send a pdf to my kindle for some holiday reading. You can easily do this by emailing the pdf to your kindle-bound email address.
+
+Now, I typically attach files when composing mu4e emails by using /mml-attach-file/, which attaches the file using /<#part>...<#/part>/. However, the Amazon service did not find the attached pdf, so no pdf was added to my Kindle.
+
+Fortunately, I found a handy [[https://www.reddit.com/r/emacs/comments/97abs7/anyone_uses_mu4e_to_send_mobi_files_to_kindle][Reddit thread, leding me to a working solution]]. Wrapping the part using /<#multipart type=mixed>...<#/multipart>/ did the job, using /mml-insert-multipart/, followed by /mml-attach-file/.
+
+Resulting attachment should look something like:
+
+#+BEGIN_EXAMPLE
+  <#multipart type=mixed>
+  <#part type="application/pdf" filename="/path/to/file.pdf" disposition=attachment>
+  <#/part>
+  <#/multipart>
+#+END_EXAMPLE
+
+I should a convenience elisp function for this, but that's for another time...
+
 * [2018-12-21 Fri] [[#org-tip-convert-csv-to-table][#]] org tip: convert csv to table
   :PROPERTIES:
   :CUSTOM_ID: org-tip-convert-csv-to-table
@@ -15,10 +91,11 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   :CUSTOM_ID: sponsoring-platform-bookmarks
   :END:
   :MODIFIED:
-  [2018-12-20 Thu]
+  [2018-12-25 Tue]
   :END:
 - [[https://www.patreon.com/][Best way for artists and creators to get sustainable income and connect with fans (Patreon)]].
 - [[https://www.buymeacoffee.com/][Buy Me A Coffee — A free, fast and beautiful way for creators to monetise their content]].
+- [[https://tallyco.in/][Tallycoin is a Bitcoin fundraising platform and a Patreon alternative.]].
 * [2018-12-20 Thu] [[#artisticcreative-bookmarks][#]] Artistic/creative bookmarks
   :PROPERTIES:
   :CUSTOM_ID: artisticcreative-bookmarks
@@ -3917,8 +3994,9 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 :CUSTOM_ID: typescript-bookmarks
 :END:
 :MODIFIED:
-[2017-05-18 Thu]
+[2018-12-22 Sat]
 :END:
+- [[https://blog.mgechev.com/2018/11/19/introduction-bazel-typescript-tutorial/][Building TypeScript Projects with Bazel (Minko Gechev's blog)]].
 - [[http://definitelytyped.org][DefinitelyTyped: The repository for high quality TypeScript type definitions]].
 - [[https://github.com/ivogabe/gulp-typescript][gulp-typescript]].
 - [[https://github.com/Microsoft/TypeScript/wiki/JSX][React/JSX Typescript support]].
@@ -5052,10 +5130,11 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: sql-bookmarks
 :END:
 :MODIFIED:
-[2018-12-14 Fri]
+[2018-12-25 Tue]
 :END:
 - [[https://modern-sql.com/use-case/literate-sql][Literate SQL]].
 - [[https://news.ycombinator.com/item?id=18335723][Show HN: SQL Trainer – Learn SQL by doing live data exercises (Hacker News)]].
+- [[https://www.sqlite.org/appfileformat.html][SQLite As An Application File Format]].
 - [[https://simonwillison.net/2018/Oct/4/datasette-ideas/][The interesting ideas in Datasette]].
 - [[https://dev.to/geshan/you-can-do-it-in-sql-stop-writing-extra-code-for-it-lok][You Can Do it in SQL, Stop Writing Extra Code for it - DEV Community]].
 - [[http://ericsink.com/entries/rss_cat_3.html][Zumero: Efficient sync by using multiple SQLite files]].
@@ -6928,7 +7007,7 @@ M-x flush-lines RET ^$ RET
 :CUSTOM_ID: iceland-travel-bookmarks
 :END:
 :MODIFIED:
-[2016-02-09 Tue]
+[2018-12-25 Tue]
 :END:
 - [[http://www.gertenbach.info/e_reisen_2010.htm][An Iceland travel log]].
 - [[http://www.apartmenthouse.is/][Apartmenthouse.is]] for local flats.
@@ -6949,6 +7028,8 @@ M-x flush-lines RET ^$ RET
 - [[http://www.lebowskibar.is/][Lebowski Bar]] seriously?
 - Noodle Station.
 - [[http://www.pinkiceland.is/#!tours/cbo8][Pink Iceland tours]].
+- [[https://swanhouse.is/][Reykjavik Apartment Hotel – Accommodation in City Centre (swanhouse.is)]].
+- [[https://www.britishairways.com/en-gb/destinations/reykjavik/reykjavik-holidays][Reykjavik City Breaks (Book now with British Airways)]].
 - [[http://sandholt.is/][Sandholt]].
 - South coast's waterfalls and caves.
 
@@ -7804,6 +7885,7 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
 - [[http://florence-markets.com/sanlorenzomarket.asp][San Lorenzo leather market]].
 - [[https://www.lonelyplanet.com/travel-tips-and-articles/skiing-in-italy-find-your-perfect-resort][Skiing in Italy: find your perfect resort]].
 - [[https://en.wikipedia.org/wiki/Volterra][Volterra, Tuscany]].
+- [[https://travellingantics.com/][Abbruzzo's Sulmona: one of the oldest towns in the area and home to the Latin poet Ovid, confetti (sugared almonds) and arrosticini (barbecued lamb skewers)]].
 
 * [2015-03-17 Tue] [[#emacs-lisp-debug-on-entry][#]] Emacs lisp debug on entry
 :PROPERTIES:
@@ -7969,12 +8051,13 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: photography-bookmarks
 :END:
 :MODIFIED:
-[2018-12-20 Thu]
+[2018-12-25 Tue]
 :END:
 - [[http://www.techradar.com/how-to/photography-video-capture/cameras/77-photography-techniques-tips-and-tricks-for-taking-pictures-of-anything-1320768/][77 photography techniques, tips and tricks for taking pictures of anything]].
 - [[https://www.qdev.de/?location=mac/exifrenamer][ExifRenamer: Batch rename photos using exif information]].
 - [[https://github.com/Jack000/Expose][Exposé, A simple static site generator for photoessays]].
 - [[http://gakuran.com/category/haikyo-ruins/][Michael Gakuran's Gakuranman]].
+- [[https://openmv.io/][OpenMV (Small - Affordable - Expandable)]].
 - [[https://www.reddit.com/r/photocritique][Photo Critique (Subreddit)]].
 
 * [2015-03-08 Sun] [[#paris-travel-bookmarks][#]] Paris travel bookmarks
@@ -8511,7 +8594,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2018-12-11 Tue]
+[2018-12-22 Sat]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -8659,6 +8742,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.talkingquickly.co.uk/2015/04/what-id-tell-myself-about-startups/][What I'd tell myself about startups if I could go back 5 years]].
 - [[https://twitter.com/romanzolotarev/status/1054342116917329921?s=12][What is your favorite domain registrar? (Twitter)]].
 - [[https://news.ycombinator.com/item?id=13063842][What’s the Second Job of a Startup CEO? (Hacker News)]].
+- [[https://news.ycombinator.com/item?id=18713844][Writing copy for landing pages (Hacker News)]].
 - [[http://www.ycombinator.com/documents/#sales][YC Sales agreement]].
 
 * [2015-03-06 Fri] [[#romania-travel-bookmarks][#]] Romania travel bookmarks
@@ -9617,8 +9701,12 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2018-11-18 Sun]
+[2018-12-25 Tue]
 :END:
+******* TODO [[https://ofone.co/][A company of one]].
+******* TODO [[https://www.goodreads.com/book/show/27220736-shoe-dog][Shoe Dog: A Memoir by the Creator of NIKE]].
+******* TODO [[https://twitter.com/thegooddeath/status/1077325245940289537?s=12][Caitlin Doughty's top 8 books from 2018]].
+******* TODO [[https://www.amazon.co.uk/Global-Economy-Youve-Never-Seen-ebook/dp/B07GVT67HB/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=1545746296&sr=8-1][Global Economy as you've never seen it]].
 ******* TODO [[https://www.amazon.com/Replay-Ken-Grimwood/dp/068816112X][Replay]].
 ******* TODO [[https://www.amazon.com/Siddhartha-Novel-Hermann-Hesse/dp/0553208845][Siddhartha: A Novel]].
 ******* TODO [[https://en.wikipedia.org/wiki/Out_(novel)][Out (novel) by Natsuo Kirino]].
