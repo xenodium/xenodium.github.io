@@ -1,6 +1,98 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-01-13 Sun] [[#swapping-emacs-ivy-collectionssources][#]] Swapping Emacs ivy collections/sources
+  :PROPERTIES:
+  :CUSTOM_ID: swapping-emacs-ivy-collectionssources
+  :END:
+[[https://github.com/abo-abo/swiper][Ivy]] is great. I've been meaning to figure out a way to swap sources while running ivy. This would enable me to cycle through different sources using the existing search parameters.
+
+At first look, /'ivy-set-sources/ seemed like the right choice, but it's used during setup to agregate sources. Subsequent /'ivy-set-sources/ calls are ignored during an /'ivy-read/ session.
+
+There's an ivy [[https://github.com/abo-abo/swiper/issues/606][feature request]] over at github with a similar goal in mind. Although the feature is not yet supported, there's a handy suggestion to use /'ivy-quit-and-run/ to quit the current command and run a different one.
+
+With /'ivy-quit-and-run/ in mind, we can write our /'ar/ivy-read/ function to take a list of sources and add a little logic to cycle through them using a keybiding, in my case <left> and <right>.
+
+#+BEGIN_SRC emacs-lisp
+  ;;; -*- lexical-binding: t; -*-
+
+  (require 'cl)
+
+  (cl-defstruct
+      ar/ivy-source
+    prompt
+    collection
+    action)
+
+  (cl-defun ar/ivy-read (sources &key index initial-input)
+    (let ((kmap (make-sparse-keymap))
+          (source))
+      (cl-assert (> (length sources) 0))
+      (when (null index) (setq index 0))
+      (setq source (nth index sources))
+      (define-key kmap (kbd "<right>") (lambda ()
+                                         (interactive)
+                                         (ivy-quit-and-run (ar/ivy-read sources
+                                                                        :index (if (>= (1+ index)
+                                                                                       (length sources))
+                                                                                   0
+                                                                                 (1+ index))
+                                                                        :initial-input ivy-text))))
+      (define-key kmap (kbd "<left>") (lambda ()
+                                        (interactive)
+                                        (ivy-quit-and-run (ar/ivy-read sources
+                                                                       :index (if (< (1- index)
+                                                                                     0)
+                                                                                  (1- (length sources))
+                                                                                (1- index))
+                                                                       :initial-input ivy-text))))
+      (ivy-read (ar/ivy-source-prompt source)
+                (ar/ivy-source-collection source)
+                :action (ar/ivy-source-action source)
+                :initial-input initial-input
+                :keymap kmap)))
+
+  (defun ar/ivy-food-menu ()
+    (interactive)
+    (ar/ivy-read (list
+                  (make-ar/ivy-source :prompt "Pizza: "
+                                      :action (lambda (selection)
+                                                (message "Selected pizza: %s" selection))
+                                      :collection (lambda (str pred v)
+                                                    (list "Bianca Neve - Mozzarella, Ricotta, Sausage, Extra Virgin Olive Oil, Basil"
+                                                          "Boscaiola - Mozzarella, Tomato Sauce, Sausage, Mushrooms, Extra Virgin Olive Oil, Basil"
+                                                          "Calzone - Ricotta, Ham, Mushrooms, Artichokes. Topped with Tomato Sauce and Extra Virgin Olive Oil."
+                                                          "Capricciosa - Mozzarella,Tomato Sauce, Prosciutto Cotto Ham, Mushrooms, Artichokes, Extra Virgin Olive Oil."
+                                                          "Carciofi - Mozzarella, Tomato Sauce, Artichokes, Extra Virgin Olive Oil, Basil."
+                                                          "Diavola - Mozzarella, Tomato Sauce, Spicy Salami, Extra Virgin Olive Oil, Basil."
+                                                          "Funghi - Mozzarella, Tomato Sauce, Mushrooms, Extra Virgin Olive Oil, Basil.")))
+                  (make-ar/ivy-source :prompt "Tacos: "
+                                      :action (lambda (selection)
+                                                (message "Selected taco: %s" selection))
+                                      :collection (lambda (str pred v)
+                                                    (list "Pork pibil - Slow cooked in citrus & spices, with pink pickled onions."
+                                                          "Grilled chicken & avocado - Ancho rub, guacamole & green tomatillo salsa."
+                                                          "Plantain - Sweet & spicy chipotle & crumbled feta."
+                                                          "Poblano pepper - Caramelised onions, corn & cashew nut mole."
+                                                          "Buttermilk chicken - Served crispy fried with habanero & white onion relish & spiced mayo."
+                                                          "Sustainable battered cod - mSC certified cod with shredded slaw, chipotle mayo & pickled cucumber."
+                                                          "Chargrilled steak - Avocado & chipotle salsas.")))
+                  (make-ar/ivy-source :prompt "Burgers: "
+                                      :action (lambda (selection)
+                                                (message "Selected burger: %s" selection))
+                                      :collection (lambda (str pred v)
+                                                    (list "The cheese - Aged beef patty with american cheese, gherkins, ketchup & mustard."
+                                                          "The yeah! - Aged beef patty with american cheese, gherkins, yeah! sauce & salad."
+                                                          "The yfc or hot yfc - Crispy chicken with lime or chipotle crema, lettuce, pickled onion & slaw."
+                                                          "The rancher - Grilled chicken with ranch dressing, bacon & salad."
+                                                          "The bubbah - Aged beef patty with smokey aubergine, pickled red cabbage, lettuce, roast toms, onions & cheddar."
+                                                          "The bulgogi - Sesame-spiced beef patty with miso mayo, pickled radish, onion, cucumber & spring onion."
+                                                          "The summer - Aged beef patty with sriracha mayo, lettuce, onion, toms, avo, cheddar & bacon."))))))
+#+END_SRC
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/swapping-emacs-ivy-collectionssources/ivy-cycle-sources.gif]]
+
 * [2019-01-12 Sat] [[#podcast-bookmarks][#]] Podcast bookmarks
   :PROPERTIES:
   :CUSTOM_ID: podcast-bookmarks
@@ -165,6 +257,8 @@ Installed with:
 
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/trying-out-emacs-pdf-tools/pdf-tools.png]]
+
+ps. Menu data from [[https://starofkings.co.uk/food-and-drink/][Star of Kings]], [[https://www.wahaca.co.uk/menu/food/][Wahaca]], and [[https://pizzarino.us/menu][Pizzarino]].
 
 * [2018-12-27 Thu] [[#ascii-art-generator-bookmarks][#]] ASCII art generator bookmarks
   :PROPERTIES:
@@ -5450,7 +5544,7 @@ Had problems loading seq. Removed byte-compiled packages:
 :PROPERTIES:
 :CUSTOM_ID: making-hummus
 :END:
-Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/][Delicious Istanbul's]] [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/][5 Secrets to Perfect Hummus]] post.
+Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/][Delicious Istanbul's]] [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/][5 Secrets to Perfect Hummus]] ([[https://web.archive.org/web/20160829162734/deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/][wayback machine]]) post.
 
 - 160 g dry chickpeas.
 - 4 cloves garlic minced.
@@ -5458,10 +5552,19 @@ Made hummus, based on [[http://www.deliciousistanbul.com/blog/2013/04/28/5-secre
 - 1 1/2 tbsp lemon juice.
 - 1/4 tsp ground cumin.
 - 6 tbsp tahini paste.
-- 2/3 cup cooking liquid.
+- 2/3 cup cooking water.
 - Extra virgin olive oil, for serving.
 - Red pepper flakes, for serving.
 - Zahter mixture, for serving.
+
+1. Soak chickpeas overnight.
+2. Discard water and rinse chickpeas.
+3. Cook in low heat (about 5 cups water) for 1.5 hours for until soft (but keeping shape.) Check if can be mashed with thumnb.
+4. Save cooking water.
+5. Peal chickpeas (optional).
+6. Blend ingredients until silky paste. Taste and add lemon/salt/cooking water.
+
+Keeps in fridge for 3-4 days. Freeze otherwise.
 
 
 [[file:images/making-hummus/hummus-01.jpg]] [[file:images/making-hummus/hummus-02.jpg]] [[file:images/making-hummus/hummus-03.jpg]] [[file:images/making-hummus/hummus-04.jpg]] [[file:images/making-hummus/hummus-05.jpg]] [[file:images/making-hummus/hummus-06.jpg]] [[file:images/making-hummus/hummus-07.jpg]] [[file:images/making-hummus/hummus-08.jpg]] [[file:images/making-hummus/hummus-09.jpg]]
@@ -9782,7 +9885,6 @@ maps key to action.
 [2019-01-12 Sat]
 :END:
 ******* TODO [[https://www.youtube.com/playlist?list=PL94E35692EB9D36F3][Donald Knuth Lectures - YouTube]].
-******* TODO [[https://www.youtube.com/watch?v=ttLgyKk7yMA][Juliet Schor Iris Nights: Re-Thinking Materialism]].
 ******* TODO Rashomon by Akira Kurosawa.
 ******* TODO [[https://vimeo.com/97903574][Seeing spaces]].
 ******* TODO [[https://www.youtube.com/watch?v=HHYs78uIx3M][An exclusive seminar with Julian Assange]].
@@ -9814,6 +9916,7 @@ maps key to action.
 ******* TODO [[https://www.youtube.com/watch?v%3DVXTpTRuPiPQ][Surya Namaskar stretches]].
 ******* TODO [[http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm][The Emacs of distros]].
 ******* TODO [[https://www.youtube.com/watch?v%3D17jymDn0W6U&sns%3Dem][The Known Universe by AMNH]].
+******* DONE [[https://www.youtube.com/watch?v=ttLgyKk7yMA][Juliet Schor Iris Nights: Re-Thinking Materialism]].
 ******* DONE [[https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N][The Internets own boy]].
 ******* DONE [[https://www.youtube.com/watch?v%3DFw8BV4VFOwM][BBC's secret of levitation]].
 ******* DONE [[https://vimeo.com/15351476][Hold Fast]].
