@@ -1,6 +1,63 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-02-19 Tue] [[#parsing-dates-in-go][#]] Parsing dates in Go
+  :PROPERTIES:
+  :CUSTOM_ID: parsing-dates-in-go
+  :END:
+  Use 01/02/2006 for layout string. For example:
+
+  #+begin_src go :results verbatim :exports both
+    package main
+
+    import (
+            "fmt"
+            "time"
+    )
+
+    func main() {
+            layout := "January 2 2006"
+            t, _ := time.Parse(layout, "March 10 2019")
+            fmt.Printf("%v", t)
+    }
+  #+end_src
+
+  #+RESULTS:
+  : 2019-03-10 00:00:00 +0000 UTC
+
+* [2019-02-13 Wed] [[#life-in-the-uk-bookmarks][#]] Life in the UK bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: life-in-the-uk-bookmarks
+  :END:
+  :MODIFIED:
+  [2019-02-13 Wed]
+  :END:
+- [[https://textuploader.com/5yfk0]['LitUK': notes by a Redditor (TextUploader.com)]].
+- [[https://lifeintheuktestweb.co.uk/][Life In The UK Test, Practice Tests 2017]].
+* [2019-02-10 Sun] [[#c-language-bookmarks][#]] C language bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: c-language-bookmarks
+  :END:
+- [[https://littlevgl.com/][LittlevGL - Open-source Embedded GUI Library]].
+* [2019-02-10 Sun] [[#video-editing-bookmarks][#]] Video editing bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: video-editing-bookmarks
+  :END:
+  :MODIFIED:
+  [2019-02-15 Fri]
+  :END:
+- [[https://lars.ingebrigtsen.no/2019/02/14/adventures-in-netflix/][Adventures in Netflix (screenshotting HDMI)]].
+- [[https://www.youtube.com/watch?v=tYytVzbPky8][HOW TO DATAMOSH: PART 1 - YouTube]].
+- [[http://www.linux-magazine.com/Issues/2018/206/Tutorials-FFmpeg][Inserting a Watermark with FFmpeg (Linux Magazine)]].
+* [2019-02-10 Sun] [[#icons-bookmarks][#]] Icons bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: icons-bookmarks
+  :END:
+  :MODIFIED:
+  [2019-02-10 Sun]
+  :END:
+- [[http://compute.vision/nouns/index.html][Find Similar Icons (using Noun Project)]].
+- [[https://thenounproject.com/][Noun Project - Icons for Everything]].
 * [2019-01-27 Sun] [[#salt-beef-recipe][#]] Salt beef recipe
   :PROPERTIES:
   :CUSTOM_ID: salt-beef-recipe
@@ -771,7 +828,7 @@ We don't actually need two functions, but /ar/elfeed-filter-results-count/ enabl
 Wanted to convert a docx document to pdf on macOS. Pandoc to the rescue, but first needed pdflatex installed:
 
 #+BEGIN_SRC sh :results verbatim :exports both
-  pandoc some.docx -o some.pdf
+  pandoc -t latex some.docx -o some.pdf
 #+END_SRC
 #+RESULTS:
 : pdflatex not found. Please select a different --pdf-engine or install pdflatex
@@ -780,6 +837,18 @@ Installed pdflatex on macOS with:
 
 #+BEGIN_SRC sh
   brew cask install mactex
+#+END_SRC
+
+Can also use HTML5. Install wkhtmltopdf with:
+
+#+BEGIN_SRC sh
+  brew install Caskroom/cask/wkhtmltopdf
+#+END_SRC
+
+Convert with:
+
+#+BEGIN_SRC sh
+  pandoc -t html5 some.docx -o some.pdf
 #+END_SRC
 
 * [2018-11-13 Tue] [[#faster-elfeed-browsing-with-paging][#]] Faster elfeed browsing with paging
@@ -2324,15 +2393,19 @@ Install
 #+END_SRC
 
 Bonus: If using Emacs's [[https://github.com/flycheck/flycheck][flycheck]], you get ShellCheck support out of the box.
-* [2018-04-08 Sun] [[#imagemagick-bookmarks][#]] Imagemagick bookmarks
+* [2018-04-08 Sun] [[#image-editing-bookmarks][#]] Image editing bookmarks
 :PROPERTIES:
-:CUSTOM_ID: imagemagick-bookmarks
+:CUSTOM_ID: image-editing-bookmarks
 :END:
 :MODIFIED:
-[2018-08-14 Tue]
+[2019-02-13 Wed]
 :END:
 - [[https://news.ycombinator.com/item?id=17748266][Exif.tools – A multimedia file metadata tool (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=16668254][Fred's ImageMagick Scripts (Hacker News)]].
+- [[https://linuxhint.com/howto_crop_gimp/][How to crop in GIMP (Linux Hint)]].
+- [[https://linuxhint.com/imagemagick_sharpen_image/][ImageMagick to Sharpen an Image – Linux Hint]].
+- [[https://news.ycombinator.com/item?id=10222524][The Art of PNG Glitch (Hacker News)]].
+- [[http://ucnv.github.io/pnglitch/][The Art of PNG Glitch]].
 * [2018-04-05 Thu] [[#buying-matcha-powder-online][#]] Buying matcha powder online
 :PROPERTIES:
 :CUSTOM_ID: buying-matcha-powder-online
@@ -3556,10 +3629,12 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2019-02-17 Sun]
 :END:
+- [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
 - [[https://financialpanther.com/9-best-personal-finance-podcasts/][9 Best New Personal Finance Podcasts - Financial Panther]].
+- [[https://www.reddit.com/r/UKPersonalFinance/comments/aq5ss6/a_simple_example_of_contributing_half_your_age_as/][A Simple Example of Contributing Half Your Age as a Percentage of Salary to a Pension [OC] : UKPersonalFinance]].
 - [[http://monevator.com/category/investing/passive-investing-investing/][A guide to passive investing in the UK]].
 - [[https://www.amazon.com/How-Interview-Financial-Advisor-Piaw-ebook/dp/B00GXDT9LY][Amazon.com: How to Interview a Financial Advisor eBook: Piaw Na: Kindle Store]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9edd3m/any_critique_against_the_vanguard_ftse_global_all/][Any critique against the Vanguard FTSE global all cap index? : UKPersonalFinance]].
@@ -3582,6 +3657,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://twitter.com/ericajoy/status/1057774364181987328?s=12][EricaJoy on Twitter: what is the process for finding a financial advisor/accountant/etc]].
 - [[https://www.justetf.com/de-en/][ETF portfolios made simple (justETF)]].
 - [[https://www.bogleheads.org/wiki/EU_investing][EU investing - Bogleheads]].
+- [[https://www.ft.com/content/c6183f2f-f58a-3569-a6ac-9d2b44adfe28][European active managers beaten by passives, 10-year study finds (Financial Times)]].
 - [[https://app.fin-dee.com/][Fin-dee (FIRE calculator)]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9viifz/financial_education_book_for_teenagers_by_martin/][Financial education book for teenagers by Martin Lewis : UKPersonalFinance]].
 - [[https://www.madfientist.com/podcast][Financial Independence Podcast]].
@@ -3623,8 +3699,10 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[http://engaging-data.com/will-money-last-retire-early/][Post-Retirement Calculator: Will My Money Survive Early Retirement? Visualizing Longevity Risk - Engaging Data]].
 - [[https://www.moneysavingexpert.com/savings/premium-bonds-calculator/][Premium Bond Probability Calculator]].
 - [[https://www.moneysavingexpert.com/savings/premium-bonds/][Premium Bonds: are they worth it? - MoneySavingExpert]].
+- [[https://www.reddit.com/r/UKPersonalFinance/comments/aopvqe/purchasing_a_new_property_with_a_baby_on_the_way/][Purchasing a new property with a baby on the way..? : UKPersonalFinance]].
 - [[https://rockstarfinance.com/][Rockstar Finance :: Curating the best of money and personal finance]].
 - [[https://directory.rockstarfinance.com/personal-finance-blogs][Rockstar Finance Directory of Bloggers]].
+- [[https://www.kalzumeus.com/2012/01/23/salary-negotiation/][Salary Negotiation: Make More Money, Be More Valued | Kalzumeus Software]].
 - [[https://thesavingninja.com/sipp-and-isa-fee-comparison/][Saving Ninja: What Platform to Use Now? (iWeb vs Charles Stanley vs Halifax share dealing vs Aviva vs Vanguard Investor)]].
 - [[https://www.moneysavingexpert.com/savings/savings-accounts-best-interest/][Savings accounts: 1.5% easy access or up to 2.7% fixed]].
 - [[https://www.reddit.com/r/financialindependence/comments/9bhg0j/so_you_want_to_be_a_landlord/][So, you want to be a landlord?? : financialindependence]].
@@ -3656,6 +3734,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[http://monevator.com/why-a-total-world-equity-index-tracker-is-the-only-index-fund-you-need][Why a world equity index tracker?]].
 - [[https://www.quora.com/Why-are-most-people-broke][Why are most people broke? - Quora]].
 - [[https://www.youtube.com/watch?v=zrCo0m5gSfc][Why Jack Bogle Doesn't Like ETFs (Forbes - YouTube)]].
+- [[http://www.x-o.co.uk/][X-O.co.uk - Execution Only Share Dealing (broker)]].
 
 * [2016-05-02 Mon] [[#scotland-travel-bookmarks][#]] Scotland travel bookmarks
 :PROPERTIES:
@@ -4294,7 +4373,12 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 :PROPERTIES:
 :CUSTOM_ID: regular-expressions-bookmarks
 :END:
+:MODIFIED:
+[2019-02-11 Mon]
+:END:
+- [[https://regex101.com/][regex101.com]].
 - [[https://regex101.com/][Regex101]]: Online regex tool.
+- [[https://rubular.com/][Rubular: a Ruby regular expression editor]].
 
 * [2016-02-02 Tue] [[#typescript-bookmarks][#]] Typescript bookmarks
 :PROPERTIES:
@@ -5444,12 +5528,13 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: sql-bookmarks
 :END:
 :MODIFIED:
-[2019-01-05 Sat]
+[2019-02-12 Tue]
 :END:
 - [[https://www.pgcli.com/launching-litecli.html][Launching LiteCLI]].
 - [[https://news.ycombinator.com/item?id=18831470][LiteCLI – A user-friendly command-line client for SQLite database (Hacker News)]].
 - [[https://modern-sql.com/use-case/literate-sql][Literate SQL]].
 - [[https://news.ycombinator.com/item?id=18335723][Show HN: SQL Trainer – Learn SQL by doing live data exercises (Hacker News)]].
+- [[https://dev.to/helenanders26/sql-series-from-a-to-z-2pk9][SQL Series: From A to Z - DEV Community]].
 - [[https://www.sqlite.org/appfileformat.html][SQLite As An Application File Format]].
 - [[https://simonwillison.net/2018/Oct/4/datasette-ideas/][The interesting ideas in Datasette]].
 - [[https://dev.to/geshan/you-can-do-it-in-sql-stop-writing-extra-code-for-it-lok][You Can Do it in SQL, Stop Writing Extra Code for it - DEV Community]].
@@ -5461,10 +5546,11 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :END:
 
 :MODIFIED:
-[2019-01-17 Thu]
+[2019-02-14 Thu]
 :END:
 - [[https://forums.freebsd.org/threads/small-guide-on-using-mtree.61113/][(small) Guide on using mtree (The FreeBSD Forums)]].
 - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
+- [[https://linuxhint.com/20_awk_examples/][20 awk examples – Linux Hint]].
 - [[https://www.cyberciti.biz/open-source/7-awesome-open-source-analytics-weblog-analysis-softwares/][7 Awesome Open Source Analytics Software For Linux and Unix - nixCraft]].
 - [[https://news.ycombinator.com/item?id=12137576][A practical proposal for migrating to safe long sessions on the web (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=12140477][A practical security guide for web developers (Hacker News)]].
@@ -5482,6 +5568,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://remysharp.com/2018/08/23/cli-improved][CLI: improved (better cli alternatives)]].
 - [[https://news.ycombinator.com/item?id=17874718][CLI: Improved, better CLI alternatives (Hacker News)]].
 - [[http://kkovacs.eu/cool-but-obscure-unix-tools#][Cool but obscure unix tools at kkovacs.eu]].
+- [[https://linuxhint.com/curl_bash_examples/][Curl in Bash Scripts by Example (Linux Hint)]].
 - [[https://news.ycombinator.com/item?id=11213213][Curl vs Wget (Hacker News)]].
 - [[https://www.romanzolotarev.com/openbsd/bioctl-crypto.html][Encrypt disk with bioctl(8) and CRYPTO - Roman Zolotarev]].
 - [[http://puntoblogspot.blogspot.co.uk/2016/01/entr-suckless-inotify-tools.html?m=1][entr runs commands when a file changes]].
@@ -5489,7 +5576,9 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://news.ycombinator.com/item?id=18967249][For the Love of Pipes (Hacker News)]].
 - [[http://git-annex.branchable.com/assistant/][git-annex]].
 - [[https://www.digitalocean.com/community/tutorials/how-to-use-bash-s-job-control-to-manage-foreground-and-background-processes][How To Use Bash's Job Control to Manage Foreground and Background Processes]].
+- [[https://linuxhint.com/dd_command_linux-2/][How to Use dd Command on Linux (Linux Hint)]].
 - [[https://github.com/jkbrzt/httpie][httpie: Command line HTTP client, a user-friendly curl alternative]].
+- [[https://linuxhint.com/iptables_for_beginners/][Iptables for beginners (Linux Hint)]].
 - [[https://blog.jessfraz.com/post/for-the-love-of-pipes/][Jessie Frazelle's Blog: For the Love of Pipes]].
 - [[https://jvns.ca/zines/][Julia Evans's zines (unix tools)]].
 - [[http://irreal.org/blog/?p=7323][Learn a Little AWK (Irreal)]].
@@ -5511,6 +5600,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://www.reddit.com/r/linux/comments/mi80x/give_me_that_one_command_you_wish_you_knew_years/][Unix commands you wish you knew years ago (Reddit)]].
 - [[http://unixmages.com/ufbm.pdf][Unix for the Beginning Mage]].
 - [[http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html][Using gnu stow to manage your dotfiles]].
+- [[https://www.semicomplete.com/projects/xdotool/][xdotool - fake keyboard/mouse input, window management, and more - semicomplete]].
 - xmllint --format.
 
 * [2015-11-26 Thu] [[#couchbase-react-native-bookmarks][#]] Couchbase React Native bookmarks
@@ -6409,7 +6499,7 @@ My friend Sakhya brought me the wonderful [[http://www.nitamehta.com/Cookbook-of
 :CUSTOM_ID: meditation-bookmarks
 :END:
 :MODIFIED:
-[2018-12-11 Tue]
+[2019-02-12 Tue]
 :END:
 - [[https://www.10percenthappier.com/][10% Happier: Mindfulness Meditation Courses with Dan Harris and Joseph Goldstein]].
 - [[https://en.wikipedia.org/wiki/Aimless_wandering][Aimless Wandering]].
@@ -6418,6 +6508,7 @@ My friend Sakhya brought me the wonderful [[http://www.nitamehta.com/Cookbook-of
 - [[http://theenergyproject.com/blog/take-back-your-life-ten-steps][Best 10 life changes]].
 - [[https://www.drweil.com/health-wellness/body-mind-spirit/stress-anxiety/breathing-three-exercises/][Breathing Exercise: Three To Try | 4-7-8 Breath (Andrew Weil, M.D.)]].
 - [[https://www.youtube.com/watch?v%3DZ8LOhZmuVaE&feature%3Dyoutu.be][Developing Lotus Flexibility - Preparing Yoga Padmasana Sitting Position, part 1 (YouTube)]].
+- [[http://franticworld.com/free-meditations-from-mindfulness/][Free meditations from Mindfulness | Mindfulness: Finding Peace in a Frantic World]].
 - [[https://hbr.org/2014/02/how-to-make-yourself-work-when-you-just-dont-want-to/][How to Make Yourself Work When You Just Don’t Want To]].
 - [[http://www.tricycle.com/blog/how-sit-zen-and-stretching-excercises-full-lotus][How to sit Zen]].
 - [[http://jonathanfoust.libsyn.com/webpage][Jonathan Foust's talks]].
@@ -6429,6 +6520,7 @@ My friend Sakhya brought me the wonderful [[http://www.nitamehta.com/Cookbook-of
 - [[https://www.mindbodyattention.com/][Mind Body Attention — thinking, moving, and meditating]].
 - [[https://thebuddhistcentre.com/text/mindfulness-breathing][Mindfulness breathing]].
 - [[https://hbr.org/2014/12/mindfulness-mitigates-biases-you-may-not-know-you-have][Mindfulness Mitigates Biases You May Not Know You Have]].
+- [[https://www.smilingmind.com.au/smiling-mind-app][Smiling Mind free apps]].
 - [[https://news.ycombinator.com/item?id=13019767][The Challenge of Consciousness (Hacker News)]].
 - [[http://theenergyproject.com/blog][The Energy Project blog]].
 * [2015-08-22 Sat] [[#learning-bookmarks][#]] Learning bookmarks
@@ -8474,7 +8566,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2019-01-17 Thu]
+[2019-02-12 Tue]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
@@ -8500,6 +8592,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://mbork.pl/2018-08-18_Embedding_files_in_Org-mode_revisited][Marcin Borkowski: 2018-08-18 Embedding files in Org-mode revisited]].
 - [[https://fuco1.github.io/2018-12-23-Multiline-fontification-with-org-emphasis-alist.html][Multiline fontification (ie. bold) with org-emphasis-alist]].
 - [[https://joshrollinswrites.com/emacsorg/org-capture-template-1/][My Org Capture Templates - Part 1 &middot; The Art of Not Asking Why]].
+- [[https://joshrollinswrites.com/emacsorg/org-capture-template-3/][My Org Capture Templates - Part 3 &middot; The Art of Not Asking Why]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[https://writepermission.com/org-blogging-rss-feed.html][Org mode blogging: RSS feed]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
@@ -8513,12 +8606,14 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE&app=desktop][OrgMode tutorial - YouTube channel]].
 - [[https://vxlabs.com/2017/06/03/querying-restful-webservices-into-emacs-orgmode-tables/][Querying RESTful webservices into Emacs orgmode tables (vxlabs)]].
 - [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][Rainer König's OrgMode YouTube tutorials]].
+- [[https://fuco1.github.io/2019-02-10-Refiling-hydra-with-pre-defined-targets.html][Refiling hydra with pre-defined targets]].
 - [[https://lepisma.github.io/2017/10/28/ricing-org-mode/][Ricing up Org Mode]].
 - [[https://www.arcadianvisions.com/blog/#orga597dcf][Robust Notes with Embedded Code (extensive org babel usage)]].
 - [[http://www.sastibe.de/2018/05/2018-05-11-emacs-org-mode-rest-apis-stocks/][Use Emacs Org Mode and REST APIs for an up-to-date Stock Portfolio]].
 - [[http://cestlaz.github.io/posts/using-emacs-24-capture-2/#.WTtEbXWw5pg][Using Emacs - 24 - Org Capture 2]].
 - [[https://cestlaz.github.io/post/using-emacs-54-org-tables][Using Emacs 54 Org Tables]].
 - [[http://www.diegoberrocal.com/blog/2015/08/19/org-protocol/][Using org-capture with org-protocol be like - Diego Berrocal]].
+- [[http://kitchingroup.cheme.cmu.edu/blog/2019/02/12/Using-results-from-one-code-block-in-another-org-mode/][Using results from one code block in another org-mode]].
 - [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][Writing Specs with Org-mode]].
 
 * [2018-09-11 Tue] [[#london-bar-backlog][#]] London bar backlog
@@ -8675,6 +8770,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO [[http://www.ganapatirestaurant.com][Ganapati]] (South Indian).
 *** Piccadilly
 ******* TODO [[http://machi-ya.co.uk/][Machiya]] (Japanese comfort) <2018-12-02 Sun>
+******* TODO [[https://www.ica.art/rochelle-canteen][Rochelle Canteen @ The Institute of Contemporary Arts (ICA)]] (Pie and ping Sunday special) <2019-02-12 Tue>
 *** Putney
 ******* TODO [[https://www.tripadvisor.co.uk/ShowUserReviews-g186338-d807103-r176708451-Tomoe-London_England.html][authentic Japanese restaurant in Putney - Tomoe, London Traveller Reviews - TripAdvisor]].
 *** Shoreditch
@@ -8964,7 +9060,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2019-02-14 Thu]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -9012,6 +9108,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9xyiv7/does_anyone_have_recommendations_for_accounting/][Does anyone have recommendations for accounting software? : UKPersonalFinance]].
 - [[https://news.ycombinator.com/item?id=14070189][Does it scale? Who cares (2011) (Hacker News)]].
 - [[https://speakerdeck.com/appltn/done-is-better-than-perfect][Done is better than perfect]].
+- [[https://news.ycombinator.com/item?id=19154082][Earnest Capital is live (Hacker News)]].
 - [[https://www.fastly.com/][Edge Cloud Platform (Fastly)]].
 - [[https://fieldbook.com][fieldbook: Create a database, as easily as a spreadsheet]].
 - [[https://rivalseek.com/][Find your competition]].
@@ -9097,7 +9194,6 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://textbelt.com/][TextBelt:]] A free, open source API for outgoing texts..
 - [[https://news.ycombinator.com/item?id=12448844][The Correct Way to Validate Email Addresses (Hacker News)]].
 - [[https://medium.com/fluxx-studio-notes/the-first-rule-of-pricing-is-you-do-not-talk-about-pricing-1875caa39b89#.exvbm4vfa][The first rule of pricing is: you do not talk about pricing]].
-- [[http://thenounproject.com/][The noun project (more icons)]].
 - [[https://news.ycombinator.com/item?id=9501892][The Psychology of Pricing: A Gigantic List of Strategies (HN comments)]].
 - [[http://www.nickkolenda.com/psychological-pricing-strategies][The Psychology of Pricing: A Gigantic List of Strategies]].
 - [[https://thehungryjpeg.com/aff/Madiha/][TheHungryJPEG.com (Premium Graphic Design Resources)]].
@@ -9157,10 +9253,11 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2019-01-05 Sat]
+[2019-02-15 Fri]
 :END:
 - [[https://www.lastpass.com/][#1 Password Manager, Vault, &amp; Digital Wallet App (LastPass)]].
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
+- [[https://amiunique.org/fp][Am I unique?]].
 - [[https://news.ycombinator.com/item?id=17896692][An Intensive Introduction to Cryptography (Hacker News)]].
 - [[https://github.com/yishilin14/asc-key-to-qr-code-gif][asc-key-to-qr-code-gif: Convert ASCII-armored PGP keys to animated QR code]].
 - [[https://nullprogram.com/blog/2018/09/06/][Brute Force Incognito Browsing « null program]].
@@ -9168,11 +9265,13 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://dbp.io/essays/2013-06-29-hackers-replacement-for-gmail.html][dbp.io :: A Hacker's Replacement for GMail]].
 - [[http://digital-era.net/][Digital Era]].
 - [[https://news.ycombinator.com/item?id=18100243][DuckDuckGo Traffic (Hacker News)]].
+- [[https://www.computerworld.com/article/3339618/apple-ios/how-to-stay-as-private-as-possible-on-apples-ipad-and-iphone.html][How to stay as private as possible on Apple&#039;s iPad and iPhone | Computerworld]].
 - [[https://news.ycombinator.com/item?id=17737148][K-anonymity (Hacker News)]].
 - [[https://github.com/Kickball/awesome-selfhosted][Kickball/awesome-selfhosted: Free Software network services and web applications which can be hosted locally.]].
 - [[https://news.ycombinator.com/item?id=18810035][Migrating from Google Analytics (Hacker News)]].
 - [[https://github.com/mssun/passforios/wiki#importing-ascii-armor-encrypted-key][mssun/passforios Wiki]].
 - [[http://adi.is/s/cpunk20/#21][New privacy tools]].
+- [[https://panopticlick.eff.org][Panopticlick (Is your browser safe against tracking?)]].
 - [[https://www.privacytools.io/][Privacy Tools - Encryption Against Global Mass Surveillance]].
 - [[https://www.qubes-os.org/][Qubes OS: A reasonably secure operating system]].
 - [[https://medium.com/@ahawkins/securing-my-digital-life-gpg-yubikey-ssh-on-macos-5f115cb01266][Securing My Digital Life: GPG, Yubikey, & SSH on macOS]].
@@ -10110,8 +10209,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2019-02-10 Sun]
 :END:
+******* TODO [[https://en.wikipedia.org/wiki/Snow_Crash][Snow Crash - Wikipedia]].
 ******* TODO [[https://www.powells.com/book/-9781119404507][The Little Book of Common Sense Investing, Updated and Revised]].
 ******* TODO [[https://www.amazon.com/Little-LISPer-Third-Daniel-Friedman/dp/0023397632][The Little LISPer, Third Edition: 9780023397639: Computer Science Books @ Amazon.com]].
 ******* TODO [[https://www.amazon.com/Anatomy-Peace-Resolving-Heart-Conflict/dp/1626564310][The Anatomy of Peace: Resolving the Heart of Conflict]].
@@ -10502,7 +10602,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2019-01-05 Sat]
+[2019-02-10 Sun]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -10560,6 +10660,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://emacs.sexy/][Emacs is sexy]].
 - [[https://gist.github.com/avendael/7028579][Emacs keybindings for vimium]].
 - [[http://overtone.github.io/emacs-live/][Emacs live]].
+- [[https://phst.eu/emacs-modules][Emacs modules (Philipp’s documents)]].
 - [[http://www.emacswiki.org/emacs/EmacsNiftyTricks][Emacs Nifty tricks]]: Another source of emacs goodness.
 - [[http://emacsnyc.org/videos.html][Emacs NYC videos]].
 - [[http://emacsredux.com/][Emacs redux]].
@@ -10654,6 +10755,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
 - [[http://stackoverflow.com/questions/673554/how-can-i-refactor-c-source-code-using-emacs][SO: How can I refactor C++ source code using emacs?]].
 - [[http://psung.blogspot.co.uk/2010/03/some-emacs-macro-tricks.html][Some Emacs macro tricks]].
+- [[https://www.draketo.de/english/emacs/staying-sane-drudge-work][Staying sane with Emacs (when facing drudge work) (Zwillingssterns Weltenwald)]].
 - [[https://www.reddit.com/r/emacs/comments/370k9p/stock_emacs_tips/][Stock Emacs tips (Reddit)]].
 - [[http://pragmaticemacs.com/emacs/super-spotlight-search-with-counsel/][Super spotlight search with ivy/counsel (Pragmatic Emacs)]].
 - [[https://www.wisdomandwonder.com/article/10474/techne-emacs-friendly-keyboard-operations-keys][Techne (Emacs Friendly Keyboard): Operations Keys | Wisdom and Wonder]].
@@ -10849,7 +10951,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: python-bookmarks
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2019-02-10 Sun]
 :END:
 - [[https://github.com/mkaz/termgraph][A python command-line tool which draws basic graphs/charts in the terminal]].
 - [[https://www.continuum.io/why-anaconda][Anaconda Python sandbox]].
@@ -10870,6 +10972,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://irreal.org/blog/?p=3860][Python tools for Emacs]].
 - [[http://tech.blog.aknin.name/tag/internals/page/2/][Python’s Innards: Hello, ceval.c!]].
 - [[http://www.johndcook.com/blog/python_regex/][Regular expressions in Python and Perl]].
+- [[https://www.johndcook.com/blog/2019/01/24/reversing-an-md5-hash/][Reversing an MD5 hash (python)]].
 - [[https://github.com/deanmalmgren/textract][Textract]]: Python util extracting text from a handful of document types.
 - [[https://julien.danjou.info/blog/2013/guide-python-static-class-abstract-methods][The definitive guide on how to use static, class or abstract methods in Python]].
 - [[https://julien.danjou.info/books/the-hacker-guide-to-python][The Hacker's guide to python]].
