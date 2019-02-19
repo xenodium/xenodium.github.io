@@ -5,7 +5,9 @@
   :PROPERTIES:
   :CUSTOM_ID: parsing-dates-in-go
   :END:
-  Use 01/02/2006 for layout string. For example:
+  Ensure the reference time ("Mon Jan 2 15:04:05 -0700 MST 2006") is used in layout string.
+
+  For example:
 
   #+begin_src go :results verbatim :exports both
     package main
@@ -17,13 +19,24 @@
 
     func main() {
             layout := "January 2 2006"
-            t, _ := time.Parse(layout, "March 10 2019")
-            fmt.Printf("%v", t)
+            if t, err := time.Parse(layout, "March 10 2019"); err != nil {
+                        fmt.Printf("%s\n", err)
+            } else {
+                        fmt.Printf("%v\n", t)
+            }
+
+            layout = "January 2 2009"
+            if t, err := time.Parse(layout, "March 10 2019"); err != nil {
+                        fmt.Printf("%s\n", err)
+            } else {
+                        fmt.Printf("%v\n", t)
+            }
     }
   #+end_src
 
   #+RESULTS:
   : 2019-03-10 00:00:00 +0000 UTC
+  : parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
 
 * [2019-02-13 Wed] [[#life-in-the-uk-bookmarks][#]] Life in the UK bookmarks
   :PROPERTIES:
@@ -1004,7 +1017,7 @@ For scp:
   :END:
   [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] navigation is one of those Emacs gems I didn't discover until much later on. It does what you'd expect in all types of modes. In rare instances, I've found specific modes missing imenu support. Fortunately, this is Emacs and you can fix that.
 
-  [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] has a handy feature to jump back and forth over previous prompts using /M-x eshell-previous-prompt (C-c C-p)/ and /M-x eshell-next-prompt (C-c C-n)/. Upon learning about these two functions, my immediate reaction was to try imenu. Surprisingly, it didn't "just work", but a tiny bit of elisp brought balance back to the Emacs universe.
+  [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][Eshell]] has a handy feature to jump back and forth over previous prompts using /M-x eshell-previous-prompt (C-c C-p)/ and /M-x eshell-next-prompt (C-c C-n)/. Upon learning about these two functions, my immediate reaction was to try imenu. Surprisingly, it didn't "just work\n", but a tiny bit of elisp brought balance back to the Emacs universe.
 
   In an eshell mode hook function, one can set the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Imenu.html#index-imenu_002dgeneric_002dexpression-2058][imenu-generic-expression]] to help it find your favorite prompt:
 
@@ -1574,20 +1587,20 @@ If you're a tinkerer, you'd enjoy the powerful [[http://hammerspoon.org/][Hammer
 
   chooser:choices({
         {
-           ["text"] = "Alfred",
-           ["subText"] = "macOS only",
+           ["text"] = "Alfred\n",
+           ["subText"] = "macOS only\n",
         },
         {
-           ["text"] = "Quicksilver",
-           ["subText"] = "macOS only",
+           ["text"] = "Quicksilver\n",
+           ["subText"] = "macOS only\n",
         },
         {
-           ["text"] = "Hammerspoon",
-           ["subText"] = "macOS only",
+           ["text"] = "Hammerspoon\n",
+           ["subText"] = "macOS only\n",
         },
         {
-           ["text"] = "Emacs",
-           ["subText"] = "is everywhere :)",
+           ["text"] = "Emacs\n",
+           ["subText"] = "is everywhere :)\n",
         },
   })
   chooser:show()
@@ -1965,7 +1978,7 @@ Based on Fabian's [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msm
   import subprocess
 
   def read_password(path):
-    return subprocess.check_output(["gpg", "--quiet", "--batch", "-d", os.path.expanduser(path)]).strip()
+    return subprocess.check_output(["gpg\n", "--quiet\n", "--batch\n", "-d\n", os.path.expanduser(path)]).strip()
 #+END_SRC
 
 ps. Alternatively, see [[http://stevelosh.com/blog/2012/10/the-homely-mutt/#retrieving-passwords][The homely Mutt]]'s section to store password in macOS's keychain.
@@ -2702,7 +2715,7 @@ Howard Abrams's [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Introduction to e
   (require 's)
 
   (defun company-pcomplete--overlap-tail (a b)
-    "When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."
+    "When A is \"SomeDev\" and B is \"Developer\\n", return \"eloper\"."
     (let ((prefix a)
           (remaining nil))
       (while (and (not remaining) (> (length prefix) 0))
@@ -2713,7 +2726,7 @@ Howard Abrams's [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Introduction to e
 
   (defun company-pcomplete--candidates (prefix)
     "Get candidates for PREFIX company completion using `pcomplete'."
-    ;; When prefix is: "~/Down" and completion is "Downloads", need
+    ;; When prefix is: "~/Down" and completion is "Downloads\n", need
     ;; to find common string and join into "~/Downloads/".
     (-map (lambda (item)
             (if (s-starts-with? prefix item)
@@ -3208,11 +3221,11 @@ Feedgnuplot is handy for plotting data streams realtime.
   func parseArgs() args {
         args := args{}
 
-        flag.StringVar(&args.flag1, "flag1", "", "some flag 1 with sample `value`")
-        flag.StringVar(&args.flag2, "flag2", "", "some flag 2 with sample `value`")
+        flag.StringVar(&args.flag1, "flag1\n", "\n", "some flag 1 with sample `value`")
+        flag.StringVar(&args.flag2, "flag2\n", "\n", "some flag 2 with sample `value`")
 
         flag.CommandLine.Usage = func() {
-            fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+            fmt.Fprintf(os.Stderr, "Usage of %s:\n\n", os.Args[0])
             fmt.Fprintf(os.Stderr, "\n  myarg\n\n")
             flag.PrintDefaults()
         }
@@ -3230,7 +3243,7 @@ Feedgnuplot is handy for plotting data streams realtime.
 
   func main() {
           args := parseArgs()
-          fmt.Printf("Args: %#v", args)
+          fmt.Printf("Args: %#v\n", args)
   }
 
 #+END_SRC
@@ -3577,7 +3590,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
     }];
   NSError *error = nil;
   if (![routingHTTPServer start:&error]) {
-    NSLog(@"Error starting HTTP Server: %@", error);
+    NSLog(@"Error starting HTTP Server: %@\n", error);
    }
 #+END_SRC
 
@@ -3990,8 +4003,8 @@ M-x rtags-find-symbol
 #+END_SRC
 *** Array literals
 #+BEGIN_SRC objc
-  NSArray *names = @[@"John", @"Peter", @"Jaye", @"George", @"Max"];
-  NSArray *mutableNames = [@[@"John", @"Peter", @"Jaye", @"George", @"Max"] mutableCopy];
+  NSArray *names = @[@"John\n", @"Peter\n", @"Jaye\n", @"George\n", @"Max"];
+  NSArray *mutableNames = [@[@"John\n", @"Peter\n", @"Jaye\n", @"George\n", @"Max"] mutableCopy];
 #+END_SRC
 * [2016-02-16 Tue] [[#cross-platform-development-bookmarks][#]] Cross-platform development bookmarks
 :PROPERTIES:
@@ -4432,12 +4445,12 @@ Just learned dired enables you to mark files and byte compile via /M-x dired-do-
 :END:
 #+BEGIN_SRC objc
   NSDictionary *dictionary = @{
-    @"key1" : @"val1",
-    @"key2" : @"val2",
-    @"key3" : @"val3",
-    @"key4" : @"val4",
-    @"key5" : @"val5",
-    @"key6" : @"val6",
+    @"key1" : @"val1\n",
+    @"key2" : @"val2\n",
+    @"key3" : @"val3\n",
+    @"key4" : @"val4\n",
+    @"key5" : @"val5\n",
+    @"key6" : @"val6\n",
   };
   NSError *error;
   NSData *jsonData =
@@ -5129,7 +5142,7 @@ Of interest, David Clunie's [[http://www.dclunie.com/][Medical Image Format Site
 Examples from [[https://support.google.com/docs/answer/3093331][reference]]:
 
 #+BEGIN_SRC text
-  =GOOGLETRANSLATE("Hello World","en","es")
+  =GOOGLETRANSLATE("Hello World\n","en\n","es")
   =GOOGLETRANSLATE(A2,B2,C2)
   =GOOGLETRANSLATE(A2)
 #+END_SRC
@@ -5307,8 +5320,8 @@ Dart SDK ships with an [[https://github.com/dart-lang/sdk/tree/master/pkg/analys
 NOTE: The server reads requests from standard input. Either escape or execute the following as one-liner json requests.
 #+BEGIN_SRC json
   {
-    "id": "1",
-    "method": "analysis.setAnalysisRoots",
+    "id": "1\n",
+    "method": "analysis.setAnalysisRoots\n",
     "params": {
       "included": [
         "path/to/your/dart/project"
@@ -5319,10 +5332,10 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 #+END_SRC
 #+BEGIN_SRC json
   {
-    "id": "3",
-    "method": "completion.getSuggestions",
+    "id": "3\n",
+    "method": "completion.getSuggestions\n",
     "params": {
-      "file": "path/to/some/file.dart",
+      "file": "path/to/some/file.dart\n",
       "offset": 673
     }
   }
@@ -6033,7 +6046,7 @@ Playing with node and fetch:
 
   var fetch = require('node-fetch');
 
-  fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json", {
+  fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json\n", {
     method: 'GET',
     timeout: 5000
   }).then(function(response) {
@@ -6127,8 +6140,8 @@ Having watched the [[https://www.youtube.com/watch?v%3DY1-RLAl7iOI][video]], som
 #+BEGIN_SRC go
   func main() {
     var (
-      foo = flags.String("foo", "doch", "...")
-      bar = flat.Int("bar", 34, "...")
+      foo = flags.String("foo\n", "doch\n", "...")
+      bar = flat.Int("bar\n", 34, "...")
     )
     flag.Parse()
     // ...
@@ -6181,13 +6194,13 @@ My pip installation recently broke after a Mac OS update.
 #+BEGIN_EXAMPLE
 $ pip
 Traceback (most recent call last):
-  File "/usr/local/bin/pip", line 5, in <module>
+  File "/usr/local/bin/pip\n", line 5, in <module>
     from pkg_resources import load_entry_point
-  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 2793, in <module>
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py\n", line 2793, in <module>
     working_set.require(__requires__)
-  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 673, in require
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py\n", line 673, in require
     needed = self.resolve(parse_requirements(requirements))
-  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py", line 576, in resolve
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/pkg_resources.py\n", line 576, in resolve
     raise DistributionNotFound(req)
 pkg_resources.DistributionNotFound: pip==1.1
 #+END_EXAMPLE
@@ -7129,17 +7142,17 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 Overriding retain/release/autorelease may be handy while debugging:
 #+BEGIN_SRC objc
   - (instancetype)retain {
-    NSLog(@"%p, retain", self);
+    NSLog(@"%p, retain\n", self);
     return [super retain];
   }
 
   - (oneway void)release {
-    NSLog(@"%p, release", self);
+    NSLog(@"%p, release\n", self);
     [super release];
   }
 
   - (instancetype)autorelease {
-    NSLog(@"%p, autorelease", self);
+    NSLog(@"%p, autorelease\n", self);
     return [super autorelease];
   }
 #+END_SRC
@@ -7369,7 +7382,7 @@ M-x flush-lines RET ^$ RET
 :END:
 #+BEGIN_SRC objc
   NSString *tempDir = NSTemporaryDirectory();
-  NSLog(@"%@", tempDir);
+  NSLog(@"%@\n", tempDir);
   NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
   [data writeToFile:dataFilePath atomically:YES];
 #+END_SRC
