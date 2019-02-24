@@ -1,6 +1,30 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-02-24 Sun] [[#copy-from-desktop-to-mobile-via-qr-code][#]] Copy from desktop to mobile via QR code
+  :PROPERTIES:
+  :CUSTOM_ID: copy-from-desktop-to-mobile-via-qr-code
+  :END:
+[[https://twitter.com/marcin_mbork][Marcin Borkowski]] has a nice [[http://mbork.pl/2019-02-24_Transferring_strings_to_a_phone_via_QR_codes][tip]] to quickly copy text or URLs between desktop and mobile using QR codes.
+
+Wrote a little elisp to do a similar thing using the clipboard via Emacs:
+
+#+begin_src emacs-lisp
+  (defun ar/misc-clipboard-to-qr ()
+    "Convert text in clipboard to qrcode and display within Emacs."
+    (interactive)
+    (let ((temp-file (concat (temporary-file-directory) "qr-code")))
+      (if (eq 0 (shell-command (format "qrencode -s10 -o %s %s"
+                                       temp-file
+                                       (shell-quote-argument (current-kill 0)))
+                               "*qrencode*"))
+          (switch-to-buffer (find-file-noselect temp-file t))
+        (error "Error: Could not create qrcode, check *qrencode* buffer"))))
+#+end_src
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/copy-from-desktop-to-mobile-via-qr-code/qrencode.gif]]
+
 * [2019-02-19 Tue] [[#parsing-dates-in-go][#]] Parsing dates in Go
   :PROPERTIES:
   :CUSTOM_ID: parsing-dates-in-go
@@ -3642,13 +3666,13 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2019-02-20 Wed]
+[2019-02-23 Sat]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
 - [[https://financialpanther.com/9-best-personal-finance-podcasts/][9 Best New Personal Finance Podcasts - Financial Panther]].
-- [[https://www.reddit.com/r/UKPersonalFinance/comments/aq5ss6/a_simple_example_of_contributing_half_your_age_as/][A Simple Example of Contributing Half Your Age as a Percentage of Salary to a Pension : UKPersonalFinance]].
 - [[http://monevator.com/category/investing/passive-investing-investing/][A guide to passive investing in the UK]].
+- [[https://www.reddit.com/r/UKPersonalFinance/comments/aq5ss6/a_simple_example_of_contributing_half_your_age_as/][A Simple Example of Contributing Half Your Age as a Percentage of Salary to a Pension : UKPersonalFinance]].
 - [[https://adviserbook.co.uk/][AdviserBook | Find a regulated financial adviser near you]].
 - [[https://www.amazon.com/How-Interview-Financial-Advisor-Piaw-ebook/dp/B00GXDT9LY][Amazon.com: How to Interview a Financial Advisor eBook: Piaw Na: Kindle Store]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9edd3m/any_critique_against_the_vanguard_ftse_global_all/][Any critique against the Vanguard FTSE global all cap index? : UKPersonalFinance]].
@@ -3668,6 +3692,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.codementor.io/][Codementor (Get live 1:1 coding help, hire a developer, & more)]].
 - [[https://www.coursera.org/learn/financial-markets-global/reviews][Coursera (Online Courses From Top Universities. Join for Free)]].
 - [[http://www.cfiresim.com/][Crowdsourced Financial Independence and Early Retirement Simulator/Calculator]].
+- [[https://qr.ae/TUK1OD][Crystal's Quora answer to becoming a millionaire (full sensible/conservative advice) ]].
 - [[https://news.ycombinator.com/item?id=17930318][Don't Steal Money from Day Traders Before They Lose It (Hacker News)]].
 - [[https://twitter.com/ericajoy/status/1057774364181987328?s=12][EricaJoy on Twitter: what is the process for finding a financial advisor/accountant/etc]].
 - [[https://www.justetf.com/de-en/][ETF portfolios made simple (justETF)]].
@@ -3738,6 +3763,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.youtube.com/watch?v=s75GcslrfOE][Tim Bennett Explains: Which is best - an ISA or a SIPP? - YouTube]].
 - [[https://www.moneysavingexpert.com/savings/best-cash-isa/][Top Cash ISAs: 1.35% easy access, 2.3% fixed - MSE]].
 - [[https://www.cisi.org/cisiweb2/cisi-website/about-us/press-release/2018/09/05/uk-consumers-offered-free-personal-financial-planning-sessions-worth-up-to-500-in-cisi-financial-planning-week-3--10-october-makedreamshappen][UK Financial Planning Week]].
+- UKPersonalFinance redditor quote: "Deprogrammed myself from the zeitgeist of brands/labels. I either buy cheap or I buy quality dependent on application, but in either event I ignore the label."
 - [[https://www.gov.uk/employee-tax-codes/numbers][Understanding your employees' tax codes: What the numbers mean - GOV.UK]].
 - [[https://firehub.eu/blogs/country/united-kingdom][United Kingdom | Countries (FIREhub.eu)]].
 - [[http://www.avios.com/gb/en_gb/spend/zone-map?from=flightSearch][Use the Avios Rewards Flight Calculator to plan flights]].
@@ -9082,7 +9108,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2019-02-14 Thu]
+[2019-02-23 Sat]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -9161,6 +9187,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://startupclass.samaltman.com/][How to start a startup lectures]].
 - [[http://www.iconarchive.com/][Icon archive]].
 - [[https://www.iconfinder.com][Icon finder]].
+- [[https://imagetragick.com/][ImageTragick (ImageMagick vulnerabilities and mitigations)]].
 - [[http://launchaco.com/build/][Launchaco - Name a business]].
 - [[https://layer.com][Layer, messaging platform]].
 - [[http://blog.sueraisty.com/lessons-learned-from-co-founding-a-tech-startup/][Lessons I learned from Co-Founding a startup]].
@@ -9382,7 +9409,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: golang-bookmarks
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2019-02-24 Sun]
 :END:
 - [[http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+spf13+%28Steve+Francia%27s+Blog%29][7 Common mistakes in Go]].
 - [[https://github.com/mingrammer/commonregex][A collection of common regular expressions for Go]].
@@ -9472,6 +9499,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://github.com/golang/go/wiki/PanicAndRecover][PanicAndRecover]].
 - [[http://maciekmm.net/html-golang-stream-processing/][Parsing HTML with Go using stream processing]].
 - [[https://peter.bourgon.org/go-best-practices-2016/][Peter Bourgon · Go best practices, six years in]].
+- [[https://news.ycombinator.com/item?id=19218097][Practical Go: Real-world advice for writing maintainable Go programs (Hacker News)]].
 - [[https://github.com/bradfitz/exp-httpclient/blob/master/problems.md][Problems with Go net/http Client API]].
 - [[https://github.com/m3ng9i/ran][Ran: a simple static web server written in Go]].
 - [[https://blog.gopheracademy.com/advent-2015/reducing-boilerplate-with-go-generate/][Reducing boilerplate with go generate]].
@@ -10109,7 +10137,7 @@ maps key to action.
   :CUSTOM_ID: frugal-bookmarks
   :END:
   :MODIFIED:
-  [2019-01-27 Sun]
+  [2019-02-21 Thu]
   :END:
 - [[https://mobile.asda.com/][Asda Mobile | Pay as you go SIM (Order your free SIM)]].
 - [[https://www.getrichslowly.org/best-cheap-coffee/][Beating the latte factor: My quest for the best cheap coffee]].
@@ -10120,6 +10148,7 @@ maps key to action.
 - [[https://m.aliexpress.com/][Global Online Shopping for Apparel, Phones, Computers, Electronics, Fashion and more on Aliexpress]].
 - [[https://www.getrichslowly.org/best-quality-for-less/][How to find the best quality for less, but it for life, (Get Rich Slowly)]].
 - [[https://cookingonabootstrap.com/2015/11/12/how-to-shop-on-a-budget/][How To Shop On A Budget &#8211; from A Girl Called Jack (Jack Monroe)]].
+- [[https://www.molecountrystores.co.uk][Mole Country Stores: Agricultural and Rural Retailer (clothing)]].
 - [[https://thehumblepenny.com/][The Humble Penny (Create Financial Joy)]].
 - [[https://www.choosefi.com/want-to-buy-it-for-life-consider-this/][Want To Buy It For Life? (lots of item suggestions)]].
 * [2014-09-18 Thu] [[#charities-bookmarks][#]] Charities bookmarks
@@ -10567,7 +10596,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2019-01-01 Tue]
+[2019-02-21 Thu]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -10578,6 +10607,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://caiorss.github.io/Emacs-Elisp-Programming/Elisp_Snippets.html][Caio Rordrigues's Elisp Snippets]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
 - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].
+- [[https://github.com/alhassy/ElispCheatSheet][ElispCheatSheet: Quick reference to the core language of Emacs ---Editor MACroS.]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Emacs - Elisp Programming and Customization]].
 - [[https://github.com/chrisdone/elisp-guide/blob/master/README.md][Emacs Lisp Guide, chrisdone/elisp-guide · GitHub]].
 - [[https://github.com/larsmagne/emacs-sqlite3][Emacs sqlite binding of Emacs Lisp inspired by mruby-sqlite3]].
@@ -10587,6 +10617,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
 - [[https://github.com/functionreturnfunction/format-table][format-table: Parse and reformat tabular data in emacs (Looks great for converting between org, json, and other RDBMS)]].
 - [[https://github.com/alphapapa/ts.el][GitHub - alphapapa/ts.el: Emacs date-time library]].
+- [[https://github.com/Wilfred/ht.el][GitHub - Wilfred/ht.el: The missing hash table library for Emacs]].
 - [[https://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][Harry R. Schwartz's An Introduction to Emacs Lisp]].
 - [[https://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix][How to choose Emacs Lisp package namespace prefix]].
 - [[http://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode]].
@@ -10624,10 +10655,11 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2019-02-10 Sun]
+[2019-02-21 Thu]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
+- [[https://hackr.io/tutorials/learn-emacs][Learn Emacs - [2019] Most Recommended Emacs Tutorials | Hackr.io]].
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
 - [[http://irreal.org/blog/?p=5378][A Reminder About Macro Counters]].
 - [[https://spin.atomicobject.com/2016/05/27/write-emacs-package/][A Simple Guide to Writing & Publishing Emacs Packages]].
@@ -10651,6 +10683,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://www.reddit.com/r/emacs/comments/9dg13i/cclsnavigate_semantic_navigat=ion_for_cc/][ccls-navigate: semantic navigation for C/C++/ObjC ]].
 - [[https://github.com/MaskRay/ccls][ccls: C/C++/ObjC language server supporting cross references, hierarchies, completion and semantic highlighting]].
 - [[https://ddavis.fyi/blog/2018-07-07-emacs-cpp-ide/][Clangd based Emacs C++ IDE (Doug Davis)]].
+- [[https://people.gnome.org/~federico/blog/compilation-notifications-in-emacs.html][Compilation notifications in Emacs - Federico's Blog]].
 - [[http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html][Configuring emacs to use eslint and babel with flycheck for javascript and React.js JSX]].
 - [[http://mbork.pl/Content_AND_Presentation][Content AND Presentation]].
 - [[https://lars.ingebrigtsen.no/2018/11/12/cropping-images-in-emacs/][Cropping Images in Emacs (Lars Ingebrigtsen)]].
@@ -10665,6 +10698,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://www.masteringemacs.org/articles/2011/01/14/effective-editing-movement/][Effective editing I:Movement]]
 - [[http://ergoemacs.org/emacs/effective_emacs.html][Effective emacs tips]]: From ergoemacs.
 - [[https://sites.google.com/site/steveyegge2/effective-emacs][Effective emacs]]: Steve Yegge's effective emacs tips.
+- [[https://ddavis.io/posts/eglot-cpp-ide/][Eglot based Emacs C++ IDE with clangd (ddavis.io)]].
 - [[https://realpython.com/blog/python/emacs-the-best-python-editor/?utm_content=buffer661a4&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer][Emacs - the Best Python Editor?]].
 - [[https://joshwolfe.ca/post/emacs-for-csharp/][Emacs as a C# development environment - Josh Wolfe]].
 - [[https://forums.unrealengine.com/showthread.php?52891-Emacs-as-my-UE4-IDE-with-intellisense][Emacs as my UE4 IDE with intellisense]].
