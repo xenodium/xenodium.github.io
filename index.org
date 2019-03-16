@@ -1,6 +1,47 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-03-16 Sat] [[#no-emacs-frame-refocus-on-macos][#]] No Emacs frame refocus on macOS
+  :PROPERTIES:
+  :CUSTOM_ID: no-emacs-frame-refocus-on-macos
+  :END:
+  This one's been bugging me for a while. On macOS, Emacs automatically focuses (raises) other frames when one is closed.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/no-emacs-frame-refocus-on-macos/before.gif]]
+
+  This has the unfortunate side-effect that I could be moved from one macOS desktop/space to another when closing an Emacs frame.
+
+  Finally managed do something about it. Since I install Emacs on macOS via homebrew, a [[https://github.com/xenodium/homebrew-emacs-plus/commit/79a8e98b222fa262746f6db620ddd1fdb151ece9][small patch on emacs-plus recipe]] did the job.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/no-emacs-frame-refocus-on-macos/after.gif]]
+
+  [[https://github.com/xenodium/homebrew-emacs-plus/commit/79a8e98b222fa262746f6db620ddd1fdb151ece9][Patch]] currently lives at [[https://github.com/xenodium/homebrew-emacs-plus][xenodium/homebrew-emacs-plus]] fork. To use:
+
+#+begin_src sh
+  brew tap xenodium/emacs-plus
+  brew install emacs-plus --with-no-frame-refocus --HEAD
+#+end_src
+
+Balance restored.
+
+* [2019-03-16 Sat] [[#checksums-on-linuxmacos][#]] Checksums on linux/macOS
+  :PROPERTIES:
+  :CUSTOM_ID: checksums-on-linuxmacos
+  :END:
+*** MD5
+    #+begin_src sh
+      md5 file
+    #+end_src
+*** SHA-1
+    #+begin_src sh
+      shasum -a 1 file
+    #+end_src
+*** SHA-256
+    #+begin_src sh
+      shasum -a 256 file
+    #+end_src
 * [2019-03-12 Tue] [[#language-server-protocol-lsp-bookmarks][#]] Language server protocol (LSP) bookmarks
   :PROPERTIES:
   :CUSTOM_ID: language-server-protocol-lsp-bookmarks
