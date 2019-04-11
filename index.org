@@ -1,6 +1,21 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-04-11 Thu] Building mu/mu4e on macOS
+  :PROPERTIES:
+  :CUSTOM_ID: building-mumu4e-on-macos
+  :END:
+
+Recently built [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] 1.2.0 from source on macOS. Steps for posterity:
+
+#+begin_src sh
+  brew install gmime
+  export CPPFLAGS=-I$(brew --prefix)/Cellar/gmime/3.2.3/include
+  export LDFLAGS=-L$(brew --prefix)/Cellar/gmime/3.2.3/lib
+  export PKG_CONFIG_PATH=$(brew --prefix)/Cellar/gmime/3.2.3/lib/pkgconfig:$(brew --prefix)/opt/libffi/lib/pkgconfig
+  ./configure --prefix=$(~/local) --disable-dependency-tracking
+  make install
+#+end_src
 * [2019-03-30 Sat] Reading spreadsheets with python/pandas
   :PROPERTIES:
   :CUSTOM_ID: reading-spreadsheets-with-pythonpandas
