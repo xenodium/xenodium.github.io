@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-04-03 Wed 16:42 -->
+<!-- 2019-04-13 Sat 11:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Get Emacs to gather links in posts</title>
@@ -518,7 +518,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org0445b28" class="outline-2">
+<div id="outline-container-orge00aa70" class="outline-2">
 <h2 id="get-emacs-to-gather-links-in-posts"><span class="timestamp-wrapper"><span class="timestamp">17 October 2015</span></span> Get Emacs to gather links in posts</h2>
 <div class="outline-text-2" id="text-get-emacs-to-gather-links-in-posts">
 <p>
@@ -534,7 +534,6 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">enlive</span>) <span style="color: #969896;">;; </span><span style="color: #969896;">https://github.com/zweifisch/enlive</span>
 (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">org</span>)
 
-
 (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/input-clipboard-url-or-prompt</span> ()
   <span style="color: #183691;">"Return a URL from clipboard or prompt user for one."</span>
   (<span style="color: #a71d5d;">let*</span> ((clipboard (current-kill 0))
@@ -545,28 +544,41 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
       (<span style="color: #333333;">error</span> <span style="color: #183691;">"Not a URL"</span>))
     url))
 
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/url-fetch-anchor-elements</span> (url)
+  <span style="color: #183691;">"Fetch anchor elements in URL as list of alist:</span>
+<span style="color: #183691;">\((title . \"my title\")</span>
+<span style="color: #183691;"> (url . \"http://some.location.com\"))."</span>
+  (<span style="color: #a71d5d;">let</span> ((elements (enlive-query-all (enlive-fetch url) [a])))
+    (mapcar (<span style="color: #a71d5d;">lambda</span> (element)
+              `((title . ,(enlive-text element))
+                (url . ,(enlive-attr element 'href))))
+            elements)))
+
 (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/url-view-links-at</span> ()
   <span style="color: #183691;">"View external links in HTML from prompted URL or clipboard."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create <span style="color: #183691;">"*links*"</span>)
     (org-mode)
-    (read-only-mode -1)
+    (view-mode -1)
     (erase-buffer)
-    (mapc (<span style="color: #a71d5d;">lambda</span> (element)
-            (<span style="color: #a71d5d;">let</span> ((href (enlive-attr element 'href))
-                  (text (enlive-text element)))
-              (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> href (string-match <span style="color: #183691;">"^http"</span> href))
-                (insert (org-make-link-string href text) <span style="color: #183691;">"\n"</span>))))
-          (enlive-query-all
-           (enlive-fetch (ar/input-clipboard-url-or-prompt))
-           [a]))
+    (mapc (<span style="color: #a71d5d;">lambda</span> (anchor)
+            (<span style="color: #a71d5d;">let-alist</span> anchor
+              (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> .url (string-match <span style="color: #183691;">"^http"</span> .url))
+                (insert (org-make-link-string .url
+                                              .title) <span style="color: #183691;">"\n"</span>))))
+          (ar/url-fetch-anchor-elements
+           (ar/input-clipboard-url-or-prompt)))
     (delete-duplicate-lines (point-min) (point-max))
     (goto-char (point-min))
     (toggle-truncate-lines +1)
-    (read-only-mode +1)
-    (switch-to-buffer (current-buffer))))
+    (view-mode +1)
+(switch-to-buffer (current-buffer))))
 </pre>
 </div>
+
+<p>
+UPDATE(2019-04-13): Refreshed post with latest code from my <a href="https://github.com/xenodium/dotsies/blob/9cf32157c5fec140218898dfcb11e74f623fec6c/emacs/ar/ar-url.el#L35">init</a>. Thanks to <a href="https://twitter.com/sjig">Gĳs</a> for pinging.
+</p>
 </div>
 </div>
 </div>
