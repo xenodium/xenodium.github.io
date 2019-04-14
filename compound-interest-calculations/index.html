@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-04-13 Sat 15:42 -->
+<!-- 2019-04-14 Sun 16:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>GitHub</title>
+<title>Compound interest calculations</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
 <style type="text/css">
@@ -196,70 +196,11 @@
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
 
-         @media (min-width:320px)  {
-           /* smartphones, iPhone, portrait 480x320 phones */
-           body {
-             font-size: 100%;
-             max-width: 300px;
-             margin: 0 auto;
-             padding: 5px;
-             width: 95%;
-           }
-         }
-
-         @media (min-width:481px)  {
-           /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
-           body {
-             font-size: 100%;
-             max-width: 300px;
-             margin: 0 auto;
-             padding: 5px;
-             width: 95%;
-           }
-         }
-
-         @media (min-width:641px)  {
-           /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-           body {
-             font-size: 100%;
-             max-width: 300px;
-             margin: 0 auto;
-             padding: 5px;
-             width: 95%;
-           }
-         }
-
-         @media (min-width:961px)  {
-           /* tablet, landscape iPad, lo-res laptops ands desktops */
-           body {
-             font-size: 100%;
-             margin: 0 auto;
-             max-width: 710px;
-             padding: 25px;
-             width: 50%;
-           }
-         }
-
-         @media (min-width:1025px) {
-           /* big landscape tablets, laptops, and desktops */
-           body {
-             font-size: 100%;
-             margin: 0 auto;
-             max-width: 710px;
-             padding: 25px;
-             width: 50%;
-           }
-         }
-
-         @media (min-width:1281px) {
-           /* hi-res laptops and desktops */
-           body {
-             font-size: 100%;
-             margin: 0 auto;
-             max-width: 710px;
-             padding: 25px;
-             width: 50%;
-           }
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
          }
 
          .figure {
@@ -518,15 +459,67 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org6a4a83c" class="outline-2">
-<h2 id="github"><span class="timestamp-wrapper"><span class="timestamp">06 March 2015</span></span> GitHub</h2>
-<div class="outline-text-2" id="text-github">
-<ul class="org-ul">
-<li><a href="https://help.github.com/articles/adding-a-cname-file-to-your-repository/">Adding a CNAME file to your repository</a>.</li>
-<li><a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">Tips for configuring a CNAME record with your DNS provider</a>.</li>
-<li><a href="https://help.github.com/categories/github-pages-basics/">Github pages basics</a>.</li>
-<li><a href="http://stackoverflow.com/questions/23375422/how-to-setup-github-pages-to-redirect-dns-requests-from-subdomain-e-g-www-to">SO DNS response</a>.</li>
-</ul>
+<div id="outline-container-orge75236b" class="outline-2">
+<h2 id="compound-interest-calculations"><span class="timestamp-wrapper"><span class="timestamp">14 April 2019</span></span> Compound interest calculations</h2>
+<div class="outline-text-2" id="text-compound-interest-calculations">
+<p>
+Saving <a href="https://twitter.com/tonytechwriter">Tony Bedford's</a> python snippets for <a href="https://coffeeandcode.neocities.org/financial-calculations-1.html">calculating compound interest</a>. Really just an excuse to fire up Emacs and play with org babel.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #333333;">t</span> = 20 <span style="color: #969896;"># </span><span style="color: #969896;">years</span>
+<span style="color: #333333;">r</span> = 0.07 <span style="color: #969896;"># </span><span style="color: #969896;">rate</span>
+<span style="color: #333333;">pv</span> = 200000.00 <span style="color: #969896;"># </span><span style="color: #969896;">present value</span>
+<span style="color: #333333;">fv</span> = pv * (1+r)**t <span style="color: #969896;"># </span><span style="color: #969896;">future value</span>
+<span style="color: #a71d5d;">print</span>(<span style="color: #183691;">"Pension of %.2f at %d%% will be worth %.2f in %d years"</span> % (pv, 100 * r, fv, t))
+</pre>
+</div>
+
+<pre class="example">
+Pension of 200000.00 at 7% will be worth 773936.89 in 20 years
+</pre>
+
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #333333;">t</span> = 20 <span style="color: #969896;"># </span><span style="color: #969896;">years</span>
+<span style="color: #333333;">r</span> = 0.07 <span style="color: #969896;"># </span><span style="color: #969896;">rate</span>
+<span style="color: #333333;">pv</span> = 200000.00 <span style="color: #969896;"># </span><span style="color: #969896;">present value</span>
+<span style="color: #333333;">n</span> = 1
+<span style="color: #333333;">fv</span> = pv * (1 + r/n)**(n*t) <span style="color: #969896;"># </span><span style="color: #969896;">future value</span>
+<span style="color: #a71d5d;">print</span> (<span style="color: #183691;">"First formula calculates final value to: %.2f"</span> % fv)
+
+<span style="color: #333333;">fv</span> = pv * (1 + r/n)**(n*1) <span style="color: #969896;"># </span><span style="color: #969896;">year 1 only</span>
+<span style="color: #a71d5d;">print</span>(<span style="color: #183691;">"Year %d: %.2f"</span> % (1, fv))
+<span style="color: #a71d5d;">for</span> i <span style="color: #a71d5d;">in</span> <span style="color: #a71d5d;">range</span> (2, t+1):
+    <span style="color: #333333;">fv</span> = fv * (1 + r/n)**(n*1) <span style="color: #969896;"># </span><span style="color: #969896;">Calculate one year at a time</span>
+    <span style="color: #a71d5d;">print</span>(<span style="color: #183691;">"Year %d: %.2f"</span> % (i, fv))
+</pre>
+</div>
+
+<pre class="example">
+First formula calculates final value to: 773936.89
+Year 1: 214000.00
+Year 2: 228980.00
+Year 3: 245008.60
+Year 4: 262159.20
+Year 5: 280510.35
+Year 6: 300146.07
+Year 7: 321156.30
+Year 8: 343637.24
+Year 9: 367691.84
+Year 10: 393430.27
+Year 11: 420970.39
+Year 12: 450438.32
+Year 13: 481969.00
+Year 14: 515706.83
+Year 15: 551806.31
+Year 16: 590432.75
+Year 17: 631763.04
+Year 18: 675986.46
+Year 19: 723305.51
+Year 20: 773936.89
+</pre>
 </div>
 </div>
 </div>
