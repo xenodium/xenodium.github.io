@@ -1,12 +1,71 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-04-14 Sun] Compound interest calculations
+  :PROPERTIES:
+  :CUSTOM_ID: compound-interest-calculations
+  :END:
+
+Saving [[https://twitter.com/tonytechwriter][Tony Bedford's]] python snippets for [[https://coffeeandcode.neocities.org/financial-calculations-1.html][calculating compound interest]]. Really just an excuse to fire up Emacs and play with org babel.
+
+  #+begin_src python :results output :exports both
+    t = 20 # years
+    r = 0.07 # rate
+    pv = 200000.00 # present value
+    fv = pv * (1+r)**t # future value
+    print("Pension of %.2f at %d%% will be worth %.2f in %d years" % (pv, 100 * r, fv, t))
+  #+end_src
+
+  #+RESULTS:
+  : Pension of 200000.00 at 7% will be worth 773936.89 in 20 years
+
+
+  #+begin_src python :results output :exports both
+    t = 20 # years
+    r = 0.07 # rate
+    pv = 200000.00 # present value
+    n = 1
+    fv = pv * (1 + r/n)**(n*t) # future value
+    print ("First formula calculates final value to: %.2f" % fv)
+
+    fv = pv * (1 + r/n)**(n*1) # year 1 only
+    print("Year %d: %.2f" % (1, fv))
+    for i in range (2, t+1):
+        fv = fv * (1 + r/n)**(n*1) # Calculate one year at a time
+        print("Year %d: %.2f" % (i, fv))
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  First formula calculates final value to: 773936.89
+  Year 1: 214000.00
+  Year 2: 228980.00
+  Year 3: 245008.60
+  Year 4: 262159.20
+  Year 5: 280510.35
+  Year 6: 300146.07
+  Year 7: 321156.30
+  Year 8: 343637.24
+  Year 9: 367691.84
+  Year 10: 393430.27
+  Year 11: 420970.39
+  Year 12: 450438.32
+  Year 13: 481969.00
+  Year 14: 515706.83
+  Year 15: 551806.31
+  Year 16: 590432.75
+  Year 17: 631763.04
+  Year 18: 675986.46
+  Year 19: 723305.51
+  Year 20: 773936.89
+  #+end_example
+
 * [2019-04-11 Thu] Building mu/mu4e on macOS
   :PROPERTIES:
   :CUSTOM_ID: building-mumu4e-on-macos
   :END:
 
-Recently built [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] 1.2.0 from source on macOS. Steps for posterity:
+Recently built Emacs's [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] 1.2.0 from source on macOS. Steps:
 
 #+begin_src sh
   brew install gmime
@@ -5564,7 +5623,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2019-03-06 Wed]
+[2019-04-13 Sat]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -5595,6 +5654,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://medium.com/@PavelGnatyuk/large-title-and-search-in-ios-11-514d5e020cee][Large Title and Search in iOS 11 – Pavel Gnatyuk – Medium]].
 - [[https://github.com/hyperoslo/Lightbox][Lightbox is a convenient and easy to use image viewer for your iOS app]].
 - [[https://oleb.net/2018/objc-swift-transition/][Migrating an Objective-C class to Swift: a piecemeal approach – Ole Begemann]].
+- [[https://medium.com/thecreateschool/migrating-from-swift-4-to-swift-5-2f425b99436b][Migrating from Swift 4 to Swift 5 – The Create School – Medium]].
 - [[https://ericasadun.com/2018/12/14/more-fun-with-swift-5-string-interpolation-radix-formatting/][More fun with Swift 5 String Interpolation: Radix (Erica Sadun)]].
 - [[https://github.com/netguru/swift-style-guide][Netguru's Swift Style Guide]].
 - [[https://nshipster.com/never/][Never: Eliminating Impossible States in Swift Generic Types - NSHipster]].
@@ -6931,8 +6991,9 @@ My times:
 :CUSTOM_ID: philippines-travel-bookmarks
 :END:
 :MODIFIED:
-[2016-02-18 Thu]
+[2019-04-14 Sun]
 :END:
+- [[https://rachfeed.com/5-unique-tourist-spots-philippines/][5 Unique Tourist Spots in the Philippines - RachFeed]].
 - [[http://www.lonelyplanet.com/philippines/travel-tips-and-articles/the-philippines-for-beginners-7-first-timer-fails-to-avoid-on-your-trip][7 first-timer fails]].
 - [[https://en.wikipedia.org/wiki/Palawan_%28island%29][Palawan (island)]].
 - [[http://www.lonelyplanet.com/philippines/travel-tips-and-articles/77222][The best beaches of the Philippines]].
