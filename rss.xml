@@ -6,7 +6,164 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 14 Apr 2019 16:43:35 +0100</lastBuildDate>
+<lastBuildDate>Tue, 16 Apr 2019 22:10:22 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Mark region, indent, restore location</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org409a953" class="outline-2">
+ <h2 id="mark-region-indent-restore-location"> <span class="timestamp-wrapper"> <span class="timestamp">16 April 2019</span></span> Mark region, indent, restore location</h2>
+ <div class="outline-text-2" id="text-mark-region-indent-restore-location">
+ <p>
+When I'm not using an automatic code formatter (ie. clang-format, gofmt, etc.), I often find myself using Emacs region marking commands like  <i>mark-defun</i>,  <i>er/expand-region</i>, and  <i>mark-whole-buffer</i> prior to pressing <tab>, which is bound to  <i>indent-for-tab-command</i>.
+</p>
+
+ <p>
+This is all working as expected: the selection gets indented and the point is left in the current location.
+</p>
+
+ <p>
+Say we have the following snippet we'd like to indent.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/mark-region-indent-restore-location/before.png" alt="before.png"></img></p>
+</div>
+
+ <p>
+Mark region with C-M-h (mark-defun)
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/mark-region-indent-restore-location/selection.png" alt="selection.png"></img></p>
+</div>
+
+ <p>
+Indent with <tab> (indent-for-tab-command)
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/mark-region-indent-restore-location/basic-indent.png" alt="basic-indent.png"></img></p>
+</div>
+
+ <p>
+but… I always wished the point returned to the location prior to initiating the marking region command.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/mark-region-indent-restore-location/smart-indent.png" alt="smart-indent.png"></img></p>
+</div>
+
+ <p>
+I'm not aware of an existing package that helps with this, so here's a tiny minor mode (divert-mode) to help with restoring point location after indenting a region. The  <i>diverted-events</i> variable can be used to track specific region selecting commands and associate breadcrumb functions to replace the point location as needed.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;;; </span> <span style="color: #969896;">diverted.el --- Identify temporary diversions and automatically</span>
+ <span style="color: #969896;">;;; </span> <span style="color: #969896;">move point back to original location.</span>
+
+ <span style="color: #969896;">;;; </span> <span style="color: #969896;">Commentary:</span>
+ <span style="color: #969896;">;; </span> <span style="color: #969896;">Automatically come back to a original location prior to diversion.</span>
+
+
+ <span style="color: #969896;">;;; </span> <span style="color: #969896;">Code:</span>
+
+( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">cl</span>)
+( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+( <span style="color: #a71d5d;">defstruct</span> diverted-event
+  from  <span style="color: #969896;">;; </span> <span style="color: #969896;">Initial function (eg. 'mark-defun)</span>
+  to  <span style="color: #969896;">;; </span> <span style="color: #969896;">Follow-up function (eg. 'indent-for-tab-command)</span>
+  breadcrumb)
+
+( <span style="color: #a71d5d;">defvar</span>  <span style="color: #333333;">diverted-events</span>
+  (list
+   (make-diverted-event  <span style="color: #a71d5d;">:from</span> 'mark-defun
+                         <span style="color: #a71d5d;">:to</span> 'indent-for-tab-command
+                         <span style="color: #a71d5d;">:breadcrumb</span> ( <span style="color: #a71d5d;">lambda</span> ()
+                                      (diverted--pop-to-mark-command 2)))
+   (make-diverted-event  <span style="color: #a71d5d;">:from</span> 'er/expand-region
+                         <span style="color: #a71d5d;">:to</span> 'indent-for-tab-command
+                         <span style="color: #a71d5d;">:breadcrumb</span> ( <span style="color: #a71d5d;">lambda</span> ()
+                                      (diverted--pop-to-mark-command 2)))
+   (make-diverted-event  <span style="color: #a71d5d;">:from</span> 'mark-whole-buffer
+                         <span style="color: #a71d5d;">:to</span> 'indent-for-tab-command
+                         <span style="color: #a71d5d;">:breadcrumb</span> ( <span style="color: #a71d5d;">lambda</span> ()
+                                      (diverted--pop-to-mark-command 2))))
+   <span style="color: #183691;">"Diversion events to look for."</span>)
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">diverted--resolve</span> (symbol)
+   <span style="color: #183691;">"Resolve SYMBOL to event."</span>
+  (seq-find ( <span style="color: #a71d5d;">lambda</span> (event)
+              (equal symbol
+                     (diverted-event-from event)))
+            diverted-events))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">diverted--pop-to-mark-command</span> (n)
+   <span style="color: #183691;">"Invoke `</span> <span style="color: #0086b3;">pop-to-mark-command</span> <span style="color: #183691;">' N number of times."</span>
+  ( <span style="color: #a71d5d;">dotimes</span> (_ n)
+    (pop-to-mark-command)))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">diverted--advice-fun</span> (orig-fun  <span style="color: #0086b3;">&rest</span> r)
+   <span style="color: #183691;">"Get back to location prior to diversion using advice around `</span> <span style="color: #0086b3;">diverted-events</span> <span style="color: #183691;">' (ORIG-FUN and R)."</span>
+  ( <span style="color: #a71d5d;">let</span> ((recognized-event (diverted--resolve last-command)))
+    ( <span style="color: #a71d5d;">when</span> recognized-event
+      (funcall (diverted-event-breadcrumb recognized-event))
+      (message  <span style="color: #183691;">"Breadcrumbed prior to `</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">'"</span>
+               (diverted-event-from recognized-event)))))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">diverted-mode-enable</span> ()
+   <span style="color: #183691;">"Enable diverted-mode."</span>
+  ( <span style="color: #a71d5d;">interactive</span>)
+  (diverted-mode-disable)
+  (mapc ( <span style="color: #a71d5d;">lambda</span> (event)
+          (advice-add (diverted-event-to event)
+                       <span style="color: #a71d5d;">:after</span>
+                      'diverted--advice-fun)
+          (message  <span style="color: #183691;">"Looking for `</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' after `</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' diversions."</span>
+                   (diverted-event-to event)
+                   (diverted-event-from event)))
+        diverted-events)
+  (message  <span style="color: #183691;">"diverted-mode enabled"</span>))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">diverted-mode-disable</span> ()
+   <span style="color: #183691;">"Disable diverted-mode."</span>
+  ( <span style="color: #a71d5d;">interactive</span>)
+  (mapc ( <span style="color: #a71d5d;">lambda</span> (event)
+          (advice-remove (diverted-event-to event)
+                         'diverted--advice-fun)
+          (message  <span style="color: #183691;">"Ignoring `</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' after `</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' diversions."</span>
+                   (diverted-event-to event)
+                   (diverted-event-from event)))
+        diverted-events)
+  (message  <span style="color: #183691;">"diverted-mode disabled"</span>))
+
+( <span style="color: #a71d5d;">define-minor-mode</span>  <span style="color: #795da3;">diverted-mode</span>
+   <span style="color: #183691;">"Detect temporary diversions and restore point location."</span>
+   <span style="color: #a71d5d;">:init-value</span> nil
+   <span style="color: #a71d5d;">:lighter</span>  <span style="color: #183691;">" diverted"</span>
+   <span style="color: #a71d5d;">:global</span> t
+  ( <span style="color: #a71d5d;">if</span> diverted-mode
+      (diverted-mode-enable)
+    (diverted-mode-disable)))
+
+( <span style="color: #a71d5d;">provide</span> ' <span style="color: #0086b3;">diverted</span>)
+
+ <span style="color: #969896;">;;; </span> <span style="color: #969896;">diverted.el ends here</span>
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/mark-region-indent-restore-location/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/mark-region-indent-restore-location/index.html</guid>
+  <pubDate>Tue, 16 Apr 2019 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Compound interest calculations</title>
@@ -85,7 +242,7 @@ Year 20: 773936.89
   <title>Building mu/mu4e on macOS</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orgc655fab" class="outline-2">
+ <div id="outline-container-org819eb93" class="outline-2">
  <h2 id="building-mumu4e-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">11 April 2019</span></span> Building mu/mu4e on macOS</h2>
  <div class="outline-text-2" id="text-building-mumu4e-on-macos">
  <p>
@@ -101,6 +258,10 @@ Recently built Emacs's  <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a
 make install
 </pre>
 </div>
+
+ <p>
+UPDATE(2019-04-16): Another approach at Irreal's  <a href="https://irreal.org/blog/?p=7976">Mu/mu4e 1.2 Available</a>.
+</p>
 </div>
 </div>
 </div>]]></description>
