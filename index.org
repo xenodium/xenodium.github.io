@@ -1,6 +1,126 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-04-16 Tue] Mark region, indent, restore location
+  :PROPERTIES:
+  :CUSTOM_ID: mark-region-indent-restore-location
+  :END:
+When I'm not using an automatic code formatter (ie. clang-format, gofmt, etc.), I often find myself using Emacs region marking commands like /mark-defun/, /er/expand-region/, and /mark-whole-buffer/ prior to pressing <tab>, which is bound to /indent-for-tab-command/.
+
+This is all working as expected: the selection gets indented and the point is left in the current location.
+
+Say we have the following snippet we'd like to indent.
+
+[[file:images/mark-region-indent-restore-location/before.png]]
+
+Mark region with C-M-h (mark-defun)
+
+[[file:images/mark-region-indent-restore-location/selection.png]]
+
+Indent with <tab> (indent-for-tab-command)
+
+[[file:images/mark-region-indent-restore-location/basic-indent.png]]
+
+ but... I always wished the point returned to the location prior to initiating the marking region command.
+
+[[file:images/mark-region-indent-restore-location/smart-indent.png]]
+
+I'm not aware of an existing package that helps with this, so here's a tiny minor mode (divert-mode) to help with restoring point location after indenting a region. The /diverted-events/ variable can be used to track specific region selecting commands and associate breadcrumb functions to replace the point location as needed.
+
+ #+begin_src emacs-lisp
+   ;;; diverted.el --- Identify temporary diversions and automatically
+   ;;; move point back to original location.
+
+   ;;; Commentary:
+   ;; Automatically come back to a original location prior to diversion.
+
+
+   ;;; Code:
+
+   (require 'cl)
+   (require 'seq)
+
+   (defstruct diverted-event
+     from ;; Initial function (eg. 'mark-defun)
+     to ;; Follow-up function (eg. 'indent-for-tab-command)
+     breadcrumb)
+
+   (defvar diverted-events
+     (list
+      (make-diverted-event :from 'mark-defun
+                           :to 'indent-for-tab-command
+                           :breadcrumb (lambda ()
+                                         (diverted--pop-to-mark-command 2)))
+      (make-diverted-event :from 'er/expand-region
+                           :to 'indent-for-tab-command
+                           :breadcrumb (lambda ()
+                                         (diverted--pop-to-mark-command 2)))
+      (make-diverted-event :from 'mark-whole-buffer
+                           :to 'indent-for-tab-command
+                           :breadcrumb (lambda ()
+                                         (diverted--pop-to-mark-command 2))))
+     "Diversion events to look for.")
+
+   (defun diverted--resolve (symbol)
+     "Resolve SYMBOL to event."
+     (seq-find (lambda (event)
+                 (equal symbol
+                        (diverted-event-from event)))
+               diverted-events))
+
+   (defun diverted--pop-to-mark-command (n)
+     "Invoke `pop-to-mark-command' N number of times."
+     (dotimes (_ n)
+       (pop-to-mark-command)))
+
+   (defun diverted--advice-fun (orig-fun &rest r)
+     "Get back to location prior to diversion using advice around `diverted-events' (ORIG-FUN and R)."
+     (let ((recognized-event (diverted--resolve last-command)))
+       (when recognized-event
+         (funcall (diverted-event-breadcrumb recognized-event))
+         (message "Breadcrumbed prior to `%s'"
+                  (diverted-event-from recognized-event)))))
+
+   (defun diverted-mode-enable ()
+     "Enable diverted-mode."
+     (interactive)
+     (diverted-mode-disable)
+     (mapc (lambda (event)
+             (advice-add (diverted-event-to event)
+                         :after
+                         'diverted--advice-fun)
+             (message "Looking for `%s' after `%s' diversions."
+                      (diverted-event-to event)
+                      (diverted-event-from event)))
+           diverted-events)
+     (message "diverted-mode enabled"))
+
+   (defun diverted-mode-disable ()
+     "Disable diverted-mode."
+     (interactive)
+     (mapc (lambda (event)
+             (advice-remove (diverted-event-to event)
+                            'diverted--advice-fun)
+             (message "Ignoring `%s' after `%s' diversions."
+                      (diverted-event-to event)
+                      (diverted-event-from event)))
+           diverted-events)
+     (message "diverted-mode disabled"))
+
+   (define-minor-mode diverted-mode
+     "Detect temporary diversions and restore point location."
+     :init-value nil
+     :lighter " diverted"
+     :global t
+     (if diverted-mode
+         (diverted-mode-enable)
+       (diverted-mode-disable)))
+
+   (provide 'diverted)
+
+   ;;; diverted.el ends here
+ #+end_src
+
 * [2019-04-14 Sun] Wider web bookmarks
   :PROPERTIES:
   :CUSTOM_ID: wider-web-bookmarks
