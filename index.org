@@ -1,6 +1,21 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-05-04 Sat] Batch renaming with counsel, find-dired, and wdired
+  :PROPERTIES:
+  :CUSTOM_ID: batch-renaming-with-counsel-find-dired-and-wdired
+  :END:
+The first time I saw [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Wdired.html][wdired]] in action, it blew my mind. wdired makes [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html#Dired][dired]] (directory editor) buffers writeable, so you can edit them like any other Emacs buffer. You can subsequently use all your favorite file-editing tricks to rename files (amongst other things). You can see it in action at the end of [[http://emacsrocks.com/e16.html][Emacs Rocks episode 16]].
+
+When combining [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html][find-dired]] with wdired, one can easily find matching files and quickly batch rename them using something like [[https://github.com/magnars/multiple-cursors.el][multiple cursors]] or [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html][keyboard macros]]. I've been a fan of the /find-dired/ -> /dired-toggle-read-only/ -> /mc/mark-all-like-this/ workflow for quite some time, but I always wished I could adjust /find-dired/ queries a little quicker by getting immediate feedback.
+
+Completion frontends like [[https://github.com/abo-abo/swiper][ivy]] and [[https://github.com/emacs-helm/helm][helm]] are perfect for getting this kind of immediate feedback. Peeking into ivy's [[https://github.com/abo-abo/swiper/blob/master/counsel.el][counsel source]], I borrowed some ideas to glue counsel-style narrowing on a find command, which I can easily translate to a writeable dired buffer for all that joyful-mutiple-cursor-editing experience.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/batch-renaming-with-counsel-find-dired-and-wdired/counsel-find.gif]]
+
+The code for /ar/counsel-find/ is a little rough but can be found at [[https://github.com/xenodium/dotsies/blob/master/emacs/ar/ar-counsel-find.el][here]].
+
 * [2019-04-26 Fri] VPS bookmarks
   :PROPERTIES:
   :CUSTOM_ID: vps-bookmarks
