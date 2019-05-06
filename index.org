@@ -1,6 +1,18 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-05-06 Mon] Ledger query snippets
+  :PROPERTIES:
+  :CUSTOM_ID: ledger-query-snippets
+  :END:
+*** Expenses paid in cash between two dates
+    #+begin_src sh
+    ledger -f my.ledger reg "^Expenses" and expr 'any(account=~/Assets:Cash:Wallet/)' -b 02/19 -e 04/09
+    #+end_src
+*** Bank account income between two dates
+    #+begin_src sh
+    ledger -f my.ledger reg "^Assets:Bank:Acme" and expr "amount > 0" -b 02/19 -e 04/09
+    #+end_src
 * [2019-05-04 Sat] Batch file renaming with counsel, find-dired, and wdired
   :PROPERTIES:
   :CUSTOM_ID: batch-renaming-with-counsel-find-dired-and-wdired
@@ -4042,7 +4054,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2019-03-13 Wed]
+[2019-05-05 Sun]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
@@ -4124,6 +4136,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.moneysavingexpert.com/savings/premium-bonds-calculator/][Premium Bond Probability Calculator]].
 - [[https://www.moneysavingexpert.com/savings/premium-bonds/][Premium Bonds: are they worth it? - MoneySavingExpert]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/aopvqe/purchasing_a_new_property_with_a_baby_on_the_way/][Purchasing a new property with a baby on the way..? : UKPersonalFinance]].
+- [[https://reboapp.co.uk/][rebo - Portfolio management software for UK private investors]].
 - [[https://marcusmichaels.github.io/personal-finance-flowchart/][Reddit Personal Finance Flowchart (interactive)]].
 - [[https://moneytothemasses.com/owning-a-home/mortgages/should-you-fix-your-mortgage-now][Remortgaging in 2019 - is now the right time to fix & for how long? - Money To The Masses]].
 - [[https://rockstarfinance.com/][Rockstar Finance (Curating the best of money and personal finance)]].
@@ -4934,11 +4947,12 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :CUSTOM_ID: parenting-bookmarks
 :END:
 :MODIFIED:
-[2019-03-17 Sun]
+[2019-05-05 Sun]
 :END:
 - [[http://www.janetlansbury.com/2018/07/a-toddlers-do-it-myself-attitude-ends-in-tantrums/][A Toddler's Do-It-Myself Attitude Ends In Tantrums - Janet Lansbury]].
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
 - [[https://codecombat.com/][CodeCombat - Learn how to code by playing a game]].
+- [[http://blog.growingwithscience.com/][Growing With Science Blog]].
 - [[https://conference.michellegale.com/][Home - Mindful Parenting Online Conference]].
 - [[https://www.npr.org/sections/goatsandsoda/2019/03/13/685533353/a-playful-way-to-teach-kids-to-control-their-anger][How Inuit Parents Teach Kids To Control Their Anger (NPR)]].
 - [[https://news.ycombinator.com/item?id=17435671][How to get kids to pay attention (Hacker News)]].
@@ -5990,7 +6004,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :END:
 
 :MODIFIED:
-[2019-04-28 Sun]
+[2019-05-05 Sun]
 :END:
 - [[https://forums.freebsd.org/threads/small-guide-on-using-mtree.61113/][(small) Guide on using mtree (The FreeBSD Forums)]].
 - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
@@ -6044,6 +6058,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://blog.0xbadc0de.be/archives/300][SSH: Best practices]].
 - [[http://irreal.org/blog/?p=7184][Text Manipulation with Command Line Utilities]].
 - [[https://github.com/calebmadrigal/trackerjacker/blob/master/README.md][trackerjacker/README.md at master · calebmadrigal/trackerjacker · GitHub]].
+- [[https://devarea.com/understanding-awk-practical-guide/][Understanding Awk (Practical Guide)]].
 - [[https://www.cis.upenn.edu/~bcpierce/unison/][Unison File Synchronizer]].
 - [[https://www.reddit.com/r/linux/comments/mi80x/give_me_that_one_command_you_wish_you_knew_years/][Unix commands you wish you knew years ago (Reddit)]].
 - [[http://unixmages.com/ufbm.pdf][Unix for the Beginning Mage]].
@@ -8499,7 +8514,7 @@ Note to self. Open with Alt-f2.
 :CUSTOM_ID: emacs-init.el-bookmarks
 :END:
 :MODIFIED:
-[2019-04-29 Mon]
+[2019-05-04 Sat]
 :END:
 - [[https://github.com/daschwa/emacs.d][Adam Schwartz's init]].
 - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
@@ -8528,6 +8543,7 @@ Note to self. Open with Alt-f2.
 - [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org][Mathieu Marques's wonderful literary config (uses tern for Javascript)]].
 - [[https://github.com/abdullin/emacs.d/blob/master/emacs.org][Rinat Abdullin's literary config]].
 - [[https://github.com/To1ne/temacco][Temacco's init]].
+- [[https://gitlab.com/to1ne/temacco][Temacco's Plutonium empowered emacs]].
 - [[https://github.com/wasamasa/dotemacs/blob/master/TODO.org][Wasamama's extensive init TODO ]].
 - [[http://zzamboni.org/post/my-emacs-configuration-with-commentary/][zzamboni.org | My Emacs Configuration, With Commentary]].
 - [[https://etienne.depar.is/emacs.d/init.html][Étienne Deparis's Emacs Main Initialization File]].
@@ -9777,7 +9793,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2019-05-04 Sat]
+[2019-05-05 Sun]
 :END:
 - [[https://www.lastpass.com/][#1 Password Manager, Vault, & Digital Wallet App (LastPass)]].
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
@@ -9806,6 +9822,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://adi.is/s/cpunk20/#21][New privacy tools]].
 - [[https://riseup.net/en/security/message-security/openpgp/best-practices][OpenPGP Best Practices - riseup.net]].
 - [[https://panopticlick.eff.org][Panopticlick (Is your browser safe against tracking?)]].
+- [[https://mhaffner.github.io/post/pi-hole-troubleshooting/][Pi-hole troubleshooting: An overview of my recent installation | Matthew Haffner]].
 - [[https://news.ycombinator.com/item?id=19258717][Pi-Hole – A black hole for Internet advertisements (Hacker News)]].
 - [[https://www.privacytools.io/][Privacy Tools - Encryption Against Global Mass Surveillance]].
 - [[https://www.qubes-os.org/][Qubes OS: A reasonably secure operating system]].
@@ -10251,7 +10268,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: ios-bookmarks
 :END:
 :MODIFIED:
-[2019-04-14 Sun]
+[2019-05-05 Sun]
 :END:
 - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
 - [[https://medium.com/flawless-app-stories/30-great-ui-kits-for-ios-engineers-41b2732896b9][30 great UI Kits for iOS engineers – Flawless App Stories – Medium]].
@@ -10296,6 +10313,7 @@ If FROM or TO is negative, it counts from the end.
 - [[https://github.com/indragiek/INDANCSClient][INDANCSClient: Objective-C Apple Notification Center Service Implementation (Bluetooth LE)]].
 - [[https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW10][Info PList key reference]].
 - [[http://injectionforxcode.com][Injection for Xcode]].
+- [[https://www.cocoawithlove.com/blog/introducing-cwlviews.html][Introducing CwlViews]].
 - [[https://developer.apple.com/videos/play/wwdc2016/413][Introduction to Xcode (Apple WWDC 2016)]].
 - [[http://stackoverflow.com/questions/40904676/how-to-merge-two-video-with-transparency][ios - how to merge two video with transparency - Stack Overflow]].
 - [[http://puzzles.design/][iOS 10 UI]].
@@ -10641,7 +10659,7 @@ maps key to action.
 - [[http://www.pricegrabber.com/][Check online store ratings and save money with deals at PriceGrabber.com]].
 - [[https://frugalmoneyman.com/2018/03/23/emergency-fund-before-yolo/][Emergency Fund Before YOLO - Frugal Money Man]].
 - [[https://www.reddit.com/r/FreeEBOOKS][FreeEBOOKS (subreddit)]].
-- [[https://frugalfun4boys.com/][Frugal Fun For Boys and Girls - Learning, Play, STEM Activities, and Thing to Do!]].
+- [[https://frugalfun4boys.com/][Frugal Fun For Boys and Girls - Learning, Play, STEM Activities, and Thing to Do! (home experiments for kids)]].
 - [[https://m.aliexpress.com/][Global Online Shopping for Apparel, Phones, Computers, Electronics, Fashion and more on Aliexpress]].
 - [[https://www.getrichslowly.org/best-quality-for-less/][How to find the best quality for less, but it for life, (Get Rich Slowly)]].
 - [[https://cookingonabootstrap.com/2015/11/12/how-to-shop-on-a-budget/][How To Shop On A Budget &#8211; from A Girl Called Jack (Jack Monroe)]].
