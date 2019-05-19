@@ -3520,6 +3520,8 @@ May need to kill gpg-agent to reload config.
 :PROPERTIES:
 :CUSTOM_ID: installing-gnuplot-on-macos
 :END:
+UPDATE(2019-05-19 Sun): Plan A and B use options no longer available since the recent changes to [[https://github.com/Homebrew/homebrew-core/issues/31510][remove all options from Homebrew/homebrew-core formulae]]. See Plan C.
+
 *** +Plan A+
 ***** +Install gnuplot Qt+
 +If you have the resources, you can try the Qt flavor. You need at least 15GB to download and a long build. Ran out of space on my Macbook Air. Aborted.+
@@ -3542,8 +3544,6 @@ Feedgnuplot is handy for plotting data streams realtime.
   brew install feedgnuplot
 #+END_SRC
 
-UPDATE(2019-05-19 Sun): Plan A and B use options no longer available since the recent changes to [[https://github.com/Homebrew/homebrew-core/issues/31510][remove all options from Homebrew/homebrew-core formulae]]. See Plan C.
-
 ***  Plan C
 ***** Install with no options
  #+BEGIN_SRC sh
@@ -3559,7 +3559,7 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
 ***** Debugging
 ******* QT_DEBUG_PLUGINS
 
-Turns out you can get plugin logs with using the QT_DEBUG_PLUGINS environment variable:
+Turns out you can get plugin logs using the QT_DEBUG_PLUGINS environment variable:
 
 #+begin_src sh
   export QT_DEBUG_PLUGINS=1
@@ -3582,14 +3582,25 @@ Getting the Qt prefix can be done by inspecting QtCore's strings:
 #+RESULTS:
 : qt_prfxpath=/usr/local/Cellar/qt/5.12.3
 
-Ok so qt_prfxpath is pointing to //usr/local/Cellar/qt/, while my installation's is at //Users/myuser/homebrew/Cellar/qt/. This is problematic and indeed my fault for installing homebrew in //Users/myuser/homebrew instead of the recommended/ //usr/local/.
+Ok so qt_prfxpath is pointing to //usr/local/Cellar/qt/, while my installation's is at //Users/myuser/homebrew/Cellar/qt/. This is problematic and indeed my fault for installing homebrew in //Users/myuser/homebrew/ instead of the recommended //usr/local/.
 
 Symlinking did the job:
 
 #+begin_src sh
-  mkdir -p /usr/local/Cellar
+  sudo mkdir -p /usr/local/Cellar
   sudo ln -s ~/homebrew/Cellar/qt /usr/local/Cellar/qt
 #+end_src
+
+#+begin_src sh
+  /Users/myuser/homebrew/Cellar/gnuplot/5.2.6_1/libexec/gnuplot/5.2/gnuplot_qt
+#+end_src
+
+#+RESULTS:
+: QFactoryLoader::QFactoryLoader() checking directory path "/Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms" ...
+: QFactoryLoader::QFactoryLoader() looking at "/Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms/libqcocoa.dylib"
+: Found metadata in lib /Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms/libqcocoa.dylib
+
+Success.
 
 * [2017-01-22 Sun] Tel Aviv travel bookmarks
 :PROPERTIES:

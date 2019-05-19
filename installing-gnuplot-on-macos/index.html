@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-04-14 Sun 16:35 -->
+<!-- 2019-05-19 Sun 14:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Installing gnuplot on macOS</title>
+<title>InstallinggnuplotonmacOS</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
 <style type="text/css">
@@ -459,53 +459,58 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org25cf7bb" class="outline-2">
+<div id="outline-container-org297e90f" class="outline-2">
 <h2 id="installing-gnuplot-on-macos"><span class="timestamp-wrapper"><span class="timestamp">13 March 2017</span></span> Installing gnuplot on macOS</h2>
 <div class="outline-text-2" id="text-installing-gnuplot-on-macos">
-</div>
-<div id="outline-container-orgd61e386" class="outline-3">
-<h3 id="orgd61e386">Plan A</h3>
-<div class="outline-text-3" id="text-orgd61e386">
-</div>
-<div id="outline-container-org527202d" class="outline-4">
-<h4 id="org527202d">Install gnuplot Qt</h4>
-<div class="outline-text-4" id="text-org527202d">
 <p>
-If you have the resources, you can try the Qt flavor. You need at least 15GB to download and a long build. Ran out of space on my Macbook Air. Aborted.
+UPDATE(2019-05-19 Sun): Plan A and B use options no longer available since the recent changes to <a href="https://github.com/Homebrew/homebrew-core/issues/31510">remove all options from Homebrew/homebrew-core formulae</a>. See Plan C.
+</p>
+</div>
+
+<div id="outline-container-orgaf7e4a8" class="outline-3">
+<h3 id="orgaf7e4a8"><del>Plan A</del></h3>
+<div class="outline-text-3" id="text-orgaf7e4a8">
+</div>
+<div id="outline-container-orgd274b31" class="outline-4">
+<h4 id="orgd274b31"><del>Install gnuplot Qt</del></h4>
+<div class="outline-text-4" id="text-orgd274b31">
+<p>
+<del>If you have the resources, you can try the Qt flavor. You need at least 15GB to download and a long build. Ran out of space on my Macbook Air. Aborted.</del>
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">brew install --force  gnuplot --with-qt
+<pre class="src src-sh">brew install gnuplot --with-qt
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org28534b8" class="outline-3">
-<h3 id="org28534b8">Plan B</h3>
-<div class="outline-text-3" id="text-org28534b8">
+<div id="outline-container-orgd326796" class="outline-3">
+<h3 id="orgd326796"><del>Plan B</del></h3>
+<div class="outline-text-3" id="text-orgd326796">
 </div>
-<div id="outline-container-org2f8a375" class="outline-4">
-<h4 id="org2f8a375">Install xquartz</h4>
-<div class="outline-text-4" id="text-org2f8a375">
+<div id="outline-container-org5d18fc0" class="outline-4">
+<h4 id="org5d18fc0"><del>Install xquartz</del></h4>
+<div class="outline-text-4" id="text-org5d18fc0">
 <div class="org-src-container">
 <pre class="src src-sh">brew install Caskroom/cask/xquartz
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbe718f1" class="outline-4">
-<h4 id="orgbe718f1">Install gnuplot x11</h4>
-<div class="outline-text-4" id="text-orgbe718f1">
+<div id="outline-container-org8f5f8f1" class="outline-4">
+<h4 id="org8f5f8f1"><del>Install gnuplot x11</del></h4>
+<div class="outline-text-4" id="text-org8f5f8f1">
 <div class="org-src-container">
-<pre class="src src-sh">brew install --force  gnuplot --with-x11
+<pre class="src src-sh">brew install gnuplot --with-x11
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgfe0e419" class="outline-3">
-<h3 id="orgfe0e419">Install feedgnuplot</h3>
-<div class="outline-text-3" id="text-orgfe0e419">
+
+<div id="outline-container-orga1b91b8" class="outline-3">
+<h3 id="orga1b91b8">Install feedgnuplot</h3>
+<div class="outline-text-3" id="text-orga1b91b8">
 <p>
 Feedgnuplot is handy for plotting data streams realtime.
 </p>
@@ -513,6 +518,109 @@ Feedgnuplot is handy for plotting data streams realtime.
 <pre class="src src-sh">brew install feedgnuplot
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org48e28d1" class="outline-3">
+<h3 id="org48e28d1">Plan C</h3>
+<div class="outline-text-3" id="text-org48e28d1">
+</div>
+<div id="outline-container-orge429e89" class="outline-4">
+<h4 id="orge429e89">Install with no options</h4>
+<div class="outline-text-4" id="text-orge429e89">
+<div class="org-src-container">
+<pre class="src src-sh">brew install gnuplot
+</pre>
+</div>
+
+<p>
+So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could not be loaded:
+</p>
+
+<blockquote>
+<p>
+qt.qpa.plugin: Could not find the Qt platform plugin "cocoa" in ""
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org46543c1" class="outline-4">
+<h4 id="org46543c1">Debugging</h4>
+<div class="outline-text-4" id="text-org46543c1">
+</div>
+<ul class="org-ul">
+<li><a id="org4fd3615"></a>QT_DEBUG_PLUGINS<br />
+<div class="outline-text-5" id="text-org4fd3615">
+<p>
+Turns out you can get plugin logs using the QT_DEBUG_PLUGINS environment variable:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a71d5d;">export</span> <span style="color: #333333;">QT_DEBUG_PLUGINS</span>=1
+</pre>
+</div>
+
+<blockquote>
+<p>
+QFactoryLoader::QFactoryLoader() checking directory path "/Users/myuser/homebrew/Cellar/gnuplot/5.2.6_1/libexec/gnuplot/5.2/platforms" &#x2026;
+</p>
+</blockquote>
+
+<p>
+This led me to find out about the <i>gnuplot/5.2/gnuplot_qt</i> binary.
+</p>
+</div>
+</li>
+
+<li><a id="org2dcbe02"></a>qt_prfxpath<br />
+<div class="outline-text-5" id="text-org2dcbe02">
+<p>
+Getting the Qt prefix can be done by inspecting QtCore's strings:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">strings /Users/myuser/homebrew/Cellar/qt/5.12.3/Frameworks/QtCore.framework/QtCore | grep qt_prfxpath
+</pre>
+</div>
+
+<pre class="example">
+qt_prfxpath=/usr/local/Cellar/qt/5.12.3
+</pre>
+
+
+<p>
+Ok so qt_prfxpath is pointing to <i>/usr/local/Cellar/qt</i>, while my installation's is at <i>/Users/myuser/homebrew/Cellar/qt</i>. This is problematic and indeed my fault for installing homebrew in <i>/Users/myuser/homebrew</i> instead of the recommended <i>/usr/local</i>.
+</p>
+
+<p>
+Symlinking did the job:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo mkdir -p /usr/local/Cellar
+sudo ln -s ~/homebrew/Cellar/qt /usr/local/Cellar/qt
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">/Users/myuser/homebrew/Cellar/gnuplot/5.2.6_1/libexec/gnuplot/5.2/gnuplot_qt
+</pre>
+</div>
+
+<pre class="example">
+QFactoryLoader::QFactoryLoader() checking directory path "/Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms" ...
+QFactoryLoader::QFactoryLoader() looking at "/Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms/libqcocoa.dylib"
+Found metadata in lib /Users/myuser/homebrew/Cellar/qt/5.12.3/plugins/platforms/libqcocoa.dylib
+</pre>
+
+
+<p>
+Success.
+</p>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
