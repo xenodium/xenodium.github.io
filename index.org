@@ -1,6 +1,29 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-05-21 Tue] Changing MAC address from org mode
+  :PROPERTIES:
+  :CUSTOM_ID: changing-mac-address-from-org-mode
+  :END:
+Via Minko Gechev's [[https://twitter.com/mgechev/status/1130441471105093632?s=12][tweet]]. Saving in an org block, just because...
+
+  #+begin_src sh :dir /sudo::
+    changeMAC() {
+        local mac=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+        ifconfig en0 ether $mac
+        ifconfig en0 down
+        ifconfig en0 up
+        echo "Your new physical address is $mac"
+    }
+
+    changeMAC
+  #+end_src
+
+  #+RESULTS:
+  : Your new physical address is aa:36:ee:d2:ee:66
+
+ps. Also see [[http://xenodium.com/execute-org-blocks-as-root/][Execute org blocks as root]].
+
 * [2019-05-17 Fri] Charting bookmarks
   :PROPERTIES:
   :CUSTOM_ID: charting-bookmarks
@@ -9195,7 +9218,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2019-04-29 Mon]
+[2019-05-20 Mon]
 :END:
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
 - [[http://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][Assigning ids to entries]].
@@ -9212,6 +9235,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://github.com/nikclayton/ob-html-chrome][Export Org HTML SRC blocks as PNG files using Chrome]].
 - [[https://gitlab.com/ambrevar/ambrevar.gitlab.io/blob/master/feed-builder/feed-builder.el][feed-builder/feed-builder.el an org/blog rss implementation]].
 - [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle:  Rifle through your Org buffers and acquire your target]].
+- [[https://www.reddit.com/r/emacs/comments/6mzgkg/how_can_orgbabel_be_configured_to_set_variables/][How can org-babel be configured to set variables across multiple language? (Reddit)]].
 - [[https://www.miskatonic.org/2016/08/25/image-display-size-in-org/][Image display size in Org]].
 - [[http://kelvinh.github.io/wiki/org-mode-manual/][Kevin's org notes]].
 - [[http://howardism.org/Technical/Emacs/literate-devops.html][Literate DevOps with org source blocks (Howardism)]].
@@ -9223,6 +9247,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://fuco1.github.io/2018-12-23-Multiline-fontification-with-org-emphasis-alist.html][Multiline fontification (ie. bold) with org-emphasis-alist]].
 - [[https://joshrollinswrites.com/emacsorg/org-capture-template-1/][My Org Capture Templates - Part 1 &middot; The Art of Not Asking Why]].
 - [[https://joshrollinswrites.com/emacsorg/org-capture-template-3/][My Org Capture Templates - Part 3 &middot; The Art of Not Asking Why]].
+- [[https://github.com/dfeich/org-babel-examples][Org babel examples repo]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[https://writepermission.com/org-blogging-rss-feed.html][Org mode blogging: RSS feed]].
 - [[http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html][Org mode examples and cookbook]].
@@ -9464,6 +9489,8 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 *** Spitafields
 ***** DONE [[https://pickyglutton.com/2016/05/02/som-saa-review-spitalfields/][Som Saa]] (Thai), highly recommended. <2018-12-27 Thu>
 ***** DONE [[https://lahpet.co.uk/][Lahpet]] (Burmese) <2018-12-02 Sun> <2018-12-27 Thu>
+*** Strand
+******* TODO [[https://www.strand-continental.co.uk/india-club][India Club (around for 50 years)]] <2019-05-21 Tue>
 *** Stoke Newingtom
 ******* TODO [[http://www.the-haberdashery.com][The Haberdashery]] (coffee, working).
 *** Tottenham Court Road.
@@ -10924,8 +10951,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2019-04-30 Tue]
+[2019-05-20 Mon]
 :END:
+******* TODO [[https://www.amazon.co.uk/Thinking-Systems-Primer-Diana-Wright/dp/184407725X][Thinking in Systems: A Primer: Amazon.co.uk: Diana Wright, Donella H. Meadows: 9781844077250: Books]].
 ******* TODO [[http://www.lisperati.com/casting-spels-emacs/html/casting-spels-emacs-1.html][Casting SPELs in Lisp (Emacs edition)]].
 ******* TODO [[http://landoflisp.com/][Land of lisp]].
 ******* TODO [[https://www.goodreads.com/book/show/558738.Juggling_for_the_Complete_Klutz][Juggling for the Complete Klutz by John Cassidy]].
@@ -11344,7 +11372,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2019-05-08 Wed]
+[2019-05-20 Mon]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -11418,6 +11446,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/mathiasdahl/emacs-launcher][emacs-launcher: A launcher for programs, files, folders, web pages and other, using Emacs (supersedes anything-launcher)]].
 - [[https://github.com/emacs-lsp/dap-mode#swift][emacs-lsp/dap-mode: Debug Adapter Protocol for Emacs (Swift included)]].
 - [[http://emacslife.com/][Emacslife]].
+- [[https://www.emacswiki.org/emacs/CreatingYourOwnCompileErrorRegexp][EmacsWiki: Creating Your Own Compile Error Regexp]].
 - [[https://github.com/jonnay/emagicians-starter-kit][Emagicians starter kit]].
 - [[http://endlessparentheses.com][Endless parenthesis]].
 - [[http://www.skybert.net/emacs/java/][Enterprise Java Development in Emacs]].
