@@ -1,0 +1,166 @@
+#+PROPERTY: header-args :eval never-export
+
+Org file generating charts based on [[https://www.sundialdreams.com/report-scripts-for-ledger-cli-with-gnuplot/][Report Scripts for Ledger CLI with Gnuplot]] post.
+
+* Setup
+
+#+name: ledger-file
+#+begin_src emacs-lisp
+"my.ledger"
+#+end_src
+
+[[file://plotting-ledger-reports/my.ledger][my.ledger]]
+
+Use png for inline or qt for interactive
+#+name: gnuplot-term
+#+begin_src emacs-lisp
+"png"
+#+end_src
+
+* Monthly Income and Expenses
+
+#+name: income-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -j reg ^Income -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
+#+end_src
+
+#+name: expenses-data
+#+begin_src sh :results table :noweb yes
+  ledger -f <<<ledger-file>>> -j reg ^Expenses -M --collapse
+#+end_src
+
+#+begin_src gnuplot :noweb yes :var myterm=gnuplot-term income=income-data expenses=expenses-data :exports both :file monthly-income-and-expenses.png
+set terminal myterm size 3500,1500
+set style data histogram
+set style histogram clustered gap 1
+set style fill transparent solid 0.4 noborder
+set xtics nomirror scale 0 center
+set ytics add ('' 0) scale 0
+set border 1
+set grid ytics
+set title "Monthly Income and Expenses"
+set ylabel "Amount"
+plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) title "Income" linecolor rgb "light-salmon", '' using 0:2:2 with labels left font "Courier,8" rotate by 15 offset -4,0.5 textcolor linestyle 0 notitle, expenses using 2 title "Expenses" linecolor rgb "light-green", '' using 0:2:2 with labels left font "Courier,8" rotate by 15 offset 0,0.5 textcolor linestyle 0 notitle
+#+end_src
+
+* Monthly food expenses
+
+#+name: monthly-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -j reg Expenses:Food -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
+#+end_src
+
+#+begin_src gnuplot :noweb yes :var mdata=monthly-data :exports both :file monthly.png
+  set terminal <<<gnuplot-term>>> size 3500,1500 persist
+  set style data histogram
+  set style histogram clustered gap 1
+  set style fill transparent solid 0.4 noborder
+  set xtics nomirror scale 0 center
+  set ytics add ('' 0) scale 0
+  set border 1
+  set grid ytics
+  set title "Monthly"
+  set ylabel "Amount"
+  plot mdata using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) notitle linecolor rgb "light-turquoise", '' using 0:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
+#+end_src
+
+* Biggest expenses last month
+
+- Change "bal Expenses" to "bal OtherAccount".
+
+#+name: histogram-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -J bal Expenses --period "last month" --sort="-abs(amount)" --flat --no-total --plot-total-format="%(partial_account(options.flat)) %(abs(quantity(scrub(total))))\n"
+#+end_src
+
+#+begin_src gnuplot :noweb yes :var mdata=histogram-data :exports both :file biggest.png
+  set terminal <<<gnuplot-term>>> size 3500,1500 persist
+  set style data histogram
+  set style histogram clustered gap 1
+  set style fill transparent solid 0.4 noborder
+  set xtics nomirror scale 0 center
+  set ytics add ('' 0) scale 0
+  set border 1
+  set grid ytics
+  set title "Monthly"
+  set ylabel "Amount"
+  plot mdata using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) notitle linecolor rgb "light-turquoise", '' using 0:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
+#+end_src
+
+* Cashflow
+
+#+name: cashflow-income-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -J reg ^Income -M --collapse --plot-total-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_total))))\n"
+#+end_src
+
+#+name: cashflow-expenses-data
+#+begin_src sh :results table :noweb yes
+  ledger -f <<<ledger-file>>> -J reg ^Expenses -M --collapse
+#+end_src
+
+#+name: today-date
+#+begin_src emacs-lisp
+(format-time-string "%Y-%m-%d")
+#+end_src
+
+#+name: yearago-date
+#+begin_src emacs-lisp
+(format "%s-%s-%s" (1- (nth 5 (decode-time (current-time))))
+                   (nth 4 (decode-time (current-time)))
+                   (nth 3 (decode-time (current-time))))
+#+end_src
+
+Grewing gap means wealth should be growing. Look out for narrowing.
+
+Change sdate (start date) and edate (end date).
+
+#+begin_src gnuplot :noweb yes :var income=cashflow-income-data expenses=cashflow-expenses-data sdate=yearago-date edate=today-date :exports both :file cashflow.png
+  set terminal <<<gnuplot-term>>> size 3500,1500 persist
+  set xdata time
+  set timefmt "%Y-%m-%d"
+  set xrange [sdate:edate]
+  set xtics nomirror sdate,2592000 format "%b"
+  unset mxtics
+  set mytics 2
+  set grid xtics ytics mytics
+  set title "Cashflow"
+  set ylabel "Accumulative Income and Expenses"
+  set style fill transparent solid 0.6 noborder
+  plot income using 1:2 with filledcurves x1 title "Income" linecolor rgb "light-salmon", '' using 1:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle, expenses using 1:2 with filledcurves y1=0 title "Expenses" linecolor rgb "seagreen", '' using 1:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
+#+end_src
+
+* Wealth grow
+
+#+name: assets-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -J reg ^Assets -M --collapse
+#+end_src
+
+#+name: liabilities-data
+#+begin_src sh :results table :noweb yes
+  ledger -f <<<ledger-file>>> -J reg ^Liabilities -M --collapse --plot-total-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_total))))\n"
+#+end_src
+
+Change sdate (start date) and edate (end date).
+
+#+begin_src gnuplot :noweb yes :var assets=assets-data liabilities=liabilities-data sdate=yearago-date edate=today-date :exports both :file wealthgrow.png
+  set terminal <<<gnuplot-term>>> size 3500,1500 persist
+  set xdata time
+  set timefmt "%Y-%m-%d"
+  set xrange [sdate:edate]
+  set xtics nomirror sdate,2592000 format "%b"
+  unset mxtics
+  set mytics 2
+  set grid xtics ytics mytics
+  set title "Wealthgrow"
+  set ylabel "Amount"
+  set style fill transparent solid 0.6 noborder
+  plot assets using 1:2 with filledcurves x1 title "Assets" linecolor rgb "goldenrod", '' using 1:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle, liabilities using 1:2 with filledcurves y1=0 title "Liabilities" linecolor rgb "violet", '' using 1:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
+#+end_src
+
+Local Variables:
+org-babel-noweb-wrap-start: "<<<"
+org-babel-noweb-wrap-end: ">>>"
+org-confirm-babel-evaluate: t
+End:
