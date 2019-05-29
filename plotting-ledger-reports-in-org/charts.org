@@ -2,7 +2,9 @@
 
 Org file generating charts based on [[https://www.sundialdreams.com/report-scripts-for-ledger-cli-with-gnuplot/][Report Scripts for Ledger CLI with Gnuplot]] post.
 
-* Setup
+* My ledger file
+
+Save path to [[file:plotting-ledger-reports-in-org/my.ledger][my.ledger]] in /ledger-file/ block.
 
 #+name: ledger-file
 #+begin_src emacs-lisp
@@ -39,9 +41,13 @@ set ytics add ('' 0) scale 0
 set border 1
 set grid ytics
 set title "Monthly Income and Expenses"
+set xtics font ", 30"
 set ylabel "Amount"
-plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) title "Income" linecolor rgb "light-salmon", '' using 0:2:2 with labels left font "Courier,8" rotate by 15 offset -4,0.5 textcolor linestyle 0 notitle, expenses using 2 title "Expenses" linecolor rgb "light-green", '' using 0:2:2 with labels left font "Courier,8" rotate by 15 offset 0,0.5 textcolor linestyle 0 notitle
+plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) title "Income" linecolor rgb "light-salmon", '' using 0:2:2 with labels left font "Courier,25" rotate by 15 offset -4,0.5 textcolor linestyle 0 notitle, expenses using 2 title "Expenses" linecolor rgb "light-green", '' using 0:2:2 with labels left font "Courier,25" rotate by 15 offset 0,0.5 textcolor linestyle 0 notitle
 #+end_src
+
+#+RESULTS:
+[[file:monthly-income-and-expenses.png]]
 
 * Monthly food expenses
 
@@ -56,13 +62,16 @@ plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) 
   set style histogram clustered gap 1
   set style fill transparent solid 0.4 noborder
   set xtics nomirror scale 0 center
-  set ytics add ('' 0) scale 0
+  set ytics add ('' 30) scale 0
   set border 1
   set grid ytics
   set title "Monthly"
   set ylabel "Amount"
   plot mdata using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) notitle linecolor rgb "light-turquoise", '' using 0:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
 #+end_src
+
+#+RESULTS:
+[[file:monthly.png]]
 
 * Biggest expenses last month
 
@@ -79,13 +88,15 @@ plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) 
   set style histogram clustered gap 1
   set style fill transparent solid 0.4 noborder
   set xtics nomirror scale 0 center
-  set ytics add ('' 0) scale 0
   set border 1
   set grid ytics
   set title "Monthly"
   set ylabel "Amount"
   plot mdata using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) notitle linecolor rgb "light-turquoise", '' using 0:2:2 with labels font "Courier,8" offset 0,0.5 textcolor linestyle 0 notitle
 #+end_src
+
+#+RESULTS:
+[[file:biggest.png]]
 
 * Cashflow
 
