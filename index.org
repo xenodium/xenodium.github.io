@@ -1,6 +1,22 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-05-29 Wed] mu4e as macOS mail composer
+  :PROPERTIES:
+  :CUSTOM_ID: mu4e-as-macos-mail-composer
+  :END:
+Via [[https://www.reddit.com/r/emacs/comments/6lh2pp/using_emacs_as_default_mailer_on_macos][Using Emacs as Default Mailer on macOS]], a tiny script to handle mailto: links.
+
+From //Script Editor/, save following script as Application (MailOnEmacs.app). From Mail.app, /Preferences -> Default email reader/ and chosse MailOnEmacs.app.
+
+  #+begin_src applescript
+    on open location myurl
+            tell application "Emacs" to activate
+            set text item delimiters to {":"}
+            do shell script "/path/to/emacsclient --eval '(browse-url-mail \"" & myurl & "\")'"
+    end open location
+  #+end_src
+
 * [2019-05-26 Sun] New sudo user snippet
   :PROPERTIES:
   :CUSTOM_ID: new-sudo-user-snippet
@@ -1886,7 +1902,7 @@ Use pip3 to install ludget:
   :CUSTOM_ID: ledger-bookmarks
   :END:
   :MODIFIED:
-  [2019-05-06 Mon]
+  [2019-05-29 Wed]
   :END:
 - [[https://github.com/adept/full-fledged-hledger]["Full-fledged Hledger" Tutorial (interesting approach with great traceability and regeneration)]].
 - [[https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-stateme][Accounting and financial statements (Khan Academy)]].
@@ -1898,6 +1914,7 @@ Use pip3 to install ludget:
 - [[https://github.com/barrucadu/finances][GitHub - barrucadu/finances: A small tool to visualise my hledger journal.]].
 - [[https://github.com/Clever/csvlint][GitHub - Clever/csvlint: library and command line tool that validates a CSV file]].
 - [[https://www.reddit.com/r/Bitcoin/comments/155gw5/heres_how_you_use_ledger_to_account_for_bitcoin/][Here's how you use ledger to account for Bitcoin transactions]].
+- [[https://pauley.org.za/hledger-flow/][Hledger Flow: Step-By-Step]].
 - [[https://www.reddit.com/r/plaintextaccounting/comments/8b10o0/importing_trans=actions_from_bank/][Importing transactions from bank. : plaintextaccounting (Reddit)]].
 - [[https://devhints.io/ledger][Ledger CLI cheatsheet]].
 - [[https://devhints.io/ledger-csv][Ledger CSV format cheatsheet]].
