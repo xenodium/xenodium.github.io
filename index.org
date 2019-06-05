@@ -1,6 +1,78 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-06-04 Tue] gnu global, ctags, and Emacs setup
+  :PROPERTIES:
+  :CUSTOM_ID: gnu-global-ctags-and-emacs-setup
+  :END:
+Install gnu global (ensure homebrew uses --with-exuberant-ctags flag).
+
+  #+begin_src sh
+    brew install global
+    brew install ctags
+    pip install pygments
+  #+end_src
+
+.ctags
+
+#+begin_src fundamental
+--langdef=swift
+--langmap=swift:.swift
+--regex-swift=/[[:<:]]class[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/c,class/
+--regex-swift=/[[:<:]]enum[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/e,enum/
+--regex-swift=/[[:<:]]func[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/f,function/
+--regex-swift=/[[:<:]]protocol[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/P,protocol/
+--regex-swift=/[[:<:]]struct[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/s,struct/
+--regex-swift=/[[:<:]]typealias[[:>:]][[:space:]]+([[:alnum:]_]+)/\1/t,typealias/
+#+end_src
+
+.globalrc
+
+#+begin_src fundamental
+  default:\
+      :tc=pygments:
+
+  ctags:\
+      :tc=exuberant-ctags:
+
+  exuberant-ctags|plugin-example|setting to use Exuberant Ctags plug-in parser:\
+      :tc=common:\
+      :ctagscom=ctags:\
+      :ctagslib=$libdir/gtags/exuberant-ctags.la:\
+      :langmap=Swift\:.swift:\
+      :gtags_parser=Swift\:$ctagslib:
+
+  pygments:\
+      :tc=pygments-parser:
+
+  pygments-parser|Pygments plug-in parser:\
+      :langmap=Swift\:.swift:\
+      :gtags_parser=Swift\:$pygmentslib:\
+      :langmap=Common-Lisp\:.cl.lisp.el:\
+      :gtags_parser=Common-Lisp\:$pygmentslib:\
+      :langmap=Python\:.py.pyw.sc.tac.sage:\
+      :gtags_parser=Python\:$pygmentslib:\
+      :langmap=Ruby\:.rb.rbw.rake.gemspec.rbx.duby:\
+      :gtags_parser=Ruby\:$pygmentslib:\
+      :langmap=Objective-C++\:.mm.hh:\
+      :gtags_parser=Objective-C++\:$pygmentslib:\
+      :langmap=Objective-C\:.m.h:\
+      :gtags_parser=Objective-C\:$pygmentslib:\
+      :ctagscom=ctags:\
+      :pygmentslib=$libdir/gtags/pygments-parser.la:\
+      :tc=common:
+
+  common:\
+      :skip=build/,HTML/,HTML.pub/,tags,TAGS,ID,y.tab.c,y.tab.h,gtags.files,cscope.files,cscope.out,cscope.po.out,cscope.in.out,SCCS/,RCS/,CVS/,CVSROOT/,{arch}/,autom4te.cache/,*.orig,*.rej,*.bak,*~,#*#,*.swp,*.tmp,*_flymake.*,*_flymake,*.o,*.a,*.so,*.lo,*.zip,*.gz,*.bz2,*.xz,*.lzh,*.Z,*.tgz,*.min.js,*min.css:
+#+end_src
+
+Helpful references
+
+https://github.com/osdakira/dotfiles/blob/395640726d669674496a8035458840f0742e54a5/gtags.conf
+https://github.com/NicholasTD07/dotfiles/blob/e66eb05b408fbcb0d47994fc8a0a79bf438b9e03/.globalrc
+https://github.com/NicholasTD07/dotfiles/blob/master/.ctags
+https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf
+
 * [2019-05-29 Wed] mu4e as macOS mail composer
   :PROPERTIES:
   :CUSTOM_ID: mu4e-as-macos-mail-composer
@@ -5185,6 +5257,7 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :END:
 - [[http://www.janetlansbury.com/2018/07/a-toddlers-do-it-myself-attitude-ends-in-tantrums/][A Toddler's Do-It-Myself Attitude Ends In Tantrums - Janet Lansbury]].
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
+- [[https://news.ycombinator.com/item?id=20069714][Ask HN: I need ideas to impress fifth graders with technology]].
 - [[https://codecombat.com/][CodeCombat - Learn how to code by playing a game]].
 - [[http://blog.growingwithscience.com/][Growing With Science Blog]].
 - [[https://conference.michellegale.com/][Home - Mindful Parenting Online Conference]].
@@ -10528,7 +10601,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: ios-bookmarks
 :END:
 :MODIFIED:
-[2019-05-05 Sun]
+[2019-06-04 Tue]
 :END:
 - [[https://medium.com/ios-apprentice/11-insanely-great-ios-developers-sites-95686a523ea8][11 Insanely Great iOS Developers Sites]].
 - [[https://medium.com/flawless-app-stories/30-great-ui-kits-for-ios-engineers-41b2732896b9][30 great UI Kits for iOS engineers – Flawless App Stories – Medium]].
@@ -10626,6 +10699,7 @@ If FROM or TO is negative, it counts from the end.
 - [[https://developer.apple.com/library/mac/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html][Transitioning to ARC]].
 - [[https://github.com/zh-wang/TwitterGifComposer][Twitter GIF composer]].
 - [[http://masilotti.com/ui-testing-xcode-7/][UI Testing in Xcode 7]].
+- [[https://twitter.com/twostraws/status/1135639902337478656][UIImage has a new initializer, UIImage(systemName:) that takes a string and returns one of over 1500 different system icons.]].
 - [[https://twitter.com/smileyborg/status/1115120700493144065][UITableView and UICollectionView: update your data model *inside* the batch updates block]].
 - [[http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions][Ultimate guide to resolutions]].
 - [[https://itunesconnect.apple.com/docs/UsingApplicationLoader.pdf][Using Application Loader]].
