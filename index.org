@@ -1,6 +1,28 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-07-14 Sun] Thumbnailing pdf page
+  :PROPERTIES:
+  :CUSTOM_ID: thumbnailing-pdf-page
+  :END:
+
+  If you ever need to thumbnail a pdf page, imagemagick has got you covered. For example, to thumbnail page 3, you can use:
+
+  #+begin_src sh :results verbatim
+    convert path/to/input.pdf[2] path/to/output.png
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+convert -resize 10000x10000 path/to/input.pdf[2] path/to/output.png
+convert: FailedToExecuteCommand `'gs' -sstdout=%stderr -dQUIET -dSAFER -dBATCH -dNOPAUSE -dNOPROMPT -dMaxBitmap=500000000 -dAlignToPixels=0 -dGridFitTT=2 '-sDEVICE=pngalpha' -dTextAlphaBits=4 -dGraphicsAlphaBits=4 '-r72x72' -dFirstPage=3 -dLastPage=3 '-sOutputFile=/var/folders/2y/nj_s07ms7l5gfsffh89_79zm0000gn/T/magick-30950xzlPsgqGUwtA%d' '-f/var/folders/2y/nj_s07ms7l5gfsffh89_79zm0000gn/T/magick-30950jpGyui82uGOQ' '-f/var/folders/2y/nj_s07ms7l5gfsffh89_79zm0000gn/T/magick-30950cuDVTNjArshs'' (1) @ error/pdf.c/InvokePDFDelegate/292.
+  #+end_example
+
+However, I had the error above (missing gs), resolved by installing ghostscript.
+
+  #+begin_src sh
+    brew install ghostscript
+  #+end_src
 * [2019-07-12 Fri] Outdoor bookmarks
   :PROPERTIES:
   :CUSTOM_ID: outdoor-bookmarks
@@ -2819,6 +2841,7 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 - [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org][Practical guide to use Gnus with Gmail]].
 - [[http://pragmaticemacs.com/mu4e-tutorials/][Pragmatic Emacs's mu4e tutorials]].
 - [[http://ict4g.net/adolfo/notes/2014/12/27/emacs-imap.html][Reading IMAP Mail in Emacs on OSX]].
+- [[https://vxlabs.com/2019/07/03/send-queued-mails-in-background-with-mu4e/][Sending queued mails in the background with mu4e]].
 - [[https://lars.ingebrigtsen.no/2014/12/01/the-emacs-network-security-manager][The Emacs Network Security Manager]].
 - [[http://tech.memoryimprintstudio.com/the-ultimate-emailing-agent-with-mu4e-and-emacs][The Ultimate Emailing Agent with Mu4e and Emacs]].
 - [[https://www.reddit.com/r/emacs/comments/8q84dl/tip_how_to_easily_manage_your_emails_with_mu4e/][TIP: How to easily manage your emails with mu4e (Reddit)]].
@@ -6310,7 +6333,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: travel-lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2019-06-15 Sat]
+[2019-07-14 Sun]
 :END:
 - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
 - [[https://www.your-rv-lifestyle.com/travel-tips.html][50 Best Travel Tips from 10 Years of Travel - Your RV Lifestyle]].
@@ -6320,6 +6343,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://expertvagabond.com/best-travel-tips/][My 30 Best Travel Tips After 8 Years Traveling The World • Expert Vagabond]].
 - [[https://www.quora.com/My-partner-I-want-to-backpack-around-as-much-of-the-world-as-we-can-for-6-12-months-What-surprises-did-you-learn-on-the-way-I-should-plan-for][My partner & I want to backpack around as much of the world as we can for 6-12 months. What surprises did you learn on the way I should plan for?]].
 - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
+- [[http://www.justanotherbackpacker.com/round-the-world-trip-20172018-the-costs/][Round The World Trip 2017/2018: The Costs - Just Another Backpacker]].
 - [[https://news.ycombinator.com/item?id=11890991][Show HN: I made a database of remote companies (Hacker News)]].
 - [[http://www.tombihn.com][tom bihn bags]].
 - [[http://waveuptravel.com][waveUPtravel]].
@@ -7883,7 +7907,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 :CUSTOM_ID: portugal-travel-bookmarks
 :END:
 :MODIFIED:
-[2019-05-21 Tue]
+[2019-07-14 Sun]
 :END:
 - [[https://duckduckgo.com/?q=avenida+dos+platanos&ia=images][Avenida dos Platanos]].
 - Boca do inferno.
@@ -7909,6 +7933,7 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 - Pena's Pallace (must see if you go to sintra)
 - Pena's Pallace (Sintra).
 - Pensao do Amor (bar).
+- [[https://www.etfoodvoyage.com/category/locations/portugal/][Portugal Archives - ET Food Voyage]].
 - Praça do comercio.
 - Quinta da Regaleira
 - Quinta da Regaleira (Sintra).
@@ -9588,6 +9613,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO [[https://dabbadrop.co.uk][DabbaDrop (Indian delivery subscription)]].
 *** Hammersmith
 ******* DONE [[http://indian-zing.co.uk/][Indian Zing]] (Indian): It was OK (not great).
+******* TODO [[https://www.etfoodvoyage.com/2018/08/24/dragon-cat-cafe/][Dragon cat cafe]] (bubble tea and wheel cake). <2019-07-14 Sun>
 *** Hamstead
 ******* TODO [[http://www.jinkichi.com/][Jin Kichi]] (Japanese).
 *** Harrow
@@ -9607,6 +9633,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO [[http://www.thepigandbutcher.co.uk/][The pig and butcher]] (sunday roast).
 ******* TODO [[http://busanbbq.co.uk][Busan BBQ]] (Korean meets American diner/burgers and fried chicken).
 ******* TODO [[https://smokehouseislington.co.uk/][Smokehouse Islington]].
+******* TODO [[https://www.etfoodvoyage.com/2019/02/19/katsute-100/][Katsuke 100]] (Japanese tea/cake room). <2019-07-14 Sun>
 *** Kensington
 ******* TODO Clarke's, try the burger.
 *** Kensal Green
@@ -9618,6 +9645,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO [[http://www.germangymnasium.com/][German Gymnasium]].
 ******* DONE [[http://starofkings.co.uk/food-and-drink/][Yeah! Burger at Star of Kings]].
 ******* TODO [[http://www.wingwing.co.uk/][Wing Wing (Korean fried chicken)]]s.
+******* TODO [[https://www.etfoodvoyage.com/2018/08/31/sambal-shiok-has-a-permanent-home][Sambal Shiok]] known for laksa and satai burger. <2019-07-14 Sun>
 *** Leicester square
 ******* [[https://ichibanya.uk/][Curry House Ichibanya UK Japanese Restaurant London WC2H]] <2019-03-12 Tue>.
 *** Leytonstone
@@ -9658,6 +9686,9 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 ******* TODO [[https://www.ica.art/rochelle-canteen][Rochelle Canteen @ The Institute of Contemporary Arts (ICA)]] (Pie and ping Sunday special) <2019-02-12 Tue>
 *** Putney
 ******* TODO [[https://www.tripadvisor.co.uk/ShowUserReviews-g186338-d807103-r176708451-Tomoe-London_England.html][authentic Japanese restaurant in Putney - Tomoe, London Traveller Reviews - TripAdvisor]].
+*** Sheppherds bush
+******* TODO [[https://www.etfoodvoyage.com/2017/09/03/caco-co/][Caco & Co]] (Portuguese cafe). <2019-07-14 Sun>
+******* TODO [[https://www.etfoodvoyage.com/2017/03/17/chop-chop-noodle-bar/][Chop chop]] (Noodle bar). <2019-07-14 Sun>
 *** Shoreditch
 ******* TODO [[http://mastbrothers.com/pages/london][Mast Brothers chocolate makers]].
 ******* TODO [[http://www.sagardi.co.uk/en/][Sagardi]] (basque).
@@ -9955,7 +9986,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2019-07-06 Sat]
+[2019-07-13 Sat]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -10031,6 +10062,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://gumroad.com][Gumroad. Helps creators sell, generate digital licenses, grow audiences, etc]].
 - [[https://news.ycombinator.com/item?id=9865338][HN: Things to Know When Making a Web Application in 2015]].
 - [[http://kukuruku.co/hub/ios/how-i-got-to-the-app-store-top-with-a-simple-currency-app][How I got to the app store top with a simple currency app]].
+- [[https://blog.usejournal.com/how-i-made-8-000-per-month-podcasting-and-why-you-probably-dont-want-to-855966a557aa?gi=58d80835cfc8][How I Made $8,000 per Month Podcasting, and Why You Probably Don’t Want To]].
 - [[http://www.sentia.com.au/blog/how-much-does-it-cost-to-build-an-app][How much does it cost to build an app? (Sentia Blog)]].
 - [[https://news.ycombinator.com/item?id=18490437][How to Acquire Your First 100 Customers (Hacker News)]].
 - [[http://bulgerpartners.com/how-to-be-prepared-for-technical-due-diligence-what-to-anticipate-and-how-to-excel/][How to Be Prepared for Technical Due Diligence: What to Anticipate and How to Excel]].
@@ -10067,6 +10099,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://blog.fogcreek.com/how-to-onboard-software-engineers-interview-with-kate-heddleston/][Onboarding engineers]].
 - [[https://onesignal.com/][OneSignal]].
 - [[https://www.crowdcube.com/][Online investing, equity crowdfunding, business finance : Crowdcube]].
+- [[https://gusto.com/][Online Payroll Services, HR, and Benefits | Gusto]].
 - [[https://www.openhunt.co/][Open Hunt: an open and community-run alternative to Product Hunt.]].
 - [[http://serverfault.com/questions/219620/which-is-the-best-webserver-for-serving-static-content-and-load-balancing][Options to serve static content]].
 - [[https://medium.com/@sgblank/organizational-debt-is-like-technical-debt-but-worse-3c0c86eae3eb][Organizational Debt is Like Technical debt — But Worse]].
@@ -10184,6 +10217,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.mullvad.net/en/guides/first-steps-towards-online-privacy/][Change your online habits - Guides | Mullvad VPN]].
 - [[https://crypt.ee][Cryptee (Private, Secure, Encrypted Documents & Photos)]].
 - [[https://dbp.io/essays/2013-06-29-hackers-replacement-for-gmail.html][dbp.io :: A Hacker's Replacement for GMail]].
+- [[https://nrempel.com/de-googling-my-life/][De-Googling My Life]].
 - [[http://digital-era.net/][Digital Era]].
 - [[https://www.dnsleaktest.com][DNS leak test]].
 - [[https://doesmysiteneedhttps.com/][Does my site need HTTPS?]].
@@ -10659,6 +10693,8 @@ If FROM or TO is negative, it counts from the end.
 - [[http://phonegap-tips.com/articles/debugging-ios-phonegap-apps-with-safaris-web-inspector.html][Access mobile Safari via web inspector]].
 - [[https://developer.apple.com/library/ios/technotes/tn2259/_index.html][Adding in-app purchase]].
 - [[http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/][An @import-ant Change in Xcode]].
+- [[https://developer.apple.com/documentation/mapkit/mkgeojsondecoder][An object that decodes GeoJSON objects into MapKit types]].
+- [[https://developer.apple.com/documentation/imageio/3333271-cganimateimageaturlwithblock][Animated Gifs with CGAnimateImageAtURLWithBlock]].
 - [[https://developer.apple.com/library/ios/documentation/General/Conceptual/DevPedia-CocoaCore/AppID.html][App IDs]].
 - [[https://devimages.apple.com.edgekey.net/app-store/review/guidelines/App-Review-Guidelines-The-Comic-Book.pdf][App review guidelines (comic book)]].
 - [[https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010810-CH1-SW1][Apple docs]].
@@ -10677,9 +10713,12 @@ If FROM or TO is negative, it counts from the end.
 - [[http://codepilot.cc][Code pilot]].
 - [[https://www.codeschool.com/paths/ios][Code School iOS courses]].
 - [[http://componentkit.org/][ComponentKit is an Objective-C++ view framework for iOS that is heavily inspired by React]].
+- [[https://github.com/ethanhuang13/NSAttributedStringBuilder][Composing NSAttributedString with SwiftUI-style syntax]].
+- [[https://developer.apple.com/documentation/foundation/nsdata/3174960-compressed][Compressing data with Foundation APIs]].
 - [[http://www.cakesolutions.net/teamblogs/2014/03/08/cmsamplebufferref-from-cgimageref][Create a CMSampleBufferRef from CGImageRef]].
 - [[https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide/Chapters/CreatingiTunesConnectRecord.html][Creating iTunes Connect Record]].
 - [[https://github.com/facebook/css-layout][css-layout: Facebook's layout transpiled to C, Java and C#]].
+- [[https://developer.apple.com/documentation/security/password_autofill/customizing_password_autofill_rules][Customizing Password AutoFill Rules]].
 - [[http://www.davemark.com/?p=1829][DaveLots of iOS resources]].
 - [[https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/UsingTextClasses/UsingTextClasses.html][Displaying Text Content in iOS]].
 - [[https://cocoapods.org/pods/DJKFlipper][DJKFlipper]].
@@ -11602,7 +11641,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2019-07-10 Wed]
+[2019-07-14 Sun]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -11820,6 +11859,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://emacs.readthedocs.io/en/latest/][Yi Tang's road to emacs documentation on readthedocs.io]].
 - [[https://yoo2080.wordpress.com/category/emacs/][Yoo Box's Emacs category]].
 - [[http://ericscrosson.wordpress.com][Zen in the Art of Emacs]].
+- [[http://akrl.sdf.org/][‎The Emacs Garbage Collection Magic Hack]].
 
 * [2014-09-11 Thu] Resetting gnome-terminal preferences
 :PROPERTIES:
