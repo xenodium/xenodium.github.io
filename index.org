@@ -103,6 +103,23 @@ Install gnu global (ensure homebrew uses --with-exuberant-ctags flag).
       :skip=build/,HTML/,HTML.pub/,tags,TAGS,ID,y.tab.c,y.tab.h,gtags.files,cscope.files,cscope.out,cscope.po.out,cscope.in.out,SCCS/,RCS/,CVS/,CVSROOT/,{arch}/,autom4te.cache/,*.orig,*.rej,*.bak,*~,#*#,*.swp,*.tmp,*_flymake.*,*_flymake,*.o,*.a,*.so,*.lo,*.zip,*.gz,*.bz2,*.xz,*.lzh,*.Z,*.tgz,*.min.js,*min.css:
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package counsel-gtags
+    :ensure t
+    :commands counsel-gtags-mode
+    :bind (:map
+           counsel-gtags-mode-map
+           ("M-." . counsel-gtags-dwim)
+           ("M-," . counsel-gtags-go-backward))
+    :hook ((swift-mode . counsel-gtags-mode)
+           (swift-mode . ggtags-mode)))
+
+  ;; Needs .ctags and .globalrc in $HOME.
+  (use-package ggtags
+    :ensure t
+    :commands ggtags-mode)
+#+end_src
+
 Helpful references
 
 https://github.com/osdakira/dotfiles/blob/395640726d669674496a8035458840f0742e54a5/gtags.conf
@@ -131,7 +148,7 @@ From //Script Editor/, save following script as Application (MailOnEmacs.app). F
   :PROPERTIES:
   :CUSTOM_ID: new-sudo-user-snippet
   :END:
-Don't do add linux users frequently enough, but always end up looking it up.
+I don't add linux sudoers frequently enough. Always looking it up. Keeping snippet.
 #+begin_src sh
   adduser -m -d /home/<username> <username>
   passwd <username>
