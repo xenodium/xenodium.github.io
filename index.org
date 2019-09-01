@@ -1,6 +1,20 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-09-01 Sun] Speeding up Emacs tramp via ControlMaster
+  :PROPERTIES:
+  :CUSTOM_ID: speeding-up-emacs-tramp-via-controlmaster
+  :END:
+Via [[https://gist.github.com/ralt/a36288cd748ce185b26237e6b85b27bb][Florian Margaine's Eshell config]], I discovered ssh's [[https://man.openbsd.org/ssh_config#ControlMaster][ControlMaster]]. It enables sharing multiple sessions over a single network connection. This has the benefit of speeding up Emacs TRAMP.
+
+In your ~/.ssh/config add:
+
+#+begin_src fundamental
+  Host *
+      ControlPath ~/.ssh/master-%h:%p
+      ControlMaster auto
+      ControlPersist 10m
+#+end_src
 * [2019-09-01 Sun] csv bookmarks
   :PROPERTIES:
   :CUSTOM_ID: csv-bookmarks
@@ -7985,10 +7999,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 :MODIFIED:
 [2019-08-10 Sat]
 :END:
-* TODO [[https://www.amazon.com/Altered-Traits-Science-Reveals-Meditation/dp/0399184384][Altered Traits: Science Reveals How Meditation Changes Your Mind]].- [[https://elpa.gnu.org/packages/path-iterator.html][An iterator for traversing a directory path]].
-  :MODIFIED:
-  [2019-08-11 Sun]
-  :END:
 - [[https://www.quora.com/As-a-Dermatologist-what-life-changing-skin-care-advice-would-you-give-me][As a Dermatologist, what life changing skin care advice would you give me?]].
 - [[https://duckduckgo.com/?q=avenida+dos+platanos&ia=images][Avenida dos Platanos]].
 - [[https://brunoamaral.eu/page/beautiful-lisbon/][Beautiful Lisbon]].
@@ -11326,8 +11336,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2019-08-18 Sun]
+[2019-09-01 Sun]
 :END:
+******* TODO [[https://www.amazon.com/Altered-Traits-Science-Reveals-Meditation/dp/0399184384][Altered Traits: Science Reveals How Meditation Changes Your Mind, Brain, and Body]].
 ******* TODO [[https://www.amazon.com/Junk-Food-Japan-Addictive-Kurobuta/dp/1472919920][Junk Food Japan: Addictive Food from Kurobuta]].
 ******* TODO [[https://news.ycombinator.com/item?id=20332455][Ask HN: Recommend one book I need to read this summer?]].
 ******* TODO I am a cat (Soseki Natsume).
@@ -11686,7 +11697,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2019-06-10 Mon]
+[2019-09-01 Sun]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -11695,6 +11706,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/alphapapa/emacs-package-dev-handbook][alphapapa's The Emacs Package Developer’s Handbook]].
 - [[https://nullprogram.com/blog/2019/03/10/][An Async / Await Library for Emacs Lisp « null program]].
 - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
+- [[https://elpa.gnu.org/packages/path-iterator.html][An iterator for traversing a directory path]].
 - [[http://caiorss.github.io/Emacs-Elisp-Programming/Elisp_Snippets.html][Caio Rordrigues's Elisp Snippets]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
 - [[http://www.emacswiki.org/emacs/ElDoc][eldoc-mode]].

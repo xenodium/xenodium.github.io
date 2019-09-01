@@ -6,7 +6,53 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 31 Aug 2019 18:34:56 +0100</lastBuildDate>
+<lastBuildDate>Sun, 01 Sep 2019 15:13:35 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>csv bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org2f51c19" class="outline-2">
+ <h2 id="csv-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">01 September 2019</span></span> csv bookmarks</h2>
+ <div class="outline-text-2" id="text-csv-bookmarks">
+ <dl class="org-dl"> <dt>[[ <a href="https://haveagooddata.net/posts/why-you-dont-want-to-use-csv-files/">https://haveagooddata.net/posts/why-you-dont-want-to-use-csv-files/</a>][Why You Don't Want to Use CSV Files</dt> <dd>Have a good data]].</dd>
+</dl></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/csv-bookmarks/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/csv-bookmarks/index.html</guid>
+  <pubDate>Sun, 01 Sep 2019 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Speeding up Emacs tramp via ControlMaster</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-orgde982b8" class="outline-2">
+ <h2 id="speeding-up-emacs-tramp-via-controlmaster"> <span class="timestamp-wrapper"> <span class="timestamp">01 September 2019</span></span> Speeding up Emacs tramp via ControlMaster</h2>
+ <div class="outline-text-2" id="text-speeding-up-emacs-tramp-via-controlmaster">
+ <p>
+Via  <a href="https://gist.github.com/ralt/a36288cd748ce185b26237e6b85b27bb">Florian Margaine's Eshell config</a>, I discovered ssh's  <a href="https://man.openbsd.org/ssh_config#ControlMaster">ControlMaster</a>. It enables sharing multiple sessions over a single network connection. This has the benefit of speeding up Emacs TRAMP.
+</p>
+
+ <p>
+In your ~/.ssh/config add:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-fundamental">Host *
+    ControlPath ~/.ssh/master-%h:%p
+    ControlMaster auto
+    ControlPersist 10m
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/index.html</guid>
+  <pubDate>Sun, 01 Sep 2019 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Slovakia travel bookmarks</title>
@@ -97,7 +143,7 @@ However, I had the error above (missing gs), resolved by installing ghostscript.
   <title>gnu global, ctags, and Emacs setup</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orga316a94" class="outline-2">
+ <div id="outline-container-orgdc4d582" class="outline-2">
  <h2 id="gnu-global-ctags-and-emacs-setup"> <span class="timestamp-wrapper"> <span class="timestamp">04 June 2019</span></span> gnu global, ctags, and Emacs setup</h2>
  <div class="outline-text-2" id="text-gnu-global-ctags-and-emacs-setup">
  <p>
@@ -170,6 +216,24 @@ common:\
 </pre>
 </div>
 
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">counsel-gtags</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:commands</span> counsel-gtags-mode
+   <span style="color: #a71d5d;">:bind</span> ( <span style="color: #a71d5d;">:map</span>
+         counsel-gtags-mode-map
+         ( <span style="color: #183691;">"M-."</span> . counsel-gtags-dwim)
+         ( <span style="color: #183691;">"M-,"</span> . counsel-gtags-go-backward))
+   <span style="color: #a71d5d;">:hook</span> ((swift-mode . counsel-gtags-mode)
+         (swift-mode . ggtags-mode)))
+
+ <span style="color: #969896;">;; </span> <span style="color: #969896;">Needs .ctags and .globalrc in $HOME.</span>
+( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">ggtags</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:commands</span> ggtags-mode)
+</pre>
+</div>
+
  <p>
 Helpful references
 </p>
@@ -224,11 +288,11 @@ From  <i>/Script Editor</i>, save following script as Application (MailOnEmacs.a
   <title>New sudo user snippet</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org47a62f3" class="outline-2">
+ <div id="outline-container-org71e5011" class="outline-2">
  <h2 id="new-sudo-user-snippet"> <span class="timestamp-wrapper"> <span class="timestamp">26 May 2019</span></span> New sudo user snippet</h2>
  <div class="outline-text-2" id="text-new-sudo-user-snippet">
  <p>
-Don't do add linux users frequently enough, but always end up looking it up.
+I don't add linux sudoers frequently enough. Always looking it up. Keeping snippet.
 </p>
  <div class="org-src-container">
  <pre class="src src-sh">adduser -m -d /home/<username> <username>
