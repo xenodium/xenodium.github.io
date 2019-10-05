@@ -1,6 +1,32 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-10-05 Sat] Show/hide Emacs dired details in style
+  :PROPERTIES:
+  :CUSTOM_ID: showhide-emacs-dired-details-in-style
+  :END:
+Emacs [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] is a powerful directory browser/editor. By default, it shows lots of handy file and directory details.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/showhide-emacs-dired-details-in-style/dired.png]]
+
+I typically prefer hiding file and directory details until I need them. The built-in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html][dired-hide-details-mode]] makes this easy with the "(" key toggle. Coupled with [[https://github.com/purcell/diredfl][diredfl]] (for coloring), it strikes a great user experience.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/showhide-emacs-dired-details-in-style/diredfl.gif]]
+
+With a short snippet, you can also show/hide dired details in style:
+
+  #+begin_src emacs-lisp
+    (use-package dired
+      :hook (dired-mode . dired-hide-details-mode)
+      :config
+      ;; Colourful columns.
+      (use-package diredfl
+        :ensure t
+        :config
+        (diredfl-global-mode 1)))
+  #+end_src
 * [2019-09-29 Sun] Bulk buying bookmarks
   :PROPERTIES:
   :CUSTOM_ID: bulk-buying-bookmarks
@@ -789,11 +815,12 @@ Wrote a little elisp to do a similar thing using the clipboard via Emacs:
   :CUSTOM_ID: icons-bookmarks
   :END:
   :MODIFIED:
-  [2019-09-22 Sun]
+  [2019-10-04 Fri]
   :END:
 - [[https://news.ycombinator.com/item?id=21039739][Absurd Design – Free Surrealist Illustrations and Vector Art (Hacker News)]].
 - [[http://compute.vision/nouns/index.html][Find Similar Icons (using Noun Project)]].
 - [[https://thenounproject.com/][Noun Project - Icons for Everything]].
+- [[https://t.co/ttqvpky3Te][shape.so icons]].
 - [[https://streamlineicons.com/][Streamline 3.0 – The World's Largest Icon Library]].
 * [2019-01-27 Sun] Salt beef recipe
   :PROPERTIES:
@@ -9578,7 +9605,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2019-09-28 Sat]
+[2019-10-01 Tue]
 :END:
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
 - [[https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html][An Agenda for Life With Org Mode]].
@@ -9591,8 +9618,10 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://gitlab.com/sadiq/sadiq.gitlab.io/blob/master/src/blog-atom.sh][Creating org atom xml feed with blog-atom.sh]].
 - [[https://github.com/philipphoman/org-mode-poster][Creating scientific posters with org-mode]].
 - [[https://github.com/dfeich/org-babel-examples/blob/master/README.org][dfeich/org-babel-examples (GitHub)]].
+- [[https://github.com/dfeich/org-babel-examples/blob/master/README.org][Dfeich’s Org-babel, org-exporter, org-table example collection]].
 - [[http://correl.phoenixinquis.net/2015/07/12/git-graphs.html][Drawing Git Graphs with Graphviz and Org-Mode]].
 - [[http://ergoemacs.org/emacs/elisp_parse_org_mode.html][Elisp: Parse Org Mode (API examples by Xah Lee)]].
+- [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][Emacs org-mode examples and cookbook]].
 - [[https://github.com/nikclayton/ob-html-chrome][Export Org HTML SRC blocks as PNG files using Chrome]].
 - [[https://gitlab.com/ambrevar/ambrevar.gitlab.io/blob/master/feed-builder/feed-builder.el][feed-builder/feed-builder.el an org/blog rss implementation]].
 - [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle:  Rifle through your Org buffers and acquire your target]].
@@ -10482,7 +10511,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: golang-bookmarks
 :END:
 :MODIFIED:
-[2019-08-12 Mon]
+[2019-10-01 Tue]
 :END:
 - [[http://spf13.com/presentation/7-common-mistakes-in-go-2015/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+spf13+%28Steve+Francia%27s+Blog%29][7 Common mistakes in Go]].
 - [[https://github.com/mingrammer/commonregex][A collection of common regular expressions for Go]].
@@ -10529,6 +10558,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://gotalks.googleplex.com/codelab/flag.article][Go command Line Flags]].
 - [[http://blog.golang.org/pipelines][Go Concurrency Patterns: Pipelines and cancellation]].
 - [[https://github.com/grpc/grpc-go/tree/master/examples/features/authentication][Go grpc authentication]].
+- [[https://timr.co/go-interfaces-the-tricky-parts][Go interfaces, the tricky parts]].
 - [[https://github.com/otium/ytdl][Go library for downloading YouTube videos]].
 - [[https://github.com/alecthomas/gometalinter][Go Meta Linter]].
 - [[http://www.gregosuri.com/2015/12/04/go-proverbs-illustrated/][Go Proverbs Illustrated]].
@@ -12209,7 +12239,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: html5-bookmarks
 :END:
 :MODIFIED:
-[2019-08-26 Mon]
+[2019-10-01 Tue]
 :END:
 - [[https://hacks.mozilla.org/2016/08/a-few-html-tips/][A few HTML tips (Mozilla)]].
 - [[http://bettermotherfuckingwebsite.com/][Better Motherfucking Website]].
@@ -12218,6 +12248,8 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://blog.chromium.org/2014/06/web-fundamentals-and-web-starter-kit.html][Chromium's web fundamentals and Web Starter Kit]].
 - [[https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_cookbook][CSS Layout cookbook - CSS: Cascading Style Sheets (MDN)]].
 - [[https://www.pandastrike.com/posts/20151015-rest-vs-relay][Facebook Relay: An Evil And/Or Incompetent Attack On REST]].
+- [[https://htmlhead.dev/][HEAD - A free guide to <head> elements]].
+- [[https://news.ycombinator.com/item?id=21119553][HEAD – A guide to <head> elements (Hacker News)]].
 - [[http://blog.ustunozgur.com/javascript/programming/books/videos/2015/06/17/how_to_be_a_great_javascript_software_developer.html][How to Become a Great JavaScript Developer]].
 - [[http://www.fse.guru/how-to-pick-a-frontend-web-framework][How To Pick a Frontend Web Framework]].
 - [[https://developer.mozilla.org/en-US/Learn][Learning the Web (mozilla.org)]].
