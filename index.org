@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-10-06 Sun] Rewriting dates with Emacs multiple cursors
+  :PROPERTIES:
+  :CUSTOM_ID: rewriting-dates-with-emacs-multiple-cursors
+  :END:
+  Needed to rewrite the date format in a couple of csv columns. Emacs multiple cursors helps here, but needed a function to parse and reformat the dates themselves.
+
+  I can likely reformat dates using the built-in /parse-time-string/ and /format-time-string/ functions, but hey why not give the [[https://github.com/alphapapa/ts.el][ts.el]] library a try...
+
+#+begin_src emacs-lisp
+  (defun ar/region-to-timestamp ()
+    "Convert date like \"29 Apr 2019\" to \"2019-04-29\"."
+    (interactive)
+    (let ((date (ts-parse (buffer-substring
+                           (region-beginning)
+                           (region-end)))))
+      (delete-region (region-beginning)
+                     (region-end))
+      (insert (ts-format "%Y-%m-%d" date))))
+#+end_src
+
+Bound the new function to a temporary keybinding, so I can invoke from multiple cursors:
+
+#+begin_src emacs-lisp
+  (bind-key "M-q" #'ar/region-to-timestamp)
+#+end_src
+
+and voila!
+
+#+ATTR_HTML: :width 40% :height 40%
+[[file:images/rewriting-dates-with-emacs-multiple-cursors/ts.gif]]
+
 * [2019-10-05 Sat] Show/hide Emacs dired details in style
   :PROPERTIES:
   :CUSTOM_ID: showhide-emacs-dired-details-in-style
@@ -9059,7 +9090,7 @@ Note to self. Open with Alt-f2.
 :CUSTOM_ID: emacs-init.el-bookmarks
 :END:
 :MODIFIED:
-[2019-05-22 Wed]
+[2019-10-06 Sun]
 :END:
 - [[https://github.com/daschwa/emacs.d][Adam Schwartz's init]].
 - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
@@ -9083,6 +9114,7 @@ Note to self. Open with Alt-f2.
 - [[http://www.john2x.com/emacs.html][John's Emacs Config (mu4e and ledger usage)]].
 - [[https://justin.abrah.ms/dotfiles/emacs.html][Justin Abrahms: My Emacs Configuration]].
 - [[https://ladicle.com/post/config/][Ladicle's Emacs Configuration]].
+- [[https://github.com/MatthewZMD/.emacs.d#lsp][M-EMACS's lsp config]].
 - [[https://github.com/msparks/dotfiles/blob/master/.emacs][Mark Sparks's init.el]].
 - [[https://github.com/CQQL/dotfiles/blob/master/src/.emacs.d/init.el][Marten Lienen's init.el]].
 - [[http://writequit.org/org/settings.html][Mathew Lee Hinman's Emacs settings file]].

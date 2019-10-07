@@ -6,13 +6,66 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 05 Oct 2019 14:09:08 +0100</lastBuildDate>
+<lastBuildDate>Mon, 07 Oct 2019 08:31:39 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Rewriting dates with Emacs multiple cursors</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org2bb2167" class="outline-2">
+ <h2 id="rewriting-dates-with-emacs-multiple-cursors"> <span class="timestamp-wrapper"> <span class="timestamp">06 October 2019</span></span> Rewriting dates with Emacs multiple cursors</h2>
+ <div class="outline-text-2" id="text-rewriting-dates-with-emacs-multiple-cursors">
+ <p>
+Needed to rewrite the date format in a couple of csv columns. Emacs multiple cursors helps here, but needed a function to parse and reformat the dates themselves.
+</p>
+
+ <p>
+I can likely reformat dates using the built-in  <i>parse-time-string</i> and  <i>format-time-string</i> functions, but hey why not give the  <a href="https://github.com/alphapapa/ts.el">ts.el</a> library a try…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/region-to-timestamp</span> ()
+   <span style="color: #183691;">"Convert date like \"29 Apr 2019\" to \"2019-04-29\"."</span>
+  ( <span style="color: #a71d5d;">interactive</span>)
+  ( <span style="color: #a71d5d;">let</span> ((date (ts-parse (buffer-substring
+                         (region-beginning)
+                         (region-end)))))
+    (delete-region (region-beginning)
+                   (region-end))
+    (insert (ts-format  <span style="color: #183691;">"%Y-%m-%d"</span> date))))
+</pre>
+</div>
+
+ <p>
+Bound the new function to a temporary keybinding, so I can invoke from multiple cursors:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">bind-key</span>  <span style="color: #183691;">"M-q"</span> #'ar/region-to-timestamp)
+</pre>
+</div>
+
+ <p>
+and voila!
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/rewriting-dates-with-emacs-multiple-cursors/ts.gif" alt="ts.gif" width="40%" height="40%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/rewriting-dates-with-emacs-multiple-cursors/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/rewriting-dates-with-emacs-multiple-cursors/index.html</guid>
+  <pubDate>Sun, 06 Oct 2019 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Show/hide Emacs dired details in style</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org4d25c2c" class="outline-2">
+ <div id="outline-container-org77b91c2" class="outline-2">
  <h2 id="showhide-emacs-dired-details-in-style"> <span class="timestamp-wrapper"> <span class="timestamp">05 October 2019</span></span> Show/hide Emacs dired details in style</h2>
  <div class="outline-text-2" id="text-showhide-emacs-dired-details-in-style">
  <p>
@@ -46,6 +99,27 @@ With a short snippet, you can also show/hide dired details in style:
      <span style="color: #a71d5d;">:ensure</span> t
      <span style="color: #a71d5d;">:config</span>
     (diredfl-global-mode 1)))
+</pre>
+</div>
+
+ <p>
+ <b>UPDATE:</b> Thanks to  <a href="https://twitter.com/dmartincy">Daniel Martín</a>, who  <a href="https://twitter.com/dmartincy/status/1180512330288975872">pointed me</a> to  <a href="https://github.com/clemera/dired-git-info">dired-git-info</a>. This package adds git logs to dired file and directory details.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/showhide-emacs-dired-details-in-style/dired-git-info.gif" alt="dired-git-info.gif" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+Binding  <i>dired-git-info-mode</i> to ")" is a nice complement to  <i>dired-hide-details-mode</i>'s "(" binding.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">dired-git-info</span>
+     <span style="color: #a71d5d;">:ensure</span> t
+     <span style="color: #a71d5d;">:bind</span> ( <span style="color: #a71d5d;">:map</span> dired-mode-map
+                ( <span style="color: #183691;">")"</span> . dired-git-info-mode)))
 </pre>
 </div>
 </div>
