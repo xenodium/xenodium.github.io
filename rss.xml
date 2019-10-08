@@ -6,7 +6,78 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 07 Oct 2019 08:31:39 +0100</lastBuildDate>
+<lastBuildDate>Tue, 08 Oct 2019 09:20:58 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Spam blacklisting with Emacs org babel</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org0e17258" class="outline-2">
+ <h2 id="spam-blacklisting-with-emacs-org-babel"> <span class="timestamp-wrapper"> <span class="timestamp">08 October 2019</span></span> Spam blacklisting with Emacs org babel</h2>
+ <div class="outline-text-2" id="text-spam-blacklisting-with-emacs-org-babel">
+ <p>
+Some email provider accept regular expressions to blacklist additional spam. My blacklist is long and tedious to update, but hey… Emacs org babel can simplify things here.
+</p>
+
+ <p>
+It's way easier to maintain a blacklist (with no regex) using an org table.
+</p>
+</div>
+
+ <div id="outline-container-org8faeb73" class="outline-3">
+ <h3 id="org8faeb73">Blacklist</h3>
+ <div class="outline-text-3" id="text-org8faeb73">
+ <div class="org-src-container">
+ <pre class="src src-org">#+name: spam-entries
+| dodgyfella@hotmail.com |
+| henryzeespammer.com    |
+| yumspam.com            |
+</pre>
+</div>
+
+ <p>
+and subsequently use org babel (elisp snippet) to generate the regex.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org66e7bce" class="outline-3">
+ <h3 id="org66e7bce">Regex gen</h3>
+ <div class="outline-text-3" id="text-org66e7bce">
+ <div class="org-src-container">
+ <pre class="src src-org">#+begin_src emacs-lisp :var entries=spam-entries
+  (require 's)
+
+  (concat
+   "^"
+   (s-join "|" (mapcar (lambda (row)
+                         (let ((entry (regexp-quote
+                                       (s-trim (nth 0 row)))))
+                           (assert (s-present? entry))
+                           (if (s-contains-p "@" entry)
+                               (format "(%s)" entry)
+                             (format "(.*@%s)" entry))))
+                       entries))
+   "$")
+#+end_src
+
+#+RESULTS:
+: ^(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
+</pre>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/spam-blacklisting-with-emacs-org-babel/blacklist.png" alt="blacklist.png" width="75%" height="75%"></img></p>
+</div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/spam-blacklisting-with-emacs-org-babel/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/spam-blacklisting-with-emacs-org-babel/index.html</guid>
+  <pubDate>Tue, 08 Oct 2019 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Rewriting dates with Emacs multiple cursors</title>

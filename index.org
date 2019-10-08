@@ -1,6 +1,49 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-10-08 Tue] Spam blacklisting with Emacs org babel
+  :PROPERTIES:
+  :CUSTOM_ID: spam-blacklisting-with-emacs-org-babel
+  :END:
+Some email provider accept regular expressions to blacklist additional spam. My blacklist is long and tedious to update, but hey... Emacs org babel can simplify things here.
+
+It's way easier to maintain a blacklist (with no regex) using an org table.
+
+*** Blacklist
+  #+begin_src org :exports src
+  ,#+name: spam-entries
+  | dodgyfella@hotmail.com |
+  | henryzeespammer.com    |
+  | yumspam.com            |
+  #+end_src
+
+and subsequently use org babel (elisp snippet) to generate the regex.
+
+*** Regex gen
+  #+begin_src org :exports src
+  ,#+begin_src emacs-lisp :var entries=spam-entries
+    (require 's)
+
+    (concat
+     "^"
+     (s-join "|" (mapcar (lambda (row)
+                           (let ((entry (regexp-quote
+                                         (s-trim (nth 0 row)))))
+                             (assert (s-present? entry))
+                             (if (s-contains-p "@" entry)
+                                 (format "(%s)" entry)
+                               (format "(.*@%s)" entry))))
+                         entries))
+     "$")
+  ,#+end_src
+
+  ,#+RESULTS:
+  : ^(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
+  #+end_src
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/spam-blacklisting-with-emacs-org-babel/blacklist.png]]
+
 * [2019-10-06 Sun] Rewriting dates with Emacs multiple cursors
   :PROPERTIES:
   :CUSTOM_ID: rewriting-dates-with-emacs-multiple-cursors
@@ -1881,11 +1924,12 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   :CUSTOM_ID: macos-app-bookmarks
   :END:
   :MODIFIED:
-  [2019-09-29 Sun]
+  [2019-10-07 Mon]
   :END:
 - [[https://github.com/GetStream/Winds/blob/master/README.md][GetStream/Winds: macOS rss reader]].
 - [[https://github.com/TermiT/Flycut][GitHub - TermiT/Flycut: Clean and simple clipboard manager for developers]].
 - [[https://www.obdev.at/products/launchbar/index.html][LaunchBar 6 (can I implement flows in Emacs)?]].
+- [[https://news.ycombinator.com/item?id=21179713][List of open source applications for macOS (Hacker News)]].
 - [[https://macopenweb.com/][Mac Open Web, by Brian Warren]].
 - [[https://papers.put.as/macosx/macosx/][macOS · Papers, Slides and Thesis Archive]].
 - [[https://www.gonsie.com/blorg/ipad-setup.html][My iPad Setup]].
@@ -4346,8 +4390,12 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 :PROPERTIES:
 :CUSTOM_ID: moscow-travel-bookmarks
 :END:
+:MODIFIED:
+[2019-10-07 Mon]
+:END:
 - [[http://www.drzhivago.ru/en/][Drюzhivago (restaurant)]].
 - [[http://park-gorkogo.com/][Gorky park]].
+- [[https://twitter.com/archpng/status/1180991886674321408][Hotel Peking]].
 - [[http://www.kremlin-izmailovo.com/o-kremle/kreml-segodnja][Izmailovo]].
 - [[http://mgomz.com/][Kolomenskoe (park)]].
 - [[http://www.kreml.ru/en-Us/museums-moscow-kremlin][Kremlin]].
@@ -10424,7 +10472,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2019-09-01 Sun]
+[2019-10-07 Mon]
 :END:
 - [[https://www.lastpass.com/][#1 Password Manager, Vault, & Digital Wallet App (LastPass)]].
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
@@ -10444,6 +10492,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://news.ycombinator.com/item?id=18100243][DuckDuckGo Traffic (Hacker News)]].
 - [[https://ethical.net/resources/][Ethical Alternatives & Resources - ethical.net]].
 - [[https://usefathom.com/][Fathom Analytics - Simple, Privacy-focused Web Analytics]].
+- [[https://github.com/AGWA/git-crypt][git-crypt: Transparent file encryption in git]].
 - [[https://www.computerworld.com/article/3339618/apple-ios/how-to-stay-as-private-as-possible-on-apples-ipad-and-iphone.html][How to stay as private as possible on Apple&#039;s iPad and iPhone | Computerworld]].
 - [[https://www.ncsc.gov.uk/blog-post/three-random-words-or-thinkrandom-0][Ian M discusses what makes a good password (NCSC)]].
 - [[https://prism-break.org/en/categories/ios/][iOS - Platforms - PRISM Break (more privacy tools)]].
