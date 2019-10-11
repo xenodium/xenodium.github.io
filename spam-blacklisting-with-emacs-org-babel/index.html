@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-10-08 Tue 09:19 -->
+<!-- 2019-10-11 Fri 21:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spam blacklisting with Emacs org babel</title>
@@ -459,7 +459,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org0e17258" class="outline-2">
+<div id="outline-container-orgae85049" class="outline-2">
 <h2 id="spam-blacklisting-with-emacs-org-babel"><span class="timestamp-wrapper"><span class="timestamp">08 October 2019</span></span> Spam blacklisting with Emacs org babel</h2>
 <div class="outline-text-2" id="text-spam-blacklisting-with-emacs-org-babel">
 <p>
@@ -471,11 +471,12 @@ It's way easier to maintain a blacklist (with no regex) using an org table.
 </p>
 </div>
 
-<div id="outline-container-org8faeb73" class="outline-3">
-<h3 id="org8faeb73">Blacklist</h3>
-<div class="outline-text-3" id="text-org8faeb73">
+<div id="outline-container-org7a7ab9f" class="outline-3">
+<h3 id="org7a7ab9f">Blacklist</h3>
+<div class="outline-text-3" id="text-org7a7ab9f">
 <div class="org-src-container">
 <pre class="src src-org">#+name: spam-entries
+| .spammy                |
 | dodgyfella@hotmail.com |
 | henryzeespammer.com    |
 | yumspam.com            |
@@ -488,30 +489,47 @@ and subsequently use org babel (elisp snippet) to generate the regex.
 </div>
 </div>
 
-<div id="outline-container-org66e7bce" class="outline-3">
-<h3 id="org66e7bce">Regex gen</h3>
-<div class="outline-text-3" id="text-org66e7bce">
+<div id="outline-container-org8153b72" class="outline-3">
+<h3 id="org8153b72">Regex gen</h3>
+<div class="outline-text-3" id="text-org8153b72">
 <div class="org-src-container">
-<pre class="src src-org">#+begin_src emacs-lisp :var entries=spam-entries
+<pre class="src src-org">#+begin_src emacs-lisp :var rows=spam-entries
+  (require 'dash)
   (require 's)
 
-  (concat
-   "^"
-   (s-join "|" (mapcar (lambda (row)
-                         (let ((entry (regexp-quote
-                                       (s-trim (nth 0 row)))))
-                           (assert (s-present? entry))
-                           (if (s-contains-p "@" entry)
-                               (format "(%s)" entry)
-                             (format "(.*@%s)" entry))))
-                       entries))
-   "$")
+  (concat "^"
+          (s-join "|"
+                  (mapcar (lambda (entry)
+                            (setq entry (regexp-quote
+                                         (s-trim entry)))
+                            (assert (s-present? entry))
+                            (cond
+                             ;; Blacklist email address: joe@spammer.spammy
+                             ((s-contains-p "@" entry)
+                              (format "(%s)" entry))
+                             ;; Blacklist top-level domain: .spammy
+                             ((s-starts-with-p "\\." entry)
+                              (format "([^.]*%s)" entry))
+                             ;; Blacklist domain: @spammer.spammy
+                             (t
+                              (format "(.*@%s)" entry))))
+                          (-sort
+                           'string&lt;
+                           (-map (lambda (row)
+                                   (nth 0 row))
+                                 rows))))
+          "$")
+
 #+end_src
 
 #+RESULTS:
-: ^(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
+: ^([^.]*\.spammy)|(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
 </pre>
 </div>
+
+<p>
+UPDATE: Tweaked elisp and regex (but not animation).
+</p>
 
 
 <div class="figure">

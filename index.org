@@ -49,6 +49,7 @@ It's way easier to maintain a blacklist (with no regex) using an org table.
 *** Blacklist
   #+begin_src org :exports src
   ,#+name: spam-entries
+  | .spammy                |
   | dodgyfella@hotmail.com |
   | henryzeespammer.com    |
   | yumspam.com            |
@@ -58,25 +59,40 @@ and subsequently use org babel (elisp snippet) to generate the regex.
 
 *** Regex gen
   #+begin_src org :exports src
-  ,#+begin_src emacs-lisp :var entries=spam-entries
-    (require 's)
+    ,#+begin_src emacs-lisp :var rows=spam-entries
+      (require 'dash)
+      (require 's)
 
-    (concat
-     "^"
-     (s-join "|" (mapcar (lambda (row)
-                           (let ((entry (regexp-quote
-                                         (s-trim (nth 0 row)))))
-                             (assert (s-present? entry))
-                             (if (s-contains-p "@" entry)
-                                 (format "(%s)" entry)
-                               (format "(.*@%s)" entry))))
-                         entries))
-     "$")
-  ,#+end_src
+      (concat "^"
+              (s-join "|"
+                      (mapcar (lambda (entry)
+                                (setq entry (regexp-quote
+                                             (s-trim entry)))
+                                (assert (s-present? entry))
+                                (cond
+                                 ;; Blacklist email address: joe@spammer.spammy
+                                 ((s-contains-p "@" entry)
+                                  (format "(%s)" entry))
+                                 ;; Blacklist top-level domain: .spammy
+                                 ((s-starts-with-p "\\." entry)
+                                  (format "([^.]*%s)" entry))
+                                 ;; Blacklist domain: @spammer.spammy
+                                 (t
+                                  (format "(.*@%s)" entry))))
+                              (-sort
+                               'string<
+                               (-map (lambda (row)
+                                       (nth 0 row))
+                                     rows))))
+              "$")
 
-  ,#+RESULTS:
-  : ^(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
+    ,#+end_src
+
+    ,#+RESULTS:
+    : ^([^.]*\.spammy)|(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
   #+end_src
+
+UPDATE: Tweaked elisp and regex (but not animation).
 
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/spam-blacklisting-with-emacs-org-babel/blacklist.png]]
