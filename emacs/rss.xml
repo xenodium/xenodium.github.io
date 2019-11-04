@@ -6,7 +6,79 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 13 Oct 2019 13:39:53 +0100</lastBuildDate>
+<lastBuildDate>Mon, 04 Nov 2019 00:08:44 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>A more reusable Emacs shell-command history</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org5e864c6" class="outline-2">
+ <h2 id="more-reusable-emacs-shell-command-history"> <span class="timestamp-wrapper"> <span class="timestamp">03 November 2019</span></span> A more reusable Emacs shell-command history</h2>
+ <div class="outline-text-2" id="text-more-reusable-emacs-shell-command-history">
+ <p>
+ <a href="https://twitter.com/camdez">Cameron Desautel</a> has a great post on  <a href="https://engineering.collbox.co/post/working-faster-in-emacs-by-reading-the-future/">Working Faster in Emacs by Reading the "Future"</a>, highlighting  <i>M-n</i>'s usefulness for inserting minibuffer default values.
+</p>
+
+ <p>
+Invoking  <i>M-n</i> in  <i>shell-command</i>'s prompt is handy for quickly getting the current buffer's file name. This works great for one-off shell commands like  <i>"chmod +x script.sh"</i> or  <i>"tidy -xml -i -m data.xml"</i>. Unfortunately, these commands aren't easily reusable from  <i>shell-command</i>'s minibuffer history, since it'll keep hardcoded file names.
+</p>
+
+ <p>
+There's likely existing built-in functionality or a more elaborate package for this, but advising  <i>read-shell-command</i> enables us to write more reusable commands like  <i>"chmod +x $f"</i> or  <i>"tidy -xml -i -m $f".</i> We merely replace  <i>$f</i> with  <i>(buffer-file-name)</i>, and let everything else continue as usual.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/more-reusable-emacs-shell-command-history/expanded-shell-command.png" alt="expanded-shell-command.png" width="50%" height="50%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/adviced-read-shell-command</span> (orig-fun  <span style="color: #0086b3;">&rest</span> r)
+   <span style="color: #183691;">"Advice around `</span> <span style="color: #0086b3;">read-shell-command</span> <span style="color: #183691;">' to replace $f with buffer file name."</span>
+  ( <span style="color: #a71d5d;">let</span> ((command (apply orig-fun r)))
+    ( <span style="color: #a71d5d;">if</span> (string-match-p  <span style="color: #183691;">"\\$f"</span> command)
+        (replace-regexp-in-string  <span style="color: #183691;">"\\$f"</span>
+                                  ( <span style="color: #a71d5d;">or</span> (buffer-file-name)
+                                      ( <span style="color: #333333;">user-error</span>  <span style="color: #183691;">"No file file visited to replace $f"</span>))
+                                  command)
+      command)))
+
+(advice-add 'read-shell-command
+             <span style="color: #a71d5d;">:around</span>
+            'ar/adviced-read-shell-command)
+</pre>
+</div>
+
+ <p>
+It's worth mentioning that searching minibuffer history is pretty simple when leveraging  <a href="https://github.com/abo-abo/swiper">counsel</a> to fuzzy search (via  <i>counsel-minibuffer-history</i>, bound to  <i>C-r</i> by default).
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/more-reusable-emacs-shell-command-history/counsel-history.png" alt="counsel-history.png" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+On a final note, searching minibuffer history for cache hits is way more useful with richer history content. Be sure to save minibuffer history across Emacs sessions and increase the history length using the built-in  <a href="https://www.emacswiki.org/emacs/SaveHist">savehist-mode</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">savehist</span>
+   <span style="color: #a71d5d;">:custom</span>
+  (savehist-file  <span style="color: #183691;">"~/.emacs.d/savehist"</span>)
+  (savehist-save-minibuffer-history t)
+  (history-length 10000)
+   <span style="color: #a71d5d;">:config</span>
+  (savehist-mode +1))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/more-reusable-emacs-shell-command-history/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/more-reusable-emacs-shell-command-history/index.html</guid>
+  <pubDate>Sun, 03 Nov 2019 00:00:00 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs swiper and multiple cursors</title>
@@ -2493,7 +2565,7 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   <title>Trying out mu4e with mbsync</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org678a05a" class="outline-2">
+ <div id="outline-container-orgaafc834" class="outline-2">
  <h2 id="trying-out-mu4e-with-mbsync"> <span class="timestamp-wrapper"> <span class="timestamp">17 June 2018</span></span> Trying out mu4e with mbsync</h2>
  <div class="outline-text-2" id="text-trying-out-mu4e-with-mbsync">
  <p>
@@ -2501,9 +2573,9 @@ The email fun in Emacs continues. After a few weeks since I  <a href="../trying-
 </p>
 </div>
 
- <div id="outline-container-org5ba2bfb" class="outline-3">
- <h3 id="org5ba2bfb">Install isync (for mbsync)</h3>
- <div class="outline-text-3" id="text-org5ba2bfb">
+ <div id="outline-container-orgafc8b75" class="outline-3">
+ <h3 id="orgafc8b75">Install isync (for mbsync)</h3>
+ <div class="outline-text-3" id="text-orgafc8b75">
  <div class="org-src-container">
  <pre class="src src-sh">brew install isync
 </pre>
@@ -2511,9 +2583,9 @@ The email fun in Emacs continues. After a few weeks since I  <a href="../trying-
 </div>
 </div>
 
- <div id="outline-container-org5210888" class="outline-3">
- <h3 id="org5210888">Configure mbsync</h3>
- <div class="outline-text-3" id="text-org5210888">
+ <div id="outline-container-org489e69d" class="outline-3">
+ <h3 id="org489e69d">Configure mbsync</h3>
+ <div class="outline-text-3" id="text-org489e69d">
  <p>
 Mbsync uses  <code>~/.mbsyncrc</code> for configuration. Migrating  <a href="../trying-out-mu4e-and-offlineimap">~/.offlineimaprc</a> to  <code>~/.mbsyncrc</code> looks like:
 </p>
@@ -2549,9 +2621,9 @@ SyncState *
 </div>
 </div>
 </div>
- <div id="outline-container-org0fd5262" class="outline-3">
- <h3 id="org0fd5262">No concurrent IMAP commands supported</h3>
- <div class="outline-text-3" id="text-org0fd5262">
+ <div id="outline-container-org133ff1a" class="outline-3">
+ <h3 id="org133ff1a">No concurrent IMAP commands supported</h3>
+ <div class="outline-text-3" id="text-org133ff1a">
  <p>
 My IMAP provider doesn't handle concurrent IMAP commands.  <a href="https://kdecherf.com/blog/2017/05/01/mbsync-and-office-365/">mbsync and Office 365</a> had the answer:
 </p>
@@ -2563,9 +2635,9 @@ My IMAP provider doesn't handle concurrent IMAP commands.  <a href="https://kdec
 </div>
 </div>
 
- <div id="outline-container-org701ccb7" class="outline-3">
- <h3 id="org701ccb7">Initial sync</h3>
- <div class="outline-text-3" id="text-org701ccb7">
+ <div id="outline-container-orgfb733b7" class="outline-3">
+ <h3 id="orgfb733b7">Initial sync</h3>
+ <div class="outline-text-3" id="text-orgfb733b7">
  <p>
 Run initial from the command line sync:
 </p>
@@ -2584,18 +2656,37 @@ IMAP error: unexpected EOF from some.imap.host.com (1.2.3.4:993)
 </pre>
 
  <p>
-First few times, I restarted the syncing manually, but then used a loop to automatically restart it:
+First few times, I restarted the syncing manually, but then used a loop to automatically restart it.
 </p>
 
- <pre class="example">
-while true; do mbsync -V Xenodium; sleep 5; done
+ <p>
+Bash loops:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">while</span> true;  <span style="color: #a71d5d;">do</span> mbsync -V Personal; sleep 5;  <span style="color: #a71d5d;">done</span>
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">for</span> i <span style="color: #a71d5d;"> in</span> {1..5};  <span style="color: #a71d5d;">do</span> mbsync -V Personal; sleep 5 done
+</pre>
+</div>
+
+ <p>
+Eshell loop:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">for</span> i <span style="color: #a71d5d;"> in</span> (number-sequence 1 10) {mbsync -V Personal; sleep 5}
 </pre>
 </div>
 </div>
+</div>
 
- <div id="outline-container-org00a1b9d" class="outline-3">
- <h3 id="org00a1b9d">Create mu index</h3>
- <div class="outline-text-3" id="text-org00a1b9d">
+ <div id="outline-container-org917124d" class="outline-3">
+ <h3 id="org917124d">Create mu index</h3>
+ <div class="outline-text-3" id="text-org917124d">
  <p>
 Reindex using mu, but first remove existing index for offlineimap messages:
 </p>
@@ -2616,9 +2707,9 @@ Ok, do index now:
 </div>
 </div>
 
- <div id="outline-container-org4ae0795" class="outline-3">
- <h3 id="org4ae0795">Mu4e tweaks</h3>
- <div class="outline-text-3" id="text-org4ae0795">
+ <div id="outline-container-org7b7f94d" class="outline-3">
+ <h3 id="org7b7f94d">Mu4e tweaks</h3>
+ <div class="outline-text-3" id="text-org7b7f94d">
  <p>
 The  <i>get mail</i> command should now point to mbsync.
 </p>
@@ -2639,14 +2730,14 @@ I had issues with duplicate IDs after moving and deleting messages from mu4e.  <
 </div>
 </div>
 
- <div id="outline-container-orgabb3bda" class="outline-3">
- <h3 id="orgabb3bda">Helpful references</h3>
- <div class="outline-text-3" id="text-orgabb3bda">
- <ul class="org-ul"> <li> <a href="http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/">Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs</a>.</li>
+ <div id="outline-container-orge4ca47e" class="outline-3">
+ <h3 id="orge4ca47e">Helpful references</h3>
+ <div class="outline-text-3" id="text-orge4ca47e">
+ <ul class="org-ul"> <li> <a href="https://webgefrickel.de/blog/a-modern-mutt-setup">A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel</a>.</li>
+ <li> <a href="http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/">Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs</a>.</li>
+ <li> <a href="https://copyninja.info/blog/email_setup.html">My personal Email setup - Notmuch, mbsync, postfix and dovecot</a>.</li>
+ <li> <a href="https://github.com/jeremy-compostella/org-msg/blob/master/README.org">org-msg: Compose and reply to emails in a Outlook HTML friendly style</a>.</li>
  <li> <a href="http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html">Reading IMAP Mail in Emacs on OSX</a>.</li>
- <li> <a href="https://copyninja.info/blog/email_setup.html">My personal Email setup - Notmuch, mbsync, postfix and dovecot</a>.</li>
- <li> <a href="https://copyninja.info/blog/email_setup.html">My personal Email setup - Notmuch, mbsync, postfix and dovecot</a>.</li>
- <li> <a href="https://webgefrickel.de/blog/a-modern-mutt-setup">A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel</a>.</li>
 </ul></div>
 </div>
 </div>
