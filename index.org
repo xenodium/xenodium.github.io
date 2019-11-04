@@ -33,9 +33,9 @@ There's likely existing built-in functionality or a more elaborate package for t
 It's worth mentioning that searching minibuffer history is pretty simple when leveraging [[https://github.com/abo-abo/swiper][counsel]] to fuzzy search (via /counsel-minibuffer-history/, bound to /C-r/ by default).
 
 #+ATTR_HTML: :width 50% :height 50%
-[[file:images/more-reusable-emacs-shell-command-history/counsel-history.png]]
+[[file:images/more-reusable-emacs-shell-command-history/richer-shell-command-history.gif]]
 
-On a final note, searching minibuffer history for cache hits is way more useful with richer history content. Be sure to save minibuffer history across Emacs sessions and increase the history length using the built-in [[https://www.emacswiki.org/emacs/SaveHist][savehist-mode]].
+On a final note, searching minibuffer history for cache hits is way more useful with richer history content. Be sure to save minibuffer history across Emacs sessions and increase /shell-command-history/ using the built-in [[https://www.emacswiki.org/emacs/SaveHist][savehist-mode]].
 
 #+begin_src emacs-lisp
   (use-package savehist
@@ -43,6 +43,8 @@ On a final note, searching minibuffer history for cache hits is way more useful 
     (savehist-file "~/.emacs.d/savehist")
     (savehist-save-minibuffer-history t)
     (history-length 10000)
+    (savehist-additional-variables
+     '(shell-command-history))
     :config
     (savehist-mode +1))
 #+end_src
