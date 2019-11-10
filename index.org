@@ -1,6 +1,23 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-11-10 Sun] Enhanced Emacs searching with counsel switches
+  :PROPERTIES:
+  :CUSTOM_ID: enhanced-emacs-searching-with-counsel-switches
+  :END:
+The [[https://github.com/abo-abo/swiper][counsel]] family of Emacs search commands are great for searching the filesystem. More specifically, /counsel-rg/, /counsel-ag/, and /counsel-pt/, which use the popular [[https://github.com/BurntSushi/ripgrep][ripgrep]], [[https://github.com/ggreer/the_silver_searcher][silver searcher]], and [[https://github.com/monochromegane/the_platinum_searcher][platinum searcher]] utilities.
+
+counsel-rg is my default searcher. It returns results quickly, with live updates as I tweak the search query.
+
+Up until recently, my queries typically matched text in files only. This works great, but every so often I wished I could amend the query to include (or exclude) results matching specific file /names/. Turns out, you can prepend the search query with additional switches using the "--" separator.
+
+The switches are usually utility-specific, but if we wanted to keep results from file names matching a glob, we can prepend the ripgrep query with something like /"--glob Make* --"/ or the shorter version /"-g Make* --"/.
+
+rg: *-g Makefile -- install*
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/enhanced-emacs-searching-with-counsel-switches/counsel-rg-switch.gif]]
+
 * [2019-11-10 Sun] Emacs org block company completion
   :PROPERTIES:
   :CUSTOM_ID: emacs-org-block-company-completion
