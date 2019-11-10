@@ -6,7 +6,111 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 04 Nov 2019 23:00:06 +0000</lastBuildDate>
+<lastBuildDate>Sun, 10 Nov 2019 17:26:15 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs org block company completion</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org8011403" class="outline-2">
+ <h2 id="emacs-org-block-company-completion"> <span class="timestamp-wrapper"> <span class="timestamp">10 November 2019</span></span> Emacs org block company completion</h2>
+ <div class="outline-text-2" id="text-emacs-org-block-company-completion">
+ <p>
+Back in 2015, I bound the "<" key to a hydra for quickly inserting org blocks. The idea came from Oleg's post on  <a href="https://oremacs.com/2015/03/07/hydra-org-templates/">org-mode block templates in Hydra</a>. The suggested binding settled in my muscle memory without much effort.
+</p>
+
+ <p>
+Fast forward to Febrary 2019. I replaced the hydra with  <a href="https://orgmode.org/manual/Easy-templates.html">easy templates</a> when  <i>org-try-structure-completion</i> was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
+</p>
+
+ <p>
+Since my primary use-case for easy templates is inserting  <a href="https://orgmode.org/manual/Working-with-source-code.html">source blocks</a>, I was keen to expedite choosing the source language as well as inserting the source block itself.
+</p>
+
+ <p>
+Writing a small  <a href="https://company-mode.github.io/">company mode</a> completion backend fits my primary use-case pretty well.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/emacs-org-block-company-completion/company-org-block.gif" alt="company-org-block.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+The company backend looks as follow:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org</span>)
+( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block</span> (command  <span style="color: #0086b3;">&optional</span> arg  <span style="color: #0086b3;">&rest</span> ignored)
+   <span style="color: #183691;">"Complete org babel languages into source blocks."</span>
+  ( <span style="color: #a71d5d;">interactive</span> (list 'interactive))
+  ( <span style="color: #a71d5d;">cl-case</span> command
+    ( <span style="color: #a71d5d;">interactive</span> (company-begin-backend 'company-org-block))
+    (prefix (company-org-block--grap-symbol-cons))
+    (candidates (company-org-block--candidates arg))
+    (post-completion
+     (company-org-block--expand arg))))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--candidates</span> (prefix)
+   <span style="color: #183691;">"Return a list of org babel languages matching PREFIX."</span>
+  (seq-filter ( <span style="color: #a71d5d;">lambda</span> (language)
+                (string-prefix-p prefix language))
+              (mapcar ( <span style="color: #a71d5d;">lambda</span> (mode)
+                        (format  <span style="color: #183691;">"%s"</span> (car mode)))
+                      org-babel-load-languages)))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--expand</span> (insertion)
+   <span style="color: #183691;">"Replace INSERTION with actual source block."</span>
+  (delete-region (point) (- (point) (1+  <span style="color: #969896;">;; </span> <span style="color: #969896;">Include "<" in length.</span>
+                                     (length insertion))))
+  (insert (format  <span style="color: #183691;">"#+begin_src %s :results %s\n"</span>
+                  insertion
+                  ( <span style="color: #a71d5d;">if</span> (string-equal insertion  <span style="color: #183691;">"python"</span>)
+                       <span style="color: #183691;">"output"</span>
+                     <span style="color: #183691;">"value"</span>)))
+  (insert  <span style="color: #183691;">"  "</span>)
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Saving restores point to location inside code block.</span>
+  ( <span style="color: #a71d5d;">save-excursion</span>
+    (insert  <span style="color: #183691;">"\n#+end_src"</span>)))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--grap-symbol-cons</span> ()
+   <span style="color: #183691;">"Return cons with symbol and t whenever prefix of < is found.</span>
+ <span style="color: #183691;">    For example:</span>
+ <span style="color: #183691;">        \"<e\" -> (\"e\" . t)</span>
+ <span style="color: #183691;">    "</span>
+  ( <span style="color: #a71d5d;">when</span> (looking-back  <span style="color: #183691;">"<</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[</span> <span style="color: #a71d5d;">^</span> <span style="color: #183691;"> ]*</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">"</span> (line-beginning-position))
+    ( <span style="color: #a71d5d;">if</span> (match-string-no-properties 1)
+        (cons (match-string-no-properties 1) t)
+      nil)))
+</pre>
+</div>
+
+ <p>
+To use, enable  <i>company-mode</i> in  <i>org-mode</i> and bind "<" to a custom insert function:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-insert-char-dwim</span> ()
+   <span style="color: #183691;">"If inserting < at BOL, invoke `</span> <span style="color: #0086b3;">company-org-block</span> <span style="color: #183691;">' otherwise insert."</span>
+  ( <span style="color: #a71d5d;">interactive</span>)
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Display company-org-block if < inserted at BOL.</span>
+  ( <span style="color: #a71d5d;">let</span> ((complete-p ( <span style="color: #a71d5d;">and</span> company-mode
+                         (looking-back  <span style="color: #183691;">"^"</span>))))
+    (self-insert-command 1)
+    ( <span style="color: #a71d5d;">when</span> complete-p
+      (call-interactively 'company-org-block))))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-org-block-company-completion/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-org-block-company-completion/index.html</guid>
+  <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>A more reusable Emacs shell-command history</title>

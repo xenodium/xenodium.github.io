@@ -1,6 +1,84 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-11-10 Sun] Emacs org block company completion
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-org-block-company-completion
+  :END:
+Back in 2015, I bound the "<" key to a hydra for quickly inserting org blocks. The idea came from Oleg's post on [[https://oremacs.com/2015/03/07/hydra-org-templates/][org-mode block templates in Hydra]]. The suggested binding settled in my muscle memory without much effort.
+
+Fast forward to Febrary 2019. I replaced the hydra with [[https://orgmode.org/manual/Easy-templates.html][easy templates]] when /org-try-structure-completion/ was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
+
+Since my primary use-case for easy templates is inserting [[https://orgmode.org/manual/Working-with-source-code.html][source blocks]], I was keen to expedite choosing the source language as well as inserting the source block itself.
+
+Writing a small [[https://company-mode.github.io/][company mode]] completion backend fits my primary use-case pretty well.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-org-block-company-completion/company-org-block.gif]]
+
+The company backend looks as follow:
+
+#+begin_src emacs-lisp :results value
+  (require 'org)
+  (require 'seq)
+
+  (defun company-org-block (command &optional arg &rest ignored)
+    "Complete org babel languages into source blocks."
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'company-org-block))
+      (prefix (company-org-block--grap-symbol-cons))
+      (candidates (company-org-block--candidates arg))
+      (post-completion
+       (company-org-block--expand arg))))
+
+  (defun company-org-block--candidates (prefix)
+    "Return a list of org babel languages matching PREFIX."
+    (seq-filter (lambda (language)
+                  (string-prefix-p prefix language))
+                (mapcar (lambda (mode)
+                          (format "%s" (car mode)))
+                        org-babel-load-languages)))
+
+  (defun company-org-block--expand (insertion)
+    "Replace INSERTION with actual source block."
+    (delete-region (point) (- (point) (1+ ;; Include "<" in length.
+                                       (length insertion))))
+    (insert (format "#+begin_src %s :results %s\n"
+                    insertion
+                    (if (string-equal insertion "python")
+                        "output"
+                      "value")))
+    (insert "  ")
+    ;; Saving restores point to location inside code block.
+    (save-excursion
+      (insert "\n#+end_src")))
+
+  (defun company-org-block--grap-symbol-cons ()
+    "Return cons with symbol and t whenever prefix of < is found.
+      For example:
+          \"<e\" -> (\"e\" . t)
+      "
+    (when (looking-back "<\\([^ ]*\\)" (line-beginning-position))
+      (if (match-string-no-properties 1)
+          (cons (match-string-no-properties 1) t)
+        nil)))
+#+end_src
+
+To use, enable /company-mode/ in /org-mode/ and bind "<" to a custom insert function:
+
+#+begin_src emacs-lisp :results value
+  (defun ar/org-insert-char-dwim ()
+    "If inserting < at BOL, invoke `company-org-block' otherwise insert."
+    (interactive)
+    ;; Display company-org-block if < inserted at BOL.
+    (let ((complete-p (and company-mode
+                           (looking-back "^"))))
+      (self-insert-command 1)
+      (when complete-p
+        (call-interactively 'company-org-block))))
+#+end_src
+
 * [2019-11-08 Fri] IRC bookmarks
   :PROPERTIES:
   :CUSTOM_ID: irc-bookmarks
