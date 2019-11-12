@@ -24,7 +24,7 @@ rg: *-g Makefile -- install*
   :END:
 Back in 2015, I bound the "<" key to a hydra for quickly inserting org blocks. The idea came from Oleg's post on [[https://oremacs.com/2015/03/07/hydra-org-templates/][org-mode block templates in Hydra]]. The suggested binding settled in my muscle memory without much effort.
 
-Fast forward to Febrary 2019. I replaced the hydra with [[https://orgmode.org/manual/Easy-templates.html][easy templates]] when /org-try-structure-completion/ was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
+Fast forward to Febrary 2019. I replaced the hydra with /[[https://orgmode.org/manual/Easy-templates.html][org-insert-structure-template]]/ when /org-try-structure-completion/ was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
 
 Since my primary use-case for easy templates is inserting [[https://orgmode.org/manual/Working-with-source-code.html][source blocks]], I was keen to expedite choosing the source language as well as inserting the source block itself.
 
@@ -36,6 +36,7 @@ Writing a small [[https://company-mode.github.io/][company mode]] completion bac
 The company backend looks as follow:
 
 #+begin_src emacs-lisp :results value
+  (require 'map)
   (require 'org)
   (require 'seq)
 
@@ -53,29 +54,45 @@ The company backend looks as follow:
     "Return a list of org babel languages matching PREFIX."
     (seq-filter (lambda (language)
                   (string-prefix-p prefix language))
-                (mapcar (lambda (mode)
-                          (format "%s" (car mode)))
-                        org-babel-load-languages)))
+                ;; Flatten `org-babel-load-languages' and
+                ;; `org-structure-template-alist', join, and sort.
+                (seq-sort
+                 #'string-lessp
+                 (append
+                  (mapcar #'prin1-to-string
+                          (map-keys org-babel-load-languages))
+                  (map-values org-structure-template-alist)))))
+
+  (defun company-org-block--template-p (template)
+    (seq-contains (map-values org-structure-template-alist)
+                  template))
 
   (defun company-org-block--expand (insertion)
     "Replace INSERTION with actual source block."
     (delete-region (point) (- (point) (1+ ;; Include "<" in length.
                                        (length insertion))))
-    (insert (format "#+begin_src %s :results %s\n"
-                    insertion
-                    (if (string-equal insertion "python")
-                        "output"
-                      "value")))
+    (if (company-org-block--template-p insertion)
+    p    (company-org-block--wrap-point insertion
+                                       ;; May be multiple words.
+                                       ;; Take the first one.
+                                       (nth 0 (split-string insertion)))
+      (company-org-block--wrap-point (format "src %s" insertion)
+                                     "src")))
+
+  (defun company-org-block--wrap-point (begin end)
+    "Wrap point with block using BEGIN and END.  For example:
+  ,#+begin_BEGIN
+    |
+  ,#+end_END"
+    (insert (format "#+begin_%s\n" begin))
     (insert "  ")
-    ;; Saving restores point to location inside code block.
+    ;; Saving excursion restores point to location inside code block.
     (save-excursion
-      (insert "\n#+end_src")))
+      (insert (format "\n#+end_%s" end))))
 
   (defun company-org-block--grap-symbol-cons ()
     "Return cons with symbol and t whenever prefix of < is found.
-      For example:
-          \"<e\" -> (\"e\" . t)
-      "
+  For example: \"<e\" -> (\"e\" . t)"
     (when (looking-back "<\\([^ ]*\\)" (line-beginning-position))
       (if (match-string-no-properties 1)
           (cons (match-string-no-properties 1) t)
@@ -95,6 +112,10 @@ To use, enable /company-mode/ in /org-mode/ and bind "<" to a custom insert func
       (when complete-p
         (call-interactively 'company-org-block))))
 #+end_src
+
+*** Updates
+- Removed language-specific header logic (use /[[https://www.orgmode.org/worg/org-contrib/babel/header-args.html][org-babel-default-header-args]]/ instead).
+- Also completes non-source block templates from [[https://orgmode.org/manual/Easy-templates.html][org-structure-template-alist]].
 
 * [2019-11-08 Fri] IRC bookmarks
   :PROPERTIES:
@@ -9941,7 +9962,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2019-11-08 Fri]
+[2019-11-11 Mon]
 :END:
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
 - [[https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html][An Agenda for Life With Org Mode]].
@@ -9978,6 +9999,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://patrickskiba.com/org-mode/2019/05/22/uses-for-org-mode.html][My Org-mode use cases (Patrick Skiba)]].
 - [[http://www.cachestocaches.com/2016/9/my-workflow-org-agenda/][My Workflow with Org-Agenda]].
 - [[https://github.com/dfeich/org-babel-examples][Org babel examples repo]].
+- [[https://org-babel.readthedocs.io/en/latest/][Org Babel reference card]].
 - [[https://raw.githubusercontent.com/eschulte/babel-dev/master/scraps.org][org babel scraps]].
 - [[http://www.star.bris.ac.uk/bjm/org-basics.html][Org mode basics]].
 - [[https://writepermission.com/org-blogging-rss-feed.html][Org mode blogging: RSS feed]].

@@ -6,13 +6,13 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 10 Nov 2019 23:23:21 +0000</lastBuildDate>
+<lastBuildDate>Tue, 12 Nov 2019 00:07:23 +0000</lastBuildDate>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs org block company completion</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org8011403" class="outline-2">
+ <div id="outline-container-orgfe502f8" class="outline-2">
  <h2 id="emacs-org-block-company-completion"> <span class="timestamp-wrapper"> <span class="timestamp">10 November 2019</span></span> Emacs org block company completion</h2>
  <div class="outline-text-2" id="text-emacs-org-block-company-completion">
  <p>
@@ -20,7 +20,7 @@ Back in 2015, I bound the "<" key to a hydra for quickly inserting org blocks. T
 </p>
 
  <p>
-Fast forward to Febrary 2019. I replaced the hydra with  <a href="https://orgmode.org/manual/Easy-templates.html">easy templates</a> when  <i>org-try-structure-completion</i> was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
+Fast forward to Febrary 2019. I replaced the hydra with  <i> <a href="https://orgmode.org/manual/Easy-templates.html">org-insert-structure-template</a></i> when  <i>org-try-structure-completion</i> was removed from org mode. No biggie, as I kept the same binding to "<" and hardly noticed the change.
 </p>
 
  <p>
@@ -41,7 +41,8 @@ The company backend looks as follow:
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org</span>)
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">map</span>)
+( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org</span>)
 ( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
 
 ( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block</span> (command  <span style="color: #0086b3;">&optional</span> arg  <span style="color: #0086b3;">&rest</span> ignored)
@@ -58,29 +59,45 @@ The company backend looks as follow:
    <span style="color: #183691;">"Return a list of org babel languages matching PREFIX."</span>
   (seq-filter ( <span style="color: #a71d5d;">lambda</span> (language)
                 (string-prefix-p prefix language))
-              (mapcar ( <span style="color: #a71d5d;">lambda</span> (mode)
-                        (format  <span style="color: #183691;">"%s"</span> (car mode)))
-                      org-babel-load-languages)))
+               <span style="color: #969896;">;; </span> <span style="color: #969896;">Flatten `</span> <span style="color: #0086b3;">org-babel-load-languages</span> <span style="color: #969896;">' and</span>
+               <span style="color: #969896;">;; </span> <span style="color: #969896;">`</span> <span style="color: #0086b3;">org-structure-template-alist</span> <span style="color: #969896;">', join, and sort.</span>
+              (seq-sort
+               #'string-lessp
+               (append
+                (mapcar #'prin1-to-string
+                        (map-keys org-babel-load-languages))
+                (map-values org-structure-template-alist)))))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--template-p</span> (template)
+  (seq-contains (map-values org-structure-template-alist)
+                template))
 
 ( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--expand</span> (insertion)
    <span style="color: #183691;">"Replace INSERTION with actual source block."</span>
   (delete-region (point) (- (point) (1+  <span style="color: #969896;">;; </span> <span style="color: #969896;">Include "<" in length.</span>
                                      (length insertion))))
-  (insert (format  <span style="color: #183691;">"#+begin_src %s :results %s\n"</span>
-                  insertion
-                  ( <span style="color: #a71d5d;">if</span> (string-equal insertion  <span style="color: #183691;">"python"</span>)
-                       <span style="color: #183691;">"output"</span>
-                     <span style="color: #183691;">"value"</span>)))
+  ( <span style="color: #a71d5d;">if</span> (company-org-block--template-p insertion)
+  p    (company-org-block--wrap-point insertion
+                                      <span style="color: #969896;">;; </span> <span style="color: #969896;">May be multiple words.</span>
+                                      <span style="color: #969896;">;; </span> <span style="color: #969896;">Take the first one.</span>
+                                     (nth 0 (split-string insertion)))
+    (company-org-block--wrap-point (format  <span style="color: #183691;">"src %s"</span> insertion)
+                                    <span style="color: #183691;">"src"</span>)))
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--wrap-point</span> (begin end)
+   <span style="color: #183691;">"Wrap point with block using BEGIN and END.  For example:</span>
+ <span style="color: #183691;">#+begin_BEGIN</span>
+ <span style="color: #183691;">  |</span>
+ <span style="color: #183691;">#+end_END"</span>
+  (insert (format  <span style="color: #183691;">"#+begin_%s\n"</span> begin))
   (insert  <span style="color: #183691;">"  "</span>)
-   <span style="color: #969896;">;; </span> <span style="color: #969896;">Saving restores point to location inside code block.</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Saving excursion restores point to location inside code block.</span>
   ( <span style="color: #a71d5d;">save-excursion</span>
-    (insert  <span style="color: #183691;">"\n#+end_src"</span>)))
+    (insert (format  <span style="color: #183691;">"\n#+end_%s"</span> end))))
 
 ( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-org-block--grap-symbol-cons</span> ()
    <span style="color: #183691;">"Return cons with symbol and t whenever prefix of < is found.</span>
- <span style="color: #183691;">    For example:</span>
- <span style="color: #183691;">        \"<e\" -> (\"e\" . t)</span>
- <span style="color: #183691;">    "</span>
+ <span style="color: #183691;">For example: \"<e\" -> (\"e\" . t)"</span>
   ( <span style="color: #a71d5d;">when</span> (looking-back  <span style="color: #183691;">"<</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[</span> <span style="color: #a71d5d;">^</span> <span style="color: #183691;"> ]*</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">"</span> (line-beginning-position))
     ( <span style="color: #a71d5d;">if</span> (match-string-no-properties 1)
         (cons (match-string-no-properties 1) t)
@@ -104,6 +121,14 @@ To use, enable  <i>company-mode</i> in  <i>org-mode</i> and bind "<" to a custom
       (call-interactively 'company-org-block))))
 </pre>
 </div>
+</div>
+
+ <div id="outline-container-org96d5d07" class="outline-3">
+ <h3 id="org96d5d07">Updates</h3>
+ <div class="outline-text-3" id="text-org96d5d07">
+ <ul class="org-ul"> <li>Removed language-specific header logic (use  <i> <a href="https://www.orgmode.org/worg/org-contrib/babel/header-args.html">org-babel-default-header-args</a></i> instead).</li>
+ <li>Also completes non-source block templates from  <a href="https://orgmode.org/manual/Easy-templates.html">org-structure-template-alist</a>.</li>
+</ul></div>
 </div>
 </div>
 </div>]]></description>
