@@ -40,12 +40,18 @@ The company backend looks as follow:
   (require 'org)
   (require 'seq)
 
+  (defvar company-org-block-bol-p t "If t, detect completion when at
+  begining of line, otherwise detect completion anywhere.")
+
+  (defvar company-org--regexp "<\\([^ ]*\\)")
+
   (defun company-org-block (command &optional arg &rest ignored)
     "Complete org babel languages into source blocks."
     (interactive (list 'interactive))
     (cl-case command
       (interactive (company-begin-backend 'company-org-block))
-      (prefix (company-org-block--grap-symbol-cons))
+      (prefix (when (derived-mode-p 'org-mode)
+                (company-org-block--grab-symbol-cons)))
       (candidates (company-org-block--candidates arg))
       (post-completion
        (company-org-block--expand arg))))
@@ -72,7 +78,7 @@ The company backend looks as follow:
     (delete-region (point) (- (point) (1+ ;; Include "<" in length.
                                        (length insertion))))
     (if (company-org-block--template-p insertion)
-    p    (company-org-block--wrap-point insertion
+        (company-org-block--wrap-point insertion
                                        ;; May be multiple words.
                                        ;; Take the first one.
                                        (nth 0 (split-string insertion)))
@@ -90,33 +96,28 @@ The company backend looks as follow:
     (save-excursion
       (insert (format "\n#+end_%s" end))))
 
-  (defun company-org-block--grap-symbol-cons ()
+  (defun company-org-block--grab-symbol-cons ()
     "Return cons with symbol and t whenever prefix of < is found.
   For example: \"<e\" -> (\"e\" . t)"
-    (when (looking-back "<\\([^ ]*\\)" (line-beginning-position))
-      (if (match-string-no-properties 1)
-          (cons (match-string-no-properties 1) t)
-        nil)))
+    (when (looking-back (if company-org-block-bol-p
+                            (concat "^" company-org--regexp)
+                          company-org--regexp)
+                        (line-beginning-position))
+      (cons (match-string-no-properties 1) t)))
 #+end_src
 
-To use, enable /company-mode/ in /org-mode/ and bind "<" to a custom insert function:
+To use, add the backend enable /company-mode/ in /org-mode/:
 
 #+begin_src emacs-lisp :results value
-  (defun ar/org-insert-char-dwim ()
-    "If inserting < at BOL, invoke `company-org-block' otherwise insert."
-    (interactive)
-    ;; Display company-org-block if < inserted at BOL.
-    (let ((complete-p (and company-mode
-                           (looking-back "^"))))
-      (self-insert-command 1)
-      (when complete-p
-        (call-interactively 'company-org-block))))
+  (add-to-list 'company-backends 'company-org-block)
+  (company-mode +1)
 #+end_src
 
 *** Updates
 - Removed language-specific header logic (use /[[https://www.orgmode.org/worg/org-contrib/babel/header-args.html][org-babel-default-header-args]]/ instead).
 - Also completes non-source block templates from [[https://orgmode.org/manual/Easy-templates.html][org-structure-template-alist]].
-- Source on [[https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el][github]].
+- Source in my [[https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el][dot files]].
+- Removed unnecessary binding. Just add company backend as usual.
 
 * [2019-11-08 Fri] IRC bookmarks
   :PROPERTIES:

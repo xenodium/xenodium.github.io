@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-12 Tue 00:11 -->
+<!-- 2019-11-13 Wed 00:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs org block company completion</title>
@@ -459,7 +459,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org75ba5f8" class="outline-2">
+<div id="outline-container-org5cfd436" class="outline-2">
 <h2 id="emacs-org-block-company-completion"><span class="timestamp-wrapper"><span class="timestamp">10 November 2019</span></span> Emacs org block company completion</h2>
 <div class="outline-text-2" id="text-emacs-org-block-company-completion">
 <p>
@@ -493,12 +493,18 @@ The company backend looks as follow:
 (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">org</span>)
 (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">seq</span>)
 
+(<span style="color: #a71d5d;">defvar</span> <span style="color: #333333;">company-org-block-bol-p</span> t <span style="color: #183691;">"If t, detect completion when at</span>
+<span style="color: #183691;">begining of line, otherwise detect completion anywhere."</span>)
+
+(<span style="color: #a71d5d;">defvar</span> <span style="color: #333333;">company-org--regexp</span> <span style="color: #183691;">"&lt;</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">[</span><span style="color: #a71d5d;">^</span><span style="color: #183691;"> ]*</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">)</span><span style="color: #183691;">"</span>)
+
 (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-org-block</span> (command <span style="color: #0086b3;">&amp;optional</span> arg <span style="color: #0086b3;">&amp;rest</span> ignored)
   <span style="color: #183691;">"Complete org babel languages into source blocks."</span>
   (<span style="color: #a71d5d;">interactive</span> (list 'interactive))
   (<span style="color: #a71d5d;">cl-case</span> command
     (<span style="color: #a71d5d;">interactive</span> (company-begin-backend 'company-org-block))
-    (prefix (company-org-block--grap-symbol-cons))
+    (prefix (<span style="color: #a71d5d;">when</span> (derived-mode-p 'org-mode)
+              (company-org-block--grab-symbol-cons)))
     (candidates (company-org-block--candidates arg))
     (post-completion
      (company-org-block--expand arg))))
@@ -525,7 +531,7 @@ The company backend looks as follow:
   (delete-region (point) (- (point) (1+ <span style="color: #969896;">;; </span><span style="color: #969896;">Include "&lt;" in length.</span>
                                      (length insertion))))
   (<span style="color: #a71d5d;">if</span> (company-org-block--template-p insertion)
-  p    (company-org-block--wrap-point insertion
+      (company-org-block--wrap-point insertion
                                      <span style="color: #969896;">;; </span><span style="color: #969896;">May be multiple words.</span>
                                      <span style="color: #969896;">;; </span><span style="color: #969896;">Take the first one.</span>
                                      (nth 0 (split-string insertion)))
@@ -543,41 +549,36 @@ The company backend looks as follow:
   (<span style="color: #a71d5d;">save-excursion</span>
     (insert (format <span style="color: #183691;">"\n#+end_%s"</span> end))))
 
-(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-org-block--grap-symbol-cons</span> ()
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-org-block--grab-symbol-cons</span> ()
   <span style="color: #183691;">"Return cons with symbol and t whenever prefix of &lt; is found.</span>
 <span style="color: #183691;">For example: \"&lt;e\" -&gt; (\"e\" . t)"</span>
-  (<span style="color: #a71d5d;">when</span> (looking-back <span style="color: #183691;">"&lt;</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">[</span><span style="color: #a71d5d;">^</span><span style="color: #183691;"> ]*</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">)</span><span style="color: #183691;">"</span> (line-beginning-position))
-    (<span style="color: #a71d5d;">if</span> (match-string-no-properties 1)
-        (cons (match-string-no-properties 1) t)
-      nil)))
+  (<span style="color: #a71d5d;">when</span> (looking-back (<span style="color: #a71d5d;">if</span> company-org-block-bol-p
+                          (concat <span style="color: #183691;">"^"</span> company-org--regexp)
+                        company-org--regexp)
+                      (line-beginning-position))
+    (cons (match-string-no-properties 1) t)))
 </pre>
 </div>
 
 <p>
-To use, enable <i>company-mode</i> in <i>org-mode</i> and bind "&lt;" to a custom insert function:
+To use, add the backend enable <i>company-mode</i> in <i>org-mode</i>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/org-insert-char-dwim</span> ()
-  <span style="color: #183691;">"If inserting &lt; at BOL, invoke `</span><span style="color: #0086b3;">company-org-block</span><span style="color: #183691;">' otherwise insert."</span>
-  (<span style="color: #a71d5d;">interactive</span>)
-  <span style="color: #969896;">;; </span><span style="color: #969896;">Display company-org-block if &lt; inserted at BOL.</span>
-  (<span style="color: #a71d5d;">let</span> ((complete-p (<span style="color: #a71d5d;">and</span> company-mode
-                         (looking-back <span style="color: #183691;">"^"</span>))))
-    (self-insert-command 1)
-    (<span style="color: #a71d5d;">when</span> complete-p
-      (call-interactively 'company-org-block))))
+<pre class="src src-emacs-lisp">(add-to-list 'company-backends 'company-org-block)
+(company-mode +1)
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org27cbd8e" class="outline-3">
-<h3 id="org27cbd8e">Updates</h3>
-<div class="outline-text-3" id="text-org27cbd8e">
+<div id="outline-container-orgb9293c3" class="outline-3">
+<h3 id="orgb9293c3">Updates</h3>
+<div class="outline-text-3" id="text-orgb9293c3">
 <ul class="org-ul">
 <li>Removed language-specific header logic (use <i><a href="https://www.orgmode.org/worg/org-contrib/babel/header-args.html">org-babel-default-header-args</a></i> instead).</li>
 <li>Also completes non-source block templates from <a href="https://orgmode.org/manual/Easy-templates.html">org-structure-template-alist</a>.</li>
-<li>Source on <a href="https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el">github</a>.</li>
+<li>Source in my <a href="https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el">dot files</a>.</li>
+<li>Removed unnecessary binding. Just add company backend as usual.</li>
 </ul>
 </div>
 </div>
