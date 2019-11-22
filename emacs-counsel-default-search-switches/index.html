@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-11-22 Fri 00:12 -->
+<!-- 2019-11-22 Fri 00:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Enhanced Emacs searching with counsel switches</title>
+<title>Emacs counsel default search switches</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
 <style type="text/css">
@@ -459,32 +459,26 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orgd19a7c1" class="outline-2">
-<h2 id="enhanced-emacs-searching-with-counsel-switches"><span class="timestamp-wrapper"><span class="timestamp">10 November 2019</span></span> Enhanced Emacs searching with counsel switches</h2>
-<div class="outline-text-2" id="text-enhanced-emacs-searching-with-counsel-switches">
+<div id="outline-container-orgbdff936" class="outline-2">
+<h2 id="emacs-counsel-default-search-switches"><span class="timestamp-wrapper"><span class="timestamp">21 November 2019</span></span> Emacs counsel default search switches</h2>
+<div class="outline-text-2" id="text-emacs-counsel-default-search-switches">
 <p>
-The <a href="https://github.com/abo-abo/swiper">counsel</a> family of Emacs search commands are great for searching the filesystem. More specifically, <i>counsel-rg</i>, <i>counsel-ag</i>, and <i>counsel-pt</i>, which use the popular <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a>, <a href="https://github.com/ggreer/the_silver_searcher">silver searcher</a>, and <a href="https://github.com/monochromegane/the_platinum_searcher">platinum searcher</a> utilities.
+Following up from <a href="../enhanced-emacs-searching-with-counsel-switches">Enhanced Emacs searching with counsel switches</a>, rather than remembering <a href="https://github.com/ggreer/the_silver_searcher">silver searcher</a> and <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> switches, we can use <a href="https://github.com/abo-abo/swiper">counsel's</a> <i>ivy-initial-inputs-alist</i> to set these up as default visible switches.
 </p>
 
-<p>
-counsel-rg is my default searcher. It returns results quickly, with live updates as I tweak the search query.
-</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">push</span> '(counsel-ag . <span style="color: #183691;">"--file-search-regex '' -- "</span>) ivy-initial-inputs-alist)
+(<span style="color: #a71d5d;">push</span> '(counsel-rg . <span style="color: #183691;">"--glob '**' -- "</span>) ivy-initial-inputs-alist)
+</pre>
+</div>
 
 <p>
-Up until recently, my queries typically matched text in files only. This works great, but every so often I wished I could amend the query to include (or exclude) results matching specific file <i>names</i>. Turns out, you can prepend the search query with additional switches using the "&#x2013;" separator.
-</p>
-
-<p>
-The switches are usually utility-specific, but if we wanted to keep results from file names matching a glob, we can prepend the ripgrep query with something like <i>"&#x2013;glob Make* &#x2013;"</i> or the shorter version <i>"-g Make* &#x2013;"</i>.
-</p>
-
-<p>
-rg: -g Make* &#x2013; install
+The default switches stay out of the way in typical searches, but can be easily modified to include (or exclude) results matching specific file <i>names</i>.
 </p>
 
 
 <div class="figure">
-<p><img src="../images/enhanced-emacs-searching-with-counsel-switches/counsel-rg-switch.gif" alt="counsel-rg-switch.gif" width="75%" height="75%" />
+<p><img src="../images/emacs-counsel-default-search-switches/default-switches.gif" alt="default-switches.gif" width="75%" height="75%" />
 </p>
 </div>
 </div>

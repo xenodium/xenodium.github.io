@@ -1,6 +1,22 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-11-21 Thu] Emacs counsel default search switches
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-counsel-default-search-switches
+  :END:
+Following up from [[#enhanced-emacs-searching-with-counsel-switches][Enhanced Emacs searching with counsel switches]], rather than remembering [[https://github.com/ggreer/the_silver_searcher][silver searcher]] and [[https://github.com/BurntSushi/ripgrep][ripgrep]] switches, we can use [[https://github.com/abo-abo/swiper][counsel's]] /ivy-initial-inputs-alist/ to set these up as default visible switches.
+
+#+begin_src emacs-lisp
+  (push '(counsel-ag . "--file-search-regex '' -- ") ivy-initial-inputs-alist)
+  (push '(counsel-rg . "--glob '**' -- ") ivy-initial-inputs-alist)
+#+end_src
+
+The default switches stay out of the way in typical searches, but can be easily modified to include (or exclude) results matching specific file /names/.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-counsel-default-search-switches/default-switches.gif]]
+
 * [2019-11-10 Sun] Enhanced Emacs searching with counsel switches
   :PROPERTIES:
   :CUSTOM_ID: enhanced-emacs-searching-with-counsel-switches
@@ -13,7 +29,7 @@ Up until recently, my queries typically matched text in files only. This works g
 
 The switches are usually utility-specific, but if we wanted to keep results from file names matching a glob, we can prepend the ripgrep query with something like /"--glob Make* --"/ or the shorter version /"-g Make* --"/.
 
-rg: *-g Makefile -- install*
+rg: -g Make* -- install
 
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/enhanced-emacs-searching-with-counsel-switches/counsel-rg-switch.gif]]
@@ -5752,7 +5768,7 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :CUSTOM_ID: parenting-bookmarks
 :END:
 :MODIFIED:
-[2019-09-01 Sun]
+[2019-11-19 Tue]
 :END:
 - [[http://www.janetlansbury.com/2018/07/a-toddlers-do-it-myself-attitude-ends-in-tantrums/][A Toddler's Do-It-Myself Attitude Ends In Tantrums - Janet Lansbury]].
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
@@ -5762,6 +5778,8 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 - [[https://conference.michellegale.com/][Home - Mindful Parenting Online Conference]].
 - [[https://www.npr.org/sections/goatsandsoda/2019/03/13/685533353/a-playful-way-to-teach-kids-to-control-their-anger][How Inuit Parents Teach Kids To Control Their Anger (NPR)]].
 - [[https://news.ycombinator.com/item?id=17435671][How to get kids to pay attention (Hacker News)]].
+- [[https://twitter.com/brainpicker/status/1173363871035383808][How to raise a child – 10 rules from young single mom]].
+- [[https://www.brainpickings.org/2012/09/13/susan-sontag-10-rules-for-raising-a-child/][How to Raise a Child: 10 Rules from Young Susan Sontag – Brain Pickings]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/af2z1b/im_becoming_a_dad_for_the_first_time_in_may_what/][I'm becoming a Dad for the first time in May. What are you top finacial tips when becoming a parent? : UKPersonalFinance]].
 - [[https://aeon.co/essays/do-people-have-a-moral-duty-to-have-children-if-they-can][Is it OK to have kids?]].
 - [[https://blog.codinghorror.com/on-parenthood/][On Parenthood]].
@@ -10521,7 +10539,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2019-11-17 Sun]
+[2019-11-21 Thu]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -10605,6 +10623,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://clearfounder.com/how-to-diy-a-product-launch-video-with-no-experience-and-for-free/][How to DIY a Product Launch Video with No Experience, and for Free]].
 - [[https://news.ycombinator.com/item?id=18880043][How to get your money’s worth from your startup lawyer (Hacker News)]].
 - [[https://blog.streamroot.io/how-to-implement-a-multi-cdn-strategy-everything-you-need-to-know/][How to implement a multi-CDN strategy: everything you need to know]].
+- [[https://news.ycombinator.com/item?id=21591002][How to Kickstart and Scale a Marketplace | Hacker News]].
 - [[https://crew.co/backstage/blog/the-psychology-of-pricing][How to price anything: The psychology of why we’ll pay what we pay]].
 - [[https://www.sendwithus.com/resources/guide][How to Send Email Like a Startup]].
 - [[http://startupclass.samaltman.com/][How to start a startup lectures]].
@@ -10672,6 +10691,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.splunk.com/][Splunk: SIEM, AIOps, Application Management, Log Management, Machine Learning, and Compliance]].
 - [[http://logo.squarespace.com/][Squarespace Logo]].
 - [[http://blog.samaltman.com/startup-advice-briefly][Startup advice, briefly]].
+- [[https://www.defmacro.org/2019/03/26/startup-checklist.html][Startup idea checklist | defmacro]].
 - [[https://github.com/leonar15/startup-checklist][Startup Incorporation Checklist]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9nibvw/striking_off_company_am_i_missing_anything][Striking off company - am I missing anything? : UKPersonalFinance]].
 - [[https://www.firebase.com/docs/android/guide/structuring-data.html][Structuring JSON data in your Firebase database]].
@@ -11693,8 +11713,9 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2019-10-12 Sat]
+[2019-11-19 Tue]
 :END:
+******* TODO [[https://twitter.com/alicegoldfuss/status/1196527679127732224][Twitter: "Has anyone here seen Parasite?"]].
 ******* TODO [[https://www.imdb.com/title/tt2334879/][White House Down (2013) - IMDb]].
 ******* TODO [[https://www.imdb.com/title/tt2179136/][American Sniper (2014) - IMDb]].
 ******* TODO Hannibal Burress, Hasan Minhaj, Neal Brennan, Dave Chappelle.
@@ -12169,10 +12190,11 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2019-11-17 Sun]
+[2019-11-19 Tue]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
+- [[https://github.com/alphapapa/unpackaged.el#font-compare][A snippet to try out fonts]].
 - Abo abo's [[https://github.com/abo-abo/elisp-guide][Emacs Lisp Guide]].
 - [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][Adding A New Language to Emacs (ie. writing a new major mode)]].
 - [[https://github.com/alphapapa/emacs-package-dev-handbook][alphapapa's The Emacs Package Developer’s Handbook]].
@@ -12211,6 +12233,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://emacslife.com/how-to-read-emacs-lisp.html][Read Lisp, Tweak Emacs]].
 - [[https://joelmccracken.github.io/entries/reading-writing-data-in-emacs-batch-via-stdin-stdout/][Reading from stdin and writing to stdout with Emacs batch]].
 - [[http://thewanderingcoder.com/2015/02/refactoring-beginning-emacs-lisp-i-adding-tests/][Refactoring “Beginning Emacs Lisp”: I: Adding Tests]].
+- [[https://gist.github.com/equwal/89b1ef5ac8d4d737cfd37f66e9ba4895][Selecting and trying out different fonts in Emacs]].
 - [[https://github.com/purcell/elisp-slime-nav][Slime-style navigation for Emacs Lisp]].
 - [[https://zck.me/testing-buffer-modifying-emacs-code][Testing Emacs code that modifies buffers]].
 - [[http://nic.ferrier.me.uk/blog/2012_07/tips-and-tricks-for-emacslisp][Tips on Emacs Lisp programming]].
@@ -12237,7 +12260,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2019-11-18 Mon]
+[2019-11-19 Tue]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -12268,6 +12291,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://two-wrongs.com/centered-cursor-mode-in-vanilla-emacs][Centered Cursor Mode in Vanilla Emacs]].
 - [[https://ddavis.fyi/blog/2018-07-07-emacs-cpp-ide/][Clangd based Emacs C++ IDE (Doug Davis)]].
 - [[https://people.gnome.org/~federico/blog/compilation-notifications-in-emacs.html][Compilation notifications in Emacs - Federico's Blog]].
+- [[https://medium.com/@suvratapte/configuring-emacs-from-scratch-intro-3157bed9d040][Configuring Emacs from Scratch — Intro - Suvrat Apte - Medium]].
 - [[http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html][Configuring emacs to use eslint and babel with flycheck for javascript and React.js JSX]].
 - [[http://mbork.pl/Content_AND_Presentation][Content AND Presentation]].
 - [[https://github.com/redguardtoo/counsel-etags#ctags-setup][counsel-etags: Fast, energy-saving, and powerful code navigation solution]].
