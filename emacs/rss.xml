@@ -6,7 +6,85 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 Nov 2019 15:40:54 +0000</lastBuildDate>
+<lastBuildDate>Sun, 24 Nov 2019 10:05:56 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Wizard zines comics Emacs eshell util</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org00f10ad" class="outline-2">
+ <h2 id="wizard-zines-comics-eshell-util"> <span class="timestamp-wrapper"> <span class="timestamp">24 November 2019</span></span> Wizard zines comics Emacs eshell util</h2>
+ <div class="outline-text-2" id="text-wizard-zines-comics-eshell-util">
+ <p>
+Over at  <a href="http://wizardzines.com">wizardzines.com</a>,  <a href="https://jvns.ca">Julia Evans</a> authors wonderful zines on topics like git, networking, linux, command-line utilities, and others. Some zines are paid. Some are free. No affiliation here, just a fan.
+</p>
+
+ <p>
+A little while ago, Julia  <a href="https://twitter.com/b0rk/status/1192304892435738624">tweeted</a> about a utility she's building to view her original comics on similar topics. I instantly thought it'd be a fun tool to implement for Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a>.
+</p>
+
+ <p>
+Since then, I subscribed to  <a href="https://wizardzines.com/saturday-comics/">wizardzines.com/saturday-comics</a> and received a few comics (awk, tar, and bash tricks). I saved them locally (using topic name and dropping file extensions).
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">ls -1 ~/Downloads/wizardzines-comics/
+</pre>
+</div>
+
+ <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"> <colgroup> <col class="org-left"></col></colgroup> <tbody> <tr> <td class="org-left">awk</td>
+</tr> <tr> <td class="org-left">bash</td>
+</tr> <tr> <td class="org-left">tar</td>
+</tr></tbody></table> <p>
+By no means battle-tested, but here's an elisp snippet defining the  <i>ecomic</i> command. It displays inlined comics in the handy eshell.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">eshell</span>)
+( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">iimage</span>)
+
+( <span style="color: #a71d5d;">defvar</span>  <span style="color: #333333;">wizardzines-comics-path</span>  <span style="color: #183691;">"~/Downloads/wizardzines-comics"</span>)
+
+( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">eshell/ecomic</span> ( <span style="color: #0086b3;">&rest</span> args)
+   <span style="color: #183691;">"Display command comic in ARGS.</span>
+ <span style="color: #183691;">Note: ensure comic images live in `</span> <span style="color: #0086b3;">wizardzines-comics-path</span> <span style="color: #183691;">', named with</span>
+ <span style="color: #183691;">command name and no extension."</span>
+  (eshell-eval-using-options
+    <span style="color: #183691;">"ecomic"</span> args
+   '((?h  <span style="color: #183691;">"help"</span> nil nil  <span style="color: #183691;">"show this usage screen"</span>)
+      <span style="color: #a71d5d;">:external</span>  <span style="color: #183691;">"ecomic"</span>
+      <span style="color: #a71d5d;">:show-usage</span>
+      <span style="color: #a71d5d;">:usage</span>  <span style="color: #183691;">"COMMAND</span>
+
+ <span style="color: #183691;">Show COMMAND comic from Julia Evans' https://wizardzines.com/saturday-comics"</span>)
+   ( <span style="color: #a71d5d;">let*</span> ((command (nth 0 (eshell-stringify-list (eshell-flatten-list args))))
+          (image-fpath (concat (file-name-as-directory
+                                (expand-file-name wizardzines-comics-path))
+                               command)))
+     ( <span style="color: #a71d5d;">unless</span> (file-exists-p image-fpath)
+       ( <span style="color: #333333;">error</span>  <span style="color: #183691;">"comic: \"%s\" not found :-("</span> command))
+     (eshell-buffered-print  <span style="color: #183691;">"\n"</span>)
+     (add-text-properties 0 (length image-fpath)
+                          `(display ,(create-image image-fpath)
+                                    modification-hooks
+                                    (iimage-modification-hook))
+                          image-fpath)
+     (eshell-buffered-print image-fpath)
+     (eshell-flush))))
+</pre>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/wizard-zines-comics-eshell-util/ecomic.gif" alt="ecomic.gif" width="75%" height="75%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/wizard-zines-comics-eshell-util/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/wizard-zines-comics-eshell-util/index.html</guid>
+  <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs counsel default search switches</title>
