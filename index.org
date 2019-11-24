@@ -1,6 +1,64 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2019-11-24 Sun] Wizard zines comics Emacs eshell util
+  :PROPERTIES:
+  :CUSTOM_ID: wizard-zines-comics-eshell-util
+  :END:
+Over at [[http://wizardzines.com][wizardzines.com]], [[https://jvns.ca][Julia Evans]] authors wonderful zines on topics like git, networking, linux, command-line utilities, and others. Some zines are paid. Some are free. No affiliation here, just a fan.
+
+A little while ago, Julia [[https://twitter.com/b0rk/status/1192304892435738624][tweeted]] about a utility she's building to view her original comics on similar topics. I instantly thought it'd be a fun tool to implement for Emacs [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]].
+
+Since then, I subscribed to [[https://wizardzines.com/saturday-comics/][wizardzines.com/saturday-comics]] and received a few comics (awk, tar, and bash tricks). I saved them locally (using topic name and dropping file extensions).
+
+#+begin_src sh :exports both
+  ls -1 ~/Downloads/wizardzines-comics/
+#+end_src
+
+#+RESULTS:
+| awk  |
+| bash |
+| tar  |
+
+By no means battle-tested, but here's an elisp snippet defining the /ecomic/ command. It displays inlined comics in the handy eshell.
+
+#+begin_src emacs-lisp
+  (require 'eshell)
+  (require 'iimage)
+
+  (defvar wizardzines-comics-path "~/Downloads/wizardzines-comics")
+
+  (defun eshell/ecomic (&rest args)
+    "Display command comic in ARGS.
+  Note: ensure comic images live in `wizardzines-comics-path', named with
+  command name and no extension."
+    (eshell-eval-using-options
+     "ecomic" args
+     '((?h "help" nil nil "show this usage screen")
+       :external "ecomic"
+       :show-usage
+       :usage "COMMAND
+
+  Show COMMAND comic from Julia Evans' https://wizardzines.com/saturday-comics")
+     (let* ((command (nth 0 (eshell-stringify-list (eshell-flatten-list args))))
+            (image-fpath (concat (file-name-as-directory
+                                  (expand-file-name wizardzines-comics-path))
+                                 command)))
+       (unless (file-exists-p image-fpath)
+         (error "comic: \"%s\" not found :-(" command))
+       (eshell-buffered-print "\n")
+       (add-text-properties 0 (length image-fpath)
+                            `(display ,(create-image image-fpath)
+                                      modification-hooks
+                                      (iimage-modification-hook))
+                            image-fpath)
+       (eshell-buffered-print image-fpath)
+       (eshell-flush))))
+#+end_src
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/wizard-zines-comics-eshell-util/ecomic.gif]]
+
 * [2019-11-21 Thu] Emacs counsel default search switches
   :PROPERTIES:
   :CUSTOM_ID: emacs-counsel-default-search-switches
