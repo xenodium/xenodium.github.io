@@ -3279,15 +3279,15 @@ Lastly, configure mu4e:
   (use-package mu4e
     :config
     ;; Update mail using 'U' in main view:
-    (csetq mu4e-get-mail-command "offlineimap")
-    (csetq mu4e-view-show-addresses t)
-    (csetq mu4e-attachment-dir (expand-file-name "~/Downloads/"))
-    (csetq mu4e-maildir "~/stuff/active/Mail")
-    (csetq mu4e-html2text-command "w3m -T text/html") ;; alternatively "textutil -stdin -format html -convert txt -stdout"
-    (csetq mu4e-user-mail-address-list '("myself@domain1.com"
+    (setq mu4e-get-mail-command "offlineimap")
+    (setq mu4e-view-show-addresses t)
+    (setq mu4e-attachment-dir (expand-file-name "~/Downloads/"))
+    (setq mu4e-maildir "path/to/Mail")
+    (setq mu4e-html2text-command "w3m -T text/html") ;; alternatively "textutil -stdin -format html -convert txt -stdout"
+    (setq mu4e-user-mail-address-list '("myself@domain1.com"
                                          "myself@domain2.com"))
-    (csetq mu4e-context-policy 'pick-first)
-    (csetq mu4e-compose-context-policy 'always-ask)
+    (setq mu4e-context-policy 'pick-first)
+    (setq mu4e-compose-context-policy 'always-ask)
     (setq mu4e-contexts
           (list
            (make-mu4e-context
@@ -3299,12 +3299,15 @@ Lastly, configure mu4e:
                             (mu4e-message-contact-field-matches
                              msg '(:from :to :cc :bcc) "myself@domain1.com")))
             :vars '((user-mail-address . "myself@domain1.com")
-                    (user-full-name . "Álvaro Ramírez")
+                    (user-full-name . "My name")
                     (mu4e-sent-folder . "/Domain1/Sent")
                     (mu4e-drafts-folder . "/Domain1/Drafts")
                     (mu4e-trash-folder . "/Domain1/Trash")
                     (mu4e-compose-signature . nil)
-                    (mu4e-compose-format-flowed . nil)))
+                    (mu4e-compose-format-flowed . nil)
+                    (smtpmail-smtp-user . "myself@domain1.com")
+                    (smtpmail-smtp-server . "smtp.domain1.com")
+                    (smtpmail-smtp-service . 587)))
            (make-mu4e-context
             :name "domain2"
             :enter-func (lambda () (mu4e-message "Entering context myself@domain2.com"))
@@ -3314,12 +3317,27 @@ Lastly, configure mu4e:
                             (mu4e-message-contact-field-matches
                              msg '(:from :to :cc :bcc) "myself@domain2.com")))
             :vars '((user-mail-address . "myself@domain2.com")
-                    (user-full-name . "Álvaro Ramírez")
+                    (user-full-name . "My name")
                     (mu4e-sent-folder . "/Domain2/Sent")
                     (mu4e-drafts-folder . "/Domain2/Drafts")
                     (mu4e-trash-folder . "/Domain2/Trash")
                     (mu4e-compose-signature . nil)
-                    (mu4e-compose-format-flowed . nil))))))
+                    (mu4e-compose-format-flowed . nil)
+                    (smtpmail-smtp-user . "myself@domain2.com")
+                    (smtpmail-smtp-server . "smtp.domain2.com")
+                    (smtpmail-smtp-service . 587))))))
+
+  (use-package smtpmail
+    :config
+    (setq smtpmail-stream-type 'starttls)
+    (setq smtpmail-debug-info t)
+    (setq smtpmail-warn-about-unknown-extensions t)
+    (setq smtpmail-queue-mail t)
+    (setq smtpmail-default-smtp-server nil)
+    ;; Created with mu mkdir path/to/Mail/queue
+    ;; Also avoid indexing.
+    ;; touch path/to/Mail/queue/.noindex
+    (setq smtpmail-queue-dir "path/to/Mail/queue/cur"))
 #+END_SRC
 *** Authinfo
 
