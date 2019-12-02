@@ -3285,7 +3285,7 @@ Lastly, configure mu4e:
     (setq mu4e-maildir "path/to/Mail")
     (setq mu4e-html2text-command "w3m -T text/html") ;; alternatively "textutil -stdin -format html -convert txt -stdout"
     (setq mu4e-user-mail-address-list '("myself@domain1.com"
-                                         "myself@domain2.com"))
+                                        "myself@domain2.com"))
     (setq mu4e-context-policy 'pick-first)
     (setq mu4e-compose-context-policy 'always-ask)
     (setq mu4e-contexts
@@ -3338,6 +3338,10 @@ Lastly, configure mu4e:
     ;; Also avoid indexing.
     ;; touch path/to/Mail/queue/.noindex
     (setq smtpmail-queue-dir "path/to/Mail/queue/cur"))
+
+  (use-package message
+    :config
+    (setq message-send-mail-function 'smtpmail-send-it))
 #+END_SRC
 *** Authinfo
 
