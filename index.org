@@ -14,7 +14,7 @@ Took some notes along the way (mostly data with years attached) and dumped it in
 
 *NOTE:* /These tables alone are *not* comprehensive enough to prepare for the exam. You'll need to know additional information without dates attached./
 
-*** Events
+** Events
 
 |----------------+--------------------------------------------------------------------------------|
 |           Year | Event                                                                          |
@@ -71,7 +71,7 @@ Took some notes along the way (mostly data with years attached) and dumped it in
 | 6000 years ago | Farmers come to Britain                                                        |
 |----------------+--------------------------------------------------------------------------------|
 
-*** Population
+** Population
 
 |------+--------------|
 | Year | Population   |
@@ -151,7 +151,7 @@ By no means battle-tested, but here's an elisp snippet defining the /ecomic/ com
 
 comments on [[https://twitter.com/xenodium/status/1198542659704504321][twitter]]
 
-*** Updates
+** Updates
 - Tweaked title.
 
 * [2019-11-21 Thu] Emacs counsel default search switches
@@ -283,7 +283,7 @@ To use, add the backend enable /company-mode/ in /org-mode/:
   (company-mode +1)
 #+end_src
 
-*** Updates
+** Updates
 - Removed language-specific header logic (use /[[https://www.orgmode.org/worg/org-contrib/babel/header-args.html][org-babel-default-header-args]]/ instead).
 - Also completes non-source block templates from [[https://orgmode.org/manual/Easy-templates.html][org-structure-template-alist]].
 - Source in my [[https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el][dot files]].
@@ -394,7 +394,7 @@ Some email provider accept regular expressions to blacklist additional spam. My 
 
 It's way easier to maintain a blacklist (with no regex) using an org table.
 
-*** Blacklist
+** Blacklist
   #+begin_src org :exports src
   ,#+name: spam-entries
   | .spammy                |
@@ -405,7 +405,7 @@ It's way easier to maintain a blacklist (with no regex) using an org table.
 
 and subsequently use org babel (elisp snippet) to generate the regex.
 
-*** Regex gen
+** Regex gen
   #+begin_src org :exports src
     ,#+begin_src emacs-lisp :var rows=spam-entries
       (require 'dash)
@@ -700,7 +700,7 @@ I don't add linux sudoers frequently enough. Always looking it up. Keeping snipp
   :PROPERTIES:
   :CUSTOM_ID: plotting-ledger-reports-in-org
   :END:
-*** My ledger file
+** My ledger file
 
 Save path to [[file:plotting-ledger-reports-in-org/my.ledger][my.ledger]] in /ledger-file/ block.
 
@@ -711,7 +711,7 @@ Save path to [[file:plotting-ledger-reports-in-org/my.ledger][my.ledger]] in /le
   ,#+end_src
 #+end_src
 
-*** gnuplot terminal (png or qt)
+** gnuplot terminal (png or qt)
 
 Select gnuplot terminal. Using png to output images, but qt is handy too for interactive chart inspection.
 
@@ -723,7 +723,7 @@ Use png for inline or qt for interactive
 ,#+end_src
 #+end_src
 
-*** Monthly Income and Expenses
+** Monthly Income and Expenses
 
 Generate income report.
 
@@ -831,15 +831,15 @@ POSITIONAL ARGUMENTS:
   :PROPERTIES:
   :CUSTOM_ID: ledger-query-snippets
   :END:
-*** Expenses paid in cash between two dates
+** Expenses paid in cash between two dates
     #+begin_src sh
     ledger -f my.ledger reg "^Expenses" and expr 'any(account=~/Assets:Cash:Wallet/)' -b 02/19 -e 04/09
     #+end_src
-*** Bank account income between two dates
+** Bank account income between two dates
     #+begin_src sh
     ledger -f my.ledger reg "^Assets:Bank:Acme" and expr "amount > 0" -b 02/19 -e 04/09
     #+end_src
-*** Formatting reg output
+** Formatting reg output
     #+begin_src sh
     ledger -f my.ledger reg "^Assets:Bank:Acme" --format="%(payee) %(amount)\n"
     #+end_src
@@ -1194,15 +1194,15 @@ Starting from week 4:
   :PROPERTIES:
   :CUSTOM_ID: checksums-on-linuxmacos
   :END:
-*** MD5
+** MD5
     #+begin_src sh
       md5 file
     #+end_src
-*** SHA-1
+** SHA-1
     #+begin_src sh
       shasum -a 1 file
     #+end_src
-*** SHA-256
+** SHA-256
     #+begin_src sh
       shasum -a 256 file
     #+end_src
@@ -1638,7 +1638,7 @@ Finally, join all pdfs into one. Turns out macOS has a handy python script alrea
 
 ps. [[https://pdfgrep.org][pdfgrep]] is great for searching pdfs.
 
-*** Useful references
+** Useful references
     - [[https://ryanfb.github.io/etc/2014/11/13/command_line_ocr_on_mac_os_x.html][Ryan Baumann's: Command-Line OCR with Tesseract on Mac OS X]].
 
 * [2018-12-25 Tue] Audiobook providers bookmarks
@@ -1814,7 +1814,7 @@ Needed to diff two directories, but only interested in file size changes. diff, 
 
 /Note: Using diff, find, sort, and stat on macOS./
 
-*** Update 1
+** Update 1
   I've since learned about mtree (thanks [[https://twitter.com/romanzolotarev/status/1070249301815771137][Roman]]!). A nice utility to add to the toolbox.
 
   #+BEGIN_SRC sh
@@ -1844,7 +1844,7 @@ Needed to diff two directories, but only interested in file size changes. diff, 
   ..
   #+end_example
 
-*** Update 2
+** Update 2
   I've added Emacs ediff to the mix:
 
   #+BEGIN_SRC emacs-lisp
@@ -1915,7 +1915,7 @@ Here's a table comparing Ocado (30% off) and Asda (no discount):
 
 On the upside, Ocado has plenty of items I cannot find at Asda. May be a good opportunity to get these items at a discount.
 
-*** Emacs org tables
+** Emacs org tables
 
 Small tables are the perfect use-case for Emacs [[https://orgmode.org/manual/Tables.html][org-mode tables]]. Been a while since I used one, so great timing for a little refresh.
 
@@ -3037,13 +3037,13 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   :END:
 The email fun in Emacs continues. After a few weeks since I [[#trying-out-mu4e-and-offlineimap][started using mu4e and offlineimap]], I'm sold. Both are awesome. [[http://isync.sourceforge.net/mbsync.html][Mbsync]] is an [[http://www.offlineimap.org/][offlineimap]] alternative. Despite resyncing all my mail, the transition was fairly smooth. Here's how...
 
-*** Install isync (for mbsync)
+** Install isync (for mbsync)
 
 #+BEGIN_SRC sh
   brew install isync
 #+END_SRC
 
-*** Configure mbsync
+** Configure mbsync
 
 Mbsync uses ~~/.mbsyncrc~ for configuration. Migrating [[#trying-out-mu4e-and-offlineimap][~/.offlineimaprc]] to ~~/.mbsyncrc~ looks like:
 
@@ -3075,7 +3075,7 @@ Mbsync uses ~~/.mbsyncrc~ for configuration. Migrating [[#trying-out-mu4e-and-of
   Expunge Both
   SyncState *
 #+END_SRC
-*** No concurrent IMAP commands supported
+** No concurrent IMAP commands supported
 
 My IMAP provider doesn't handle concurrent IMAP commands. [[https://kdecherf.com/blog/2017/05/01/mbsync-and-office-365/][mbsync and Office 365]] had the answer:
 
@@ -3083,7 +3083,7 @@ My IMAP provider doesn't handle concurrent IMAP commands. [[https://kdecherf.com
   PipelineDepth 1
 #+END_SRC
 
-*** Initial sync
+** Initial sync
 
 Run initial from the command line sync:
 
@@ -3115,7 +3115,7 @@ Eshell loop:
   for i in (number-sequence 1 10) {mbsync -V Personal; sleep 5}
 #+END_SRC
 
-*** Create mu index
+** Create mu index
 
 Reindex using mu, but first remove existing index for offlineimap messages:
 
@@ -3129,7 +3129,7 @@ Ok, do index now:
   mu index --maildir=~/IMAP
 #+END_SRC
 
-*** Mu4e tweaks
+** Mu4e tweaks
 
 The /get mail/ command should now point to mbsync.
 
@@ -3143,7 +3143,7 @@ I had issues with duplicate IDs after moving and deleting messages from mu4e. [[
   (csetq mu4e-change-filenames-when-moving t)
 #+END_SRC
 
-*** Helpful references
+** Helpful references
 - [[https://webgefrickel.de/blog/a-modern-mutt-setup][A modern mutt setup with neomutt, mbsync, msmtp and mu — part one | webgefrickel]].
 - [[http://pragmaticemacs.com/emacs/migrating-from-offlineimap-to-mbsync-for-mu4e/][Migrating from offlineimap to mbsync for mu4e | Pragmatic Emacs]].
 - [[https://copyninja.info/blog/email_setup.html][My personal Email setup - Notmuch, mbsync, postfix and dovecot]].
@@ -3232,7 +3232,7 @@ Continuing the mu4e fun, added mu4e-maildirs-extension to display a mail dirs su
 
 Managing Email from Emacs. Surely that's crazy-talk, but hey... let's give it a try.
 
-*** Install offlineimap
+** Install offlineimap
 Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
 
 #+BEGIN_SRC sh
@@ -3241,7 +3241,7 @@ Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for in
 
 Before can configure offlineimap, we'll need to handle a few things first.
 
-*** Get a cert fingerprint
+** Get a cert fingerprint
 
 Use openssl for getting a certificate fingerprint. From offlineimap's [[http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint][FAQ:]]
 
@@ -3255,7 +3255,7 @@ Should give you something like:
   SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
 #+END_QUOTE
 
-*** Encrypt password
+** Encrypt password
 Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
 
 #+BEGIN_SRC sh
@@ -3274,7 +3274,7 @@ Generate an offlineimap account password file.
   echo "YourPassword" | gpg --encrypt --recipient "Your Name" -o ~/.offlineimap_accountname.gpg
 #+END_SRC
 
-*** Python password  wrapper
+** Python password  wrapper
 
 Based on Fabian's [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html][Encrypt OfflineIMAP and msmtp password with GnuPG]], I created ~/.read_password.py with:
 
@@ -3288,7 +3288,7 @@ Based on Fabian's [[https://f-koehler.github.io/posts/2015-03-17-offlineimap-msm
 
 ps. Alternatively, see [[http://stevelosh.com/blog/2012/10/the-homely-mutt/#retrieving-passwords][The homely Mutt]]'s section to store password in macOS's keychain.
 
-*** Configure offlineimap
+** Configure offlineimap
 
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 
@@ -3329,7 +3329,7 @@ remotepasseval = read_password("~/.offlineimap_personal_account_password.gpg")
 cert_fingerprint = aabbccddeeddffaa00aa2aaaaaaaa82080aaa2aa
 #+END_SRC
 
-***** Cert file
+*** Cert file
 
 You can use macOS's certificates from Keychain Access -> System Roots -> Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
 
@@ -3339,7 +3339,7 @@ sslcacertfile = /path/to/certs.pem
 
 Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate ca-bundle.crt, using certdata.txt from Mozilla's source tree.
 
-*** Install mu4e
+** Install mu4e
 Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
 
 #+BEGIN_SRC sh
@@ -3359,7 +3359,7 @@ Finally installed mu4e:
   brew install mu
 #+END_SRC
 
-*** Configure mu4e
+** Configure mu4e
 
 Lastly, configure mu4e:
 
@@ -3433,7 +3433,7 @@ Lastly, configure mu4e:
     :config
     (setq message-send-mail-function 'smtpmail-send-it))
 #+END_SRC
-*** Authinfo
+** Authinfo
 
 Create an ~/.authinfo file for sendmail authentication with:
 
@@ -3444,7 +3444,7 @@ machine smtp.host2.com login account2@host2.com password somepassword2
 
 Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~/.authinfo.
 
-*** Mu4e helpful references
+** Mu4e helpful references
 - [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-][A Complete Guide to Email in Emacs using Mu and Mu4e]].
 - [[https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/][A year with Notmuch mail - a super-fast email client available on Emacs]].
 - [[https://dev.to/shrysr/archaic-text-based-email-clients-rock-3flm][Archaic: text based email clients rock - DEV Community (lots of great links)]].
@@ -3625,7 +3625,7 @@ And good 'ol gdb (lldb works too):
   gdb ../nextstep/Emacs.app/Contents/MacOS/Emacs
 #+END_SRC
 
-*** Reference
+** Reference
     - [[https://git.savannah.gnu.org/cgit/emacs.git/tree/etc/DEBUG][etc/DEBUG: Debugging GNU Emacs]].
 
 * [2018-04-19 Thu] Paper less bookmarks
@@ -3806,7 +3806,7 @@ Option 2
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/trying-out-chunkwm/chunkwm.png]]
 
-***** Installing [[https://github.com/koekeishiya/chunkwm][Chunkwm]]
+*** Installing [[https://github.com/koekeishiya/chunkwm][Chunkwm]]
 
 #+BEGIN_SRC sh
   $ brew tap crisidev/homebrew-chunkwm
@@ -3828,7 +3828,7 @@ Start chunkwmrc service.
   $ brew services start crisidev/chunkwm/chunkwm
 #+END_SRC
 
-***** Installing [[https://github.com/koekeishiya/skhd][skhd]] (a hotkey daemon)
+*** Installing [[https://github.com/koekeishiya/skhd][skhd]] (a hotkey daemon)
 
 #+BEGIN_SRC sh
   $ brew install --HEAD --with-logging  koekeishiya/formulae/skhd
@@ -3853,7 +3853,7 @@ Add a configuration file. Started off from this [[https://raw.githubusercontent.
   chmod +x ~/.skhdrc
 #+END_SRC
 
-***** Installing [[https://github.com/koekeishiya/skhd][khd]] (easily invoke hotkeys from terminal)
+*** Installing [[https://github.com/koekeishiya/skhd][khd]] (easily invoke hotkeys from terminal)
 #+BEGIN_SRC sh
   $ brew install khd
 #+END_SRC
@@ -3869,24 +3869,24 @@ Some additional Mission Control and keyboard shortcut preferences:
 :PROPERTIES:
 :CUSTOM_ID: building-bazel-on-macos
 :END:
-*** Bootstrap
+** Bootstrap
 #+BEGIN_SRC sh
   brew install bazel
 #+END_SRC
 
-*** Build
+** Build
 #+BEGIN_SRC sh
   git clone https://github.com/bazelbuild/bazel.git
   cd bazel
   bazel build //src:bazel
 #+END_SRC
 
-*** Get your bazel binary
+** Get your bazel binary
 #+BEGIN_SRC
   Self-contained binary in bazel-bin/src/bazel
 #+END_SRC
 
-*** Known revisions
+** Known revisions
 - https://github.com/bazelbuild/bazel.git @ d81a46cebe07f73d3ea38206262cf7a1a9513b42
 - https://github.com/bazelbuild/rules_apple.git @ e921a9f727e039c8b5087d4f98c5d09f189658cd
 * [2018-01-07 Sun] Extracting files from pkg
@@ -3997,7 +3997,7 @@ Add /objc/ to /org-babel-load-languages/, and you can subsequently compile and r
 :PROPERTIES:
 :CUSTOM_ID: ios-dev-command-line-goodies
 :END:
-*** Install ipa on device
+** Install ipa on device
 Get utility with:
 #+BEGIN_SRC sh
   npm install -g ipa-deploy
@@ -4007,12 +4007,12 @@ Install ipa on connected iPhone:
 #+BEGIN_SRC sh
   ipa-deploy path/to/your/App.ipa
 #+END_SRC
-*** Install app on booted simulator
+** Install app on booted simulator
 Install ipa on connected iPhone:
 #+BEGIN_SRC sh
   xcrun simctl install booted path/to/your/App.app
 #+END_SRC
-*** Install ipa on booted simulator
+** Install ipa on booted simulator
 #+BEGIN_SRC sh
   #!/bin/bash
 
@@ -4394,30 +4394,30 @@ May need to kill gpg-agent to reload config.
 :END:
 UPDATE(2019-05-19 Sun): Plan A and B use options no longer available since the recent changes to [[https://github.com/Homebrew/homebrew-core/issues/31510][remove all options from Homebrew/homebrew-core formulae]]. See Plan C.
 
-*** +Plan A+
-***** +Install gnuplot Qt+
+** +Plan A+
+*** +Install gnuplot Qt+
 +If you have the resources, you can try the Qt flavor. You need at least 15GB to download and a long build. Ran out of space on my Macbook Air. Aborted.+
 #+BEGIN_SRC sh
   brew install gnuplot --with-qt
 #+END_SRC
-*** +Plan B+
-***** +Install xquartz+
+** +Plan B+
+*** +Install xquartz+
 #+BEGIN_SRC sh
   brew install Caskroom/cask/xquartz
 #+END_SRC
-***** +Install gnuplot x11+
+*** +Install gnuplot x11+
 #+BEGIN_SRC sh
   brew install gnuplot --with-x11
 #+END_SRC
 
-*** Install feedgnuplot
+** Install feedgnuplot
 Feedgnuplot is handy for plotting data streams realtime.
 #+BEGIN_SRC sh
   brew install feedgnuplot
 #+END_SRC
 
-***  Plan C
-***** Install with no options
+**  Plan C
+*** Install with no options
  #+BEGIN_SRC sh
   brew install gnuplot
  #+END_SRC
@@ -4428,8 +4428,8 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
   qt.qpa.plugin: Could not find the Qt platform plugin "cocoa" in ""
  #+end_quote
 
-***** Debugging
-******* QT_DEBUG_PLUGINS
+*** Debugging
+**** QT_DEBUG_PLUGINS
 
 Turns out you can get plugin logs using the QT_DEBUG_PLUGINS environment variable:
 
@@ -4443,7 +4443,7 @@ Turns out you can get plugin logs using the QT_DEBUG_PLUGINS environment variabl
 
 This led me to find out about the /gnuplot/5.2/gnuplot_qt/ binary.
 
-******* qt_prfxpath
+**** qt_prfxpath
 
 Getting the Qt prefix can be done by inspecting QtCore's strings:
 
@@ -4608,7 +4608,7 @@ Success.
 :PROPERTIES:
 :CUSTOM_ID: go-snippets
 :END:
-*** Command-line flags
+** Command-line flags
 #+BEGIN_SRC go
   import (
         "flag"
@@ -4751,7 +4751,7 @@ Success.
 :END:
 Straight out of [[http://jvns.ca/blog/2016/08/29/how-i-made-a-zine][How (and why) I made a zine]], some handy utilities for generating pdfs...
 
-*** Convert pngs to pdfs
+** Convert pngs to pdfs
 #+BEGIN_SRC sh
   # start with a bunch of PNG images of your zine pages
   # convert them all to PDF
@@ -4762,26 +4762,26 @@ Straight out of [[http://jvns.ca/blog/2016/08/29/how-i-made-a-zine][How (and why
      done
 #+END_SRC
 
-*** Combine pdfs
+** Combine pdfs
 #+BEGIN_SRC sh
   # pdftk is awesome for combining pdfs into a single pdf
   pdftk *.pdf cat output zine.pdf
 #+END_SRC
 
-*** Reorder pdf pages
+** Reorder pdf pages
 #+BEGIN_SRC sh
   # pdfmod is a GUI that lets you reorder pages
   pdfmod zine.pdf
 #+END_SRC
 
-*** Add margins to pdf
+** Add margins to pdf
 #+BEGIN_SRC sh
   # pdfcrop lets you add margins to the pdf. this is good because otherwise the
   # printer will cut off stuff at the edges
   pdfcrop --margin '29 29 29 29' zine.pdf zine-intermediate.pdf
 #+END_SRC
 
-*** Turn pdf into booklet
+** Turn pdf into booklet
 #+BEGIN_SRC sh
   # pdfjam is this wizard tool that lets you take a normal ordered pdf and turn
   # it into something you can print as a booklet on a regular printer.
@@ -5266,21 +5266,21 @@ An 8-week training schedule:
 :PROPERTIES:
 :CUSTOM_ID: haskell-notes
 :END:
-*** Referential transparency
+** Referential transparency
 An expression consistently evaluating to the same result, regardless of context.
-*** References
+** References
 - [[http://learnyouahaskell.com/][learnyouahaskell.com]].
 - [[https://wiki.haskell.org][wiki.haskell.org]].
 * [2016-03-28 Mon] Emacs Objective-C tagging with RTags
 :PROPERTIES:
 :CUSTOM_ID: emacs-objective-c-tagging-with-rtags
 :END:
-*** Install libclang on Mac
+** Install libclang on Mac
 #+BEGIN_SRC sh
   brew install llvm --with-clang
 #+END_SRC
 
-*** Install RTags
+** Install RTags
 #+BEGIN_SRC sh
   git clone --recursive https://github.com/Andersbakken/rtags.git
   cd rtags
@@ -5288,28 +5288,28 @@ An expression consistently evaluating to the same result, regardless of context.
   make
 #+END_SRC
 
-*** Start RTags daemon
+** Start RTags daemon
 #+BEGIN_SRC sh
   path/to/rtags/bin/rdm 2> /tmp/rdm.log
 #+END_SRC
 
-*** Compilation database
-***** Install xctool
+** Compilation database
+*** Install xctool
 #+BEGIN_SRC sh
   brew install xctool
 #+END_SRC
-***** Generate a compilation database
+*** Generate a compilation database
 #+BEGIN_SRC sh
   cd path/to/your/objc-project
   xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
 #+END_SRC
 
-*** Load compilation database
+** Load compilation database
 #+BEGIN_SRC sh
   path/to/rtags/bin/rc -J path/to/your/objc-project/compile_commands.json
 #+END_SRC
 
-*** Install RTags Emacs package
+** Install RTags Emacs package
 
 #+BEGIN_SRC emacs-lisp
   (use-package rtags :ensure t
@@ -5318,14 +5318,14 @@ An expression consistently evaluating to the same result, regardless of context.
     (setq rtags-path "path/to/rtags/bin/"))
 #+END_SRC
 
-*** Ready to go
+** Ready to go
 Use any of the rtags interactive commands. For example:
 
 #+BEGIN_EXAMPLE
 M-x rtags-find-symbol
 #+END_EXAMPLE
 
-*** References
+** References
 - [[https://github.com/Andersbakken/rtags#tldr-quickstart][RTags TLDR Quickstart]].
 - [[http://syamajala.github.io/c-ide.html][Emacs as C++ IDE]].
 
@@ -5342,7 +5342,7 @@ M-x rtags-find-symbol
 :PROPERTIES:
 :CUSTOM_ID: python-tips-backlog
 :END:
-******* TODO [[https://news.ycombinator.com/item?id=11210370][A Better Pip Workflow (Hacker News)]].
+**** TODO [[https://news.ycombinator.com/item?id=11210370][A Better Pip Workflow (Hacker News)]].
 * [2016-03-05 Sat] Bruges travel bookmarks
 :PROPERTIES:
 :CUSTOM_ID: bruges-travel-bookmarks
@@ -5367,23 +5367,23 @@ M-x rtags-find-symbol
 :PROPERTIES:
 :CUSTOM_ID: emacs-lisp-snippets
 :END:
-*** Find file upwards, up parents, up hierarchy
+** Find file upwards, up parents, up hierarchy
 #+BEGIN_SRC emacs-lisp
   (locate-dominating-file FILE NAME)
 #+END_SRC
-*** Find executable in PATH
+** Find executable in PATH
 #+BEGIN_SRC emacs-lisp
   (executable-find COMMAND)
 #+END_SRC
-*** Read string with completion (helm/ido/ivy friendly)
+** Read string with completion (helm/ido/ivy friendly)
 #+BEGIN_SRC emacs-lisp
   (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 #+END_SRC
-*** Execute command/process and return list (similar to shell-command-to-string)
+** Execute command/process and return list (similar to shell-command-to-string)
 #+BEGIN_SRC emacs-lisp
   (process-lines PROGRAM &rest ARGS)
 #+END_SRC
-*** Iterating org buffer
+** Iterating org buffer
 #+BEGIN_SRC emacs-lisp
   (org-element-map (org-element-parse-buffer) '(headline link)
     (lambda (element)
@@ -5427,7 +5427,7 @@ M-x rtags-find-symbol
 :PROPERTIES:
 :CUSTOM_ID: some-modern-objective-c-idioms
 :END:
-*** NSNumber literals
+** NSNumber literals
 #+BEGIN_SRC objc
   NSNumber *number1 = @1024;
   NSNumber *number2 = @1024.123f;
@@ -5439,7 +5439,7 @@ M-x rtags-find-symbol
   NSNumber *number8 = @1543; // Integer
   NSNumber *number9 = @111.456; // Double
 #+END_SRC
-*** Array literals
+** Array literals
 #+BEGIN_SRC objc
   NSArray *names = @[@"John\n", @"Peter\n", @"Jaye\n", @"George\n", @"Max"];
   NSArray *mutableNames = [@[@"John\n", @"Peter\n", @"Jaye\n", @"George\n", @"Max"] mutableCopy];
@@ -5634,12 +5634,12 @@ Or if you want a single function:
 :MODIFIED:
 [2016-02-13 Sat]
 :END:
-******* TODO [[https://vinta.ws/code/tern-js-with-atom.html][Tern.js with Atom]].
-******* TODO [[https://github.com/sebmarkbage/ecmascript-rest-spread][Object spread syntax proposed for ES7]].
-******* TODO if (typeof myvar === 'undefined') ...
-******* TODO copy object  and set with Object.assign({}, state, {property: newValue}).
-******* TODO Use ES6 computed property syntax.
-******* TODO ES6 syntax: import * as reducers from './reducers'.
+**** TODO [[https://vinta.ws/code/tern-js-with-atom.html][Tern.js with Atom]].
+**** TODO [[https://github.com/sebmarkbage/ecmascript-rest-spread][Object spread syntax proposed for ES7]].
+**** TODO if (typeof myvar === 'undefined') ...
+**** TODO copy object  and set with Object.assign({}, state, {property: newValue}).
+**** TODO Use ES6 computed property syntax.
+**** TODO ES6 syntax: import * as reducers from './reducers'.
 * [2016-02-06 Sat] Emacs lisp tips backlog
 :PROPERTIES:
 :CUSTOM_ID: emacs-lisp-tips-backlog
@@ -5647,22 +5647,22 @@ Or if you want a single function:
 :MODIFIED:
 [2018-12-27 Thu]
 :END:
-******* TODO [[https://github.com/mola-T/signal][Signal: a library offering enriched hook-like features]].
-******* TODO [[http://mbork.pl/2016-05-15_debug-on-whatever][Debugging tips]].
-******* TODO [[http://article.gmane.org/gmane.emacs.devel/202535][Examples of Emacs modules]].
-******* TODO [[https://gitlab.com/RobertCochran/neato-graph-bar][htop-like CPU and memory graphs for Emacs]].
-******* TODO [[https://github.com/mola-T/timp][Timp: multithreading library]].
-******* TODO [[http://www.wilfred.me.uk/blog/2016/04/28/effortless-major-mode-development/][Effortless Major Mode Development]].
-******* TODO [[https://github.com/tkych/cl-spark][cl-spark implementation of Zach Holman's spark and Gil Gonçalves' vspark with little extension]].
-******* TODO [[http://endlessparentheses.com/new-in-emacs-25-1-map-el-library.html][map.el for map-like collections built-in as of 25.1]].
-******* TODO [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/map.el][Standard library for key/value data structures]].
-******* TODO [[http://oremacs.com/2015/01/11/pretty-elisp-regex/][Making Elisp regex look nicer]].
-******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices][Adapting code using the old defadvice]].
-******* TODO [[http://endlessparentheses.com/new-on-elpa-and-in-emacs-25-1-seq-el.html][seq.el sequence library built-in as of 25.1]].
-******* TODO [[https://github.com/syohex/emacs-parson][Binding of parson JSON parser]].
-******* TODO [[http://puntoblogspot.blogspot.co.uk/2016/02/with-this-little-trick-helm-dash-gets.html?m=1][Helm-dash find-as-you-type]].
-******* TODO [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][Org mode - Parsing rich HTML directly when pasting? (Stack Overflow)]].
-******* TODO From [[https://twitter.com/_wilfredh/status/694643167056916480][@_wilfredh]], use (interactive "*") for commands that edit the buffer, so they show a helpful error if the buffer is read only.
+**** TODO [[https://github.com/mola-T/signal][Signal: a library offering enriched hook-like features]].
+**** TODO [[http://mbork.pl/2016-05-15_debug-on-whatever][Debugging tips]].
+**** TODO [[http://article.gmane.org/gmane.emacs.devel/202535][Examples of Emacs modules]].
+**** TODO [[https://gitlab.com/RobertCochran/neato-graph-bar][htop-like CPU and memory graphs for Emacs]].
+**** TODO [[https://github.com/mola-T/timp][Timp: multithreading library]].
+**** TODO [[http://www.wilfred.me.uk/blog/2016/04/28/effortless-major-mode-development/][Effortless Major Mode Development]].
+**** TODO [[https://github.com/tkych/cl-spark][cl-spark implementation of Zach Holman's spark and Gil Gonçalves' vspark with little extension]].
+**** TODO [[http://endlessparentheses.com/new-in-emacs-25-1-map-el-library.html][map.el for map-like collections built-in as of 25.1]].
+**** TODO [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/map.el][Standard library for key/value data structures]].
+**** TODO [[http://oremacs.com/2015/01/11/pretty-elisp-regex/][Making Elisp regex look nicer]].
+**** TODO [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices][Adapting code using the old defadvice]].
+**** TODO [[http://endlessparentheses.com/new-on-elpa-and-in-emacs-25-1-seq-el.html][seq.el sequence library built-in as of 25.1]].
+**** TODO [[https://github.com/syohex/emacs-parson][Binding of parson JSON parser]].
+**** TODO [[http://puntoblogspot.blogspot.co.uk/2016/02/with-this-little-trick-helm-dash-gets.html?m=1][Helm-dash find-as-you-type]].
+**** TODO [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][Org mode - Parsing rich HTML directly when pasting? (Stack Overflow)]].
+**** TODO From [[https://twitter.com/_wilfredh/status/694643167056916480][@_wilfredh]], use (interactive "*") for commands that edit the buffer, so they show a helpful error if the buffer is read only.
 
 * [2016-02-04 Thu] Entering accents in Emacs
 :PROPERTIES:
@@ -5696,24 +5696,24 @@ Albums -> Recently Deleted -> Select -> Delete All
 :END:
 Since [[#fischers-london-yes-but][eating at Fischers's]], I've been inclined to make Schnitzel. This is my attempt.
 
-*** Ingredients
+** Ingredients
 - Salt and ground black pepper.
 - All-purpose flour.
 - Eggs (beaten).
 - Bread crumbs (natural).
 - Oil.
 
-*** Preparation
+** Preparation
 - Flatten the pork/chicken/veal.
 - Season (salt and pepper).
 - Heat pan with a generous amount of oil.
 - Dip into flour -> egg -> bread crumbs.
 
-*** Garnish
+** Garnish
 - Anchovies.
 - Capers.
 
-*** Photo
+** Photo
 
 [[file:images/schnitzel-recipe/schnitzel.jpg]]
 
@@ -5721,13 +5721,13 @@ Since [[#fischers-london-yes-but][eating at Fischers's]], I've been inclined to 
 :PROPERTIES:
 :CUSTOM_ID: hot-reloading-with-react-and-redux
 :END:
-*** By Robert Knight ([[http://twitter.com/robknight_][@robknight_]]).
-*** Checkout
+** By Robert Knight ([[http://twitter.com/robknight_][@robknight_]]).
+** Checkout
 - [[http://browserify.org][Browserify]].
 - [[https://webpack.github.io][Webpack]] (more stable?).
 - [[https://github.com/gaearon/react-transform-hmr][React-transform-hmr]].
 - [[https://github.com/jchansen/reselect][Reselect]]: A redux selector for redux.
-*** Slides
+** Slides
 - https://github.com/robertknight/hot-reloading-talk
 
 * [2016-02-03 Wed] Converting Unix epoc time to human readable date
@@ -5737,7 +5737,7 @@ Since [[#fischers-london-yes-but][eating at Fischers's]], I've been inclined to 
 
 Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/status/694780560221147136][Turn a Unix epoch time back into a human readable date]]:
 
-*** GNU
+** GNU
 
 #+BEGIN_SRC sh :exports both
   date -d @192179700
@@ -5746,7 +5746,7 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 #+RESULTS:
 : Tue Feb  3 07:15:00 GMT 1976
 
-*** BSD/OS X
+** BSD/OS X
 
 #+BEGIN_SRC sh :exports both
   date -r 192179700
@@ -5807,8 +5807,8 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 :PROPERTIES:
 :CUSTOM_ID: meditation-tips-backlog
 :END:
-******* TODO [[http://www.workman.com/static/realhappinessebook/][Real Happiness Audio Files]].
-******* DONE [[https://www.intelligentlifemagazine.com/content/features/wanting-versus-liking][The science of craving]].
+**** TODO [[http://www.workman.com/static/realhappinessebook/][Real Happiness Audio Files]].
+**** DONE [[https://www.intelligentlifemagazine.com/content/features/wanting-versus-liking][The science of craving]].
 * [2016-02-02 Tue] Append jpegs in a video sequence
 :PROPERTIES:
 :CUSTOM_ID: append-jpegs-in-a-video-sequence
@@ -5906,11 +5906,11 @@ Just learned dired enables you to mark files and byte compile via /M-x dired-do-
 :PROPERTIES:
 :CUSTOM_ID: fischers-london-yes-but
 :END:
-*** Yes
+** Yes
 Step into a Viennese blast from the past. Beautiful setting and pleasant vibe. Ordered a dirty martini on the rocks, a bottle of Merlot, Käsespätzle (with bacon), and Wiener Schnitzel (with anchovy/capers/egg). All very tasty.
-*** But...
+** But...
 Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing spectacular. Also not a cheap eat (£50 per person).
-*** Photos
+** Photos
 [[file:images/fischers-london-yes-but/fischers-03.JPG]] [[file:images/fischers-london-yes-but/fischers-04.JPG]] [[file:images/fischers-london-yes-but/fischers-05.JPG]] [[file:images/fischers-london-yes-but/fischers-06.JPG]] [[file:images/fischers-london-yes-but/fischers-07.JPG]] [[file:images/fischers-london-yes-but/fischers-08.JPG]] [[file:images/fischers-london-yes-but/fischers-09.JPG]] [[file:images/fischers-london-yes-but/fischers-10.JPG]] [[file:images/fischers-london-yes-but/fischers-11.JPG]] [[file:images/fischers-london-yes-but/fischers-12.JPG]]
 * [2016-01-25 Mon] Polar travel bookmarks
 :PROPERTIES:
@@ -5938,14 +5938,14 @@ Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing specta
 :CUSTOM_ID: chocolate-fondant-recipe
 :END:
 My girlfriend recently made a delicious chocolate fondant. Saving the [[http://www.theguardian.com/lifeandstyle/wordofmouth/2011/feb/10/how-cook-perfect-chocolate-fondants][The Guardian's recipe]]:
-*** Ingredients (2 servings)
+** Ingredients (2 servings)
 - 60g unsalted butter, cut into dice, plus extra to grease
 - 1 tbsp cocoa powder
 - 60g dark chocolate, broken into pieces
 - 1 egg and 1 egg yolk
 - 60g caster sugar
 - 1 tbsp plain flour
-*** Preparation
+** Preparation
 1. Pre-heat the oven to 200C if cooking immediately, and put a baking tray on the middle shelf. Butter the inside of 2 small ramekins or pudding moulds, and then put the cocoa in one and turn it to coat the inside, holding it over the second mould to catch any that escapes. Do the same with the other mould.
 2. Put the butter and chocolate into a heatproof bowl set over, but not touching, a pan of simmering water and stir occasionally until melted. Allow to cool slightly.
 3. Vigorously whisk together the egg, yolk, sugar and a pinch of salt until pale and fluffy. Gently fold in the melted chocolate and butter, and then the flour. Spoon into the prepared moulds, stopping just shy of the top – at this point the mixture can be refrigerated until needed, or even frozen, as the puddings will not wait around once cooked.
@@ -5981,11 +5981,11 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :PROPERTIES:
 :CUSTOM_ID: ippudo-london-yes-but
 :END:
-*** Yes
+** Yes
 [[http://www.ippudo.co.uk/find_us/][Central St. Giles]] location. Ordered a Kirin Ichiban beer and a Spicy Tonkotsu with a seasoned boiled egg. Awesome medium-spice broth, tasty egg and firm noodles. Got additional noodles for £1.50.
-*** But...
+** But...
 The space feels soulless. Think generic, chain, Pizza Express...
-*** Photos
+** Photos
 
 [[file:images/ippudo-london-yes-but/ipuddo_00.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_01.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_02.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_03.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_04.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_05.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_06.JPG]] [[file:images/ippudo-london-yes-but/ipuddo_07.JPG]]
 
@@ -6051,11 +6051,11 @@ command alias foundation expr @import Foundation
 :MODIFIED:
 [2016-01-12 Tue]
 :END:
-******* DONE [[http://ruenzuo.github.io/static-analysis-on-ios-part-ii/][Static Analysis on iOS - Part II]].
-******* DONE [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset (unmaintained)]].
-******* DONE [[https://github.com/dsmelov/simsim][SimSim: access to application data folders]].
-******* DONE [[https://github.com/supermarin/xcpretty][xcpretty (fast and flexible formatter/prettifier for xcodebuild output)]].
-******* DONE [[https://github.com/facebook/xctool][xctool]].
+**** DONE [[http://ruenzuo.github.io/static-analysis-on-ios-part-ii/][Static Analysis on iOS - Part II]].
+**** DONE [[https://github.com/lukhnos/refactorial/][Clang-based C/C++/Objective-C refactoring toolset (unmaintained)]].
+**** DONE [[https://github.com/dsmelov/simsim][SimSim: access to application data folders]].
+**** DONE [[https://github.com/supermarin/xcpretty][xcpretty (fast and flexible formatter/prettifier for xcodebuild output)]].
+**** DONE [[https://github.com/facebook/xctool][xctool]].
 
 * [2016-01-11 Mon] Basic Emacs keybindings on Linux desktop
 :PROPERTIES:
@@ -6079,11 +6079,11 @@ More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Ema
 :PROPERTIES:
 :CUSTOM_ID: emacs-objective-c-completion-with-irony
 :END:
-*** Install libclang on Mac
+** Install libclang on Mac
 #+BEGIN_SRC sh
   brew install llvm --with-clang
 #+END_SRC
-*** Configure Emacs
+** Configure Emacs
 #+BEGIN_SRC emacs-lisp
   (use-package irony :ensure t
     :config
@@ -6096,7 +6096,7 @@ More at [[http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome][Ema
                                  (setq-local company-backends '((company-irony)))))
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 #+END_SRC
-*** install irony server
+** install irony server
 Run:
 #+BEGIN_EXAMPLE
 M-x irony-install-server
@@ -6109,16 +6109,16 @@ For example:
 #+BEGIN_EXAMPLE
 cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTALL_PREFIX\=/Users/your-user-name/.emacs.d/irony/ /Users/your-user-name/.emacs.d/elpa/irony-20160106.1223/server && cmake --build . --use-stderr --config Release --target install
 #+END_EXAMPLE
-*** Compilation database
-***** Install xctool
+** Compilation database
+*** Install xctool
 #+BEGIN_SRC sh
   brew install xctool
 #+END_SRC
-***** Generate compilation database
+*** Generate compilation database
 #+BEGIN_SRC sh
   xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
 #+END_SRC
-*** Set Irony's database path
+** Set Irony's database path
 #+BEGIN_QUOTE
 M-x irony-cdb-json-add-compile-commands-path
 #+END_QUOTE
@@ -6186,27 +6186,27 @@ Been a fan of [[https://github.com/fgeller/highlight-thing.el][highlight-thing-m
 :CUSTOM_ID: gandhis-ever-contemporary-wisdom
 :END:
 From [[http://www.amazon.co.uk/Gandhi-Changing-Mohandas-Karamchand-published/dp/B015GRZTP2][Gandhi: Radical Wisdom for a Changing World]]:
-*** Anger
+** Anger
 "I do get angry, but I feel angry with myself for it. Full conquest of anger is possible only through self-realization. We should love even those who have the worst opinion of us. This is ahimsa, the rest is only ignorance."
-*** Bad handwriting
+** Bad handwriting
 "I am now of opinion that children should first be taught the art of drawing before learning how to write. Let the child learn his letters by observation as he does different objectives, such as flowers, birds, etc., and let him learn handwriting only after he has learned to draw objects."
-*** Conduct of the Ashram
+** Conduct of the Ashram
 "Service without humility is selfishness and egotism."
-*** Eating
+** Eating
 "There is a great deal of truth in the saying that man becomes what he eats. The grosser the food, the grosser the body."
-*** Heart
+** Heart
 "There are chords in every human heart. If we only know how to strike the right chord, we bring out the music."
-*** Moral law
+** Moral law
 The law of truth and love.
-*** Renouncing or forgoing
+** Renouncing or forgoing
 Nishkulanand sings: "Renunciation of objects, without the renunciation of desires, is short-lived, however hard you may try."
-*** Silence
+** Silence
 "Man spoils matters much more by speech than by silence."
-*** Time
+** Time
 "Every minute that runs to waste never returns. Yet, knowing this, how much time do we waste?"
-*** The palate
+** The palate
 "Turn to the birds and beasts, and what do you find? They never eat merely to please the palate, they never go on eating till their inside is full to overflowing. And yet, we regard ourselves as superior to the animal creation!"
-*** Vow of Swadeshi
+** Vow of Swadeshi
 "The person who has taken the vow of swadeshi will never use articles which conceivably involve violation of truth in their manufature or on the part of their manufacturers."
 
 * [2016-01-02 Sat] Functional programming bookmarks
@@ -6243,7 +6243,7 @@ From HBR's [[https://hbr.org/2015/12/9-productivity-tips-from-people-who-write-a
 :CUSTOM_ID: first-meal-of-2016
 :END:
 
-*** Pancakes
+** Pancakes
 
 - 1 teaspoon of salt.
 - 1.5 cups of milk.
@@ -6264,12 +6264,12 @@ Makes 10/11 pancakes.
 
 For our last meal of 2015, I contributed dal and rotis. This is my first attempt at making either one of these. Both recipes based on Anupy Singla's [[http://www.amazon.co.uk/Indian-Everyone-Anupy-Singla/dp/1572841621][Indian for Everyone]].
 
-*** Dal Makhani (Buttered black lentils)
+** Dal Makhani (Buttered black lentils)
 
 [[file:images/last-meal-of-2015/dal-grid.png]]
 [[file:images/last-meal-of-2015/dal.jpg]]
 
-*** Roti-Chapati-Phulka
+** Roti-Chapati-Phulka
 
 [[file:images/last-meal-of-2015/roti-grid.png]]
 [[file:images/last-meal-of-2015/roti.jpg]]
@@ -6301,7 +6301,7 @@ I always forget about /type/ though:
 :PROPERTIES:
 :CUSTOM_ID: npm-basics
 :END:
-*** Global vs local package installation location
+** Global vs local package installation location
 #+BEGIN_QUOTE
 {prefix}/lib/node_modules
 #+END_QUOTE
@@ -6309,7 +6309,7 @@ vs
 #+BEGIN_QUOTE
 path/to/project/node_modules
 #+END_QUOTE
-*** View npm config
+** View npm config
 #+BEGIN_SRC sh :results output :exports both
   npm config list
 #+END_SRC
@@ -6324,7 +6324,7 @@ path/to/project/node_modules
 : ; 'npm config ls -l' to show all defaults.
 :
 
-*** Get config value
+** Get config value
 #+BEGIN_SRC sh :results output :exports both
   npm config get prefix
 #+END_SRC
@@ -6332,12 +6332,12 @@ path/to/project/node_modules
 #+RESULTS:
 : /Users/user/.nvm/versions/node/v4.0.0
 
-*** Set config value
+** Set config value
 #+BEGIN_SRC sh
   npm config set prefix=$HOME/some/location
 #+END_SRC
 
-*** Install package globally
+** Install package globally
 #+BEGIN_SRC sh
   node install --global <package-name>
 #+END_SRC
@@ -6345,7 +6345,7 @@ or
 #+BEGIN_SRC sh
   node install -g <package-name>
 #+END_SRC
-*** List global packages
+** List global packages
 #+BEGIN_SRC sh :results output :exports both
   npm list --global
 #+END_SRC
@@ -6361,28 +6361,28 @@ You can also use --depth=0 to make less verbose.
 ...
 #+END_EXAMPLE
 
-*** Install local package
+** Install local package
 #+BEGIN_SRC sh
   npm install <package-name> --save
 #+END_SRC
 --save will add <package-name> dependency to your package.json.
-*** package.json
+** package.json
 See [[https://docs.npmjs.com/getting-started/using-a-package.json][using a package.json]].
-*** Uninstall package
+** Uninstall package
 #+BEGIN_SRC sh
   npm uninstall <package-name>
 #+END_SRC
 
-*** Install package at version
+** Install package at version
 #+BEGIN_SRC sh
   npm install <package-name>@1.7.0
 #+END_SRC
 
-*** Search packages
+** Search packages
 #+BEGIN_SRC sh
   npm search linter
 #+END_SRC
-*** Online documentation
+** Online documentation
 Online documentation is great so far. More at [[https://docs.npmjs.com][docs.npmjs.com]].
 
 * [2015-12-25 Fri] Clojure bookmarks
@@ -6403,14 +6403,14 @@ Online documentation is great so far. More at [[https://docs.npmjs.com][docs.npm
 :MODIFIED:
 [2016-03-06 Sun]
 :END:
-******* TODO [[http://tracesof.net/uebersicht/][Uebersicht: Keep an eye on what is happening on your machine and in the World]].
-******* DONE [[https://github.com/koekeishiya/kwm][Kwm: Tiling window manager with focus follows mouse for OSX]].
+**** TODO [[http://tracesof.net/uebersicht/][Uebersicht: Keep an eye on what is happening on your machine and in the World]].
+**** DONE [[https://github.com/koekeishiya/kwm][Kwm: Tiling window manager with focus follows mouse for OSX]].
 #+BEGIN_SRC sh
   cp ~/homebrew/Cellar/kwm/1.1.3/homebrew.mxcl.kwm.plist ~/Library/LaunchAgents/
   launchctl load ~/Library/LaunchAgents/homebrew.mxcl.kwm.plist
 #+END_SRC
-******* DONE Turn off shadows with [[https://github.com/ocodo/ShadowToggle][ShadowToggle]].
-******* DONE [[http://www.derlien.com][Disk Inventory X]]: disk usage utility for Mac.
+**** DONE Turn off shadows with [[https://github.com/ocodo/ShadowToggle][ShadowToggle]].
+**** DONE [[http://www.derlien.com][Disk Inventory X]]: disk usage utility for Mac.
 * [2015-12-20 Sun] Search bash history with Emacs helm
 :PROPERTIES:
 :CUSTOM_ID: search-bash-history-with-emacs-helm
@@ -6663,27 +6663,27 @@ JCS, from [[http://irreal.org/blog][Irreal]], recently [[http://irreal.org/blog/
 :PROPERTIES:
 :CUSTOM_ID: gpg-examples
 :END:
-*** Export private key
+** Export private key
 #+BEGIN_SRC sh
     gpg --export-secret-key -a <keyid> > <private.asc>
 #+END_SRC
 
-*** Import key
+** Import key
 #+BEGIN_SRC sh
     gpg --import < <private.asc>
 #+END_SRC
 
-*** Delete public key
+** Delete public key
 #+BEGIN_SRC sh
     gpg --delete-keys <keyid>
 #+END_SRC
 
-*** Delete private key
+** Delete private key
 #+BEGIN_SRC sh
     gpg --delete-secret-keys <keyid>
 #+END_SRC
 
-*** Edit key
+** Edit key
 #+BEGIN_SRC sh
     gpg --edit-key <keyid>
     gpg> uid (lists IDs)
@@ -6692,13 +6692,13 @@ JCS, from [[http://irreal.org/blog][Irreal]], recently [[http://irreal.org/blog/
     Really remove this user ID? (y/N) y
 #+END_SRC
 
-*** Change passphrase of the secret key
+** Change passphrase of the secret key
 #+BEGIN_SRC sh
   gpg --edit-key Your-Key-ID-Here
   gpg> passwd
   gpg> save
 #+END_SRC
-*** References
+** References
 - [[http://blog.ghostinthemachines.com/2015/03/01/how-to-use-gpg-command-line/][How To Use GPG on the Command Line (Ghost in the Machines)]].
 - [[https://www.cyberciti.biz/faq/linux-unix-gpg-change-passphrase-command/][GPG Change Passphrase Secret Key Password Command - nixCraft]].
 - [[https://www.gnupg.org/gph/en/manual.html][The GNU Privacy handbook]].
@@ -6993,16 +6993,16 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :MODIFIED:
 [2016-05-21 Sat]
 :END:
-******* TODO [[http://phrack.org/issues/69/1.html][Phrack 69]].
-******* TODO [[https://hbr.org/2015/10/a-simple-formula-for-changing-our-behavior?utm_campaign=harvardbiz&utm_source=twitter&utm_medium=social][A Simple Formula for Changing Our Behavior]].
-******* TODO [[https://hbr.org/2013/11/be-grateful-more-often][Be Grateful More Often]].
-******* TODO [[http://heydave.org/post/24286720323/gtd-sucks-for-creative-work-heres-an-alternative][GTD sucks for creative work]].
-******* TODO [[http://continuations.com/post/131372549150/land-capital-attention-this-time-it-is-the-same][Land, Capital, Attention: This Time it Is the Same]].
-******* TODO [[http://www.gatesnotes.com/Books/Mindset-The-New-Psychology-of-Success][Mindset: What You Believe Affects What You Achieve (Gates Notes)]].
-******* TODO [[http://www.theatlantic.com/business/archive/2015/10/get-rid-borders-completely/409501/?single_page%3Dtrue][The Case for Getting Rid of Borders—Completely]].
-******* TODO [[https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/][The Ultimate Guide to Personal Productivity Methods]].
-******* TODO [[http://www.gatesnotes.com/Books/Thing-Explainer][Thing Explainer: A Basic Guide for Curious Minds (Gates Notes)]].
-******* TODO [[https://www.ted.com/talks/amy_cuddy_your_body_language_shapes_who_you_are?language%3Den][Your body language shapes who you are]].
+**** TODO [[http://phrack.org/issues/69/1.html][Phrack 69]].
+**** TODO [[https://hbr.org/2015/10/a-simple-formula-for-changing-our-behavior?utm_campaign=harvardbiz&utm_source=twitter&utm_medium=social][A Simple Formula for Changing Our Behavior]].
+**** TODO [[https://hbr.org/2013/11/be-grateful-more-often][Be Grateful More Often]].
+**** TODO [[http://heydave.org/post/24286720323/gtd-sucks-for-creative-work-heres-an-alternative][GTD sucks for creative work]].
+**** TODO [[http://continuations.com/post/131372549150/land-capital-attention-this-time-it-is-the-same][Land, Capital, Attention: This Time it Is the Same]].
+**** TODO [[http://www.gatesnotes.com/Books/Mindset-The-New-Psychology-of-Success][Mindset: What You Believe Affects What You Achieve (Gates Notes)]].
+**** TODO [[http://www.theatlantic.com/business/archive/2015/10/get-rid-borders-completely/409501/?single_page%3Dtrue][The Case for Getting Rid of Borders—Completely]].
+**** TODO [[https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/][The Ultimate Guide to Personal Productivity Methods]].
+**** TODO [[http://www.gatesnotes.com/Books/Thing-Explainer][Thing Explainer: A Basic Guide for Curious Minds (Gates Notes)]].
+**** TODO [[https://www.ted.com/talks/amy_cuddy_your_body_language_shapes_who_you_are?language%3Den][Your body language shapes who you are]].
 * [2015-11-28 Sat] Travel lifestyle bookmarks
 :PROPERTIES:
 :CUSTOM_ID: travel-lifestyle-bookmarks
@@ -7156,13 +7156,13 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :PROPERTIES:
 :CUSTOM_ID: installing-emacs-on-mac-os-x
 :END:
-*** Stable
+** Stable
 #+BEGIN_SRC sh
   brew update
   brew install emacs --HEAD --use-git-head --with-cocoa --with-srgb --with-gnutls
   brew linkapps emacs
 #+END_SRC
-*** Development
+** Development
 #+BEGIN_SRC sh
     brew update
     brew install emacs --devel --with-cocoa --with-srgb --with-gnutls
@@ -7656,34 +7656,34 @@ Want a word ending in "esome"?
 :CUSTOM_ID: soundclouds-go-best-practices-gophercon-2014
 :END:
 Having watched the [[https://www.youtube.com/watch?v%3DY1-RLAl7iOI][video]], some takeaways:
-*** Single GOPATH
-***** $GOPATH/src/github.com/soundcloud/foo
-*** Repo structure
-***** github.com/soundcloud/whatever
-******* README.md
-******* Makefile
-******* main.go
-******* support.go
-******* foo
-********* foo.go
-********* bar.go
-******* whatever-server
-********* main.go
-******* wharever-worker
-********* main.go
-*** Formatting and style
-***** Use gofmt.
-***** Google's codereview [[https://github.com/golang/go/wiki/CodeReviewComments][guidelines]].
-***** Avoid named return parameters.
-***** Avoid make and new (unless you know sizes).
-***** Use struct{} for sentinel values: sets, signal chans.
-******* Conveys no information in it this part.
-******* Instead of empty interface.
-******* instead of boolean.
-***** Break long lines at parameters
-******* No need to compact.
-******* Keep trailing coma in last argument.
-***** Flags
+** Single GOPATH
+*** $GOPATH/src/github.com/soundcloud/foo
+** Repo structure
+*** github.com/soundcloud/whatever
+**** README.md
+**** Makefile
+**** main.go
+**** support.go
+**** foo
+***** foo.go
+***** bar.go
+**** whatever-server
+***** main.go
+**** wharever-worker
+***** main.go
+** Formatting and style
+*** Use gofmt.
+*** Google's codereview [[https://github.com/golang/go/wiki/CodeReviewComments][guidelines]].
+*** Avoid named return parameters.
+*** Avoid make and new (unless you know sizes).
+*** Use struct{} for sentinel values: sets, signal chans.
+**** Conveys no information in it this part.
+**** Instead of empty interface.
+**** instead of boolean.
+*** Break long lines at parameters
+**** No need to compact.
+**** Keep trailing coma in last argument.
+*** Flags
 #+BEGIN_SRC go
   func main() {
     var (
@@ -7694,44 +7694,44 @@ Having watched the [[https://www.youtube.com/watch?v%3DY1-RLAl7iOI][video]], som
     // ...
   }
 #+END_SRC
-***** Logging
-******* package log
-******* Telemetry
-******* Push model (gets expensive over time)
-********* Graphite
-********* Statsd
-********* AirBrake
-******* Pull model (chosen)
-********* expvar
-********* Prometheus
-***** Testing
-******* package testing
-********* Unit tests
-********* reflect.DeepEqual
-******* Integration
-********* Use flags for starting services
-********* // +build integration
-***** Code validation
-******* On Save
-********* Go fmt
-********* Go import (go fmt++)
-******* On Build
-********* Go vet
-********* Golint
-********* Go test
-******* On Deploy
-********* go test -tags=integration
-******* GoCov?
-***** Dependency management
-******* Unimportant projects
-********* go get -d (and hope)
-******* Important
-********* VENDOR (ie. copy into your repo)
-*********** Git submodules (no!).
-*********** Git subtrees (seem OK).
-*********** Tool (godep?).
-*********** Build
-************* For binaries (use _vendor subdir)
+*** Logging
+**** package log
+**** Telemetry
+**** Push model (gets expensive over time)
+***** Graphite
+***** Statsd
+***** AirBrake
+**** Pull model (chosen)
+***** expvar
+***** Prometheus
+*** Testing
+**** package testing
+***** Unit tests
+***** reflect.DeepEqual
+**** Integration
+***** Use flags for starting services
+***** // +build integration
+*** Code validation
+**** On Save
+***** Go fmt
+***** Go import (go fmt++)
+**** On Build
+***** Go vet
+***** Golint
+***** Go test
+**** On Deploy
+***** go test -tags=integration
+**** GoCov?
+*** Dependency management
+**** Unimportant projects
+***** go get -d (and hope)
+**** Important
+***** VENDOR (ie. copy into your repo)
+****** Git submodules (no!).
+****** Git subtrees (seem OK).
+****** Tool (godep?).
+****** Build
+****** For binaries (use _vendor subdir)
 
 * [2015-09-23 Wed] Sync pip with Mac OS updates
 :PROPERTIES:
@@ -7760,36 +7760,36 @@ Updating my pip installation fixes the break:
 :PROPERTIES:
 :CUSTOM_ID: chinatown-treats-review
 :END:
-*** Recommended? yep
+** Recommended? yep
 There's a corner in Chinatown hosting some truly superb treats. If you get caught in the rush between Newport court and Newport place, you'd likely fail to notice some the awesome street food stands.
 
 [[file:images/chinatown-treats/chinatown.jpg]] [[file:images/chinatown-treats/newport-court.jpg]]
 
-*** Chilly squid
+** Chilly squid
 I've walked past this place many times and never noticed it. They serve a handful of items, but the grilled chilly squid skewers caught my attention. They're grilled, brushed with chilly sauce and finished with sprinkled sesame and cumin seeds. Super tasty.
 
 [[file:images/chinatown-treats/squid-stand.jpg]]
 
 [[file:images/chinatown-treats/chilly-squid-1.jpg]] [[file:images/chinatown-treats/chilly-squid-2.jpg]]
 
-*** Pancake + Crisp + Egg + Hot chillies = Jiān Bǐng 煎餅
+** Pancake + Crisp + Egg + Hot chillies = Jiān Bǐng 煎餅
 I first had these delicious breakfast savory pancakes at a Beijing street food stall. Never expected to randomly find Jiān Bǐng in London. It's a crepe with an additional egg spread, hoisin sauce, chilly sauce, hot chillies, topped with spring onions and coriander, all wrapping a wonderfully crispy bread cracker. And.. it's awesome.
 
 [[file:images/chinatown-treats/pancake-3.jpg]]
 
-*** Tai Yaki
+** Tai Yaki
 Chinatown Bakery is hard to miss. Pedestrian traffic slows down as we all fall under the spell of the Tai Yaki machine. This wonderful assembly line produces fish-shaped sweet waffles filled with custard. They are the perfect dessert after some savory street snacks. You can get a bag of 4 for £2.
 
 [[file:images/chinatown-treats/fish-1.jpg]]  [[file:images/chinatown-treats/fish-4.jpg]]
 
-*** All near each other
+** All near each other
 All these delights are within a stone's throw away from each other.
 
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/chinatown-treats/pano.png]]
-*** Useful?
+** Useful?
 Was this post useful to you? do [[https://twitter.com/xenodium/status/646101779281801216][reply]]!
-*** Better suggestion?
+** Better suggestion?
 London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. Very few deliver truly awesome food (even those expensive ones). Got suggestions? I'd love to hear from you [[https://twitter.com/xenodium][@xenodium]].
 
 * [2015-09-18 Fri] React bookmarks
@@ -7950,7 +7950,7 @@ Fix image aspect ratios for Instagram:
 :PROPERTIES:
 :CUSTOM_ID: lucky-7-review
 :END:
-*** Recommended? yep
+** Recommended? yep
 [[http://www.lucky7london.co.uk][Lucky 7]] is a small nostalgic American diner on Westbourne Park road. I like the vibe, the space, and the unpretentious waiting staff. I go to Lucky 7 often enough, originally for the buttermilk pancakes, but the list of favorites on the menu keeps growing.
 
 [[file:images/lucky-7-review/lucky-7-menu-board.jpg]]
@@ -7958,26 +7958,26 @@ Fix image aspect ratios for Instagram:
 
 Smileys by [[https://openclipart.org/detail/219291/smile][w.dyer]].
 
-*** Buttermilk Banana pancakes
+** Buttermilk Banana pancakes
 These are my favorite pancakes in London by far. Banana buttermilk pancakes and a few free coffee refills usually sort me out until dinner time. Add a side of bacon if extra hungry. You probably don't need it though.
 
 [[file:images/lucky-7-review/lucky-7-coffee.jpg]]
 [[file:images/lucky-7-review/lucky-7-pancakes.jpg]]
 
-*** Reuben sandwich
+** Reuben sandwich
 The reuben has been on Lucky 7's specials menu for months now. Not had many of these in London, but compared to The Brass Rail's, this reuben was a clear winner. The sandwich is huge and comes with fries. My girlfriend and I struggled to finish one between the two of us.
 
 file:images/lucky-7-review/lucky-7-reuben-fries.jpg
 
 file:images/lucky-7-review/lucky-7-reuben-cross-section.jpg
 
-*** Vanilla milkshake (add malt!)
+** Vanilla milkshake (add malt!)
 This milkshake hits the spot every time, but it's filling. You almost have to decide between the shake and an actual meal. If you must have it, add malt. Sorry, no picture.
-*** Huevos Rancheros
+** Huevos Rancheros
 This is a breakfast dish I can equally make (better?) at home, but Lucky 7 wins hands down every time I'm feeling particularly lazy. Sorry, no picture.
-*** Useful?
+** Useful?
 Was this post useful to you? do [[https://twitter.com/xenodium/status/643139264302186497][reply]]!
-*** Better suggestion?
+** Better suggestion?
 London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. Very few deliver truly awesome food (even those expensive ones). Got suggestions? I'd love to hear from you [[https://twitter.com/xenodium][@xenodium]].
 
 * [2015-09-02 Wed] Sierra Leone travel bookmarks
@@ -9184,11 +9184,11 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
   }
 #+END_SRC
 
-*** Also consider:
+** Also consider:
 - A UIView Subclass should implement intrinsicContentSize.
 - A UIView Subclass should never add constraints on neither itself (ie. self) nor superview.
 
-*** References
+** References
 - [[https://medium.com/@NSomar/auto-layout-best-practices-for-minimum-pain-c130b2b1a0f6#.uu0xxmqbr][Auto layout best practices for minimum pain]].
 * [2015-04-23 Thu] Japan travel bookmarks
 :PROPERTIES:
@@ -9778,7 +9778,7 @@ References from reading Christopher McDougall's [[http://www.chrismcdougall.com/
 
 Recipe by [[http://www.bellaonline.com/articles/art51802.asp][Megan Mignot]], based on book references:
 
-*** Mama Tita’s Pancakes
+** Mama Tita’s Pancakes
 - 1 ½ cups cooked brown rice
 - 1 cup coconut milk
 - 2 ripe bananas
@@ -10094,7 +10094,7 @@ The new [[https://github.com/abo-abo/swiper][swiper]] Emacs package is proving t
 :CUSTOM_ID: working-with-os-x-and-emacs-tips
 :END:
 From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [[http://emacsblog.org/2011/01/04/how-i-work-working-with-os-x-and-emacs/][workflow]].
-*** Frequently used apps:
+** Frequently used apps:
 - [[https://agilebits.com/onepassword][1 password]].
 - [[http://www.choosyosx.com/][Choosy]].
 - [[http://mizage.com/divvy/][Divvy]].
@@ -10103,26 +10103,26 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.obdev.at/products/launchbar/index.html][Launchbar]].
 - [[https://evernote.com/skitch/guide/mac/][Skitch (screenshots)]].
 - [[http://smilesoftware.com/TextExpander/index.html][te (Text expander)]].
-*** Dotfiles
+** Dotfiles
 - [[https://github.com/rmm5t/dotfiles][Github]].
 
 * [2015-03-09 Mon] Building ycmd
 :PROPERTIES:
 :CUSTOM_ID: building-ycmd
 :END:
-*** Build
+** Build
 #+BEGIN_SRC sh
   $ git clone https://github.com/Valloric/ycmd.git
   $ cd ycmd
   $ git submodule update --init --recursive
   $ ./build.sh --clang-completer
 #+END_SRC
-*** Test
+** Test
 #+BEGIN_SRC sh
   $ python ycmd
     serving on http://127.0.0.1:54265
 #+END_SRC
-*** More info
+** More info
 - [[https://github.com/Valloric/YouCompleteMe/blob/master/README.md][YouCompleteMe README]].
 - [[https://github.com/Valloric/ycmd/blob/master/README.md][ycmd README]].
 
@@ -10270,7 +10270,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
   :PROPERTIES:
   :CUSTOM_ID: london-bar-backlog
   :END:
-*** Soho
+** Soho
     - [[http://www.68andboston.com][68 and Boston (cocktails and wine bar)]].
 * [2015-03-08 Sun] London food backlog
 :PROPERTIES:
@@ -10282,246 +10282,246 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.lonelyplanet.com/china/travel-tips-and-articles/chinas-most-epic-high-speed-rail-journeys/40625c8c-8a11-5710-a052-1479d2768596][China's most epic high-speed rail journeys]].
 - [[https://slatestarcodex.com/2018/07/10/melatonin-much-more-than-you-wanted-to-know][Melatonin: Much More Than You Wanted To Know | Slate Star Codex]].
 - [[https://maps.app.goo.gl/m5G9DwtTeM5d4j1x5][hlo1]] [[https://maps.app.goo.gl/z32cgoxU9Hm2iNRg7][hlo2]] maps.
-*** B_acklog
-***** [[https://www.saporitaliarestaurant.co.uk][Saporitalia (Italian/pizza), Notting Hill]].
-***** [[https://www.clifton.co.uk/the-quince-tree-cafe-london][The Quince Tree Cafe London (Cafe), Paddington]].
-***** [[https://www.bombaybustle.com][Bombay Bustle (Indian), Mayfair]].
-***** [[https://www.kyseri.co.uk][Kyseri (modern turkish), Fitzrovia]].
-***** [[http://www.pied-a-terre.co.uk/][Pied a Terre (fine dining), Fitzrovia]].
-***** [[http://www.theledbury.com/tasting-menu/][The Ledbury (fine dining), Notting Hill]].
-***** [[https://www.flourandgrape.com][Flour and Grape (Pasta), Bermondsey]].
-***** [[https://www.honipoke.com/][Honi Pokē (poke), Soho]].
-***** [[http://zialucia.com/][ZIA LUCIA (pizza), Highbury Islington]].
-***** Yeast Bakery.
-***** Pavillion Cafe.
-***** Palm Vaults.
-*** Angel
-******* TODO [[http://www.shawarmabar.co.uk/][Shawarma Bar - Berber and Q]].
-******* TODO [[http://bombayburrito.co.uk/][Bombay Burrito (Indian burrito takeaway & restaurant: Angel, Islington)]].
-*** Baker Street
-******* DONE [[http://www.anticapizzeriadamichele.co.uk][L’ANTICA PIZZERIA DA MICHELE (Pizza), Baker Street]].
-*** Barbican
-******* TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advance)]].
-*** Barnsbury
-******* TODO Sunday (breakfast, cafe, working).
-*** Battersea
-******* TODO [[https://tonkotsu.co.uk/][Tonkotsu (ramen)]].
-*** Brick Lane
-******* TODO [[http://www.chezellesbistroquet.co.uk][Chez Elles]] (french).
-******* TODO [[http://www.yelp.com/biz/fika-london-2][Fika]] (Swedish, cinnamon buns, coffee).
-*** Bermondsey
-******* TODO Druid Street market
-********* FAT London (Kimchee ).
-********* & Cultured butter.
-*** Bethnal Green
-***** DONE [[https://lahpet.co.uk/][Lahpet]] (Burmese) <2018-12-02 Sun> <2018-12-27 Thu>
-*** Brixton
-******* TODO [[http://www.nanban.co.uk/][Nanban]] (Japanese soul food).
-*** Borough
-******* DONE [[http://padella.co][Padella]] (great fresh pasta).
-******* TODO [[https://roastingplant.com/][Roasting Plant: Fresh Roasted Coffee]] <2019-01-15 Tue>
-*** Camberwell
-******* TODO [[http://suncamberwell.com][Sun of Camberwell]] (Roast beef, Yorkshire, and sticky toffee pudding).
-******* TODO [[http://www.timeout.com/london/restaurants/silk-road][Silk Road (Chinese, Lamb/cumin skewers)]].
-*** Canada Water
-******* TODO [[http://www.chuckburgerbar.com/#canadawater][Chuck burger (truck)]].
-*** Cannon street
-******* TODO [[https://www.theinfatuation.com/london/reviews/brigadiers][The Brigadiers (Indian)]] <2019-01-22 Tue>
-*** Chiswick
-******* TODO [[https://www.thecoffeetraveller.com/][The Coffee Traveller]] <2019-01-16 Wed>
-*** Covent Garden
-******* TODO [[http://www.punjab.co.uk/][Punjab]] (Punjabi).
-******* TODO [[https://www.dintaifung-uk.com/][鼎泰豐・Din Tai Fung・ディンタイフォン・딘타이펑 (soup dumplings)]] <2019-03-12 Tue>
-******* TODO [[https://www.littlekolkata.co.uk/][Little Kolkata (London Restaurant - Kolkata Spirits)]] <2019-03-12 Tue>
-******* TODO [[http://www.duendelondon.com/][Duende]] (modern Spanish).
-******* TODO [[http://rockandsoleplaice.com][Rock & Sole Plaice]] (fish and chips).
-******* TODO [[https://tyuk.com][Timber Yard]] (coffee, working).
-******* TODO [[http://www.chicknsours.co.uk/][Chicks 'n' Sours]].
-******* TODO [[https://www.jidori.co.uk/][Jidori]] (chicken yakitori) <2018-12-02 Sun>
-******* DONE Dishoom (Indian), try Lamb raan.
-******* DONE [[http://www.sagarveg.co.uk][Sagar]] (South Indian): Great food!
-*** Clapham
-******* TODO [[http://www.joepublicpizza.com][Joe Public Pizza]].
-*** Crouch end
-******* TODO [[http://www.the-haberdashery.com][The Haberdashery]] (coffee, working).
-******* TODO [[http://www.localblend.co.uk/blend-harringay-2][Blend]] (coffee, working).
-*** Ealing
-******* TODO Kiraku (Sushi).
-******* TODO [[https://wacafe.co.uk/][Wa Cafe (Japanese Patiserie)]].
-*** Earls court
-******* TODO [[http://mamlondon.com][MAM]] (Vietnamese) <2018-12-02 Sun>
-******* TODO [[https://www.facebook.com/ukjollibee/?utm_source=tripadvisor&utm_medium=referral][Jollibee UK (filipino fried chicken/fast food)]] <2019-03-12 Tue>
-*** Edware road
-******* DONE [[http://gogi-restaurant.com][GOGI]] (korean): Average. Also, they lied to me and apologized with £10 credit.
-*** Euston
-******* TODO Roti King (Indian/Pakistani/Singaporean): 40, Doric Way, Euston, NW1 1LH.
-*** Farringdon
-******* TODO Quality Chop House.
-******* TODO Daddy Donkey (Mexican).
-******* TODO [[http://jandacafe.com][J+A]] (coffe, working).
-*** Fitzrovia
-******* TODO [[http://www.indianymca.org/][Indian YMCA]] (inexpensive Indian).
-******* TODO [[https://www.pastificioaldente.com][Pastificio al dente (Italian, fresh pasta)]] <2019-03-12 Tue>
-******* TODO [[http://www.houseofho.co.uk/home][House of Ho]] (Vietnamese).
-*** Golders Green
-******* TODO Cafe Japan (Sushi).
-*** Hackney
-******* TODO [[http://www.pidginlondon.com][Pidgin]].
-******* TODO [[https://dabbadrop.co.uk][DabbaDrop (Indian delivery subscription)]].
-*** Hammersmith
-******* DONE [[http://indian-zing.co.uk/][Indian Zing]] (Indian): It was OK (not great).
-******* TODO [[https://www.etfoodvoyage.com/2018/08/24/dragon-cat-cafe/][Dragon cat cafe]] (bubble tea and wheel cake). <2019-07-14 Sun>
-*** Hamstead
-******* TODO [[http://www.jinkichi.com/][Jin Kichi]] (Japanese).
-*** Harrow
-******* TODO [[http://mazarafghanrestaurant.co.uk/contact/][Mazar]] (Afghan).
-*** Hatch End
-******* TODO [[http://www.chuckburgerbar.com/][Chuck Burger]].
-*** Holborn
-******* TODO [[http://www.prufrockcoffee.com][Prufrock Café]] (coffee, working).
-******* TODO [[http://www.goodandpropertea.com/find-us][Good & Proper]] (coffee, tea, working).
-******* TODO [[https://www.theinfatuation.com/london/reviews/noble-rot][Noble Rot (wine bar/food)]] <2019-01-22 Tue>
-*** Holloway Road
-******* TODO Xi'an impression (Xi'an)
-*** Islington
-******* TODO [[http://delhigrill.com][Delhi Grill]] (Indian), try chicken makhani and naan.
-******* TODO [[http://www.bababoom.london][BabaBoom]] (the kebab makers) <2018-12-02 Sun>
-******* TODO [[http://rootsatn1.com][Roots N1]] (Indian).
-******* TODO [[http://www.thepigandbutcher.co.uk/][The pig and butcher]] (sunday roast).
-******* TODO [[http://busanbbq.co.uk][Busan BBQ]] (Korean meets American diner/burgers and fried chicken).
-******* TODO [[https://smokehouseislington.co.uk/][Smokehouse Islington]].
-******* TODO [[https://www.etfoodvoyage.com/2019/02/19/katsute-100/][Katsuke 100]] (Japanese tea/cake room). <2019-07-14 Sun>
-*** Kensington
-******* TODO Clarke's, try the burger.
-*** Kensal Green
-******* TODO [[http://www.tripadvisor.com/Restaurant_Review-g186338-d3531042-Reviews-Centro_Galego_de_Londres-London_England.html][Centro Galego de Londres]] (Gallician).
-*** Kentish town
-******* TODO [[http://www.timeout.com/london/restaurants/the-fields-beneath][The Fields Beneath]] (coffee, working).
-*** King's Cross
-******* TODO Itadaki Zen.
-******* TODO [[http://www.germangymnasium.com/][German Gymnasium]].
-******* DONE [[http://starofkings.co.uk/food-and-drink/][Yeah! Burger at Star of Kings]].
-******* TODO [[http://www.wingwing.co.uk/][Wing Wing (Korean fried chicken)]]s.
-******* TODO [[https://www.etfoodvoyage.com/2018/08/31/sambal-shiok-has-a-permanent-home][Sambal Shiok]] known for laksa and satai burger. <2019-07-14 Sun>
-*** Leicester square
-******* [[https://ichibanya.uk/][Curry House Ichibanya UK Japanese Restaurant London WC2H]] <2019-03-12 Tue>.
-*** Leytonstone
-******* [[http://www.singburi.co.uk][Singburi (Thai)]] <2019-05-07 Tue>.
-*** Liverpool street
-******* TODO [[http://www.gunpowderlondon.com][Gunpowder]] (Indian).
-******* TODO Cinnamon Kitchen (Indian).
-*** London Bridge
-******* TODO [[https://www.santoremedio.co.uk/][Santo Remedio]] (Mexican).
-*** Marylebone
-******* DONE [[http://www.timeout.com/london/restaurants/fischers][Fischer's]] (Austrian). Great atmosphere and schnitzel. Not cheap.
-******* TODO Nambutei (Sushi).
-******* TODO [[http://www.lurra.co.uk/][Lurra]] (Basque).
-*** Mayfair
-******* TODO [[http://www.mayfairchippy.com][Mayfair chippy]] (Fish and chips).
-******* TODO [[http://www.ikedarestaurant.com/][Ikeda]] (Japanese).
-******* TODO [[http://www.the-araki.com/][THE ARAKI (Sushi) / pricey]].
-*** Mornington Crescent
-******* TODO Asakusa (Japanese).
-*** Notting Hill
-******* TODO [[http://www.localblend.co.uk/blend-harringay-2][Blend]] (coffee, working).
-******* TODO [[http://www.thecontinentalpantry.com/][The continental pantry]].
-******* TODO [[http://mamlondon.com][MAM]] (Vietnamese) <2018-12-02 Sun>
-*** Old Street
-******* TODO [[http://sardine.london][Sardine]] (French).
-******* TODO [[http://sasukeramen.co.uk/][Sasuke]] (ramen).
-*** Olympia
-******* DONE Aborz (Iranian). <2018-12-27 Thu>
-*** Oxford street
-******* TODO Roti Chai (Indian).
-*** Peckham
-******* TODO [[http://www.ganapatirestaurant.com][Ganapati]] (South Indian).
-******* TODO [[http://thebeggingbowl.co.uk/][The Begging Bowl (Thai)]] <2019-05-07 Tue>.
-*** Piccadilly
-******* TODO [[http://www.urbantearooms.com/menus][Urban tea rooms (coffee/tea/brunch)]] <2019-03-12 Tue>
-******* TODO [[http://machi-ya.co.uk/][Machiya]] (Japanese comfort) <2018-12-02 Sun>
-******* TODO [[https://yoriuk.com/][YORI-Korean Restaurant]] <2019-03-12 Tue>
-******* TODO [[https://www.ica.art/rochelle-canteen][Rochelle Canteen @ The Institute of Contemporary Arts (ICA)]] (Pie and ping Sunday special) <2019-02-12 Tue>
-*** Putney
-******* TODO [[https://www.tripadvisor.co.uk/ShowUserReviews-g186338-d807103-r176708451-Tomoe-London_England.html][authentic Japanese restaurant in Putney - Tomoe, London Traveller Reviews - TripAdvisor]].
-*** Sheppherds bush
-******* TODO [[https://www.etfoodvoyage.com/2017/09/03/caco-co/][Caco & Co]] (Portuguese cafe). <2019-07-14 Sun>
-******* TODO [[https://www.etfoodvoyage.com/2017/03/17/chop-chop-noodle-bar/][Chop chop]] (Noodle bar). <2019-07-14 Sun>
-*** Shoreditch
-******* TODO [[http://mastbrothers.com/pages/london][Mast Brothers chocolate makers]].
-******* TODO [[http://www.sagardi.co.uk/en/][Sagardi]] (basque).
-******* TODO [[http://www.lookmumnohands.com/][Look mum no hands]] (cofee, working).
-******* TODO [[http://jandacafe.com][J+A]] (coffe, working).
-******* TODO [[http://www.goodandpropertea.com/find-us][Good & Proper]] (coffee, tea, working).
-******* TODO [[https://smokestak.co.uk][Smokestak]] (BBQ).
-******* TODO [[https://pickyglutton.com/2015/08/17/banh-mi-in-london-review/][Pho Viet 68]] (Banh mi).
-*** Sloane Square
-******* TODO [[http://rasoi-uk.com/][Rasoi]] (Indian).
-*** Soho
-******* TODO [[https://www.lehanoi.uk/][Le Hanoi]] (Vietnamese) <2018-12-02 Sun>
-******* TODO [[https://www.thevietnamesekitchen.co.uk/][Cay Tre]] (Vietnamese) <2018-12-02 Sun>
-******* TODO [[http://vietnamfood.co.uk/vietfood][Viet Food]] (Vietnamese) <2018-12-02 Sun>
-******* TODO [[http://www.taotaoju.co.uk/][Tao Tao Ju]] (Dim sum) <2018-12-02 Sun>
-******* TODO [[http://www.lokhandwala.co.uk/][Lokhandwala London (Top Indian Tapas Restaurant & Bar in London)]] <2019-01-15 Tue>
-******* TODO [[https://dumlondon.com/][DUM biryani (Indian)]] <2019-01-15 Tue>
-******* TODO [[http://pastaio.london][Pastaio (Italian, fresh pasta)]] <2019-01-15 Tue>.
-******* TODO [[https://bun.house/][Bun House]] (ie. pork buns).
-******* TODO [[http://temperrestaurant.com/][Temper restaurant]] (BBQ/tapas).
-******* TODO [[http://www.goldenunion.co.uk][Golden Union]] (fish bar).
-******* TODO [[http://meltroom.com/][Melt Room]] (Cheese toasties).
-******* TODO [[http://shotgunbbq.com/][Shotgun]] (BBQ).
-******* TODO [[http://smacklobster.com/][Smack Lobster]] (Lobster rolls).
-******* TODO [[https://pickyglutton.com/2014/11/05/smoking-goat-review/][Smoking Goat]] (Thai), highly recommended.
-******* TODO [[http://www.atariya.co.uk/restaurants/][Atari Ya]] (Sushi).
-******* TODO Yumi Izakaya (Japanese).
-******* TODO Jugemu (Japanese).
-******* TODO [[http://www.darjeeling-express.com/][Darjeeling Express]] (Indian).
-******* TODO [[http://www.hopperslondon.com][Hoppers]] Dosas, Rice, Roast, Kothu & Arrack (Sri Lanka and Tamil Nadu).
-******* TODO [[https://tyuk.com][Timber Yard]] (coffee, working).
-******* DONE [[http://pizzapilgrims.co.uk/][Pizza Pilgrims]].
-******* DONE [[https://pickyglutton.com/2016/10/14/kiln-review-soho/][Kiln]] (Thai), highly recommended.
-******* DONE [[http://baolondon.com][BAO]] (Bao buns! enough said).
-******* DONE [[http://said.it/en/london/][SAID]] (italian chocolate shop). Awesome hot chocolate.
-*** Southhall
-***** DONE [[http://brilliantrestaurant.com][Brilliant restaurant]] (healthier Indian). <2018-12-27 Thu>
-*** Southbank
-******* TODO [[https://tonkotsu.co.uk/][Tonkotsu (ramen)]].
-*** South Kensington
-******* TODO Hour Glass (Pub restaurant).
-*** Smithfield
-******* TODO [[http://birdofsmithfield.com][Bird of Smithfield]] (Sheppherd's pie, ox cheek, cheesecake).
-*** Spitafields
-******* DONE [[https://pickyglutton.com/2016/05/02/som-saa-review-spitalfields/][Som Saa]] (Thai), highly recommended. <2018-12-27 Thu>
-******* TODO [[https://lahpet.co.uk/][Lahpet]] (Burmese) <2018-12-02 Sun>
-*** Strand
-******* TODO [[https://www.strand-continental.co.uk/india-club][India Club (around for 50 years)]] <2019-05-21 Tue>
-*** Stoke Newingtom
-******* TODO [[http://www.the-haberdashery.com][The Haberdashery]] (coffee, working).
-*** Tottenham Court Road.
-******* DONE [[https://www.kanada-ya.com/][Kanada-Ya]] (rammen): Not bad.
-*** Tower Hill
-******* TODO [[http://www.manze.co.uk][M. Manze]] (pie and mash).
-******* TODO [[https://www.google.co.uk/search?q=maltby+street+market&rlz=1C1FLDB_enGB546GB546&espv=2&biw=1449&bih=913&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwj1nrGQvYvLAhUF2hoKHeaQDQsQsAQIOg&dpr=1][Maltby street market]].
-*** Tufnell Park
-******* TODO Monsoon (Indian), try lamb naga.
-*** Turnham Green
-******* TODO Chief Coffee.
-*** Victoria
-******* TODO [[http://dominiqueansellondon.com/][Dominique Ansel Bakery (Bakery)]] <2019-01-22 Tue>
-******* TODO Dominique Ansel Bakery <2018-12-11 Tue>
-******* TODO [[https://bleeckerburger.co.uk][Bleeker (burger)]] <2019-01-22 Tue>
-*** Walthamstow
-******* TODO [[https://grillstock.co.uk][Grillstock BBQ]].
-*** Waterloo
-******* TODO [[http://thelaughinggravy.co.uk][The Laughing Gravy]].
-******* TODO [[http://zenchina.co.uk][Zen China]].
-*** West Hamstead
-******* TODO [[http://www.timeout.com/london/restaurants/nautilus][Nautilus]] (fish and chips).
-******* TODO [[https://twitter.com/MamacitaNW6/media][Mamacita]] (Mexican).
-*** Whitechapel
-******* TODO Lahore Kebab House, try seekh kebabs with roti.
-******* TODO Sushinoen.
-*** Wimbledon
-******* TODO Dalchini (Indian), try spicy cocunut fish curry.
+** B_acklog
+*** [[https://www.saporitaliarestaurant.co.uk][Saporitalia (Italian/pizza), Notting Hill]].
+*** [[https://www.clifton.co.uk/the-quince-tree-cafe-london][The Quince Tree Cafe London (Cafe), Paddington]].
+*** [[https://www.bombaybustle.com][Bombay Bustle (Indian), Mayfair]].
+*** [[https://www.kyseri.co.uk][Kyseri (modern turkish), Fitzrovia]].
+*** [[http://www.pied-a-terre.co.uk/][Pied a Terre (fine dining), Fitzrovia]].
+*** [[http://www.theledbury.com/tasting-menu/][The Ledbury (fine dining), Notting Hill]].
+*** [[https://www.flourandgrape.com][Flour and Grape (Pasta), Bermondsey]].
+*** [[https://www.honipoke.com/][Honi Pokē (poke), Soho]].
+*** [[http://zialucia.com/][ZIA LUCIA (pizza), Highbury Islington]].
+*** Yeast Bakery.
+*** Pavillion Cafe.
+*** Palm Vaults.
+** Angel
+**** TODO [[http://www.shawarmabar.co.uk/][Shawarma Bar - Berber and Q]].
+**** TODO [[http://bombayburrito.co.uk/][Bombay Burrito (Indian burrito takeaway & restaurant: Angel, Islington)]].
+** Baker Street
+**** DONE [[http://www.anticapizzeriadamichele.co.uk][L’ANTICA PIZZERIA DA MICHELE (Pizza), Baker Street]].
+** Barbican
+**** TODO [[http://sushitetsu.co.uk][Sushi Tetsu (must book, well in advance)]].
+** Barnsbury
+**** TODO Sunday (breakfast, cafe, working).
+** Battersea
+**** TODO [[https://tonkotsu.co.uk/][Tonkotsu (ramen)]].
+** Brick Lane
+**** TODO [[http://www.chezellesbistroquet.co.uk][Chez Elles]] (french).
+**** TODO [[http://www.yelp.com/biz/fika-london-2][Fika]] (Swedish, cinnamon buns, coffee).
+** Bermondsey
+**** TODO Druid Street market
+***** FAT London (Kimchee ).
+***** & Cultured butter.
+** Bethnal Green
+*** DONE [[https://lahpet.co.uk/][Lahpet]] (Burmese) <2018-12-02 Sun> <2018-12-27 Thu>
+** Brixton
+**** TODO [[http://www.nanban.co.uk/][Nanban]] (Japanese soul food).
+** Borough
+**** DONE [[http://padella.co][Padella]] (great fresh pasta).
+**** TODO [[https://roastingplant.com/][Roasting Plant: Fresh Roasted Coffee]] <2019-01-15 Tue>
+** Camberwell
+**** TODO [[http://suncamberwell.com][Sun of Camberwell]] (Roast beef, Yorkshire, and sticky toffee pudding).
+**** TODO [[http://www.timeout.com/london/restaurants/silk-road][Silk Road (Chinese, Lamb/cumin skewers)]].
+** Canada Water
+**** TODO [[http://www.chuckburgerbar.com/#canadawater][Chuck burger (truck)]].
+** Cannon street
+**** TODO [[https://www.theinfatuation.com/london/reviews/brigadiers][The Brigadiers (Indian)]] <2019-01-22 Tue>
+** Chiswick
+**** TODO [[https://www.thecoffeetraveller.com/][The Coffee Traveller]] <2019-01-16 Wed>
+** Covent Garden
+**** TODO [[http://www.punjab.co.uk/][Punjab]] (Punjabi).
+**** TODO [[https://www.dintaifung-uk.com/][鼎泰豐・Din Tai Fung・ディンタイフォン・딘타이펑 (soup dumplings)]] <2019-03-12 Tue>
+**** TODO [[https://www.littlekolkata.co.uk/][Little Kolkata (London Restaurant - Kolkata Spirits)]] <2019-03-12 Tue>
+**** TODO [[http://www.duendelondon.com/][Duende]] (modern Spanish).
+**** TODO [[http://rockandsoleplaice.com][Rock & Sole Plaice]] (fish and chips).
+**** TODO [[https://tyuk.com][Timber Yard]] (coffee, working).
+**** TODO [[http://www.chicknsours.co.uk/][Chicks 'n' Sours]].
+**** TODO [[https://www.jidori.co.uk/][Jidori]] (chicken yakitori) <2018-12-02 Sun>
+**** DONE Dishoom (Indian), try Lamb raan.
+**** DONE [[http://www.sagarveg.co.uk][Sagar]] (South Indian): Great food!
+** Clapham
+**** TODO [[http://www.joepublicpizza.com][Joe Public Pizza]].
+** Crouch end
+**** TODO [[http://www.the-haberdashery.com][The Haberdashery]] (coffee, working).
+**** TODO [[http://www.localblend.co.uk/blend-harringay-2][Blend]] (coffee, working).
+** Ealing
+**** TODO Kiraku (Sushi).
+**** TODO [[https://wacafe.co.uk/][Wa Cafe (Japanese Patiserie)]].
+** Earls court
+**** TODO [[http://mamlondon.com][MAM]] (Vietnamese) <2018-12-02 Sun>
+**** TODO [[https://www.facebook.com/ukjollibee/?utm_source=tripadvisor&utm_medium=referral][Jollibee UK (filipino fried chicken/fast food)]] <2019-03-12 Tue>
+** Edware road
+**** DONE [[http://gogi-restaurant.com][GOGI]] (korean): Average. Also, they lied to me and apologized with £10 credit.
+** Euston
+**** TODO Roti King (Indian/Pakistani/Singaporean): 40, Doric Way, Euston, NW1 1LH.
+** Farringdon
+**** TODO Quality Chop House.
+**** TODO Daddy Donkey (Mexican).
+**** TODO [[http://jandacafe.com][J+A]] (coffe, working).
+** Fitzrovia
+**** TODO [[http://www.indianymca.org/][Indian YMCA]] (inexpensive Indian).
+**** TODO [[https://www.pastificioaldente.com][Pastificio al dente (Italian, fresh pasta)]] <2019-03-12 Tue>
+**** TODO [[http://www.houseofho.co.uk/home][House of Ho]] (Vietnamese).
+** Golders Green
+**** TODO Cafe Japan (Sushi).
+** Hackney
+**** TODO [[http://www.pidginlondon.com][Pidgin]].
+**** TODO [[https://dabbadrop.co.uk][DabbaDrop (Indian delivery subscription)]].
+** Hammersmith
+**** DONE [[http://indian-zing.co.uk/][Indian Zing]] (Indian): It was OK (not great).
+**** TODO [[https://www.etfoodvoyage.com/2018/08/24/dragon-cat-cafe/][Dragon cat cafe]] (bubble tea and wheel cake). <2019-07-14 Sun>
+** Hamstead
+**** TODO [[http://www.jinkichi.com/][Jin Kichi]] (Japanese).
+** Harrow
+**** TODO [[http://mazarafghanrestaurant.co.uk/contact/][Mazar]] (Afghan).
+** Hatch End
+**** TODO [[http://www.chuckburgerbar.com/][Chuck Burger]].
+** Holborn
+**** TODO [[http://www.prufrockcoffee.com][Prufrock Café]] (coffee, working).
+**** TODO [[http://www.goodandpropertea.com/find-us][Good & Proper]] (coffee, tea, working).
+**** TODO [[https://www.theinfatuation.com/london/reviews/noble-rot][Noble Rot (wine bar/food)]] <2019-01-22 Tue>
+** Holloway Road
+**** TODO Xi'an impression (Xi'an)
+** Islington
+**** TODO [[http://delhigrill.com][Delhi Grill]] (Indian), try chicken makhani and naan.
+**** TODO [[http://www.bababoom.london][BabaBoom]] (the kebab makers) <2018-12-02 Sun>
+**** TODO [[http://rootsatn1.com][Roots N1]] (Indian).
+**** TODO [[http://www.thepigandbutcher.co.uk/][The pig and butcher]] (sunday roast).
+**** TODO [[http://busanbbq.co.uk][Busan BBQ]] (Korean meets American diner/burgers and fried chicken).
+**** TODO [[https://smokehouseislington.co.uk/][Smokehouse Islington]].
+**** TODO [[https://www.etfoodvoyage.com/2019/02/19/katsute-100/][Katsuke 100]] (Japanese tea/cake room). <2019-07-14 Sun>
+** Kensington
+**** TODO Clarke's, try the burger.
+** Kensal Green
+**** TODO [[http://www.tripadvisor.com/Restaurant_Review-g186338-d3531042-Reviews-Centro_Galego_de_Londres-London_England.html][Centro Galego de Londres]] (Gallician).
+** Kentish town
+**** TODO [[http://www.timeout.com/london/restaurants/the-fields-beneath][The Fields Beneath]] (coffee, working).
+** King's Cross
+**** TODO Itadaki Zen.
+**** TODO [[http://www.germangymnasium.com/][German Gymnasium]].
+**** DONE [[http://starofkings.co.uk/food-and-drink/][Yeah! Burger at Star of Kings]].
+**** TODO [[http://www.wingwing.co.uk/][Wing Wing (Korean fried chicken)]]s.
+**** TODO [[https://www.etfoodvoyage.com/2018/08/31/sambal-shiok-has-a-permanent-home][Sambal Shiok]] known for laksa and satai burger. <2019-07-14 Sun>
+** Leicester square
+**** [[https://ichibanya.uk/][Curry House Ichibanya UK Japanese Restaurant London WC2H]] <2019-03-12 Tue>.
+** Leytonstone
+**** [[http://www.singburi.co.uk][Singburi (Thai)]] <2019-05-07 Tue>.
+** Liverpool street
+**** TODO [[http://www.gunpowderlondon.com][Gunpowder]] (Indian).
+**** TODO Cinnamon Kitchen (Indian).
+** London Bridge
+**** TODO [[https://www.santoremedio.co.uk/][Santo Remedio]] (Mexican).
+** Marylebone
+**** DONE [[http://www.timeout.com/london/restaurants/fischers][Fischer's]] (Austrian). Great atmosphere and schnitzel. Not cheap.
+**** TODO Nambutei (Sushi).
+**** TODO [[http://www.lurra.co.uk/][Lurra]] (Basque).
+** Mayfair
+**** TODO [[http://www.mayfairchippy.com][Mayfair chippy]] (Fish and chips).
+**** TODO [[http://www.ikedarestaurant.com/][Ikeda]] (Japanese).
+**** TODO [[http://www.the-araki.com/][THE ARAKI (Sushi) / pricey]].
+** Mornington Crescent
+**** TODO Asakusa (Japanese).
+** Notting Hill
+**** TODO [[http://www.localblend.co.uk/blend-harringay-2][Blend]] (coffee, working).
+**** TODO [[http://www.thecontinentalpantry.com/][The continental pantry]].
+**** TODO [[http://mamlondon.com][MAM]] (Vietnamese) <2018-12-02 Sun>
+** Old Street
+**** TODO [[http://sardine.london][Sardine]] (French).
+**** TODO [[http://sasukeramen.co.uk/][Sasuke]] (ramen).
+** Olympia
+**** DONE Aborz (Iranian). <2018-12-27 Thu>
+** Oxford street
+**** TODO Roti Chai (Indian).
+** Peckham
+**** TODO [[http://www.ganapatirestaurant.com][Ganapati]] (South Indian).
+**** TODO [[http://thebeggingbowl.co.uk/][The Begging Bowl (Thai)]] <2019-05-07 Tue>.
+** Piccadilly
+**** TODO [[http://www.urbantearooms.com/menus][Urban tea rooms (coffee/tea/brunch)]] <2019-03-12 Tue>
+**** TODO [[http://machi-ya.co.uk/][Machiya]] (Japanese comfort) <2018-12-02 Sun>
+**** TODO [[https://yoriuk.com/][YORI-Korean Restaurant]] <2019-03-12 Tue>
+**** TODO [[https://www.ica.art/rochelle-canteen][Rochelle Canteen @ The Institute of Contemporary Arts (ICA)]] (Pie and ping Sunday special) <2019-02-12 Tue>
+** Putney
+**** TODO [[https://www.tripadvisor.co.uk/ShowUserReviews-g186338-d807103-r176708451-Tomoe-London_England.html][authentic Japanese restaurant in Putney - Tomoe, London Traveller Reviews - TripAdvisor]].
+** Sheppherds bush
+**** TODO [[https://www.etfoodvoyage.com/2017/09/03/caco-co/][Caco & Co]] (Portuguese cafe). <2019-07-14 Sun>
+**** TODO [[https://www.etfoodvoyage.com/2017/03/17/chop-chop-noodle-bar/][Chop chop]] (Noodle bar). <2019-07-14 Sun>
+** Shoreditch
+**** TODO [[http://mastbrothers.com/pages/london][Mast Brothers chocolate makers]].
+**** TODO [[http://www.sagardi.co.uk/en/][Sagardi]] (basque).
+**** TODO [[http://www.lookmumnohands.com/][Look mum no hands]] (cofee, working).
+**** TODO [[http://jandacafe.com][J+A]] (coffe, working).
+**** TODO [[http://www.goodandpropertea.com/find-us][Good & Proper]] (coffee, tea, working).
+**** TODO [[https://smokestak.co.uk][Smokestak]] (BBQ).
+**** TODO [[https://pickyglutton.com/2015/08/17/banh-mi-in-london-review/][Pho Viet 68]] (Banh mi).
+** Sloane Square
+**** TODO [[http://rasoi-uk.com/][Rasoi]] (Indian).
+** Soho
+**** TODO [[https://www.lehanoi.uk/][Le Hanoi]] (Vietnamese) <2018-12-02 Sun>
+**** TODO [[https://www.thevietnamesekitchen.co.uk/][Cay Tre]] (Vietnamese) <2018-12-02 Sun>
+**** TODO [[http://vietnamfood.co.uk/vietfood][Viet Food]] (Vietnamese) <2018-12-02 Sun>
+**** TODO [[http://www.taotaoju.co.uk/][Tao Tao Ju]] (Dim sum) <2018-12-02 Sun>
+**** TODO [[http://www.lokhandwala.co.uk/][Lokhandwala London (Top Indian Tapas Restaurant & Bar in London)]] <2019-01-15 Tue>
+**** TODO [[https://dumlondon.com/][DUM biryani (Indian)]] <2019-01-15 Tue>
+**** TODO [[http://pastaio.london][Pastaio (Italian, fresh pasta)]] <2019-01-15 Tue>.
+**** TODO [[https://bun.house/][Bun House]] (ie. pork buns).
+**** TODO [[http://temperrestaurant.com/][Temper restaurant]] (BBQ/tapas).
+**** TODO [[http://www.goldenunion.co.uk][Golden Union]] (fish bar).
+**** TODO [[http://meltroom.com/][Melt Room]] (Cheese toasties).
+**** TODO [[http://shotgunbbq.com/][Shotgun]] (BBQ).
+**** TODO [[http://smacklobster.com/][Smack Lobster]] (Lobster rolls).
+**** TODO [[https://pickyglutton.com/2014/11/05/smoking-goat-review/][Smoking Goat]] (Thai), highly recommended.
+**** TODO [[http://www.atariya.co.uk/restaurants/][Atari Ya]] (Sushi).
+**** TODO Yumi Izakaya (Japanese).
+**** TODO Jugemu (Japanese).
+**** TODO [[http://www.darjeeling-express.com/][Darjeeling Express]] (Indian).
+**** TODO [[http://www.hopperslondon.com][Hoppers]] Dosas, Rice, Roast, Kothu & Arrack (Sri Lanka and Tamil Nadu).
+**** TODO [[https://tyuk.com][Timber Yard]] (coffee, working).
+**** DONE [[http://pizzapilgrims.co.uk/][Pizza Pilgrims]].
+**** DONE [[https://pickyglutton.com/2016/10/14/kiln-review-soho/][Kiln]] (Thai), highly recommended.
+**** DONE [[http://baolondon.com][BAO]] (Bao buns! enough said).
+**** DONE [[http://said.it/en/london/][SAID]] (italian chocolate shop). Awesome hot chocolate.
+** Southhall
+*** DONE [[http://brilliantrestaurant.com][Brilliant restaurant]] (healthier Indian). <2018-12-27 Thu>
+** Southbank
+**** TODO [[https://tonkotsu.co.uk/][Tonkotsu (ramen)]].
+** South Kensington
+**** TODO Hour Glass (Pub restaurant).
+** Smithfield
+**** TODO [[http://birdofsmithfield.com][Bird of Smithfield]] (Sheppherd's pie, ox cheek, cheesecake).
+** Spitafields
+**** DONE [[https://pickyglutton.com/2016/05/02/som-saa-review-spitalfields/][Som Saa]] (Thai), highly recommended. <2018-12-27 Thu>
+**** TODO [[https://lahpet.co.uk/][Lahpet]] (Burmese) <2018-12-02 Sun>
+** Strand
+**** TODO [[https://www.strand-continental.co.uk/india-club][India Club (around for 50 years)]] <2019-05-21 Tue>
+** Stoke Newingtom
+**** TODO [[http://www.the-haberdashery.com][The Haberdashery]] (coffee, working).
+** Tottenham Court Road.
+**** DONE [[https://www.kanada-ya.com/][Kanada-Ya]] (rammen): Not bad.
+** Tower Hill
+**** TODO [[http://www.manze.co.uk][M. Manze]] (pie and mash).
+**** TODO [[https://www.google.co.uk/search?q=maltby+street+market&rlz=1C1FLDB_enGB546GB546&espv=2&biw=1449&bih=913&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwj1nrGQvYvLAhUF2hoKHeaQDQsQsAQIOg&dpr=1][Maltby street market]].
+** Tufnell Park
+**** TODO Monsoon (Indian), try lamb naga.
+** Turnham Green
+**** TODO Chief Coffee.
+** Victoria
+**** TODO [[http://dominiqueansellondon.com/][Dominique Ansel Bakery (Bakery)]] <2019-01-22 Tue>
+**** TODO Dominique Ansel Bakery <2018-12-11 Tue>
+**** TODO [[https://bleeckerburger.co.uk][Bleeker (burger)]] <2019-01-22 Tue>
+** Walthamstow
+**** TODO [[https://grillstock.co.uk][Grillstock BBQ]].
+** Waterloo
+**** TODO [[http://thelaughinggravy.co.uk][The Laughing Gravy]].
+**** TODO [[http://zenchina.co.uk][Zen China]].
+** West Hamstead
+**** TODO [[http://www.timeout.com/london/restaurants/nautilus][Nautilus]] (fish and chips).
+**** TODO [[https://twitter.com/MamacitaNW6/media][Mamacita]] (Mexican).
+** Whitechapel
+**** TODO Lahore Kebab House, try seekh kebabs with roti.
+**** TODO Sushinoen.
+** Wimbledon
+**** TODO Dalchini (Indian), try spicy cocunut fish curry.
 
 * [2015-03-07 Sat] UX bookmarks
 :PROPERTIES:
@@ -10574,13 +10574,13 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :PROPERTIES:
 :CUSTOM_ID: recipes
 :END:
-*** Banana pancakes
+** Banana pancakes
 - Ripe banana.
 - 2 Eggs.
 - 1/3 cup instant oats.
 - 1/2 teaspoon baking powder.
 - Blend.
-*** Tom Kha Gai soup
+** Tom Kha Gai soup
 - Chicken or Prawns
 - 2 kaffir lime leaves
 - 1 lemongrass stalk
@@ -10593,7 +10593,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - 1-4 thai chillies
 - 1-2 tbsp chili oil
 - 1 green onion
-*** Veg-Fruit juice
+** Veg-Fruit juice
 - Lime
 - Ginger
 - Apple
@@ -10601,15 +10601,15 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - Celery
 - Fig
 - Blueberries
-*** Berry Hempster
+** Berry Hempster
 - Hemp milk
 - Hemp protein
 - Strawberry
 - Blueberry
 - Date
-*** How to cook [[https://www.youtube.com/watch?v%3DDaN4ifTG3H0][Beef Chow Fun]].
-*** [[http://www.dailymail.co.uk/home/you/article-2248267/Recipe-Cavolo-nero-anchovies-chilli-garlic.html][Cavolo nero with anchovies, chilli and garlic]].
-*** Vietnamese Pork Lettuce Wraps (my own versions)
+** How to cook [[https://www.youtube.com/watch?v%3DDaN4ifTG3H0][Beef Chow Fun]].
+** [[http://www.dailymail.co.uk/home/you/article-2248267/Recipe-Cavolo-nero-anchovies-chilli-garlic.html][Cavolo nero with anchovies, chilli and garlic]].
+** Vietnamese Pork Lettuce Wraps (my own versions)
 - Pork Mince.
 - Chopped garlic.
 - Chopped chillies.
@@ -10626,20 +10626,20 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :MODIFIED:
 [2019-11-18 Mon]
 :END:
-******* TODO [[https://twitter.com/cognazor/status/1196464349109530625][Zontali on Twitter: "Name one of your most emotionally resonant songs, and I ...]].
-******* TODO [[https://generative.fm/][Generative.fm]].
-******* TODO [[http://ivanish.ca/diminished-fifth/][Diminished Fifth]].
-******* TODO [[http://www.archiveofindianmusic.org/][Archive of Indian music]].
-******* TODO Budhaditya Mukherjee.
-******* TODO Debashish Bhattcharya.
-******* TODO Halim Jafar Khan and his Disciples - Sitar Quintet - LP published in India in 1968.
-******* TODO Harjinderpal Singh.
-******* TODO Jayanthi Kumaresh.
-******* TODO [[https://www.youtube.com/watch?v=jMEjPKBvhzE#t=0][Kayhan Kalhor]].
-******* TODO [[http://youtu.be/qQcKzwSmGy0][Malaya Chalo]].
-******* TODO Mehboob Nadeem.
-******* TODO Nirmalya Dey.
-******* TODO [[https://www.youtube.com/watch?v=dPSr3swtLDk][Zia Mohiuddin]].
+**** TODO [[https://twitter.com/cognazor/status/1196464349109530625][Zontali on Twitter: "Name one of your most emotionally resonant songs, and I ...]].
+**** TODO [[https://generative.fm/][Generative.fm]].
+**** TODO [[http://ivanish.ca/diminished-fifth/][Diminished Fifth]].
+**** TODO [[http://www.archiveofindianmusic.org/][Archive of Indian music]].
+**** TODO Budhaditya Mukherjee.
+**** TODO Debashish Bhattcharya.
+**** TODO Halim Jafar Khan and his Disciples - Sitar Quintet - LP published in India in 1968.
+**** TODO Harjinderpal Singh.
+**** TODO Jayanthi Kumaresh.
+**** TODO [[https://www.youtube.com/watch?v=jMEjPKBvhzE#t=0][Kayhan Kalhor]].
+**** TODO [[http://youtu.be/qQcKzwSmGy0][Malaya Chalo]].
+**** TODO Mehboob Nadeem.
+**** TODO Nirmalya Dey.
+**** TODO [[https://www.youtube.com/watch?v=dPSr3swtLDk][Zia Mohiuddin]].
 
 * [2015-03-06 Fri] UX scrapbook bookmarks
 :PROPERTIES:
@@ -10953,8 +10953,8 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :MODIFIED:
 [2016-01-11 Mon]
 :END:
-******* TODO [[https://github.com/tonsky/AnyBar][AnyBar: OS X menubar status indicator (color dot)]].
-******* TODO [[https://github.com/benvan/mercury][mercury (fuzzy tab search)]].
+**** TODO [[https://github.com/tonsky/AnyBar][AnyBar: OS X menubar status indicator (color dot)]].
+**** TODO [[https://github.com/benvan/mercury][mercury (fuzzy tab search)]].
 
 * [2015-03-06 Fri] Productivity bookmarks
 :PROPERTIES:
@@ -11786,34 +11786,34 @@ use git [[http://git-scm.com/blog/2010/03/08/rerere.html][rerere]]. here's a [[h
 :PROPERTIES:
 :CUSTOM_ID: emacs-key-bindings-and-maps
 :END:
-*** based on [[http://www.masteringemacs.org/article/mastering-key-bindings-emacs][masteringemacs.org]].
-*** bonus tip
+** based on [[http://www.masteringemacs.org/article/mastering-key-bindings-emacs][masteringemacs.org]].
+** bonus tip
 prefix key, followed by c-h, lists keys in prefix.
-*** keymap
+** keymap
 maps key to action.
-*** keymap found in buffer and most major modes.
-*** keys
+** keymap found in buffer and most major modes.
+** keys
 - undefined: self explanatory.
 - prefix key: ie. c-x (part of complete key).
 - complete key: complete input executes associated command.
-*** mapping
+** mapping
 - (define-key keymap key def): add to current buffer map.
 - (local-set-key key command): add to active buffer (no map option).
 - (local-unset-key key)
 - (global-set-key key command): add to global keymap (all buffers).
 - (global-unset-key key)
-*** key codes
+** key codes
 - kbd: macro transaltes human-readable key to emacs readable.
 - function and navigation keys must be surrounded by <>.
 - example: (kbd "c-c p") or (kbd "<f8>") of (kbd "<down>").
-*** remapping
+** remapping
 - use remap to replace mapping (ie. kill-line with my/kill-line).
 - (define-key keymap [remap original-function] 'my-own-function).
-*** reserved keys
+** reserved keys
 - "c-c ?" generally reserved for you, but third party packages use it.
 - function keys (ie. f1-f12).
 - hyper and super (ancient).
-*** lookup order
+** lookup order
 - in a nutshell: minor mode keys, local keys, global keys.
 - full order:
   1. overriding-terminal-local-map: terminal-specific key binds.
@@ -11824,7 +11824,7 @@ maps key to action.
   6. minor-mode-map-alist: as previous (preferred for minor modes) <-----
   7. current-local-map: buffers current local map.
   8. current-global-map: last place to look (ie. global).
-*** mode hooks
+** mode hooks
 - (local-set-key (kbd "c-c q") 'my-awesome-method)) in hook-method.
 - for key-chord-define, use current-local-map.
 
@@ -11835,46 +11835,46 @@ maps key to action.
 :MODIFIED:
 [2019-01-12 Sat]
 :END:
-******* TODO [[https://www.youtube.com/watch?v=wBraurRo_bg][Frank Ostaseski: "Inviting the Wisdom of Death into Life"]].
-******* TODO [[https://news.ycombinator.com/item?id=17210164][YouTube’s top creators are burning out (Hacker News)]].
-******* TODO [[https://www.youtube.com/playlist?list=PL94E35692EB9D36F3][Donald Knuth Lectures - YouTube]].
-******* TODO Rashomon by Akira Kurosawa.
-******* TODO [[https://vimeo.com/97903574][Seeing spaces]].
-******* TODO [[https://www.youtube.com/watch?v=HHYs78uIx3M][An exclusive seminar with Julian Assange]].
-******* TODO [[https://www.youtube.com/watch?v=LrObZ_HZZUc][The (Secret) City of London, Part 1: History]].
-******* TODO [[https://www.youtube.com/watch?v=z1ROpIKZe-c][The (Secret) City of London, Part 2: History]].
-******* TODO [[https://www.youtube.com/watch?v=kXBJLH2xrBM][The UK Gold]].
-******* TODO [[https://www.youtube.com/watch?v=Jio7DK15Q1E&feature=youtu.be][Terra Plana - Learning the skill of barefoot running]].
-******* TODO [[https://www.youtube.com/watch?v=Zwx1PaWbD4U][The Science of Compassion ॐ Mata Amritanandamayi ॐ Documentary]].
-******* TODO [[https://www.youtube.com/playlist?list=PLZdCLR02grLrEwKaZv-5QbUzK0zGKOOcr][Rich Hickey Talks (clojure)]].
-******* TODO [[https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree][Redux: The Single Immutable State Tree screencast]].
-******* TODO [[https://channel9.msdn.com/Shows/Going+Deep/Anders-Hejlsberg-and-Lars-Bak-TypeScript-JavaScript-and-Dart][Anders Hejlsberg and Lars Bak: TypeScript, JavaScript, and Dart]].
-******* TODO [[http://www.slowhustle.com/how-to-travel-the-slow-hustle-way-insights-from-50-episodes/][How To Travel… The Slow Hustle Way]].
-******* TODO [[https://www.youtube.com/watch?time_continue%3D1&v%3DnUjgKoOYxos][2015-12-10 Emacs Chat - John Wiegley]].
-******* TODO [[http://emacsnyc.org/2015/03/02/how-i-use-org-capture-and-stuff.html][How To Order Salads From Inside Emacs]].
-******* TODO [[http://emacsnyc.org/2014/04/07/an-introduction-to-emacs-lisp.html][An introduction to Emacs Lisp]].
-******* TODO [[https://vimeo.com/139910837?ref%3Dtw-share][12 Challenging Steps to Being a Better Interviewer – Cate Huston at The Lead Developer 2015]].
-******* TODO [[https://www.youtube.com/watch?v%3D8o46HH-TfNY][Born Rich: Children Of The Insanely Wealthy]].
-******* TODO [[https://www.youtube.com/watch?v%3DFtieBc3KptU&feature%3Dyoutu.be&a][Emacs for writers]].
-******* TODO [[https://www.youtube.com/watch?v%3dbkdt9bfh5gs][Frugal fire 002: justin mccurry (rootofgood)]].
-******* TODO Graham Hancock – The War on Consciousness.
-******* TODO [[http://www.nfb.ca/film/griefwalker?utm_content%3dbuffer24b02&utm_medium%3dsocial&utm_source%3dtwitter.com&utm_campaign%3dbuffer][Griefwalker]].
-******* TODO [[https://www.youtube.com/watch?v%3DSwkjqGd8NC4][How to win the loser's game]].
-******* TODO [[https://www.youtube.com/playlist?list%3DPLBDA2E52FB1EF80C9][John Green's "Crash Course History" videos]].
-******* TODO [[https://www.youtube.com/watch?v%3DunX4FQqM6vI][Matthieu Ricard Leads a Meditation on Altruistic Love and Compassion]].
-******* TODO [[https://www.youtube.com/watch?v%3DjUlWDxhSlt8][Matthieu Ricard: "Altruism" | Talks at Google]].
-******* TODO Nick Hanauer – Rich People Don’t Create Jobs.
-******* TODO [[https://www.youtube.com/watch?v%3DcsyL9EC0S0c][Programming is terrible — Lessons learned from a life wasted]].
-******* TODO Rupert Sheldrake – The Science of Delusion.
-******* TODO [[https://www.youtube.com/watch?v%3DVXTpTRuPiPQ][Surya Namaskar stretches]].
-******* TODO [[http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm][The Emacs of distros]].
-******* TODO [[https://www.youtube.com/watch?v%3D17jymDn0W6U&sns%3Dem][The Known Universe by AMNH]].
-******* DONE [[https://www.youtube.com/watch?v=ttLgyKk7yMA][Juliet Schor Iris Nights: Re-Thinking Materialism]].
-******* DONE [[https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N][The Internets own boy]].
-******* DONE [[https://www.youtube.com/watch?v%3DFw8BV4VFOwM][BBC's secret of levitation]].
-******* DONE [[https://vimeo.com/15351476][Hold Fast]].
-******* DONE [[https://www.youtube.com/watch?v=8crol-ydfmi][This is water, commencement speech]].
-******* DONE [[https://www.youtube.com/watch?v=dkyjvv7huzw][This is water]].
+**** TODO [[https://www.youtube.com/watch?v=wBraurRo_bg][Frank Ostaseski: "Inviting the Wisdom of Death into Life"]].
+**** TODO [[https://news.ycombinator.com/item?id=17210164][YouTube’s top creators are burning out (Hacker News)]].
+**** TODO [[https://www.youtube.com/playlist?list=PL94E35692EB9D36F3][Donald Knuth Lectures - YouTube]].
+**** TODO Rashomon by Akira Kurosawa.
+**** TODO [[https://vimeo.com/97903574][Seeing spaces]].
+**** TODO [[https://www.youtube.com/watch?v=HHYs78uIx3M][An exclusive seminar with Julian Assange]].
+**** TODO [[https://www.youtube.com/watch?v=LrObZ_HZZUc][The (Secret) City of London, Part 1: History]].
+**** TODO [[https://www.youtube.com/watch?v=z1ROpIKZe-c][The (Secret) City of London, Part 2: History]].
+**** TODO [[https://www.youtube.com/watch?v=kXBJLH2xrBM][The UK Gold]].
+**** TODO [[https://www.youtube.com/watch?v=Jio7DK15Q1E&feature=youtu.be][Terra Plana - Learning the skill of barefoot running]].
+**** TODO [[https://www.youtube.com/watch?v=Zwx1PaWbD4U][The Science of Compassion ॐ Mata Amritanandamayi ॐ Documentary]].
+**** TODO [[https://www.youtube.com/playlist?list=PLZdCLR02grLrEwKaZv-5QbUzK0zGKOOcr][Rich Hickey Talks (clojure)]].
+**** TODO [[https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree][Redux: The Single Immutable State Tree screencast]].
+**** TODO [[https://channel9.msdn.com/Shows/Going+Deep/Anders-Hejlsberg-and-Lars-Bak-TypeScript-JavaScript-and-Dart][Anders Hejlsberg and Lars Bak: TypeScript, JavaScript, and Dart]].
+**** TODO [[http://www.slowhustle.com/how-to-travel-the-slow-hustle-way-insights-from-50-episodes/][How To Travel… The Slow Hustle Way]].
+**** TODO [[https://www.youtube.com/watch?time_continue%3D1&v%3DnUjgKoOYxos][2015-12-10 Emacs Chat - John Wiegley]].
+**** TODO [[http://emacsnyc.org/2015/03/02/how-i-use-org-capture-and-stuff.html][How To Order Salads From Inside Emacs]].
+**** TODO [[http://emacsnyc.org/2014/04/07/an-introduction-to-emacs-lisp.html][An introduction to Emacs Lisp]].
+**** TODO [[https://vimeo.com/139910837?ref%3Dtw-share][12 Challenging Steps to Being a Better Interviewer – Cate Huston at The Lead Developer 2015]].
+**** TODO [[https://www.youtube.com/watch?v%3D8o46HH-TfNY][Born Rich: Children Of The Insanely Wealthy]].
+**** TODO [[https://www.youtube.com/watch?v%3DFtieBc3KptU&feature%3Dyoutu.be&a][Emacs for writers]].
+**** TODO [[https://www.youtube.com/watch?v%3dbkdt9bfh5gs][Frugal fire 002: justin mccurry (rootofgood)]].
+**** TODO Graham Hancock – The War on Consciousness.
+**** TODO [[http://www.nfb.ca/film/griefwalker?utm_content%3dbuffer24b02&utm_medium%3dsocial&utm_source%3dtwitter.com&utm_campaign%3dbuffer][Griefwalker]].
+**** TODO [[https://www.youtube.com/watch?v%3DSwkjqGd8NC4][How to win the loser's game]].
+**** TODO [[https://www.youtube.com/playlist?list%3DPLBDA2E52FB1EF80C9][John Green's "Crash Course History" videos]].
+**** TODO [[https://www.youtube.com/watch?v%3DunX4FQqM6vI][Matthieu Ricard Leads a Meditation on Altruistic Love and Compassion]].
+**** TODO [[https://www.youtube.com/watch?v%3DjUlWDxhSlt8][Matthieu Ricard: "Altruism" | Talks at Google]].
+**** TODO Nick Hanauer – Rich People Don’t Create Jobs.
+**** TODO [[https://www.youtube.com/watch?v%3DcsyL9EC0S0c][Programming is terrible — Lessons learned from a life wasted]].
+**** TODO Rupert Sheldrake – The Science of Delusion.
+**** TODO [[https://www.youtube.com/watch?v%3DVXTpTRuPiPQ][Surya Namaskar stretches]].
+**** TODO [[http://audio-video.gnu.org/video/misc/2015-01__gnu_guix__the_emacs_of_distros.webm][The Emacs of distros]].
+**** TODO [[https://www.youtube.com/watch?v%3D17jymDn0W6U&sns%3Dem][The Known Universe by AMNH]].
+**** DONE [[https://www.youtube.com/watch?v=ttLgyKk7yMA][Juliet Schor Iris Nights: Re-Thinking Materialism]].
+**** DONE [[https://archive.org/details/The.Internets.Own.Boy.The.Story.of.Aaron.Swartz.2014.WEBRiP.XViD.AC3LEGi0N][The Internets own boy]].
+**** DONE [[https://www.youtube.com/watch?v%3DFw8BV4VFOwM][BBC's secret of levitation]].
+**** DONE [[https://vimeo.com/15351476][Hold Fast]].
+**** DONE [[https://www.youtube.com/watch?v=8crol-ydfmi][This is water, commencement speech]].
+**** DONE [[https://www.youtube.com/watch?v=dkyjvv7huzw][This is water]].
 
 * [2014-09-12 Wed] Flight-booking bookmarks
   :PROPERTIES:
@@ -11936,96 +11936,96 @@ maps key to action.
 :MODIFIED:
 [2019-11-30 Sat]
 :END:
-******* TODO [[https://en.m.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba][Demon Slayer: Kimetsu no Yaiba - Wikipedia]].
-******* TODO [[https://en.wikipedia.org/wiki/Yuri_on_Ice][Yuri on Ice]].
-******* TODO [[https://twitter.com/alicegoldfuss/status/1196527679127732224][Twitter: "Has anyone here seen Parasite?"]].
-******* TODO [[https://www.imdb.com/title/tt2334879/][White House Down (2013) - IMDb]].
-******* TODO [[https://www.imdb.com/title/tt2179136/][American Sniper (2014) - IMDb]].
-******* TODO Hannibal Burress, Hasan Minhaj, Neal Brennan, Dave Chappelle.
-******* TODO [[https://en.wikipedia.org/wiki/The_Insider_(film)][The Insider (film) - Wikipedia]].
-******* TODO [[https://twitter.com/alicegoldfuss/status/1166139660822663168][I need recommendations for shows/movies (preferably on Netflix)]].
-******* TODO [[https://www.amazon.co.uk/gp/product/B000PE0H0E/][Taste of Tea]].
-******* TODO [[http://japanology.tv/][Japanology Episodes List]].
-******* TODO [[https://www3.nhk.or.jp/nhkworld/en/tv/japanologyplus/][Japanology Plus - TV | NHK WORLD-JAPAN Live & Programs]].
-******* TODO [[https://www.newyorker.com/culture/on-television/with-the-netflix-series-our-planet-david-attenborough-delivers-an-urgent-message][David Attenborough's Our Planet]].
-******* TODO [[https://en.wikipedia.org/wiki/Infernal_Affairs][Infernal Affairs - Wikipedia]].
-******* TODO [[https://twitter.com/VictoriaAveyard/status/1106965397729767424][Victoria Aveyard on Twitter: "when your roommate asks for a Marvel watch list with commentary… "]].
-******* TODO [[https://www.netflix.com/title/80240715?trkid=13710079&MSG_TITLE=80240715&lnktrk=EMP&g=34314DADF578FF8FA7BD72C94F6C8ED9645514B1&lkid=W2W_ROW_2_MDP_2][ROMA]].
-******* TODO [[https://www.imdb.com/title/tt5715874/][The Killing of a Sacred Deer (2017)]].
-******* TODO Private Life.
-******* TODO You Were Never Really Here.
-******* TODO Sorry to Bother You.
-******* TODO Game Night.
-******* TODO Support the Girls.
-******* TODO Steven Yeun, Burning.
-******* TODO A Simple Favor.
-******* TODO [[https://news.ycombinator.com/item?id=18271167][Ask HN: Mind blowing documentaries?]].
-******* TODO [[http://www.theyshootpictures.com/21stcentury.htm][The 21st Century’s Most Acclaimed Films (including films from 2000)]].
-******* TODO [[https://en.wikipedia.org/wiki/Koyaanisqatsi][Koyaanisqatsi]].
-******* TODO [[https://www.imdb.com/title/tt4000670/][Mifune: The Last Samurai (2015) - IMDb]].
-******* TODO [[https://www.imdb.com/title/tt1322313/][Sunshine Superman (2014) - IMDb]].
-******* TODO [[https://www.netflix.com/gb/title/80100869][Under the Sun (Netflix)]]: "Under the Sun keeps forcing us to ponder why we watch representations of real life and what we think we’re learning about reality in the process".
-******* TODO [[https://www.netflix.com/gb/title/80107737][Peter and the Farm (Netflix)]].
-******* TODO [[https://en.wikipedia.org/wiki/Lessons_of_Darkness][Lessons of Darkness - Wikipedia]].
-******* TODO [[https://en.wikipedia.org/wiki/The_Story_of_Stuff][The story of stuff]].
-******* TODO [[https://www.imdb.com/title/tt0120894/?ref_=nm_flmg_act_42][Immortality]].
-******* TODO Ichi the killer.
-******* TODO Audition.
-******* TODO The Happiness of the Katakuris.
-******* TODO Agitator.
-******* TODO Gozu.
-******* TODO Outrage.
-******* TODO Minbo.
-******* TODO Blues harp.
-******* TODO Goyokin.
-******* TODO The hidden blade.
-******* TODO Wild Tales.
-******* TODO The Road.
-******* TODO Moon.
-******* TODO Who am I.
-******* TODO [[http://www.openculture.com/2010/07/tarkovksy.html][Tarkovsky films]].
-******* TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
-******* TODO [[https://en.wikipedia.org/wiki/Kubo_and_the_Two_Strings][Kubo and the two strings]].
-******* TODO Spotlight.
-******* TODO Creed.
-******* TODO Innocence of memories.
-******* TODO The revenant.
-******* TODO Big short.
-******* TODO Pressure Cooker.
-******* TODO Bob and David.
-******* TODO Twinsters.
-******* TODO Akira kurosawa director.
-******* TODO [[http://www.imdb.com/title/tt0042192/][All About Eve]].
-******* TODO [[http://www.imdb.com/title/tt2321549/][Babadook]].
-******* TODO [[https://en.wikipedia.org/wiki/Death_to_Smoochy][Death to Smoochy]].
-******* TODO Enter the void, by gaspar noe.
-******* TODO [[http://www.imdb.com/title/tt1671513/][Four horsemen]].
-******* TODO Hirokazu koreeda director.
-******* TODO Naomi kawaze director.
-******* TODO Nostalghia.
-******* TODO Sion sono director.
-******* TODO Solyaris
-******* TODO Stalker
-******* TODO Takashi kitano director.
-******* TODO Takashi miike director.
-******* TODO [[https://www.theconnection.tv/][The connection]].
-******* TODO The mirror
-******* TODO [[http://www.imdb.com/title/tt0078269/?ref_%3Dfn_al_tt_1][The Silent Partner]].
-******* TODO Uncle boonmee who can recall his past lives, by apichatpong weerasethakul.
-******* TODO Waking life, by rickard linklater.
-******* TODO [[http://xaharts.org/movie/best_movies.html][Xah Lee's movie list]].
-******* DONE [[https://www.reddit.com/r/UKPersonalFinance/comments/b4jwo6/the_men_who_made_us_spend_a_really_amazing_3_part/][The Men Who Made Us Spend - a really amazing 3 part documentary from the BBC on spending and consumerism]].
-******* DONE [[https://en.wikipedia.org/wiki/Annihilation_(film)][Annihilation (film) - Wikipedia]].
-******* DONE 13 Assasins <2018-12-27 Thu>.
-******* DONE 7 Samurai <2018-12-27 Thu>.
-******* DONE [[https://www.imdb.com/title/tt6839788/][Dogs of Berlin (TV Series 2018– ) - IMDb]].
-******* DONE [[https://www.netflix.com/title/80209379?trkid=13710079&MSG_TITLE=80209379&lnktrk=EMP&g=E58636EBA68F4FFCE4B16798136D42876455394E&lkid=W2W_ROW_2_MDP_1][Tidying Up with Marie Kondo]].
-******* DONE The True cost.
-******* DONE [[http://www.awaketheyoganandamovie.com/][Awake, the life of yogananda]].
-******* DONE [[http://www.imdb.com/title/tt2562232/][Birdman]].
-******* DONE [[http://www.imdb.com/title/tt1065073/][Boyhood]].
-******* DONE She A Chinese.
-******* DONE [[http://www.imdb.com/title/tt0243655/][Wet Hot American Summer]].
+**** TODO [[https://en.m.wikipedia.org/wiki/Demon_Slayer:_Kimetsu_no_Yaiba][Demon Slayer: Kimetsu no Yaiba - Wikipedia]].
+**** TODO [[https://en.wikipedia.org/wiki/Yuri_on_Ice][Yuri on Ice]].
+**** TODO [[https://twitter.com/alicegoldfuss/status/1196527679127732224][Twitter: "Has anyone here seen Parasite?"]].
+**** TODO [[https://www.imdb.com/title/tt2334879/][White House Down (2013) - IMDb]].
+**** TODO [[https://www.imdb.com/title/tt2179136/][American Sniper (2014) - IMDb]].
+**** TODO Hannibal Burress, Hasan Minhaj, Neal Brennan, Dave Chappelle.
+**** TODO [[https://en.wikipedia.org/wiki/The_Insider_(film)][The Insider (film) - Wikipedia]].
+**** TODO [[https://twitter.com/alicegoldfuss/status/1166139660822663168][I need recommendations for shows/movies (preferably on Netflix)]].
+**** TODO [[https://www.amazon.co.uk/gp/product/B000PE0H0E/][Taste of Tea]].
+**** TODO [[http://japanology.tv/][Japanology Episodes List]].
+**** TODO [[https://www3.nhk.or.jp/nhkworld/en/tv/japanologyplus/][Japanology Plus - TV | NHK WORLD-JAPAN Live & Programs]].
+**** TODO [[https://www.newyorker.com/culture/on-television/with-the-netflix-series-our-planet-david-attenborough-delivers-an-urgent-message][David Attenborough's Our Planet]].
+**** TODO [[https://en.wikipedia.org/wiki/Infernal_Affairs][Infernal Affairs - Wikipedia]].
+**** TODO [[https://twitter.com/VictoriaAveyard/status/1106965397729767424][Victoria Aveyard on Twitter: "when your roommate asks for a Marvel watch list with commentary… "]].
+**** TODO [[https://www.netflix.com/title/80240715?trkid=13710079&MSG_TITLE=80240715&lnktrk=EMP&g=34314DADF578FF8FA7BD72C94F6C8ED9645514B1&lkid=W2W_ROW_2_MDP_2][ROMA]].
+**** TODO [[https://www.imdb.com/title/tt5715874/][The Killing of a Sacred Deer (2017)]].
+**** TODO Private Life.
+**** TODO You Were Never Really Here.
+**** TODO Sorry to Bother You.
+**** TODO Game Night.
+**** TODO Support the Girls.
+**** TODO Steven Yeun, Burning.
+**** TODO A Simple Favor.
+**** TODO [[https://news.ycombinator.com/item?id=18271167][Ask HN: Mind blowing documentaries?]].
+**** TODO [[http://www.theyshootpictures.com/21stcentury.htm][The 21st Century’s Most Acclaimed Films (including films from 2000)]].
+**** TODO [[https://en.wikipedia.org/wiki/Koyaanisqatsi][Koyaanisqatsi]].
+**** TODO [[https://www.imdb.com/title/tt4000670/][Mifune: The Last Samurai (2015) - IMDb]].
+**** TODO [[https://www.imdb.com/title/tt1322313/][Sunshine Superman (2014) - IMDb]].
+**** TODO [[https://www.netflix.com/gb/title/80100869][Under the Sun (Netflix)]]: "Under the Sun keeps forcing us to ponder why we watch representations of real life and what we think we’re learning about reality in the process".
+**** TODO [[https://www.netflix.com/gb/title/80107737][Peter and the Farm (Netflix)]].
+**** TODO [[https://en.wikipedia.org/wiki/Lessons_of_Darkness][Lessons of Darkness - Wikipedia]].
+**** TODO [[https://en.wikipedia.org/wiki/The_Story_of_Stuff][The story of stuff]].
+**** TODO [[https://www.imdb.com/title/tt0120894/?ref_=nm_flmg_act_42][Immortality]].
+**** TODO Ichi the killer.
+**** TODO Audition.
+**** TODO The Happiness of the Katakuris.
+**** TODO Agitator.
+**** TODO Gozu.
+**** TODO Outrage.
+**** TODO Minbo.
+**** TODO Blues harp.
+**** TODO Goyokin.
+**** TODO The hidden blade.
+**** TODO Wild Tales.
+**** TODO The Road.
+**** TODO Moon.
+**** TODO Who am I.
+**** TODO [[http://www.openculture.com/2010/07/tarkovksy.html][Tarkovsky films]].
+**** TODO [[https://en.wikipedia.org/wiki/Snowpiercer][Snowpiercer]].
+**** TODO [[https://en.wikipedia.org/wiki/Kubo_and_the_Two_Strings][Kubo and the two strings]].
+**** TODO Spotlight.
+**** TODO Creed.
+**** TODO Innocence of memories.
+**** TODO The revenant.
+**** TODO Big short.
+**** TODO Pressure Cooker.
+**** TODO Bob and David.
+**** TODO Twinsters.
+**** TODO Akira kurosawa director.
+**** TODO [[http://www.imdb.com/title/tt0042192/][All About Eve]].
+**** TODO [[http://www.imdb.com/title/tt2321549/][Babadook]].
+**** TODO [[https://en.wikipedia.org/wiki/Death_to_Smoochy][Death to Smoochy]].
+**** TODO Enter the void, by gaspar noe.
+**** TODO [[http://www.imdb.com/title/tt1671513/][Four horsemen]].
+**** TODO Hirokazu koreeda director.
+**** TODO Naomi kawaze director.
+**** TODO Nostalghia.
+**** TODO Sion sono director.
+**** TODO Solyaris
+**** TODO Stalker
+**** TODO Takashi kitano director.
+**** TODO Takashi miike director.
+**** TODO [[https://www.theconnection.tv/][The connection]].
+**** TODO The mirror
+**** TODO [[http://www.imdb.com/title/tt0078269/?ref_%3Dfn_al_tt_1][The Silent Partner]].
+**** TODO Uncle boonmee who can recall his past lives, by apichatpong weerasethakul.
+**** TODO Waking life, by rickard linklater.
+**** TODO [[http://xaharts.org/movie/best_movies.html][Xah Lee's movie list]].
+**** DONE [[https://www.reddit.com/r/UKPersonalFinance/comments/b4jwo6/the_men_who_made_us_spend_a_really_amazing_3_part/][The Men Who Made Us Spend - a really amazing 3 part documentary from the BBC on spending and consumerism]].
+**** DONE [[https://en.wikipedia.org/wiki/Annihilation_(film)][Annihilation (film) - Wikipedia]].
+**** DONE 13 Assasins <2018-12-27 Thu>.
+**** DONE 7 Samurai <2018-12-27 Thu>.
+**** DONE [[https://www.imdb.com/title/tt6839788/][Dogs of Berlin (TV Series 2018– ) - IMDb]].
+**** DONE [[https://www.netflix.com/title/80209379?trkid=13710079&MSG_TITLE=80209379&lnktrk=EMP&g=E58636EBA68F4FFCE4B16798136D42876455394E&lkid=W2W_ROW_2_MDP_1][Tidying Up with Marie Kondo]].
+**** DONE The True cost.
+**** DONE [[http://www.awaketheyoganandamovie.com/][Awake, the life of yogananda]].
+**** DONE [[http://www.imdb.com/title/tt2562232/][Birdman]].
+**** DONE [[http://www.imdb.com/title/tt1065073/][Boyhood]].
+**** DONE She A Chinese.
+**** DONE [[http://www.imdb.com/title/tt0243655/][Wet Hot American Summer]].
 
 * [2014-12-29 Mon] Microservices bookmarks
 :PROPERTIES:
@@ -12045,99 +12045,99 @@ maps key to action.
 :MODIFIED:
 [2019-12-14 Sat]
 :END:
-******* TODO [[https://twitter.com/twostraws/status/1205416072058490880][Paul Hudson on Twitter: Can you recommend some manga?]].
-******* TODO [[https://twitter.com/dan_abramov/status/1190762799338790913][Dan Abramov: Please point me to a book about programming that isn't boring]].
-******* TODO [[https://www.amazon.com/gp/registry/wishlist/28JXH54TPGED7][John's Amazon wishlist]].
-******* TODO [[https://www.amazon.co.uk/Super-Thinking-Upgrade-Reasoning-Decisions-ebook/dp/B07FRXC3KN/ref=sr_1_2][Super Thinking: Upgrade Your Reasoning and Make Better Decisions with Mental Models]].
-******* TODO [[https://www.amazon.co.uk/s?k=Giulia+Enders][Gut: the inside story of our body's most under-rated organ]].
-******* TODO [[https://twitter.com/evansandhoefner/status/1048426752404410368][Evan Sandhoefner on Twitter: Which books/papers/talks/etc have blown your mind / changed your worldview significantly?]].
-******* TODO [[https://www.amazon.co.uk/Joy-Demand-Discovering-Happiness-Within/dp/0062378872/ref=sr_1_1][JOY ON DEMAND: The Art of Discovering the Happiness Within]].
-******* TODO [[https://www.amazon.co.uk/Minute-Meditation-Expanded-Quiet-Change/dp/0399173420/ref=sr_1_2][8 Minute Meditation Expanded : Quiet Your Mind. Change Your Life]].
-******* TODO [[https://www.amazon.co.uk/Mindfulness-Plain-English-20th-Anniversary/dp/0861719069/ref=sr_1_1][Mindfulness in Plain English: 20th Anniversary Edition: Amazon.co.uk]].
-******* TODO [[https://twitter.com/bettina_bosch/status/1164430628852572161][Bettina Bauer: What is your favorite Science Fiction novel? (twitter)]].
-******* TODO [[https://www.amazon.com/Altered-Traits-Science-Reveals-Meditation/dp/0399184384][Altered Traits: Science Reveals How Meditation Changes Your Mind, Brain, and Body]].
-******* TODO [[https://www.amazon.com/Junk-Food-Japan-Addictive-Kurobuta/dp/1472919920][Junk Food Japan: Addictive Food from Kurobuta]].
-******* TODO [[https://news.ycombinator.com/item?id=20332455][Ask HN: Recommend one book I need to read this summer?]].
-******* TODO I am a cat (Soseki Natsume).
-******* TODO [[https://www.amazon.co.uk/Thinking-Systems-Primer-Diana-Wright/dp/184407725X][Thinking in Systems: A Primer: Amazon.co.uk: Diana Wright, Donella H. Meadows: 9781844077250: Books]].
-******* TODO [[http://www.lisperati.com/casting-spels-emacs/html/casting-spels-emacs-1.html][Casting SPELs in Lisp (Emacs edition)]].
-******* TODO [[http://landoflisp.com/][Land of lisp]].
-******* TODO [[https://www.goodreads.com/book/show/558738.Juggling_for_the_Complete_Klutz][Juggling for the Complete Klutz by John Cassidy]].
-******* TODO [[https://www.amazon.co.uk/Positioning-Battle-Your-Al-Ries-ebook/][Positioning: The Battle for Your Mind]].
-******* TODO [[https://en.wikipedia.org/wiki/Snow_Crash][Snow Crash - Wikipedia]].
-******* TODO [[https://www.powells.com/book/-9781119404507][The Little Book of Common Sense Investing, Updated and Revised]].
-******* TODO [[https://www.amazon.com/Little-LISPer-Third-Daniel-Friedman/dp/0023397632][The Little LISPer, Third Edition: 9780023397639: Computer Science Books @ Amazon.com]].
-******* TODO [[https://www.amazon.com/Anatomy-Peace-Resolving-Heart-Conflict/dp/1626564310][The Anatomy of Peace: Resolving the Heart of Conflict]].
-******* TODO [[https://superfastthebook.com/][Superfast Lead at speed]].
-******* TODO [[https://ofone.co/][A company of one]].
-******* TODO [[https://www.goodreads.com/book/show/27220736-shoe-dog][Shoe Dog: A Memoir by the Creator of NIKE]].
-******* TODO [[https://twitter.com/thegooddeath/status/1077325245940289537?s=12][Caitlin Doughty's top 8 books from 2018]].
-******* TODO [[https://www.amazon.co.uk/Global-Economy-Youve-Never-Seen-ebook/dp/B07GVT67HB/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=1545746296&sr=8-1][Global Economy as you've never seen it]].
-******* TODO [[https://www.amazon.com/Replay-Ken-Grimwood/dp/068816112X][Replay]].
-******* TODO [[https://www.amazon.com/Siddhartha-Novel-Hermann-Hesse/dp/0553208845][Siddhartha: A Novel]].
-******* TODO [[https://en.wikipedia.org/wiki/Out_(novel)][Out (novel) by Natsuo Kirino]].
-******* TODO [[https://www.pitt.edu/~dash/japantales.html][Folklore, Folktales, and Fairy Tales from Japan: A Digital Library]].
-******* TODO [[https://www.goodreads.com/book/show/15811545-a-tale-for-the-time-being][A Tale for the Time Being by Ruth Ozeki]].
-******* TODO [[https://www.amazon.com/dp/0571171044/ref=rdr_ext_tmb][Kitchen by Banan Yashimoto]].
-******* TODO [[https://www.amazon.com/Overspent-American-Want-What-Dont/dp/0060977582/ref=sr_1_3/136-0317326-4068376?ie=UTF8&qid=1538250472&sr=8-3&keywords=juliet+schor&dpID=51%252BdTsv9XUL&preST=_SY291_BO1,204,203,200_QL40_&dpSrc=srch][The Overspent American: Why We Want What We Don't Need Paperback]].
-******* TODO [[https://www.goodreads.com/book/show/13540802-enough][Enough by Patrick Rhone]].
-******* TODO [[https://hotair.tech/about/][Hot Air has a nice selection]].
-******* TODO [[https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215][Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition]].
-******* TODO [[https://www.amazon.com/Seeing-like-State-Certain-Condition/dp/0300078153][Seeing like a State: How Certain Schemes to Improve the Human Condition Have Failed Paperback]].
-******* TODO [[https://www.amazon.com/Conquest-Abundance-Abstraction-versus-Richness/dp/0226245349][Conquest of Abundance: A Tale of Abstraction versus the Richness of Being 2nd Edition]].
-******* TODO [[https://books.google.co.uk/books?id=a6sRdYLlmqIC&pg=PA6&lpg=PA6&redir_esc=y][The Wisdom of No Escape: And the Path of Loving-Kindness]].
-******* TODO [[https://www.amazon.com/Anatomy-Peace-Resolving-Heart-Conflict/dp/1626564310][The Anatomy of Peace: Resolving the Heart of Conflict]].
-******* TODO [[https://en.wikipedia.org/wiki/The_Millionaire_Next_Door][The Millionaire Next Door]].
-******* TODO [[https://www.amazon.co.uk/Refactoring-Improving-Existing-Addison-Wesley-Technology-ebook/dp/B007WTFWJ6/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1515533074&sr=1-1&keywords=refactoring+fowler][Refactoring: Improving the Design of Existing Code]].
-******* TODO [[https://news.ycombinator.com/item?id=12896313][Touched by the Goddess: On Ramanujan (Hacker News)]].
-******* TODO [[https://www.amazon.com/Kundalini-Untold-Story-Himalayan/dp/0994002793][Kundalini -- An Untold Story: A Himalayan Mystic's Insight into the Power of Kundalini and Chakra Sadhana]].
-******* TODO [[https://news.ycombinator.com/item?id=12365693][Show HN: Top books mentioned in comments on Hacker News]].
-******* TODO [[https://en.wikipedia.org/wiki/The_Prime_of_Miss_Jean_Brodie_%2528novel%2529][The Prime of Miss Jean Brodie (novel)]].
-******* TODO [[https://www.goodreads.com/book/show/53849.Plan_B][Plan B]].
-******* TODO [[http://www.amazon.com/Deskbound-Standing-Up-Sitting-World/dp/1628600586][Deskbound]].
-******* TODO [[http://www.amazon.com/The-Way-Wanderlust-Writing-Travelers/dp/1609521056][The Way of Wanderlust: The Best Travel Writing of Don George (Travelers' Tales)]].
-******* TODO [[https://en.m.wikipedia.org/wiki/We_%28novel%29][We (novel)]].
-******* TODO [[http://ramiro.org/vis/hn-most-linked-books/][Top Books on Amazon Based on Links in Hacker News Comments (Hacker News)]].
-******* TODO I'm OK, You're OK (Thomas A. Harris).
-******* TODO Mistakes Were Made (but not by me) (Tavris/Aronson).
-******* TODO Crucial Conversations (Patterson, Kelly...).
-******* TODO When Prophecy Fails (Festinger).
-******* TODO Influence (Robert Cialdini).
-******* TODO The Seven Day Weekend (Ricardo Semler).
-******* TODO Elements of Style (various).
-******* TODO The Man Who Sold the Eiffel Tower (various).
-******* TODO How to talk to anyone (Leil Lowndes).
-******* TODO [[http://www.gutenberg.org/ebooks/1091?msg=welcome_stranger][On Heroes, Hero-Worship, and the Heroic in History by Thomas Carlyle]].
-******* TODO [[http://www.amazon.com/Light-Asia-Sir-Edwin-Arnold/dp/1491290447/ref=sr_1_1?s=books&ie=UTF8&qid=1451846351&sr=1-1&keywords=the+light+of+asia+by+sir+edwin+arnold][Edwin Sir Arnold's The Light of Asia]].
-******* TODO [[http://www.amazon.com/Song-Celestial-Bhagavad-Gita-From-Mahabharata/dp/1848301596][Edwin Sir Arnold's The Song Celestial or Bhagavad-Gita]].
-******* TODO [[http://www.amazon.com/great-curries-india-camellia-panjabi/dp/1904920357][50 great curries of india]].
-******* TODO [[http://www.amazon.com/gp/product/034549802X?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D034549802X][8 Week to optimum health]].
-******* TODO [[http://www.amazon.com/Guide-Good-Life-Ancient-Stoic/dp/0195374614][A Guide to the Good Life: The Ancient Art of Stoic Joy]].
-******* TODO [[http://www.amazon.co.uk/Building-Microservices-Sam-Newman/dp/1491950358/ref%3Dsr_1_1?ie%3DUTF8&qid%3D1442603949&sr%3D8-1&keywords%3Dbuilding%2Bmicroservices][Building Microservices]].
-******* TODO [[http://ocw.mit.edu/ans7870/21f/21f.027/opium_wars_01/ow1_essay.pdf][First Opium War essay]].
-******* TODO [[http://www.amazon.com/full-catastrophe-living-wisdom-illness/dp/0739358588][Full catastrophe living]].
-******* TODO [[https://www.goodreads.com/][goodreads.com]].
-******* TODO [[http://www.amazon.com/gp/product/0061121088?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0061121088][Leaving Microsoft to Change the world]].
-******* TODO [[http://www.amazon.com/gp/product/0140442103?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0140442103][Letters from a stoic]].
-******* TODO [[http://www.goodreads.com/review/list/266149-michael?page=1&shelf=2014_read&view=covers][Michael's bookshelf]].
-******* TODO [[http://www.brainpickings.org/2014/12/29/neil-degrasse-tyson-reading-list/][Neil degrasse tyson's reading list]].
-******* TODO [[https://en.wikipedia.org/wiki/On_the_Road][On the Road, by Jack Kerouac]].
-******* TODO [[https://librivox.org/search?primary_key=0&search_category=title&search_page=1&search_form=get_results][Public domain audio books]].
-******* TODO [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Royal horticultural society's organic Gardening]].
-******* TODO [[http://www.salmanrushdie.com/books/][Salman Rushdie books]].
-******* TODO [[http://www.amazon.com/Technopoly-The-Surrender-Culture-Technology/dp/0679745408][Technopoly: The Surrender of Culture to Technology]].
-******* TODO The Songlines, Bruce Chatwin.
-******* TODO [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
-******* TODO [[http://www.amazon.co.uk/Thing-Explainer-Complicated-Stuff-Simple/dp/1473620910][Thing Explainer: Complicated Stuff in Simple Words]].
-******* TODO [[http://www.amazon.co.uk/madhur-jaffreys-ultimate-curry-bible/dp/0091874157/ref=sr_1_3?ie=utf8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate curry bible]].
-******* TODO [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Veg patch]].
-******* TODO [[http://www.amazon.co.uk/JavaScript-Developer-ECMAScript-OdeToCode-Programming-ebook/dp/B018D12X0C][What Every JavaScript Developer Should Know About ECMAScript 2015]].
-******* TODO [[http://camdez.com/blog/2016/01/02/2016-reading-list/][Cameron Desautels's 2016 reading list]].
-******* TODO Thinking Fast and Slow (Kahneman).
-******* DONE [[https://www.amazon.com/Why-We-Sleep-Unlocking-Dreams/dp/1501144316][Why we sleep]] ([[https://twitter.com/uberstuber/status/1138291707231887361?s=12][twitter outline]]).
-******* DONE [[http://www.amazon.com/Flow-Psychology-Experience-Perennial-Classics/dp/0061339202/][Flow: The Psychology of Optimal Experience]].
-******* DONE [[http://www.harukimurakami.com/library/][Haruki Murakami]].
-******* DONE [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
+**** TODO [[https://twitter.com/twostraws/status/1205416072058490880][Paul Hudson on Twitter: Can you recommend some manga?]].
+**** TODO [[https://twitter.com/dan_abramov/status/1190762799338790913][Dan Abramov: Please point me to a book about programming that isn't boring]].
+**** TODO [[https://www.amazon.com/gp/registry/wishlist/28JXH54TPGED7][John's Amazon wishlist]].
+**** TODO [[https://www.amazon.co.uk/Super-Thinking-Upgrade-Reasoning-Decisions-ebook/dp/B07FRXC3KN/ref=sr_1_2][Super Thinking: Upgrade Your Reasoning and Make Better Decisions with Mental Models]].
+**** TODO [[https://www.amazon.co.uk/s?k=Giulia+Enders][Gut: the inside story of our body's most under-rated organ]].
+**** TODO [[https://twitter.com/evansandhoefner/status/1048426752404410368][Evan Sandhoefner on Twitter: Which books/papers/talks/etc have blown your mind / changed your worldview significantly?]].
+**** TODO [[https://www.amazon.co.uk/Joy-Demand-Discovering-Happiness-Within/dp/0062378872/ref=sr_1_1][JOY ON DEMAND: The Art of Discovering the Happiness Within]].
+**** TODO [[https://www.amazon.co.uk/Minute-Meditation-Expanded-Quiet-Change/dp/0399173420/ref=sr_1_2][8 Minute Meditation Expanded : Quiet Your Mind. Change Your Life]].
+**** TODO [[https://www.amazon.co.uk/Mindfulness-Plain-English-20th-Anniversary/dp/0861719069/ref=sr_1_1][Mindfulness in Plain English: 20th Anniversary Edition: Amazon.co.uk]].
+**** TODO [[https://twitter.com/bettina_bosch/status/1164430628852572161][Bettina Bauer: What is your favorite Science Fiction novel? (twitter)]].
+**** TODO [[https://www.amazon.com/Altered-Traits-Science-Reveals-Meditation/dp/0399184384][Altered Traits: Science Reveals How Meditation Changes Your Mind, Brain, and Body]].
+**** TODO [[https://www.amazon.com/Junk-Food-Japan-Addictive-Kurobuta/dp/1472919920][Junk Food Japan: Addictive Food from Kurobuta]].
+**** TODO [[https://news.ycombinator.com/item?id=20332455][Ask HN: Recommend one book I need to read this summer?]].
+**** TODO I am a cat (Soseki Natsume).
+**** TODO [[https://www.amazon.co.uk/Thinking-Systems-Primer-Diana-Wright/dp/184407725X][Thinking in Systems: A Primer: Amazon.co.uk: Diana Wright, Donella H. Meadows: 9781844077250: Books]].
+**** TODO [[http://www.lisperati.com/casting-spels-emacs/html/casting-spels-emacs-1.html][Casting SPELs in Lisp (Emacs edition)]].
+**** TODO [[http://landoflisp.com/][Land of lisp]].
+**** TODO [[https://www.goodreads.com/book/show/558738.Juggling_for_the_Complete_Klutz][Juggling for the Complete Klutz by John Cassidy]].
+**** TODO [[https://www.amazon.co.uk/Positioning-Battle-Your-Al-Ries-ebook/][Positioning: The Battle for Your Mind]].
+**** TODO [[https://en.wikipedia.org/wiki/Snow_Crash][Snow Crash - Wikipedia]].
+**** TODO [[https://www.powells.com/book/-9781119404507][The Little Book of Common Sense Investing, Updated and Revised]].
+**** TODO [[https://www.amazon.com/Little-LISPer-Third-Daniel-Friedman/dp/0023397632][The Little LISPer, Third Edition: 9780023397639: Computer Science Books @ Amazon.com]].
+**** TODO [[https://www.amazon.com/Anatomy-Peace-Resolving-Heart-Conflict/dp/1626564310][The Anatomy of Peace: Resolving the Heart of Conflict]].
+**** TODO [[https://superfastthebook.com/][Superfast Lead at speed]].
+**** TODO [[https://ofone.co/][A company of one]].
+**** TODO [[https://www.goodreads.com/book/show/27220736-shoe-dog][Shoe Dog: A Memoir by the Creator of NIKE]].
+**** TODO [[https://twitter.com/thegooddeath/status/1077325245940289537?s=12][Caitlin Doughty's top 8 books from 2018]].
+**** TODO [[https://www.amazon.co.uk/Global-Economy-Youve-Never-Seen-ebook/dp/B07GVT67HB/ref=tmm_kin_swatch_0?_encoding=UTF8&qid=1545746296&sr=8-1][Global Economy as you've never seen it]].
+**** TODO [[https://www.amazon.com/Replay-Ken-Grimwood/dp/068816112X][Replay]].
+**** TODO [[https://www.amazon.com/Siddhartha-Novel-Hermann-Hesse/dp/0553208845][Siddhartha: A Novel]].
+**** TODO [[https://en.wikipedia.org/wiki/Out_(novel)][Out (novel) by Natsuo Kirino]].
+**** TODO [[https://www.pitt.edu/~dash/japantales.html][Folklore, Folktales, and Fairy Tales from Japan: A Digital Library]].
+**** TODO [[https://www.goodreads.com/book/show/15811545-a-tale-for-the-time-being][A Tale for the Time Being by Ruth Ozeki]].
+**** TODO [[https://www.amazon.com/dp/0571171044/ref=rdr_ext_tmb][Kitchen by Banan Yashimoto]].
+**** TODO [[https://www.amazon.com/Overspent-American-Want-What-Dont/dp/0060977582/ref=sr_1_3/136-0317326-4068376?ie=UTF8&qid=1538250472&sr=8-3&keywords=juliet+schor&dpID=51%252BdTsv9XUL&preST=_SY291_BO1,204,203,200_QL40_&dpSrc=srch][The Overspent American: Why We Want What We Don't Need Paperback]].
+**** TODO [[https://www.goodreads.com/book/show/13540802-enough][Enough by Patrick Rhone]].
+**** TODO [[https://hotair.tech/about/][Hot Air has a nice selection]].
+**** TODO [[https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215][Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition]].
+**** TODO [[https://www.amazon.com/Seeing-like-State-Certain-Condition/dp/0300078153][Seeing like a State: How Certain Schemes to Improve the Human Condition Have Failed Paperback]].
+**** TODO [[https://www.amazon.com/Conquest-Abundance-Abstraction-versus-Richness/dp/0226245349][Conquest of Abundance: A Tale of Abstraction versus the Richness of Being 2nd Edition]].
+**** TODO [[https://books.google.co.uk/books?id=a6sRdYLlmqIC&pg=PA6&lpg=PA6&redir_esc=y][The Wisdom of No Escape: And the Path of Loving-Kindness]].
+**** TODO [[https://www.amazon.com/Anatomy-Peace-Resolving-Heart-Conflict/dp/1626564310][The Anatomy of Peace: Resolving the Heart of Conflict]].
+**** TODO [[https://en.wikipedia.org/wiki/The_Millionaire_Next_Door][The Millionaire Next Door]].
+**** TODO [[https://www.amazon.co.uk/Refactoring-Improving-Existing-Addison-Wesley-Technology-ebook/dp/B007WTFWJ6/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1515533074&sr=1-1&keywords=refactoring+fowler][Refactoring: Improving the Design of Existing Code]].
+**** TODO [[https://news.ycombinator.com/item?id=12896313][Touched by the Goddess: On Ramanujan (Hacker News)]].
+**** TODO [[https://www.amazon.com/Kundalini-Untold-Story-Himalayan/dp/0994002793][Kundalini -- An Untold Story: A Himalayan Mystic's Insight into the Power of Kundalini and Chakra Sadhana]].
+**** TODO [[https://news.ycombinator.com/item?id=12365693][Show HN: Top books mentioned in comments on Hacker News]].
+**** TODO [[https://en.wikipedia.org/wiki/The_Prime_of_Miss_Jean_Brodie_%2528novel%2529][The Prime of Miss Jean Brodie (novel)]].
+**** TODO [[https://www.goodreads.com/book/show/53849.Plan_B][Plan B]].
+**** TODO [[http://www.amazon.com/Deskbound-Standing-Up-Sitting-World/dp/1628600586][Deskbound]].
+**** TODO [[http://www.amazon.com/The-Way-Wanderlust-Writing-Travelers/dp/1609521056][The Way of Wanderlust: The Best Travel Writing of Don George (Travelers' Tales)]].
+**** TODO [[https://en.m.wikipedia.org/wiki/We_%28novel%29][We (novel)]].
+**** TODO [[http://ramiro.org/vis/hn-most-linked-books/][Top Books on Amazon Based on Links in Hacker News Comments (Hacker News)]].
+**** TODO I'm OK, You're OK (Thomas A. Harris).
+**** TODO Mistakes Were Made (but not by me) (Tavris/Aronson).
+**** TODO Crucial Conversations (Patterson, Kelly...).
+**** TODO When Prophecy Fails (Festinger).
+**** TODO Influence (Robert Cialdini).
+**** TODO The Seven Day Weekend (Ricardo Semler).
+**** TODO Elements of Style (various).
+**** TODO The Man Who Sold the Eiffel Tower (various).
+**** TODO How to talk to anyone (Leil Lowndes).
+**** TODO [[http://www.gutenberg.org/ebooks/1091?msg=welcome_stranger][On Heroes, Hero-Worship, and the Heroic in History by Thomas Carlyle]].
+**** TODO [[http://www.amazon.com/Light-Asia-Sir-Edwin-Arnold/dp/1491290447/ref=sr_1_1?s=books&ie=UTF8&qid=1451846351&sr=1-1&keywords=the+light+of+asia+by+sir+edwin+arnold][Edwin Sir Arnold's The Light of Asia]].
+**** TODO [[http://www.amazon.com/Song-Celestial-Bhagavad-Gita-From-Mahabharata/dp/1848301596][Edwin Sir Arnold's The Song Celestial or Bhagavad-Gita]].
+**** TODO [[http://www.amazon.com/great-curries-india-camellia-panjabi/dp/1904920357][50 great curries of india]].
+**** TODO [[http://www.amazon.com/gp/product/034549802X?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D034549802X][8 Week to optimum health]].
+**** TODO [[http://www.amazon.com/Guide-Good-Life-Ancient-Stoic/dp/0195374614][A Guide to the Good Life: The Ancient Art of Stoic Joy]].
+**** TODO [[http://www.amazon.co.uk/Building-Microservices-Sam-Newman/dp/1491950358/ref%3Dsr_1_1?ie%3DUTF8&qid%3D1442603949&sr%3D8-1&keywords%3Dbuilding%2Bmicroservices][Building Microservices]].
+**** TODO [[http://ocw.mit.edu/ans7870/21f/21f.027/opium_wars_01/ow1_essay.pdf][First Opium War essay]].
+**** TODO [[http://www.amazon.com/full-catastrophe-living-wisdom-illness/dp/0739358588][Full catastrophe living]].
+**** TODO [[https://www.goodreads.com/][goodreads.com]].
+**** TODO [[http://www.amazon.com/gp/product/0061121088?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0061121088][Leaving Microsoft to Change the world]].
+**** TODO [[http://www.amazon.com/gp/product/0140442103?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0140442103][Letters from a stoic]].
+**** TODO [[http://www.goodreads.com/review/list/266149-michael?page=1&shelf=2014_read&view=covers][Michael's bookshelf]].
+**** TODO [[http://www.brainpickings.org/2014/12/29/neil-degrasse-tyson-reading-list/][Neil degrasse tyson's reading list]].
+**** TODO [[https://en.wikipedia.org/wiki/On_the_Road][On the Road, by Jack Kerouac]].
+**** TODO [[https://librivox.org/search?primary_key=0&search_category=title&search_page=1&search_form=get_results][Public domain audio books]].
+**** TODO [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Royal horticultural society's organic Gardening]].
+**** TODO [[http://www.salmanrushdie.com/books/][Salman Rushdie books]].
+**** TODO [[http://www.amazon.com/Technopoly-The-Surrender-Culture-Technology/dp/0679745408][Technopoly: The Surrender of Culture to Technology]].
+**** TODO The Songlines, Bruce Chatwin.
+**** TODO [[http://www.amazon.co.uk/Walkers-Guide-Outdoor-Clues-Signs/dp/1444780085][The Walker's Guide to Outdoor Clues and Signs]].
+**** TODO [[http://www.amazon.co.uk/Thing-Explainer-Complicated-Stuff-Simple/dp/1473620910][Thing Explainer: Complicated Stuff in Simple Words]].
+**** TODO [[http://www.amazon.co.uk/madhur-jaffreys-ultimate-curry-bible/dp/0091874157/ref=sr_1_3?ie=utf8&qid=1419973767&sr=8-3&keywords=madhur+jaffrey+curry][Ultimate curry bible]].
+**** TODO [[http://www.amazon.co.uk/gp/product/1840001585/sr=8-1/qid=1419902519/ref=olp_product_details?ie=utf8&me=&qid=1419902519&sr=8-1][Veg patch]].
+**** TODO [[http://www.amazon.co.uk/JavaScript-Developer-ECMAScript-OdeToCode-Programming-ebook/dp/B018D12X0C][What Every JavaScript Developer Should Know About ECMAScript 2015]].
+**** TODO [[http://camdez.com/blog/2016/01/02/2016-reading-list/][Cameron Desautels's 2016 reading list]].
+**** TODO Thinking Fast and Slow (Kahneman).
+**** DONE [[https://www.amazon.com/Why-We-Sleep-Unlocking-Dreams/dp/1501144316][Why we sleep]] ([[https://twitter.com/uberstuber/status/1138291707231887361?s=12][twitter outline]]).
+**** DONE [[http://www.amazon.com/Flow-Psychology-Experience-Perennial-Classics/dp/0061339202/][Flow: The Psychology of Optimal Experience]].
+**** DONE [[http://www.harukimurakami.com/library/][Haruki Murakami]].
+**** DONE [[http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180][Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel]].
 
 * [2014-12-29 Mon] Gardening bookmarks
 :PROPERTIES:
@@ -12152,35 +12152,35 @@ maps key to action.
 :MODIFIED:
 [2017-06-18 Sun]
 :END:
-******* TODO Try out [[https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el][cquery]], [[https://github.com/emacs-lsp/lsp-mode][emacs-lsp]], and [[https://github.com/tigersoldier/company-lsp][company-lsp]].
-******* TODO [[https://github.com/facetframer/orgnav][Drill down org files using orgnav (helm-based)]].
-******* TODO [[https://github.com/prettier/prettier-emacs][Pretier emacs]].
-******* TODO [[http://amitp.blogspot.co.uk/search/label/emacs][Spaceline walkthrough]].
-******* TODO [[http://blog.jakoblind.no/2015/06/08/emacs-as-git-mergetool/][Emacs as git mergetool]].
-******* TODO Try out emacs Android debug (see this [[http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/][post]]).
-******* TODO [[https://github.com/mrkkrp/typit][Typit: typing game for Emacs]].
-******* TODO [[https://github.com/jekor/hidepw][hidepw - an Emacs minor mode for hiding passwords]].
-******* TODO [[https://github.com/Wilfred/pyimport][pyimports]].
-******* TODO [[https://github.com/syohex/emacs-quickrun][quickrun.el]].
-******* TODO [[http://sriramkswamy.github.io/dotemacs/][Sriram Krishnaswamy's init]].
-******* TODO [[https://github.com/zakame/emacs-for-javascript][Emacs for JavaScript]].
-******* TODO [[http://williambert.online/2014/02/using-a-node-repl-with-emacs/][Using a Node repl in Emacs with nvm and npm]].
-******* TODO [[https://github.com/iced/go-gopath/blob/master/README.md][go-gopath]].
-******* TODO [[https://github.com/alezost/shift-number.el][shift-number.el]].
-******* TODO [[https://github.com/afainer/arview][arview]].
-******* TODO [[https://github.com/xuchunyang/DevDocs.el][https://github.com/xuchunyang/DevDocs.el]].
-******* TODO [[https://github.com/PythonNut/company-flx][company-flx: fuzzy matching to company]].
-******* TODO [[https://vxlabs.com/2016/04/11/step-by-step-guide-to-c-navigation-and-completion-with-emacs-and-the-clang-based-rtags/][Step-by-step guide to C++ navigation and completion with Emacs and the Clang-based rtags]].
-******* TODO [[https://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/go-guru][Integration of the Go 'guru' analysis tool into Emacs]].
-******* TODO [[https://github.com/remyferre/comment-dwim-2/blob/master/README.md][comment-dwim]].
-******* DONE (setq projectile-use-git-grep t). <2018-12-27 Thu>
-******* TODO [[https://github.com/company-mode/company-statistics][company-mode/company-statistics: Sort completion candidates by previous completion choices]].
-******* TODO rats for Go testing.
-******* TODO go-impl.
-******* TODO go-gopath to guess GOPATH.
-******* TODO [[https://www.youtube.com/watch?v=mtliRYQd0j4&feature=youtu.be][Rewrite git history with Emacs, magit and git rebase]].
-******* TODO [[https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/][Is there any easy way to make .org files password protected? (Reddit)]].
-******* TODO use-package binding to different maps
+**** TODO Try out [[https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el][cquery]], [[https://github.com/emacs-lsp/lsp-mode][emacs-lsp]], and [[https://github.com/tigersoldier/company-lsp][company-lsp]].
+**** TODO [[https://github.com/facetframer/orgnav][Drill down org files using orgnav (helm-based)]].
+**** TODO [[https://github.com/prettier/prettier-emacs][Pretier emacs]].
+**** TODO [[http://amitp.blogspot.co.uk/search/label/emacs][Spaceline walkthrough]].
+**** TODO [[http://blog.jakoblind.no/2015/06/08/emacs-as-git-mergetool/][Emacs as git mergetool]].
+**** TODO Try out emacs Android debug (see this [[http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/][post]]).
+**** TODO [[https://github.com/mrkkrp/typit][Typit: typing game for Emacs]].
+**** TODO [[https://github.com/jekor/hidepw][hidepw - an Emacs minor mode for hiding passwords]].
+**** TODO [[https://github.com/Wilfred/pyimport][pyimports]].
+**** TODO [[https://github.com/syohex/emacs-quickrun][quickrun.el]].
+**** TODO [[http://sriramkswamy.github.io/dotemacs/][Sriram Krishnaswamy's init]].
+**** TODO [[https://github.com/zakame/emacs-for-javascript][Emacs for JavaScript]].
+**** TODO [[http://williambert.online/2014/02/using-a-node-repl-with-emacs/][Using a Node repl in Emacs with nvm and npm]].
+**** TODO [[https://github.com/iced/go-gopath/blob/master/README.md][go-gopath]].
+**** TODO [[https://github.com/alezost/shift-number.el][shift-number.el]].
+**** TODO [[https://github.com/afainer/arview][arview]].
+**** TODO [[https://github.com/xuchunyang/DevDocs.el][https://github.com/xuchunyang/DevDocs.el]].
+**** TODO [[https://github.com/PythonNut/company-flx][company-flx: fuzzy matching to company]].
+**** TODO [[https://vxlabs.com/2016/04/11/step-by-step-guide-to-c-navigation-and-completion-with-emacs-and-the-clang-based-rtags/][Step-by-step guide to C++ navigation and completion with Emacs and the Clang-based rtags]].
+**** TODO [[https://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/go-guru][Integration of the Go 'guru' analysis tool into Emacs]].
+**** TODO [[https://github.com/remyferre/comment-dwim-2/blob/master/README.md][comment-dwim]].
+**** DONE (setq projectile-use-git-grep t). <2018-12-27 Thu>
+**** TODO [[https://github.com/company-mode/company-statistics][company-mode/company-statistics: Sort completion candidates by previous completion choices]].
+**** TODO rats for Go testing.
+**** TODO go-impl.
+**** TODO go-gopath to guess GOPATH.
+**** TODO [[https://www.youtube.com/watch?v=mtliRYQd0j4&feature=youtu.be][Rewrite git history with Emacs, magit and git rebase]].
+**** TODO [[https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/][Is there any easy way to make .org files password protected? (Reddit)]].
+**** TODO use-package binding to different maps
 #+BEGIN_SRC emacs-lisp
   (use-package term
     :bind
@@ -12193,108 +12193,108 @@ maps key to action.
      ("M-p" . term-send-up)
      ("M-n" . term-send-down)))
 #+END_SRC
-******* TODO [[https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el][select-themes]].
-******* TODO [[https://github.com/bmag/helm-purpose][Emacs purpose]].
-******* TODO [[https://github.com/trezona-lecomte/coverage][Code coverage highlighting for Emacs]].
-******* TODO [[http://elpa.gnu.org/packages/tramp-theme.html][tramp-theme]].
-******* TODO [[http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/][Why are you changing gc-cons-threshold?]].
-******* TODO [[https://github.com/syohex/emacs-qrencode/blob/master/README.md][Emacs qrencode]].
-******* TODO [[https://github.com/Fuco1/smartparens][Smartparens]].
-******* TODO [[https://github.com/nivekuil/corral][Corral]].
-******* TODO [[https://gist.github.com/syohex/626af66ba3650252b0a2][Hash region]].
-******* TODO [[https://github.com/alexmurray/cstyle][cstyle]].
-******* TODO [[https://github.com/lvillani/metafmt][metafmt]].
-******* TODO [[https://github.com/nicklanasa/xcode-mode/blob/master/README.md][xcode-mode]].
-******* TODO [[https://github.com/yuutayamada/commenter][commenter]].
-******* TODO [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
-******* TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer?]].
-******* TODO [[https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el][A go Emacs config]].
-******* TODO [[http://clubctrl.com/org/prog/howto.html][Try out ox-twbs]].
-******* TODO [[http://ergoemacs.org/emacs/function-frequency.html][Emacs Lisp function frequency]].
-******* TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer? (Stack Exchange)]].
-******* TODO [[https://github.com/nekop/yasnippet-java-mode/blob/master/java-snippets.el][yasnippet-java-mode/java-snippets.el]].
-******* TODO [[https://github.com/Lindydancer/font-lock-studio][font-lock-studio]].
-******* TODO [[https://github.com/jorgenschaefer/emacs-buttercup][buttercup]].
-******* TODO [[https://github.com/niku/markdown-preview-eww][markdown-preview-eww]].
-******* TODO [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
-******* TODO [[https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el][Peek at peteyy's Javascript config]].
-******* TODO [[http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1][ediff-revision and magit-find-file to compare branches]].
-******* TODO [[https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md][Flycheck linter for sh using checkbashisms]].
-******* TODO [[http://draketo.de/light/english/free-software/el-kanban-org-table][El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables]].
-******* TODO [[http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511][Emacs iOS development (qiita)]].
-******* TODO [[http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/][Emacs iOS development (fujimisakari)]].
-******* TODO [[https://github.com/trotzig/import-js][import-js]].
-******* TODO [[http://orgmode.org/worg/org-tutorials/encrypting-files.html][encrypting org files]].
-******* TODO [[https://github.com/flycheck/flycheck-pos-tip][flycheck-pos-tip]].
-******* TODO [[https://github.com/CodyReichert/es6-snippets][ES6 yasnippets]].
-******* TODO [[http://tiborsimko.org/emacs-epydoc-snippets.html][Writing Python Docstrings with Emacs]].
-******* TODO [[https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac][Try Completion for Objective-C (Github diff)]].
-******* TODO [[https://github.com/swank-js/swank-js][swank-js]].
-******* TODO [[https://github.com/steckerhalter/emacs-fasd][Emacs fasd support]].
-******* TODO [[https://github.com/benma/visual-regexp.el][visual-regexp]].
-******* TODO [[http://emacsredux.com/blog/2014/05/16/opening-large-files/][Open large files]].
-******* TODO [[https://github.com/nathankot/company-sourcekit][company-sourcekit]] (Swift completion): [[https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24][sample config]].
-******* TODO [[https://github.com/dakrone/emacs-java-imports][emacs-java-imports]].
-******* TODO [[https://github.com/ananthakumaran/tide][TypeScript Interactive Development Environment for Emacs]].
-******* TODO append-to-buffer.
-******* TODO [[https://github.com/wavexx/python-x.el][python-x: extras for interactive evaluation]].
-******* TODO [[https://github.com/emacsmirror/outlined-elisp-mode][outlined-elisp-mode]].
-******* TODO [[https://github.com/tj64/outline-magic][outlien-magic]].
-******* TODO Gutter and linum+ config (see [[https://github.com/zvlex/dotfiles][zvlex/dotfiles]]).
-******* TODO [[https://github.com/emacsfodder/kurecolor][kurecolor]]: Editing color.
-******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html][auto-insert-mode]].
-******* TODO Buffer local cursor color: [[https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org][ccc]].
-******* TODO clang indexing tool: [[http://ffevotte.github.io/clang-tags/][clang-tags]].
-******* TODO Create custom theme: Trường's [[http://truongtx.me/2013/03/31/color-theming-in-emacs-24/][post]].
-******* TODO [[https://github.com/Fuco1/dired-hacks][dired-hacks]].
-******* TODO emacs-index-search (lookup subject in Emacs manual).
-******* TODO gtd emacs workflow: Charles cave's [[http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html][notes]].
-******* TODO info-apropos (lookup subject in all manuals).
-******* TODO Jumping around tips: [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
-******* TODO Mac OS clipboard support (from terminal): [[https://github.com/jkp/pbcopy.el][pbcopy]].
-******* TODO [[https://github.com/m0smith/malabar-mode][Malabar mode]]: For Java.
-******* TODO Melpa recipe format:[[https://github.com/milkypostman/melpa#recipe-format][format]].
-******* TODO Naturaldocs for javascript: [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][Vineet's post]].
-******* TODO Org protocol: see irreal's [[http://irreal.org/blog/?p=3594][post]] and oremacs's [[http://oremacs.com/2015/01/07/org-protocol-1/][part 1]] and [[http://oremacs.com/2015/01/08/org-protocol-2/][part 2]].
-******* TODO org-multiple-keymap.  More at [[https://github.com/myuhe/org-multiple-keymap.el][org-multiple-keymap.el]].
-******* TODO [[https://github.com/yjwen/org-reveal/tree/stable][org-reveal]]: Export org to reveal.js.
-******* TODO Practice touch/speed typing: [[https://github.com/hagleitn/speed-type][speedtype]].
-******* TODO private configuration: [[https://github.com/cheunghy/private][private]].
-******* TODO project management for C/C++: [[https://github.com/lefterisjp/malinka][malinka]].
-******* TODO Project templates: [[https://github.com/chrisbarrett/skeletor.el][skeletor]].
-******* TODO Rewrite git logs. See [[http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/][emacs magit tutorial | rewrite older commit]].
-******* TODO [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html][Selective display]]: Hide lines longer than.
-******* TODO shell-command-on-region: Print inline with C-u M-|.
-******* TODO shell-command: Print output inline with C-u M-!.
-******* TODO Simplify media file transformations: [[https://github.com/abo-abo/make-it-so][make-it-so]].
-******* TODO [[https://github.com/mineo/yatemplate][yatemplate]].
-******* TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
-******* DONE [[https://github.com/syohex/emacs-helm-ispell][helm-ispell]].
-******* DONE [[https://github.com/HKey/dired-atool][Pack/unpack files with atool on dired]].
-******* DONE [[https://github.com/Alexander-Miller/company-shell][company-shell]].
-******* DONE artbollocks-mode and writegood. More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
-******* DONE comint-prompt-read-only for making shell prompts read-only.
-******* DONE [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
-******* DONE [[https://www.reddit.com/r/emacs/comments/43b42y/i_just_realized_emacs_has_a_fast_infix_calculator/][I just realized Emacs has a fast infix calculator that's not calc or quick-calc... (Reddit)]].
-******* DONE [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
-******* DONE [[https://github.com/calvinwyoung/org-autolist][org-autolist]].
-******* DONE Move up by parens: More at the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html][manual]].
-******* DONE sunrise-sunset.
-******* DONE [[https://github.com/abo-abo/ace-window][ace-window]].
-******* DONE Checkdoc.
-******* DONE Choose magit repo c-u c-x g (magit-status).
-******* DONE continue comment blocks: m-j (indent-new-comment-line).
-******* DONE Debug expanded elisp macros: See Wisdom and Wonder's [[http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros][post]].
-******* DONE delete-duplicate-lines
-******* DONE Describe bindings: C-h b lists all bindings.
-******* DONE Disable furniture
+**** TODO [[https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el][select-themes]].
+**** TODO [[https://github.com/bmag/helm-purpose][Emacs purpose]].
+**** TODO [[https://github.com/trezona-lecomte/coverage][Code coverage highlighting for Emacs]].
+**** TODO [[http://elpa.gnu.org/packages/tramp-theme.html][tramp-theme]].
+**** TODO [[http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/][Why are you changing gc-cons-threshold?]].
+**** TODO [[https://github.com/syohex/emacs-qrencode/blob/master/README.md][Emacs qrencode]].
+**** TODO [[https://github.com/Fuco1/smartparens][Smartparens]].
+**** TODO [[https://github.com/nivekuil/corral][Corral]].
+**** TODO [[https://gist.github.com/syohex/626af66ba3650252b0a2][Hash region]].
+**** TODO [[https://github.com/alexmurray/cstyle][cstyle]].
+**** TODO [[https://github.com/lvillani/metafmt][metafmt]].
+**** TODO [[https://github.com/nicklanasa/xcode-mode/blob/master/README.md][xcode-mode]].
+**** TODO [[https://github.com/yuutayamada/commenter][commenter]].
+**** TODO [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
+**** TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer?]].
+**** TODO [[https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el][A go Emacs config]].
+**** TODO [[http://clubctrl.com/org/prog/howto.html][Try out ox-twbs]].
+**** TODO [[http://ergoemacs.org/emacs/function-frequency.html][Emacs Lisp function frequency]].
+**** TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer? (Stack Exchange)]].
+**** TODO [[https://github.com/nekop/yasnippet-java-mode/blob/master/java-snippets.el][yasnippet-java-mode/java-snippets.el]].
+**** TODO [[https://github.com/Lindydancer/font-lock-studio][font-lock-studio]].
+**** TODO [[https://github.com/jorgenschaefer/emacs-buttercup][buttercup]].
+**** TODO [[https://github.com/niku/markdown-preview-eww][markdown-preview-eww]].
+**** TODO [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
+**** TODO [[https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el][Peek at peteyy's Javascript config]].
+**** TODO [[http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1][ediff-revision and magit-find-file to compare branches]].
+**** TODO [[https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md][Flycheck linter for sh using checkbashisms]].
+**** TODO [[http://draketo.de/light/english/free-software/el-kanban-org-table][El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables]].
+**** TODO [[http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511][Emacs iOS development (qiita)]].
+**** TODO [[http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/][Emacs iOS development (fujimisakari)]].
+**** TODO [[https://github.com/trotzig/import-js][import-js]].
+**** TODO [[http://orgmode.org/worg/org-tutorials/encrypting-files.html][encrypting org files]].
+**** TODO [[https://github.com/flycheck/flycheck-pos-tip][flycheck-pos-tip]].
+**** TODO [[https://github.com/CodyReichert/es6-snippets][ES6 yasnippets]].
+**** TODO [[http://tiborsimko.org/emacs-epydoc-snippets.html][Writing Python Docstrings with Emacs]].
+**** TODO [[https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac][Try Completion for Objective-C (Github diff)]].
+**** TODO [[https://github.com/swank-js/swank-js][swank-js]].
+**** TODO [[https://github.com/steckerhalter/emacs-fasd][Emacs fasd support]].
+**** TODO [[https://github.com/benma/visual-regexp.el][visual-regexp]].
+**** TODO [[http://emacsredux.com/blog/2014/05/16/opening-large-files/][Open large files]].
+**** TODO [[https://github.com/nathankot/company-sourcekit][company-sourcekit]] (Swift completion): [[https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24][sample config]].
+**** TODO [[https://github.com/dakrone/emacs-java-imports][emacs-java-imports]].
+**** TODO [[https://github.com/ananthakumaran/tide][TypeScript Interactive Development Environment for Emacs]].
+**** TODO append-to-buffer.
+**** TODO [[https://github.com/wavexx/python-x.el][python-x: extras for interactive evaluation]].
+**** TODO [[https://github.com/emacsmirror/outlined-elisp-mode][outlined-elisp-mode]].
+**** TODO [[https://github.com/tj64/outline-magic][outlien-magic]].
+**** TODO Gutter and linum+ config (see [[https://github.com/zvlex/dotfiles][zvlex/dotfiles]]).
+**** TODO [[https://github.com/emacsfodder/kurecolor][kurecolor]]: Editing color.
+**** TODO [[https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html][auto-insert-mode]].
+**** TODO Buffer local cursor color: [[https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org][ccc]].
+**** TODO clang indexing tool: [[http://ffevotte.github.io/clang-tags/][clang-tags]].
+**** TODO Create custom theme: Trường's [[http://truongtx.me/2013/03/31/color-theming-in-emacs-24/][post]].
+**** TODO [[https://github.com/Fuco1/dired-hacks][dired-hacks]].
+**** TODO emacs-index-search (lookup subject in Emacs manual).
+**** TODO gtd emacs workflow: Charles cave's [[http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html][notes]].
+**** TODO info-apropos (lookup subject in all manuals).
+**** TODO Jumping around tips: [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
+**** TODO Mac OS clipboard support (from terminal): [[https://github.com/jkp/pbcopy.el][pbcopy]].
+**** TODO [[https://github.com/m0smith/malabar-mode][Malabar mode]]: For Java.
+**** TODO Melpa recipe format:[[https://github.com/milkypostman/melpa#recipe-format][format]].
+**** TODO Naturaldocs for javascript: [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][Vineet's post]].
+**** TODO Org protocol: see irreal's [[http://irreal.org/blog/?p=3594][post]] and oremacs's [[http://oremacs.com/2015/01/07/org-protocol-1/][part 1]] and [[http://oremacs.com/2015/01/08/org-protocol-2/][part 2]].
+**** TODO org-multiple-keymap.  More at [[https://github.com/myuhe/org-multiple-keymap.el][org-multiple-keymap.el]].
+**** TODO [[https://github.com/yjwen/org-reveal/tree/stable][org-reveal]]: Export org to reveal.js.
+**** TODO Practice touch/speed typing: [[https://github.com/hagleitn/speed-type][speedtype]].
+**** TODO private configuration: [[https://github.com/cheunghy/private][private]].
+**** TODO project management for C/C++: [[https://github.com/lefterisjp/malinka][malinka]].
+**** TODO Project templates: [[https://github.com/chrisbarrett/skeletor.el][skeletor]].
+**** TODO Rewrite git logs. See [[http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/][emacs magit tutorial | rewrite older commit]].
+**** TODO [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html][Selective display]]: Hide lines longer than.
+**** TODO shell-command-on-region: Print inline with C-u M-|.
+**** TODO shell-command: Print output inline with C-u M-!.
+**** TODO Simplify media file transformations: [[https://github.com/abo-abo/make-it-so][make-it-so]].
+**** TODO [[https://github.com/mineo/yatemplate][yatemplate]].
+**** TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+**** DONE [[https://github.com/syohex/emacs-helm-ispell][helm-ispell]].
+**** DONE [[https://github.com/HKey/dired-atool][Pack/unpack files with atool on dired]].
+**** DONE [[https://github.com/Alexander-Miller/company-shell][company-shell]].
+**** DONE artbollocks-mode and writegood. More at Sacha's [[http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/][post]].
+**** DONE comint-prompt-read-only for making shell prompts read-only.
+**** DONE [[https://github.com/kelvinh/org-page][org-page]]: Static blog.
+**** DONE [[https://www.reddit.com/r/emacs/comments/43b42y/i_just_realized_emacs_has_a_fast_infix_calculator/][I just realized Emacs has a fast infix calculator that's not calc or quick-calc... (Reddit)]].
+**** DONE [[http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/][How to get emacs key bindings in Ubuntu]].
+**** DONE [[https://github.com/calvinwyoung/org-autolist][org-autolist]].
+**** DONE Move up by parens: More at the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html][manual]].
+**** DONE sunrise-sunset.
+**** DONE [[https://github.com/abo-abo/ace-window][ace-window]].
+**** DONE Checkdoc.
+**** DONE Choose magit repo c-u c-x g (magit-status).
+**** DONE continue comment blocks: m-j (indent-new-comment-line).
+**** DONE Debug expanded elisp macros: See Wisdom and Wonder's [[http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros][post]].
+**** DONE delete-duplicate-lines
+**** DONE Describe bindings: C-h b lists all bindings.
+**** DONE Disable furniture
 #+BEGIN_SRC emacs-lisp
   (menu-bar-mode -1)
   (toggle-scroll-bar -1)
   (tool-bar-mode -1)
 #+END_SRC
-******* DONE [[https://github.com/silex/elmacro][elmacro]] shows keyboard as emacs lisp.
-******* DONE yasnippet mirrors with transformations more at [[https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6][snippet development]].
+**** DONE [[https://github.com/silex/elmacro][elmacro]] shows keyboard as emacs lisp.
+**** DONE yasnippet mirrors with transformations more at [[https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6][snippet development]].
 For example:
 #+BEGIN_SRC sh
   - (${1:id})${2:foo}
@@ -12309,16 +12309,16 @@ For example:
   }
   $0
 #+END_SRC
-******* DONE Emacs regex: [[http://ergoemacs.org/emacs/emacs_regex.html][Emacs: text pattern matching (regex) tutorial]].
-******* DONE export ascii art: [[http://www.lysator.liu.se/~tab/artist/][artist mode]] + [[http://ditaa.sourceforge.net][ditaa]] for uml. demo [[https://www.youtube.com/watch?v=ciux87xo8fc][video]].
-******* DONE [[https://github.com/abo-abo/lispy][lispy]].
-******* DONE [[https://github.com/dandavison/minimal][minimal]]: minimalist appearance.
-******* DONE Narrowing regions
+**** DONE Emacs regex: [[http://ergoemacs.org/emacs/emacs_regex.html][Emacs: text pattern matching (regex) tutorial]].
+**** DONE export ascii art: [[http://www.lysator.liu.se/~tab/artist/][artist mode]] + [[http://ditaa.sourceforge.net][ditaa]] for uml. demo [[https://www.youtube.com/watch?v=ciux87xo8fc][video]].
+**** DONE [[https://github.com/abo-abo/lispy][lispy]].
+**** DONE [[https://github.com/dandavison/minimal][minimal]]: minimalist appearance.
+**** DONE Narrowing regions
 - c-x n n (narrow-to-region).
 - c-x n w (Widen).
-******* DONE [[https://www.gnu.org/software/emacs/manual/nxml-mode.html][nxml-mode]].
-******* DONE [[https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org][org-beautify-theme]]: a sub-theme to make org-mode more beautiful.
-******* DONE Recursive query/replace
+**** DONE [[https://www.gnu.org/software/emacs/manual/nxml-mode.html][nxml-mode]].
+**** DONE [[https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org][org-beautify-theme]]: a sub-theme to make org-mode more beautiful.
+**** DONE Recursive query/replace
 - M-x find-dired RET.
 - Navigate to location, RET.
 - Add find argument (omit for all files), RET.
@@ -12327,17 +12327,17 @@ For example:
 - Enter search/replace terms.
 - y/n for each match.
 - C-x s ! (save all).
-******* DONE Repeat last command: C-x z (and just z threreafter).
-******* DONE Replace char with a newline
+**** DONE Repeat last command: C-x z (and just z threreafter).
+**** DONE Replace char with a newline
 - M-x replace-string RET ; RET C-q C-j.
 - C-q (quoted-insert).
 - C-j (newline).
-******* DONE [[https://github.com/bruce-connor/smart-mode-line][smart-mode-line]], [[http://pages.sachachua.com/.emacs.d/sacha.html][sacha's sample usage]].
-******* DONE Toggling key bingings: [[http://oremacs.com/2014/12/25/ode-to-toggle/][ode to the toggle]].
-******* DONE [[https://github.com/damiencassou/unify-opening][unify-opening]]
-******* DONE use-package: [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][lunaryorn]].
-******* DONE [[https://github.com/aaronbieber/sunshine.el][sunshine.el]].
-******* DONE youtube-dl: [[http://oremacs.com/2015/01/05/youtube-dl/][or emacs]].
+**** DONE [[https://github.com/bruce-connor/smart-mode-line][smart-mode-line]], [[http://pages.sachachua.com/.emacs.d/sacha.html][sacha's sample usage]].
+**** DONE Toggling key bingings: [[http://oremacs.com/2014/12/25/ode-to-toggle/][ode to the toggle]].
+**** DONE [[https://github.com/damiencassou/unify-opening][unify-opening]]
+**** DONE use-package: [[http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html][lunaryorn]].
+**** DONE [[https://github.com/aaronbieber/sunshine.el][sunshine.el]].
+**** DONE youtube-dl: [[http://oremacs.com/2015/01/05/youtube-dl/][or emacs]].
 
 * [2014-07-09 Wed] Installing Emacs 24.4 on Linux
 :PROPERTIES:
@@ -12362,7 +12362,7 @@ See Yamamoto's Mac OS X [[https://github.com/railwaycat/emacs-mac-port][port]]. 
 :CUSTOM_ID: xcode6-tips
 :END:
 From Ray Wenderlich's [[http://www.raywenderlich.com/85999/xcode-6-tips-tricks-tech-talk-video][tech talk]] And [[http://www.raywenderlich.com/72021/supercharging-xcode-efficiency][supercharging Your Xcode Efficiency (by Jack Wu)]].
-*** Shortcuts
+** Shortcuts
 - ⌘⇧o Fuzzy file search.
 - ⌘⌥j Fuzzy file search (showing in Xcode project hierarchy).
 - ⌘⇧j Show file in Xcode project hierarchy.
@@ -12374,13 +12374,13 @@ From Ray Wenderlich's [[http://www.raywenderlich.com/85999/xcode-6-tips-tricks-t
 - ⌘/ Toggle comment.
 - ⌘[1-8] Select tabs on left panel.
 - Ctrl[1-x] Select top file navigation menu items.
-*** Xcode features
+** Xcode features
 - Snippets.
 - Templates.
 - View debugging.
 - Simctl (send files to simulator).
 
-*** Plugins of interest
+** Plugins of interest
 - Fuzzy autocomplete.
 - Uncrustify for indentation.
 - xcs code switch expansion.
@@ -12762,16 +12762,16 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :PROPERTIES:
 :CUSTOM_ID: resetting-gnome-terminal-preferences
 :END:
-*** Resetting preferences
+** Resetting preferences
 #+BEGIN_SRC sh
   gconftool --recursive-unset /apps/gnome-terminal
 #+END_SRC
-*** Want 256 colors?
+** Want 256 colors?
 Edit .bash_profile
 #+BEGIN_SRC sh
   export TERM="screen-256color"
 #+END_SRC
-*** Ensure .bash_profile is loaded
+** Ensure .bash_profile is loaded
 From gnome-terminal window:
 #+BEGIN_QUOTE
 gnome-terminal
@@ -12781,7 +12781,7 @@ gnome-terminal
         Title and Command
           X Run command as login shell
 #+END_QUOTE
-*** Solarized
+** Solarized
 Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs][post]] to get solarized on gnome-terminal.
 
 * [2014-10-09 Thu] C++ bookmarks
@@ -13056,13 +13056,13 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :PROPERTIES:
 :CUSTOM_ID: passwordless-ssh-with-authorized-keys
 :END:
-*** On local host
+** On local host
 #+BEGIN_SRC sh
   ssh-keygen
   cat ~/.ssh/id_dsa.pub | ssh user@remotehost 'cat >> ~/.ssh/authorized_keys'
 #+END_SRC
 
-*** On remote host
+** On remote host
 #+BEGIN_SRC sh
   chmod 700 ~/.ssh
   chmod 600 ~/.ssh/authorized_keys
