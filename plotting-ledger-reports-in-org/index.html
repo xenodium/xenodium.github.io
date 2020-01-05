@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-08-31 Sat 18:10 -->
+<!-- 2020-01-05 Sun 18:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Plotting ledger reports in org</title>
@@ -459,58 +459,57 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orgb3c7708" class="outline-2">
+<div id="outline-container-orgfd27def" class="outline-2">
 <h2 id="plotting-ledger-reports-in-org"><span class="timestamp-wrapper"><span class="timestamp">24 May 2019</span></span> Plotting ledger reports in org</h2>
 <div class="outline-text-2" id="text-plotting-ledger-reports-in-org">
 </div>
-
-<div id="outline-container-org0496647" class="outline-3">
-<h3 id="org0496647">My ledger file</h3>
-<div class="outline-text-3" id="text-org0496647">
+<div id="outline-container-orgb156af1" class="outline-3">
+<h3 id="orgb156af1">My ledger file</h3>
+<div class="outline-text-3" id="text-orgb156af1">
 <p>
 Save path to <a href="plotting-ledger-reports-in-org/my.ledger">my.ledger</a> in <i>ledger-file</i> block.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org"><span style="color: #969896;">#+name: ledger-file</span>
-<span style="color: #969896;">#+begin_src emacs-lisp</span>
-<span style="color: #183691;">"my.ledger"</span>
-<span style="color: #969896;">#+end_src</span>
+<pre class="src src-org">#+name: ledger-file
+#+begin_src emacs-lisp
+"my.ledger"
+#+end_src
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5b30b58" class="outline-3">
-<h3 id="org5b30b58">gnuplot terminal (png or qt)</h3>
-<div class="outline-text-3" id="text-org5b30b58">
+<div id="outline-container-orgd81c423" class="outline-3">
+<h3 id="orgd81c423">gnuplot terminal (png or qt)</h3>
+<div class="outline-text-3" id="text-orgd81c423">
 <p>
 Select gnuplot terminal. Using png to output images, but qt is handy too for interactive chart inspection.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-org">Use png for inline or qt for interactive
-<span style="color: #969896;">#+name: gnuplot-term</span>
-<span style="color: #969896;">#+begin_src emacs-lisp</span>
-<span style="color: #183691;">"png"</span>
-<span style="color: #969896;">#+end_src</span>
+#+name: gnuplot-term
+#+begin_src emacs-lisp
+"png"
+#+end_src
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgfe09ce5" class="outline-3">
-<h3 id="orgfe09ce5">Monthly Income and Expenses</h3>
-<div class="outline-text-3" id="text-orgfe09ce5">
+<div id="outline-container-org92149f7" class="outline-3">
+<h3 id="org92149f7">Monthly Income and Expenses</h3>
+<div class="outline-text-3" id="text-org92149f7">
 <p>
 Generate income report.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org"><span style="color: #969896;">#+name: income-data</span>
-<span style="color: #969896;">#+begin_src bash :results table :noweb yes</span>
-  ledger -f <span style="text-decoration: underline;">&lt;&lt;&lt;ledger-file&gt;&gt;&gt;</span> -j reg ^Income -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
-<span style="color: #969896;">#+end_src</span>
+<pre class="src src-org">#+name: income-data
+#+begin_src bash :results table :noweb yes
+  ledger -f &lt;&lt;&lt;ledger-file&gt;&gt;&gt; -j reg ^Income -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
+#+end_src
 </pre>
 </div>
 
@@ -519,10 +518,10 @@ Generate expenses report.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org"><span style="color: #969896;">#+name: expenses-data</span>
-<span style="color: #969896;">#+begin_src sh :results table :noweb yes</span>
+<pre class="src src-org">#+name: expenses-data
+#+begin_src sh :results table :noweb yes
   ledger -f &lt;&lt;&lt;ledger-file&gt;&gt;&gt; -j reg ^Expenses -M --collapse
-<span style="color: #969896;">#+end_src</span>
+#+end_src
 </pre>
 </div>
 
