@@ -1,6 +1,39 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-03-20 Fri] Emacs smartparens auto-indent
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-smartparens-auto-indent
+  :END:
+While I do most editing in Emacs, I make the odd quick change in Xcode. I like Xcode's automatic matching of pairs (ie. brackets) combined with its auto indent between pairs.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-smartparens-auto-indent/xcode_indent.gif]]
+
+While the wonderful [[https://github.com/Fuco1/smartparens][smartparens]] gives Emacs pair-matching powers, it doesn't automatically indent between pairs (out of the box anyway).
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-smartparens-auto-indent/indent_bracket_before.gif]]
+
+Luckily, smartparens does provide /sp-local-pair,/ which enables us to achieve a similar goal.
+
+With a short snippet, we can autoindent between {}, [], and () when the return key is pressed.
+
+#+begin_src emacs-lisp
+  (defun indent-between-pair (&rest _ignored)
+    (newline)
+    (indent-according-to-mode)
+    (forward-line -1)
+    (indent-according-to-mode))
+
+  (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
+  (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
+  (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET")))
+#+end_src
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-smartparens-auto-indent/indent_bracket_after.gif]]
+
 * [2020-03-20 Fri] Solarpunk bookmarks
   :PROPERTIES:
   :CUSTOM_ID: solarpunk-bookmarks
