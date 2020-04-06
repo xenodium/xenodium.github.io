@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-04-04 Sat 20:28 -->
+<!-- 2020-04-06 Mon 20:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Video editing bookmarks</title>
+<title>Emacss counsel-M-x meets multiple cursors</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
 <style type="text/css">
@@ -438,6 +438,28 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -460,20 +482,48 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orge964a6e" class="outline-2">
-<h2 id="video-editing-bookmarks"><span class="timestamp-wrapper"><span class="timestamp">10 February 2019</span></span> Video editing bookmarks</h2>
-<div class="outline-text-2" id="text-video-editing-bookmarks">
-<span class="modified-timestamp">  <em>updated: 04 April 2020  </em></span>
-<ul class="org-ul">
-<li><a href="https://lars.ingebrigtsen.no/2019/02/14/adventures-in-netflix/">Adventures in Netflix (screenshotting HDMI)</a>.</li>
-<li><a href="https://dragonquest64.blogspot.com/2019/11/non-rectangular-video-cropping.html">Dragon Quest 64: Non-Rectangular Video Cropping</a>.</li>
-<li><a href="https://superuser.com/questions/1270950/ffmpeg-how-to-achieve-a-circular-video-overlay">FFmpeg - How to achieve a circular video overlay..?</a>.</li>
-<li><a href="https://github.com/moxuse/kusabi">GitHub - moxuse/Kusabi: Coding environment 3D graphics with PureScript.</a>.</li>
-<li><a href="https://www.youtube.com/watch?v=tYytVzbPky8">HOW TO DATAMOSH: PART 1 - YouTube</a>.</li>
-<li><a href="https://news.ycombinator.com/item?id=22775502">How to trim video clips instantly without reencoding | Hacker News</a>.</li>
-<li><a href="http://www.linux-magazine.com/Issues/2018/206/Tutorials-FFmpeg">Inserting a Watermark with FFmpeg (Linux Magazine)</a>.</li>
-<li><a href="https://news.ycombinator.com/item?id=21897293">Non-Rectangular Video Cropping with FFMpeg | Hacker News</a>.</li>
-</ul>
+<div id="outline-container-orgba96c73" class="outline-2">
+<h2 id="emacss-counsel-m-x-meets-multiple-cursors"><span class="timestamp-wrapper"><span class="timestamp">06 April 2020</span></span> Emacs's counsel-M-x meets multiple cursors</h2>
+<div class="outline-text-2" id="text-emacss-counsel-m-x-meets-multiple-cursors">
+<p>
+I'm a fan of Magnar Sveen's <a href="https://github.com/magnars/multiple-cursors.el">multiple cursors</a> Emacs implementation. It's just so fun to use and works very well with commands bound to my favorite keys.
+</p>
+
+<p>
+Every now and then I'd like to execute extended commands on all cursors, but they have no keys bound to them. If you're an <a href="https://github.com/abo-abo/swiper">ivy/counsel</a> fan like me (and all packages by <a href="https://oremacs.com/about/">Abo Abo</a>), you use <i>counsel-M-x</i> to invoke commands. However, <i>counsel-M-x</i> doesn't support multiple cursors out of the box. Luckily, this is Emacs and we can fix that&#x2026;
+</p>
+
+<p>
+Back in December 2019, I made a note to revisit <a href="https://www.reddit.com/user/snippins1987/">u/snippins1987</a>'s weekly tip to pair <a href="https://www.reddit.com/r/emacs/comments/eeyhdz/weekly_tipstricketc_thread/fch1bkv?utm_source=share&amp;utm_medium=web2x">helm-M-x with multiple cursors</a>. Finally got back to it. With a few changes, we can also make the snippet work with <i>counsel-M-x</i> \o/.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">adviced:counsel-M-x-action</span> (orig-fun <span style="color: #0086b3;">&amp;rest</span> r)
+  <span style="color: #183691;">"Additional support for multiple cursors."</span>
+  (apply orig-fun r)
+  (<span style="color: #a71d5d;">let</span> ((cmd (intern (counsel--string-trim-left (nth 0 r) <span style="color: #183691;">"\\^"</span>))))
+    (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
+               multiple-cursors-mode
+               cmd
+               (not (memq cmd mc--default-cmds-to-run-once))
+               (not (memq cmd mc/cmds-to-run-once))
+               (<span style="color: #a71d5d;">or</span> mc/always-run-for-all
+                   (memq cmd mc--default-cmds-to-run-for-all)
+                   (memq cmd mc/cmds-to-run-for-all)
+                   (mc/prompt-for-inclusion-in-whitelist cmd)))
+      (mc/execute-command-for-all-fake-cursors cmd))))
+
+(advice-add #'counsel-M-x-action
+            <span style="color: #a71d5d;">:around</span>
+            #'adviced:counsel-M-x-action)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="../images/emacss-counsel-m-x-meets-multiple-cursors/counsel-mx-mc.gif" alt="counsel-mx-mc.gif" />
+</p>
+</div>
 </div>
 </div>
 </div>

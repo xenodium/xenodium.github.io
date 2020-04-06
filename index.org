@@ -1,6 +1,45 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-04-06 Mon] Emacs's counsel-M-x meets multiple cursors
+  :PROPERTIES:
+  :CUSTOM_ID: emacss-counsel-m-x-meets-multiple-cursors
+  :END:
+I'm a fan of Magnar Sveen's [[https://github.com/magnars/multiple-cursors.el][multiple cursors]] Emacs implementation. It's just so fun to use and works very well with commands bound to my favorite keys.
+
+Every now and then I'd like to execute extended commands on all cursors, but they have no keys bound to them. If you're an [[https://github.com/abo-abo/swiper][ivy/counsel]] fan like me (and all packages by [[https://oremacs.com/about/][Abo Abo]]), you use /counsel-M-x/ to invoke commands. However, /counsel-M-x/ doesn't support multiple cursors out of the box. Luckily, this is Emacs and we can fix that...
+
+Back in December 2019, I made a note to revisit [[https://www.reddit.com/user/snippins1987/][u/snippins1987]]'s weekly tip to pair [[https://www.reddit.com/r/emacs/comments/eeyhdz/weekly_tipstricketc_thread/fch1bkv?utm_source=share&utm_medium=web2x][helm-M-x with multiple cursors]]. Finally got back to it. With a few changes, we can also make the snippet work with /counsel-M-x/ \o/.
+
+#+ATTR_HTML: :width 40% :height 40%
+#+begin_src emacs-lisp
+  (defun adviced:counsel-M-x-action (orig-fun &rest r)
+    "Additional support for multiple cursors."
+    (apply orig-fun r)
+    (let ((cmd (intern (counsel--string-trim-left (nth 0 r) "\\^"))))
+      (when (and (boundp 'multiple-cursors-mode)
+                 multiple-cursors-mode
+                 cmd
+                 (not (memq cmd mc--default-cmds-to-run-once))
+                 (not (memq cmd mc/cmds-to-run-once))
+                 (or mc/always-run-for-all
+                     (memq cmd mc--default-cmds-to-run-for-all)
+                     (memq cmd mc/cmds-to-run-for-all)
+                     (mc/prompt-for-inclusion-in-whitelist cmd)))
+        (mc/execute-command-for-all-fake-cursors cmd))))
+
+  (advice-add #'counsel-M-x-action
+              :around
+              #'adviced:counsel-M-x-action)
+#+end_src
+
+[[file:images/emacss-counsel-m-x-meets-multiple-cursors/counsel-mx-mc.gif]]
+
+* [2020-04-05 Sun] Portland travel bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: portland-travel-bookmarks
+  :END:
+- [[https://www.powells.com/][Powell’s Books | The World’s Largest Independent Bookstore]].
 * [2020-03-29 Sun] String inflection Emacs package
   :PROPERTIES:
   :CUSTOM_ID: string-inflection-emacs-package
@@ -198,6 +237,11 @@ comments on [[https://twitter.com/xenodium/status/1241104117264781312][twitter]]
   :PROPERTIES:
   :CUSTOM_ID: security-bookmarks
   :END:
+  :MODIFIED:
+  [2020-04-06 Mon]
+  :END:
+- [[https://sneak.berlin/20191011/stupid-unix-tricks/][Jeffrey Paul: Stupid Unix Tricks (ssh)]].
+- [[https://sneak.berlin/20191011/stupid-unix-tricks/][Jeffrey Paul: Stupid Unix Tricks (yubikey setup)]].
 - [[https://lchsk.com/stay-paranoid-and-trust-no-one-overview-of-common-security-vulnerabilities-in-web-applications.html][Stay paranoid and trust no one. Overview of common security vulnerabilities in web applications]].
 * [2020-02-15 Sat] Nix bookmarks
   :PROPERTIES:
@@ -1400,6 +1444,21 @@ Saving [[https://twitter.com/tonytechwriter][Tony Bedford's]] python snippets fo
   :CUSTOM_ID: building-mumu4e-on-macos
   :END:
 
+I've now built Emacs's [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] releases a handful of times on macOS. These are the steps, so I don't forget.
+
+** 1.3
+Updated steps for building [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] 1.3:
+
+#+begin_src sh
+  brew install gmime
+  export CPPFLAGS="-I$(brew --prefix)/Cellar/gmime/3.2.3/include -I$(brew --prefix)/include"
+  export LDFLAGS=-L$(brew --prefix)/Cellar/gmime/3.2.3/lib
+  export PKG_CONFIG_PATH=$(brew --prefix)/Cellar/gmime/3.2.3/lib/pkgconfig:$(brew --prefix)/opt/libffi/lib/pkgconfig
+  export EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
+  ./configure --prefix=$(~/local)
+  make install
+#+end_src
+** 1.2
 Recently built Emacs's [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]] 1.2.0 from source on macOS. Steps:
 
 #+begin_src sh
@@ -1633,13 +1692,14 @@ More comprehensively:
   :CUSTOM_ID: video-editing-bookmarks
   :END:
   :MODIFIED:
-  [2019-12-30 Mon]
+  [2020-04-04 Sat]
   :END:
 - [[https://lars.ingebrigtsen.no/2019/02/14/adventures-in-netflix/][Adventures in Netflix (screenshotting HDMI)]].
 - [[https://dragonquest64.blogspot.com/2019/11/non-rectangular-video-cropping.html][Dragon Quest 64: Non-Rectangular Video Cropping]].
 - [[https://superuser.com/questions/1270950/ffmpeg-how-to-achieve-a-circular-video-overlay][FFmpeg - How to achieve a circular video overlay..?]].
 - [[https://github.com/moxuse/kusabi][GitHub - moxuse/Kusabi: Coding environment 3D graphics with PureScript.]].
 - [[https://www.youtube.com/watch?v=tYytVzbPky8][HOW TO DATAMOSH: PART 1 - YouTube]].
+- [[https://news.ycombinator.com/item?id=22775502][How to trim video clips instantly without reencoding | Hacker News]].
 - [[http://www.linux-magazine.com/Issues/2018/206/Tutorials-FFmpeg][Inserting a Watermark with FFmpeg (Linux Magazine)]].
 - [[https://news.ycombinator.com/item?id=21897293][Non-Rectangular Video Cropping with FFMpeg | Hacker News]].
 * [2019-02-10 Sun] Icons bookmarks
@@ -3368,12 +3428,13 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   :CUSTOM_ID: web-serving-tools-bookmarks
   :END:
   :MODIFIED:
-  [2018-11-19 Mon]
+  [2020-04-06 Mon]
   :END:
 - [[https://certbot.eff.org/][Certbot: Automatically enable HTTPS on your website, deploying Let's Encrypt certificates]].
 - [[https://www.timdoug.com/log/2018/08/04/#wireguard_macos][How to configure WireGuard to tunnel traffic from a macOS client through a Debian server with IPv4 and IPv6]].
 - [[http://irreal.org/blog/?p=7306][HTTPS Is Easy (Irreal)]].
 - [[https://news.ycombinator.com/item?id=17689188][I made my own WireGuard VPN server (Hacker News)]].
+- [[https://jsonapi.org/][JSON:API — A specification for building APIs in JSON]].
 - [[https://mirage.io/][MirageOS: high-performance network applications across a variety of cloud computing and mobile platforms]].
 - [[https://nginxconfig.io/][nginxconfig.io]].
 - [[https://idiallo.com/blog/handling-1-million-web-request][Poor man's way of handling 1.3 million web request]].
@@ -7039,13 +7100,14 @@ JCS, from [[http://irreal.org/blog][Irreal]], recently [[http://irreal.org/blog/
 :CUSTOM_ID: css-bookmarks
 :END:
 :MODIFIED:
-[2020-02-15 Sat]
+[2020-04-05 Sun]
 :END:
 - [[https://jrl.ninja/etc/1/][58 bytes of css to look great nearly everywhere]].
 - [[https://csslayout.io/][CSS Layout]].
 - [[https://news.ycombinator.com/item?id%3D10731360][CSS Protips: A collection of tips to help take your CSS skills pro (Hacker News)]].
 - [[https://github.com/AllThingsSmitty/css-protips][CSS Protips: A collection of tips to help take your CSS skills pro]].
 - [[http://cssguidelin.es][CSS style guide]].
+- [[https://css-tricks.com/][CSS-Tricks]].
 - [[https://github.com/jamztang/CSStickyHeaderFlowLayout][CSStickyHeaderFlowLayout]].
 - [[http://dynamicsjs.com/][Dynamics.js: JavaScript library to create physics-based CSS animations]].
 - [[http://flexboxfroggy.com/][Flexbox Froggy, a game for writing CSS code]].
@@ -8573,11 +8635,14 @@ My times:
 :CUSTOM_ID: germany-travel-bookmarks
 :END:
 :MODIFIED:
-[2018-04-05 Thu]
+[2020-04-05 Sun]
 :END:
 - [[https://en.wikipedia.org/wiki/Azalea_and_Rhododendron_Park_Kromlau][Azalea and Rhododendron Park Kromlau]].
+- [[http://www.7stern.at/de-de/][Home - 7STERN Bräu]].
 - [[https://kerriescupoftea.blogspot.co.uk/2014/10/lai-fufu-in-munich-germany.html][Kerrie's Cup of Tea: lai fufu in Munich Germany]].
 - [[https://www.laifufu.de/][Laifufu Teesalon - Teezeremonie - Tee - Oolong - München - Laifufu Teesalon]].
+- [[https://www.sudhaus.at/][SUDHAUS — Brauerei & Restaurant (try pizza?)]].
+- [[https://www.sudhaus.at/][SUDHAUS — Brauerei & Restaurant]].
 
 * [2015-08-08 Sat] Menorca travel bookmarks
 :PROPERTIES:
@@ -9627,7 +9692,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: tokyo-travel-bookmarks
 :END:
 :MODIFIED:
-[2019-12-07 Sat]
+[2020-04-05 Sun]
 :END:
 - [[https://roadsandkingdoms.com/travel-guide/tokyo/know-before-you-go-to-tokyo/][14 Things to Know Before You Go to Tokyo]].
 - [[http://globalhelpswap.com/5-alternative-things-to-do-in-tokyo/][5 alternative things to do in Tokyo (by globalhelpswap)]].
@@ -9642,6 +9707,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[http://authenticbar.com/odin/yebisu.html][Bar Odin]].
 - [[https://www.tripadvisor.co.uk/Restaurant_Review-g1066461-d1688630-Reviews-Benten-Taito_Tokyo_Tokyo_Prefecture_Kanto.html][Benten, Taito - 3-21-8 Asakusa, Ueno, Asakusa (Buckwheat noodles shop)]].
 - Bentomi (Sushi).
+- [[https://cheese-stand.com/][CHEESE STAND （チーズスタンド）]].
 - Coffee Tengoku, Asakusa (best hotcakes/pancakes). Noting is premade. After 12 years, best hotcakes.
 - [[http://tabelog.com/en/tokyo/A1313/A131301/13002389/][Daiwasushi (food)]]. An account [[http://mjkobb.com/Prattling%20on/6570A66F-8F2F-49FD-912C-4A5D0C3862C8.html][here]].
 - Dorayaki (in Ukenbukuru). Seijuken is long established in Ningyocho.
@@ -9663,6 +9729,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Kaiden-don, near tsukiji (Sushi).
 - Kajitsuen Libre. Peach Parfait. Fresh fruit.
 - Kinozen restaurant for Matcha Bavarian cream (matcha bavaroa). Kagurazaka. Check out the backstreets.
+- [[http://www.waentei-kikko.com/][Kodai's Fukui restaurant (old tea house)]].
 - Kushikatsu restaurant in Golden Gai, a karaoke booth in Ebisu, or drifting through the back alley izakayas of Akabane.
 - Menya Musashi and Fuunji are both generally very well regarded and about a 5-7 minute walk from the SW part of Shinjuku station.
 - [[http://openbuildings.com/buildings/mikimoto-ginza-2-profile-2818][Mikimoto building in Ginza]].
@@ -9673,6 +9740,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Omoide yokocho: Alleyway next to Shinjuku station. Lots of yakitori restaurants.
 - [[http://ooo-koffee.com/][Omotesando Koffee]] (coffee and baked custard slice).
 - Omotesando side streets.
+- [[http://pignontokyo.jp/][Pignon | French Restaurant]].
 - Pound cake from Patisserie Gondola in Kudanue.
 - Roppongi.
 - Savarin (brioge-based, of french origin) in Yokohama. Cafe Recherche.
@@ -9704,6 +9772,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Tokyo Station: Massive station. Lots of restaurants and shops (check out ramen street).
 - [[http://coffeeandpassport.com/tokyo-travel-tips/][Tokyo Travel Tips: 5 Things You Need In Japan | Coffee and Passport]].
 - [[https://twitter.com/yanarchy/status/1162570360769798144][Tokyo Twitter: any Japanese breakfast restaurants]].
+- [[https://www.cntraveller.com/article/travel-guide-tokyo][Tokyo, Japan - Condé Nast Traveller | CN Traveller]].
 - [[http://tokyocheapo.com/][TokyoCheapo]].
 - Tokyu Hands and Loft (shops in Shibuya).
 - Toritake (yakitori at Shibuya).
@@ -9964,7 +10033,7 @@ Note to self. Open with Alt-f2.
 :CUSTOM_ID: emacs-init.el-bookmarks
 :END:
 :MODIFIED:
-[2020-01-15 Wed]
+[2020-04-05 Sun]
 :END:
 - [[https://github.com/daschwa/emacs.d][Adam Schwartz's init]].
 - [[https://github.com/apg/emacs-config/tree/master/lisp/activator.d][Andrew Gwozdziewycz's init.el]].
@@ -9977,6 +10046,7 @@ Note to self. Open with Alt-f2.
 - [[https://github.com/iocanel/dotfiles/blob/master/.config/emacs/config.org][dotfiles/config.org at master · iocanel/dotfiles · GitHub (mu4e config)]].
 - [[https://www.emacswiki.org/emacs/StarterKits][EmacsWiki: Starter Kits]].
 - [[https://github.com/ejmr/DotEmacs/blob/master/.emacs][Eric James Michael Ritz]].
+- [[https://github.com/alhassy/emacs.d][GitHub - alhassy/emacs.d: My Emacs configuration, literately]].
 - [[https://github.com/rememberYou/.emacs.d/][GitHub - FIXME rememberYou/.emacs.d: Personal GNU Emacs configuration]].
 - [[https://github.com/Fuco1/.emacs.d][GitHub - Fuco1/.emacs.d: My emacs config]].
 - [[https://github.com/zamansky/emacs.dz][GitHub - zamansky/emacs.dz: Awesome emacs config files]].
@@ -11108,7 +11178,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2020-03-21 Sat]
+[2020-04-06 Mon]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -11256,6 +11326,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://news.ycombinator.com/item?id=18402411][RemoteMac.io – Dedicated Mac mini (Hacker News)]].
 - [[http://rethinkdb.com/faq/][RethinkDB FAQ]].
 - [[https://news.ycombinator.com/item?id=9185338][RethinkDB HN comments]].
+- [[https://retool.com][Retool: Build internal tools fast]].
 - [[https://news.ycombinator.com/item?id=19388489][Roll Your Own Analytics (Hacker News)]].
 - [[https://www.pcmaffey.com/roll-your-own-analytics/][Roll Your Own Analytics]].
 - [[https://spin.atomicobject.com/2019/06/12/ip-software-dev-contract/][Securing Intellectual Property Rights in a Software Development Contract]].
@@ -11274,6 +11345,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://t.co/5WUoz5BwtT][Submit.co: Press coverage for your startup]].
 - [[http://submit.co/][submit.co: Where to get press coverage for your startup]].
 - [[http://swagger.io/][Swagger]]: Represent REST API.
+- [[https://tailwindui.com/][Tailwind UI]].
 - [[http://taskjuggler.org/][TaskJuggler - A Free and Open Source Project Management Software - About TaskJuggler]].
 - [[https://news.ycombinator.com/item?id=11964763][Telephony, SMS, and MMS APIs (Hacker News)]].
 - [[http://textbelt.com/][TextBelt:]] A free, open source API for outgoing texts..
@@ -12508,8 +12580,10 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2020-03-29 Sun]
+[2020-04-05 Sun]
 :END:
+**** TODO [[https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders][This Book Is Full of Spiders by David Wong]].
+**** TODO [[https://thequilltolive.com/recommendations-2/][Recommendations | The Quill to Live]].
 **** TODO [[https://fumbling.it/posts/my-2020-reading-list/][My 2020 Reading List · FumbLing]].
 **** TODO [[https://www.goodreads.com/book/show/37903770-norse-mythology][Norse Mythology by Neil Gaiman]].
 **** TODO [[https://www.goodreads.com/book/show/18216145-auto][Auto by David Wailing]].
