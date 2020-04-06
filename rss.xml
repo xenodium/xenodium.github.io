@@ -6,7 +6,60 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 30 Mar 2020 19:39:49 +0100</lastBuildDate>
+<lastBuildDate>Mon, 06 Apr 2020 20:33:14 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacss counsel-M-x meets multiple cursors</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-orgba96c73" class="outline-2">
+ <h2 id="emacss-counsel-m-x-meets-multiple-cursors"> <span class="timestamp-wrapper"> <span class="timestamp">06 April 2020</span></span> Emacs's counsel-M-x meets multiple cursors</h2>
+ <div class="outline-text-2" id="text-emacss-counsel-m-x-meets-multiple-cursors">
+ <p>
+I'm a fan of Magnar Sveen's  <a href="https://github.com/magnars/multiple-cursors.el">multiple cursors</a> Emacs implementation. It's just so fun to use and works very well with commands bound to my favorite keys.
+</p>
+
+ <p>
+Every now and then I'd like to execute extended commands on all cursors, but they have no keys bound to them. If you're an  <a href="https://github.com/abo-abo/swiper">ivy/counsel</a> fan like me (and all packages by  <a href="https://oremacs.com/about/">Abo Abo</a>), you use  <i>counsel-M-x</i> to invoke commands. However,  <i>counsel-M-x</i> doesn't support multiple cursors out of the box. Luckily, this is Emacs and we can fix that…
+</p>
+
+ <p>
+Back in December 2019, I made a note to revisit  <a href="https://www.reddit.com/user/snippins1987/">u/snippins1987</a>'s weekly tip to pair  <a href="https://www.reddit.com/r/emacs/comments/eeyhdz/weekly_tipstricketc_thread/fch1bkv?utm_source=share&utm_medium=web2x">helm-M-x with multiple cursors</a>. Finally got back to it. With a few changes, we can also make the snippet work with  <i>counsel-M-x</i> \o/.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">adviced:counsel-M-x-action</span> (orig-fun  <span style="color: #0086b3;">&rest</span> r)
+   <span style="color: #183691;">"Additional support for multiple cursors."</span>
+  (apply orig-fun r)
+  ( <span style="color: #a71d5d;">let</span> ((cmd (intern (counsel--string-trim-left (nth 0 r)  <span style="color: #183691;">"\\^"</span>))))
+    ( <span style="color: #a71d5d;">when</span> ( <span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
+               multiple-cursors-mode
+               cmd
+               (not (memq cmd mc--default-cmds-to-run-once))
+               (not (memq cmd mc/cmds-to-run-once))
+               ( <span style="color: #a71d5d;">or</span> mc/always-run-for-all
+                   (memq cmd mc--default-cmds-to-run-for-all)
+                   (memq cmd mc/cmds-to-run-for-all)
+                   (mc/prompt-for-inclusion-in-whitelist cmd)))
+      (mc/execute-command-for-all-fake-cursors cmd))))
+
+(advice-add #'counsel-M-x-action
+             <span style="color: #a71d5d;">:around</span>
+            #'adviced:counsel-M-x-action)
+</pre>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/emacss-counsel-m-x-meets-multiple-cursors/counsel-mx-mc.gif" alt="counsel-mx-mc.gif"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacss-counsel-m-x-meets-multiple-cursors/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/emacss-counsel-m-x-meets-multiple-cursors/index.html</guid>
+  <pubDate>Mon, 06 Apr 2020 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>String inflection Emacs package</title>
@@ -407,10 +460,10 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <title>SwiftUI bookmarks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org0e2e8e9" class="outline-2">
+ <div id="outline-container-org01f9ec2" class="outline-2">
  <h2 id="swiftui-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">29 December 2019</span></span> SwiftUI bookmarks</h2>
  <div class="outline-text-2" id="text-swiftui-bookmarks">
- <span class="modified-timestamp">   <em>updated: 11 March 2020  </em></span>
+ <span class="modified-timestamp">   <em>updated: 01 April 2020  </em></span>
  <ul class="org-ul"> <li> <a href="https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/"><SwiftUI for Absolute Beginners>读书 - emacsist</a>.</li>
  <li> <a href="https://github.com/Jinxiansen/SwiftUI">`SwiftUI` Framework Learning and Usage Guide</a>.</li>
  <li> <a href="https://swiftui-lab.com/companion/">A Companion for SwiftUI - The SwiftUI Lab</a>.</li>
@@ -424,6 +477,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
  <li> <a href="https://theswiftdev.com/2018/01/25/deep-dive-into-swift-frameworks/">Deep dive into Swift frameworks - The.Swift.Dev.</a>.</li>
  <li> <a href="https://dev.to/maeganwilson_/default-a-view-in-navigationview-with-swiftui-183p">Default a View in NavigationView with SwiftUI - DEV Community</a>.</li>
  <li> <a href="https://designcode.io/swiftui?promo=learnswiftui">designcode's SwiftUI course</a>.</li>
+ <li> <a href="https://medium.com/@karaiskc/first-learnings-from-adopting-swiftui-be2ee4289007">First learnings from adopting SwiftUI - Christos Karaiskos - Medium (card example)</a>.</li>
  <li> <a href="https://swiftui-lab.com/geometryreader-to-the-rescue/">GeometryReader to the Rescue - The SwiftUI Lab</a>.</li>
  <li> <a href="https://medium.com/better-programming/gestures-in-swiftui-e94b784ecc7">Gestures in SwiftUI - Better Programming - Medium</a>.</li>
  <li> <a href="https://github.com/AppPear/ChartView">GitHub - AppPear/ChartView: ChartView made in SwiftUI</a>.</li>
@@ -440,6 +494,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
  <li> <a href="https://www.hackingwithswift.com/articles/210/how-to-fix-slow-list-updates-in-swiftui">How to fix slow List updates in SwiftUI – Hacking with Swift</a>.</li>
  <li> <a href="https://medium.com/better-programming/implement-searchbar-in-swiftui-556a204e1970">Implement a Search Bar in SwiftUI - Better Programming - Medium</a>.</li>
  <li> <a href="https://swiftui-lab.com/communicating-with-the-view-tree-part-1/">Inspecting the View Tree with PreferenceKey - Part 1 - The SwiftUI Lab</a>.</li>
+ <li> <a href="https://stackoverflow.com/questions/56505043/how-to-make-view-the-size-of-another-view-in-swiftui">ios - How to make view the size of another view in SwiftUI - Stack Overflow</a>.</li>
  <li> <a href="https://swiftwithmajid.com/2019/12/04/must-have-swiftui-extensions/">Must-have SwiftUI extensions | Majid’s blog about Swift development</a>.</li>
  <li> <a href="https://nalexn.github.io/swiftui-deep-linking/">Programmatic navigation in SwiftUI project - Alexey Naumov</a>.</li>
  <li> <a href="https://dev.to/gualtierofr/remote-images-in-swiftui-49jp">Remote images in SwiftUI - DEV Community</a>.</li>
@@ -465,6 +520,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
  <li> <a href="https://github.com/alfianlosari/SwiftUIStaggeredList">SwiftUIStaggeredList: Staggered Layout List Using SwiftUI</a>.</li>
  <li> <a href="https://www.reddit.com/r/swift/comments/elhakp/so_i_guess_my_journey_begins_now/">SwuiftUI books</a>.</li>
  <li> <a href="https://sarunw.com/tags/swiftui/">Tagged “SwiftUI” | Sarun</a>.</li>
+ <li> <a href="https://swiftwithmajid.com/2020/02/26/textfield-in-swiftui/">TextField in SwiftUI | Majid’s blog about Swift development</a>.</li>
  <li> <a href="https://medium.com/better-programming/the-complete-swiftui-documentation-youve-been-waiting-for-fdfe7241add9">The Complete SwiftUI Documentation You’ve Been Waiting For</a>.</li>
  <li> <a href="https://theswiftdev.com/2019/10/31/the-ultimate-combine-framework-tutorial-in-swift/">The ultimate Combine framework tutorial in Swift - The.Swift.Dev.</a>.</li>
  <li> <a href="https://twitter.com/dbuchanandev/status/1236411023340511233">Tweet on improving List SwiftUI performace (searching)</a>.</li>
@@ -2859,15 +2915,16 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <title>Video editing bookmarks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org0f8642f" class="outline-2">
+ <div id="outline-container-orge964a6e" class="outline-2">
  <h2 id="video-editing-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">10 February 2019</span></span> Video editing bookmarks</h2>
  <div class="outline-text-2" id="text-video-editing-bookmarks">
- <span class="modified-timestamp">   <em>updated: 30 December 2019  </em></span>
+ <span class="modified-timestamp">   <em>updated: 04 April 2020  </em></span>
  <ul class="org-ul"> <li> <a href="https://lars.ingebrigtsen.no/2019/02/14/adventures-in-netflix/">Adventures in Netflix (screenshotting HDMI)</a>.</li>
  <li> <a href="https://dragonquest64.blogspot.com/2019/11/non-rectangular-video-cropping.html">Dragon Quest 64: Non-Rectangular Video Cropping</a>.</li>
  <li> <a href="https://superuser.com/questions/1270950/ffmpeg-how-to-achieve-a-circular-video-overlay">FFmpeg - How to achieve a circular video overlay..?</a>.</li>
  <li> <a href="https://github.com/moxuse/kusabi">GitHub - moxuse/Kusabi: Coding environment 3D graphics with PureScript.</a>.</li>
  <li> <a href="https://www.youtube.com/watch?v=tYytVzbPky8">HOW TO DATAMOSH: PART 1 - YouTube</a>.</li>
+ <li> <a href="https://news.ycombinator.com/item?id=22775502">How to trim video clips instantly without reencoding | Hacker News</a>.</li>
  <li> <a href="http://www.linux-magazine.com/Issues/2018/206/Tutorials-FFmpeg">Inserting a Watermark with FFmpeg (Linux Magazine)</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=21897293">Non-Rectangular Video Cropping with FFMpeg | Hacker News</a>.</li>
 </ul></div>
@@ -9431,7 +9488,7 @@ An 8-week training schedule:
   <title>Money bookmarks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org272dc28" class="outline-2">
+ <div id="outline-container-org3a43e03" class="outline-2">
  <h2 id="money-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">02 May 2016</span></span> Money bookmarks</h2>
  <div class="outline-text-2" id="text-money-bookmarks">
  <span class="modified-timestamp">   <em>updated: 16 February 2020  </em></span>
@@ -9552,6 +9609,7 @@ An 8-week training schedule:
  <li> <a href="https://www.youtube.com/watch?v=s75GcslrfOE">Tim Bennett Explains: Which is best - an ISA or a SIPP? - YouTube</a>.</li>
  <li> <a href="https://www.moneysavingexpert.com/savings/best-cash-isa/">Top Cash ISAs: 1.35% easy access, 2.3% fixed - MSE</a>.</li>
  <li> <a href="https://www.cisi.org/cisiweb2/cisi-website/about-us/press-release/2018/09/05/uk-consumers-offered-free-personal-financial-planning-sessions-worth-up-to-500-in-cisi-financial-planning-week-3--10-october-makedreamshappen">UK Financial Planning Week</a>.</li>
+ <li> <a href="https://ukpersonal.finance/uk-funds-faq/">UK Funds FAQ</a>.</li>
  <li>UKPersonalFinance redditor quote: "Deprogrammed myself from the zeitgeist of brands/labels. I either buy cheap or I buy quality dependent on application, but in either event I ignore the label."</li>
  <li> <a href="https://www.gov.uk/employee-tax-codes/numbers">Understanding your employees' tax codes: What the numbers mean - GOV.UK</a>.</li>
  <li> <a href="https://firehub.eu/blogs/country/united-kingdom">United Kingdom | Countries (FIREhub.eu)</a>.</li>
@@ -18997,13 +19055,32 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <title>Recipes</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orge6eee9b" class="outline-2">
+ <div id="outline-container-org345c366" class="outline-2">
  <h2 id="recipes"> <span class="timestamp-wrapper"> <span class="timestamp">07 March 2015</span></span> Recipes</h2>
  <div class="outline-text-2" id="text-recipes">
 </div>
- <div id="outline-container-org8981788" class="outline-3">
- <h3 id="org8981788">Banana pancakes</h3>
- <div class="outline-text-3" id="text-org8981788">
+ <div id="outline-container-org6cecab7" class="outline-3">
+ <h3 id="org6cecab7">Slow-cooked lamb</h3>
+ <div class="outline-text-3" id="text-org6cecab7">
+ <ol class="org-ol"> <li>Preheat oven 220°C (no fan).</li>
+ <li>Lamb face up in tray.</li>
+ <li>Cook for 30 mins (or brown).</li>
+ <li>Take lamb out.</li>
+ <li>Add to tray: broth, onions, rosemary.</li>
+ <li>Lamb face down (broth covers 1/3 or 1/4).</li>
+ <li>Cover with lid (or baking/parchment paper then 2 layers of foil).</li>
+ <li>Bake for 3.5 hours at 180°C (no fan).</li>
+ <li>Take out.</li>
+ <li>Turn lamb face up (over again). Check if liquid needs top-up.</li>
+ <li>Cook for 2 more hours.</li>
+ <li>Check if ready. Does meat fall off the bone with fork?</li>
+ <li>If not, keep for another 30 mins. Check again.</li>
+ <li>You are done \o/.</li>
+</ol></div>
+</div>
+ <div id="outline-container-orgfe64914" class="outline-3">
+ <h3 id="orgfe64914">Banana pancakes</h3>
+ <div class="outline-text-3" id="text-orgfe64914">
  <ul class="org-ul"> <li>Ripe banana.</li>
  <li>2 Eggs.</li>
  <li>1/3 cup instant oats.</li>
@@ -19011,9 +19088,9 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
  <li>Blend.</li>
 </ul></div>
 </div>
- <div id="outline-container-org2392c27" class="outline-3">
- <h3 id="org2392c27">Tom Kha Gai soup</h3>
- <div class="outline-text-3" id="text-org2392c27">
+ <div id="outline-container-org3920253" class="outline-3">
+ <h3 id="org3920253">Tom Kha Gai soup</h3>
+ <div class="outline-text-3" id="text-org3920253">
  <ul class="org-ul"> <li>Chicken or Prawns</li>
  <li>2 kaffir lime leaves</li>
  <li>1 lemongrass stalk</li>
@@ -19028,9 +19105,9 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
  <li>1 green onion</li>
 </ul></div>
 </div>
- <div id="outline-container-org0fbd19c" class="outline-3">
- <h3 id="org0fbd19c">Veg-Fruit juice</h3>
- <div class="outline-text-3" id="text-org0fbd19c">
+ <div id="outline-container-orgf1ab16b" class="outline-3">
+ <h3 id="orgf1ab16b">Veg-Fruit juice</h3>
+ <div class="outline-text-3" id="text-orgf1ab16b">
  <ul class="org-ul"> <li>Lime</li>
  <li>Ginger</li>
  <li>Apple</li>
@@ -19040,9 +19117,9 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
  <li>Blueberries</li>
 </ul></div>
 </div>
- <div id="outline-container-org0f6999f" class="outline-3">
- <h3 id="org0f6999f">Berry Hempster</h3>
- <div class="outline-text-3" id="text-org0f6999f">
+ <div id="outline-container-orgb1e2e32" class="outline-3">
+ <h3 id="orgb1e2e32">Berry Hempster</h3>
+ <div class="outline-text-3" id="text-orgb1e2e32">
  <ul class="org-ul"> <li>Hemp milk</li>
  <li>Hemp protein</li>
  <li>Strawberry</li>
@@ -19050,15 +19127,15 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
  <li>Date</li>
 </ul></div>
 </div>
- <div id="outline-container-org8ef96ea" class="outline-3">
- <h3 id="org8ef96ea">How to cook  <a href="https://www.youtube.com/watch?v%3DDaN4ifTG3H0">Beef Chow Fun</a>.</h3>
+ <div id="outline-container-org2b89274" class="outline-3">
+ <h3 id="org2b89274">How to cook  <a href="https://www.youtube.com/watch?v%3DDaN4ifTG3H0">Beef Chow Fun</a>.</h3>
 </div>
- <div id="outline-container-org91ab53f" class="outline-3">
- <h3 id="org91ab53f"> <a href="http://www.dailymail.co.uk/home/you/article-2248267/Recipe-Cavolo-nero-anchovies-chilli-garlic.html">Cavolo nero with anchovies, chilli and garlic</a>.</h3>
+ <div id="outline-container-orgac109f5" class="outline-3">
+ <h3 id="orgac109f5"> <a href="http://www.dailymail.co.uk/home/you/article-2248267/Recipe-Cavolo-nero-anchovies-chilli-garlic.html">Cavolo nero with anchovies, chilli and garlic</a>.</h3>
 </div>
- <div id="outline-container-orgd8caf9d" class="outline-3">
- <h3 id="orgd8caf9d">Vietnamese Pork Lettuce Wraps (my own versions)</h3>
- <div class="outline-text-3" id="text-orgd8caf9d">
+ <div id="outline-container-org9923ec1" class="outline-3">
+ <h3 id="org9923ec1">Vietnamese Pork Lettuce Wraps (my own versions)</h3>
+ <div class="outline-text-3" id="text-org9923ec1">
  <ul class="org-ul"> <li>Pork Mince.</li>
  <li>Chopped garlic.</li>
  <li>Chopped chillies.</li>
