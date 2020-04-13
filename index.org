@@ -7071,37 +7071,41 @@ JCS, from [[http://irreal.org/blog][Irreal]], recently [[http://irreal.org/blog/
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/drill-down-emacs-dired-with-dired-subtree/dired-subtree.gif]]
 
-* [2015-12-14 Mon] GPG examples
+* [2015-12-14 Mon] GPG (GnuPG) examples
 :PROPERTIES:
 :CUSTOM_ID: gpg-examples
 :END:
+** Generate key
+#+begin_src sh
+  gpg --full-generate-key
+#+end_src
 ** Export private key
 #+BEGIN_SRC sh
-    gpg --export-secret-key -a <keyid> > <private.asc>
+  gpg --export-secret-key -a <keyid> > <private.asc>
 #+END_SRC
 
 ** Import key
 #+BEGIN_SRC sh
-    gpg --import < <private.asc>
+  gpg --import < <private.asc>
 #+END_SRC
 
 ** Delete public key
 #+BEGIN_SRC sh
-    gpg --delete-keys <keyid>
+  gpg --delete-keys <keyid>
 #+END_SRC
 
 ** Delete private key
 #+BEGIN_SRC sh
-    gpg --delete-secret-keys <keyid>
+  gpg --delete-secret-keys <keyid>
 #+END_SRC
 
 ** Edit key
 #+BEGIN_SRC sh
-    gpg --edit-key <keyid>
-    gpg> uid (lists IDs)
-    gpg> uid 2 (marks ID)
-    gpg> deluid (deletes marked ID)
-    Really remove this user ID? (y/N) y
+  gpg --edit-key <keyid>
+  gpg> uid (lists IDs)
+  gpg> uid 2 (marks ID)
+  gpg> deluid (deletes marked ID)
+  Really remove this user ID? (y/N) y
 #+END_SRC
 
 ** Change passphrase of the secret key
