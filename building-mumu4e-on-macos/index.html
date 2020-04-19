@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-20 Fri 19:59 -->
+<!-- 2020-04-19 Sun 09:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Building mu/mu4e on macOS</title>
@@ -201,6 +201,7 @@
            max-width: 88ch;
            padding: 2ch;
            margin: auto;
+           background-color: white;
          }
 
          .figure {
@@ -459,9 +460,36 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org8406bad" class="outline-2">
+<div id="outline-container-org02b3c60" class="outline-2">
 <h2 id="building-mumu4e-on-macos"><span class="timestamp-wrapper"><span class="timestamp">11 April 2019</span></span> Building mu/mu4e on macOS</h2>
 <div class="outline-text-2" id="text-building-mumu4e-on-macos">
+<p>
+I've now built Emacs's <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> releases a handful of times on macOS. These are the steps, so I don't forget.
+</p>
+</div>
+
+<div id="outline-container-org76833ee" class="outline-3">
+<h3 id="org76833ee">1.4</h3>
+<div class="outline-text-3" id="text-org76833ee">
+<p>
+Updated steps for building <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> 1.4:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install gmime
+<span style="color: #a71d5d;">export</span> <span style="color: #333333;">CPPFLAGS</span>=<span style="color: #183691;">"-I$(</span><span style="color: #183691;">brew</span><span style="color: #183691;"> --prefix)/Cellar/gmime/3.2.3/include -I$(</span><span style="color: #183691;">brew</span><span style="color: #183691;"> --prefix)/include"</span>
+<span style="color: #a71d5d;">export</span> <span style="color: #333333;">LDFLAGS</span>=-L$(<span style="color: #183691;">brew</span> --prefix)/Cellar/gmime/3.2.3/lib
+<span style="color: #a71d5d;">export</span> <span style="color: #333333;">PKG_CONFIG_PATH</span>=$(<span style="color: #183691;">brew</span> --prefix)/Cellar/gmime/3.2.3/lib/pkgconfig:$(<span style="color: #183691;">brew</span> --prefix)/opt/libffi/lib/pkgconfig
+<span style="color: #a71d5d;">export</span> <span style="color: #333333;">EMACS</span>=/Applications/Emacs.app/Contents/MacOS/Emacs
+./configure --prefix=$(<span style="color: #183691;">~/local</span>)
+make install
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd6bfbb4" class="outline-3">
+<h3 id="orgd6bfbb4">1.2</h3>
+<div class="outline-text-3" id="text-orgd6bfbb4">
 <p>
 Recently built Emacs's <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> 1.2.0 from source on macOS. Steps:
 </p>
@@ -479,6 +507,7 @@ make install
 <p>
 UPDATE(2019-04-16): Another approach at Irreal's <a href="https://irreal.org/blog/?p=7976">Mu/mu4e 1.2 Available</a>.
 </p>
+</div>
 </div>
 </div>
 </div>
