@@ -1,6 +1,39 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-04-19 Sun] mu/mu4e 1.4 released
+  :PROPERTIES:
+  :CUSTOM_ID: mumu4e-14-released
+  :END:
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/mumu4e-14-released/mu14.png]]
+
+[[https://www.reddit.com/r/emacs/comments/g3nsgg/mumu4e_14_has_been_released/][mu/mu4e 1.4 is out]]. About a week ago, I built and installed its [[https://github.com/djcb/mu/releases/tag/1.3.10][pre-release version (1.3.10)]] and noted [[http://xenodium.com/building-mumu4e-on-macos/][build steps on macOS]]. It's been working great for me. Today, I updated to 1.4.
+
+I was keen to try the new release out. I had been experiencing a short delay immediately after syncing/indexing mail. An initial investigation pointed to contact syncing, but I didn't dig further. The 1.4 release notes had a promising entry:
+
+#+begin_quote
+  In many cases, `mu4e' used to receive /all/ contacts after each indexing operation; this was slow for some users, so we have updated this to /only/ get the contacts that have changed since the last round.
+#+end_quote
+
+After upgrading. The delay is gone for me \o/
+
+*Note*: there are a few config tweaks needed for the 1.4 upgrade, but these are well-documented in the [[https://github.com/djcb/mu/releases/tag/1.4][release notes]]. For me, it primarily consisted of:
+
+- Swapping elisp /mu4e-maildir/ var for /mu init --maildir path/to/local/IMAP/.
+- Swapping elisp /mu4e-user-mail-address-list/ for /mu init --my-address address1@domain.com --my-address address2@domain.com/.
+- Disabling /mu4e-maildirs-extension/ (not yet compatible with mu 1.4). No issues here, since I hardly ever look at the /mu4e-main/ buffer. I have global binding to my unread messages that looks a little something like this:
+
+#+begin_src emacs-lisp
+  (defun ar/mu4e-view-unread-messages ()
+    (interactive)
+    (mu4e-headers-search-bookmark (concat "flag:unread AND "
+                                          "flag:unread AND "
+                                          "NOT flag:trashed AND "
+                                          "(maildir:/address1/INBOX OR "
+                                          "maildir:/address1/INBOX)")))
+#+end_src
 * [2020-04-14 Tue] Libya travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: libya-travel-bookmarks
