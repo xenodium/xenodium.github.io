@@ -6,7 +6,62 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 06 Apr 2020 20:31:14 +0100</lastBuildDate>
+<lastBuildDate>Sun, 19 Apr 2020 13:39:28 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>mu/mu4e 1.4 released</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org48a5378" class="outline-2">
+ <h2 id="mumu4e-14-released"> <span class="timestamp-wrapper"> <span class="timestamp">19 April 2020</span></span> mu/mu4e 1.4 released</h2>
+ <div class="outline-text-2" id="text-mumu4e-14-released">
+
+ <div class="figure">
+ <p> <img src="../images/mumu4e-14-released/mu14.png" alt="mu14.png" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+ <a href="https://www.reddit.com/r/emacs/comments/g3nsgg/mumu4e_14_has_been_released/">mu/mu4e 1.4 is out</a>. About a week ago, I built and installed its  <a href="https://github.com/djcb/mu/releases/tag/1.3.10">pre-release version (1.3.10)</a> and noted  <a href="http://xenodium.com/building-mumu4e-on-macos/">build steps on macOS</a>. It's been working great for me. Today, I updated to 1.4.
+</p>
+
+ <p>
+I was keen to try the new release out. I had been experiencing a short delay immediately after syncing/indexing mail. An initial investigation pointed to contact syncing, but I didn't dig further. The 1.4 release notes had a promising entry:
+</p>
+
+ <blockquote>
+ <p>
+In many cases, `mu4e' used to receive  <i>all</i> contacts after each indexing operation; this was slow for some users, so we have updated this to  <i>only</i> get the contacts that have changed since the last round.
+</p>
+</blockquote>
+
+ <p>
+After upgrading. The delay is gone for me \o/
+</p>
+
+ <p>
+ <b>Note</b>: there are a few config tweaks needed for the 1.4 upgrade, but these are well-documented in the  <a href="https://github.com/djcb/mu/releases/tag/1.4">release notes</a>. For me, it primarily consisted of:
+</p>
+
+ <ul class="org-ul"> <li>Swapping elisp  <i>mu4e-maildir</i> var for  <i>mu init –maildir path/to/local/IMAP</i>.</li>
+ <li>Swapping elisp  <i>mu4e-user-mail-address-list</i> for  <i>mu init –my-address address1@domain.com –my-address address2@domain.com</i>.</li>
+ <li>Disabling  <i>mu4e-maildirs-extension</i> (not yet compatible with mu 1.4). No issues here, since I hardly ever look at the  <i>mu4e-main</i> buffer. I have global binding to my unread messages that looks a little something like this:</li>
+</ul> <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/mu4e-view-unread-messages</span> ()
+  ( <span style="color: #a71d5d;">interactive</span>)
+  (mu4e-headers-search-bookmark (concat  <span style="color: #183691;">"flag:unread AND "</span>
+                                         <span style="color: #183691;">"flag:unread AND "</span>
+                                         <span style="color: #183691;">"NOT flag:trashed AND "</span>
+                                         <span style="color: #183691;">"(maildir:/box1/INBOX OR "</span>
+                                         <span style="color: #183691;">"maildir:/box2/INBOX)"</span>)))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/mumu4e-14-released/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/mumu4e-14-released/index.html</guid>
+  <pubDate>Sun, 19 Apr 2020 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacss counsel-M-x meets multiple cursors</title>
@@ -1493,9 +1548,36 @@ Year 20: 773936.89
   <title>Building mu/mu4e on macOS</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org8406bad" class="outline-2">
+ <div id="outline-container-org02b3c60" class="outline-2">
  <h2 id="building-mumu4e-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">11 April 2019</span></span> Building mu/mu4e on macOS</h2>
  <div class="outline-text-2" id="text-building-mumu4e-on-macos">
+ <p>
+I've now built Emacs's  <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> releases a handful of times on macOS. These are the steps, so I don't forget.
+</p>
+</div>
+
+ <div id="outline-container-org76833ee" class="outline-3">
+ <h3 id="org76833ee">1.4</h3>
+ <div class="outline-text-3" id="text-org76833ee">
+ <p>
+Updated steps for building  <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> 1.4:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install gmime
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">CPPFLAGS</span>= <span style="color: #183691;">"-I$(</span> <span style="color: #183691;">brew</span> <span style="color: #183691;"> --prefix)/Cellar/gmime/3.2.3/include -I$(</span> <span style="color: #183691;">brew</span> <span style="color: #183691;"> --prefix)/include"</span>
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">LDFLAGS</span>=-L$( <span style="color: #183691;">brew</span> --prefix)/Cellar/gmime/3.2.3/lib
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">PKG_CONFIG_PATH</span>=$( <span style="color: #183691;">brew</span> --prefix)/Cellar/gmime/3.2.3/lib/pkgconfig:$( <span style="color: #183691;">brew</span> --prefix)/opt/libffi/lib/pkgconfig
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">EMACS</span>=/Applications/Emacs.app/Contents/MacOS/Emacs
+./configure --prefix=$( <span style="color: #183691;">~/local</span>)
+make install
+</pre>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgd6bfbb4" class="outline-3">
+ <h3 id="orgd6bfbb4">1.2</h3>
+ <div class="outline-text-3" id="text-orgd6bfbb4">
  <p>
 Recently built Emacs's  <a href="http://www.djcbsoftware.nl/code/mu/">mu/mu4e</a> 1.2.0 from source on macOS. Steps:
 </p>
@@ -1513,6 +1595,7 @@ make install
  <p>
 UPDATE(2019-04-16): Another approach at Irreal's  <a href="https://irreal.org/blog/?p=7976">Mu/mu4e 1.2 Available</a>.
 </p>
+</div>
 </div>
 </div>
 </div>]]></description>
@@ -7500,10 +7583,10 @@ $ <span style="color: #333333;">0</span>
   <title>Emacs bookmarks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orgf39d106" class="outline-2">
+ <div id="outline-container-org836a21f" class="outline-2">
  <h2 id="emacs-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">19 September 2014</span></span> Emacs bookmarks</h2>
  <div class="outline-text-2" id="text-emacs-bookmarks">
- <span class="modified-timestamp">   <em>updated: 28 March 2020  </em></span>
+ <span class="modified-timestamp">   <em>updated: 07 April 2020  </em></span>
  <ul class="org-ul"> <li> <a href="https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el">.emacs.d/gud-cdb.el (supports lldb)</a>.</li>
  <li> <a href="https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el">.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub</a>.</li>
  <li> <a href="https://emacsthemes.com/">A GNU Emacs Themes Gallery (great for previewing)</a>.</li>
@@ -7638,6 +7721,7 @@ $ <span style="color: #333333;">0</span>
  <li> <a href="https://github.com/dieggsy/esh-autosuggest">GitHub - dieggsy/esh-autosuggest: Fish-like autosuggestions in eshell.</a>.</li>
  <li> <a href="https://github.com/joaotavora/eglot">GitHub - joaotavora/eglot: A client for Language Server Protocol servers</a>.</li>
  <li> <a href="https://github.com/mmontone/template-overlays">GitHub - mmontone/template-overlays: Emacs overlays for template files</a>.</li>
+ <li> <a href="https://github.com/p3r7/space-theming">GitHub - p3r7/space-theming: A port of Spacemacs theming layer to vanilla Emacs</a>.</li>
  <li> <a href="https://github.com/politza/pdf-tools">GitHub - politza/pdf-tools: Emacs support library for PDF files.</a>.</li>
  <li> <a href="https://github.com/sebastiencs/company-box">GitHub - sebastiencs/company-box: A company front-end with icons</a>.</li>
  <li> <a href="https://github.com/takaxp/moom">GitHub - takaxp/moom: A Moom port to Emacs - Make your dominant hand FREE from your mouse (easily move frames)</a>.</li>
