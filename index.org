@@ -1,6 +1,111 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-05-06 Wed] Emacs: connect my Bluetooth speaker
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-connect-my-bluetooth-speaker
+  :END:
+Connecting and disconnecting bluetooth devices on macOS is fairly simple: use the menu bar utility.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-connect-my-bluetooth-speaker/macos-menu.png]]
+
+/But could we make it quicker from our beloved editor?/
+
+Turns out with a little elisp glue, we can fuzzy search our Bluetooth devices and toggle connections. We can use [[https://twitter.com/_abo_abo][Oleh Krehel's]] [[https://github.com/abo-abo/swiper][ivy-read]] for fuzzy searching and [[https://twitter.com/lap_felix][Felix Lapalme]]'s nifty [[https://github.com/lapfelix/BluetoothConnector][BluetoothConnector]] to list devices and toggle Bluetooth connections.
+
+As a bonus, we can make it remember the last selected device, so you can quickly toggle it again.
+
+#+begin_src emacs-lisp
+  (defun ar/ivy-bluetooth-connect ()
+    "Connect to paired bluetooth device."
+    (interactive)
+    (assert (string-equal system-type "darwin")
+            nil "macOS only. Sorry :/")
+    (assert (executable-find "BluetoothConnector")
+            nil "Install BluetoothConnector from https://github.com/lapfelix/BluetoothConnector")
+    (ivy-read "(Dis)connect: "
+              (seq-map
+               (lambda (item)
+                 (let* ((device (split-string item " - "))
+                        (mac (nth 0 device))
+                        (name (nth 1 device)))
+                   (propertize name
+                               'mac mac)))
+               (seq-filter
+                (lambda (line)
+                  ;; Keep lines like: af-8c-3b-b1-99-af - Device name
+                  (string-match-p "^[0-9a-f]\\{2\\}" line))
+                (with-current-buffer (get-buffer-create "*BluetoothConnector*")
+                  (erase-buffer)
+                  ;; BluetoothConnector exits with 64 if no param is given.
+                  ;; Invoke with no params to get a list of devices.
+                  (unless (eq 64 (call-process "BluetoothConnector" nil (current-buffer)))
+                    (error (buffer-string)))
+                  (split-string (buffer-string) "\n"))))
+              :require-match t
+              :preselect (when (boundp 'ar/misc-bluetooth-connect--history)
+                           (nth 0 ar/misc-bluetooth-connect--history))
+              :history 'ar/misc-bluetooth-connect--history
+              :caller 'ar/toggle-bluetooth-connection
+              :action (lambda (device)
+                        (start-process "BluetoothConnector"
+                                       (get-buffer-create "*BluetoothConnector*")
+                                       "BluetoothConnector" (get-text-property 0 'mac device) "--notify"))))
+#+end_src
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-connect-my-bluetooth-speaker/connect-disconnect.gif]]
+
+* [2020-05-02 Sat] Duti: changing default macOS apps
+  :PROPERTIES:
+  :CUSTOM_ID: duti-changing-default-macos-apps
+  :END:
+Future self example, setting [[https://mpv.io/][mpv.io]] to open all aiff files on macOS:
+
+#+begin_src bash
+  duti -s io.mpv aiff
+#+end_src
+* [2020-04-26 Sun] Neapolitan pizza recipe
+  :PROPERTIES:
+  :CUSTOM_ID: neapolitan-pizza-recipe
+  :END:
+** Dissolve yeast
+
+- 7g of yeast.
+- 325ml of lukewarm water.
+
+Dissolve the yeast in the lukewarm water.
+
+** Mixing the dough
+
+- 500g of flour.
+- 1 teaspoon of salt.
+
+Gradually add flour to the yeast and water mix, using the bottom of a spoon to work it until smooth (no lumps). The dough will be very sticky at first. Stay faithful to the spoon. It'll work. BBC's [[http://www.bbc.com/travel/story/20200415-how-to-make-pizza-like-a-neapolitan-master][How to make pizza like a Neapolitan master]] has a great demo. I followed the dough technique.
+
+** Kneading the dough
+
+Sprinkle some flour on the table and knead the dough (punch, stretch, and fold many times) from previous step. Eventually, the dough will hold its shape.
+
+** Make 4 balls
+
+Roll the dough into a cylinder and cut into 4 pieces. Make 4 balls.
+
+** Cover for 2 hours
+
+Place the 4 dough balls into a container and cover with a damp cloth for 2 hours.
+
+** Shaping pie
+
+- 125g of Mozzarella cheese.
+- Passata.
+- 6 cloves of garlic.
+- Olive oil.
+- Salt.
+- Parmesan cheese.
+- Anchovies.
+
 * [2020-04-21 Tue] Oatmeal cookie recipe
   :PROPERTIES:
   :CUSTOM_ID: oatmeal-cookie-recipe
@@ -1297,11 +1402,8 @@ ps. Also see [[http://xenodium.com/execute-org-blocks-as-root/][Execute org bloc
 Trying out [[https://github.com/google/swift][Google's swift-format]]. Build with:
 
   #+begin_src sh
-  git clone https://github.com/google/swift.git swift-format
+  git clone -b swift-5.2-branch https://github.com/apple/swift-format.git
   cd swift-format
-  git checkout format
-  git submodule init
-  git submodule update
   swift build
   #+end_src
 
@@ -1326,6 +1428,8 @@ OPTIONS:
 POSITIONAL ARGUMENTS:
   filenames or paths      One or more input filenames
 #+end_example
+
+UPDATE: Now uses swift-5.2-branch (for Xcode 11.4), according to [[https://github.com/apple/swift-format#matching-swift-format-to-your-swift-version][Matching swift-format to Your Swift Version]].
 
 * [2019-05-06 Mon] Ledger query snippets
   :PROPERTIES:
@@ -5606,7 +5710,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2020-04-13 Mon]
+[2020-04-29 Wed]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
@@ -5645,6 +5749,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.bogleheads.org/wiki/EU_investing][EU investing - Bogleheads]].
 - [[https://www.ft.com/content/c6183f2f-f58a-3569-a6ac-9d2b44adfe28][European active managers beaten by passives, 10-year study finds (Financial Times)]].
 - [[https://app.fin-dee.com/][Fin-dee (FIRE calculator)]].
+- [[https://www.khanacademy.org/economics-finance-domain/core-finance][Finance and capital markets | Economics and finance | Khan Academy]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9viifz/financial_education_book_for_teenagers_by_martin/][Financial education book for teenagers by Martin Lewis : UKPersonalFinance]].
 - [[https://www.madfientist.com/podcast][Financial Independence Podcast]].
 - [[https://www.reddit.com/r/FIREUK/][Financial Independence Retiring Early UK (r/fireuk)]].
@@ -6349,12 +6454,13 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 :CUSTOM_ID: regular-expressions-bookmarks
 :END:
 :MODIFIED:
-[2019-08-10 Sat]
+[2020-05-02 Sat]
 :END:
 - [[https://dev.to/emmawedekind/regex-cheat-sheet-2j2a][Regex Cheat Sheet - DEV Community]].
 - [[https://www.janmeppe.com/blog/regex-for-noobs/][Regex For Noobs (like me!) - An Illustrated Guide - Janmeppe.com]].
 - [[https://regex101.com/][regex101.com]].
 - [[https://regex101.com/][Regex101]]: Online regex tool.
+- [[https://refrf.shreyasminocha.me/][Regular Expressions for Regular Folk]].
 - [[https://rubular.com/][Rubular: a Ruby regular expression editor]].
 
 * [2016-02-02 Tue] Typescript bookmarks
@@ -7360,7 +7466,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2020-03-11 Wed]
+[2020-05-04 Mon]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -7382,6 +7488,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://www.swiftbysundell.com/posts/constructing-urls-in-swift][Constructing URLs in Swift]].
 - [[https://www.hackingwithswift.com/read/4/2/creating-a-simple-browser-with-wkwebview][Creating a simple browser with WKWebView in Swift]].
 - [[https://github.com/danielmartin/swift-info][Curated Swift 5 documentation and reference in GNU Info format]].
+- [[https://forums.swift.org/t/debugging-sourcekit-lsp-using-lldb/28328/14][Debugging sourcekit-lsp using LLDB - LLDB - Swift Forums]].
 - [[https://www.swiftbysundell.com/articles/deciding-whether-to-adopt-new-swift-technologies/][Deciding whether to adopt new Swift technologies | Swift by Sundell]].
 - [[https://theswiftdev.com/deep-dive-into-swift-frameworks/][Deep dive into Swift frameworks - The.Swift.Dev.]].
 - [[https://www.swiftbysundell.com/articles/encapsulating-configuration-code-in-swift/][Encapsulating configuration code in Swift | Swift by Sundell]].
@@ -7413,6 +7520,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://github.com/hyperoslo/Lightbox][Lightbox is a convenient and easy to use image viewer for your iOS app]].
 - [[https://github.com/zhuorantan/LocationPicker][Location picker: A ready for use and fully customizable location picker for your app]].
 - [[https://www.raywenderlich.com/731-macos-development-for-beginners-part-1][macOS Swift Development for Beginners: Part 1]].
+- [[https://twitter.com/MartinLasek/status/1256349442472505344][Martin Lasek on Twitter: "Handling prices in Swift."]].
 - [[https://oleb.net/2018/objc-swift-transition/][Migrating an Objective-C class to Swift: a piecemeal approach – Ole Begemann]].
 - [[https://medium.com/thecreateschool/migrating-from-swift-4-to-swift-5-2f425b99436b][Migrating from Swift 4 to Swift 5 – The Create School – Medium]].
 - [[https://ericasadun.com/2018/12/14/more-fun-with-swift-5-string-interpolation-radix-formatting/][More fun with Swift 5 String Interpolation: Radix (Erica Sadun)]].
@@ -7431,7 +7539,6 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://github.com/mxcl/swift-sh][swift sh adds automatic dependency loading in scripts]].
 - [[https://pragprog.com/book/esswift2/swift-style-second-edition][Swift Style, Second Edition: An Opinionated Guide to an Opinionated Language by Erica Sadun (The Pragmatic Bookshelf)]].
 - [[https://swift.org/blog/argument-parser/][Swift.org - Announcing ArgumentParser]].
-- [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://github.com/LeonardoCardoso/SwiftLinkPreview][SwiftLinkPreview: Link Previewer for iOS, macOS, watchOS and tvOS]].
 - [[http://swiftmonthly.com/][SwiftMothly]].
@@ -8688,7 +8795,7 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 :CUSTOM_ID: cooking-bookmarks
 :END:
 :MODIFIED:
-[2020-04-26 Sun]
+[2020-05-02 Sat]
 :END:
 - [[http://drinks.seriouseats.com/2013/05/25-essential-cocktails-everyone-should-know-cocktail-101-easy-mixed-drink-recipes-classic-cocktail-guide.html][25 Cocktails Everyone Should Know]].
 - [[https://www.amazon.com/Taylor-Precision-Products-Stainless-11-Pound/dp/B002SXV8G2/ref=sr_1_1?s=home-garden&ie=UTF8&qid=1481553229&sr=1-1-spons&keywords=Taylor+Precision+stainless+steel&psc=1][Amazon.com: Taylor Precision Products Stainless Steel Kitchen Scale]].
@@ -8708,6 +8815,7 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 - [[http://cooking.nytimes.com/][New York Times cooking]].
 - [[http://www.womenshealthmag.co.uk/nutrition/recipes/2321/pho-tai-lan-hanoi-style-flash-fried-steak-garlic-soup/][Pho Tai Lan (Hanoi style flash-fried steak & garlic soup)]].
 - [[https://www.pizzamaking.com/pizza-recipes.html][Pizza Recipes - PizzaMaking.com]].
+- [[https://www.portlandfarmersmarket.org/cookbook/][Portland Farmers Market » Cookbook]].
 - [[https://www.fixfeastflair.com/home/2015/2/9/swedish-cardamom-rolls-kardemummabullar-recipe][Swedish Cardamom Rolls (Kardemummabullar) — Fix Feast Flair]].
 - [[http://www.amazon.com/The-Ringer-Cleaner-Stainless-Chainmail/dp/B00FKBR1ZG][The Ringer Cast Iron Cleaner XL 8x6 Inch Stainless Steel Chainmail (Amazon)]].
 - [[http://www.seriouseats.com/2014/11/the-truth-about-cast-iron.html][The Truth About Cast Iron Pans: 7 Myths That Need To Go Away]].
@@ -11604,7 +11712,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2020-04-08 Wed]
+[2020-05-04 Mon]
 :END:
 - [[https://www.lastpass.com/][#1 Password Manager, Vault, & Digital Wallet App (LastPass)]].
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
@@ -11619,6 +11727,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://crypt.ee][Cryptee (Private, Secure, Encrypted Documents & Photos)]].
 - [[https://dbp.io/essays/2013-06-29-hackers-replacement-for-gmail.html][dbp.io: A Hacker's Replacement for GMail]].
 - [[https://nrempel.com/de-googling-my-life/][De-Googling My Life]].
+- [[https://simpleoptout.com/][Deep links to opt-out of data sharing by 60+ companies – Simple Opt Out]].
 - [[http://digital-era.net/][Digital Era]].
 - [[https://www.dnsleaktest.com][DNS leak test]].
 - [[https://doesmysiteneedhttps.com/][Does my site need HTTPS?]].
@@ -11667,7 +11776,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2020-03-10 Tue]
+[2020-05-02 Sat]
 :END:
 - "Do not spoil what you have by desiring what you have not; what you now have was once among the things you only hoped for." - Epicurus
 - [[https://www.thesleepjudge.com/23-weird-plants-for-your-bedroom-that-will-help-you-sleep-like-a-baby/][23 Weird Plants For Your Bedroom That Will Help You Sleep Like A Baby]].
@@ -11687,11 +11796,11 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.youtube.com/watch?v=j2C8MkY7Co8&feature=youtu.be][Dr. Hamilton Demonstrates "The Hold" - How To Calm A Crying Baby (YouTube)]].
 - [[https://www.recipes-news.co.nz/news/2019/11/6/game-changer-or-fame-gainer][Game Changer or Fame Gainer? — News & Features]].
 - [[https://betterhumans.coach.me/how-to-set-up-your-iphone-for-productivity-focus-and-your-own-longevity-bb27a68cc3d8][How to Configure Your iPhone to Work for You, Not Against You]].
+- [[https://www.quora.com/What-is-the-best-way-to-improve-life/answer/Jon-Brosio][Jon Brosio's answer to What is the best way to improve life? - Quora]].
 - [[https://www.dezeen.com/2019/05/02/minimod-curucaca-mapa-prefab-house-brazil/][MAPA hides prefab Minimod Curucaca in Brazilian forest]].
 - [[https://news.ycombinator.com/item?id=17632668][Melatonin: Much More Than You Wanted to Know (Hacker News)]].
 - [[http://www.mindbodygreen.com/][Mind body green]].
 - [[https://news.ycombinator.com/item?id=18844791][Most lives are lived by default (2012) | Hacker News]].
-- [[https://www.mayoclinic.org/diseases-conditions/panic-attacks/symptoms-causes/syc-20376021][Panic attacks and panic disorder - Symptoms and causes - Mayo Clinic]].
 - [[https://www.mayoclinic.org/diseases-conditions/panic-attacks/symptoms-causes/syc-20376021][Panic attacks and panic disorder - Symptoms and causes - Mayo Clinic]].
 - [[https://news.ycombinator.com/item?id=17679451][Periodic fasting starves cisplatin‐resistant cancers to death (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=17231806][Posing for photos (all about the squinch)]].
@@ -12875,7 +12984,11 @@ maps key to action.
 :PROPERTIES:
 :CUSTOM_ID: gardening-bookmarks
 :END:
+:MODIFIED:
+[2020-05-04 Mon]
+:END:
 - [[https://mastergardeners.org/warm-cool-veg-charts][Recommended times to plant vegetables in Santa Clara County]].
+- [[https://www.reddit.com/r/IAmA/comments/gc9agk/were_the_selftaught_development_team_behind_the_1/][We're the self-taught development team behind the #1 gardening app.]].
 
 * [2014-12-03 Wed] Emacs tips backlog
 :PROPERTIES:
@@ -13146,7 +13259,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2020-04-10 Fri]
+[2020-05-06 Wed]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -13157,6 +13270,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://nullprogram.com/blog/2019/03/10/][An Async / Await Library for Emacs Lisp « null program]].
 - [[http://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][An introduction to emacs lisp]].
 - [[https://elpa.gnu.org/packages/path-iterator.html][An iterator for traversing a directory path]].
+- [[https://www.badykov.com/emacs/2020/05/05/async-company-mode-backend/][Async autocompletion in Emacs – Kraken of Thought]].
 - [[http://caiorss.github.io/Emacs-Elisp-Programming/Elisp_Snippets.html][Caio Rordrigues's Elisp Snippets]].
 - [[https://github.com/caiorss/Emacs-Elisp-Programming][Caio's Emacs - Programming and Customization]].
 - [[https://rosettacode.org/wiki/Category:Emacs_Lisp][Category:Emacs Lisp - Rosetta Code]].
@@ -13221,7 +13335,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2020-04-20 Mon]
+[2020-05-06 Wed]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -13490,6 +13604,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://www.johndcook.com/blog/2018/01/27/emacs-features-that-use-regular-expressions/][Uses of regular expressions in Emacs]].
 - [[http://dance.computer.dance/posts/2015/04/using-ctags-on-modern-javascript.html][Using ctags on modern Javascript (handy for Emacs)]].
 - [[http://www.pygopar.com/using-emacs-and-eclim-for-android-development/][Using Emacs and Eclim for Android Development]].
+- [[https://lispcookbook.github.io/cl-cookbook/emacs-ide.html][Using Emacs as an IDE (The Common Lisp Cookbook)]].
 - [[https://www.reddit.com/r/emacs/comments/fojc1y/using_viewmode_for_modal_navigation/][Using view-mode for modal navigation : emacs]].
 - [[https://github.com/DamienCassou/vdirel][vdirel vdir (calendars and contacts) for Emacs]].
 - [[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][View and annotate PDFs in Emacs with PDF-tools (Pragmatic Emacs)]].
