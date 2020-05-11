@@ -6,7 +6,138 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 06 May 2020 22:39:00 +0100</lastBuildDate>
+<lastBuildDate>Mon, 11 May 2020 22:30:03 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Enrich Emacs direds batching toolbox</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org0af5126" class="outline-2">
+ <h2 id="enrich-your-dired-batching-toolbox"> <span class="timestamp-wrapper"> <span class="timestamp">11 May 2020</span></span> Enrich Emacs dired's batching toolbox</h2>
+ <div class="outline-text-2" id="text-enrich-your-dired-batching-toolbox">
+ <p>
+Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">for</span> f <span style="color: #a71d5d;"> in</span> *.HEIC ;  <span style="color: #a71d5d;">do</span> convert  <span style="color: #183691;">"$f"</span>  <span style="color: #183691;">"${f%.*}.jpg"</span>;  <span style="color: #a71d5d;">done</span>
+</pre>
+</div>
+
+ <p>
+Save the one-liner (or memorize it) and pull it from your toolbox next time you need it. This is handy as it is, but  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">Emacs dired</a> is just a file-management powerhouse. Its  <i>dired-map-over-marks</i> function is just a few elisp lines away from enabling all sorts of batch processing within your dired buffers.
+</p>
+
+
+ <p>
+Dired already enables selecting and deselecting files using all sorts of built-in mechanisms ( <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Marks-vs-Flags.html">dired-mark-files-regexp</a>,  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html">find-name-dired</a>, etc) or wonderful third-party packages like Matus Goljer's  <a href="https://github.com/Fuco1/dired-hacks">dired-filters</a>.
+</p>
+
+ <p>
+Regardless of how you selected your files, here's a snippet to run ImageMagick's  <a href="https://imagemagick.org/script/convert.php">convert</a> on a bunch of selected files:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/dired-convert-image</span> (<span style="color: #0086b3;">&optional</span> arg)
+   <span style="color: #183691;">"Convert image files to other formats."</span>
+  (<span style="color: #a71d5d;">interactive</span>  <span style="color: #183691;">"P"</span>)
+  (<span style="color: #a71d5d;">assert</span> (executable-find  <span style="color: #183691;">"convert"</span>) nil  <span style="color: #183691;">"Install imagemagick"</span>)
+  (<span style="color: #a71d5d;">let</span> ((dst-fpath)
+        (src-fpath)
+        (src-ext)
+        (last-ext)
+        (dst-ext))
+    (mapc
+     (<span style="color: #a71d5d;">lambda</span> (fpath)
+       (<span style="color: #a71d5d;">setq</span> src-fpath fpath)
+       (<span style="color: #a71d5d;">setq</span> src-ext (downcase (file-name-extension src-fpath)))
+       (<span style="color: #a71d5d;">unless</span> (string-equal dst-ext last-ext)
+         (<span style="color: #a71d5d;">setq</span> dst-ext (completing-read  <span style="color: #183691;">"to format: "</span>
+                                        (seq-remove (<span style="color: #a71d5d;">lambda</span> (format)
+                                                      (string-equal format src-ext))
+                                                    '(<span style="color: #183691;">"jpg"</span>  <span style="color: #183691;">"png"</span>)))))
+       (<span style="color: #a71d5d;">setq</span> last-ext dst-ext)
+       (<span style="color: #a71d5d;">setq</span> dst-fpath (format  <span style="color: #183691;">"%s.%s"</span> (file-name-sans-extension src-fpath) dst-ext))
+       (message  <span style="color: #183691;">"convert %s to %s ..."</span> (file-name-nondirectory dst-fpath) dst-ext)
+       (set-process-sentinel (start-process  <span style="color: #183691;">"convert"</span>
+                                            (generate-new-buffer (format  <span style="color: #183691;">"*convert %s*"</span> (file-name-nondirectory src-fpath)))
+                                             <span style="color: #183691;">"convert"</span> src-fpath dst-fpath)
+                             (<span style="color: #a71d5d;">lambda</span> (process state)
+                               (<span style="color: #a71d5d;">if</span> (= (process-exit-status process) 0)
+                                   (message  <span style="color: #183691;">"convert %s ✔"</span> (file-name-nondirectory dst-fpath))
+                                 (message  <span style="color: #183691;">"convert %s ❌"</span> (file-name-nondirectory dst-fpath))
+                                 (message (<span style="color: #a71d5d;">with-current-buffer</span> (process-buffer process)
+                                            (buffer-string))))
+                               (kill-buffer (process-buffer process)))))
+     (<span style="color: #a71d5d;">dired-map-over-marks</span> (dired-get-filename) arg))))
+</pre>
+</div>
+
+ <p>
+The snippet can be shorter, but wouldn't be as friendly. We ask users to provide desired image format, spawn separate processes (avoids blocking Emacs), and generate a basic report.
+</p>
+
+
+ <div class="figure">
+ <p> <img src="../images/enrich-your-dired-batching-toolbox/batch-dired.gif" alt="batch-dired.gif"></img></p>
+</div>
+</div>
+
+ <div id="outline-container-org4c05c19" class="outline-3">
+ <h3 id="org4c05c19">BEWARE</h3>
+ <div class="outline-text-3" id="text-org4c05c19">
+ <p>
+The snippet isn't currently capping the number of processes, but hey we can revise in the future…
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/enrich-your-dired-batching-toolbox/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/enrich-your-dired-batching-toolbox/index.html</guid>
+  <pubDate>Mon, 11 May 2020 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Banana oats pancakes recipe</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org34590f4" class="outline-2">
+ <h2 id="banana-oats-pancakes-recipe"> <span class="timestamp-wrapper"> <span class="timestamp">09 May 2020</span></span> Banana oats pancakes recipe</h2>
+ <div class="outline-text-2" id="text-banana-oats-pancakes-recipe">
+
+ <div class="figure">
+ <p> <img src="../images/banana-oats-pancakes-recipe/banpan.jpg" alt="banpan.jpg" width="50%" height="50%"></img></p>
+</div>
+</div>
+
+ <div id="outline-container-org4c85868" class="outline-3">
+ <h3 id="org4c85868">Blend</h3>
+ <div class="outline-text-3" id="text-org4c85868">
+ <ul class="org-ul"> <li>Ripe banana.</li>
+ <li>2 Eggs.</li>
+ <li>1/3 cup instant oats.</li>
+ <li>1/2 teaspoon baking powder.</li>
+</ul> <p>
+Really is this easy. Add all ingredients and blend.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org50119fd" class="outline-3">
+ <h3 id="org50119fd">Cook</h3>
+ <div class="outline-text-3" id="text-org50119fd">
+ <p>
+Medium to low heat. Cook for 3 minutes. Flip. Cook for 1 minute. You're done.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/banana-oats-pancakes-recipe/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/banana-oats-pancakes-recipe/index.html</guid>
+  <pubDate>Sat, 09 May 2020 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: connect my Bluetooth speaker</title>
@@ -112,6 +243,277 @@ Future self example, setting  <a href="https://mpv.io/">mpv.io</a> to open all a
   <link>http://xenodium.com/duti-changing-default-macos-apps/index.html</link>
   <guid isPermaLink="false">http://xenodium.com/duti-changing-default-macos-apps/index.html</guid>
   <pubDate>Sat, 02 May 2020 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Neapolitan pizza recipe</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org3c39222" class="outline-2">
+ <h2 id="neapolitan-pizza-recipe"> <span class="timestamp-wrapper"> <span class="timestamp">26 April 2020</span></span> Neapolitan pizza recipe</h2>
+ <div class="outline-text-2" id="text-neapolitan-pizza-recipe">
+ <p>
+Full disclosure: I'm a complete noob at making pizza. It's my second pizza, but hey, it was tasty and fun to make! Making pizza at home is not as far-fetched as I initially thought.
+</p>
+</div>
+
+ <div id="outline-container-org7d15ed5" class="outline-3">
+ <h3 id="org7d15ed5">UPDATES:</h3>
+ <div class="outline-text-3" id="text-org7d15ed5">
+ <p>
+I've made this recipe a couple of times. Made two improvements worth mentioning.
+</p>
+</div>
+
+ <div id="outline-container-orga784a62" class="outline-4">
+ <h4 id="orga784a62">Flan tin / quiche pan</h4>
+ <div class="outline-text-4" id="text-orga784a62">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/round_pie.jpg" alt="round_pie.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+My first pizzas were rectangular, matching the baking tray shape, but I really wanted round pies. I found a quiche pan at home and gave that a try. Worked pretty well. The dish bottom comes up, which is pretty handy.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org6c761ed" class="outline-4">
+ <h4 id="org6c761ed">Double baking</h4>
+ <div class="outline-text-4" id="text-org6c761ed">
+ <p>
+Bake in two stages:
+</p>
+
+ <ol class="org-ol"> <li>Bake the pizza for 6 minutes (without the mozarella) at bottom of oven.</li>
+ <li>Add mozzarella and make for 4 minutes at top of the oven.</li>
+</ol></div>
+</div>
+</div>
+
+ <div id="outline-container-orgff5a22e" class="outline-3">
+ <h3 id="orgff5a22e">Recipe</h3>
+ <div class="outline-text-3" id="text-orgff5a22e">
+ <p>
+Ok, on to the recipe now…
+</p>
+</div>
+
+ <div id="outline-container-org47c808c" class="outline-4">
+ <h4 id="org47c808c">Dissolve the yeast</h4>
+ <div class="outline-text-4" id="text-org47c808c">
+ <ul class="org-ul"> <li>7g of yeast.</li>
+ <li>325ml of lukewarm water.</li>
+</ul> <p>
+Dissolve the yeast in the lukewarm water.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org27fc4b1" class="outline-4">
+ <h4 id="org27fc4b1">Mixing the dough</h4>
+ <div class="outline-text-4" id="text-org27fc4b1">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/mix1.jpg" alt="mix1.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/mix2.jpg" alt="mix2.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <ul class="org-ul"> <li>500g of flour.</li>
+ <li>1 teaspoon of salt.</li>
+</ul> <p>
+Gradually add flour to the yeast and water mix, using the bottom of a spoon to work it until smooth (no lumps). The dough will be very sticky at first. Stay faithful to the spoon. It'll work. BBC's  <a href="http://www.bbc.com/travel/story/20200415-how-to-make-pizza-like-a-neapolitan-master">How to make pizza like a Neapolitan master</a> has a great demo. I followed the dough technique.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org6a7c56d" class="outline-4">
+ <h4 id="org6a7c56d">Kneading the dough</h4>
+ <div class="outline-text-4" id="text-org6a7c56d">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/knead1.jpg" alt="knead1.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/knead2.jpg" alt="knead2.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+Sprinkle some flour on the table and knead the dough (punch, stretch, and fold many times) from previous step. Eventually, the dough will hold its shape.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgee89780" class="outline-4">
+ <h4 id="orgee89780">Make 4 balls</h4>
+ <div class="outline-text-4" id="text-orgee89780">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/cut_in_four.jpg" alt="cut_in_four.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/four_balls.jpg" alt="four_balls.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+Roll the dough into a cylinder and cut into 4 pieces. Make 4 balls.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orga02070c" class="outline-4">
+ <h4 id="orga02070c">Make the tomato sauce</h4>
+ <div class="outline-text-4" id="text-orga02070c">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/garlic_slice.jpg" alt="garlic_slice.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/sauce_done.jpg" alt="sauce_done.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <ul class="org-ul"> <li>500g of passata.</li>
+ <li>3 cloves of garlic.</li>
+</ul> <p>
+I love garlic. Who doesn't? Slice the garlic finely and combine with the passata in a class jar. Shake it a little. Garlic and passata. That's your sauce.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org903911e" class="outline-4">
+ <h4 id="org903911e">Cover for 2 hours</h4>
+ <div class="outline-text-4" id="text-org903911e">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/put_away.jpg" alt="put_away.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/after_hours.jpg" alt="after_hours.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+Place the 4 dough balls into a container and cover with a damp cloth for 2 hours. You can make 4 pizzas.
+</p>
+
+ <p>
+ <i>*Rookie mistake: I should have used a bigger container. The balls grew and merged.</i>
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgeee41e9" class="outline-4">
+ <h4 id="orgeee41e9">Preheat oven</h4>
+ <div class="outline-text-4" id="text-orgeee41e9">
+ <p>
+Preheat the oven at 250°C.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org6c3f7ed" class="outline-4">
+ <h4 id="org6c3f7ed">Stretch base</h4>
+ <div class="outline-text-4" id="text-org6c3f7ed">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/stretch.jpg" alt="stretch.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+Sprinkle more flour on table prior to shaping the dough. Place ball on table, flatten. Flip over, flatten again. Gradually stretch until you have the shape and thickness desired.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org37102c1" class="outline-4">
+ <h4 id="org37102c1">Place base on baking tray</h4>
+ <div class="outline-text-4" id="text-org37102c1">
+ <ul class="org-ul"> <li>Semolina</li>
+ <li>Aluminium foil</li>
+</ul> <p>
+Line up the tray with some aluminium foil. Before transferring the base on to the baking tray, sprinkle semolina (or breadcrumbs) on the foil (it helps prevent the dough from sticking).
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgf2397d0" class="outline-4">
+ <h4 id="orgf2397d0">Toppings</h4>
+ <div class="outline-text-4" id="text-orgf2397d0">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/oiled.jpg" alt="oiled.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/parmesan.jpg" alt="parmesan.jpg" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/mozarella.jpg" alt="mozarella.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <ul class="org-ul"> <li>Tomato sauce.</li>
+ <li>Salt.</li>
+ <li>Olive oil.</li>
+ <li>Parmesan cheese.</li>
+ <li>125g of Mozzarella cheese.</li>
+ <li>Fresh basil.</li>
+</ul> <p>
+Spread some of the tomato sauce with a spoon. Sprinkle salt, olive oil, and parmesan cheese. Break the mozzarella into pieces and spread throughout. Add some basil leaves. Your basic margherita pizza is now ready for the oven.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgae24bbc" class="outline-4">
+ <h4 id="orgae24bbc">Bake pizza</h4>
+ <div class="outline-text-4" id="text-orgae24bbc">
+ <p>
+Place the tray in the oven for 10 minutes. This worked for my oven, which goes up to 250°C. Either way, keep an eye on it.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org66f154a" class="outline-4">
+ <h4 id="org66f154a">Post baking toppings</h4>
+ <div class="outline-text-4" id="text-org66f154a">
+
+ <div class="figure">
+ <p> <img src="../images/neapolitan-pizza-recipe/final.jpg" alt="final.jpg" width="50%" height="50%"></img></p>
+</div>
+
+ <ul class="org-ul"> <li>Anchovies.</li>
+</ul> <p>
+Controversial, but I really like anchovies. Add them post-baking and you're good to go. Enjoy your pizza.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orga920d4a" class="outline-4">
+ <h4 id="orga920d4a">Helpful references</h4>
+ <div class="outline-text-4" id="text-orga920d4a">
+ <ul class="org-ul"> <li> <a href="http://www.bbc.com/travel/story/20200415-how-to-make-pizza-like-a-neapolitan-master">How to make pizza like a Neapolitan master (BBC)</a>.</li>
+ <li> <a href="https://www.youtube.com/watch?v=1-SJGQ2HLp8">How to Make Perfect Pizza (Gennaro Contaldo - YouTube)</a>.</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/neapolitan-pizza-recipe/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/neapolitan-pizza-recipe/index.html</guid>
+  <pubDate>Sun, 26 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>
