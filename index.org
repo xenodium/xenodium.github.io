@@ -1,6 +1,67 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-05-11 Mon] Enrich Emacs dired's batching toolbox
+  :PROPERTIES:
+  :CUSTOM_ID: enrich-your-dired-batching-toolbox
+  :END:
+Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
+
+#+begin_src sh
+  for f in *.HEIC ; do convert "$f" "${f%.*}.jpg"; done
+#+end_src
+
+Save the one-liner (or memorize it) and pull it from your toolbox next time you need it. This is handy as it is, but [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][Emacs dired]] is just a file-management powerhouse. Its /dired-map-over-marks/ function is just a few elisp lines away from enabling all sorts of batch processing within your dired buffers.
+
+
+Dired already enables selecting and deselecting files using all sorts of built-in mechanisms ([[https://www.gnu.org/software/emacs/manual/html_node/emacs/Marks-vs-Flags.html][dired-mark-files-regexp]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html][find-name-dired]], etc) or wonderful third-party packages like Matus Goljer's [[https://github.com/Fuco1/dired-hacks][dired-filters]].
+
+Regardless of how you selected your files, here's a snippet to run ImageMagick's [[https://imagemagick.org/script/convert.php][convert]] on a bunch of selected files:
+
+#+begin_src emacs-lisp
+  (defun ar/dired-convert-image (&optional arg)
+    "Convert image files to other formats."
+    (interactive "P")
+    (assert (executable-find "convert") nil "Install imagemagick")
+    (let ((dst-fpath)
+          (src-fpath)
+          (src-ext)
+          (last-ext)
+          (dst-ext))
+      (mapc
+       (lambda (fpath)
+         (setq src-fpath fpath)
+         (setq src-ext (downcase (file-name-extension src-fpath)))
+         (unless (string-equal dst-ext last-ext)
+           (setq dst-ext (completing-read "to format: "
+                                          (seq-remove (lambda (format)
+                                                        (string-equal format src-ext))
+                                                      '("jpg" "png")))))
+         (setq last-ext dst-ext)
+         (setq dst-fpath (format "%s.%s" (file-name-sans-extension src-fpath) dst-ext))
+         (message "convert %s to %s ..." (file-name-nondirectory dst-fpath) dst-ext)
+         (set-process-sentinel (start-process "convert"
+                                              (generate-new-buffer (format "*convert %s*" (file-name-nondirectory src-fpath)))
+                                              "convert" src-fpath dst-fpath)
+                               (lambda (process state)
+                                 (if (= (process-exit-status process) 0)
+                                     (message "convert %s ✔" (file-name-nondirectory dst-fpath))
+                                   (message "convert %s ❌" (file-name-nondirectory dst-fpath))
+                                   (message (with-current-buffer (process-buffer process)
+                                              (buffer-string))))
+                                 (kill-buffer (process-buffer process)))))
+       (dired-map-over-marks (dired-get-filename) arg))))
+#+end_src
+
+The snippet can be shorter, but wouldn't be as friendly. We ask users to provide desired image format, spawn separate processes (avoids blocking Emacs), and generate a basic report.
+
+[[file:images/enrich-your-dired-batching-toolbox/batch-dired.gif]]
+
+** BEWARE
+
+The snippet isn't currently capping the number of processes, but hey we can revise in the future...
+
+
 * [2020-05-09 Sat] Banana oats pancakes recipe
   :PROPERTIES:
   :CUSTOM_ID: banana-oats-pancakes-recipe
