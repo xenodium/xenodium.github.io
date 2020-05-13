@@ -29,8 +29,7 @@ Regardless of how you selected your files, here's a snippet to run ImageMagick's
            (src-fpath)
            (src-ext)
            (last-ext)
-           (dst-ext)
-           (cmd-args))
+           (dst-ext))
       (mapc
        (lambda (fpath)
          (setq src-fpath fpath)
@@ -44,7 +43,6 @@ Regardless of how you selected your files, here's a snippet to run ImageMagick's
          (setq last-ext dst-ext)
          (setq dst-fpath (format "%s.%s" (file-name-sans-extension src-fpath) dst-ext))
          (message "convert %s to %s ..." (file-name-nondirectory dst-fpath) dst-ext)
-         (setq cmd-args (list ))
          (set-process-sentinel
           (if (string-equal system-type "windows-nt")
               (start-process "convert"
