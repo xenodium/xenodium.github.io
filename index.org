@@ -19,20 +19,24 @@ Dired already enables selecting and deselecting files using all sorts of built-i
 Regardless of how you selected your files, here's a snippet to run ImageMagick's [[https://imagemagick.org/script/convert.php][convert]] on a bunch of selected files:
 
 #+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t; -*-
+
   (defun ar/dired-convert-image (&optional arg)
     "Convert image files to other formats."
     (interactive "P")
     (assert (executable-find "convert") nil "Install imagemagick")
-    (let ((dst-fpath)
-          (src-fpath)
-          (src-ext)
-          (last-ext)
-          (dst-ext))
+    (let* ((dst-fpath)
+           (src-fpath)
+           (src-ext)
+           (last-ext)
+           (dst-ext)
+           (cmd-args))
       (mapc
        (lambda (fpath)
          (setq src-fpath fpath)
          (setq src-ext (downcase (file-name-extension src-fpath)))
-         (unless (string-equal dst-ext last-ext)
+         (when (or (null dst-ext)
+                   (not (string-equal dst-ext last-ext)))
            (setq dst-ext (completing-read "to format: "
                                           (seq-remove (lambda (format)
                                                         (string-equal format src-ext))
@@ -40,20 +44,26 @@ Regardless of how you selected your files, here's a snippet to run ImageMagick's
          (setq last-ext dst-ext)
          (setq dst-fpath (format "%s.%s" (file-name-sans-extension src-fpath) dst-ext))
          (message "convert %s to %s ..." (file-name-nondirectory dst-fpath) dst-ext)
-         (set-process-sentinel (start-process "convert"
-                                              (generate-new-buffer (format "*convert %s*" (file-name-nondirectory src-fpath)))
-                                              "convert" src-fpath dst-fpath)
-                               (lambda (process state)
-                                 (if (= (process-exit-status process) 0)
-                                     (message "convert %s ✔" (file-name-nondirectory dst-fpath))
-                                   (message "convert %s ❌" (file-name-nondirectory dst-fpath))
-                                   (message (with-current-buffer (process-buffer process)
-                                              (buffer-string))))
-                                 (kill-buffer (process-buffer process)))))
+         (setq cmd-args (list ))
+         (set-process-sentinel
+          (if (string-equal system-type "windows-nt")
+              (start-process "convert"
+                             (generate-new-buffer (format "*convert %s*" (file-name-nondirectory src-fpath)))
+                             "magick.exe" "convert" src-fpath dst-fpath)
+            (start-process "convert"
+                           (generate-new-buffer (format "*convert %s*" (file-name-nondirectory src-fpath)))
+                           "convert" src-fpath dst-fpath))
+          (lambda (process state)
+            (if (= (process-exit-status process) 0)
+                (message "convert %s ✔" (file-name-nondirectory dst-fpath))
+              (message "convert %s ❌" (file-name-nondirectory dst-fpath))
+              (message (with-current-buffer (process-buffer process)
+                         (buffer-string))))
+            (kill-buffer (process-buffer process)))))
        (dired-map-over-marks (dired-get-filename) arg))))
 #+end_src
 
-The snippet can be shorter, but wouldn't be as friendly. We ask users to provide desired image format, spawn separate processes (avoids blocking Emacs), and generate a basic report.
+The snippet can be shorter, but wouldn't be as friendly. We ask users to provide desired image format, spawn separate processes (avoids blocking Emacs), and generate a basic report. Also adds support for Windows.
 
 [[file:images/enrich-your-dired-batching-toolbox/batch-dired.gif]]
 
@@ -61,6 +71,10 @@ The snippet can be shorter, but wouldn't be as friendly. We ask users to provide
 
 The snippet isn't currently capping the number of processes, but hey we can revise in the future...
 
+
+** Update
+
+Thanks to [[https://github.com/pbeliveau][Philippe Beliveau]] for pointing out a bug in snippet (now updated) and changes to make it Windows compatible.
 
 * [2020-05-09 Sat] Banana oats pancakes recipe
   :PROPERTIES:
@@ -7805,8 +7819,9 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: leading-bookmarks
 :END:
 :MODIFIED:
-[2020-03-28 Sat]
+[2020-05-12 Tue]
 :END:
+- [[https://news.ycombinator.com/item?id=22969533][Agile's early evangelists wouldn't mind watching Agile die]].
 - [[https://news.ycombinator.com/item?id%3D10395046][Ask HN: How to Be a Good Technical Lead? (Hacker News)]].
 - [[https://twitter.com/bcantrill/status/1216491216356823040][Bryan Cantrill on Twitter: "So, my thoughts on engineering performance management..."]].
 - [[https://twitter.com/dan_abramov/status/1203486500731719681][Dan Abramov: What is your favorite book about management... (twitter)]].
