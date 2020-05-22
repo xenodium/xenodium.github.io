@@ -6,13 +6,13 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 May 2020 15:37:11 +0100</lastBuildDate>
+<lastBuildDate>Fri, 22 May 2020 16:48:15 +0100</lastBuildDate>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Open Emacs elfeed links in the background</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org4bc1c22" class="outline-2">
+ <div id="outline-container-org2047147" class="outline-2">
  <h2 id="open-emacs-elfeed-links-in-background"> <span class="timestamp-wrapper"> <span class="timestamp">22 May 2020</span></span> Open Emacs elfeed links in the background</h2>
  <div class="outline-text-2" id="text-open-emacs-elfeed-links-in-background">
 
@@ -42,20 +42,24 @@ I'm running macOS, so I took a look at  <a href="https://github.com/emacs-mirror
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/elfeed-search-browse-background-url</span> ()
-   <span style="color: #183691;">"Open current `</span> <span style="color: #0086b3;">elfeed</span> <span style="color: #183691;">' entry (or region entries) in browser without losing focus."</span>
-  (<span style="color: #a71d5d;">interactive</span>)
-  (<span style="color: #a71d5d;">let</span> ((entries (elfeed-search-selected)))
-    (mapc (<span style="color: #a71d5d;">lambda</span> (entry)
-            (<span style="color: #a71d5d;">assert</span> (memq system-type '(darwin)) t  <span style="color: #183691;">"open command is macOS only"</span>)
-            (start-process (concat  <span style="color: #183691;">"open "</span> (elfeed-entry-link entry))
-                            <span style="color: #969896;">;; </span> <span style="color: #969896;">macOS only. Modify for linux.</span>
-                           nil  <span style="color: #183691;">"open"</span>  <span style="color: #183691;">"--background"</span> (elfeed-entry-link entry))
-            (elfeed-untag entry 'unread)
-            (elfeed-search-update-entry entry))
-          entries)
-    (<span style="color: #a71d5d;">unless</span> (<span style="color: #a71d5d;">or</span> elfeed-search-remain-on-entry (use-region-p))
-      (forward-line))))
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">elfeed</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> elfeed-search-mode-map
+              (<span style="color: #183691;">"B"</span> . ar/elfeed-search-browse-background-url))
+   <span style="color: #a71d5d;">:config</span>
+  (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/elfeed-search-browse-background-url</span> ()
+     <span style="color: #183691;">"Open current `</span> <span style="color: #0086b3;">elfeed</span> <span style="color: #183691;">' entry (or region entries) in browser without losing focus."</span>
+    (<span style="color: #a71d5d;">interactive</span>)
+    (<span style="color: #a71d5d;">let</span> ((entries (elfeed-search-selected)))
+      (mapc (<span style="color: #a71d5d;">lambda</span> (entry)
+              (<span style="color: #a71d5d;">assert</span> (memq system-type '(darwin)) t  <span style="color: #183691;">"open command is macOS only"</span>)
+              (start-process (concat  <span style="color: #183691;">"open "</span> (elfeed-entry-link entry))
+                             nil  <span style="color: #183691;">"open"</span>  <span style="color: #183691;">"--background"</span> (elfeed-entry-link entry))
+              (elfeed-untag entry 'unread)
+              (elfeed-search-update-entry entry))
+            entries)
+      (<span style="color: #a71d5d;">unless</span> (<span style="color: #a71d5d;">or</span> elfeed-search-remain-on-entry (use-region-p))
+        (forward-line)))))
 </pre>
 </div>
 
