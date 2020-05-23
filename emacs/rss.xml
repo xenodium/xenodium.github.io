@@ -6,7 +6,185 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 May 2020 16:48:40 +0100</lastBuildDate>
+<lastBuildDate>Sat, 23 May 2020 20:13:18 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Preview SwiftUI layouts using Emacs org blocks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org085baa8" class="outline-2">
+ <h2 id="swiftui-layout-previews-using-emacs-org-blocks"> <span class="timestamp-wrapper"> <span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
+ <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
+
+ <div class="figure">
+ <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif" alt="ob-swiftui.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+Chris Eidhof  <a href="https://twitter.com/chriseidhof/status/1261360332594974721">twitted</a> a handy  <a href="https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff">snippet</a> that enables quickly bootstrapping throwaway SwiftUI code. It can be easily integrated into other tools for rapid experimentation.
+</p>
+
+ <p>
+Being a SwiftUI noob, I could use some SwiftUI integration with my editor of choice. With some elisp glue and a small patch, Chris's snippet can be used to generate SwiftUI inline previews using Emacs org babel. This is particular handy for playing around with SwiftUI layouts.
+</p>
+
+ <p>
+We can piggyback ride off zweifisch's  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> by advicing  <i>org-babel-execute:swift</i> to inject the org source block into the bootstrapping snippet. We also add a hook to  <i>org-babel-after-execute-hook</i> to automatically refresh the inline preview.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">adviced:org-babel-execute:swift</span> (f  <span style="color: #0086b3;">&rest</span> args)
+   <span style="color: #183691;">"Advice `</span> <span style="color: #0086b3;">adviced:org-babel-execute:swift</span> <span style="color: #183691;">' enabling swiftui header param."</span>
+  (<span style="color: #a71d5d;">let*</span> ((body (nth 0 args))
+         (params (nth 1 args))
+         (swiftui (cdr (assoc  <span style="color: #a71d5d;">:swiftui</span> params)))
+         (output))
+    (<span style="color: #a71d5d;">when</span> swiftui
+      (<span style="color: #a71d5d;">assert</span> (<span style="color: #a71d5d;">or</span> (string-equal swiftui  <span style="color: #183691;">"preview"</span>)
+                  (string-equal swiftui  <span style="color: #183691;">"interactive"</span>))
+              nil  <span style="color: #183691;">":swiftui must be either preview or interactive"</span>)
+      (<span style="color: #a71d5d;">setq</span> body (format
+                   <span style="color: #183691;">"</span>
+ <span style="color: #183691;">import Cocoa</span>
+ <span style="color: #183691;">import SwiftUI</span>
+ <span style="color: #183691;">import Foundation</span>
+
+ <span style="color: #183691;">let screenshotURL: URL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".tiff\")</span>
+
+ <span style="color: #183691;">let preview = %s</span>
+
+ <span style="color: #183691;">NSApplication.shared.run {</span>
+ <span style="color: #183691;">  %s</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  public func run<V: View>(@ViewBuilder view: () -> V) {</span>
+ <span style="color: #183691;">    let appDelegate = AppDelegate(view())</span>
+ <span style="color: #183691;">    NSApp.setActivationPolicy(.regular)</span>
+ <span style="color: #183691;">    mainMenu = customMenu</span>
+ <span style="color: #183691;">    delegate = appDelegate</span>
+ <span style="color: #183691;">    run()</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  var customMenu: NSMenu {</span>
+ <span style="color: #183691;">    let appMenu = NSMenuItem()</span>
+ <span style="color: #183691;">    appMenu.submenu = NSMenu()</span>
+
+ <span style="color: #183691;">    let quitItem = NSMenuItem(</span>
+ <span style="color: #183691;">      title: \"Quit </span> <span style="color: #333333;">\</span> <span style="color: #183691;">(ProcessInfo.processInfo.processName)\",</span>
+ <span style="color: #183691;">      action: #selector(NSApplication.terminate(_:)), keyEquivalent: \"q\")</span>
+ <span style="color: #183691;">    quitItem.keyEquivalentModifierMask = []</span>
+ <span style="color: #183691;">    appMenu.submenu?.addItem(quitItem)</span>
+
+ <span style="color: #183691;">    let mainMenu = NSMenu(title: \"Main Menu\")</span>
+ <span style="color: #183691;">    mainMenu.addItem(appMenu)</span>
+ <span style="color: #183691;">    return mainMenu</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">class AppDelegate<V: View>: NSObject, NSApplicationDelegate, NSWindowDelegate {</span>
+ <span style="color: #183691;">  var window = NSWindow(</span>
+ <span style="color: #183691;">    contentRect: NSRect(x: 0, y: 0, width: 414 * 0.2, height: 896 * 0.2),</span>
+ <span style="color: #183691;">    styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],</span>
+ <span style="color: #183691;">    backing: .buffered, defer: false)</span>
+
+ <span style="color: #183691;">  var contentView: V</span>
+
+ <span style="color: #183691;">  init(_ contentView: V) {</span>
+ <span style="color: #183691;">    self.contentView = contentView</span>
+ <span style="color: #183691;">  }</span>
+
+ <span style="color: #183691;">  func applicationDidFinishLaunching(_ notification: Notification) {</span>
+ <span style="color: #183691;">    window.delegate = self</span>
+ <span style="color: #183691;">    window.center()</span>
+ <span style="color: #183691;">    window.contentView = NSHostingView(rootView: contentView)</span>
+ <span style="color: #183691;">    window.makeKeyAndOrderFront(nil)</span>
+
+ <span style="color: #183691;">    if preview {</span>
+ <span style="color: #183691;">      screenshot(view: window.contentView!, saveTo: screenshotURL)</span>
+ <span style="color: #183691;">      // Write path (without newline) so org babel can parse it</span>
+ <span style="color: #183691;">      // and also drop first chars (file://).</span>
+ <span style="color: #183691;">      FileHandle.standardOutput.write(screenshotURL.absoluteString.dropFirst(7).data(using:.utf8, allowLossyConversion:false)!)</span>
+ <span style="color: #183691;">      NSApplication.shared.terminate(self)</span>
+ <span style="color: #183691;">      return</span>
+ <span style="color: #183691;">    }</span>
+
+ <span style="color: #183691;">    window.setFrameAutosaveName(\"Main Window\")</span>
+ <span style="color: #183691;">    NSApp.activate(ignoringOtherApps: true)</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">func screenshot(view: NSView, saveTo fileURL: URL) {</span>
+ <span style="color: #183691;">  let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!</span>
+ <span style="color: #183691;">  view.cacheDisplay(in: view.bounds, to: rep)</span>
+
+ <span style="color: #183691;">  let image = NSImage(size: view.bounds.size)</span>
+ <span style="color: #183691;">  image.addRepresentation(rep)</span>
+
+ <span style="color: #183691;">  try! image.tiffRepresentation?.write(to: fileURL)</span>
+ <span style="color: #183691;">}"</span>
+                  (<span style="color: #a71d5d;">if</span> (string-equal swiftui  <span style="color: #183691;">"preview"</span>)
+                       <span style="color: #183691;">"true"</span>
+                     <span style="color: #183691;">"false"</span>)
+                  body))
+      (<span style="color: #a71d5d;">setq</span> args (list body params)))
+    (<span style="color: #a71d5d;">setq</span> output (apply f args))
+    (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
+      (org-redisplay-inline-images))
+    output))
+
+(advice-add #'org-babel-execute:swift
+             <span style="color: #a71d5d;">:around</span>
+            #'adviced:org-babel-execute:swift)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-refresh-inline-images</span> ()
+  (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
+    (org-redisplay-inline-images)))
+
+ <span style="color: #969896;">;; </span> <span style="color: #969896;">Automatically refresh inline images.</span>
+(add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
+</pre>
+</div>
+
+ <p>
+We also introduce the  <i>:swiftui</i> header param to switch between inline static preview and interactively running the app. When running interactively, pressing "q" (without ⌘) kills the app.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+begin_src swift :results file :swiftui preview
+  VStack(spacing: 10) {
+      HStack(spacing: 10) {
+        Rectangle().fill(Color.red)
+        Rectangle().fill(Color.blue)
+      }
+      Rectangle().fill(Color.purple)
+      HStack(spacing: 10) {
+        Rectangle().fill(Color.green)
+        Rectangle().fill(Color.yellow)
+      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+#+end_src
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+results:
+</pre>
+</div>
+
+ <div class="figure">
+ <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg" alt="vstack.jpg"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/index.html</guid>
+  <pubDate>Sat, 23 May 2020 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Open Emacs elfeed links in the background</title>
@@ -83,7 +261,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1263839324023525376">t
 </div>]]></description>
   <link>http://xenodium.com/open-emacs-elfeed-links-in-background/index.html</link>
   <guid isPermaLink="false">http://xenodium.com/open-emacs-elfeed-links-in-background/index.html</guid>
-  <pubDate>Fri, 22 May 2020 15:15:24 +0100</pubDate>
+  <pubDate>Fri, 22 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>
