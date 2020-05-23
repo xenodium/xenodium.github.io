@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-05-23 Sat 20:43 -->
+<!-- 2020-05-23 Sat 22:49 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Preview SwiftUI layouts using Emacs org blocks</title>
@@ -460,7 +460,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orgad66342" class="outline-2">
+<div id="outline-container-org3b6f87b" class="outline-2">
 <h2 id="swiftui-layout-previews-using-emacs-org-blocks"><span class="timestamp-wrapper"><span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
 <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
 
@@ -478,7 +478,21 @@ Being a SwiftUI noob, I could use some SwiftUI integration with my editor of cho
 </p>
 
 <p>
-We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> by advicing <i>org-babel-execute:swift</i> to inject the org source block into the bootstrapping snippet. We also add a hook to <i>org-babel-after-execute-hook</i> to automatically refresh the inline preview.
+We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-swift">ob-swift</a>, but need that installed first:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob-swift</span>
+  <span style="color: #a71d5d;">:ensure</span> t
+  <span style="color: #a71d5d;">:config</span>
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((swift     . t)))))
+</pre>
+</div>
+
+<p>
+Now we can advice ob-swift's <i>org-babel-execute:swift</i> to inject an org source block into the bootstrapping snippet. We also add a hook to <i>org-babel-after-execute-hook</i> to automatically refresh the inline preview.
 </p>
 
 <div class="org-src-container">
@@ -598,7 +612,7 @@ We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-s
 </div>
 
 <p>
-We also introduce the <i>:swiftui</i> header param to switch between inline static preview and interactively running the app. When running interactively, pressing "q" (without ⌘) kills the app.
+We introduced the <i>:swiftui</i> header param to switch between inline static <i>preview</i> and <i>interactive</i> mode. Here's a full <i>preview</i> block:
 </p>
 
 <div class="org-src-container">
@@ -628,6 +642,10 @@ We also introduce the <i>:swiftui</i> header param to switch between inline stat
 <p><img src="../images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg" alt="vstack.jpg" />
 </p>
 </div>
+
+<p>
+To run interactively, use <i>:swiftui interactive.</i> When running interactively, press "q" (without ⌘) to quit the app.
+</p>
 
 <p>
 comments on <a href="https://twitter.com/xenodium/status/1194224168709083137">twitter</a>.

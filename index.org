@@ -13,7 +13,18 @@ Chris Eidhof [[https://twitter.com/chriseidhof/status/1261360332594974721][twitt
 
 Being a SwiftUI noob, I could use some SwiftUI integration with my editor of choice. With some elisp glue and a small patch, Chris's snippet can be used to generate SwiftUI inline previews using Emacs org babel. This is particular handy for playing around with SwiftUI layouts.
 
-We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][ob-swift]] by advicing /org-babel-execute:swift/ to inject the org source block into the bootstrapping snippet. We also add a hook to /org-babel-after-execute-hook/ to automatically refresh the inline preview.
+We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][ob-swift]], but need that installed first:
+
+#+begin_src emacs-lisp
+  (use-package ob-swift
+    :ensure t
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 (append org-babel-load-languages
+                                         '((swift     . t)))))
+#+end_src
+
+Now we can advice ob-swift's /org-babel-execute:swift/ to inject an org source block into the bootstrapping snippet. We also add a hook to /org-babel-after-execute-hook/ to automatically refresh the inline preview.
 
 #+begin_src emacs-lisp
   (defun adviced:org-babel-execute:swift (f &rest args)
@@ -130,7 +141,7 @@ We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][o
   (add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
 #+end_src
 
-We also introduce the /:swiftui/ header param to switch between inline static preview and interactively running the app. When running interactively, pressing "q" (without ⌘) kills the app.
+We introduced the /:swiftui/ header param to switch between inline static /preview/ and /interactive/ mode. Here's a full /preview/ block:
 
 #+begin_src org :exports src
   ,#+begin_src swift :results file :swiftui preview
@@ -153,6 +164,8 @@ We also introduce the /:swiftui/ header param to switch between inline static pr
   ,#+results:
 #+end_src
 [[file:images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg]]
+
+To run interactively, use /:swiftui interactive./ When running interactively, press "q" (without ⌘) to quit the app.
 
 comments on [[https://twitter.com/xenodium/status/1194224168709083137][twitter]].
 
@@ -1099,7 +1112,7 @@ Thank you Internet strangers! :)
   :PUBDATE:  <2020-05-22 Fri 16:43>
   :END:
   :MODIFIED:
-  [2020-04-22 Wed]
+  [2020-05-23 Sat]
   :END:
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
 - [[https://github.com/Jinxiansen/SwiftUI][`SwiftUI` Framework Learning and Usage Guide]].
@@ -1133,6 +1146,7 @@ Thank you Internet strangers! :)
 - [[https://swiftui-lab.com/communicating-with-the-view-tree-part-1/][Inspecting the View Tree with PreferenceKey - Part 1 - The SwiftUI Lab]].
 - [[https://stackoverflow.com/questions/56505043/how-to-make-view-the-size-of-another-view-in-swiftui][ios - How to make view the size of another view in SwiftUI - Stack Overflow]].
 - [[https://swiftwithmajid.com/2019/12/04/must-have-swiftui-extensions/][Must-have SwiftUI extensions | Majid’s blog about Swift development]].
+- [[https://www.objc.io/blog/2020/03/17/thinking-in-swiftui/][Our New Book: Thinking in SwiftUI · objc.io]].
 - [[https://nalexn.github.io/swiftui-deep-linking/][Programmatic navigation in SwiftUI project - Alexey Naumov]].
 - [[https://dev.to/gualtierofr/remote-images-in-swiftui-49jp][Remote images in SwiftUI - DEV Community]].
 - [[https://medium.com/ymedialabs-innovation/resizing-techniques-and-image-quality-that-every-ios-developer-should-know-e061f33f7aba][Resizing Techniques and Image Quality That Every iOS Developer Should Know (Swift)]].
@@ -4283,9 +4297,10 @@ TIL from [[https://twitter.com/liamnichols_/status/1018812142693253120?s=12][thi
   :PUBDATE:  <2020-05-22 Fri 16:43>
   :END:
   :MODIFIED:
-  [2018-07-15 Sun]
+  [2020-05-23 Sat]
   :END:
 - [[https://www.romanzolotarev.com/setup.html][Roman Zolotarev's OpenBSD on my fanless desktop computer (really sweet setup)]].
+- [[https://michael.stapelberg.ch/posts/2020-05-23-desk-setup/][stapelberg uses this: my 2020 desk setup]].
 * [2018-07-11 Wed] fitbit API, org babel, and gnuplot
   :PROPERTIES:
   :CUSTOM_ID: fitbit-api-org-babel-and-gnuplot
@@ -9142,7 +9157,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :PUBDATE:  <2020-05-22 Fri 16:43>
 :END:
 :MODIFIED:
-[2020-05-08 Fri]
+[2020-05-23 Sat]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -9215,6 +9230,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[http://www.h4labs.com/dev/ios/swift.html][Swift Resources]].
 - [[https://github.com/mxcl/swift-sh][swift sh adds automatic dependency loading in scripts]].
 - [[https://pragprog.com/book/esswift2/swift-style-second-edition][Swift Style, Second Edition: An Opinionated Guide to an Opinionated Language by Erica Sadun (The Pragmatic Bookshelf)]].
+- [[https://www.objc.io/blog/2018/10/02/using-appkit-from-the-command-line/][Swift Tip: Using AppKit from the Command-line · objc.io]].
 - [[https://swift.org/blog/argument-parser/][Swift.org - Announcing ArgumentParser]].
 - [[https://swift.org/documentation/api-design-guidelines/][Swift.org - API Design Guidelines]].
 - [[https://github.com/LeonardoCardoso/SwiftLinkPreview][SwiftLinkPreview: Link Previewer for iOS, macOS, watchOS and tvOS]].
