@@ -13,32 +13,48 @@ Chris Eidhof [[https://twitter.com/chriseidhof/status/1261360332594974721][twitt
 
 Being a SwiftUI noob, I could use some SwiftUI integration with my editor of choice. With some elisp glue and a small patch, Chris's snippet can be used to generate SwiftUI inline previews using Emacs org babel. This is particularly handy for playing around with SwiftUI layouts.
 
-We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][ob-swift]], but need that installed first:
+We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][ob-swift]] by advicing /org-babel-execute:swift/ to inject the org source block into the bootstrapping snippet. We also add a hook to /org-babel-after-execute-hook/ to automatically refresh the inline preview.
+
+If you're a [[https://github.com/jwiegley/use-package][use-package]] user, the following snippet should make things fairly self-contained (if you have [[https://melpa.org/][melpa]] set up already).
+
+Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the following snippet. I've also enabled /org-display-inline-images/ when loading org files.
 
 #+begin_src emacs-lisp
-  (use-package ob-swift
-    :ensure t
+  (use-package org
+    :hook ((org-mode . org-display-inline-images))
     :config
-    (org-babel-do-load-languages 'org-babel-load-languages
-                                 (append org-babel-load-languages
-                                         '((swift     . t)))))
-#+end_src
 
-Now we can advice ob-swift's /org-babel-execute:swift/ to inject an org source block into the bootstrapping snippet. We also add a hook to /org-babel-after-execute-hook/ to automatically refresh the inline preview.
+    (use-package ob
+      :bind (:map org-mode-map
+                  ("C-c C-c" . org-ctrl-c-ctrl-c))
+      :config
 
-#+begin_src emacs-lisp
-  (defun adviced:org-babel-execute:swift (f &rest args)
-    "Advice `adviced:org-babel-execute:swift' enabling swiftui header param."
-    (let* ((body (nth 0 args))
-           (params (nth 1 args))
-           (swiftui (cdr (assoc :swiftui params)))
-           (output))
-      (when swiftui
-        (assert (or (string-equal swiftui "preview")
-                    (string-equal swiftui "interactive"))
-                nil ":swiftui must be either preview or interactive")
-        (setq body (format
-                    "
+      (use-package ob-swift
+        :ensure t
+        :config
+        (org-babel-do-load-languages 'org-babel-load-languages
+                                     (append org-babel-load-languages
+                                             '((swift     . t))))
+
+        (defun ar/org-refresh-inline-images ()
+          (when org-inline-image-overlays
+            (org-redisplay-inline-images)))
+
+        ;; Automatically refresh inline images.
+        (add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
+
+        (defun adviced:org-babel-execute:swift (f &rest args)
+          "Advice `adviced:org-babel-execute:swift' enabling swiftui header param."
+          (let* ((body (nth 0 args))
+                 (params (nth 1 args))
+                 (swiftui (cdr (assoc :swiftui params)))
+                 (output))
+            (when swiftui
+              (assert (or (string-equal swiftui "preview")
+                          (string-equal swiftui "interactive"))
+                      nil ":swiftui must be either preview or interactive")
+              (setq body (format
+                          "
   import Cocoa
   import SwiftUI
   import Foundation
@@ -119,29 +135,26 @@ Now we can advice ob-swift's /org-babel-execute:swift/ to inject an org source b
 
     try! image.tiffRepresentation?.write(to: fileURL)
   }"
-                    (if (string-equal swiftui "preview")
-                        "true"
-                      "false")
-                    body))
-        (setq args (list body params)))
-      (setq output (apply f args))
-      (when org-inline-image-overlays
-        (org-redisplay-inline-images))
-      output))
+                          (if (string-equal swiftui "preview")
+                              "true"
+                            "false")
+                          body))
+              (setq args (list body params)))
+            (setq output (apply f args))
+            (when org-inline-image-overlays
+              (org-redisplay-inline-images))
+            output))
 
-  (advice-add #'org-babel-execute:swift
-              :around
-              #'adviced:org-babel-execute:swift)
-
-  (defun ar/org-refresh-inline-images ()
-    (when org-inline-image-overlays
-      (org-redisplay-inline-images)))
-
-  ;; Automatically refresh inline images.
-  (add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
+        (advice-add #'org-babel-execute:swift
+                    :around
+                    #'adviced:org-babel-execute:swift))))
 #+end_src
 
-We introduced the /:swiftui/ header param to switch between inline static /preview/ and /interactive/ mode. Here's a full /preview/ block:
+Snippet also at github [[https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b][gist]] and included in [[https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el][my emacs config]].
+
+Once the snippet is evaluated, we're ready to use in an org babel block. We introduced the /:swiftui/ header param to switch between inline static /preview/ and /interactive/ mode.
+
+To try out an inline /preview/, create a new org file (eg. swiftui.org) and a source block like:
 
 #+begin_src org :exports src
   ,#+begin_src swift :results file :swiftui preview
@@ -165,9 +178,15 @@ We introduced the /:swiftui/ header param to switch between inline static /previ
 #+end_src
 [[file:images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg]]
 
-To run interactively, use /:swiftui interactive./ When running interactively, press "q" (without ⌘) to quit the app.
+Place the cursor anywhere inside the source block (#+begin_src/#+end_src) and press C-c C-c (or M-x org-ctrl-c-ctrl-c).
+
+To run interactively, change the /:swiftui/ param to /interactive/ and press C-c C-c (or M-x org-ctrl-c-ctrl-c). When running interactively, press "q" (without ⌘) to quit the Swift app.
 
 comments on [[https://twitter.com/xenodium/status/1194224168709083137][twitter]].
+
+** Update
+
+Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to [[https://github.com/zweifisch/ob-swift][ob-swift]] and we can avoid the icky /advice-add/.
 
 * [2020-05-22 Fri] Open Emacs elfeed links in the background
   :PROPERTIES:
@@ -14356,7 +14375,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :PROPERTIES:
 :ID:       8A915DF3-24D8-4B15-B81E-6D314C35D247
 :END:
-1. Preheat oven 220°C (no fan).
+1. Preheat oven: 240°C (no fan) 220°C (fan).
 2. Lamb face up in tray.
 3. Cook for 30 mins (or brown).
 4. Take lamb out.

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-05-23 Sat 22:49 -->
+<!-- 2020-05-24 Sun 15:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Preview SwiftUI layouts using Emacs org blocks</title>
@@ -460,7 +460,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org3b6f87b" class="outline-2">
+<div id="outline-container-org017b1e0" class="outline-2">
 <h2 id="swiftui-layout-previews-using-emacs-org-blocks"><span class="timestamp-wrapper"><span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
 <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
 
@@ -478,36 +478,53 @@ Being a SwiftUI noob, I could use some SwiftUI integration with my editor of cho
 </p>
 
 <p>
-We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-swift">ob-swift</a>, but need that installed first:
+We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> by advicing <i>org-babel-execute:swift</i> to inject the org source block into the bootstrapping snippet. We also add a hook to <i>org-babel-after-execute-hook</i> to automatically refresh the inline preview.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob-swift</span>
-  <span style="color: #a71d5d;">:ensure</span> t
-  <span style="color: #a71d5d;">:config</span>
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               (append org-babel-load-languages
-                                       '((swift     . t)))))
-</pre>
-</div>
 
 <p>
-Now we can advice ob-swift's <i>org-babel-execute:swift</i> to inject an org source block into the bootstrapping snippet. We also add a hook to <i>org-babel-after-execute-hook</i> to automatically refresh the inline preview.
+If you're a <a href="https://github.com/jwiegley/use-package">use-package</a> user, the following snippet should make things fairly self-contained (if you have <a href="https://melpa.org/">melpa</a> set up already).
+</p>
+
+<p>
+Note: I like pressing <i>C-c C-c</i> to execute source blocks, so it's bound in the following snippet. I've also enabled <i>org-display-inline-images</i> when loading org files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">adviced:org-babel-execute:swift</span> (f <span style="color: #0086b3;">&amp;rest</span> args)
-  <span style="color: #183691;">"Advice `</span><span style="color: #0086b3;">adviced:org-babel-execute:swift</span><span style="color: #183691;">' enabling swiftui header param."</span>
-  (<span style="color: #a71d5d;">let*</span> ((body (nth 0 args))
-         (params (nth 1 args))
-         (swiftui (cdr (assoc <span style="color: #a71d5d;">:swiftui</span> params)))
-         (output))
-    (<span style="color: #a71d5d;">when</span> swiftui
-      (<span style="color: #a71d5d;">assert</span> (<span style="color: #a71d5d;">or</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
-                  (string-equal swiftui <span style="color: #183691;">"interactive"</span>))
-              nil <span style="color: #183691;">":swiftui must be either preview or interactive"</span>)
-      (<span style="color: #a71d5d;">setq</span> body (format
-                  <span style="color: #183691;">"</span>
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">org</span>
+  <span style="color: #a71d5d;">:hook</span> ((org-mode . org-display-inline-images))
+  <span style="color: #a71d5d;">:config</span>
+
+  (<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob</span>
+    <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> org-mode-map
+                (<span style="color: #183691;">"C-c C-c"</span> . org-ctrl-c-ctrl-c))
+    <span style="color: #a71d5d;">:config</span>
+
+    (<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob-swift</span>
+      <span style="color: #a71d5d;">:ensure</span> t
+      <span style="color: #a71d5d;">:config</span>
+      (org-babel-do-load-languages 'org-babel-load-languages
+                                   (append org-babel-load-languages
+                                           '((swift     . t))))
+
+      (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/org-refresh-inline-images</span> ()
+        (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
+          (org-redisplay-inline-images)))
+
+      <span style="color: #969896;">;; </span><span style="color: #969896;">Automatically refresh inline images.</span>
+      (add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
+
+      (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">adviced:org-babel-execute:swift</span> (f <span style="color: #0086b3;">&amp;rest</span> args)
+        <span style="color: #183691;">"Advice `</span><span style="color: #0086b3;">adviced:org-babel-execute:swift</span><span style="color: #183691;">' enabling swiftui header param."</span>
+        (<span style="color: #a71d5d;">let*</span> ((body (nth 0 args))
+               (params (nth 1 args))
+               (swiftui (cdr (assoc <span style="color: #a71d5d;">:swiftui</span> params)))
+               (output))
+          (<span style="color: #a71d5d;">when</span> swiftui
+            (<span style="color: #a71d5d;">assert</span> (<span style="color: #a71d5d;">or</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
+                        (string-equal swiftui <span style="color: #183691;">"interactive"</span>))
+                    nil <span style="color: #183691;">":swiftui must be either preview or interactive"</span>)
+            (<span style="color: #a71d5d;">setq</span> body (format
+                        <span style="color: #183691;">"</span>
 <span style="color: #183691;">import Cocoa</span>
 <span style="color: #183691;">import SwiftUI</span>
 <span style="color: #183691;">import Foundation</span>
@@ -588,31 +605,32 @@ Now we can advice ob-swift's <i>org-babel-execute:swift</i> to inject an org sou
 
 <span style="color: #183691;">  try! image.tiffRepresentation?.write(to: fileURL)</span>
 <span style="color: #183691;">}"</span>
-                  (<span style="color: #a71d5d;">if</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
-                      <span style="color: #183691;">"true"</span>
-                    <span style="color: #183691;">"false"</span>)
-                  body))
-      (<span style="color: #a71d5d;">setq</span> args (list body params)))
-    (<span style="color: #a71d5d;">setq</span> output (apply f args))
-    (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
-      (org-redisplay-inline-images))
-    output))
+                        (<span style="color: #a71d5d;">if</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
+                            <span style="color: #183691;">"true"</span>
+                          <span style="color: #183691;">"false"</span>)
+                        body))
+            (<span style="color: #a71d5d;">setq</span> args (list body params)))
+          (<span style="color: #a71d5d;">setq</span> output (apply f args))
+          (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
+            (org-redisplay-inline-images))
+          output))
 
-(advice-add #'org-babel-execute:swift
-            <span style="color: #a71d5d;">:around</span>
-            #'adviced:org-babel-execute:swift)
-
-(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/org-refresh-inline-images</span> ()
-  (<span style="color: #a71d5d;">when</span> org-inline-image-overlays
-    (org-redisplay-inline-images)))
-
-<span style="color: #969896;">;; </span><span style="color: #969896;">Automatically refresh inline images.</span>
-(add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images)
+      (advice-add #'org-babel-execute:swift
+                  <span style="color: #a71d5d;">:around</span>
+                  #'adviced:org-babel-execute:swift))))
 </pre>
 </div>
 
 <p>
-We introduced the <i>:swiftui</i> header param to switch between inline static <i>preview</i> and <i>interactive</i> mode. Here's a full <i>preview</i> block:
+Snippet also at github <a href="https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b">gist</a> and included in <a href="https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el">my emacs config</a>.
+</p>
+
+<p>
+Once the snippet is evaluated, we're ready to use in an org babel block. We introduced the <i>:swiftui</i> header param to switch between inline static <i>preview</i> and <i>interactive</i> mode.
+</p>
+
+<p>
+To try out an inline <i>preview</i>, create a new org file (eg. swiftui.org) and a source block like:
 </p>
 
 <div class="org-src-container">
@@ -644,12 +662,25 @@ We introduced the <i>:swiftui</i> header param to switch between inline static <
 </div>
 
 <p>
-To run interactively, use <i>:swiftui interactive.</i> When running interactively, press "q" (without ⌘) to quit the app.
+Place the cursor anywhere inside the source block (#+begin_src/#+end_src) and press C-c C-c (or M-x org-ctrl-c-ctrl-c).
+</p>
+
+<p>
+To run interactively, change the <i>:swiftui</i> param to <i>interactive</i> and press C-c C-c (or M-x org-ctrl-c-ctrl-c). When running interactively, press "q" (without ⌘) to quit the Swift app.
 </p>
 
 <p>
 comments on <a href="https://twitter.com/xenodium/status/1194224168709083137">twitter</a>.
 </p>
+</div>
+
+<div id="outline-container-orgb14f21d" class="outline-3">
+<h3 id="orgb14f21d">Update</h3>
+<div class="outline-text-3" id="text-orgb14f21d">
+<p>
+Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> and we can avoid the icky <i>advice-add</i>.
+</p>
+</div>
 </div>
 </div>
 </div>
