@@ -59,8 +59,7 @@ Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the f
   import SwiftUI
   import Foundation
 
-  let screenshotURL: URL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".tiff\")
-
+  let screenshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".png\")
   let preview = %s
 
   NSApplication.shared.run {
@@ -114,9 +113,8 @@ Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the f
 
       if preview {
         screenshot(view: window.contentView!, saveTo: screenshotURL)
-        // Write path (without newline) so org babel can parse it
-        // and also drop first chars (file://).
-        FileHandle.standardOutput.write(screenshotURL.absoluteString.dropFirst(7).data(using:.utf8, allowLossyConversion:false)!)
+        // Write path (without newline) so org babel can parse it.
+        print(screenshotURL.path, terminator: \"\")
         NSApplication.shared.terminate(self)
         return
       }
@@ -129,12 +127,10 @@ Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the f
   func screenshot(view: NSView, saveTo fileURL: URL) {
     let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
     view.cacheDisplay(in: view.bounds, to: rep)
-
-    let image = NSImage(size: view.bounds.size)
-    image.addRepresentation(rep)
-
-    try! image.tiffRepresentation?.write(to: fileURL)
-  }"
+    let pngData = rep.representation(using: .png, properties: [:])
+    try! pngData?.write(to: fileURL)
+  }
+  "
                           (if (string-equal swiftui "preview")
                               "true"
                             "false")
@@ -186,7 +182,8 @@ comments on [[https://twitter.com/xenodium/status/1194224168709083137][twitter]]
 
 ** Update
 
-Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to [[https://github.com/zweifisch/ob-swift][ob-swift]] and we can avoid the icky /advice-add/.
+- Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to [[https://github.com/zweifisch/ob-swift][ob-swift]] and we can avoid the icky /advice-add/.
+- Thanks to Chris Eidhof for PNG support (instead of TIFF). Also TIL Swift's /print/ has got a terminator param.
 
 * [2020-05-22 Fri] Open Emacs elfeed links in the background
   :PROPERTIES:
@@ -3419,7 +3416,7 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   :CUSTOM_ID: macos-app-bookmarks
   :END:
   :MODIFIED:
-  [2020-02-15 Sat]
+  [2020-05-24 Sun]
   :END:
 - [[https://github.com/GetStream/Winds/blob/master/README.md][GetStream/Winds: macOS rss reader]].
 - [[https://github.com/koekeishiya/yabai][GitHub - koekeishiya/yabai: A tiling window manager for macOS based on binary]].
@@ -3434,6 +3431,7 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 - [[https://thesweetsetup.com/netnewswire-5-0-relaunches-as-an-open-source-rss-reader-for-the-mac/][NetNewsWire 5.0 Relaunches as an Open-Source RSS Reader for the Mac – The Sweet Setup]].
 - [[https://smilesoftware.com/pdfpen/?][PDF Editor - PDFpen - Edit PDF Files (Smile Software)]].
 - [[http://solutions.weblite.ca/pdfocrx/][PDF OCR X - Mac & Windows OCR Software to convert PDFs and Images to Text]].
+- [[https://apps.apple.com/us/app/rested-simple-http-requests/id421879749][‎RESTed - Simple HTTP Requests on the Mac App Store]].
 * [2018-09-30 Sun] Gaming bookmarks
   :PROPERTIES:
   :CUSTOM_ID: gaming-bookmarks
@@ -12220,7 +12218,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2020-05-02 Sat]
+[2020-05-24 Sun]
 :END:
 - "Do not spoil what you have by desiring what you have not; what you now have was once among the things you only hoped for." - Epicurus
 - [[https://www.thesleepjudge.com/23-weird-plants-for-your-bedroom-that-will-help-you-sleep-like-a-baby/][23 Weird Plants For Your Bedroom That Will Help You Sleep Like A Baby]].
@@ -12240,6 +12238,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.youtube.com/watch?v=j2C8MkY7Co8&feature=youtu.be][Dr. Hamilton Demonstrates "The Hold" - How To Calm A Crying Baby (YouTube)]].
 - [[https://www.recipes-news.co.nz/news/2019/11/6/game-changer-or-fame-gainer][Game Changer or Fame Gainer? — News & Features]].
 - [[https://betterhumans.coach.me/how-to-set-up-your-iphone-for-productivity-focus-and-your-own-longevity-bb27a68cc3d8][How to Configure Your iPhone to Work for You, Not Against You]].
+- [[https://www.quora.com/How-do-I-get-six-pack-abs-in-one-year][How to get six pack abs in one year - Quora]].
 - [[https://www.quora.com/What-is-the-best-way-to-improve-life/answer/Jon-Brosio][Jon Brosio's answer to What is the best way to improve life? - Quora]].
 - [[https://www.dezeen.com/2019/05/02/minimod-curucaca-mapa-prefab-house-brazil/][MAPA hides prefab Minimod Curucaca in Brazilian forest]].
 - [[https://news.ycombinator.com/item?id=17632668][Melatonin: Much More Than You Wanted to Know (Hacker News)]].

@@ -6,13 +6,13 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 24 May 2020 17:44:19 +0100</lastBuildDate>
+<lastBuildDate>Mon, 25 May 2020 10:18:25 +0100</lastBuildDate>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Preview SwiftUI layouts using Emacs org blocks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org017b1e0" class="outline-2">
+ <div id="outline-container-org8531a4b" class="outline-2">
  <h2 id="swiftui-layout-previews-using-emacs-org-blocks"> <span class="timestamp-wrapper"> <span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
  <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
 
@@ -80,8 +80,7 @@ Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in
  <span style="color: #183691;">import SwiftUI</span>
  <span style="color: #183691;">import Foundation</span>
 
- <span style="color: #183691;">let screenshotURL: URL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".tiff\")</span>
-
+ <span style="color: #183691;">let screenshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".png\")</span>
  <span style="color: #183691;">let preview = %s</span>
 
  <span style="color: #183691;">NSApplication.shared.run {</span>
@@ -135,9 +134,8 @@ Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in
 
  <span style="color: #183691;">    if preview {</span>
  <span style="color: #183691;">      screenshot(view: window.contentView!, saveTo: screenshotURL)</span>
- <span style="color: #183691;">      // Write path (without newline) so org babel can parse it</span>
- <span style="color: #183691;">      // and also drop first chars (file://).</span>
- <span style="color: #183691;">      FileHandle.standardOutput.write(screenshotURL.absoluteString.dropFirst(7).data(using:.utf8, allowLossyConversion:false)!)</span>
+ <span style="color: #183691;">      // Write path (without newline) so org babel can parse it.</span>
+ <span style="color: #183691;">      print(screenshotURL.path, terminator: \"\")</span>
  <span style="color: #183691;">      NSApplication.shared.terminate(self)</span>
  <span style="color: #183691;">      return</span>
  <span style="color: #183691;">    }</span>
@@ -150,12 +148,10 @@ Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in
  <span style="color: #183691;">func screenshot(view: NSView, saveTo fileURL: URL) {</span>
  <span style="color: #183691;">  let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!</span>
  <span style="color: #183691;">  view.cacheDisplay(in: view.bounds, to: rep)</span>
-
- <span style="color: #183691;">  let image = NSImage(size: view.bounds.size)</span>
- <span style="color: #183691;">  image.addRepresentation(rep)</span>
-
- <span style="color: #183691;">  try! image.tiffRepresentation?.write(to: fileURL)</span>
- <span style="color: #183691;">}"</span>
+ <span style="color: #183691;">  let pngData = rep.representation(using: .png, properties: [:])</span>
+ <span style="color: #183691;">  try! pngData?.write(to: fileURL)</span>
+ <span style="color: #183691;">}</span>
+ <span style="color: #183691;">"</span>
                         (<span style="color: #a71d5d;">if</span> (string-equal swiftui  <span style="color: #183691;">"preview"</span>)
                              <span style="color: #183691;">"true"</span>
                            <span style="color: #183691;">"false"</span>)
@@ -224,13 +220,12 @@ comments on  <a href="https://twitter.com/xenodium/status/1194224168709083137">t
 </p>
 </div>
 
- <div id="outline-container-orgb14f21d" class="outline-3">
- <h3 id="orgb14f21d">Update</h3>
- <div class="outline-text-3" id="text-orgb14f21d">
- <p>
-Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> and we can avoid the icky  <i>advice-add</i>.
-</p>
-</div>
+ <div id="outline-container-org4d08566" class="outline-3">
+ <h3 id="org4d08566">Update</h3>
+ <div class="outline-text-3" id="text-org4d08566">
+ <ul class="org-ul"> <li>Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> and we can avoid the icky  <i>advice-add</i>.</li>
+ <li>Thanks to Chris Eidhof for PNG support (instead of TIFF). Also TIL Swift's  <i>print</i> has got a terminator param.</li>
+</ul></div>
 </div>
 </div>
 </div>]]></description>
