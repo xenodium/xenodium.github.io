@@ -6,7 +6,68 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 25 May 2020 10:18:32 +0100</lastBuildDate>
+<lastBuildDate>Sat, 06 Jun 2020 12:00:02 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs, search hackingwithswift.com</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-orgc416b95" class="outline-2">
+ <h2 id="emacs-search-hackingwithswiftcom"> <span class="timestamp-wrapper"> <span class="timestamp">06 June 2020</span></span> Emacs, search hackingwithswift.com</h2>
+ <div class="outline-text-2" id="text-emacs-search-hackingwithswiftcom">
+
+ <div class="figure">
+ <p> <img src="../images/emacs-search-hackingwithswiftcom/hws.gif" alt="hws.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+ <a href="https://twitter.com/twostraws">Paul Hudson</a> authors excellent Swift material at  <a href="https://www.hackingwithswift.com/">hackingwithswift.com</a>. I regularly land on the site while searching for snippets from the browser. I was wondering if I could search for snippets directly from Emacs.
+</p>
+
+ <p>
+Turns out, hackingwithswift uses a JSON HTTP request for querying code examples. With this in mind, we can use  <i>ivy-read</i> like Oleh Krehel's  <a href="https://github.com/abo-abo/swiper/blob/8d840b2e8680e2768edb794c9ccecf975f6ba4cf/counsel.el#L6680">counsel-search</a> and search for Swift snippets from our favorite editor:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">request</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">json</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/counsel-hacking-with-swift-search</span> ()
+   <span style="color: #183691;">"Ivy interface to query hackingwithswift.com."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (ivy-read  <span style="color: #183691;">"hacking with swift: "</span>
+            (<span style="color: #a71d5d;">lambda</span> (input)
+              (<span style="color: #a71d5d;">or</span>
+               (ivy-more-chars)
+               (<span style="color: #a71d5d;">let</span> ((request-curl-options (list  <span style="color: #183691;">"-H"</span> (string-trim (url-http-user-agent-string)))))
+                 (request
+                    <span style="color: #183691;">"https://www.hackingwithswift.com/example-code/search"</span>
+                    <span style="color: #a71d5d;">:type</span>  <span style="color: #183691;">"GET"</span>
+                    <span style="color: #a71d5d;">:params</span> (list
+                            (cons  <span style="color: #183691;">"search"</span> input))
+                    <span style="color: #a71d5d;">:parser</span> 'json-read
+                    <span style="color: #a71d5d;">:success</span> (<span style="color: #a71d5d;">cl-function</span>
+                             (<span style="color: #a71d5d;">lambda</span> (<span style="color: #0086b3;">&key</span> data  <span style="color: #0086b3;">&allow-other-keys</span>)
+                               (ivy-update-candidates
+                                (mapcar (<span style="color: #a71d5d;">lambda</span> (item)
+                                          (<span style="color: #a71d5d;">let-alist</span> item
+                                            (propertize .title 'url .url)))
+                                        data)))))
+                 0)))
+             <span style="color: #a71d5d;">:action</span> (<span style="color: #a71d5d;">lambda</span> (selection)
+                      (browse-url (concat  <span style="color: #183691;">"https://www.hackingwithswift.com"</span>
+                                          (get-text-property 0 'url selection))))
+             <span style="color: #a71d5d;">:dynamic-collection</span> t
+             <span style="color: #a71d5d;">:caller</span> 'ar/counsel-hacking-with-swift-search))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-search-hackingwithswiftcom/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-search-hackingwithswiftcom/index.html</guid>
+  <pubDate>Sat, 06 Jun 2020 11:59:51 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Preview SwiftUI layouts using Emacs org blocks</title>
@@ -231,7 +292,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1194224168709083137">t
 </div>]]></description>
   <link>http://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/index.html</link>
   <guid isPermaLink="false">http://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/index.html</guid>
-  <pubDate>Sat, 23 May 2020 20:13:18 +0100</pubDate>
+  <pubDate>Sat, 23 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>

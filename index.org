@@ -1,6 +1,49 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-06-06 Sat] Emacs, search hackingwithswift.com
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-search-hackingwithswiftcom
+  :END:
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-search-hackingwithswiftcom/hws.gif]]
+
+[[https://twitter.com/twostraws][Paul Hudson]] authors excellent Swift material at [[https://www.hackingwithswift.com/][hackingwithswift.com]]. I regularly land on the site while searching for snippets from the browser. I was wondering if I could search for snippets directly from Emacs.
+
+Turns out, hackingwithswift uses a JSON HTTP request for querying code examples. With this in mind, we can use /ivy-read/ like Oleh Krehel's [[https://github.com/abo-abo/swiper/blob/8d840b2e8680e2768edb794c9ccecf975f6ba4cf/counsel.el#L6680][counsel-search]] and search for Swift snippets from our favorite editor:
+
+#+begin_src emacs-lisp
+  (require 'request)
+  (require 'json)
+
+  (defun ar/counsel-hacking-with-swift-search ()
+    "Ivy interface to query hackingwithswift.com."
+    (interactive)
+    (ivy-read "hacking with swift: "
+              (lambda (input)
+                (or
+                 (ivy-more-chars)
+                 (let ((request-curl-options (list "-H" (string-trim (url-http-user-agent-string)))))
+                   (request
+                     "https://www.hackingwithswift.com/example-code/search"
+                     :type "GET"
+                     :params (list
+                              (cons "search" input))
+                     :parser 'json-read
+                     :success (cl-function
+                               (lambda (&key data &allow-other-keys)
+                                 (ivy-update-candidates
+                                  (mapcar (lambda (item)
+                                            (let-alist item
+                                              (propertize .title 'url .url)))
+                                          data)))))
+                   0)))
+              :action (lambda (selection)
+                        (browse-url (concat "https://www.hackingwithswift.com"
+                                            (get-text-property 0 'url selection))))
+              :dynamic-collection t
+              :caller 'ar/counsel-hacking-with-swift-search))
+#+end_src
 * [2020-05-23 Sat] Preview SwiftUI layouts using Emacs org blocks
   :PROPERTIES:
   :CUSTOM_ID: swiftui-layout-previews-using-emacs-org-blocks
@@ -883,6 +926,10 @@ comments on [[https://twitter.com/xenodium/status/1241104117264781312][twitter]]
   :PROPERTIES:
   :CUSTOM_ID: sqlite-bookmarks
   :END:
+  :MODIFIED:
+  [2020-05-25 Mon]
+  :END:
+- [[https://news.ycombinator.com/item?id=23287278][DuckDB: SQLite for Analytics | Hacker News]].
 - [[https://news.ycombinator.com/item?id=18831470][LiteCLI – A user-friendly command-line client for SQLite database (Hacker News)]].
 - [[https://www.sqlite.org/appfileformat.html][SQLite As An Application File Format]].
 - [[http://ericsink.com/entries/rss_cat_3.html][Zumero: Efficient sync by using multiple SQLite files]].
@@ -971,7 +1018,7 @@ Thank you Internet strangers! :)
   :CUSTOM_ID: swiftui-bookmarks
   :END:
   :MODIFIED:
-  [2020-05-23 Sat]
+  [2020-05-31 Sun]
   :END:
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
 - [[https://github.com/Jinxiansen/SwiftUI][`SwiftUI` Framework Learning and Usage Guide]].
@@ -982,6 +1029,7 @@ Thank you Internet strangers! :)
 - [[https://swiftwithmajid.com/2019/12/25/building-pager-view-in-swiftui/][Building Pager view in SwiftUI | Majid’s blog about Swift development]].
 - [[https://swiftwithmajid.com/2020/02/05/building-viewmodels-with-combine-framework/][Building ViewModels with Combine framework]].
 - [[https://store.raywenderlich.com/products/combine-asynchronous-programming-with-swift][Combine: Asynchronous Programming with Swift]].
+- [[https://danielsaidi.com/blog/2020/01/05/create-an-spm-package-for-swiftui][Create an SPM Package for SwiftUI | Daniel Saidi]].
 - [[https://github.com/mattgallagher/CwlFitting][CwlFitting: A small SwiftUI package to aid with "shrink-to-fit" + "fill-aligned" VStack and HStack arrangements]].
 - [[https://theswiftdev.com/2018/01/25/deep-dive-into-swift-frameworks/][Deep dive into Swift frameworks - The.Swift.Dev.]].
 - [[https://dev.to/maeganwilson_/default-a-view-in-navigationview-with-swiftui-183p][Default a View in NavigationView with SwiftUI - DEV Community]].
@@ -1029,6 +1077,7 @@ Thank you Internet strangers! :)
 - [[https://github.com/ygit/swiftui][swiftui: A collaborative list of awesome SwiftUI resources]].
 - [[https://finestructure.co/blog/2020/1/20/swiftui-equal-widths-view-constraints][SwiftUI: Equal widths view constraints — finestructure]].
 - [[https://github.com/alfianlosari/SwiftUIStaggeredList][SwiftUIStaggeredList: Staggered Layout List Using SwiftUI]].
+- [[https://danielsaidi.com/blog/2020/01/05/create-an-spm-package-for-swiftui][Swipe gesture SwiftUI | Daniel Saidi]].
 - [[https://www.reddit.com/r/swift/comments/elhakp/so_i_guess_my_journey_begins_now/][SwuiftUI books]].
 - [[https://sarunw.com/tags/swiftui/][Tagged “SwiftUI” | Sarun]].
 - [[https://swiftwithmajid.com/2020/02/26/textfield-in-swiftui/][TextField in SwiftUI | Majid’s blog about Swift development]].
@@ -2797,6 +2846,10 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   :PROPERTIES:
   :CUSTOM_ID: marketing-bookmarks
   :END:
+  :MODIFIED:
+  [2020-05-25 Mon]
+  :END:
+- [[https://news.ycombinator.com/item?id=23289185][Product Marketing for Engineers | Hacker News]].
 - [[https://www.launchaco.com/][Startup Website Builder - Launchaco]].
 * [2018-12-19 Wed] Bluetooth low energy (BLE) bookmarks
   :PROPERTIES:
@@ -3416,7 +3469,7 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   :CUSTOM_ID: macos-app-bookmarks
   :END:
   :MODIFIED:
-  [2020-05-24 Sun]
+  [2020-05-25 Mon]
   :END:
 - [[https://github.com/GetStream/Winds/blob/master/README.md][GetStream/Winds: macOS rss reader]].
 - [[https://github.com/koekeishiya/yabai][GitHub - koekeishiya/yabai: A tiling window manager for macOS based on binary]].
@@ -3425,6 +3478,7 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 - [[https://www.obdev.at/products/launchbar/index.html][LaunchBar 6 (can I implement flows in Emacs)?]].
 - [[https://news.ycombinator.com/item?id=21179713][List of open source applications for macOS (Hacker News)]].
 - [[https://macopenweb.com/][Mac Open Web, by Brian Warren]].
+- [[https://github.com/kam800/MachObfuscator/blob/master/README.md][MachObfuscator/README.md at master · kam800/MachObfuscator · GitHub]].
 - [[https://papers.put.as/macosx/macosx/][macOS · Papers, Slides and Thesis Archive]].
 - [[https://www.gonsie.com/blorg/ipad-setup.html][My iPad Setup]].
 - [[https://github.com/nikitavoloboev/my-mac-os][my-mac-os: My wonderful world of macOS]].
@@ -6152,7 +6206,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2020-04-29 Wed]
+[2020-06-04 Thu]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
@@ -6203,6 +6257,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.economist.com/finance-and-economics/2017/06/24/fund-managers-rarely-outperform-the-market-for-long][Fund managers rarely outperform the market for long - Buttonwood #passive-over-active]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/9n0636/investing_global_=all_cap_vs_small_cap_first_time/][Global All Cap VS Small Cap - first time 24 Male : UKPersonalFinance]].
 - [[https://www.reddit.com/r/UKPersonalFinance/wiki/globaltracker][globaltracker - UKPersonalFinance]].
+- [[https://www.reddit.com/r/Bogleheads/comments/gvxawv/how_do_i_take_a_wage_from_my_vanguard/][How do I take a wage from my vanguard lifestrategy fund]].
 - [[https://www.quora.com/How-does-AQR-Capital-compare-with-Two-Sigma][How does AQR Capital compare with Two Sigma? - Quora]].
 - [[https://smartersquirrel.com/how-i-built-a-six-figure-passive-income-by-age-47][How I built a six figure passive income by age 47]].
 - [[https://urbanplanned.wordpress.com/2018/08/05/how-i-paid-off-5000-of-consumer-debt-in-5-months/][How I paid off £5000 of consumer debt in 5 months – URBANPLANNED]].
@@ -7908,7 +7963,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2020-05-23 Sat]
+[2020-05-31 Sun]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -7944,6 +7999,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://github.com/almassapargali/LocationPicker][GitHub - almassapargali/LocationPicker (Swift)]].
 - [[https://github.com/anas-p/ImagePicker][GitHub - anas-p/ImagePicker: UIImagePickerController for camera and photo library]].
 - [[https://github.com/burczyk/XcodeSwiftSnippets][GitHub - burczyk/XcodeSwiftSnippets: Swift 4 code snippets for Xcode]].
+- [[https://github.com/DevLiuSir/CircleProgressBar][GitHub - DevLiuSir/CircleProgressBar: This is a simple animation circle progress bar]].
 - [[https://github.com/hyperoslo/Cache][GitHub - hyperoslo/Cache: Nothing but Cache.]].
 - [[https://github.com/Raizlabs/BonMot][GitHub - Raizlabs/BonMot: Beautiful, easy attributed strings in Swift]].
 - [[https://github.com/raywenderlich/swift-algorithm-club][GitHub - raywenderlich/swift-algorithm-club: Swift Algorithm Club]].
@@ -7964,6 +8020,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://www.raywenderlich.com/731-macos-development-for-beginners-part-1][macOS Swift Development for Beginners: Part 1]].
 - [[https://twitter.com/MartinLasek/status/1256349442472505344][Martin Lasek on Twitter: "Handling prices in Swift."]].
 - [[https://oleb.net/2018/objc-swift-transition/][Migrating an Objective-C class to Swift: a piecemeal approach – Ole Begemann]].
+- [[https://theswiftdev.com/migrating-from-cocoapods-to-swift-package-manager/][Migrating from CocoaPods to Swift Package Manager - The.Swift.Dev.]].
 - [[https://medium.com/thecreateschool/migrating-from-swift-4-to-swift-5-2f425b99436b][Migrating from Swift 4 to Swift 5 – The Create School – Medium]].
 - [[https://ericasadun.com/2018/12/14/more-fun-with-swift-5-string-interpolation-radix-formatting/][More fun with Swift 5 String Interpolation: Radix (Erica Sadun)]].
 - [[https://github.com/netguru/swift-style-guide][Netguru's Swift Style Guide]].
@@ -7993,6 +8050,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://troz.net/][TrozWare blogs on Swift]].
 - [[https://medium.com/the-traveled-ios-developers-guide/uilayoutguide-6b3b552b1890][UILayoutGuide – The Traveled iOS Developer’s Guide – Medium]].
 - [[https://swiftrocks.com/understanding-dispatchqueues.html][Understanding DispatchQueues - SwiftRocks]].
+- [[https://www.hackingwithswift.com/quick-start/understanding-swift][Understanding Swift - free quick start tutorials for Swift developers (hackingwithswift)]].
 - [[https://aozsky.com/swift/swift_ide][Use Neovim as Swift IDE - The Go Blog]].
 - [[https://www.swiftbysundell.com/posts/using-errors-as-control-flow-in-swift][Using errors as control flow in Swif (Sundell)]].
 - [[https://nshipster.com/wkwebview][WKWebView (NSHipster)]].
@@ -10921,6 +10979,10 @@ Lots of great tips in [[http://sachachua.com/blog/2015/03/emacs-hangout-2015-03-
 :PROPERTIES:
 :CUSTOM_ID: food-bookmarks
 :END:
+:MODIFIED:
+[2020-06-06 Sat]
+:END:
+- [[https://twitter.com/cherdotdev/status/1264343579725647880][Cher's hot sauce collection]].
 - [[http://summertomato.com/][Summer tomato]].
 - [[http://www.tarladalal.com/][Tarladalal recipes]].
 
@@ -11892,7 +11954,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2020-05-07 Thu]
+[2020-06-02 Tue]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -11920,6 +11982,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://arenzana.org/2019/06/artisanal-web-hosting/][Artisanal Web Hosting]].
 - [[https://news.ycombinator.com/item?id=14146850][Ask HN: Best business advice for software developers (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=12376596][Ask HN: How do you handle DDoS attacks? (Hacker News)]].
+- [[https://news.ycombinator.com/item?id=23390966][Ask HN: How does your company manage its encryption keys? | Hacker News]].
 - [[https://news.ycombinator.com/item?id=9561127][Ask HN: Simple alternative to Google Analytics]].
 - [[https://news.ycombinator.com/item?id=9667247][Ask HN: What tools do you use to build HTML emails?]]
 - [[https://news.ycombinator.com/item?id=18236188][Ask HN: What's your advice for someone who's raising capital for the first time? (Hacker News)]].
@@ -12218,7 +12281,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2020-05-24 Sun]
+[2020-06-01 Mon]
 :END:
 - "Do not spoil what you have by desiring what you have not; what you now have was once among the things you only hoped for." - Epicurus
 - [[https://www.thesleepjudge.com/23-weird-plants-for-your-bedroom-that-will-help-you-sleep-like-a-baby/][23 Weird Plants For Your Bedroom That Will Help You Sleep Like A Baby]].
@@ -12258,6 +12321,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://joshldavis.com/2013/05/20/the-path-to-dijkstras-handwriting/][The Path to Dijkstra’s Handwriting]].
 - [[http://articles.mercola.com/sites/articles/archive/2011/08/16/dirty-little-secret-orange-juice-is-artificially-flavored-to-taste-like-oranges.aspx][The Shocking Truth About Freshly Squeezed Orange Juice]].
 - [[http://www.quora.com/How-does-it-feel-to-travel-alone][Travelling alone (Quora)]].
+- [[https://english.emmaclit.com/2017/05/20/you-shouldve-asked/comment-page-9/][You should’ve asked | Emma]].
 - [[http://www.zerowastehome.com/][Zero Waste Home]].
 
 * [2015-03-06 Fri] Graphics bookmarks
@@ -12847,7 +12911,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: india-travel-bookmarks
 :END:
 :MODIFIED:
-[2019-12-01 Sun]
+[2020-06-03 Wed]
 :END:
 - [[https://news.ycombinator.com/item?id=13119986][A Guide to the Breads of India (Hacker News)]].
 - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
@@ -12888,6 +12952,7 @@ If FROM or TO is negative, it counts from the end.
 - [[https://en.wikipedia.org/wiki/Karni_Mata][Karni Mata (rats temple)]].
 - [[https://duckduckgo.com/?q=Khajuraho&t=ffab&ia=images][Khajuraho]].
 - Khandala.
+- [[https://twitter.com/wrathofgnon/status/1268080568387817472][Khotachi Wadi]].
 - [[https://duckduckgo.com/?q=kovalam+beach&t=ffab&iax=1&ia=images][Kovalam beach]].
 - Lonavala.
 - Mahabaleshwar.
@@ -13158,8 +13223,12 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2020-05-10 Sun]
+[2020-05-31 Sun]
 :END:
+**** TODO [[https://moviebabble.com/][MovieBabble - The Casual Way to Discuss Movies]].
+**** TODO [[http://bitdepth.org/][bitdepth]].
+**** TODO [[https://www.imdb.com/title/tt7282468/][Burning (2018) - IMDb]].
+**** TODO [[https://www.rottentomatoes.com/m/american_honey][American Honey (2016) - Rotten Tomatoes]].
 **** TODO Undone.
 **** TODO [[https://en.wikipedia.org/wiki/The_Wire][The Wire - Wikipedia]].
 **** TODO [[https://en.wikipedia.org/wiki/Ajin:_Demi-Human][Ajin: Demi-Human - Wikipedia]].
@@ -13316,8 +13385,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2020-05-10 Sun]
+[2020-06-03 Wed]
 :END:
+**** TODO [[https://muratbuffalo.blogspot.com/2020/06/some-book-recommendations.html][Metadata: Forty book recommendations]].
 **** TODO [[https://www.goodreads.com/list/show/89580.Solarpunk][Solarpunk (62 books)]].
 **** TODO [[https://theanarchistlibrary.org/library/p-m-bolo-bolo][Bolo’bolo | The Anarchist Library]].
 **** TODO [[https://archive.org/details/velvetmonkeywren00muir/page/260][The velvet monkey wrench : Muir, John, 1918-]].
@@ -13788,7 +13858,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2020-05-11 Mon]
+[2020-06-01 Mon]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -13930,6 +14000,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/mmontone/template-overlays][GitHub - mmontone/template-overlays: Emacs overlays for template files]].
 - [[https://github.com/p3r7/space-theming][GitHub - p3r7/space-theming: A port of Spacemacs theming layer to vanilla Emacs]].
 - [[https://github.com/politza/pdf-tools][GitHub - politza/pdf-tools: Emacs support library for PDF files.]].
+- [[https://github.com/rougier/elegant-emacs][GitHub - rougier/elegant-emacs: A very minimal but elegant emacs (I think)]].
 - [[https://github.com/sebastiencs/company-box][GitHub - sebastiencs/company-box: A company front-end with icons]].
 - [[https://github.com/takaxp/moom][GitHub - takaxp/moom: A Moom port to Emacs - Make your dominant hand FREE from your mouse (easily move frames)]].
 - [[https://github.com/wbolster/emacs-direnv][GitHub - wbolster/emacs-direnv: direnv integration for emacs]].
@@ -14147,9 +14218,10 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: browser-bookmarks
 :END:
 :MODIFIED:
-[2019-09-01 Sun]
+[2020-05-28 Thu]
 :END:
 - [[http://www.dillo.org][Dillo]].
+- [[https://fingers.today/tech/firefox-app-mode][Firefox: no window borders or other decoration]].
 - [[http://www.netsurf-browser.org/][NetSurf]].
 - [[https://addons.mozilla.org/en-US/firefox/addon/single-file/][SingleFile | Save a page as a single HTML file]].
 
