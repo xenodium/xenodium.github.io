@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-20 Fri 19:59 -->
+<!-- 2020-06-12 Fri 19:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>gnu global, ctags, and Emacs setup</title>
@@ -201,6 +201,7 @@
            max-width: 88ch;
            padding: 2ch;
            margin: auto;
+           background-color: white;
          }
 
          .figure {
@@ -459,9 +460,59 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org0c9d99a" class="outline-2">
+<div id="outline-container-org2da6585" class="outline-2">
 <h2 id="gnu-global-ctags-and-emacs-setup"><span class="timestamp-wrapper"><span class="timestamp">04 June 2019</span></span> gnu global, ctags, and Emacs setup</h2>
 <div class="outline-text-2" id="text-gnu-global-ctags-and-emacs-setup">
+</div>
+
+<div id="outline-container-org1c272e4" class="outline-3">
+<h3 id="org1c272e4">Universal ctags (newer)</h3>
+<div class="outline-text-3" id="text-org1c272e4">
+<p>
+I'm now using universal <a href="https://ctags.io/">ctags</a>, as recommended by <a href="https://github.com/redguardtoo/counsel-etags">counsel-etags</a>.
+</p>
+
+<p>
+From universal ctag's <a href="https://docs.ctags.io/en/latest/osx.html">Building on Mac OS</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew tap universal-ctags/universal-ctags
+brew install --HEAD universal-ctags
+</pre>
+</div>
+
+<p>
+.ctags
+</p>
+
+<div class="org-src-container">
+<pre class="src src-fundamental">--langdef=swift
+--langmap=swift:+.swift
+
+--kinddef-swift=v,variable,variables
+--kinddef-swift=f,function,functions
+--kinddef-swift=s,struct,structs
+--kinddef-swift=c,class,classes
+--kinddef-swift=p,protocol,protocols
+--kinddef-swift=e,enum,enums
+--kinddef-swift=t,typealias,typealiases
+
+--regex-swift=/(var|let)[ \t]+([^:=]+).*$/\2/v/
+--regex-swift=/func[ \t]+([^\(\)]+)\([^\(\)]*\)/\1/f/
+--regex-swift=/struct[ \t]+([^:\{]+).*$/\1/s/
+--regex-swift=/class[ \t]+([^:\{]+).*$/\1/c/
+--regex-swift=/protocol[ \t]+([^:\{]+).*$/\1/p/
+--regex-swift=/enum[ \t]+([^:\{]+).*$/\1/e/
+--regex-swift=/(typealias)[ \t]+([^:=]+).*$/\2/v/
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcb5aa7c" class="outline-3">
+<h3 id="orgcb5aa7c">Exuberant ctags (older/buggy?)</h3>
+<div class="outline-text-3" id="text-orgcb5aa7c">
 <p>
 Install gnu global (ensure homebrew uses &#x2013;with-exuberant-ctags flag).
 </p>
@@ -561,6 +612,7 @@ Helpful references
 <a href="https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf">https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf</a>
 <a href="https://aozsky.com/swift/swift_ide">https://aozsky.com/swift/swift_ide</a>
 </p>
+</div>
 </div>
 </div>
 </div>
