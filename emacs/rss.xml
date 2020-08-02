@@ -6,7 +6,138 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 06 Jun 2020 12:00:02 +0100</lastBuildDate>
+<lastBuildDate>Sun, 02 Aug 2020 17:06:33 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>SwiftUI macOS desk clock</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-orgdf14217" class="outline-2">
+ <h2 id="swiftui-desk-clock"> <span class="timestamp-wrapper"> <span class="timestamp">02 August 2020</span></span> SwiftUI macOS desk clock</h2>
+ <div class="outline-text-2" id="text-swiftui-desk-clock">
+
+ <div class="figure">
+ <p> <img src="../images/swiftui-desk-clock/everclock.gif" alt="everclock.gif"></img></p>
+</div>
+
+ <p>
+For time display, I've gone back and forth between an always-displayed macOS's menu bar to an auto-hide menu bar, and letting Emacs display the time. Neither felt great nor settled.
+</p>
+
+ <p>
+With some tweaks, Paul Hudson's  <a href="https://www.hackingwithswift.com/quick-start/swiftui/how-to-use-a-timer-with-swiftui">How to use a timer with SwiftUI</a>, led me to build a simple desk clock. Ok, let's not get fancy. It's really just an always-on-top floating window, showing a swiftUI label, but hey I like the minimalist feel ;)
+</p>
+
+ <p>
+Let's see if it sticks around or it gets in the way… Either way, here's standalone snippet. Run with  <i>swift deskclock.swift</i>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">import</span> Cocoa
+ <span style="color: #a71d5d;">import</span> SwiftUI
+
+ <span style="color: #a71d5d;">let</span> application = NSApplication. <span style="color: #a71d5d;">shared</span>
+ <span style="color: #a71d5d;">let</span> appDelegate =  <span style="color: #795da3;">AppDelegate</span>()
+NSApp. <span style="color: #795da3;">setActivationPolicy</span>(. <span style="color: #a71d5d;">regular</span>)
+application. <span style="color: #a71d5d;">delegate</span> = appDelegate
+application. <span style="color: #333333;">mainMenu</span> = NSMenu. <span style="color: #795da3;">makeMenu</span>()
+application. <span style="color: #a71d5d;">run</span>()
+
+ <span style="color: #a71d5d;">struct</span>  <span style="color: #795da3;">ClockView</span>: View {
+   <span style="color: #a71d5d;">@State</span>  <span style="color: #a71d5d;">var</span> time =  <span style="color: #183691;">"--:--"</span>
+
+   <span style="color: #a71d5d;">let</span> timer =  <span style="color: #a71d5d;">Timer</span>. <span style="color: #a71d5d;">publish</span>(every: 1, on: . <span style="color: #a71d5d;">main</span>,  <span style="color: #a71d5d;">in</span>: . <span style="color: #a71d5d;">common</span>). <span style="color: #a71d5d;">autoconnect</span>()
+
+   <span style="color: #a71d5d;">var</span> body:  <span style="color: #a71d5d;">some</span> View {
+    GeometryReader { geometry  <span style="color: #a71d5d;">in</span>
+
+      VStack {
+         <span style="color: #795da3;">Text</span>(time)
+          . <span style="color: #795da3;">onReceive</span>(timer) { input  <span style="color: #a71d5d;">in</span>
+             <span style="color: #a71d5d;">let</span> formatter =  <span style="color: #a71d5d;">DateFormatter</span>()
+            formatter. <span style="color: #a71d5d;">dateFormat</span> =  <span style="color: #183691;">"HH:mm"</span>
+            time = formatter. <span style="color: #a71d5d;">string</span>(from: input)
+          }
+          . <span style="color: #795da3;">font</span>(. <span style="color: #795da3;">system</span>(size: 40))
+          . <span style="color: #a71d5d;">padding</span>()
+      }. <span style="color: #795da3;">frame</span>(width: geometry. <span style="color: #a71d5d;">size</span>. <span style="color: #333333;">width</span>, height: geometry. <span style="color: #a71d5d;">size</span>. <span style="color: #333333;">height</span>)
+        . <span style="color: #a71d5d;">background</span>(Color. <span style="color: #333333;">black</span>)
+        . <span style="color: #795da3;">cornerRadius</span>(10)
+        . <span style="color: #795da3;">frame</span>(maxWidth: . <span style="color: #a71d5d;">infinity</span>, maxHeight: . <span style="color: #a71d5d;">infinity</span>)
+    }
+  }
+}
+
+ <span style="color: #a71d5d;">extension</span>  <span style="color: #795da3;">NSWindow</span> {
+   <span style="color: #a71d5d;">static</span>  <span style="color: #a71d5d;">func</span>  <span style="color: #795da3;">makeWindow</span>() -> NSWindow {
+     <span style="color: #a71d5d;">let</span> window =  <span style="color: #795da3;">NSWindow</span>(
+      contentRect:  <span style="color: #a71d5d;">NSRect</span>. <span style="color: #795da3;">makeDefault</span>(),
+      styleMask: [. <span style="color: #333333;">closable</span>, . <span style="color: #333333;">miniaturizable</span>, . <span style="color: #333333;">resizable</span>, . <span style="color: #333333;">fullSizeContentView</span>],
+      backing: . <span style="color: #333333;">buffered</span>,  <span style="color: #a71d5d;">defer</span>:  <span style="color: #0086b3;">false</span>)
+    window. <span style="color: #a71d5d;">level</span> = . <span style="color: #333333;">floating</span>
+    window. <span style="color: #795da3;">setFrameAutosaveName</span>(<span style="color: #183691;">"everclock"</span>)
+    window. <span style="color: #333333;">collectionBehavior</span> = [. <span style="color: #333333;">canJoinAllSpaces</span>, . <span style="color: #333333;">stationary</span>, . <span style="color: #333333;">ignoresCycle</span>, . <span style="color: #333333;">fullScreenPrimary</span>]
+    window. <span style="color: #795da3;">makeKeyAndOrderFront</span>(<span style="color: #0086b3;">nil</span>)
+    window. <span style="color: #333333;">isMovableByWindowBackground</span> =  <span style="color: #0086b3;">true</span>
+    window. <span style="color: #333333;">titleVisibility</span> = . <span style="color: #333333;">hidden</span>
+    window. <span style="color: #a71d5d;">backgroundColor</span> = . <span style="color: #333333;">clear</span>
+     <span style="color: #a71d5d;">return</span> window
+  }
+}
+
+ <span style="color: #a71d5d;">class</span>  <span style="color: #795da3;">AppDelegate</span>:  <span style="color: #a71d5d;">NSObject</span>, NSApplicationDelegate {
+   <span style="color: #a71d5d;">var</span> window = NSWindow. <span style="color: #795da3;">makeWindow</span>()
+   <span style="color: #a71d5d;">var</span> hostingView: NSView?
+
+   <span style="color: #a71d5d;">func</span>  <span style="color: #795da3;">applicationDidFinishLaunching</span>(_ notification:  <span style="color: #a71d5d;">Notification</span>) {
+    hostingView =  <span style="color: #795da3;">NSHostingView</span>(rootView:  <span style="color: #795da3;">ClockView</span>())
+    window. <span style="color: #333333;">contentView</span> = hostingView
+    NSApp. <span style="color: #795da3;">activate</span>(ignoringOtherApps:  <span style="color: #0086b3;">true</span>)
+  }
+}
+
+ <span style="color: #a71d5d;">extension</span>  <span style="color: #a71d5d;">NSRect</span> {
+   <span style="color: #a71d5d;">static</span>  <span style="color: #a71d5d;">func</span>  <span style="color: #795da3;">makeDefault</span>() ->  <span style="color: #a71d5d;">NSRect</span> {
+     <span style="color: #a71d5d;">let</span> initialMargin =  <span style="color: #a71d5d;">CGFloat</span>(60)
+     <span style="color: #a71d5d;">let</span> fallback =  <span style="color: #a71d5d;">NSRect</span>(x: 0, y: 0, width: 100, height: 150)
+
+     <span style="color: #a71d5d;">guard</span>  <span style="color: #a71d5d;">let</span> screenFrame = NSScreen. <span style="color: #a71d5d;">main</span>?. <span style="color: #333333;">frame</span>  <span style="color: #a71d5d;">else</span> {
+       <span style="color: #a71d5d;">return</span> fallback
+    }
+
+     <span style="color: #a71d5d;">return</span>  <span style="color: #a71d5d;">NSRect</span>(
+      x: screenFrame. <span style="color: #333333;">maxX</span> - fallback. <span style="color: #333333;">width</span> - initialMargin,
+      y: screenFrame. <span style="color: #333333;">maxY</span> - fallback. <span style="color: #333333;">height</span> - initialMargin,
+      width: fallback. <span style="color: #333333;">width</span>, height: fallback. <span style="color: #333333;">height</span>)
+  }
+}
+
+ <span style="color: #a71d5d;">extension</span>  <span style="color: #795da3;">NSMenu</span> {
+   <span style="color: #a71d5d;">static</span>  <span style="color: #a71d5d;">func</span>  <span style="color: #795da3;">makeMenu</span>() -> NSMenu {
+     <span style="color: #a71d5d;">let</span> appMenu =  <span style="color: #795da3;">NSMenuItem</span>()
+    appMenu. <span style="color: #333333;">submenu</span> =  <span style="color: #795da3;">NSMenu</span>()
+
+    appMenu. <span style="color: #333333;">submenu</span>?. <span style="color: #795da3;">addItem</span>(
+       <span style="color: #795da3;">NSMenuItem</span>(
+        title:  <span style="color: #183691;">"Quit \(</span> <span style="color: #a71d5d;">ProcessInfo</span>. <span style="color: #a71d5d;">processInfo</span>. <span style="color: #a71d5d;">processName</span> <span style="color: #183691;">)"</span>,
+        action:  <span style="color: #a71d5d;">#selector</span>(NSApplication. <span style="color: #a71d5d;">terminate</span>(_:)), keyEquivalent:  <span style="color: #183691;">"q"</span>
+      ))
+
+     <span style="color: #a71d5d;">let</span> mainMenu =  <span style="color: #795da3;">NSMenu</span>(title:  <span style="color: #183691;">"Main Menu"</span>)
+    mainMenu. <span style="color: #795da3;">addItem</span>(appMenu)
+     <span style="color: #a71d5d;">return</span> mainMenu
+  }
+}
+
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/swiftui-desk-clock/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/swiftui-desk-clock/index.html</guid>
+  <pubDate>Sun, 02 Aug 2020 00:00:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs, search hackingwithswift.com</title>
@@ -1589,9 +1720,59 @@ In your ~/.ssh/config add:
   <title>gnu global, ctags, and Emacs setup</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org0c9d99a" class="outline-2">
+ <div id="outline-container-org2da6585" class="outline-2">
  <h2 id="gnu-global-ctags-and-emacs-setup"> <span class="timestamp-wrapper"> <span class="timestamp">04 June 2019</span></span> gnu global, ctags, and Emacs setup</h2>
  <div class="outline-text-2" id="text-gnu-global-ctags-and-emacs-setup">
+</div>
+
+ <div id="outline-container-org1c272e4" class="outline-3">
+ <h3 id="org1c272e4">Universal ctags (newer)</h3>
+ <div class="outline-text-3" id="text-org1c272e4">
+ <p>
+I'm now using universal  <a href="https://ctags.io/">ctags</a>, as recommended by  <a href="https://github.com/redguardtoo/counsel-etags">counsel-etags</a>.
+</p>
+
+ <p>
+From universal ctag's  <a href="https://docs.ctags.io/en/latest/osx.html">Building on Mac OS</a>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew tap universal-ctags/universal-ctags
+brew install --HEAD universal-ctags
+</pre>
+</div>
+
+ <p>
+.ctags
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-fundamental">--langdef=swift
+--langmap=swift:+.swift
+
+--kinddef-swift=v,variable,variables
+--kinddef-swift=f,function,functions
+--kinddef-swift=s,struct,structs
+--kinddef-swift=c,class,classes
+--kinddef-swift=p,protocol,protocols
+--kinddef-swift=e,enum,enums
+--kinddef-swift=t,typealias,typealiases
+
+--regex-swift=/(var|let)[ \t]+([^:=]+).*$/\2/v/
+--regex-swift=/func[ \t]+([^\(\)]+)\([^\(\)]*\)/\1/f/
+--regex-swift=/struct[ \t]+([^:\{]+).*$/\1/s/
+--regex-swift=/class[ \t]+([^:\{]+).*$/\1/c/
+--regex-swift=/protocol[ \t]+([^:\{]+).*$/\1/p/
+--regex-swift=/enum[ \t]+([^:\{]+).*$/\1/e/
+--regex-swift=/(typealias)[ \t]+([^:=]+).*$/\2/v/
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgcb5aa7c" class="outline-3">
+ <h3 id="orgcb5aa7c">Exuberant ctags (older/buggy?)</h3>
+ <div class="outline-text-3" id="text-orgcb5aa7c">
  <p>
 Install gnu global (ensure homebrew uses –with-exuberant-ctags flag).
 </p>
@@ -1691,6 +1872,7 @@ Helpful references
  <a href="https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf">https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf</a>
  <a href="https://aozsky.com/swift/swift_ide">https://aozsky.com/swift/swift_ide</a>
 </p>
+</div>
 </div>
 </div>
 </div>]]></description>
