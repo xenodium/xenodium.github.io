@@ -1,6 +1,135 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-08-02 Sun] SwiftUI macOS desk clock
+:PROPERTIES:
+:CUSTOM_ID: swiftui-desk-clock
+:END:
+
+[[file:images/swiftui-desk-clock/everclock.gif]]
+
+For time display, I've gone back and forth between an always-displayed macOS's menu bar to an auto-hide menu bar, and letting Emacs display the time. Neither felt great nor settled.
+
+With some tweaks, Paul Hudson's [[https://www.hackingwithswift.com/quick-start/swiftui/how-to-use-a-timer-with-swiftui][How to use a timer with SwiftUI]], led me to build a simple desk clock. Ok, let's not get fancy. It's really just an always-on-top floating window, showing a swiftUI label, but hey I like the minimalist feel ;)
+
+Let's see if it sticks around or it gets in the way... Either way, here's standalone snippet. Run with /swift deskclock.swift/.
+
+#+begin_src swift
+  import Cocoa
+  import SwiftUI
+
+  let application = NSApplication.shared
+  let appDelegate = AppDelegate()
+  NSApp.setActivationPolicy(.regular)
+  application.delegate = appDelegate
+  application.mainMenu = NSMenu.makeMenu()
+  application.run()
+
+  struct ClockView: View {
+    @State var time = "--:--"
+
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+      GeometryReader { geometry in
+
+        VStack {
+          Text(time)
+            .onReceive(timer) { input in
+              let formatter = DateFormatter()
+              formatter.dateFormat = "HH:mm"
+              time = formatter.string(from: input)
+            }
+            .font(.system(size: 40))
+            .padding()
+        }.frame(width: geometry.size.width, height: geometry.size.height)
+          .background(Color.black)
+          .cornerRadius(10)
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
+    }
+  }
+
+  extension NSWindow {
+    static func makeWindow() -> NSWindow {
+      let window = NSWindow(
+        contentRect: NSRect.makeDefault(),
+        styleMask: [.closable, .miniaturizable, .resizable, .fullSizeContentView],
+        backing: .buffered, defer: false)
+      window.level = .floating
+      window.setFrameAutosaveName("everclock")
+      window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenPrimary]
+      window.makeKeyAndOrderFront(nil)
+      window.isMovableByWindowBackground = true
+      window.titleVisibility = .hidden
+      window.backgroundColor = .clear
+      return window
+    }
+  }
+
+  class AppDelegate: NSObject, NSApplicationDelegate {
+    var window = NSWindow.makeWindow()
+    var hostingView: NSView?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+      hostingView = NSHostingView(rootView: ClockView())
+      window.contentView = hostingView
+      NSApp.activate(ignoringOtherApps: true)
+    }
+  }
+
+  extension NSRect {
+    static func makeDefault() -> NSRect {
+      let initialMargin = CGFloat(60)
+      let fallback = NSRect(x: 0, y: 0, width: 100, height: 150)
+
+      guard let screenFrame = NSScreen.main?.frame else {
+        return fallback
+      }
+
+      return NSRect(
+        x: screenFrame.maxX - fallback.width - initialMargin,
+        y: screenFrame.maxY - fallback.height - initialMargin,
+        width: fallback.width, height: fallback.height)
+    }
+  }
+
+  extension NSMenu {
+    static func makeMenu() -> NSMenu {
+      let appMenu = NSMenuItem()
+      appMenu.submenu = NSMenu()
+
+      appMenu.submenu?.addItem(
+        NSMenuItem(
+          title: "Quit \(ProcessInfo.processInfo.processName)",
+          action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"
+        ))
+
+      let mainMenu = NSMenu(title: "Main Menu")
+      mainMenu.addItem(appMenu)
+      return mainMenu
+    }
+  }
+
+#+end_src
+* [2020-07-30 Thu] Mending bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: mending-bookmarks
+  :END:
+- [[https://youtu.be/S6UfWgMDlkQ][12 Great Sewing Tips and Tricks ! Best great sewing tips and tricks #7 - YouTube]].
+* [2020-06-17 Wed] ffmpeg bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: ffmpeg-bookmarks
+  :END:
+- [[https://el-tramo.be/blog/ken-burns-ffmpeg/][Ken Burns Effect Slideshows with FFMPeg (mko.re)]].
+- [[https://news.ycombinator.com/item?id=23540704][FFmpeg 4.3 (Hacker News)]].
+* [2020-06-14 Sun] Black lives matter (BLM) bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: black-lives-matter-blm-bookmarks
+  :END:
+- [[https://projects.fivethirtyeight.com/racism-polls/][Do You Know How Divided White And Black Americans Are On Racism? (FiveThirtyEight)]].
+- [[https://marker.medium.com/its-time-we-dealt-with-white-supremacy-in-tech-8f7816fe809][It’s Time We Dealt With White Supremacy in Tech]].
+- [[https://www.politico.com/magazine/story/2014/05/religious-right-real-origins-107133][The Real Origins of the Religious Right - POLITICO Magazine]].
 * [2020-06-14 Sun] Dogs bookmarks
   :PROPERTIES:
   :CUSTOM_ID: dogs-bookmarks
@@ -1023,22 +1152,29 @@ Thank you Internet strangers! :)
   :CUSTOM_ID: swiftui-bookmarks
   :END:
   :MODIFIED:
-  [2020-06-13 Sat]
+  [2020-08-01 Sat]
   :END:
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
+- [[https://developer.apple.com/documentation/swiftui/environmentvalues][@Environment values]].
+- [[https://twitter.com/natpanferova/status/1275903292946567168][`@State` `onChange`]].
 - [[https://github.com/Jinxiansen/SwiftUI][`SwiftUI` Framework Learning and Usage Guide]].
 - [[https://swiftui-lab.com/companion/][A Companion for SwiftUI - The SwiftUI Lab]].
+- [[https://github.com/jordansinger/SwiftUI-Kit][A SwiftUI iOS system components and interactions demo app based on iOS 14]].
 - [[https://swiftui-lab.com/swiftui-animations-part1/][Advanced SwiftUI Animations - Part 1: Paths - The SwiftUI Lab]].
 - [[https://swiftui-lab.com/advanced-transitions/][Advanced SwiftUI Transitions - The SwiftUI Lab]].
 - [[https://www.morningswiftui.com/blog/build-mapview-app-with-swiftui][Building a MapView app with SwiftUI — Morning SwiftUI]].
 - [[https://swiftwithmajid.com/2019/12/25/building-pager-view-in-swiftui/][Building Pager view in SwiftUI | Majid’s blog about Swift development]].
 - [[https://swiftwithmajid.com/2020/02/05/building-viewmodels-with-combine-framework/][Building ViewModels with Combine framework]].
+- [[https://www.donnywals.com/category/combine/][Category: Combine – Donny Wals]].
 - [[https://store.raywenderlich.com/products/combine-asynchronous-programming-with-swift][Combine: Asynchronous Programming with Swift]].
+- [[https://swiftwithmajid.com/2019/08/28/composable-styling-in-swiftui/][Composable styling in SwiftUI | Swift with Majid]].
 - [[https://danielsaidi.com/blog/2020/01/05/create-an-spm-package-for-swiftui][Create an SPM Package for SwiftUI | Daniel Saidi]].
 - [[https://github.com/mattgallagher/CwlFitting][CwlFitting: A small SwiftUI package to aid with "shrink-to-fit" + "fill-aligned" VStack and HStack arrangements]].
+- [[https://twitter.com/twostraws/status/1280996740053827584][debugPrint() SwiftUI modifier]].
 - [[https://theswiftdev.com/2018/01/25/deep-dive-into-swift-frameworks/][Deep dive into Swift frameworks - The.Swift.Dev.]].
 - [[https://dev.to/maeganwilson_/default-a-view-in-navigationview-with-swiftui-183p][Default a View in NavigationView with SwiftUI - DEV Community]].
 - [[https://designcode.io/swiftui?promo=learnswiftui][designcode's SwiftUI course]].
+- [[https://medium.com/over-engineering/monitoring-a-folder-for-changes-in-ios-dc3f8614f902][Detecting changes to a folder in iOS using Swift]].
 - [[https://medium.com/@karaiskc/first-learnings-from-adopting-swiftui-be2ee4289007][First learnings from adopting SwiftUI - Christos Karaiskos - Medium (card example)]].
 - [[https://www.vadimbulavin.com/swift-function-builders-swiftui-view-builder/][Function Builders in Swift and SwiftUI]].
 - [[https://swiftui-lab.com/geometryreader-to-the-rescue/][GeometryReader to the Rescue - The SwiftUI Lab]].
@@ -1052,33 +1188,49 @@ Thank you Internet strangers! :)
 - [[https://github.com/siteline/SwiftUI-Introspect][GitHub - siteline/SwiftUI-Introspect: Introspect underlying UIKit components]].
 - [[https://github.com/SwiftUIX/SwiftUIX][GitHub - SwiftUIX/SwiftUIX: An extension to the standard SwiftUI library.]].
 - [[https://swiftwithmajid.com/2019/11/13/gradient-in-swiftui/][Gradient in SwiftUI | Majid’s blog about Swift development]].
+- [[https://blckbirds.com/post/side-menu-hamburger-menu-in-swiftui/][How to create a side menu (hamburger menu) in SwiftUI | BLCKBIRDS]].
 - [[https://www.raywenderlich.com/4503153-how-to-create-a-splash-screen-with-swiftui][How to Create a Splash Screen With SwiftUI | raywenderlich.com]].
 - [[https://stackoverflow.com/questions/56490963/how-to-display-a-search-bar-with-swiftui][how to display a search bar with SwiftUI - Stack Overflow]].
 - [[https://www.hackingwithswift.com/articles/210/how-to-fix-slow-list-updates-in-swiftui][How to fix slow List updates in SwiftUI – Hacking with Swift]].
+- [[https://medium.com/better-programming/scheduling-notifications-and-badges-in-swiftui-9edf8574b893][How to Schedule Notifications and Add Badges in SwiftUI]].
 - [[https://medium.com/better-programming/implement-searchbar-in-swiftui-556a204e1970][Implement a Search Bar in SwiftUI - Better Programming - Medium]].
 - [[https://swiftui-lab.com/communicating-with-the-view-tree-part-1/][Inspecting the View Tree with PreferenceKey - Part 1 - The SwiftUI Lab]].
 - [[https://stackoverflow.com/questions/56505043/how-to-make-view-the-size-of-another-view-in-swiftui][ios - How to make view the size of another view in SwiftUI - Stack Overflow]].
 - [[https://elliehuxtable.com/lessons-learned-with-swift-ios-development/][Lessons learned with Swift + iOS development]].
+- [[https://twitter.com/dmartincy/status/1275913911506780161][LLDB "_regexp-break <file>:<line>:<column>", breakpoint at a particular source code line and column]].
 - [[https://swiftwithmajid.com/2019/12/04/must-have-swiftui-extensions/][Must-have SwiftUI extensions | Majid’s blog about Swift development]].
+- [[https://swiftwithmajid.com/2020/06/29/new-property-wrappers-in-swiftui/][New property wrappers in SwiftUI (@ScaledMetric, @SceneStorage, @AppStorage, @StateObject)]].
 - [[https://www.objc.io/blog/2020/03/17/thinking-in-swiftui/][Our New Book: Thinking in SwiftUI · objc.io]].
+- [[https://gumroad.com/l/practical-combine/wwdc2020][Practical Combine: An introduction to Combine with real examples]].
 - [[https://nalexn.github.io/swiftui-deep-linking/][Programmatic navigation in SwiftUI project - Alexey Naumov]].
+- [[https://medium.com/get-chip/propert-wrappers-in-swift-5-1-14f610530710][Property Wrappers in Swift 5.1. An introduction to one of Swift 5.1’s]].
+- [[https://twitter.com/jsngr/status/1276700160643551232][Recreate this Control Center widget in SwiftUI]].
 - [[https://dev.to/gualtierofr/remote-images-in-swiftui-49jp][Remote images in SwiftUI - DEV Community]].
 - [[https://medium.com/ymedialabs-innovation/resizing-techniques-and-image-quality-that-every-ios-developer-should-know-e061f33f7aba][Resizing Techniques and Image Quality That Every iOS Developer Should Know (Swift)]].
 - [[https://medium.com/flawless-app-stories/reusable-image-cache-in-swift-9b90eb338e8d][Reusable Image Cache in Swift - Flawless iOS - Medium]].
 - [[https://ordinarycoding.com/articles/search-view-in-swiftui/][Search View in SwiftUI | Ordinary Coding]].
 - [[https://twitter.com/icanzilb/status/1235884754576322560][Short video showing you how to debug, learn, or teach Combine operators with Timelane - the approach is always the same, add lanes - analyze the data]].
+- [[https://swiftwithmajid.com/2020/07/21/sidebar-navigation-in-swiftui/][Sidebar navigation in SwiftUI | Swift with Majid]].
 - [[https://github.com/alfianlosari/SwiftUIStaggeredNote][StaggeredList Sample App: A Staggered Pinterest Like Layout using SwiftUI]].
 - [[https://developer.apple.com/documentation/swiftui/state_and_data_flow][State and Data Flow | Apple Developer Documentation]].
+- [[https://twitter.com/twostraws/status/1279487425581133831][Stretchable header]].
 - [[https://stackoverflow.com/questions/56578072/hstack-with-sf-symbols-image-not-aligned-centered][swift - HStack with SF Symbols Image not aligned centered - Stack Overflow]].
 - [[https://stackoverflow.com/questions/59227158/imagepicker-in-swiftui][swift - ImagePicker in SwiftUI - Stack Overflow]].
+- [[https://nshipster.com/propertywrapper/][Swift Property Wrappers - NSHipster]].
+- [[https://swiftuipropertywrappers.com/][Swift UI Property Wrappers (@State, @StateObject, @EnvironmentObject, @ObservedObject, @Binding)]].
+- [[https://stackoverflow.com/questions/62840571/not-receiving-scenephase-changes][swiftui - Not Receiving scenePhase Changes (foreground/background)]].
 - [[https://medium.com/better-programming/swiftui-and-redux-clean-code-and-small-independent-components-6f46a5eb46b3][SwiftUI and Redux — Clean Code and Small, Independent Components]].
+- [[https://sarunw.com/posts/swiftui-animation/][SwiftUI Animation (buttons, rotations, etc) | Sarun]].
 - [[https://sarunw.com/posts/swiftui-animation/][SwiftUI Animation | Sarun]].
 - [[https://medium.com/swlh/learn-master-%EF%B8%8F-swiftui-basic-components-in-10-minutes-dc327e71d245][SwiftUI basic components (form example)]].
 - [[https://www.hackingwithswift.com/books/ios-swiftui/buttons-and-images][SwiftUI Buttons and images (using systemName)]].
 - [[https://designcode.io/courses][SwiftUI courses]].
 - [[https://swiftui-lab.com/custom-styling/][SwiftUI Custom Styling - The SwiftUI Lab (scaleEffect and opacity on isPressed)]].
 - [[https://github.com/Leon12345679/QuickActionCard][SwiftUI displaying customizable quick action card]].
+- [[https://troz.net/post/2020/swiftui_mac_big_sur/][SwiftUI for Mac on Big Sur :: TrozWare]].
+- [[https://twitter.com/jsngr/status/1276931917628219398][SwiftUI gives you .isPlaceholder in WidgetKit generate a placeholders]]
 - [[https://kean.github.io/post/swiftui-layout-system][SwiftUI Layout System | Alexander Grebenyuk]].
+- [[https://www.simpleswiftguide.com/swiftui-navigationview-tutorial-with-examples/][SwiftUI NavigationView tutorial with examples - Simple Swift Guide]].
 - [[https://www.tomasznazarenko.com/frameworks/SwiftUI-notes/][SwiftUI notes - Tomasz Nazarenko Blog]].
 - [[https://www.appcoda.com/swiftui-form-ui/][SwiftUI Tutorial: How to Build a Form UI for iOS Apps]].
 - [[https://swiftuihub.com/][SwiftUI Tutorials on SwiftUI Hub]].
@@ -1087,6 +1239,7 @@ Thank you Internet strangers! :)
 - [[https://github.com/ygit/swiftui][swiftui: A collaborative list of awesome SwiftUI resources]].
 - [[https://finestructure.co/blog/2020/1/20/swiftui-equal-widths-view-constraints][SwiftUI: Equal widths view constraints — finestructure]].
 - [[https://github.com/alfianlosari/SwiftUIStaggeredList][SwiftUIStaggeredList: Staggered Layout List Using SwiftUI]].
+- [[https://medium.com/better-programming/swiftuis-new-app-lifecycle-and-replacements-for-appdelegate-and-scenedelegate-in-ios-14-c9cf4a2367a9][SwiftUI’s New App Lifecycle and Replacements for AppDelegate]].
 - [[https://danielsaidi.com/blog/2020/01/05/create-an-spm-package-for-swiftui][Swipe gesture SwiftUI | Daniel Saidi]].
 - [[https://www.reddit.com/r/swift/comments/elhakp/so_i_guess_my_journey_begins_now/][SwuiftUI books]].
 - [[https://sarunw.com/tags/swiftui/][Tagged “SwiftUI” | Sarun]].
@@ -1097,9 +1250,11 @@ Thank you Internet strangers! :)
 - [[https://www.raywenderlich.com/4829472-uicollectionview-custom-layout-tutorial-pinterest][UICollectionView Custom Layout Tutorial: Pinterest | raywenderlich.com]].
 - [[https://medium.com/@dmytro.anokhin/url-image-view-in-swiftui-f08f85d942d8][URL Image view in SwiftUI]].
 - [[https://heckj.github.io/swiftui-notes/][Using Combine (extensive online book)]].
+- [[https://medium.com/better-programming/using-ios-14s-menu-as-a-picker-in-swiftui-b036c772037][Using iOS 14's Menu as a Picker in SwiftUI]].
 - [[https://swiftwithmajid.com/2019/10/30/view-composition-in-swiftui/][View composition in SwiftUI | Majid’s blog about Swift development]].
 - [[https://netsplit.com/swiftui/views-choose-their-own-sizes/][Views Choose Their Own Sizes – Netsplit.com]].
 - [[https://medium.com/flawless-app-stories/visualize-combine-magic-with-swiftui-part-1-3a56e2a461b3][Visualize Combine Magic with SwiftUI Part 1 - Flawless iOS - Medium]].
+- [[https://www.donnywals.com/whats-the-difference-between-stateobject-and-observedobject/][What’s the difference between @StateObject and @ObservedObject? – Donny Wals]].
 - [[https://nalexn.github.io/swiftui-observableobject][Why I quit using the ObservableObject - Alexey Naumov]].
 * [2019-12-17 Tue] Studying for Life in the UK test
   :PROPERTIES:
@@ -2466,7 +2621,7 @@ More comprehensively:
   :CUSTOM_ID: video-editing-bookmarks
   :END:
   :MODIFIED:
-  [2020-04-08 Wed]
+  [2020-06-17 Wed]
   :END:
 - [[https://bernd.dev/2020/04/adding-subtitles/][Adding subtitles to your videos the easy way - Bernd Verst]].
 - [[https://lars.ingebrigtsen.no/2019/02/14/adventures-in-netflix/][Adventures in Netflix (screenshotting HDMI)]].
@@ -2475,6 +2630,7 @@ More comprehensively:
 - [[https://superuser.com/questions/1270950/ffmpeg-how-to-achieve-a-circular-video-overlay][FFmpeg - How to achieve a circular video overlay..?]].
 - [[https://github.com/mifi/lossless-cut][GitHub - mifi/lossless-cut: The swiss army knife of lossless video/audio editing]].
 - [[https://github.com/moxuse/kusabi][GitHub - moxuse/Kusabi: Coding environment 3D graphics with PureScript.]].
+- [[https://github.com/whyboris/Video-Hub-App][GitHub - whyboris/Video-Hub-App: Official repository for Video Hub App 2]].
 - [[https://www.youtube.com/watch?v=tYytVzbPky8][HOW TO DATAMOSH: PART 1 - YouTube]].
 - [[https://news.ycombinator.com/item?id=22775502][How to trim video clips instantly without reencoding | Hacker News]].
 - [[http://www.linux-magazine.com/Issues/2018/206/Tutorials-FFmpeg][Inserting a Watermark with FFmpeg (Linux Magazine)]].
@@ -4417,7 +4573,12 @@ If you need more, there are others:
   :PROPERTIES:
   :CUSTOM_ID: plantuml-bookmarks
   :END:
+  :MODIFIED:
+  [2020-06-27 Sat]
+  :END:
 - [[https://scripter.co/notes/plantuml][Collection of PlantUML snippets from Scripter.co]].
+- [[https://real-world-plantuml.com/][Real World PlantUML]].
+- [[https://crashedmind.github.io/PlantUMLHitchhikersGuide/][Welcome to The Hitchhiker’s Guide to PlantUML!]].
 * [2018-05-29 Tue] Adding mu4e maildirs extension
   :PROPERTIES:
   :CUSTOM_ID: adding-mu4e-maildirs-extension
@@ -4668,6 +4829,8 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 - [[https://www.reddit.com/r/emacs/comments/5hfcid/i_got_mu4e_working/][I got mu4e working! (Reddit)]].
 - [[https://blog.danielgempesaw.com/post/43467552978/installing-mu-and-mu4e-with-homebrew-with-emacs][Installing mu and mu4e with homebrew with emacs]].
 - [[https://github.com/iqbalansari/dotEmacs/blob/master/config/mail.org][Iqbal Ansari's mail config]].
+- [[https://github.com/iqbalansari/dotEmacs/blob/master/config/mail.org][iqbalansari/dotEmacs: calendar integration]].
+- [[https://jherrlin.github.io/posts/emacs-mu4e/][Mail in Emacs with mu4e and mbsync (jherrlin)]].
 - [[http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/][Master your inbox with mu4e and org-mode]].
 - [[https://github.com/djcb/mu][Mu's github mirror]].
 - [[http://www.djcbsoftware.nl/code/mu][Mu's page]].
@@ -4690,7 +4853,6 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 - [[http://www.brool.com/post/using-mu4e/][Using mu4e (Brool blog)]].
 - [[https://github.com/zamansky/using-emacs/blob/master/mu4econfig-sample.el][Zamansky mu4e's sample config]].
 - [[https://www.youtube.com/watch?v=newRHXKm4H4][Zamansky's video on mu4e]].
-- [[https://github.com/iqbalansari/dotEmacs/blob/master/config/mail.org][iqbalansari/dotEmacs: calendar integration]].
 
 * [2018-05-24 Thu] Transparent Emacs titlebars on macOS
   :PROPERTIES:
@@ -4932,7 +5094,7 @@ Install
 :CUSTOM_ID: gif-bookmarks
 :END:
 :MODIFIED:
-[2020-03-28 Sat]
+[2020-06-17 Wed]
 :END:
 - [[https://takinginitiative.wordpress.com/2020/03/07/an-idiots-guide-to-animation-compression/][An idiot’s guide to animation compression | Taking Initiative]].
 - [[https://github.com/nwtgck/gif-progress/blob/develop/README.md][gif-progress: Attach progress bar to animated GIF]].
@@ -4955,12 +5117,14 @@ Bonus: If using Emacs's [[https://github.com/flycheck/flycheck][flycheck]], you 
 :CUSTOM_ID: image-editing-bookmarks
 :END:
 :MODIFIED:
-[2019-02-13 Wed]
+[2020-07-11 Sat]
 :END:
 - [[https://news.ycombinator.com/item?id=17748266][Exif.tools – A multimedia file metadata tool (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=16668254][Fred's ImageMagick Scripts (Hacker News)]].
 - [[https://linuxhint.com/howto_crop_gimp/][How to crop in GIMP (Linux Hint)]].
 - [[https://linuxhint.com/imagemagick_sharpen_image/][ImageMagick to Sharpen an Image – Linux Hint]].
+- [[https://news.ycombinator.com/item?id=23789934][Jpeg2png: Silky smooth JPEG decoding – no more artifacts (2016) | Hacker News]].
+- [[https://twitter.com/pidybi/status/1278590835194564608][Make your own meme image using Imagemagick]].
 - [[https://news.ycombinator.com/item?id=10222524][The Art of PNG Glitch (Hacker News)]].
 - [[http://ucnv.github.io/pnglitch/][The Art of PNG Glitch]].
 * [2018-04-05 Thu] Buying matcha powder online
@@ -7134,11 +7298,12 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [[http://w
 :CUSTOM_ID: parenting-bookmarks
 :END:
 :MODIFIED:
-[2020-03-21 Sat]
+[2020-07-03 Fri]
 :END:
 - [[http://www.janetlansbury.com/2018/07/a-toddlers-do-it-myself-attitude-ends-in-tantrums/][A Toddler's Do-It-Myself Attitude Ends In Tantrums - Janet Lansbury]].
 - [[https://news.ycombinator.com/item?id=17023693][Ask HN: Any good collaboratively built documentation on good parenting? (Hacker News)]].
 - [[https://news.ycombinator.com/item?id=20069714][Ask HN: I need ideas to impress fifth graders with technology]].
+- [[https://news.ycombinator.com/item?id=23711942][Ask HN: Recommend a maths book for a teenager? | Hacker News]].
 - [[https://codecombat.com/][CodeCombat - Learn how to code by playing a game]].
 - [[http://blog.growingwithscience.com/][Growing With Science Blog]].
 - [[https://conference.michellegale.com/][Home - Mindful Parenting Online Conference]].
@@ -7789,7 +7954,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 :CUSTOM_ID: maps-dev-bookmarks
 :END:
 :MODIFIED:
-[2020-02-15 Sat]
+[2020-07-11 Sat]
 :END:
 - [[https://www.mapzen.com/data/borders/][borders: Country, region and city boundary data from OpenStreetMap, served monthly (mapzen.com)]].
 - [[https://www.inderapotheke.de/blog/farewell-google-maps][Farewell, Google Maps (In der Apotheke)]].
@@ -7804,6 +7969,7 @@ Checking out [[https://camlistore.org][camlistore]] to organize all sorts of dat
 - [[https://medium.com/tag/mapping][Medium's mapping tag]].
 - [[https://news.ycombinator.com/item?id=18390425][Migrating away from Google Maps and cutting costs by 99% (Hacker News)]].
 - [[https://openaddresses.io/][Open Addresses]].
+- [[https://news.ycombinator.com/item?id=23722133][Openstreetmap, a global map for worldwide insight | Hacker News]].
 - [[https://www.openstreetmap.org/user/mvexel/diary/39274][OpenStreetMap: Introducing OpenStreetView]].
 - [[http://wiki.openstreetmap.org/wiki/Planet.osm][OSM data in one file]].
 - [[http://wiki.openstreetmap.org/wiki/OSM_on_Paper][OSM on paper]].
@@ -8014,7 +8180,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2020-05-31 Sun]
+[2020-07-19 Sun]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -8059,9 +8225,11 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://github.com/zhuorantan/LocationPicker][GitHub - zhuorantan/LocationPicke (Swift)]].
 - [[http://browniefed.com/blog/2015/11/28/react-native-how-to-bridge-a-swift-view/][How to bridge a Swift View]].
 - [[https://www.hackingwithswift.com/example-code/cryptokit/how-to-calculate-the-sha-hash-of-a-string-or-data-instance][How to calculate the SHA hash of a String or Data instance]].
+- [[https://whatdidilearn.info/2018/07/29/how-to-capture-regex-group-values-in-swift.html][How to capture Regex group values in Swift | What did I learn]].
 - [[https://www.hackingwithswift.com/example-code/networking/how-to-check-for-internet-connectivity-using-nwpathmonitor][How to check for internet connectivity using NWPathMonitor]].
 - [[https://www.hackingwithswift.com/example-code/games/how-to-create-a-random-terrain-tile-map-using-sktilemapnode-and-gkperlinnoisesource][How to create a random terrain tile map using SKTileMapNode and GKPerlinNoiseSource]].
 - [[https://www.hackingwithswift.com/example-code/system/how-to-run-an-external-program-using-process][How to run an external program using Process]].
+- [[http://www.globalnerdy.com/2020/05/28/how-to-work-with-dates-and-times-in-swift-5-part-4-adding-swift-syntactic-magic/][How to work with dates and times in Swift 5, part 4: Adding Swift syntactic sugar]].
 - [[https://twitter.com/olebegemann/status/1004458683428950018?s=12][I made a “What’s new in Swift 4.2” playground]].
 - [[https://stackoverflow.com/questions/3554244/uiimagepngrepresentation-issues-images-rotated-by-90-degrees][iphone - UIImagePNGRepresentation issues? / Images rotated by 90 degrees]].
 - [[https://www.youtube.com/watch?v=XJreRR0cC3E][Jason Zurita - Compositional UI Styling in Swift - YouTube]].
@@ -8079,10 +8247,13 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://lukakerr.github.io/swift/nswindow-styles][NSWindow Styles | lukakerr.github.io]].
 - [[https://medium.com/ios-os-x-development/optionals-in-swift-for-newbies-7199a30707d5][Optionals in Swift for newbies]].
 - [[https://github.com/mxcl/Path.swift][Path.swift: Delightful, robust, cross-platform and chainable file-pathing functions]].
+- [[https://www.bignerdranch.com/blog/pro-pattern-matching-in-swift/][Pro Pattern-Matching in Swift - Digital product development agency | Big Nerd Ranch]].
+- [[https://nshipster.com/swift-regular-expressions/][Regular Expressions in Swift (groups) - NSHipster]].
 - [[https://zacwood.me/2018/09/09/simple-networking-swift/][Simple networking in Swift]].
 - [[https://www.swiftbysundell.com/posts/slot-based-ui-development-in-swift][Slot-based UI development in Swift (Sundell)]].
 - [[https://swiftbysundell.com/articles/splitting-up-swift-types/][Splitting up Swift types | Swift by Sundell]].
 - [[https://github.com/seorenn/SRChoco][SRChoco: Seorenn's Development Libraries for OS X and iOS (github)]].
+- [[https://twitter.com/steipete/status/1281578201165320192][String(string[currentIndex])]].
 - [[https://stackoverflow.com/questions/43797913/how-to-authenticate-a-grpc-call-for-the-assistant-sdk][Swift - How to authenticate a gRPC call for the Assistant SDK?]].
 - [[https://ericasadun.com/2018/12/16/swift-5-interpolation-part-3-dates-and-number-formatters/][Swift 5 Interpolation Part 3: Dates and Number Formatters (Erica Sadun)]].
 - [[https://nshipster.com/vscode/][Swift Development with Visual Studio Code - NSHipster]].
@@ -8237,7 +8408,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: unix-linux-tools-bookmarks
 :END:
 :MODIFIED:
-[2020-04-12 Sun]
+[2020-07-12 Sun]
 :END:
 - [[https://forums.freebsd.org/threads/small-guide-on-using-mtree.61113/][(small) Guide on using mtree (The FreeBSD Forums)]].
 - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
@@ -8295,6 +8466,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://sneak.berlin/20191011/stupid-unix-tricks/][Jeffrey Paul: Stupid Unix Tricks (Yubikey ssh on macOS)]].
 - [[https://blog.jessfraz.com/post/for-the-love-of-pipes/][Jessie Frazelle's Blog: For the Love of Pipes]].
 - [[https://jvns.ca/zines/][Julia Evans's zines (unix tools)]].
+- [[https://twitter.com/beorn__/status/1281504590073073666][LD_DEBUG awesomeness (using ls)]].
 - [[http://irreal.org/blog/?p=7323][Learn a Little AWK (Irreal)]].
 - [[https://linuxhint.com/linux_cp_command/][Linux cp Command (Linux Hint)]].
 - [[http://bryan-murdock.blogspot.co.uk/2015/12/linux-environment-management.html][Linux environment management]].
@@ -8316,6 +8488,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://linuxhint.com/nmap_scan_ip_ranges/][Nmap: scan IP ranges (Linux Hint)]].
 - [[https://github.com/phw/peek][Peek: Simple animated GIF screen recorder with an easy to use interface]].
 - [[https://news.ycombinator.com/item?id=18992930][Practical Linux Hardening Guide (Hacker News)]].
+- [[https://rclone.org/][Rclone (mount many cloud services locally)]].
 - [[https://iridakos.com/how-to/2019/05/16/remove-duplicate-lines-preserving-order-linux.html][Remove duplicate lines from files keeping the original order]].
 - [[https://www.philipdaniels.com/blog/2019/ripgrep-cheatsheet/][Ripgrep Cheatsheet • Phil's Blog]].
 - [[https://news.ycombinator.com/item?id=18291302][Show HN: Ultimate Plumber – a tool for writing Linux pipes with live preview (Hacker News)]].
@@ -9351,7 +9524,7 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 :CUSTOM_ID: cooking-bookmarks
 :END:
 :MODIFIED:
-[2020-05-02 Sat]
+[2020-07-03 Fri]
 :END:
 - [[http://drinks.seriouseats.com/2013/05/25-essential-cocktails-everyone-should-know-cocktail-101-easy-mixed-drink-recipes-classic-cocktail-guide.html][25 Cocktails Everyone Should Know]].
 - [[https://www.amazon.com/Taylor-Precision-Products-Stainless-11-Pound/dp/B002SXV8G2/ref=sr_1_1?s=home-garden&ie=UTF8&qid=1481553229&sr=1-1-spons&keywords=Taylor+Precision+stainless+steel&psc=1][Amazon.com: Taylor Precision Products Stainless Steel Kitchen Scale]].
@@ -9367,6 +9540,7 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 - [[https://www.digitaltrends.com/home/steaming-hard-boiled-eggs/][It's Not Rocket Science, Steaming Hard-Boiled Eggs Makes Peeling Easier (Digital trends)]].
 - [[http://www.varasanos.com/PizzaRecipe.htm][Jeff Varasano's NY Pizza Recipe]].
 - [[https://www.amazon.co.uk/Marcato-machine-Chrome-Silver-Wellness/dp/B0009U5OSO/][Marcato Atlas 150 pasta machine Chrome, Silver Wellness]].
+- [[https://www.thecuriouschickpea.com/masoor-dal-tadka/][Masoor Dal Tadka - Indian Red Lentil Dal]].
 - [[http://ohsheglows.com/2013/01/24/my-favourite-homemade-almond-milk-step-by-step-photos/][My Favourite Homemade Almond Milk + Step By Step Photos]].
 - [[http://cooking.nytimes.com/][New York Times cooking]].
 - [[http://www.womenshealthmag.co.uk/nutrition/recipes/2321/pho-tai-lan-hanoi-style-flash-fried-steak-garlic-soup/][Pho Tai Lan (Hanoi style flash-fried steak & garlic soup)]].
@@ -10599,9 +10773,10 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: uk-travel-bookmarks
 :END:
 :MODIFIED:
-[2015-11-22 Sun]
+[2020-07-11 Sat]
 :END:
 - [[http://www.buzzfeed.com/chelseypippin/25-wanderlust-worthy-day-trips-from-london#.xbkbNaApW][25 stunning british places you can reach from London]].
+- [[https://twitter.com/ddoniolvalcroze/status/1278326573070876672][A graveyard of red telephone boxes located in the small village of Carlton Miniott]].
 - [[https://en.wikipedia.org/wiki/Dunmore_Pineapple][Dunmore Pinapple]].
 - [[http://www.hitchinlavender.co.uk/][Hitchin Lavender]].
 - [[http://www.theguardian.com/travel/2015/may/10/scotland-beach-swimming-wild-camping][In search of Scotland’s best beach]].
@@ -11415,7 +11590,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-06-14 Sun]
+[2020-07-29 Wed]
 :END:
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
@@ -11437,6 +11612,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://emacs.stackexchange.com/questions/51399/org-babel-tangle-with-function-in-header-arguments/51769#51769][Executing org source blocks when loading file (and defining file-local vars)]].
 - [[https://github.com/nikclayton/ob-html-chrome][Export Org HTML SRC blocks as PNG files using Chrome]].
 - [[https://gitlab.com/ambrevar/ambrevar.gitlab.io/blob/master/feed-builder/feed-builder.el][feed-builder/feed-builder.el an org/blog rss implementation]].
+- [[https://github.com/niklasfasching/go-org][GitHub - niklasfasching/go-org: Org mode parser with html & pretty printed org rendering]].
 - [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle:  Rifle through your Org buffers and acquire your target]].
 - [[https://www.reddit.com/r/emacs/comments/6mzgkg/how_can_orgbabel_be_configured_to_set_variables/][How can org-babel be configured to set variables across multiple language? (Reddit)]].
 - [[https://orgmode.org/manual/HTML-doctypes.html#HTML-doctypes][HTML doctypes (The Org Manual)]].
@@ -11453,9 +11629,11 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://fuco1.github.io/2018-12-23-Multiline-fontification-with-org-emphasis-alist.html][Multiline fontification (ie. bold) with org-emphasis-alist]].
 - [[https://joshrollinswrites.com/emacsorg/org-capture-template-1/][My Org Capture Templates - Part 1 &middot; The Art of Not Asking Why]].
 - [[https://joshrollinswrites.com/emacsorg/org-capture-template-3/][My Org Capture Templates - Part 3 &middot; The Art of Not Asking Why]].
+- [[https://www.reddit.com/r/emacs/comments/hnf3cw/my_orgmode_agenda_much_better_now_with_category/][My org-mode agenda, much better now with category icons! : emacs]].
 - [[https://patrickskiba.com/org-mode/2019/05/22/uses-for-org-mode.html][My Org-mode use cases (Patrick Skiba)]].
 - [[http://www.cachestocaches.com/2016/9/my-workflow-org-agenda/][My Workflow with Org-Agenda]].
 - [[https://christiantietze.de/posts/2019/12/emacs-notifications/][Native macOS Notifications for Emacs Org Tasks and Appointments]].
+- [[https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/][New link features in org 9]].
 - [[https://github.com/ndwarshuis/om.el/blob/master/README.md][om.el/README.md at master · ndwarshuis/om.el · GitHub]].
 - [[https://github.com/dfeich/org-babel-examples][Org babel examples repo]].
 - [[https://org-babel.readthedocs.io/en/latest/][Org Babel reference card]].
@@ -12011,7 +12189,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2020-06-06 Sat]
+[2020-07-24 Fri]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -12077,6 +12255,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://hackmd.io/EmPIHGhTRh6pDSJ1VEgkkA][Ethical apps code of conduct - HackMD]].
 - [[https://usefathom.com/][Fathom Analytics - Simple, Privacy-focused Web Analytics]].
 - [[https://fieldbook.com][fieldbook: Create a database, as easily as a spreadsheet]].
+- [[https://www.litscape.com/word_tools/pattern_match.php][Find words that match your pattern.]].
 - [[https://rivalseek.com/][Find your competition]].
 - [[https://www.fiverr.com/][Fiverr (logos, graphic design, etc)]].
 - [[http://flagtheory.com/][Flag Theory: Freedom, Privacy and Wealth]].
@@ -12121,6 +12300,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://layer.com][Layer, messaging platform]].
 - [[https://www.legalletters.co/][Legal Letters—At a fraction of the cost]].
 - [[http://blog.sueraisty.com/lessons-learned-from-co-founding-a-tech-startup/][Lessons I learned from Co-Founding a startup]].
+- [[https://news.ycombinator.com/item?id=23560823][Lightweight Alternatives to Google Analytics | Hacker News]].
 - [[https://github.com/neiesc/ListOfMinimalistFrameworks][List of Minimal frameworks]].
 - [[https://hatchful.shopify.com/][Logo Maker & Logo Creator - Free Logo Generator Online]].
 - [[https://www.namecheap.com/logo-maker/][Logo Maker - Create a Free Logo in Minutes - Namecheap]].
@@ -12135,10 +12315,12 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://github.com/mapsme/omim/blob/master/README.md][MAPS.ME (open sourced)]].
 - [[https://github.com/jessesquires/JSQMessagesViewController][Messaging UI for iOS]].
 - [[https://muratbuffalo.blogspot.com/2019/12/my-distributed-systems-seminars-reading.html][Metadata: My Distributed Systems Seminar's reading list for Spring 2020]].
+- [[https://news.ycombinator.com/item?id=23803046][Migrating Away from Google Analytics | Hacker News]].
 - [[https://ldpreload.com/blog/names-to-reserve][Names to reserve for your own service]].
 - [[https://netflix.github.io/mantis/][Netflix's Mantis: a platform to build an ecosystem of realtime stream processing applications]].
 - [[https://www.netlify.com/][Netlify: All-in-one platform for automating modern web projects.]].
 - [[https://www.netlify.com][Netlify: Build, deploy, and manage modern web projects]].
+- [[https://www.digitalocean.com/community/tools/nginx][NGINX Config generator | DigitalOcean]].
 - [[http://mobilenighthawk.com/][Nighthawk (Debug iOS apps remotely from your browser)]].
 - [[https://www.track.tax/][No more tax surprises - Track]].
 - [[http://officesnapshots.com/][Office Snapshots]].
@@ -12176,6 +12358,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://spin.atomicobject.com/2019/06/12/ip-software-dev-contract/][Securing Intellectual Property Rights in a Software Development Contract]].
 - [[https://www.sendwithus.com/resources/guide/][Send email like a startup]].
 - [[https://shareasimage.com/][Share as image]].
+- Show HN: How I made simple Geolocation service which handles 6m+ req/mo for $5.
 - [[https://news.ycombinator.com/item?id=22441289][Show HN: Profit Hunt - Get inspired by profitable online projects | Hacker News]].
 - [[https://simplescraper.io/][Simplescraper — Scrape Websites and turn them into APIs]].
 - [[https://news.ycombinator.com/item?id=19457709][So you want your app/website to work in China]].
@@ -12277,15 +12460,18 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: privacy-bookmarks
 :END:
 :MODIFIED:
-[2020-06-13 Sat]
+[2020-06-24 Wed]
 :END:
 - [[https://www.lastpass.com/][#1 Password Manager, Vault, & Digital Wallet App (LastPass)]].
+- [[https://blog.lopp.net/modest-privacy-protection-proposal/][A Modest Privacy Protection Proposal]].
 - [[https://www.neustadt.fr/essays/against-a-user-hostile-web/][Against an Increasingly User-Hostile Web - Neustadt.fr]].
 - [[https://restoreprivacy.com/google-alternatives/][Alternatives to Google Products (Restore Privacy)]].
 - [[https://amiunique.org/fp][Am I unique?]].
 - [[https://news.ycombinator.com/item?id=17896692][An Intensive Introduction to Cryptography (Hacker News)]].
 - [[https://github.com/yishilin14/asc-key-to-qr-code-gif][asc-key-to-qr-code-gif: Convert ASCII-armored PGP keys to animated QR code]].
+- [[https://news.ycombinator.com/item?id=23521399][Ask HN: A way to adblock “we're using cookies” popups? | Hacker News]].
 - [[https://github.com/Kickball/awesome-selfhosted][Awesome selfhosted (locally hosting and managing applications instead of renting from SaaS providers)]].
+- [[https://www.bellingcat.com/resources/how-tos/2019/12/26/guide-to-using-reverse-image-search-for-investigations/][bellingcat - Guide To Using Reverse Image Search For Investigations - bellingcat]].
 - [[https://nullprogram.com/blog/2018/09/06/][Brute Force Incognito Browsing « null program]].
 - [[https://www.mullvad.net/en/guides/first-steps-towards-online-privacy/][Change your online habits - Guides | Mullvad VPN]].
 - [[https://count.ly/][Countly | Product Analytics for Mobile, Web, Desktop and IoT]].
@@ -13286,8 +13472,12 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2020-06-13 Sat]
+[2020-07-18 Sat]
 :END:
+**** TODO [[https://www.flixist.com/the-300-coda-my-top-50-movies-of-2018-and-my-top-40-first-time-watches-of-older-films/amp/][The 300 Coda: My Top 50 Movies of 2018 and My Top 40]].
+**** TODO [[https://en.wikipedia.org/wiki/Green_Room_(film)][Green Room (film) - Wikipedia]].
+**** TODO [[https://moviebabble.com/2020/07/09/relic-is-a-masterclass-in-independent-horror/]['Relic' is a Masterclass in Independent Horror | MovieBabble]].
+**** TODO [[https://www.imdb.com/title/tt0387898/][Hidden (Caché) (2005) - IMDb]].
 **** TODO [[https://lars.ingebrigtsen.no/2020/06/10/otb1-tokyo-story/][OTB#1: Tokyo Story – Random Thoughts]].
 **** TODO [[https://www.netflix.com/gb/title/81008221][Into the Night | Netflix Official Site]].
 **** TODO [[https://www.imdb.com/title/tt8101850/][Undone (TV Series 2019– ) - IMDb]].
@@ -13462,8 +13652,11 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2020-06-03 Wed]
+[2020-06-24 Wed]
 :END:
+**** TODO [[https://www.amazon.com/dp/B0898YGR58][Extreme Privacy: What It Takes to Disappear: Bazzell, Michael: 9798643343707]].
+**** TODO [[https://www.theatlantic.com/health/archive/2011/10/you-are-not-so-smart-why-we-cant-tell-good-wine-from-bad/247240/]['You Are Not So Smart': Why We Can't Tell Good Wine From Bad - The Atlantic]].
+**** TODO [[https://stephaniekelton.com/book/][The Deficit Myth - Stephanie Kelton]].
 **** TODO [[https://muratbuffalo.blogspot.com/2020/06/some-book-recommendations.html][Metadata: Forty book recommendations]].
 **** TODO [[https://www.goodreads.com/list/show/89580.Solarpunk][Solarpunk (62 books)]].
 **** TODO [[https://theanarchistlibrary.org/library/p-m-bolo-bolo][Bolo’bolo | The Anarchist Library]].
@@ -13471,12 +13664,10 @@ maps key to action.
 **** TODO [[https://www.goodreads.com/list/show/131328.Solarpunk_Community_Discord_List][Solarpunk Community Discord List (108 books)]].
 **** TODO [[https://www.amazon.co.uk/Launch-Internet-Millionaires-Anything-Paperback/dp/B00N4E4HQC/ref=sr_1_1][Launch: An Internet Millionaire's Secret Formula to Sell Almost anything online]].
 **** TODO [[https://www.amazon.com/Psychology-Money-Timeless-lessons-happiness/dp/0857197681/][The Psychology of Money: The Psychology of Money: Timeless lessons on wealth, greed, and happiness]].
-**** TODO [[https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders][This Book Is Full of Spiders by David Wong]].
 **** TODO [[https://thequilltolive.com/recommendations-2/][Recommendations | The Quill to Live]].
 **** TODO [[https://fumbling.it/posts/my-2020-reading-list/][My 2020 Reading List · FumbLing]].
 **** TODO [[https://www.goodreads.com/book/show/37903770-norse-mythology][Norse Mythology by Neil Gaiman]].
 **** TODO [[https://www.goodreads.com/book/show/18216145-auto][Auto by David Wailing]].
-**** DONE [[https://www.goodreads.com/book/show/28209634-autonomous][Autonomous by Annalee Newitz]].
 **** TODO [[https://news.ycombinator.com/item?id=22573204][Ask HN: Book recommendations for understanding financial systems? | Hacker News]].
 **** TODO [[https://en.wikipedia.org/wiki/Andromeda_(novel)][Andromeda (novel) - Wikipedia]].
 **** TODO [[https://medium.com/solarpunks/solarpunk-a-reference-guide-8bcf18871965][SOLARPUNK : A REFERENCE GUIDE - Solarpunks - Medium]].
@@ -13575,6 +13766,8 @@ maps key to action.
 **** TODO [[http://www.amazon.co.uk/JavaScript-Developer-ECMAScript-OdeToCode-Programming-ebook/dp/B018D12X0C][What Every JavaScript Developer Should Know About ECMAScript 2015]].
 **** TODO [[http://camdez.com/blog/2016/01/02/2016-reading-list/][Cameron Desautels's 2016 reading list]].
 **** TODO Thinking Fast and Slow (Kahneman).
+**** DONE [[https://www.goodreads.com/book/show/28209634-autonomous][Autonomous by Annalee Newitz]].
+**** DONE [[https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders][This Book Is Full of Spiders by David Wong]].
 **** DONE [[https://www.amazon.com/Why-We-Sleep-Unlocking-Dreams/dp/1501144316][Why we sleep]] ([[https://twitter.com/uberstuber/status/1138291707231887361?s=12][twitter outline]]).
 **** DONE [[http://www.amazon.com/Flow-Psychology-Experience-Perennial-Classics/dp/0061339202/][Flow: The Psychology of Optimal Experience]].
 **** DONE [[http://www.harukimurakami.com/library/][Haruki Murakami]].
@@ -13597,62 +13790,18 @@ maps key to action.
 :MODIFIED:
 [2017-06-18 Sun]
 :END:
-**** TODO Try out [[https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el][cquery]], [[https://github.com/emacs-lsp/lsp-mode][emacs-lsp]], and [[https://github.com/tigersoldier/company-lsp][company-lsp]].
-**** TODO [[https://github.com/facetframer/orgnav][Drill down org files using orgnav (helm-based)]].
-**** TODO [[https://github.com/prettier/prettier-emacs][Pretier emacs]].
-**** TODO [[http://amitp.blogspot.co.uk/search/label/emacs][Spaceline walkthrough]].
-**** TODO [[http://blog.jakoblind.no/2015/06/08/emacs-as-git-mergetool/][Emacs as git mergetool]].
-**** TODO Try out emacs Android debug (see this [[http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/][post]]).
 **** TODO [[https://github.com/mrkkrp/typit][Typit: typing game for Emacs]].
-**** TODO [[https://github.com/jekor/hidepw][hidepw - an Emacs minor mode for hiding passwords]].
 **** TODO [[https://github.com/Wilfred/pyimport][pyimports]].
-**** TODO [[https://github.com/syohex/emacs-quickrun][quickrun.el]].
 **** TODO [[http://sriramkswamy.github.io/dotemacs/][Sriram Krishnaswamy's init]].
-**** TODO [[https://github.com/zakame/emacs-for-javascript][Emacs for JavaScript]].
 **** TODO [[http://williambert.online/2014/02/using-a-node-repl-with-emacs/][Using a Node repl in Emacs with nvm and npm]].
-**** TODO [[https://github.com/iced/go-gopath/blob/master/README.md][go-gopath]].
-**** TODO [[https://github.com/alezost/shift-number.el][shift-number.el]].
 **** TODO [[https://github.com/afainer/arview][arview]].
-**** TODO [[https://github.com/xuchunyang/DevDocs.el][https://github.com/xuchunyang/DevDocs.el]].
 **** TODO [[https://github.com/PythonNut/company-flx][company-flx: fuzzy matching to company]].
-**** TODO [[https://vxlabs.com/2016/04/11/step-by-step-guide-to-c-navigation-and-completion-with-emacs-and-the-clang-based-rtags/][Step-by-step guide to C++ navigation and completion with Emacs and the Clang-based rtags]].
 **** TODO [[https://melpa.org/?utm_source=dlvr.it&utm_medium=twitter#/go-guru][Integration of the Go 'guru' analysis tool into Emacs]].
-**** TODO [[https://github.com/remyferre/comment-dwim-2/blob/master/README.md][comment-dwim]].
-**** DONE (setq projectile-use-git-grep t). <2018-12-27 Thu>
 **** TODO [[https://github.com/company-mode/company-statistics][company-mode/company-statistics: Sort completion candidates by previous completion choices]].
-**** TODO rats for Go testing.
-**** TODO go-impl.
-**** TODO go-gopath to guess GOPATH.
 **** TODO [[https://www.youtube.com/watch?v=mtliRYQd0j4&feature=youtu.be][Rewrite git history with Emacs, magit and git rebase]].
-**** TODO [[https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/][Is there any easy way to make .org files password protected? (Reddit)]].
-**** TODO use-package binding to different maps
-#+BEGIN_SRC emacs-lisp
-  (use-package term
-    :bind
-    (:map
-     term-mode-map
-     ("M-p" . term-send-up)
-     ("M-n" . term-send-down)
-     :map term-raw-map
-     ("M-o" . other-window)
-     ("M-p" . term-send-up)
-     ("M-n" . term-send-down)))
-#+END_SRC
-**** TODO [[https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el][select-themes]].
-**** TODO [[https://github.com/bmag/helm-purpose][Emacs purpose]].
 **** TODO [[https://github.com/trezona-lecomte/coverage][Code coverage highlighting for Emacs]].
 **** TODO [[http://elpa.gnu.org/packages/tramp-theme.html][tramp-theme]].
-**** TODO [[http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/][Why are you changing gc-cons-threshold?]].
-**** TODO [[https://github.com/syohex/emacs-qrencode/blob/master/README.md][Emacs qrencode]].
-**** TODO [[https://github.com/Fuco1/smartparens][Smartparens]].
-**** TODO [[https://github.com/nivekuil/corral][Corral]].
-**** TODO [[https://gist.github.com/syohex/626af66ba3650252b0a2][Hash region]].
 **** TODO [[https://github.com/alexmurray/cstyle][cstyle]].
-**** TODO [[https://github.com/lvillani/metafmt][metafmt]].
-**** TODO [[https://github.com/nicklanasa/xcode-mode/blob/master/README.md][xcode-mode]].
-**** TODO [[https://github.com/yuutayamada/commenter][commenter]].
-**** TODO [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
-**** TODO [[http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer][How to make yasnippet and company work nicer?]].
 **** TODO [[https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el][A go Emacs config]].
 **** TODO [[http://clubctrl.com/org/prog/howto.html][Try out ox-twbs]].
 **** TODO [[http://ergoemacs.org/emacs/function-frequency.html][Emacs Lisp function frequency]].
@@ -13661,26 +13810,20 @@ maps key to action.
 **** TODO [[https://github.com/Lindydancer/font-lock-studio][font-lock-studio]].
 **** TODO [[https://github.com/jorgenschaefer/emacs-buttercup][buttercup]].
 **** TODO [[https://github.com/niku/markdown-preview-eww][markdown-preview-eww]].
-**** TODO [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
-**** TODO [[https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el][Peek at peteyy's Javascript config]].
 **** TODO [[http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1][ediff-revision and magit-find-file to compare branches]].
 **** TODO [[https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md][Flycheck linter for sh using checkbashisms]].
 **** TODO [[http://draketo.de/light/english/free-software/el-kanban-org-table][El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables]].
 **** TODO [[http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511][Emacs iOS development (qiita)]].
 **** TODO [[http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/][Emacs iOS development (fujimisakari)]].
-**** TODO [[https://github.com/trotzig/import-js][import-js]].
 **** TODO [[http://orgmode.org/worg/org-tutorials/encrypting-files.html][encrypting org files]].
 **** TODO [[https://github.com/flycheck/flycheck-pos-tip][flycheck-pos-tip]].
-**** TODO [[https://github.com/CodyReichert/es6-snippets][ES6 yasnippets]].
 **** TODO [[http://tiborsimko.org/emacs-epydoc-snippets.html][Writing Python Docstrings with Emacs]].
 **** TODO [[https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac][Try Completion for Objective-C (Github diff)]].
-**** TODO [[https://github.com/swank-js/swank-js][swank-js]].
 **** TODO [[https://github.com/steckerhalter/emacs-fasd][Emacs fasd support]].
 **** TODO [[https://github.com/benma/visual-regexp.el][visual-regexp]].
 **** TODO [[http://emacsredux.com/blog/2014/05/16/opening-large-files/][Open large files]].
 **** TODO [[https://github.com/nathankot/company-sourcekit][company-sourcekit]] (Swift completion): [[https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24][sample config]].
 **** TODO [[https://github.com/dakrone/emacs-java-imports][emacs-java-imports]].
-**** TODO [[https://github.com/ananthakumaran/tide][TypeScript Interactive Development Environment for Emacs]].
 **** TODO append-to-buffer.
 **** TODO [[https://github.com/wavexx/python-x.el][python-x: extras for interactive evaluation]].
 **** TODO [[https://github.com/emacsmirror/outlined-elisp-mode][outlined-elisp-mode]].
@@ -13692,14 +13835,14 @@ maps key to action.
 **** TODO clang indexing tool: [[http://ffevotte.github.io/clang-tags/][clang-tags]].
 **** TODO Create custom theme: Trường's [[http://truongtx.me/2013/03/31/color-theming-in-emacs-24/][post]].
 **** TODO [[https://github.com/Fuco1/dired-hacks][dired-hacks]].
-**** TODO emacs-index-search (lookup subject in Emacs manual).
 **** TODO gtd emacs workflow: Charles cave's [[http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html][notes]].
-**** TODO info-apropos (lookup subject in all manuals).
+**** DONE emacs-index-search (lookup subject in Emacs manual).
+**** DONE info-apropos (lookup subject in all manuals).
 **** TODO Jumping around tips: [[http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/][zerokspot]].
 **** TODO Mac OS clipboard support (from terminal): [[https://github.com/jkp/pbcopy.el][pbcopy]].
-**** TODO [[https://github.com/m0smith/malabar-mode][Malabar mode]]: For Java.
+**** OBSOLETE [[https://github.com/m0smith/malabar-mode][Malabar mode]]: For Java.
 **** TODO Melpa recipe format:[[https://github.com/milkypostman/melpa#recipe-format][format]].
-**** TODO Naturaldocs for javascript: [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][Vineet's post]].
+**** OBSOLETE Naturaldocs for javascript: [[http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html][Vineet's post]].
 **** TODO Org protocol: see irreal's [[http://irreal.org/blog/?p=3594][post]] and oremacs's [[http://oremacs.com/2015/01/07/org-protocol-1/][part 1]] and [[http://oremacs.com/2015/01/08/org-protocol-2/][part 2]].
 **** TODO org-multiple-keymap.  More at [[https://github.com/myuhe/org-multiple-keymap.el][org-multiple-keymap.el]].
 **** TODO [[https://github.com/yjwen/org-reveal/tree/stable][org-reveal]]: Export org to reveal.js.
@@ -13714,6 +13857,47 @@ maps key to action.
 **** TODO Simplify media file transformations: [[https://github.com/abo-abo/make-it-so][make-it-so]].
 **** TODO [[https://github.com/mineo/yatemplate][yatemplate]].
 **** TODO [[https://github.com/fujimisakari/emacs-helm-xcdoc][emacs-helm-xcdoc]].
+**** OBSOLETE [[https://github.com/facetframer/orgnav][Drill down org files using orgnav (helm-based)]].
+**** OBSOLETE [[https://github.com/prettier/prettier-emacs][Prettier emacs]]. (use [[https://github.com/purcell/reformatter.el][reformatter.el]].)
+**** OBSOLETE [[http://amitp.blogspot.co.uk/search/label/emacs][Spaceline walkthrough]].
+**** OBSOLETE Try out emacs Android debug (see this [[http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/][post]]).
+**** OBSOLETE [[https://github.com/syohex/emacs-quickrun][quickrun.el]].
+**** OBSOLETE [[https://github.com/zakame/emacs-for-javascript][Emacs for JavaScript]].
+**** OBSOLETE [[https://github.com/iced/go-gopath/blob/master/README.md][go-gopath]].
+**** OBSOLETE [[https://github.com/alezost/shift-number.el][shift-number.el]].
+**** OBSOLETE [[https://github.com/xuchunyang/DevDocs.el][https://github.com/xuchunyang/DevDocs.el]].
+**** OBSOLETE [[https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el][select-themes]].
+**** OBSOLETE [[https://github.com/bmag/helm-purpose][Emacs purpose]].
+**** OBSOLETE [[http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/][Why are you changing gc-cons-threshold?]].
+**** OBSOLETE [[https://github.com/nivekuil/corral][Corral]].
+**** OBSOLETE [[https://github.com/nicklanasa/xcode-mode/blob/master/README.md][xcode-mode]].
+**** OBSOLETE [[https://github.com/yuutayamada/commenter][commenter]].
+**** OBSOLETE [[https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el][Emacs JavaScript helpers]].
+**** OBSOLETE [[https://github.com/lujun9972/yahoo-weather-mode][yahoo-weather-mode]].
+**** OBSOLETE [[https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el][Peek at peteyy's Javascript config]].
+**** OBSOLETE [[https://github.com/trotzig/import-js][import-js]].
+**** OBSOLETE [[https://github.com/CodyReichert/es6-snippets][ES6 yasnippets]].
+**** OBSOLETE [[https://github.com/swank-js/swank-js][swank-js]].
+**** OBSOLETE [[https://github.com/ananthakumaran/tide][TypeScript Interactive Development Environment for Emacs]].
+**** DONE Try out [[https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el][cquery]], [[https://github.com/emacs-lsp/lsp-mode][emacs-lsp]], and [[https://github.com/tigersoldier/company-lsp][company-lsp]].
+**** DONE (setq projectile-use-git-grep t). <2018-12-27 Thu>
+**** DONE [[https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/][Is there any easy way to make .org files password protected? (Reddit)]].
+**** DONE use-package binding to different maps
+#+BEGIN_SRC emacs-lisp
+  (use-package term
+    :bind
+    (:map
+     term-mode-map
+     ("M-p" . term-send-up)
+     ("M-n" . term-send-down)
+     :map term-raw-map
+     ("M-o" . other-window)
+     ("M-p" . term-send-up)
+     ("M-n" . term-send-down)))
+#+END_SRC
+**** DONE [[https://github.com/syohex/emacs-qrencode/blob/master/README.md][Emacs qrencode]].
+**** DONE [[https://github.com/Fuco1/smartparens][Smartparens]].
+**** DONE [[https://gist.github.com/syohex/626af66ba3650252b0a2][Hash region]].
 **** DONE [[https://github.com/syohex/emacs-helm-ispell][helm-ispell]].
 **** DONE [[https://github.com/HKey/dired-atool][Pack/unpack files with atool on dired]].
 **** DONE [[https://github.com/Alexander-Miller/company-shell][company-shell]].
@@ -13859,7 +14043,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2020-05-06 Wed]
+[2020-06-20 Sat]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -13888,6 +14072,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/functionreturnfunction/format-table][format-table: Parse and reformat tabular data in emacs (Looks great for converting between org, json, and other RDBMS)]].
 - [[https://github.com/alphapapa/ts.el][GitHub - alphapapa/ts.el: Emacs date-time library]].
 - [[https://github.com/brandelune/nipel][GitHub - brandelune/nipel: New Introduction to Programming in Emacs Lisp]].
+- [[https://github.com/Lindydancer/face-explorer][GitHub - Lindydancer/face-explorer: Library and tools for faces and text properties]].
 - [[https://github.com/Wilfred/ht.el][GitHub - Wilfred/ht.el: The missing hash table library for Emacs]].
 - [[https://github.com/xuchunyang/elisp-demos/][GitHub - xuchunyang/elisp-demos: Demonstrate Emacs Lisp APIs]].
 - [[https://harryrschwartz.com/2014/04/08/an-introduction-to-emacs-lisp.html][Harry R. Schwartz's An Introduction to Emacs Lisp]].
@@ -13935,7 +14120,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2020-06-13 Sat]
+[2020-07-19 Sun]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -13969,6 +14154,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://two-wrongs.com/centered-cursor-mode-in-vanilla-emacs][Centered Cursor Mode in Vanilla Emacs]].
 - [[https://github.com/redguardtoo/emacs.d/issues/827][Chen Bin's councel/ctags/etags config]].
 - [[https://ddavis.fyi/blog/2018-07-07-emacs-cpp-ide/][Clangd based Emacs C++ IDE (Doug Davis)]].
+- [[https://twitter.com/magit_emacs/status/1284245544160952320][Colors in emacs -nw (use ~/.Xresources)]].
 - [[https://people.gnome.org/~federico/blog/compilation-notifications-in-emacs.html][Compilation notifications in Emacs - Federico's Blog]].
 - [[https://medium.com/@suvratapte/configuring-emacs-from-scratch-intro-3157bed9d040][Configuring Emacs from Scratch — Intro - Suvrat Apte - Medium]].
 - [[http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html][Configuring emacs to use eslint and babel with flycheck for javascript and React.js JSX]].
@@ -13977,6 +14163,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://erick.navarro.io/blog/creating-an-emacs-formatter-the-easy-way/][Creating an emacs formatter the easy way]].
 - [[https://lars.ingebrigtsen.no/2018/11/12/cropping-images-in-emacs/][Cropping Images in Emacs (Lars Ingebrigtsen)]].
 - [[https://emacs.zeef.com/ehartc][Curated list of packages by Ernst de Hart]].
+- [[https://gist.github.com/maciejsmolinski/ea09a7b6dfabe70fac040915bc266b5e][Custom REPL snippet]].
 - [[http://emacs-fu.blogspot.co.uk/2011/08/customizing-mode-line.html][Customizing emacs mode line]].
 - [[https://zhangda.wordpress.com/][Da's recipes on Emacs, IT, and more (Da Zhang's web notes)]].
 - [[http://www.modernemacs.com/post/major-mode-part-1/][Deep diving into a major mode - Part 1 | Modern Emacs]] (handy for writing a REPL).
@@ -14037,6 +14224,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/emacs-lsp/dap-mode#swift][emacs-lsp/dap-mode: Debug Adapter Protocol for Emacs (Swift included)]].
 - [[https://github.com/emacs-lsp/lsp-ivy/tree/78c1429c62c19006058b89d462657e1448d1e595][emacs-lsp/lsp-ivy: ivy workspace symbols offered by lsp-mode]].
 - [[https://realpython.com/emacs-the-best-python-editor/][Emacs: The Best Python Editor? – Real Python]].
+- [[https://www.reddit.com/r/emacs/comments/hhbcg7/emacsclient_eval_with_command_line_arguments/][Emacsclient --eval with command line arguments? : emacs]].
 - [[http://emacslife.com/][Emacslife]].
 - [[https://github.com/cireu/emacsql-sqlite3][emacsql-sqlite3: Yet another EmacSQL backend for SQLite]].
 - [[https://www.emacswiki.org/emacs/CreatingYourOwnCompileErrorRegexp][EmacsWiki: Creating Your Own Compile Error Regexp]].
@@ -14051,6 +14239,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://edkolev.github.io/posts/2017-09-10-travis-for-emacs-packages.html][Evgeni Kolev Blog - Travis CI integration for emacs packages]].
 - [[http://mitchfincher.blogspot.co.uk/2017/03/example-of-syntax-highlighting-with.html][Example of Syntax Highlighting]].
 - [[https://francismurillo.github.io/2017-04-15-Exploring-Emacs-chart-Library/][Exploring Emacs chart Library (chart-bar-quickie)]].
+- [[https://twitter.com/maciejsmolinski/status/1269886224774451200][extend #emacs to run an interactive REPL process]].
 - [[https://www.reddit.com/r/emacs/comments/973418/feedbuilderel_an_rss_and_atom=_generator/][feed-builder.el: An RSS (and Atom?) generator : emacs]].
 - [[http://irreal.org/blog/?p=7359][Find Commits Affecting a Function (Irreal)]].
 - [[https://github.com/d11wtq/fiplr][Fiplr]]: An Emacs Fuzzy Find in Project Package.
@@ -14072,6 +14261,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/CeleritasCelery/company-async-files][GitHub - CeleritasCelery/company-async-files: company-files with an async banckend]].
 - [[https://github.com/chuntaro/epaint][GitHub - chuntaro/epaint: A simple paint tool for Emacs]].
 - [[https://github.com/dieggsy/esh-autosuggest][GitHub - dieggsy/esh-autosuggest: Fish-like autosuggestions in eshell.]].
+- [[https://github.com/emacs-jp/dmacro][GitHub - emacs-jp/dmacro: Repeated detection and execution of key operationw]].
 - [[https://github.com/gexplorer/simple-modeline][GitHub - gexplorer/simple-modeline: A simple mode-line for Emacs.]].
 - [[https://github.com/joaotavora/eglot][GitHub - joaotavora/eglot: A client for Language Server Protocol servers]].
 - [[https://github.com/mmontone/template-overlays][GitHub - mmontone/template-overlays: Emacs overlays for template files]].
@@ -14091,6 +14281,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://doc.rix.si/org/fsem.html][Hardcore Freestyle Emacs]].
 - [[https://github.com/bbatsov/projectile][Helm Projectile]]: Is awesome for finding files in emacs.
 - [[https://www.emacswiki.org/emacs/HelpPlus][Help Plus: Enhancing Emacs help functions]].
+- [[https://github.com/jekor/hidepw][hidepw - an Emacs minor mode for hiding passwords]].
 - [[https://hotair.tech/blog/goodbye-vscode][Hot Air - Goodbye VSCode, Hello Emacs (Again) has handy JavaScript tips]].
 - [[https://www.reddit.com/r/emacs/comments/efsg0t/how_i_enqueue_online_videos_in_mpv_with_emacs/][How I enqueue online videos in mpv with Emacs : emacs]].
 - [[https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/][How is Doom Emacs so damn fast? : emacs]].
@@ -14180,6 +14371,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://rubikitch.com/][Rubikitch]].
 - [[http://sachachua.com][Sachua Chua]].
 - [[http://sakito.jp/emacs/emacsobjectivec.html][Sakito's Emacs Objective-C]].
+- [[http://lahtela.me/blog/2020/05/21/setting-up-emacs-for-qt-development.html][Setting up Emacs for Qt (C++) development - LSP]].
 - [[https://lars.ingebrigtsen.no/2019/08/26/setting-up-gpg-for-emacs/][Setting up GPG for Emacs (Random Thoughts)]].
 - [[https://superuser.com/questions/432160/slow-tramp-mode-in-emacs][Slow TRAMP mode in Emacs (Super User)]].
 - [[https://ebzzry.io/en/emacs-pairs/][Smartparens: Emacs and Pairs article]].
@@ -14187,6 +14379,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[http://psung.blogspot.co.uk/2010/03/some-emacs-macro-tricks.html][Some Emacs macro tricks]].
 - [[https://www.baty.net/2019/spaceline-for-emacs/][Spaceline for Emacs (Jack Baty's weblog)]].
 - [[https://www.draketo.de/english/emacs/staying-sane-drudge-work][Staying sane with Emacs (when facing drudge work) (Zwillingssterns Weltenwald)]].
+- [[https://vxlabs.com/2016/04/11/step-by-step-guide-to-c-navigation-and-completion-with-emacs-and-the-clang-based-rtags/][Step-by-step guide to C++ navigation and completion with Emacs and the Clang-based rtags]].
 - [[https://www.reddit.com/r/emacs/comments/370k9p/stock_emacs_tips/][Stock Emacs tips (Reddit)]].
 - [[http://pragmaticemacs.com/emacs/super-spotlight-search-with-counsel/][Super spotlight search with ivy/counsel (Pragmatic Emacs)]].
 - [[https://github.com/danielmartin/swift-helpful][swift-helpful: A Self-Documenting Emacs Programming Environment for Swift]].
@@ -14456,7 +14649,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: development-bookmarks
 :END:
 :MODIFIED:
-[2020-02-15 Sat]
+[2020-07-29 Wed]
 :END:
 - [[http://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python)):  parse, tokenize, read from tokens, environments, eval, and repl ]].
 - [[https://amplitude.com/blog/12-signs-youre-working-in-a-feature-factory-3-years-later][12 Signs You’re Working in a Feature Factory - 3 Years Later]].
@@ -14501,6 +14694,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://google-styleguide.googlecode.com/svn/trunk/shell.xml][Google shell style guide]].
 - [[http://hackershelf.com/browse/?popular=1][Hacker shelf: Free software dev books]].
 - [[http://oedb.org/ilibrarian/hacking-knowledge/][Hacking knowlege]].
+- [[https://slack.engineering/happiness-is-a-freshly-organized-codebase-7ffa6590a70d][Happiness is… a freshly organized codebase - Several People Are Coding (aka feature-driven org)]].
 - [[https://azeria-labs.com/heap-exploitation-part-1-understanding-the-glibc-heap-implementation/][Heap Exploitation Part 1: Understanding the Glibc Heap Implementation | Azeria Labs]].
 - [[http://blog.triplebyte.com/how-to-pass-a-programming-interview][How to pass a programming interview]].
 - [[https://paragonie.com/blog/2015/09/how-to-safely-implement-cryptography-in-any-application][How to Safely Implement Cryptography Features in Any Application]].
@@ -14514,6 +14708,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://www.quora.com/How-does-Login-with-Facebook-option-work-on-third-party-websites][OAuth diagram/explanation (Quora)]].
 - [[https://getpolarized.io/2019/01/08/top-pdfs-of-2018-hackernews.html][Over 500 Top PDFs posted to Hacker News in 2018]].
 - [[https://news.ycombinator.com/item?id=18772873][Please do not attempt to simplify this code: favors completeness, boilerplate, and documentation in the name of stability and long term maintenance (Hacker News)]].
+- Post snippets in a beautiful screenshot.
 - [[https://quickleft.com/blog/readme-love-quick-easy-tips/][README Love: Quick and easy tips]].
 - [[http://www.amazon.co.uk/Refactoring-Improving-Design-Existing-Technology/dp/0201485672/ref=sr_1_1?ie=UTF8&qid=1444472751&sr=8-1&keywords=refactoring+improving+the+design+of+existing+code][Refactoring: Improving the design of existing code (Book)]].
 - [[https://twitter.com/sarahmei/status/783340259073335296][Sarah Mei on livable coebases]].
