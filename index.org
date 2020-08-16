@@ -1,7 +1,235 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-online@tesco.co.uk
+* [2020-08-16 Sun] Trying out gccemacs on macOS
+  :PROPERTIES:
+  :CUSTOM_ID: trying-out-gccemacs-on-macos
+  :END:
+
+Been wanting to try Andrea Corallo's [[http://akrl.sdf.org/gccemacs.html][gccemacs]]. Followed [[https://github.com/AllenDang][Allen Dang]]'s handy [[https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e][instructions]] to build it on macOS.
+
+Though not had much of a chance to play with the new install, here's what I did to get up and running...
+
+** Patch gcc homebrew formula
+
+Edit /$(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb/
+
+#+begin_src diff
+  $ diff -u $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched
+  --- $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb		2020-08-16 14:12:13.000000000 +0100
+  +++ $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched	2020-08-07 09:16:42.000000000 +0100
+  @@ -47,7 +47,7 @@
+       #  - Go, currently not supported on macOS
+       #  - BRIG
+       # GCCEMACS
+  -    languages = %w[c c++ objc obj-c++ fortran]
+  +    languages = %w[c c++ objc obj-c++ fortran jit]
+
+       osmajor = `uname -r`.split(".").first
+       pkgversion = "Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip
+  @@ -67,6 +67,7 @@
+         --with-system-zlib
+         --with-pkgversion=#{pkgversion}
+         --with-bugurl=https://github.com/Homebrew/homebrew-core/issues
+  +      --enable-host-shared
+       ]
+
+       # Xcode 10 dropped 32-bit support
+#+end_src
+
+** Install gcc via homebrew
+
+#+begin_src sh
+  brew install gcc --build-from-source --force
+#+end_src
+
+** Save configure script
+
+Create configure-gccemacs.sh
+
+#+begin_src sh
+  #!/bin/bash
+
+  set -o nounset
+  set -o errexit
+
+  # Configures Emacs for building native comp support
+  # http://akrl.sdf.org/gccemacs.html
+
+  # Installing under homebrew's opt, but could be anywhere.
+  readonly GCCEMACS_PREFIX="$(realpath $(brew --prefix)/opt/gccemacs)"
+
+  readonly GCC_DIR="$(realpath $(brew --prefix)/opt/gcc)"
+  [[ -d $GCC_DIR ]] ||  { echo "${GCC_DIR} not found"; exit 1; }
+
+  readonly SED_DIR="$(realpath $(brew --prefix)/opt/gnu-sed)"
+  [[ -d $SED_DIR ]] ||  { echo "${SED_DIR} not found"; exit 1; }
+
+  readonly GCC_INCLUDE_DIR=${GCC_DIR}/include
+  [[ -d $GCC_INCLUDE_DIR ]] ||  { echo "${GCC_INCLUDE_DIR} not found"; exit 1; }
+
+  readonly GCC_LIB_DIR=${GCC_DIR}/lib/gcc/10
+  [[ -d $GCC_LIB_DIR ]] ||  { echo "${GCC_LIB_DIR} not found"; exit 1; }
+
+  export PATH="${SED_DIR}/libexec/gnubin:${PATH}"
+  export CFLAGS="-I${GCC_INCLUDE_DIR}"
+  export LDFLAGS="-L${GCC_LIB_DIR} -I${GCC_INCLUDE_DIR}"
+  export DYLD_FALLBACK_LIBRARY_PATH="${GCC_LIB_DIR}"
+
+  echo "Environment"
+  echo "-----------"
+  echo PATH: $PATH
+  echo CFLAGS: $CFLAGS
+  echo LDFLAGS: $LDFLAGS
+  echo DYLD_FALLBACK_LIBRARY_PATH: $DYLD_FALLBACK_LIBRARY_PATH
+  echo "-----------"
+
+  ./autogen.sh
+
+  ./configure \
+       --prefix="${GCCEMACS_PREFIX}" \
+       --enable-locallisppath="${GCCEMACS_PREFIX}/opt/gccemacs/site-lisp" \
+       --with-mailutils \
+       --with-ns \
+       --with-imagemagick \
+       --with-cairo \
+       --with-modules \
+       --with-xml2 \
+       --with-gnutls \
+       --with-json \
+       --with-rsvg \
+       --with-nativecomp \
+       --disable-silent-rules \
+       --disable-ns-self-contained \
+       --without-dbus
+#+end_src
+
+Make it executable
+
+#+begin_src shell
+  chmod +x configure-gccemacs.sh
+#+end_src
+
+** Clone Emacs source
+
+#+begin_src shell
+  git clone https://github.com/emacs-mirror/emacs gccemacs
+#+end_src
+
+** Check out native-comp feature branch
+
+#+begin_src sh
+  cd gccemacs
+  git checkout feature/native-comp
+#+end_src
+
+** Configure build
+
+#+begin_src sh
+  ../configure-gccemacs.sh
+#+end_src
+
+** Native lisp compiler found?
+
+Verify native lisp compiler is found:
+
+#+begin_src fundamental
+  Does Emacs have native lisp compiler?                   yes
+#+end_src
+
+** Build
+
+Build will take a while. Put those cores to use. Find out how many you got with:
+
+#+begin_src sh
+  sysctl hw.logicalcpu
+#+end_src
+
+#+RESULTS:
+: hw.logicalcpu: 4
+
+Ok so run:
+
+#+begin_src sh
+  make -j4
+#+end_src
+
+This will take *hours* and give your fans a good workout.
+
+** Symlink Emacs.app/Contents/lisp
+
+Without synlinking, opening Emacs.app from finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
+
+#+begin_src sh
+  ln -s $(brew --prefix)/opt/gccemacs/share/emacs/28.0.50/lisp nextstep/Emacs.app/Contents/
+#+end_src
+
+ps. Without symlink, you won't see an error unless the binary is executed explicitly from the terminal (ie. nextstep/Emacs.app/Contents/MacOS/Emacs), and then you'd see something like
+
+#+begin_src sh
+  nextstep/Emacs.app/Contents/MacOS/Emacs
+  emacs: dlopen(nextstep/Emacs.app/Contents/MacOS/../lisp/emacs-lisp/eln-x86_64-apple-darwin19.4.0-abff6ce99a055711/lisp-mode.eln, 1): image not found
+#+end_src
+
+** Remove ~/emacs.d
+
+You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
+
+** init.el config
+
+Ensure /exec-path/ and /LIBRARY_PATH/ both point to locations in $GCCEMACS_PREFIX and finally set /comp-deferred-compilation/. I wrapped mine in /exec-path-from-shell/, setting early in init.el should be enough.
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize)
+    (if (and (fboundp 'native-comp-available-p)
+             (native-comp-available-p))
+        (progn
+          (message "Native comp is available")
+          (add-to-list 'exec-path (expand-file-name "~/homebrew/opt/gccemacs/bin"))
+          (setenv "LIBRARY_PATH" (concat (getenv "LIBRARY_PATH")
+                                         (when (getenv "LIBRARY_PATH")
+                                           ":")
+                                         (car (file-expand-wildcards
+                                               (expand-file-name "~/homebrew/opt/gcc/lib/gcc/*")))))
+          ;; Only set after LIBRARY_PATH can find gcc libraries.
+          (setq comp-deferred-compilation t))
+      (message "Native comp is *not* available")))
+#+end_src
+
+** Launch Emacs.app
+
+You're good to go. Open Emacs.app via finder or shell:
+
+#+begin_src sh
+  open nextstep/Emacs.app
+#+end_src
+
+** Deferred compilation logs
+
+After setting /comp-deferred-compilation/ (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
+
+Look out for an **Async-native-compile-log** buffer. Should have content like:
+
+#+begin_src fundamental
+  Compiling .emacs.d/elpa/moody-20200514.1946/moody.el...
+  Compiling .emacs.d/elpa/minions-20200522.1052/minions.el...
+  Compiling .emacs.d/elpa/persistent-scratch-20190922.1046/persistent-scratch.el...
+  Compiling .emacs.d/elpa/which-key-20200721.1927/which-key.el...
+  ...
+#+end_src
+
+Can also check for .eln files:
+
+#+begin_src sh
+  find ~/.emacs.d -iname *.eln | wc -l
+#+end_src
+
+#+RESULTS:
+: 149
+
 * [2020-08-02 Sun] SwiftUI macOS desk clock
 :PROPERTIES:
 :CUSTOM_ID: swiftui-desk-clock

@@ -6,7 +6,337 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 06 Jun 2020 11:59:51 +0100</lastBuildDate>
+<lastBuildDate>Sun, 16 Aug 2020 16:57:44 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Trying out gccemacs on macOS</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org2cc0afe" class="outline-2">
+ <h2 id="trying-out-gccemacs-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
+ <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
+ <p>
+Been wanting to try Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a>. Followed  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> to build it on macOS.
+</p>
+
+ <p>
+Though not had much of a chance to play with the new install, here's what I did to get up and running…
+</p>
+</div>
+
+ <div id="outline-container-orgedc2df0" class="outline-3">
+ <h3 id="orgedc2df0">Patch gcc homebrew formula</h3>
+ <div class="outline-text-3" id="text-orgedc2df0">
+ <p>
+Edit  <i>$(brew –prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb</i>
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-diff">$ diff -u $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched
+ <span style="color: #ffffff; background-color: #333333;">--- </span> <span style="color: #ffffff; background-color: #333333; font-weight: bold;">$(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb</span> <span style="color: #ffffff; background-color: #333333;">         2020-08-16 14:12:13.000000000 +0100</span>
+ <span style="color: #ffffff; background-color: #333333;">+++ </span> <span style="color: #ffffff; background-color: #333333; font-weight: bold;">$(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched</span> <span style="color: #ffffff; background-color: #333333;"> 2020-08-07 09:16:42.000000000 +0100</span>
+ <span style="color: #ffffff; background-color: #333333;">@@ -47,7 +47,7 @@</span>
+     #  - Go, currently not supported on macOS
+     #  - BRIG
+     # GCCEMACS
+ <span style="color: #333333; background-color: #ffecec;">-</span> <span style="color: #333333; background-color: #ffecec;">    languages = %w[c c++ objc obj-c++ fortran]</span>
+ <span style="color: #333333; background-color: #eaffea;">+</span> <span style="color: #333333; background-color: #eaffea;">    languages = %w[c c++ objc obj-c++ fortran </span> <span style="color: #333333; background-color: #a6f3a6;">jit</span> <span style="color: #333333; background-color: #eaffea;">]</span>
+
+     osmajor = `uname -r`.split(".").first
+     pkgversion = "Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip
+ <span style="color: #ffffff; background-color: #333333;">@@ -67,6 +67,7 @@</span>
+       --with-system-zlib
+       --with-pkgversion=#{pkgversion}
+       --with-bugurl=https://github.com/Homebrew/homebrew-core/issues
+ <span style="color: #333333; background-color: #eaffea;">+</span> <span style="color: #333333; background-color: #eaffea;">      --enable-host-shared</span>
+     ]
+
+     # Xcode 10 dropped 32-bit support
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org64796e9" class="outline-3">
+ <h3 id="org64796e9">Install gcc via homebrew</h3>
+ <div class="outline-text-3" id="text-org64796e9">
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install gcc --build-from-source --force
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org5c5a5bd" class="outline-3">
+ <h3 id="org5c5a5bd">Save configure script</h3>
+ <div class="outline-text-3" id="text-org5c5a5bd">
+ <p>
+Create configure-gccemacs.sh
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #969896;">#</span> <span style="color: #969896;">!/bin/</span> <span style="color: #a71d5d;">bash</span>
+
+ <span style="color: #a71d5d;">set</span> -o nounset
+ <span style="color: #a71d5d;">set</span> -o errexit
+
+ <span style="color: #969896;"># </span> <span style="color: #969896;">Configures Emacs for building native comp support</span>
+ <span style="color: #969896;"># </span> <span style="color: #969896;">http://akrl.sdf.org/gccemacs.html</span>
+
+ <span style="color: #969896;"># </span> <span style="color: #969896;">Installing under homebrew's opt, but could be anywhere.</span>
+ <span style="color: #a71d5d;">readonly</span>  <span style="color: #333333;">GCCEMACS_PREFIX</span>= <span style="color: #183691;">"$(</span> <span style="color: #183691;">realpath $(brew --prefix</span> <span style="color: #183691;">)/opt/gccemacs)"</span>
+
+ <span style="color: #a71d5d;">readonly</span>  <span style="color: #333333;">GCC_DIR</span>= <span style="color: #183691;">"$(</span> <span style="color: #183691;">realpath $(brew --prefix</span> <span style="color: #183691;">)/opt/gcc)"</span>
+[[ -d $ <span style="color: #333333;">GCC_DIR</span> ]] ||  {  <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"${GCC_DIR} not found"</span>;  <span style="color: #a71d5d;">exit</span> 1; }
+
+ <span style="color: #a71d5d;">readonly</span>  <span style="color: #333333;">SED_DIR</span>= <span style="color: #183691;">"$(</span> <span style="color: #183691;">realpath $(brew --prefix</span> <span style="color: #183691;">)/opt/gnu-sed)"</span>
+[[ -d $ <span style="color: #333333;">SED_DIR</span> ]] ||  {  <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"${SED_DIR} not found"</span>;  <span style="color: #a71d5d;">exit</span> 1; }
+
+ <span style="color: #a71d5d;">readonly</span>  <span style="color: #333333;">GCC_INCLUDE_DIR</span>=${ <span style="color: #333333;">GCC_DIR</span>}/include
+[[ -d $ <span style="color: #333333;">GCC_INCLUDE_DIR</span> ]] ||  {  <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"${GCC_INCLUDE_DIR} not found"</span>;  <span style="color: #a71d5d;">exit</span> 1; }
+
+ <span style="color: #a71d5d;">readonly</span>  <span style="color: #333333;">GCC_LIB_DIR</span>=${ <span style="color: #333333;">GCC_DIR</span>}/lib/gcc/10
+[[ -d $ <span style="color: #333333;">GCC_LIB_DIR</span> ]] ||  {  <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"${GCC_LIB_DIR} not found"</span>;  <span style="color: #a71d5d;">exit</span> 1; }
+
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">PATH</span>= <span style="color: #183691;">"${SED_DIR}/libexec/gnubin:${PATH}"</span>
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">CFLAGS</span>= <span style="color: #183691;">"-I${GCC_INCLUDE_DIR}"</span>
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">LDFLAGS</span>= <span style="color: #183691;">"-L${GCC_LIB_DIR} -I${GCC_INCLUDE_DIR}"</span>
+ <span style="color: #a71d5d;">export</span>  <span style="color: #333333;">DYLD_FALLBACK_LIBRARY_PATH</span>= <span style="color: #183691;">"${GCC_LIB_DIR}"</span>
+
+ <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"Environment"</span>
+ <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"-----------"</span>
+ <span style="color: #a71d5d;">echo</span> PATH: $ <span style="color: #333333;">PATH</span>
+ <span style="color: #a71d5d;">echo</span> CFLAGS: $ <span style="color: #333333;">CFLAGS</span>
+ <span style="color: #a71d5d;">echo</span> LDFLAGS: $ <span style="color: #333333;">LDFLAGS</span>
+ <span style="color: #a71d5d;">echo</span> DYLD_FALLBACK_LIBRARY_PATH: $ <span style="color: #333333;">DYLD_FALLBACK_LIBRARY_PATH</span>
+ <span style="color: #a71d5d;">echo</span>  <span style="color: #183691;">"-----------"</span>
+
+./autogen.sh
+
+./configure  <span style="color: #183691;">\</span>
+     --prefix= <span style="color: #183691;">"${GCCEMACS_PREFIX}"</span>  <span style="color: #183691;">\</span>
+     --enable-locallisppath= <span style="color: #183691;">"${GCCEMACS_PREFIX}/opt/gccemacs/site-lisp"</span>  <span style="color: #183691;">\</span>
+     --with-mailutils  <span style="color: #183691;">\</span>
+     --with-ns  <span style="color: #183691;">\</span>
+     --with-imagemagick  <span style="color: #183691;">\</span>
+     --with-cairo  <span style="color: #183691;">\</span>
+     --with-modules  <span style="color: #183691;">\</span>
+     --with-xml2  <span style="color: #183691;">\</span>
+     --with-gnutls  <span style="color: #183691;">\</span>
+     --with-json  <span style="color: #183691;">\</span>
+     --with-rsvg  <span style="color: #183691;">\</span>
+     --with-nativecomp  <span style="color: #183691;">\</span>
+     --disable-silent-rules  <span style="color: #183691;">\</span>
+     --disable-ns-self-contained  <span style="color: #183691;">\</span>
+     --without-dbus
+</pre>
+</div>
+
+ <p>
+Make it executable
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-shell">chmod  <span style="color: #969896;">+x</span> configure-gccemacs.sh
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org58deb79" class="outline-3">
+ <h3 id="org58deb79">Clone Emacs source</h3>
+ <div class="outline-text-3" id="text-org58deb79">
+ <div class="org-src-container">
+ <pre class="src src-shell">git clone https://github.com/emacs-mirror/emacs gccemacs
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org10d2393" class="outline-3">
+ <h3 id="org10d2393">Check out native-comp feature branch</h3>
+ <div class="outline-text-3" id="text-org10d2393">
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">cd</span> gccemacs
+git checkout feature/native-comp
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgf9d018b" class="outline-3">
+ <h3 id="orgf9d018b">Configure build</h3>
+ <div class="outline-text-3" id="text-orgf9d018b">
+ <div class="org-src-container">
+ <pre class="src src-sh">../configure-gccemacs.sh
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgf1a907e" class="outline-3">
+ <h3 id="orgf1a907e">Native lisp compiler found?</h3>
+ <div class="outline-text-3" id="text-orgf1a907e">
+ <p>
+Verify native lisp compiler is found:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-fundamental">Does Emacs have native lisp compiler?                   yes
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org9217916" class="outline-3">
+ <h3 id="org9217916">Build</h3>
+ <div class="outline-text-3" id="text-org9217916">
+ <p>
+Build will take a while. Put those cores to use. Find out how many you got with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">sysctl hw.logicalcpu
+</pre>
+</div>
+
+ <pre class="example">
+hw.logicalcpu: 4
+</pre>
+
+
+ <p>
+Ok so run:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">make -j4
+</pre>
+</div>
+
+ <p>
+This will take  <b>hours</b> and give your fans a good workout.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org82c74ce" class="outline-3">
+ <h3 id="org82c74ce">Symlink Emacs.app/Contents/lisp</h3>
+ <div class="outline-text-3" id="text-org82c74ce">
+ <p>
+Without synlinking, opening Emacs.app from finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">ln -s $(<span style="color: #183691;">brew --prefix</span>)/opt/gccemacs/share/emacs/28.0.50/lisp nextstep/Emacs.app/Contents/
+</pre>
+</div>
+
+ <p>
+ps. Without symlink, you won't see an error unless the binary is executed explicitly from the terminal (ie. nextstep/Emacs.app/Contents/MacOS/Emacs), and then you'd see something like
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">nextstep/Emacs.app/Contents/MacOS/Emacs
+emacs: dlopen(nextstep/Emacs.app/Contents/MacOS/../lisp/emacs-lisp/eln-x86_64-apple-darwin19.4.0-abff6ce99a055711/lisp-mode.eln, 1): image not found
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org035a714" class="outline-3">
+ <h3 id="org035a714">Remove ~/emacs.d</h3>
+ <div class="outline-text-3" id="text-org035a714">
+ <p>
+You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orga4feb0a" class="outline-3">
+ <h3 id="orga4feb0a">init.el config</h3>
+ <div class="outline-text-3" id="text-orga4feb0a">
+ <p>
+Ensure  <i>exec-path</i> and  <i>LIBRARY_PATH</i> both point to locations in $GCCEMACS_PREFIX and finally set  <i>comp-deferred-compilation</i>. I wrapped mine in  <i>exec-path-from-shell</i>, setting early in init.el should be enough.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">exec-path-from-shell</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:config</span>
+  (exec-path-from-shell-initialize)
+  (<span style="color: #a71d5d;">if</span> (<span style="color: #a71d5d;">and</span> (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+      (<span style="color: #a71d5d;">progn</span>
+        (message  <span style="color: #183691;">"Native comp is available"</span>)
+        (add-to-list 'exec-path (expand-file-name  <span style="color: #183691;">"~/homebrew/opt/gccemacs/bin"</span>))
+        (setenv  <span style="color: #183691;">"LIBRARY_PATH"</span> (concat (getenv  <span style="color: #183691;">"LIBRARY_PATH"</span>)
+                                       (<span style="color: #a71d5d;">when</span> (getenv  <span style="color: #183691;">"LIBRARY_PATH"</span>)
+                                          <span style="color: #183691;">":"</span>)
+                                       (car (file-expand-wildcards
+                                             (expand-file-name  <span style="color: #183691;">"~/homebrew/opt/gcc/lib/gcc/*"</span>)))))
+         <span style="color: #969896;">;; </span> <span style="color: #969896;">Only set after LIBRARY_PATH can find gcc libraries.</span>
+        (<span style="color: #a71d5d;">setq</span> comp-deferred-compilation t))
+    (message  <span style="color: #183691;">"Native comp is *not* available"</span>)))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgfeee72a" class="outline-3">
+ <h3 id="orgfeee72a">Launch Emacs.app</h3>
+ <div class="outline-text-3" id="text-orgfeee72a">
+ <p>
+You're good to go. Open Emacs.app via finder or shell:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">open nextstep/Emacs.app
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgf3efe40" class="outline-3">
+ <h3 id="orgf3efe40">Deferred compilation logs</h3>
+ <div class="outline-text-3" id="text-orgf3efe40">
+ <p>
+After setting  <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
+</p>
+
+ <p>
+Look out for an  <b> <b>Async-native-compile-log</b></b> buffer. Should have content like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-fundamental">Compiling .emacs.d/elpa/moody-20200514.1946/moody.el...
+Compiling .emacs.d/elpa/minions-20200522.1052/minions.el...
+Compiling .emacs.d/elpa/persistent-scratch-20190922.1046/persistent-scratch.el...
+Compiling .emacs.d/elpa/which-key-20200721.1927/which-key.el...
+...
+</pre>
+</div>
+
+ <p>
+Can also check for .eln files:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">find ~/.emacs.d -iname *.eln | wc -l
+</pre>
+</div>
+
+ <pre class="example">
+149
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/trying-out-gccemacs-on-macos/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/trying-out-gccemacs-on-macos/index.html</guid>
+  <pubDate>Sun, 16 Aug 2020 17:15:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>SwiftUI macOS desk clock</title>
