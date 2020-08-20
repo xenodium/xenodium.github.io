@@ -139,7 +139,7 @@ Verify native lisp compiler is found:
 
 ** Build
 
-Build will take a while. Put those cores to use. Find out how many you got with:
+Put those cores to use. Find out how many you got with:
 
 #+begin_src sh
   sysctl hw.logicalcpu
@@ -148,18 +148,18 @@ Build will take a while. Put those cores to use. Find out how many you got with:
 #+RESULTS:
 : hw.logicalcpu: 4
 
-Ok so run:
+Ok so build with:
 
 #+begin_src sh
   make -j4 NATIVE_FAST_BOOT=1
   make install
 #+end_src
 
-This will take *hours* and give your fans a good workout.
+*Note:* Using /NATIVE_FAST_BOOT=1/ significantly improves build time (totalling between 20-30 mins, depending on your specs). Without it, the build can take *hours*.
 
 ** Symlink Emacs.app/Contents/lisp
 
-Without synlinking, opening Emacs.app from finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
+Without synlinking, opening Emacs.app from Finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
 
 #+begin_src sh
   ln -s $(brew --prefix)/opt/gccemacs/share/emacs/28.0.50/lisp nextstep/Emacs.app/Contents/
@@ -239,7 +239,9 @@ Can also check for .eln files:
 #+RESULTS:
 : 149
 
-UPDATE: Added /Symlink Emacs.app/Contents/eln-cache/ section for [[http://akrl.sdf.org/gccemacs.html#org4b11ea1][update 11]].
+UPDATE1: Added /Symlink Emacs.app/Contents/eln-cache/ section for [[http://akrl.sdf.org/gccemacs.html#org4b11ea1][update 11]].
+
+UPDATE2: Noted using NATIVE_FAST_BOOT makes the build much faster.
 
 * [2020-08-02 Sun] SwiftUI macOS desk clock
 :PROPERTIES:
