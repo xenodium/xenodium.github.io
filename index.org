@@ -1,6 +1,22 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-08-23 Sun] Swift package manager build for iOS
+  :PROPERTIES:
+  :CUSTOM_ID: swift-package-manager-build-for-ios
+  :END:
+While playing around with Swift package manager, it wasn't immediately obvious how to build for iOS from the command line. The default behaviour of invoking /swift build/ is to build for the host. In my case, macOS. In any case, this was it:
+
+#+begin_src sh
+  swift build -Xswiftc "-sdk" -Xswiftc "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.0.sdk" -Xswiftc "-target" -Xswiftc "x86_64-apple-ios13.0-simulator"
+#+end_src
+
+ps. Can get the SDK path with:
+
+#+begin_src sh
+  xcrun --sdk iphonesimulator --show-sdk-path
+#+end_src
+
 * [2020-08-23 Sun] QR code bookmarks
   :PROPERTIES:
   :CUSTOM_ID: qr-code-bookmarks
@@ -13727,7 +13743,7 @@ maps key to action.
   :CUSTOM_ID: frugal-bookmarks
   :END:
   :MODIFIED:
-  [2020-08-23 Sun]
+  [2020-08-24 Mon]
   :END:
 - [[https://www.acornishmum.com/9-great-frugal-blogs-in-the-uk/][9 Great Frugal Blogs in The UK - A Cornish Mum]].
 - [[https://www.reddit.com/r/UKFrugal/comments/ha28n9/any_tips_for_buying_cheap_red_wine/][Any tips for buying Cheap Red Wine? : UKFrugal]].
@@ -13747,6 +13763,7 @@ maps key to action.
 - [[https://ethical.net/ethical/homemade-sustainable-cleaning-products/][How to Make Your Own Sustainable Cleaning Products (ethical.net)]].
 - [[https://cookingonabootstrap.com/2015/11/12/how-to-shop-on-a-budget/][How To Shop On A Budget &#8211; from A Girl Called Jack (Jack Monroe)]].
 - [[https://iforcemarketzone.com][iForce marketzone]].
+- [[https://m.youtube.com/watch][Keeping your house cooled (video)]].
 - [[https://meanqueen-lifeaftermoney.blogspot.com/p/my-money-saving-tips.html][Life After Money: My money saving tips]].
 - [[https://www.molecountrystores.co.uk][Mole Country Stores: Agricultural and Rural Retailer (clothing)]].
 - [[https://thehumblepenny.com/][The Humble Penny (Create Financial Joy)]].
