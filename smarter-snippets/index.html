@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-25 Tue 20:06 -->
+<!-- 2020-08-25 Tue 19:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Swift package manager build for iOS</title>
+<title>Smarter Swift snippets</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
 <style type="text/css">
@@ -438,6 +438,28 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -460,24 +482,67 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orgca002be" class="outline-2">
-<h2 id="swift-package-manager-build-for-ios"><span class="timestamp-wrapper"><span class="timestamp">23 August 2020</span></span> Swift package manager build for iOS</h2>
-<div class="outline-text-2" id="text-swift-package-manager-build-for-ios">
+<div id="outline-container-org795e872" class="outline-2">
+<h2 id="smarter-snippets"><span class="timestamp-wrapper"><span class="timestamp">25 August 2020</span></span> Smarter Swift snippets</h2>
+<div class="outline-text-2" id="text-smarter-snippets">
 <p>
-While playing around with Swift package manager, it wasn't immediately obvious how to build for iOS from the command line. The default behaviour of invoking <i>swift build</i> is to build for the host. In my case, macOS. In any case, this was it:
+<a href="https://twitter.com/safijari">Jari Safi</a> published a wonderful Emacs video <a href="https://youtu.be/xmBovJvQ3KU">demoing python yasnippets in action</a>. The constructor snippet, automatically setting ivars, is just magical. I wanted it for Swift!
+</p>
+
+<p>
+I took a look at the <a href="https://github.com/jorgenschaefer/elpy/blob/060a4eb78ec8eba9c8fe3466c40a414d84b3dc81/snippets/python-mode/__init__">__init__ snippet</a> from <a href="https://github.com/jorgenschaefer">Jorgen Schäfer</a>'s <a href="https://github.com/jorgenschaefer/elpy">elpy</a>. It uses <a href="https://github.com/jorgenschaefer/elpy/blob/060a4eb78ec8eba9c8fe3466c40a414d84b3dc81/snippets/python-mode/.yas-setup.el#L33">elpy-snippet-init-assignments</a> to generate the assignments.
+</p>
+
+<p>
+With small tweaks, we can get the same action going on for Swift \o/
+</p>
+
+
+<div class="figure">
+<p><img src="../images/smarter-snippets/snippet.gif" alt="snippet.gif" width="75%" height="75%" />
+</p>
+</div>
+
+<p>
+init.yasnippet:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">swift build -Xswiftc <span style="color: #183691;">"-sdk"</span> -Xswiftc <span style="color: #183691;">"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.0.sdk"</span> -Xswiftc <span style="color: #183691;">"-target"</span> -Xswiftc <span style="color: #183691;">"x86_64-apple-ios13.0-simulator"</span>
+<pre class="src src-snippet"><span style="color: #969896;"># -*- mode: snippet -*-</span>
+<span style="color: #969896;"># name: init with assignments</span>
+<span style="color: #969896;"># key: init</span>
+<span style="color: #969896;"># --</span>
+init(<span style="color: #a71d5d;">${</span><span style="color: #333333;">1</span><span style="color: #a71d5d;">:</span>, args<span style="color: #a71d5d;">}</span>) {
+  <span style="color: #a71d5d;">${</span><span style="color: #333333;">1</span><span style="color: #a71d5d;">:</span><span style="color: #a71d5d;">$(</span>swift-snippet-init-assignments yas-text)<span style="color: #a71d5d;">}</span>
+<span style="color: #a71d5d;">}</span>
+<span style="color: #333333;">$</span><span style="color: #183691;">0</span>
 </pre>
 </div>
 
 <p>
-ps. Can get the SDK path with:
+.yas-setup.el:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">xcrun --sdk iphonesimulator --show-sdk-path
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">swift-snippet-init-assignments</span> (arg-string)
+  (<span style="color: #a71d5d;">let</span> ((indentation (make-string (<span style="color: #a71d5d;">save-excursion</span>
+                                    (goto-char start-point)
+                                    (current-indentation))
+                                  ?\s)))
+    (string-trim (mapconcat (<span style="color: #a71d5d;">lambda</span> (arg)
+                              (<span style="color: #a71d5d;">if</span> (string-match <span style="color: #183691;">"^\\*"</span> arg)
+                                  <span style="color: #183691;">""</span>
+                                (format <span style="color: #183691;">"self.%s = %s\n%s"</span>
+                                        arg arg indentation)))
+                            (swift-snippet-split-args arg-string)
+                            <span style="color: #183691;">""</span>))))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">swift-snippet-split-args</span> (arg-string)
+  (mapcar (<span style="color: #a71d5d;">lambda</span> (x)
+            (<span style="color: #a71d5d;">if</span> (<span style="color: #a71d5d;">and</span> x (string-match <span style="color: #183691;">"</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">[[:alnum:]]*</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">)</span><span style="color: #183691;">:"</span> x))
+                (match-string-no-properties 1 x)
+              x))
+          (split-string arg-string <span style="color: #183691;">"[[:blank:]]*,[[:blank:]]*"</span> t)))
 </pre>
 </div>
 </div>
