@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-20 Fri 20:01 -->
+<!-- 2020-08-29 Sat 20:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs Objective-C tagging with RTags</title>
@@ -201,6 +201,7 @@
            max-width: 88ch;
            padding: 2ch;
            margin: auto;
+           background-color: white;
          }
 
          .figure {
@@ -337,17 +338,11 @@
          }
        </style>
 
-       <!-- Start of Woopra Code -->
-       <script>
-         (function(){
-           var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
-         })("woopra");
-         woopra.config({
-             domain: 'xenodium.com'
-         });
-         woopra.track();
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
        </script>
-       <!-- End of Woopra Code -->
+       <!-- End of Goat Code -->
 
        <script>
 // Toggles heading subtree on click.
@@ -459,13 +454,13 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orgb79abcc" class="outline-2">
+<div id="outline-container-orgb6b32c9" class="outline-2">
 <h2 id="emacs-objective-c-tagging-with-rtags"><span class="timestamp-wrapper"><span class="timestamp">28 March 2016</span></span> Emacs Objective-C tagging with RTags</h2>
 <div class="outline-text-2" id="text-emacs-objective-c-tagging-with-rtags">
 </div>
-<div id="outline-container-org940c62a" class="outline-3">
-<h3 id="org940c62a">Install libclang on Mac</h3>
-<div class="outline-text-3" id="text-org940c62a">
+<div id="outline-container-org8060950" class="outline-3">
+<h3 id="org8060950">Install libclang on Mac</h3>
+<div class="outline-text-3" id="text-org8060950">
 <div class="org-src-container">
 <pre class="src src-sh">brew install llvm --with-clang
 </pre>
@@ -473,9 +468,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org07b98f7" class="outline-3">
-<h3 id="org07b98f7">Install RTags</h3>
-<div class="outline-text-3" id="text-org07b98f7">
+<div id="outline-container-orgcf71116" class="outline-3">
+<h3 id="orgcf71116">Install RTags</h3>
+<div class="outline-text-3" id="text-orgcf71116">
 <div class="org-src-container">
 <pre class="src src-sh">git clone --recursive https://github.com/Andersbakken/rtags.git
 <span style="color: #a71d5d;">cd</span> rtags
@@ -486,9 +481,9 @@ make
 </div>
 </div>
 
-<div id="outline-container-org9da47bc" class="outline-3">
-<h3 id="org9da47bc">Start RTags daemon</h3>
-<div class="outline-text-3" id="text-org9da47bc">
+<div id="outline-container-orgf42cd95" class="outline-3">
+<h3 id="orgf42cd95">Start RTags daemon</h3>
+<div class="outline-text-3" id="text-orgf42cd95">
 <div class="org-src-container">
 <pre class="src src-sh">path/to/rtags/bin/rdm 2&gt; /tmp/rdm.log
 </pre>
@@ -496,22 +491,22 @@ make
 </div>
 </div>
 
-<div id="outline-container-orge1c7f8f" class="outline-3">
-<h3 id="orge1c7f8f">Compilation database</h3>
-<div class="outline-text-3" id="text-orge1c7f8f">
+<div id="outline-container-orgefb5378" class="outline-3">
+<h3 id="orgefb5378">Compilation database</h3>
+<div class="outline-text-3" id="text-orgefb5378">
 </div>
-<div id="outline-container-org1919551" class="outline-4">
-<h4 id="org1919551">Install xctool</h4>
-<div class="outline-text-4" id="text-org1919551">
+<div id="outline-container-orgc3f5eb5" class="outline-4">
+<h4 id="orgc3f5eb5">Install xctool</h4>
+<div class="outline-text-4" id="text-orgc3f5eb5">
 <div class="org-src-container">
 <pre class="src src-sh">brew install xctool
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge72bd99" class="outline-4">
-<h4 id="orge72bd99">Generate a compilation database</h4>
-<div class="outline-text-4" id="text-orge72bd99">
+<div id="outline-container-org808d478" class="outline-4">
+<h4 id="org808d478">Generate a compilation database</h4>
+<div class="outline-text-4" id="text-org808d478">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #a71d5d;">cd</span> path/to/your/objc-project
 xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
@@ -521,9 +516,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 </div>
 </div>
 
-<div id="outline-container-orgd54f01e" class="outline-3">
-<h3 id="orgd54f01e">Load compilation database</h3>
-<div class="outline-text-3" id="text-orgd54f01e">
+<div id="outline-container-orgaa53d28" class="outline-3">
+<h3 id="orgaa53d28">Load compilation database</h3>
+<div class="outline-text-3" id="text-orgaa53d28">
 <div class="org-src-container">
 <pre class="src src-sh">path/to/rtags/bin/rc -J path/to/your/objc-project/compile_commands.json
 </pre>
@@ -531,9 +526,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 </div>
 </div>
 
-<div id="outline-container-orgfe7a98e" class="outline-3">
-<h3 id="orgfe7a98e">Install RTags Emacs package</h3>
-<div class="outline-text-3" id="text-orgfe7a98e">
+<div id="outline-container-org69107be" class="outline-3">
+<h3 id="org69107be">Install RTags Emacs package</h3>
+<div class="outline-text-3" id="text-org69107be">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">rtags</span> <span style="color: #a71d5d;">:ensure</span> t
   <span style="color: #a71d5d;">:config</span>
@@ -544,9 +539,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 </div>
 </div>
 
-<div id="outline-container-orgee27a78" class="outline-3">
-<h3 id="orgee27a78">Ready to go</h3>
-<div class="outline-text-3" id="text-orgee27a78">
+<div id="outline-container-orgb4b3c30" class="outline-3">
+<h3 id="orgb4b3c30">Ready to go</h3>
+<div class="outline-text-3" id="text-orgb4b3c30">
 <p>
 Use any of the rtags interactive commands. For example:
 </p>
@@ -557,9 +552,9 @@ M-x rtags-find-symbol
 </div>
 </div>
 
-<div id="outline-container-org02e2948" class="outline-3">
-<h3 id="org02e2948">References</h3>
-<div class="outline-text-3" id="text-org02e2948">
+<div id="outline-container-orgec3fef0" class="outline-3">
+<h3 id="orgec3fef0">References</h3>
+<div class="outline-text-3" id="text-orgec3fef0">
 <ul class="org-ul">
 <li><a href="https://github.com/Andersbakken/rtags#tldr-quickstart">RTags TLDR Quickstart</a>.</li>
 <li><a href="http://syamajala.github.io/c-ide.html">Emacs as C++ IDE</a>.</li>

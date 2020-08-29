@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-20 Fri 20:01 -->
+<!-- 2020-08-29 Sat 20:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs Objective-C completion with Irony</title>
@@ -201,6 +201,7 @@
            max-width: 88ch;
            padding: 2ch;
            margin: auto;
+           background-color: white;
          }
 
          .figure {
@@ -337,17 +338,11 @@
          }
        </style>
 
-       <!-- Start of Woopra Code -->
-       <script>
-         (function(){
-           var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
-         })("woopra");
-         woopra.config({
-             domain: 'xenodium.com'
-         });
-         woopra.track();
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
        </script>
-       <!-- End of Woopra Code -->
+       <!-- End of Goat Code -->
 
        <script>
 // Toggles heading subtree on click.
@@ -459,22 +454,22 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orga4b377f" class="outline-2">
+<div id="outline-container-org0367f54" class="outline-2">
 <h2 id="emacs-objective-c-completion-with-irony"><span class="timestamp-wrapper"><span class="timestamp">08 January 2016</span></span> Emacs Objective-C completion with Irony</h2>
 <div class="outline-text-2" id="text-emacs-objective-c-completion-with-irony">
 </div>
-<div id="outline-container-orgfbdd764" class="outline-3">
-<h3 id="orgfbdd764">Install libclang on Mac</h3>
-<div class="outline-text-3" id="text-orgfbdd764">
+<div id="outline-container-org7c2a063" class="outline-3">
+<h3 id="org7c2a063">Install libclang on Mac</h3>
+<div class="outline-text-3" id="text-org7c2a063">
 <div class="org-src-container">
 <pre class="src src-sh">brew install llvm --with-clang
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org96c2918" class="outline-3">
-<h3 id="org96c2918">Configure Emacs</h3>
-<div class="outline-text-3" id="text-org96c2918">
+<div id="outline-container-orge9a9448" class="outline-3">
+<h3 id="orge9a9448">Configure Emacs</h3>
+<div class="outline-text-3" id="text-orge9a9448">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">irony</span> <span style="color: #a71d5d;">:ensure</span> t
   <span style="color: #a71d5d;">:config</span>
@@ -490,9 +485,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
-<div id="outline-container-org731ae7c" class="outline-3">
-<h3 id="org731ae7c">install irony server</h3>
-<div class="outline-text-3" id="text-org731ae7c">
+<div id="outline-container-orgd1bf425" class="outline-3">
+<h3 id="orgd1bf425">install irony server</h3>
+<div class="outline-text-3" id="text-orgd1bf425">
 <p>
 Run:
 </p>
@@ -513,22 +508,22 @@ cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTAL
 </pre>
 </div>
 </div>
-<div id="outline-container-orga8a8b20" class="outline-3">
-<h3 id="orga8a8b20">Compilation database</h3>
-<div class="outline-text-3" id="text-orga8a8b20">
+<div id="outline-container-org55b85df" class="outline-3">
+<h3 id="org55b85df">Compilation database</h3>
+<div class="outline-text-3" id="text-org55b85df">
 </div>
-<div id="outline-container-orge391f0f" class="outline-4">
-<h4 id="orge391f0f">Install xctool</h4>
-<div class="outline-text-4" id="text-orge391f0f">
+<div id="outline-container-org8757e0d" class="outline-4">
+<h4 id="org8757e0d">Install xctool</h4>
+<div class="outline-text-4" id="text-org8757e0d">
 <div class="org-src-container">
 <pre class="src src-sh">brew install xctool
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org805205f" class="outline-4">
-<h4 id="org805205f">Generate compilation database</h4>
-<div class="outline-text-4" id="text-org805205f">
+<div id="outline-container-org695f937" class="outline-4">
+<h4 id="org695f937">Generate compilation database</h4>
+<div class="outline-text-4" id="text-org695f937">
 <div class="org-src-container">
 <pre class="src src-sh">xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
 </pre>
@@ -536,9 +531,9 @@ cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTAL
 </div>
 </div>
 </div>
-<div id="outline-container-orga942c8d" class="outline-3">
-<h3 id="orga942c8d">Set Irony's database path</h3>
-<div class="outline-text-3" id="text-orga942c8d">
+<div id="outline-container-org6b927f1" class="outline-3">
+<h3 id="org6b927f1">Set Irony's database path</h3>
+<div class="outline-text-3" id="text-org6b927f1">
 <blockquote>
 <p>
 M-x irony-cdb-json-add-compile-commands-path
