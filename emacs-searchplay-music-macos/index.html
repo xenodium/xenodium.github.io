@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-09-19 Sat 12:59 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs: search/play Music (macOS)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Álvaro Ramírez" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .title {
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+// Make header clickable.
+//           cursor: pointer;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+// Hides subtree for heading by default.
+//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
+//           display: none;
+//         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+
+       <script>
+// Toggles heading subtree on click.
+//         function getClosest(elem, selector) {
+//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
+//         	if ( elem.matches( selector ) ) return elem;
+//             }
+//             return null;
+//         };
+//
+//
+//         function setNodeVisible (node, visible) {
+//             for (var i = 0; i < node.childNodes.length; i++) {
+//                 var child = node.childNodes[i];
+//                 if (node.classList.contains('outline-text-2') ||
+//                     node.classList.contains('outline-3') ||
+//                     node.classList.contains('outline-4') ||
+//                     node.classList.contains('outline-5') ||
+//                     node.classList.contains('outline-6')) {
+//                     node.style.display = visible ? 'inline' : 'none';
+//                 } else if (node.classList.contains('org-ul')) {
+//                     node.style.display = visible ? 'block' : 'none';
+//                  }
+//                 setNodeVisible(child, visible);
+//             }
+//         }
+//
+//         window.onload = function() {
+//             var parts = document.URL.split('#');
+//             if (parts.length > 1) {
+//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
+//                 setNodeVisible(entry, true)
+//             }
+//
+//             document.body.onclick = function(e){
+//                 if (e.target.tagName.toLowerCase() === 'h2') {
+//                     var entry = getClosest(e.target, '.outline-2');
+//                     var elements = entry.getElementsByClassName('outline-text-2');
+//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
+//                 }
+//             };
+//         };
+       </script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-org2d29fe8" class="outline-2">
+<h2 id="emacs-searchplay-music-macos"><span class="timestamp-wrapper"><span class="timestamp">19 September 2020</span></span> Emacs: search/play Music (macOS)</h2>
+<div class="outline-text-2" id="text-emacs-searchplay-music-macos">
+<p>
+While trying out macOS's Music app to manage offline media, I wondered if I could easily search and control playback from Emacs. Spoiler alert: yes it can be done and fuzzy searching music is rather gratifying.
+</p>
+
+
+<div class="figure">
+<p><img src="../images/emacs-searchplay-music-macos/music_search.gif" alt="music_search.gif" width="75%" height="75%" />
+</p>
+</div>
+
+<p>
+Luckily, the hard work's already handled by <a href="https://github.com/hile/pytunes">pytunes</a>, a command line interface to macOS's iTunes/Music app. We add <a href="https://ffmpeg.org/ffprobe.html">ffprobe</a> and some elisp glue to the mix, and we can generate an Emacs media index.
+</p>
+
+<p>
+Indexing takes roughly a minute per 1000 files. Prolly is suboptimal, but I don't indent to re-index frequently. For now, we can use a separate process to prevent Emacs from blocking, so we can get back to playing tetris from our beloved editor:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-index</span> ()
+  <span style="color: #183691;">"Indexes Music's tracks in two stages:</span>
+<span style="color: #183691;">1. Generates \"Tracks.sqlite\" using pytunes (needs https://github.com/hile/pytunes installed).</span>
+<span style="color: #183691;">2. Caches an index at ~/.emacs.d/.musica.el."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (message <span style="color: #183691;">"Indexing music... started"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((now (current-time))
+         (name <span style="color: #183691;">"Music indexing"</span>)
+         (buffer (get-buffer-create (format <span style="color: #183691;">"*%s*"</span> name))))
+    (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+      (delete-region (point-min)
+                     (point-max)))
+    (set-process-sentinel
+     (start-process name
+                    buffer
+                    (file-truename (expand-file-name invocation-name
+                                                     invocation-directory))
+                    <span style="color: #183691;">"--quick"</span> <span style="color: #183691;">"--batch"</span> <span style="color: #183691;">"--eval"</span>
+                    (prin1-to-string
+                     `(<span style="color: #a71d5d;">progn</span>
+                        (<span style="color: #a71d5d;">interactive</span>)
+                        (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">cl-lib</span>)
+                        (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">seq</span>)
+                        (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">map</span>)
+
+                        (message <span style="color: #183691;">"Generating Tracks.sqlite..."</span>)
+                        (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"update-index"</span>) <span style="color: #969896;">;; </span><span style="color: #969896;">Generates Tracks.sqlite</span>
+                        (message <span style="color: #183691;">"Generating Tracks.sqlite... done"</span>)
+
+                        (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">parse-tags</span> (path)
+                          (<span style="color: #a71d5d;">with-temp-buffer</span>
+                            (<span style="color: #a71d5d;">if</span> (eq 0 (call-process <span style="color: #183691;">"ffprobe"</span> nil t nil <span style="color: #183691;">"-v"</span> <span style="color: #183691;">"quiet"</span>
+                                                    <span style="color: #183691;">"-print_format"</span> <span style="color: #183691;">"json"</span> <span style="color: #183691;">"-show_format"</span> path))
+                                (map-elt (json-parse-string (buffer-string)
+                                                            <span style="color: #a71d5d;">:object-type</span> 'alist)
+                                         'format)
+                              (message <span style="color: #183691;">"Warning: Couldn't read track metadata for %s"</span> path)
+                              (message <span style="color: #183691;">"%s"</span> (buffer-string))
+                              (list (cons 'filename path)))))
+
+                        (<span style="color: #a71d5d;">let*</span> ((paths (process-lines <span style="color: #183691;">"sqlite3"</span>
+                                                     (concat (expand-file-name <span style="color: #183691;">"~/"</span>)
+                                                             <span style="color: #183691;">"Music/Music/Music Library.musiclibrary/Tracks.sqlite"</span>)
+                                                     <span style="color: #183691;">"select path from tracks"</span>))
+                               (total (length paths))
+                               (n 0)
+                               (records (seq-map (<span style="color: #a71d5d;">lambda</span> (path)
+                                                   (<span style="color: #a71d5d;">let</span> ((tags (parse-tags path)))
+                                                     (message <span style="color: #183691;">"%d/%d %s"</span> (<span style="color: #a71d5d;">setq</span> n (1+ n))
+                                                              total (<span style="color: #a71d5d;">or</span> (map-elt (map-elt tags 'tags) 'title) <span style="color: #183691;">"No title"</span>))
+                                                     tags))
+                                                 paths)))
+                          (<span style="color: #a71d5d;">with-temp-buffer</span>
+                            (prin1 records (current-buffer))
+                            (write-file <span style="color: #183691;">"~/.emacs.d/.musica.el"</span> nil))))))
+     (<span style="color: #a71d5d;">lambda</span> (process state)
+       (<span style="color: #a71d5d;">if</span> (= (process-exit-status process) 0)
+           (message <span style="color: #183691;">"Indexing music... finished (%.3fs)"</span>
+                    (float-time (time-subtract (current-time) now)))
+         (message <span style="color: #183691;">"Indexing music... failed, see %s"</span> buffer))))))
+</pre>
+</div>
+
+<p>
+Once media is indexed, we can feed it to <a href="https://github.com/abo-abo/swiper">ivy</a> for that narrowing-down fuzzy-searching goodness! It's worth mentioning the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Size-of-Displayed-Text.html">truncate-string-to-width</a> function. Super handy for truncating strings to a fixed width and visually organizing search results in columns.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-search</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"pytunes"</span>) nil <span style="color: #183691;">"pytunes not installed"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((c1-width (round (* (- (window-width) 9) 0.4)))
+         (c2-width (round (* (- (window-width) 9) 0.3)))
+         (c3-width (- (window-width) 9 c1-width c2-width)))
+    (ivy-read <span style="color: #183691;">"Play: "</span> (mapcar
+                        (<span style="color: #a71d5d;">lambda</span> (track)
+                          (<span style="color: #a71d5d;">let-alist</span> track
+                            (cons (format <span style="color: #183691;">"%s   %s   %s"</span>
+                                          (truncate-string-to-width
+                                           (<span style="color: #a71d5d;">or</span> .tags.title
+                                               (file-name-base .filename)
+                                               <span style="color: #183691;">"No title"</span>) c1-width nil ?\s <span style="color: #183691;">"&#8230;"</span>)
+                                          (truncate-string-to-width (propertize (<span style="color: #a71d5d;">or</span> .tags.artist <span style="color: #183691;">""</span>)
+                                                                                'face '(<span style="color: #a71d5d;">:foreground</span> <span style="color: #183691;">"yellow"</span>)) c2-width nil ?\s <span style="color: #183691;">"&#8230;"</span>)
+                                          (truncate-string-to-width
+                                           (propertize (<span style="color: #a71d5d;">or</span> .tags.album <span style="color: #183691;">""</span>)
+                                                       'face '(<span style="color: #a71d5d;">:foreground</span> <span style="color: #183691;">"cyan1"</span>)) c3-width nil ?\s <span style="color: #183691;">"&#8230;"</span>))
+                                  track)))
+                        (musica--index))
+              <span style="color: #a71d5d;">:action</span> (<span style="color: #a71d5d;">lambda</span> (selection)
+                        (<span style="color: #a71d5d;">let-alist</span> (cdr selection)
+                          (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"play"</span> .filename)
+                          (message <span style="color: #183691;">"Playing: %s [%s] %s"</span>
+                                   (<span style="color: #a71d5d;">or</span> .tags.title
+                                       (file-name-base .filename)
+                                       <span style="color: #183691;">"No title"</span>)
+                                   (<span style="color: #a71d5d;">or</span> .tags.artist
+                                       <span style="color: #183691;">"No artist"</span>)
+                                   (<span style="color: #a71d5d;">or</span> .tags.album
+                                       <span style="color: #183691;">"No album"</span>)))))))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica--index</span> ()
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (insert-file-contents <span style="color: #183691;">"~/.emacs.d/.musica.el"</span>)
+    (read (current-buffer))))
+</pre>
+</div>
+
+<p>
+The remaining bits are straigtforward. We add a few interactive functions to control playback:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-info</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((raw (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"info"</span>)))
+    (message <span style="color: #183691;">"%s [%s] %s"</span>
+             (string-trim (string-remove-prefix <span style="color: #183691;">"Title"</span> (nth 3 raw)))
+             (string-trim (string-remove-prefix <span style="color: #183691;">"Artist"</span> (nth 1 raw)))
+             (string-trim (string-remove-prefix <span style="color: #183691;">"Album"</span> (nth 2 raw))))))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-play-pause</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"pytunes"</span>) nil <span style="color: #183691;">"pytunes not installed"</span>)
+  (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"play"</span>)
+  (musica-info))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-play-next</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"pytunes"</span>) nil <span style="color: #183691;">"pytunes not installed"</span>)
+  (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"next"</span>))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-play-next-random</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"pytunes"</span>) nil <span style="color: #183691;">"pytunes not installed"</span>)
+  (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"shuffle"</span> <span style="color: #183691;">"enable"</span>)
+  (<span style="color: #a71d5d;">let-alist</span> (seq-random-elt (musica--index))
+    (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"play"</span> .filename))
+  (musica-info))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">musica-play-previous</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"pytunes"</span>) nil <span style="color: #183691;">"pytunes not installed"</span>)
+  (process-lines <span style="color: #183691;">"pytunes"</span> <span style="color: #183691;">"previous"</span>))
+</pre>
+</div>
+
+<p>
+Finally, if we want some convenient keybindings, we can add something like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #183691;">"C-c m SPC"</span>) #'musica-play-pause)
+(global-set-key (kbd <span style="color: #183691;">"C-c m i"</span>) #'musica-info)
+(global-set-key (kbd <span style="color: #183691;">"C-c m n"</span>) #'musica-play-next)
+(global-set-key (kbd <span style="color: #183691;">"C-c m p"</span>) #'musica-play-previous)
+(global-set-key (kbd <span style="color: #183691;">"C-c m r"</span>) #'musica-play-next-random)
+(global-set-key (kbd <span style="color: #183691;">"C-c m s"</span>) #'musica-search)
+</pre>
+</div>
+
+<p>
+Hooray! Controlling music is now an Emacs keybinding away: \o/
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>
