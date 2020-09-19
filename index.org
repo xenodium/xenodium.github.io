@@ -1,6 +1,248 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-09-19 Sat] Emacs: search/play Music (macOS)
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-searchplay-music-macos
+  :END:
+While trying out macOS's Music app to manage offline media, I wondered if I could easily search and control playback from Emacs. Spoiler alert: yes it can be done and fuzzy searching music is rather gratifying.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-searchplay-music-macos/music_search.gif]]
+
+Luckily, the hard work's already handled by [[https://github.com/hile/pytunes][pytunes]], a command line interface to macOS's iTunes/Music app. We add [[https://ffmpeg.org/ffprobe.html][ffprobe]] and some elisp glue to the mix, and we can generate an Emacs media index.
+
+Indexing takes roughly a minute per 1000 files. Prolly is suboptimal, but I don't indent to re-index frequently. For now, we can use a separate process to prevent Emacs from blocking, so we can get back to playing tetris from our beloved editor:
+
+#+begin_src emacs-lisp
+  (defun musica-index ()
+    "Indexes Music's tracks in two stages:
+  1. Generates \"Tracks.sqlite\" using pytunes (needs https://github.com/hile/pytunes installed).
+  2. Caches an index at ~/.emacs.d/.musica.el."
+    (interactive)
+    (message "Indexing music... started")
+    (let* ((now (current-time))
+           (name "Music indexing")
+           (buffer (get-buffer-create (format "*%s*" name))))
+      (with-current-buffer buffer
+        (delete-region (point-min)
+                       (point-max)))
+      (set-process-sentinel
+       (start-process name
+                      buffer
+                      (file-truename (expand-file-name invocation-name
+                                                       invocation-directory))
+                      "--quick" "--batch" "--eval"
+                      (prin1-to-string
+                       `(progn
+                          (interactive)
+                          (require 'cl-lib)
+                          (require 'seq)
+                          (require 'map)
+
+                          (message "Generating Tracks.sqlite...")
+                          (process-lines "pytunes" "update-index") ;; Generates Tracks.sqlite
+                          (message "Generating Tracks.sqlite... done")
+
+                          (defun parse-tags (path)
+                            (with-temp-buffer
+                              (if (eq 0 (call-process "ffprobe" nil t nil "-v" "quiet"
+                                                      "-print_format" "json" "-show_format" path))
+                                  (map-elt (json-parse-string (buffer-string)
+                                                              :object-type 'alist)
+                                           'format)
+                                (message "Warning: Couldn't read track metadata for %s" path)
+                                (message "%s" (buffer-string))
+                                (list (cons 'filename path)))))
+
+                          (let* ((paths (process-lines "sqlite3"
+                                                       (concat (expand-file-name "~/")
+                                                               "Music/Music/Music Library.musiclibrary/Tracks.sqlite")
+                                                       "select path from tracks"))
+                                 (total (length paths))
+                                 (n 0)
+                                 (records (seq-map (lambda (path)
+                                                     (let ((tags (parse-tags path)))
+                                                       (message "%d/%d %s" (setq n (1+ n))
+                                                                total (or (map-elt (map-elt tags 'tags) 'title) "No title"))
+                                                       tags))
+                                                   paths)))
+                            (with-temp-buffer
+                              (prin1 records (current-buffer))
+                              (write-file "~/.emacs.d/.musica.el" nil))))))
+       (lambda (process state)
+         (if (= (process-exit-status process) 0)
+             (message "Indexing music... finished (%.3fs)"
+                      (float-time (time-subtract (current-time) now)))
+           (message "Indexing music... failed, see %s" buffer))))))
+#+end_src
+
+Once media is indexed, we can feed it to [[https://github.com/abo-abo/swiper][ivy]] for that narrowing-down fuzzy-searching goodness! It's worth mentioning the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Size-of-Displayed-Text.html][truncate-string-to-width]] function. Super handy for truncating strings to a fixed width and visually organizing search results in columns.
+
+#+begin_src emacs-lisp
+  (defun musica-search ()
+    (interactive)
+    (cl-assert (executable-find "pytunes") nil "pytunes not installed")
+    (let* ((c1-width (round (* (- (window-width) 9) 0.4)))
+           (c2-width (round (* (- (window-width) 9) 0.3)))
+           (c3-width (- (window-width) 9 c1-width c2-width)))
+      (ivy-read "Play: " (mapcar
+                          (lambda (track)
+                            (let-alist track
+                              (cons (format "%s   %s   %s"
+                                            (truncate-string-to-width
+                                             (or .tags.title
+                                                 (file-name-base .filename)
+                                                 "No title") c1-width nil ?\s "…")
+                                            (truncate-string-to-width (propertize (or .tags.artist "")
+                                                                                  'face '(:foreground "yellow")) c2-width nil ?\s "…")
+                                            (truncate-string-to-width
+                                             (propertize (or .tags.album "")
+                                                         'face '(:foreground "cyan1")) c3-width nil ?\s "…"))
+                                    track)))
+                          (musica--index))
+                :action (lambda (selection)
+                          (let-alist (cdr selection)
+                            (process-lines "pytunes" "play" .filename)
+                            (message "Playing: %s [%s] %s"
+                                     (or .tags.title
+                                         (file-name-base .filename)
+                                         "No title")
+                                     (or .tags.artist
+                                         "No artist")
+                                     (or .tags.album
+                                         "No album")))))))
+
+  (defun musica--index ()
+    (with-temp-buffer
+      (insert-file-contents "~/.emacs.d/.musica.el")
+      (read (current-buffer))))
+#+end_src
+
+The remaining bits are straigtforward. We add a few interactive functions to control playback:
+
+#+begin_src emacs-lisp
+  (defun musica-info ()
+    (interactive)
+    (let ((raw (process-lines "pytunes" "info")))
+      (message "%s [%s] %s"
+               (string-trim (string-remove-prefix "Title" (nth 3 raw)))
+               (string-trim (string-remove-prefix "Artist" (nth 1 raw)))
+               (string-trim (string-remove-prefix "Album" (nth 2 raw))))))
+
+  (defun musica-play-pause ()
+    (interactive)
+    (cl-assert (executable-find "pytunes") nil "pytunes not installed")
+    (process-lines "pytunes" "play")
+    (musica-info))
+
+  (defun musica-play-next ()
+    (interactive)
+    (cl-assert (executable-find "pytunes") nil "pytunes not installed")
+    (process-lines "pytunes" "next"))
+
+  (defun musica-play-next-random ()
+    (interactive)
+    (cl-assert (executable-find "pytunes") nil "pytunes not installed")
+    (process-lines "pytunes" "shuffle" "enable")
+    (let-alist (seq-random-elt (musica--index))
+      (process-lines "pytunes" "play" .filename))
+    (musica-info))
+
+  (defun musica-play-previous ()
+    (interactive)
+    (cl-assert (executable-find "pytunes") nil "pytunes not installed")
+    (process-lines "pytunes" "previous"))
+#+end_src
+
+Finally, if we want some convenient keybindings, we can add something like:
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c m SPC") #'musica-play-pause)
+  (global-set-key (kbd "C-c m i") #'musica-info)
+  (global-set-key (kbd "C-c m n") #'musica-play-next)
+  (global-set-key (kbd "C-c m p") #'musica-play-previous)
+  (global-set-key (kbd "C-c m r") #'musica-play-next-random)
+  (global-set-key (kbd "C-c m s") #'musica-search)
+#+end_src
+
+Hooray! Controlling music is now an Emacs keybinding away: \o/
+
+* [2020-09-12 Sat] Cheese cake recipe (no crust)
+  :PROPERTIES:
+  :CUSTOM_ID: cheese-cake-recipe-no-crust
+  :END:
+** Preheat oven
+
+Preheat oven at 175°C.
+
+** Ingredients at room temperature
+
+Ensure the cream cheese, sour cream, and eggs are at room temperature before starting.
+
+** Mix cream cheese
+
+- 900g of cream cheese
+
+Mix the cream cheese thoroughly.
+
+** Mix sugar
+
+- 240g of sugar
+
+Add half the sugar. Mix in thoroughly. Add second half and mix.
+
+** Mix sour cream, corn flour, and vanilla.
+
+- 100g sour cream
+- 40g corn flour
+- 1tbsp vanilla bean paste
+
+Add the three ingredients and mix well.
+
+** Mix eggs
+
+- 3 eggs
+- 1 egg yolk
+
+Add the eggs and mix for 30 seconds.
+
+** Mix by hand
+
+Finish mixing thoroughly by hand, using a wooden spoon.
+
+** Prepare pan
+
+- Springform pan
+- Parchment paper
+
+A springform pan works best here. Wrap its plate with parchment paper and lock it in place.
+
+** Pour mix
+
+- Strainer
+
+Pour the mix through a strainer and into the prepared pan.
+
+** Rest mix
+
+Let the mix rest in the pan for 10 minutes to let air bubbles out.
+
+** Bake
+
+Bake for an 1 hour 10 minutes. Maybe add another 10 minutes (or more) if surface is still pale. Turn the oven off, leave door half open, and let it sit for 20 minutes.
+
+** Cool off
+
+Take out and let it cool off to room temperature.
+
+** Refrigerate
+
+Refrigerate for 4 hours (or overnight) before removing the sides of the pan.
+
+** Eat!
+
+Nom nom. Yum yum.
 
 * [2020-08-28 Fri] Faster macOS dock auto-hide
   :PROPERTIES:
@@ -1482,7 +1724,7 @@ Thank you Internet strangers! :)
   :CUSTOM_ID: swiftui-bookmarks
   :END:
   :MODIFIED:
-  [2020-08-30 Sun]
+  [2020-09-12 Sat]
   :END:
 - [[https://twitter.com/clarko/status/1284940951031439361][ SwiftUI live-blur materials that you can use like a background color]].
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
@@ -1587,6 +1829,7 @@ Thank you Internet strangers! :)
 - [[https://sarunw.com/tags/swiftui/][Tagged “SwiftUI” | Sarun]].
 - [[https://swiftwithmajid.com/2020/02/26/textfield-in-swiftui/][TextField in SwiftUI | Majid’s blog about Swift development]].
 - [[https://medium.com/better-programming/the-complete-swiftui-documentation-youve-been-waiting-for-fdfe7241add9][The Complete SwiftUI Documentation You’ve Been Waiting For]].
+- [[https://swiftwithmajid.com/2020/07/02/the-difference-between-stateobject-environmentobject-and-observedobject-in-swiftui/][The difference between @StateObject, @EnvironmentObject, and @ObservedObject]].
 - [[https://swiftui-lab.com/a-powerful-combo/][The Power of the Hosting+Representable Combo (scroll SwiftUI list)]].
 - [[https://theswiftdev.com/2019/10/31/the-ultimate-combine-framework-tutorial-in-swift/][The ultimate Combine framework tutorial in Swift - The.Swift.Dev.]].
 - [[https://twitter.com/dbuchanandev/status/1236411023340511233][Tweet on improving List SwiftUI performace (searching)]].
@@ -6442,10 +6685,11 @@ Success.
 :CUSTOM_ID: api-design-bookmarks
 :END:
 :MODIFIED:
-[2016-09-18 Sun]
+[2020-09-05 Sat]
 :END:
 - [[http://blog.madewithlove.be/post/birdseye-view-on-api/][A bird's eye view on API development]].
 - [[https://msdn.microsoft.com/en-us/library/dd203052.aspx][A Guide to Designing and Building RESTful Web Services with WCF 3.5 (Microsoft)]].
+- [[https://news.ycombinator.com/item?id=24383180][Ask HN: Suggestions for books about API design? | Hacker News]].
 - [[http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api][Best Practices for Designing a Pragmatic RESTful API]].
 - [[https://apisyouwonthate.com/][Build APIs You Won't Hate]].
 - [[https://mollyrocket.com/casey/stream_0028.html][Designing and Evaluating Reusable Components]].
@@ -8738,7 +8982,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: travel-lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2019-09-12 Thu]
+[2020-09-08 Tue]
 :END:
 - [[http://fourhourworkweek.com/2010/02/25/rolf-potts-vagabonding-travel/][5 Travel Lessons You Can Use at Home]].
 - [[https://www.your-rv-lifestyle.com/travel-tips.html][50 Best Travel Tips from 10 Years of Travel - Your RV Lifestyle]].
@@ -8746,6 +8990,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[http://www.goruck.com/en][goruck bag]].
 - [[https://www.washingtonpost.com/travel/tips/dos-donts-in-flight-grooming/][Grooming on airplanes: What's acceptable? - The Washington Post]].
 - [[https://jamesstuber.com/long-term-travel-costs/][How Much Does it Cost to Drop Everything and Travel Asia for 3 Months?]].
+- [[https://www.quora.com/I-am-a-US-citizen-and-I-am-thinking-of-retiring-in-Thailand-What-are-the-pros-and-cons-and-is-it-advisable][I am a US citizen and I am thinking of retiring in Thailand.]].
 - [[https://expertvagabond.com/best-travel-tips/][My 30 Best Travel Tips After 8 Years Traveling The World • Expert Vagabond]].
 - [[https://www.quora.com/My-partner-I-want-to-backpack-around-as-much-of-the-world-as-we-can-for-6-12-months-What-surprises-did-you-learn-on-the-way-I-should-plan-for][My partner & I want to backpack around as much of the world as we can for 6-12 months. What surprises did you learn on the way I should plan for?]].
 - [[http://nomadlist.io/?hn][NomadList]]: Best cities to work from remotely.
@@ -11957,7 +12202,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-08-28 Fri]
+[2020-09-12 Sat]
 :END:
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
@@ -12030,6 +12275,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://medium.com/@tasshin/plan-your-day-daily-time-management-with-emacs-org-mode-and-google-calendar-a9162837fdb3][Plan your day: Daily Time Management with Emacs, Org-Mode, and Google Calendar]].
 - [[https://news.ycombinator.com/item?id=23130104][Prettifying Org Mode with CSS | Hacker News]].
 - [[https://sandyuraz.com/articles/orgmode-css/][Prettifying Org Mode with CSS]].
+- [[https://puntoblogspot.blogspot.com/2018/12/3-basic-org-agenda-tips-for.html][puntoblogspot: 3 basic org agenda tips for the fundamentally forgetful]].
 - [[https://vxlabs.com/2017/06/03/querying-restful-webservices-into-emacs-orgmode-tables/][Querying RESTful webservices into Emacs orgmode tables (vxlabs)]].
 - [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][Rainer König's OrgMode YouTube tutorials]].
 - [[https://fuco1.github.io/2019-02-10-Refiling-hydra-with-pre-defined-targets.html][Refiling hydra with pre-defined targets]].
@@ -13541,7 +13787,7 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: india-travel-bookmarks
 :END:
 :MODIFIED:
-[2020-06-03 Wed]
+[2020-09-13 Sun]
 :END:
 - [[https://news.ycombinator.com/item?id=13119986][A Guide to the Breads of India (Hacker News)]].
 - A route: blore - pune - mumbai - ahmedabad - mt abu - udaipur - jaipur - amritsar - chandigarh - jammu - srinagar - kargil - leh.
@@ -13587,6 +13833,7 @@ If FROM or TO is negative, it counts from the end.
 - Lonavala.
 - Mahabaleshwar.
 - [[https://en.wikipedia.org/wiki/Mahabalipuram][Mahabalipuram]].
+- [[https://www.lonelyplanet.com/india/himachal-pradesh/manali][Manali travel | India, Asia - Lonely Planet]].
 - [[https://en.wikipedia.org/wiki/Manali,_Himachal_Pradesh][Manali, Himachal Pradesh]].
 - [[https://en.wikipedia.org/wiki/Manali,_Himachal_Pradesh][Manali]].
 - Mumbai - Bademita: chicken tikka.
@@ -13860,8 +14107,9 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2020-08-29 Sat]
+[2020-09-04 Fri]
 :END:
+**** TODO [[https://m.imdb.com/title/tt2543312/][Halt and Catch Fire (TV Series 2014–2017) - IMDb]].
 **** TODO [[https://decider.com/movie/first-cow/][First Cow | Where to Stream and Watch | Decider]].
 **** TODO [[https://www.rollingstone.com/movies/movie-reviews/she-dies-tomorrow-movie-review-1034272/]['She Dies Tomorrow' Movie Review: A Person-to-Person Paranoia Pandemic]].
 **** TODO [[https://www.theringer.com/2020/7/14/21323785/palm-springs-the-years-most-fun-movie-plus-introducing-the-connect-shea-serrano-jason-concepcion][‘Palm Springs,’ 2020’s Most Fun Movie]].
@@ -14873,7 +15121,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :CUSTOM_ID: cpp-bookmarks
 :END:
 :MODIFIED:
-[2019-04-14 Sun]
+[2020-09-04 Fri]
 :END:
 - [[http://nickdesaulniers.github.io/blog/2015/07/23/additional-c-slash-c-plus-plus-tooling/][Additional C/C++ Tooling]].
 - [[https://github.com/isocpp/CppCoreGuidelines][C++ Core Guidelines]].
@@ -14881,6 +15129,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[https://github.com/romkatv/gitstatus/blob/master/docs/listdir.md][Fast directory listing]].
 - [[https://github.com/Dobiasd/FunctionalPlus][FunctionalPlus: helps you write concise and readable C++ code]].
 - [[https://github.com/mozilla/rr][GitHub - mozilla/rr: Record and Replay Framework (debugging)]].
+- [[https://news.ycombinator.com/item?id=24361469][Modern C | Hacker News]].
 - [[http://www.murrayc.com/permalink/2015/12/05/modern-c-variadic-template-parameters-and-tuples/][Modern C++: Variadic template parameters and tuples]].
 - [[http://www.artima.com/cppsource/top_cpp_aha_moments.html][My Most Important C++ Aha! Moments...Ever]].
 - [[http://www.amazon.co.uk/Programming-Principles-Practice-Using-C/dp/0321992784][Programming: Principles and Practice Using C++ Paperback]].
@@ -15031,7 +15280,6 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 :END:
 - [[https://docs.python.org/3/tutorial/venv.html][12. Virtual Environments and Packages — Python 3.7.4 documentation (pipenv)]].
 - [[https://github.com/mkaz/termgraph][A python command-line tool which draws basic graphs/charts in the terminal]].
-- [[https://www.continuum.io/why-anaconda][Anaconda Python sandbox]].
 - [[http://mkaz.com/2014/07/26/python-argparse-cookbook/][Argparse cookbook]]: For simple python scripts.
 - [[https://linuxhint.com/best_50_python_books/][Best 50 Python Books for Programmers with All Skill Sets]].
 - [[http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html][Code Like a Pythonista: Idiomatic Python]].
