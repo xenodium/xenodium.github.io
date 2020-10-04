@@ -1,6 +1,183 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-10-04 Sun] Improved Ctrl-p/Ctrl-n macOS movement
+  :PROPERTIES:
+  :CUSTOM_ID: improved-ctrl-p-ctrl-n-macos-movement
+  :END:
+macOS supports many Emacs bindings (out of the box). You can, for example, press C-p and C-n to move the cursor up and down (whether editing text in Emacs or any other macOS app). Jacob Rus's [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]] offers a more in-depth picture and also shows how to customize global macOS keybindings (via DefaultKeyBinding.dict).
+
+In addition to moving Emacs [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Point.html][point]] (cursor) up/down using C-p/C-n, I've internalized the same bindings to select an option from a list. Good Emacs examples of these are [[https://company-mode.github.io/][company mode]] and [[https://github.com/abo-abo/swiper][ivy]].
+
+Vertical cursor movement using Emacs bindings works well in most macOS apps, including forms and text boxes in web pages. However, selecting from a completion list doesn't quite work as expected. Although the binding is technically handled, it moves the cursor within the text widget, ignoring the suggested choices.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/improved-ctrl-p-ctrl-n-macos-movement/bindings-borked.gif]]
+
+Atif Afzal's [[https://www.atfzl.com/use-emacs-key-bindings-everywhere][Use emacs key bindings everywhere]] has a solution for the ignored case. He uses [[https://github.com/pqrs-org/Karabiner-Elements][Karabiner Elements]] to remap c-p and c-n to arrow-up and arrow-down.
+
+It's been roughly a week since I started using the Karabiner remapping, and I've yet to find a case where a web page (or any other macOS app) did not respond to c-p and c-n to move selection from a list.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/improved-ctrl-p-ctrl-n-macos-movement/bindings-fixed.gif]]
+
+My ~/.config/karabiner/karabiner.json configuration is as follows:
+
+#+begin_src json
+  {
+      "global": {
+          "check_for_updates_on_startup": true,
+          "show_in_menu_bar": true,
+          "show_profile_name_in_menu_bar": false
+      },
+      "profiles": [
+          {
+              "complex_modifications": {
+                  "parameters": {
+                      "basic.simultaneous_threshold_milliseconds": 50,
+                      "basic.to_delayed_action_delay_milliseconds": 500,
+                      "basic.to_if_alone_timeout_milliseconds": 1000,
+                      "basic.to_if_held_down_threshold_milliseconds": 500,
+                      "mouse_motion_to_scroll.speed": 100
+                  },
+                  "rules": [
+                      {
+                          "description": "Ctrl+p/Ctrl+n to arrow up/down",
+                          "manipulators": [
+                              {
+                                  "from": {
+                                      "key_code": "p",
+                                      "modifiers": {
+                                          "mandatory": [
+                                              "control"
+                                          ]
+                                      }
+                                  },
+                                  "to": [
+                                      {
+                                          "key_code": "up_arrow"
+                                      }
+                                  ],
+                                  "type": "basic"
+                              },
+                              {
+                                  "from": {
+                                      "key_code": "n",
+                                      "modifiers": {
+                                          "mandatory": [
+                                              "control"
+                                          ]
+                                      }
+                                  },
+                                  "to": [
+                                      {
+                                          "key_code": "down_arrow"
+                                      }
+                                  ],
+                                  "type": "basic"
+                              }
+                          ]
+                      }
+                  ]
+              },
+              "devices": [],
+              "fn_function_keys": [],
+              "name": "Default profile",
+              "parameters": {
+                  "delay_milliseconds_before_open_device": 1000
+              },
+              "selected": true,
+              "simple_modifications": [],
+              "virtual_hid_keyboard": {
+                  "country_code": 0,
+                  "mouse_key_xy_scale": 100
+              }
+          }
+      ]
+  }
+#+end_src
+
+** Bonus (C-g to exit)
+
+Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also the case for web pages. As an Emacs user, I'm pretty used to pressing C-g to cancel, quit, or exit things. With that in mind, mapping C-g to Esc is surprisingly useful outside of Emacs. Here's the relevant Karabiner C-g binding for that:
+
+#+begin_src json
+  {
+      "description": "Ctrl+G to Escape",
+      "manipulators": [
+          {
+              "description": "emacs like escape",
+              "from": {
+                  "key_code": "g",
+                  "modifiers": {
+                      "mandatory": [
+                          "left_control"
+                      ]
+                  }
+              },
+              "to": [
+                  {
+                      "key_code": "escape"
+                  }
+              ],
+              "conditions": [
+                  {
+                      "type": "frontmost_application_unless",
+                      "bundle_identifiers": [
+                          "^org\\.gnu\\.Emacs"
+                      ]
+                  }
+              ],
+              "type": "basic"
+          }
+      ]
+  }
+#+end_src
+
+* [2020-10-04 Sun] Basmati rice pudding recipe
+  :PROPERTIES:
+  :CUSTOM_ID: basmati-rice-pudding-recipe
+  :END:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/basmati-rice-pudding-recipe/rice_pudding.jpg]]
+
+** Combine in a pot
+
+- 2/3 cup of basmati rice
+- 400 ml of coconut milk
+- 4 cups of milk [1]
+- 3 tablespoons of honey [2]
+- 1/4 teaspoon of crushed cardamom seeds [3]
+- 1/8 teaspoon of salt
+
+Simple. Combine all ingredients in a pot.
+
+[1] Been using powder milk since lockdown, end-result's been tasty.
+[2] Only tried raw honey so far.
+[3] Can likely use ground cardamom. I enjoy the scents while crushing.
+
+** Boil and simmer
+
+Bring ingredients to a boil and simmer at low heat for 45 minutes. Stir occasionally.
+
+** Mix in butter
+
+- 1 tablespoon of butter.
+
+Turn stove off, add a tablespoon of butter, and mix in.
+
+** Serve warm or cold
+
+After mixing in the butter, the rice pudding is done. You can serve warm or cold.
+
+** Garnish (optional)
+
+- Pistachios
+- Cinnamon
+
+Optionally garnish with either pistachios or cinnamon (or both).
+
 * [2020-09-27 Sun] Adding images to pdfs (macOS)
   :PROPERTIES:
   :CUSTOM_ID: adding-images-to-pdfs-macos
@@ -1770,7 +1947,7 @@ Thank you Internet strangers! :)
   :CUSTOM_ID: swiftui-bookmarks
   :END:
 :MODIFIED:
-[2020-09-26 Sat]
+[2020-10-03 Sat]
 :END:
 - [[https://twitter.com/clarko/status/1284940951031439361][ SwiftUI live-blur materials that you can use like a background color]].
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
@@ -1780,6 +1957,8 @@ Thank you Internet strangers! :)
 - [[https://swiftui-lab.com/companion/][A Companion for SwiftUI - The SwiftUI Lab]].
 - [[https://swiftbysundell.com/articles/deep-dive-into-swift-function-builders/][A deep dive into Swift’s function builders | Swift by Sundell]].
 - [[https://www.objc.io/blog/2020/08/18/fuzzy-search/][A Fast Fuzzy Search Implementation · objc.io]].
+- [[https://swiftbysundell.com/articles/swiftui-state-management-guide/][A guide to SwiftUI’s state management system | Swift by Sundell]].
+- [[https://swiftbysundell.com/articles/swiftui-layout-system-guide-part-1/][A guide to the SwiftUI layout system - Part 1 | Swift by Sundell]].
 - [[https://github.com/jordansinger/SwiftUI-Kit][A SwiftUI iOS system components and interactions demo app based on iOS 14]].
 - [[https://swiftui-lab.com/swiftui-animations-part1/][Advanced SwiftUI Animations - Part 1: Paths - The SwiftUI Lab]].
 - [[https://swiftui-lab.com/advanced-transitions/][Advanced SwiftUI Transitions - The SwiftUI Lab]].
@@ -8842,7 +9021,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 :CUSTOM_ID: swift-bookmarks
 :END:
 :MODIFIED:
-[2020-08-25 Tue]
+[2020-10-03 Sat]
 :END:
 - [[https://www.uraimo.com/2016/01/06/10-Swift-One-Liners-To-Impress-Your-Friends/][10 Swift One Liners To Impress Your Friends]].
 - [[https://binarapps.com/blog/5-secrets-of-swift-api-design][5 secrets of Swift API design]].
@@ -8895,6 +9074,7 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 - [[https://twitter.com/olebegemann/status/1004458683428950018?s=12][I made a “What’s new in Swift 4.2” playground]].
 - [[https://stackoverflow.com/questions/3554244/uiimagepngrepresentation-issues-images-rotated-by-90-degrees][iphone - UIImagePNGRepresentation issues? / Images rotated by 90 degrees]].
 - [[https://www.youtube.com/watch?v=XJreRR0cC3E][Jason Zurita - Compositional UI Styling in Swift - YouTube]].
+- [[https://khanlou.com/2016/07/implementing-dictionary-in-swift/][Khanlou | Implementing Dictionary In Swift]].
 - [[https://medium.com/@PavelGnatyuk/large-title-and-search-in-ios-11-514d5e020cee][Large Title and Search in iOS 11 – Pavel Gnatyuk – Medium]].
 - [[https://github.com/hyperoslo/Lightbox][Lightbox is a convenient and easy to use image viewer for your iOS app]].
 - [[https://github.com/zhuorantan/LocationPicker][Location picker: A ready for use and fully customizable location picker for your app]].
@@ -9340,7 +9520,9 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 [2018-09-30 Sun]
 :END:
 - [[https://github.com/jrus/cocoa-text-system][Customizing the Cocoa Text System (github)]].
-- [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
+- [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System (~/Library/KeyBindings/DefaultKeyBinding.dict)]].
+- [[https://github.com/ttscoff/KeyBindings][GitHub - ttscoff/KeyBindings: DefaultKeybindings.dict for Mac OS X]].
+- [[https://developer.apple.com/documentation/appkit/nsstandardkeybindingresponding?language=objc][NSResponder (useful for DefaultKeyBinding.dict)]].
 - [[https://www.daisydiskapp.com/][DaisyDisk]] (what's taking up your disk space).
 - [[https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html][DTrace: {even better than} strace for OS X | 8th Light]].
 - [[http://flummox-engineering.blogspot.com/2014/06/getting-absolute-path-in-bash-in-osx.html][Getting absolute path in Bash in OSX]].
@@ -12258,9 +12440,10 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-09-12 Sat]
+[2020-09-29 Tue]
 :END:
 - [[https://forum.effectivealtruism.org/posts/w4CM7RfTLXxYLDccX/pablo-stafforini-s-forecasting-system-1
+- [[https://github.com/DarkBuffalo/ox-report][GitHub - DarkBuffalo/ox-report: Export your org file to minutes report PDF file]].
 - [[https://ag91.github.io/blog/2020/09/04/the-poor-org-user-spaced-repetition/][The Poor Org-User Spaced Repetition - Where parallels cross]].
 ][Pablo Stafforini’s Forecasting System - EA Forum]].
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
@@ -14367,8 +14550,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2020-09-23 Wed]
+[2020-09-28 Mon]
 :END:
+**** TODO [[https://www.amazon.co.uk/Working-Public-Making-Maintenance-Software-ebook/dp/B08BDGXVK9/ref=sr_1_1][Working in Public: The Making and Maintenance of Open Source Software eBook]].
 **** TODO [[https://www.amazon.com/No-More-Mr-Nice-Guy/dp/0762415339][No More Mr Nice Guy: A Proven Plan for Getting What You Want]].
 **** TODO [[https://twitter.com/AllegedlyMiri/status/1301302388939259905][Thread on Wask Factory (more titles)]].
 **** TODO [[https://en.wikipedia.org/wiki/The_Wasp_Factory][The Wasp Factory - Wikipedia]].
