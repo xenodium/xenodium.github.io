@@ -6,13 +6,179 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 19 Sep 2020 13:00:24 +0100</lastBuildDate>
+<lastBuildDate>Sun, 04 Oct 2020 14:49:06 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Improved Ctrl-p/Ctrl-n macOS movement</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-improved-ctrl-p-ctrl-n-macos-movement" class="outline-2">
+ <h2 id="improved-ctrl-p-ctrl-n-macos-movement"> <span class="timestamp-wrapper"> <span class="timestamp">04 October 2020</span></span> Improved Ctrl-p/Ctrl-n macOS movement</h2>
+ <div class="outline-text-2" id="text-improved-ctrl-p-ctrl-n-macos-movement">
+ <p>
+macOS supports many Emacs bindings (out of the box). You can, for example, press C-p and C-n to move the cursor up and down (whether editing text in Emacs or any other macOS app). Jacob Rus's  <a href="http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html">Customizing the Cocoa Text System</a> offers a more in-depth picture and also shows how to customize global macOS keybindings (via DefaultKeyBinding.dict).
+</p>
+
+ <p>
+In addition to moving Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Point.html">point</a> (cursor) up/down using C-p/C-n, I've internalized the same bindings to select an option from a list. Good Emacs examples of these are  <a href="https://company-mode.github.io/">company mode</a> and  <a href="https://github.com/abo-abo/swiper">ivy</a>.
+</p>
+
+ <p>
+Vertical cursor movement using Emacs bindings works well in most macOS apps, including forms and text boxes in web pages. However, selecting from a completion list doesn't quite work as expected. Although the binding is technically handled, it moves the cursor within the text widget, ignoring the suggested choices.
+</p>
+
+
+ <div id="org187d38c" class="figure">
+ <p> <img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-borked.gif" alt="bindings-borked.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+Atif Afzal's  <a href="https://www.atfzl.com/use-emacs-key-bindings-everywhere">Use emacs key bindings everywhere</a> has a solution for the ignored case. He uses  <a href="https://github.com/pqrs-org/Karabiner-Elements">Karabiner Elements</a> to remap c-p and c-n to arrow-up and arrow-down.
+</p>
+
+ <p>
+It's been roughly a week since I started using the Karabiner remapping, and I've yet to find a case where a web page (or any other macOS app) did not respond to c-p and c-n to move selection from a list.
+</p>
+
+
+ <div id="orgcd644da" class="figure">
+ <p> <img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-fixed.gif" alt="bindings-fixed.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+My ~/.config/karabiner/karabiner.json configuration is as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-json">{
+     <span style="color: #a71d5d;">"global"</span>: {
+         <span style="color: #a71d5d;">"check_for_updates_on_startup"</span>:  <span style="color: #0086b3;">true</span>,
+         <span style="color: #a71d5d;">"show_in_menu_bar"</span>:  <span style="color: #0086b3;">true</span>,
+         <span style="color: #a71d5d;">"show_profile_name_in_menu_bar"</span>:  <span style="color: #0086b3;">false</span>
+    },
+     <span style="color: #a71d5d;">"profiles"</span>: [
+        {
+             <span style="color: #a71d5d;">"complex_modifications"</span>: {
+                 <span style="color: #a71d5d;">"parameters"</span>: {
+                     <span style="color: #a71d5d;">"basic.simultaneous_threshold_milliseconds"</span>:  <span style="color: #0086b3;">50</span>,
+                     <span style="color: #a71d5d;">"basic.to_delayed_action_delay_milliseconds"</span>:  <span style="color: #0086b3;">500</span>,
+                     <span style="color: #a71d5d;">"basic.to_if_alone_timeout_milliseconds"</span>:  <span style="color: #0086b3;">1000</span>,
+                     <span style="color: #a71d5d;">"basic.to_if_held_down_threshold_milliseconds"</span>:  <span style="color: #0086b3;">500</span>,
+                     <span style="color: #a71d5d;">"mouse_motion_to_scroll.speed"</span>:  <span style="color: #0086b3;">100</span>
+                },
+                 <span style="color: #a71d5d;">"rules"</span>: [
+                    {
+                         <span style="color: #a71d5d;">"description"</span>:  <span style="color: #183691;">"Ctrl+p/Ctrl+n to arrow up/down"</span>,
+                         <span style="color: #a71d5d;">"manipulators"</span>: [
+                            {
+                                 <span style="color: #a71d5d;">"from"</span>: {
+                                     <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"p"</span>,
+                                     <span style="color: #a71d5d;">"modifiers"</span>: {
+                                         <span style="color: #a71d5d;">"mandatory"</span>: [
+                                             <span style="color: #183691;">"control"</span>
+                                        ]
+                                    }
+                                },
+                                 <span style="color: #a71d5d;">"to"</span>: [
+                                    {
+                                         <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"up_arrow"</span>
+                                    }
+                                ],
+                                 <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
+                            },
+                            {
+                                 <span style="color: #a71d5d;">"from"</span>: {
+                                     <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"n"</span>,
+                                     <span style="color: #a71d5d;">"modifiers"</span>: {
+                                         <span style="color: #a71d5d;">"mandatory"</span>: [
+                                             <span style="color: #183691;">"control"</span>
+                                        ]
+                                    }
+                                },
+                                 <span style="color: #a71d5d;">"to"</span>: [
+                                    {
+                                         <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"down_arrow"</span>
+                                    }
+                                ],
+                                 <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
+                            }
+                        ]
+                    }
+                ]
+            },
+             <span style="color: #a71d5d;">"devices"</span>: [],
+             <span style="color: #a71d5d;">"fn_function_keys"</span>: [],
+             <span style="color: #a71d5d;">"name"</span>:  <span style="color: #183691;">"Default profile"</span>,
+             <span style="color: #a71d5d;">"parameters"</span>: {
+                 <span style="color: #a71d5d;">"delay_milliseconds_before_open_device"</span>:  <span style="color: #0086b3;">1000</span>
+            },
+             <span style="color: #a71d5d;">"selected"</span>:  <span style="color: #0086b3;">true</span>,
+             <span style="color: #a71d5d;">"simple_modifications"</span>: [],
+             <span style="color: #a71d5d;">"virtual_hid_keyboard"</span>: {
+                 <span style="color: #a71d5d;">"country_code"</span>:  <span style="color: #0086b3;">0</span>,
+                 <span style="color: #a71d5d;">"mouse_key_xy_scale"</span>:  <span style="color: #0086b3;">100</span>
+            }
+        }
+    ]
+}
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org191ba60" class="outline-3">
+ <h3 id="org191ba60">Bonus (C-g to exit)</h3>
+ <div class="outline-text-3" id="text-org191ba60">
+ <p>
+Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also the case for web pages. As an Emacs user, I'm pretty used to pressing C-g to cancel, quit, or exit things. With that in mind, mapping C-g to Esc is surprisingly useful outside of Emacs. Here's the relevant Karabiner C-g binding for that:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-json">{
+     <span style="color: #a71d5d;">"description"</span>:  <span style="color: #183691;">"Ctrl+G to Escape"</span>,
+     <span style="color: #a71d5d;">"manipulators"</span>: [
+        {
+             <span style="color: #a71d5d;">"description"</span>:  <span style="color: #183691;">"emacs like escape"</span>,
+             <span style="color: #a71d5d;">"from"</span>: {
+                 <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"g"</span>,
+                 <span style="color: #a71d5d;">"modifiers"</span>: {
+                     <span style="color: #a71d5d;">"mandatory"</span>: [
+                         <span style="color: #183691;">"left_control"</span>
+                    ]
+                }
+            },
+             <span style="color: #a71d5d;">"to"</span>: [
+                {
+                     <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"escape"</span>
+                }
+            ],
+             <span style="color: #a71d5d;">"conditions"</span>: [
+                {
+                     <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"frontmost_application_unless"</span>,
+                     <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                         <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                    ]
+                }
+            ],
+             <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
+        }
+    ]
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/improved-ctrl-p-ctrl-n-macos-movement/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/improved-ctrl-p-ctrl-n-macos-movement/index.html</guid>
+  <pubDate>Sun, 04 Oct 2020 14:41:00 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: search/play Music (macOS)</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org2d29fe8" class="outline-2">
+ <div id="outline-container-org2163a4f" class="outline-2">
  <h2 id="emacs-searchplay-music-macos"> <span class="timestamp-wrapper"> <span class="timestamp">19 September 2020</span></span> Emacs: search/play Music (macOS)</h2>
  <div class="outline-text-2" id="text-emacs-searchplay-music-macos">
  <p>
@@ -197,6 +363,26 @@ Finally, if we want some convenient keybindings, we can add something like:
  <p>
 Hooray! Controlling music is now an Emacs keybinding away: \o/
 </p>
+
+ <p>
+comments on  <a href="https://twitter.com/xenodium/status/1307294369326731264">twitter</a>.
+</p>
+
+ <p>
+UPDATE1: Installing pytunes with  <i>pip3 install pytunes</i> didn't just work for me. Instead, I cloned and installed as:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">git clone https://github.com/hile/pytunes
+pip3 install file:///path/to/pytunes
+pip3 install pytz
+brew install libmagic
+</pre>
+</div>
+
+ <p>
+UPDATE2: Checked in to  <a href="https://github.com/xenodium/dotsies/blob/master/emacs/ar/musica.el">dot files</a>.
+</p>
 </div>
 </div>
 </div>]]></description>
@@ -283,7 +469,7 @@ init(<span style="color: #a71d5d;">${</span> <span style="color: #333333;">1</sp
   <title>Trying out gccemacs on macOS</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org37501ea" class="outline-2">
+ <div id="outline-container-trying-out-gccemacs-on-macos" class="outline-2">
  <h2 id="trying-out-gccemacs-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
  <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
  <p>
@@ -295,9 +481,9 @@ Though not had much of a chance to play with the new install, here's what I did 
 </p>
 </div>
 
- <div id="outline-container-orgb0378fd" class="outline-3">
- <h3 id="orgb0378fd">Patch gcc homebrew formula</h3>
- <div class="outline-text-3" id="text-orgb0378fd">
+ <div id="outline-container-org283690c" class="outline-3">
+ <h3 id="org283690c">Patch gcc homebrew formula</h3>
+ <div class="outline-text-3" id="text-org283690c">
  <p>
 Edit  <i>$(brew –prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb</i>
 </p>
@@ -328,9 +514,9 @@ Edit  <i>$(brew –prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb</i
 </div>
 </div>
 
- <div id="outline-container-orgd0bb66b" class="outline-3">
- <h3 id="orgd0bb66b">Install gcc via homebrew</h3>
- <div class="outline-text-3" id="text-orgd0bb66b">
+ <div id="outline-container-org402268f" class="outline-3">
+ <h3 id="org402268f">Install gcc via homebrew</h3>
+ <div class="outline-text-3" id="text-org402268f">
  <div class="org-src-container">
  <pre class="src src-sh">brew install gcc --build-from-source --force
 </pre>
@@ -338,9 +524,9 @@ Edit  <i>$(brew –prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb</i
 </div>
 </div>
 
- <div id="outline-container-org6f2c575" class="outline-3">
- <h3 id="org6f2c575">Save configure script</h3>
- <div class="outline-text-3" id="text-org6f2c575">
+ <div id="outline-container-org605179f" class="outline-3">
+ <h3 id="org605179f">Save configure script</h3>
+ <div class="outline-text-3" id="text-org605179f">
  <p>
 Create configure-gccemacs.sh
 </p>
@@ -414,9 +600,9 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-org2b05568" class="outline-3">
- <h3 id="org2b05568">Clone Emacs source</h3>
- <div class="outline-text-3" id="text-org2b05568">
+ <div id="outline-container-org2b6cf25" class="outline-3">
+ <h3 id="org2b6cf25">Clone Emacs source</h3>
+ <div class="outline-text-3" id="text-org2b6cf25">
  <div class="org-src-container">
  <pre class="src src-shell">git clone https://github.com/emacs-mirror/emacs gccemacs
 </pre>
@@ -424,9 +610,9 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-org86b9089" class="outline-3">
- <h3 id="org86b9089">Check out native-comp feature branch</h3>
- <div class="outline-text-3" id="text-org86b9089">
+ <div id="outline-container-org054d0fb" class="outline-3">
+ <h3 id="org054d0fb">Check out native-comp feature branch</h3>
+ <div class="outline-text-3" id="text-org054d0fb">
  <div class="org-src-container">
  <pre class="src src-sh"> <span style="color: #a71d5d;">cd</span> gccemacs
 git checkout feature/native-comp
@@ -435,9 +621,9 @@ git checkout feature/native-comp
 </div>
 </div>
 
- <div id="outline-container-orgd2be4f8" class="outline-3">
- <h3 id="orgd2be4f8">Configure build</h3>
- <div class="outline-text-3" id="text-orgd2be4f8">
+ <div id="outline-container-org31aff85" class="outline-3">
+ <h3 id="org31aff85">Configure build</h3>
+ <div class="outline-text-3" id="text-org31aff85">
  <div class="org-src-container">
  <pre class="src src-sh">../configure-gccemacs.sh
 </pre>
@@ -445,9 +631,9 @@ git checkout feature/native-comp
 </div>
 </div>
 
- <div id="outline-container-org3fb8812" class="outline-3">
- <h3 id="org3fb8812">Native lisp compiler found?</h3>
- <div class="outline-text-3" id="text-org3fb8812">
+ <div id="outline-container-org452067b" class="outline-3">
+ <h3 id="org452067b">Native lisp compiler found?</h3>
+ <div class="outline-text-3" id="text-org452067b">
  <p>
 Verify native lisp compiler is found:
 </p>
@@ -459,9 +645,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
- <div id="outline-container-orgf38fe43" class="outline-3">
- <h3 id="orgf38fe43">Build</h3>
- <div class="outline-text-3" id="text-orgf38fe43">
+ <div id="outline-container-org3ca750f" class="outline-3">
+ <h3 id="org3ca750f">Build</h3>
+ <div class="outline-text-3" id="text-org3ca750f">
  <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -492,15 +678,15 @@ make install
 </div>
 </div>
 
- <div id="outline-container-org0d61617" class="outline-3">
- <h3 id="org0d61617">Symlink Emacs.app/Contents/lisp</h3>
- <div class="outline-text-3" id="text-org0d61617">
+ <div id="outline-container-orgc2c9370" class="outline-3">
+ <h3 id="orgc2c9370">Symlink Emacs.app/Contents/lisp</h3>
+ <div class="outline-text-3" id="text-orgc2c9370">
  <p>
 Without synlinking, opening Emacs.app from Finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
 </p>
 
  <div class="org-src-container">
- <pre class="src src-sh">ln -s $(<span style="color: #183691;">brew --prefix</span>)/opt/gccemacs/share/emacs/28.0.50/lisp nextstep/Emacs.app/Contents/
+ <pre class="src src-sh">ln -s $(<span style="color: #183691;">brew --prefix</span>)/opt/gccemacs/share/emacs/28.0.50/native-lisp nextstep/Emacs.app/Contents/
 </pre>
 </div>
 
@@ -516,9 +702,9 @@ emacs: dlopen(nextstep/Emacs.app/Contents/MacOS/../lisp/emacs-lisp/eln-x86_64-ap
 </div>
 </div>
 
- <div id="outline-container-orgcf7ff8d" class="outline-3">
- <h3 id="orgcf7ff8d">Symlink Emacs.app/Contents/eln-cache</h3>
- <div class="outline-text-3" id="text-orgcf7ff8d">
+ <div id="outline-container-org106f182" class="outline-3">
+ <h3 id="org106f182">Symlink Emacs.app/Contents/eln-cache</h3>
+ <div class="outline-text-3" id="text-org106f182">
  <p>
 As of  <a href="http://akrl.sdf.org/gccemacs.html#org4b11ea1">update 11</a>, the following symbolic link is also needed.
 </p>
@@ -530,18 +716,18 @@ As of  <a href="http://akrl.sdf.org/gccemacs.html#org4b11ea1">update 11</a>, the
 </div>
 </div>
 
- <div id="outline-container-org89afe0a" class="outline-3">
- <h3 id="org89afe0a">Remove ~/emacs.d</h3>
- <div class="outline-text-3" id="text-org89afe0a">
+ <div id="outline-container-orgb082c38" class="outline-3">
+ <h3 id="orgb082c38">Remove ~/emacs.d</h3>
+ <div class="outline-text-3" id="text-orgb082c38">
  <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org2ec17bd" class="outline-3">
- <h3 id="org2ec17bd">init.el config</h3>
- <div class="outline-text-3" id="text-org2ec17bd">
+ <div id="outline-container-org8111710" class="outline-3">
+ <h3 id="org8111710">init.el config</h3>
+ <div class="outline-text-3" id="text-org8111710">
  <p>
 Ensure  <i>exec-path</i> and  <i>LIBRARY_PATH</i> both point to locations in $GCCEMACS_PREFIX and finally set  <i>comp-deferred-compilation</i>. I wrapped mine in  <i>exec-path-from-shell</i>, setting early in init.el should be enough.
 </p>
@@ -569,9 +755,9 @@ Ensure  <i>exec-path</i> and  <i>LIBRARY_PATH</i> both point to locations in $GC
 </div>
 </div>
 
- <div id="outline-container-orgd56c96f" class="outline-3">
- <h3 id="orgd56c96f">Launch Emacs.app</h3>
- <div class="outline-text-3" id="text-orgd56c96f">
+ <div id="outline-container-orgef04e2c" class="outline-3">
+ <h3 id="orgef04e2c">Launch Emacs.app</h3>
+ <div class="outline-text-3" id="text-orgef04e2c">
  <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -583,9 +769,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
- <div id="outline-container-org6a8d1df" class="outline-3">
- <h3 id="org6a8d1df">Deferred compilation logs</h3>
- <div class="outline-text-3" id="text-org6a8d1df">
+ <div id="outline-container-org554aa0e" class="outline-3">
+ <h3 id="org554aa0e">Deferred compilation logs</h3>
+ <div class="outline-text-3" id="text-org554aa0e">
  <p>
 After setting  <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>
@@ -1324,7 +1510,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1258148035319734273">t
   <title>mu/mu4e 1.4 released</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org76fae55" class="outline-2">
+ <div id="outline-container-org60f2f9c" class="outline-2">
  <h2 id="mumu4e-14-released"> <span class="timestamp-wrapper"> <span class="timestamp">19 April 2020</span></span> mu/mu4e 1.4 released</h2>
  <div class="outline-text-2" id="text-mumu4e-14-released">
 
