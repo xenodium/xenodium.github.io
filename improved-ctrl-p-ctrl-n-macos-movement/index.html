@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-04 Sun 14:35 -->
+<!-- 2020-10-08 Thu 14:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Improved Ctrl-p/Ctrl-n macOS movement</title>
@@ -446,7 +446,7 @@ Vertical cursor movement using Emacs bindings works well in most macOS apps, inc
 </p>
 
 
-<div id="org187d38c" class="figure">
+<div id="org4e593ca" class="figure">
 <p><img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-borked.gif" alt="bindings-borked.gif" width="75%" height="75%" />
 </p>
 </div>
@@ -460,7 +460,7 @@ It's been roughly a week since I started using the Karabiner remapping, and I've
 </p>
 
 
-<div id="orgcd644da" class="figure">
+<div id="org05093f0" class="figure">
 <p><img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-fixed.gif" alt="bindings-fixed.gif" width="75%" height="75%" />
 </p>
 </div>
@@ -504,6 +504,14 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
                                         <span style="color: #a71d5d;">"key_code"</span>: <span style="color: #183691;">"up_arrow"</span>
                                     }
                                 ],
+                                <span style="color: #a71d5d;">"conditions"</span>: [
+                                    {
+                                        <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"frontmost_application_unless"</span>,
+                                        <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                                            <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                                        ]
+                                    }
+                                ],
                                 <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"basic"</span>
                             },
                             {
@@ -518,6 +526,14 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
                                 <span style="color: #a71d5d;">"to"</span>: [
                                     {
                                         <span style="color: #a71d5d;">"key_code"</span>: <span style="color: #183691;">"down_arrow"</span>
+                                    }
+                                ],
+                                <span style="color: #a71d5d;">"conditions"</span>: [
+                                    {
+                                        <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"frontmost_application_unless"</span>,
+                                        <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                                            <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                                        ]
                                     }
                                 ],
                                 <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"basic"</span>
@@ -545,9 +561,9 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
 </div>
 </div>
 
-<div id="outline-container-org191ba60" class="outline-3">
-<h3 id="org191ba60">Bonus (C-g to exit)</h3>
-<div class="outline-text-3" id="text-org191ba60">
+<div id="outline-container-org20a4822" class="outline-3">
+<h3 id="org20a4822">Bonus (C-g to exit)</h3>
+<div class="outline-text-3" id="text-org20a4822">
 <p>
 Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also the case for web pages. As an Emacs user, I'm pretty used to pressing C-g to cancel, quit, or exit things. With that in mind, mapping C-g to Esc is surprisingly useful outside of Emacs. Here's the relevant Karabiner C-g binding for that:
 </p>
@@ -579,12 +595,23 @@ Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also 
                     ]
                 }
             ],
+            <span style="color: #a71d5d;">"conditions"</span>: [
+                {
+                    <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"frontmost_application_unless"</span>,
+                    <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                        <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                    ]
+                }
+            ],
             <span style="color: #a71d5d;">"type"</span>: <span style="color: #183691;">"basic"</span>
         }
     ]
 }
 </pre>
 </div>
+
+<p>
+UPDATE: Ensure bindings are only active when Emacs is <span class="underline">not</span> active.</p>
 </div>
 </div>
 </div>
