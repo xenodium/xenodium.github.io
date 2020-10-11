@@ -1,6 +1,57 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-10-11 Sun] Emacs: create a Swift package/project
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-create-a-swift-packageproject
+  :END:
+Been playing around with [[https://swift.org/package-manager/][Swift Package Manager (SPM)]]. Creating a new Swift package (ie. project) is pretty simple.
+
+To create a library package, we can use the following:
+
+#+begin_src sh
+  swift package init --type library
+#+end_src
+
+Alternatively, to create a command-line utility use:
+
+#+begin_src sh
+  swift package init --type executable
+#+end_src
+
+Turns out, there are a few options: empty, library, executable, system-module, manifest.
+
+With a little elisp, we can write a completing function to quickly generate a Swift package/project without the need to drop to the shell.
+
+Bonus: I won't have to look up SPM options if I ever forget them.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-create-swift-package/swift-package.gif]]
+
+#+begin_src emacs-lisp
+  (defun ar/swift-package-init ()
+  "Execute `swift package init', with optional name and completing type."
+  (interactive)
+  (let* ((name (read-string "name (default): "))
+         (type (completing-read
+                "project type: "
+                ;; Splits "--type empty|library|executable|system-module|manifest"
+                (split-string
+                 (nth 1 (split-string
+                         (string-trim
+                          (seq-find
+                           (lambda (line)
+                             (string-match "--type" line))
+                           (process-lines "swift" "package" "init" "--help")))
+                         "   "))
+                 "|")))
+         (command (format "swift package init --type %s" type)))
+    (unless (string-empty-p name)
+      (append command "--name " name))
+    (shell-command command))
+  (dired default-directory)
+  (revert-buffer))
+#+end_src
 * [2020-10-04 Sun] Improved Ctrl-p/Ctrl-n macOS movement
   :PROPERTIES:
   :CUSTOM_ID: improved-ctrl-p-ctrl-n-macos-movement
@@ -12465,9 +12516,10 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-09-29 Tue]
+[2020-10-11 Sun]
 :END:
 - [[https://forum.effectivealtruism.org/posts/w4CM7RfTLXxYLDccX/pablo-stafforini-s-forecasting-system-1
+- [[https://dev.to/learnbyexample/customizing-pandoc-to-generate-beautiful-pdfs-from-markdown-3lbj][Customizing pandoc to generate beautiful pdfs from markdown (helpful to tweak org export)]].
 - [[https://github.com/DarkBuffalo/ox-report][GitHub - DarkBuffalo/ox-report: Export your org file to minutes report PDF file]].
 - [[https://ag91.github.io/blog/2020/09/04/the-poor-org-user-spaced-repetition/][The Poor Org-User Spaced Repetition - Where parallels cross]].
 ][Pablo Stafforini’s Forecasting System - EA Forum]].

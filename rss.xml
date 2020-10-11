@@ -6,7 +6,86 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 04 Oct 2020 14:45:27 +0100</lastBuildDate>
+<lastBuildDate>Sun, 11 Oct 2020 20:22:19 +0100</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: create a Swift package/project</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-create-a-swift-packageproject" class="outline-2">
+ <h2 id="emacs-create-a-swift-packageproject"> <span class="timestamp-wrapper"> <span class="timestamp">11 October 2020</span></span> Emacs: create a Swift package/project</h2>
+ <div class="outline-text-2" id="text-emacs-create-a-swift-packageproject">
+ <p>
+Been playing around with  <a href="https://swift.org/package-manager/">Swift Package Manager (SPM)</a>. Creating a new Swift package (ie. project) is pretty simple.
+</p>
+
+ <p>
+To create a library package, we can use the following:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">swift package init --type library
+</pre>
+</div>
+
+ <p>
+Alternatively, to create a command-line utility use:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">swift package init --type executable
+</pre>
+</div>
+
+ <p>
+Turns out, there are a few options: empty, library, executable, system-module, manifest.
+</p>
+
+ <p>
+With a little elisp, we can write a completing function to quickly generate a Swift package/project without the need to drop to the shell.
+</p>
+
+ <p>
+Bonus: I won't have to look up SPM options if I ever forget them.
+</p>
+
+
+ <div id="orgeb228eb" class="figure">
+ <p> <img src="../images/emacs-create-swift-package/swift-package.gif" alt="swift-package.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/swift-package-init</span> ()
+ <span style="color: #183691;">"Execute `swift package init', with optional name and completing type."</span>
+(<span style="color: #a71d5d;">interactive</span>)
+(<span style="color: #a71d5d;">let*</span> ((name (read-string  <span style="color: #183691;">"name (default): "</span>))
+       (type (completing-read
+               <span style="color: #183691;">"project type: "</span>
+               <span style="color: #969896;">;; </span> <span style="color: #969896;">Splits "--type empty|library|executable|system-module|manifest"</span>
+              (split-string
+               (nth 1 (split-string
+                       (string-trim
+                        (seq-find
+                         (<span style="color: #a71d5d;">lambda</span> (line)
+                           (string-match  <span style="color: #183691;">"--type"</span> line))
+                         (process-lines  <span style="color: #183691;">"swift"</span>  <span style="color: #183691;">"package"</span>  <span style="color: #183691;">"init"</span>  <span style="color: #183691;">"--help"</span>)))
+                        <span style="color: #183691;">"   "</span>))
+                <span style="color: #183691;">"|"</span>)))
+       (command (format  <span style="color: #183691;">"swift package init --type %s"</span> type)))
+  (<span style="color: #a71d5d;">unless</span> (string-empty-p name)
+    (append command  <span style="color: #183691;">"--name "</span> name))
+  (shell-command command))
+(dired default-directory)
+(revert-buffer))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-create-a-swift-packageproject</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-create-a-swift-packageproject</guid>
+  <pubDate>Sun, 11 Oct 2020 20:22:27 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Basmati rice pudding recipe</title>
@@ -84,7 +163,7 @@ Optionally garnish with either pistachios or cinnamon (or both).
 </div>]]></description>
   <link>http://xenodium.com/basmati-rice-pudding-recipe</link>
   <guid isPermaLink="false">http://xenodium.com/basmati-rice-pudding-recipe</guid>
-  <pubDate>Sun, 04 Oct 2020 14:41:00 +0100</pubDate>
+  <pubDate>Sun, 04 Oct 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>
@@ -107,7 +186,7 @@ Vertical cursor movement using Emacs bindings works well in most macOS apps, inc
 </p>
 
 
- <div id="org187d38c" class="figure">
+ <div id="org4e593ca" class="figure">
  <p> <img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-borked.gif" alt="bindings-borked.gif" width="75%" height="75%"></img></p>
 </div>
 
@@ -120,7 +199,7 @@ It's been roughly a week since I started using the Karabiner remapping, and I've
 </p>
 
 
- <div id="orgcd644da" class="figure">
+ <div id="org05093f0" class="figure">
  <p> <img src="../images/improved-ctrl-p-ctrl-n-macos-movement/bindings-fixed.gif" alt="bindings-fixed.gif" width="75%" height="75%"></img></p>
 </div>
 
@@ -163,6 +242,14 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
                                          <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"up_arrow"</span>
                                     }
                                 ],
+                                 <span style="color: #a71d5d;">"conditions"</span>: [
+                                    {
+                                         <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"frontmost_application_unless"</span>,
+                                         <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                                             <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                                        ]
+                                    }
+                                ],
                                  <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
                             },
                             {
@@ -177,6 +264,14 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
                                  <span style="color: #a71d5d;">"to"</span>: [
                                     {
                                          <span style="color: #a71d5d;">"key_code"</span>:  <span style="color: #183691;">"down_arrow"</span>
+                                    }
+                                ],
+                                 <span style="color: #a71d5d;">"conditions"</span>: [
+                                    {
+                                         <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"frontmost_application_unless"</span>,
+                                         <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                                             <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                                        ]
                                     }
                                 ],
                                  <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
@@ -204,9 +299,9 @@ My ~/.config/karabiner/karabiner.json configuration is as follows:
 </div>
 </div>
 
- <div id="outline-container-org191ba60" class="outline-3">
- <h3 id="org191ba60">Bonus (C-g to exit)</h3>
- <div class="outline-text-3" id="text-org191ba60">
+ <div id="outline-container-org20a4822" class="outline-3">
+ <h3 id="org20a4822">Bonus (C-g to exit)</h3>
+ <div class="outline-text-3" id="text-org20a4822">
  <p>
 Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also the case for web pages. As an Emacs user, I'm pretty used to pressing C-g to cancel, quit, or exit things. With that in mind, mapping C-g to Esc is surprisingly useful outside of Emacs. Here's the relevant Karabiner C-g binding for that:
 </p>
@@ -238,19 +333,30 @@ Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also 
                     ]
                 }
             ],
+             <span style="color: #a71d5d;">"conditions"</span>: [
+                {
+                     <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"frontmost_application_unless"</span>,
+                     <span style="color: #a71d5d;">"bundle_identifiers"</span>: [
+                         <span style="color: #183691;">"^org\\.gnu\\.Emacs"</span>
+                    ]
+                }
+            ],
              <span style="color: #a71d5d;">"type"</span>:  <span style="color: #183691;">"basic"</span>
         }
     ]
 }
 </pre>
 </div>
+
+ <p>
+UPDATE: Ensure bindings are only active when Emacs is  <span class="underline">not</span> active.</p>
 </div>
 </div>
 </div>
 </div>]]></description>
   <link>http://xenodium.com/improved-ctrl-p-ctrl-n-macos-movement</link>
   <guid isPermaLink="false">http://xenodium.com/improved-ctrl-p-ctrl-n-macos-movement</guid>
-  <pubDate>Sun, 04 Oct 2020 14:41:00 +0100</pubDate>
+  <pubDate>Sun, 04 Oct 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>
@@ -526,7 +632,7 @@ UPDATE2: Checked in to  <a href="https://github.com/xenodium/dotsies/blob/master
 </div>]]></description>
   <link>http://xenodium.com/emacs-searchplay-music-macos</link>
   <guid isPermaLink="false">http://xenodium.com/emacs-searchplay-music-macos</guid>
-  <pubDate>Sat, 19 Sep 2020 13:19:44 +0100</pubDate>
+  <pubDate>Sat, 19 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
   <author>Álvaro Ramírez</author>
