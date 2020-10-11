@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-11 Sun 20:19 -->
+<!-- 2020-10-11 Sun 20:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs: create a Swift package/project</title>
@@ -468,34 +468,34 @@ Bonus: I won't have to look up SPM options if I ever forget them.
 </p>
 
 
-<div id="orgeb228eb" class="figure">
+<div id="orga1afacb" class="figure">
 <p><img src="../images/emacs-create-swift-package/swift-package.gif" alt="swift-package.gif" width="75%" height="75%" />
 </p>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/swift-package-init</span> ()
-<span style="color: #183691;">"Execute `swift package init', with optional name and completing type."</span>
-(<span style="color: #a71d5d;">interactive</span>)
-(<span style="color: #a71d5d;">let*</span> ((name (read-string <span style="color: #183691;">"name (default): "</span>))
-       (type (completing-read
-              <span style="color: #183691;">"project type: "</span>
-              <span style="color: #969896;">;; </span><span style="color: #969896;">Splits "--type empty|library|executable|system-module|manifest"</span>
-              (split-string
-               (nth 1 (split-string
-                       (string-trim
-                        (seq-find
-                         (<span style="color: #a71d5d;">lambda</span> (line)
-                           (string-match <span style="color: #183691;">"--type"</span> line))
-                         (process-lines <span style="color: #183691;">"swift"</span> <span style="color: #183691;">"package"</span> <span style="color: #183691;">"init"</span> <span style="color: #183691;">"--help"</span>)))
-                       <span style="color: #183691;">"   "</span>))
-               <span style="color: #183691;">"|"</span>)))
-       (command (format <span style="color: #183691;">"swift package init --type %s"</span> type)))
-  (<span style="color: #a71d5d;">unless</span> (string-empty-p name)
-    (append command <span style="color: #183691;">"--name "</span> name))
-  (shell-command command))
-(dired default-directory)
-(revert-buffer))
+  <span style="color: #183691;">"Execute `swift package init', with optional name and completing type."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((name (read-string <span style="color: #183691;">"name (default): "</span>))
+         (type (completing-read
+                <span style="color: #183691;">"project type: "</span>
+                <span style="color: #969896;">;; </span><span style="color: #969896;">Splits "--type empty|library|executable|system-module|manifest"</span>
+                (split-string
+                 (nth 1 (split-string
+                         (string-trim
+                          (seq-find
+                           (<span style="color: #a71d5d;">lambda</span> (line)
+                             (string-match <span style="color: #183691;">"--type"</span> line))
+                           (process-lines <span style="color: #183691;">"swift"</span> <span style="color: #183691;">"package"</span> <span style="color: #183691;">"init"</span> <span style="color: #183691;">"--help"</span>)))
+                         <span style="color: #183691;">"   "</span>))
+                 <span style="color: #183691;">"|"</span>)))
+         (command (format <span style="color: #183691;">"swift package init --type %s"</span> type)))
+    (<span style="color: #a71d5d;">unless</span> (string-empty-p name)
+      (append command <span style="color: #183691;">"--name "</span> name))
+    (shell-command command))
+  (dired default-directory)
+  (revert-buffer))
 </pre>
 </div>
 </div>
