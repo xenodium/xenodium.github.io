@@ -1,6 +1,33 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-10-18 Sun] Emacs: org block complete and edit
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-edit-after-org-block-completion
+  :END:
+I quickly got used to [[http://xenodium.com/emacs-org-block-company-completion/][Emacs org block company completion]]. I did, however, almost always found myself running /org-edit-special/ immediately after inserting completion. I use *C-c '* for that. That's all fine, but it just felt redundant.
+
+Why not automatically edit the source block in corresponding major mode after completion? I think I can also get used to that!
+
+[[file:images/emacs-edit-after-org-block-completion/automatic.gif]]
+
+Or maybe the automatic approach is too eager? There's also a middle ground: ask immediately after.
+
+[[file:images/emacs-edit-after-org-block-completion/prompted.gif]]
+
+Or maybe I don't want either in the end? Time will tell, but I now have all three options available:
+
+#+begin_src emacs-lisp
+  (defcustom company-org-block-edit-mode 'auto
+    "Customize whether edit mode, post completion was inserted."
+    :type '(choice
+            (const :tag "nil: no edit after insertion" nil)
+            (const :tag "prompt: ask before edit" prompt)
+            (const :tag "auto edit, no prompt" auto)))
+#+end_src
+
+The new option is now in the [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/company-org-block.el][company-org-block snippet]] with my latest config.
+
 * [2020-10-11 Sun] Emacs: create a Swift package/project
   :PROPERTIES:
   :CUSTOM_ID: emacs-create-a-swift-packageproject
