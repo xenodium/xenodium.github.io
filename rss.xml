@@ -6,7 +6,49 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 18 Oct 2020 19:25:11 +0100</lastBuildDate>
+<lastBuildDate>Sun, 25 Oct 2020 11:00:23 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: quote wrap all in region</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-quote-wrap-all-in-region" class="outline-2">
+ <h2 id="emacs-quote-wrap-all-in-region"> <span class="timestamp-wrapper"> <span class="timestamp">25 October 2020</span></span> Emacs: quote wrap all in region</h2>
+ <div class="outline-text-2" id="text-emacs-quote-wrap-all-in-region">
+ <p>
+As I find myself moving more shell commands into Emacs interactive commands to  <a href="http://xenodium.com/emacs-create-a-swift-packageproject/">create a Swift package/project</a>,  <a href="http://xenodium.com/enrich-your-dired-batching-toolbox/">enrich dired's featureset</a>, or  <a href="http://xenodium.com/emacs-searchplay-music-macos/">search/play Music (macOS)</a>, I often need to take a single space-separated string, make an elisp list of strings, and feed it to functions like  <i>process-lines</i>. No biggie, but I thought it'd be a fun little function to write: take the region and wrap all items in quotes. As a bonus, made it toggable.
+</p>
+
+
+ <div id="org409d4b0" class="figure">
+ <p> <img src="../images/emacs-quote-wrap-all-in-region/wrap-toggle-region.gif" alt="wrap-toggle-region.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/toggle-quote-wrap-all-in-region</span> (beg end)
+   <span style="color: #183691;">"Toggle wrapping all items in region with double quotes."</span>
+  (<span style="color: #a71d5d;">interactive</span> (list (mark) (point)))
+  (<span style="color: #a71d5d;">unless</span> (region-active-p)
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"no region to wrap"</span>))
+  (<span style="color: #a71d5d;">let</span> ((deactivate-mark nil)
+        (replacement (string-join
+                      (mapcar (<span style="color: #a71d5d;">lambda</span> (item)
+                                (<span style="color: #a71d5d;">if</span> (string-match-p  <span style="color: #183691;">"^\".*\"$"</span> item)
+                                    (string-trim item  <span style="color: #183691;">"\""</span>  <span style="color: #183691;">"\""</span>)
+                                  (format  <span style="color: #183691;">"\"%s\""</span> item)))
+                              (split-string (buffer-substring beg end)))
+                       <span style="color: #183691;">" "</span>)))
+    (delete-region beg end)
+    (insert replacement)))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-quote-wrap-all-in-region</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-quote-wrap-all-in-region</guid>
+  <pubDate>Sun, 25 Oct 2020 11:00:35 +0100</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: org block complete and edit</title>

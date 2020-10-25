@@ -1,6 +1,33 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-10-25 Sun] Emacs: quote wrap all in region
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-quote-wrap-all-in-region
+  :END:
+As I find myself moving more shell commands into Emacs interactive commands to [[http://xenodium.com/emacs-create-a-swift-packageproject/][create a Swift package/project]], [[http://xenodium.com/enrich-your-dired-batching-toolbox/][enrich dired's featureset]], or [[http://xenodium.com/emacs-searchplay-music-macos/][search/play Music (macOS)]], I often need to take a single space-separated string, make an elisp list of strings, and feed it to functions like /process-lines/. No biggie, but I thought it'd be a fun little function to write: take the region and wrap all items in quotes. As a bonus, made it toggable.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-quote-wrap-all-in-region/wrap-toggle-region.gif]]
+
+#+begin_src emacs-lisp
+  (defun ar/toggle-quote-wrap-all-in-region (beg end)
+    "Toggle wrapping all items in region with double quotes."
+    (interactive (list (mark) (point)))
+    (unless (region-active-p)
+      (user-error "no region to wrap"))
+    (let ((deactivate-mark nil)
+          (replacement (string-join
+                        (mapcar (lambda (item)
+                                  (if (string-match-p "^\".*\"$" item)
+                                      (string-trim item "\"" "\"")
+                                    (format "\"%s\"" item)))
+                                (split-string (buffer-substring beg end)))
+                        " ")))
+      (delete-region beg end)
+      (insert replacement)))
+#+end_src
+
 * [2020-10-18 Sun] Emacs: org block complete and edit
   :PROPERTIES:
   :CUSTOM_ID: emacs-edit-after-org-block-completion
