@@ -1,6 +1,69 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-10-27 Tue] Emacs: chaining org babel blocks
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-chaining-org-babel-blocks
+  :END:
+Recently wanted to chain org babel blocks. That is, aggregate separate source blocks and execute as one combined block.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-chaining-org-babel-blocks/chain.gif]]
+
+I wanted the chaining primarily driven through header arguments as follows:
+
+#+begin_src org
+  ,#+name: block-0
+  ,#+begin_src swift
+    print("hello 0")
+  ,#+end_src
+
+  ,#+name: block-1
+  ,#+begin_src swift :include block-0
+    print("hello 1")
+  ,#+end_src
+
+  ,#+RESULTS: block-1
+  : hello 0
+  : hello 1
+#+end_src
+
+I didn't find the above syntax and behaviour supported out of the box (or didn't search hard enough?). Fortunately, this is our beloved and malleable editor, so we can always bend it our way! Wasn't quite sure how to go about it, so I looked at other babel packages for inspiration. [[https://github.com/astahlman/ob-async][ob-async]] was great for that.
+
+Turns out, advicing /org-babel-execute-src-block/ did the job:
+
+#+begin_src emacs-lisp
+  (defun adviced:org-babel-execute-src-block (&optional orig-fun arg info params)
+    (let ((body (nth 1 info))
+          (include (assoc :include (nth 2 info)))
+          (named-blocks (org-element-map (org-element-parse-buffer)
+                            'src-block (lambda (item)
+                                         (when (org-element-property :name item)
+                                           (cons (org-element-property :name item)
+                                                 item))))))
+      (while include
+        (unless (cdr include)
+          (user-error ":include without value" (cdr include)))
+        (unless (assoc (cdr include) named-blocks)
+          (user-error "source block \"%s\" not found" (cdr include)))
+        (setq body (concat (org-element-property :value (cdr (assoc (cdr include) named-blocks)))
+                           body))
+        (setf (nth 1 info) body)
+        (setq include (assoc :include
+                             (org-babel-parse-header-arguments
+                              (org-element-property :parameters (cdr (assoc (cdr include) named-blocks)))))))
+      (funcall orig-fun arg info params)))
+
+  (advice-add 'org-babel-execute-src-block :around 'adviced:org-babel-execute-src-block)
+#+end_src
+
+Before I built my own support, I did find that [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] got me most of what I needed, but required sprinkling blocks with placeholder references.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-chaining-org-babel-blocks/noweb.gif]]
+
+Combining [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][:noweb]] and [[https://org-babel.readthedocs.io/en/latest/header-args/#prologue][:prologue]] would have been a great match, if only prologue did expand the noweb reference. I'm sure there's an alternative I'm missing. Either way, it was fun to poke at babel blocks and build my own chaining support.
+
 * [2020-10-25 Sun] Emacs: quote wrap all in region
   :PROPERTIES:
   :CUSTOM_ID: emacs-quote-wrap-all-in-region
@@ -7718,6 +7781,16 @@ M-x rtags-find-symbol
 :PROPERTIES:
 :CUSTOM_ID: emacs-lisp-snippets
 :END:
+** pcase literal matching
+#+begin_src emacs-lisp
+  (pcase "word"
+    ('word (message "Matched 'word symbol"))
+    ("word" (message "Matched \"word\" string")))
+#+end_src
+
+#+RESULTS:
+: Matched "word" string
+
 ** Avoid nesting with the help of thread-first and thread-last.
 #+begin_src emacs-lisp
   (thread-last "12.....34"
@@ -9898,9 +9971,10 @@ UPDATE(2019-04-13): Refreshed post with latest code from my [[https://github.com
 :CUSTOM_ID: ux-toolbox-bookmarks
 :END:
 :MODIFIED:
-[2020-06-09 Tue]
+[2020-10-25 Sun]
 :END:
 - [[https://affinity.serif.com/en-gb/ui-design-software/][Affinity Designer: the perfect tool for UI and UX design]].
+- [[https://affinity.serif.com/en-us/publisher/][Affinity Publisher – Professional Desktop Publishing Software]].
 - [[https://www.youtube.com/watch?v=lWz9G95ITuk&feature=youtu.be&utm_source=designernews][Build a static site with Material Design Lite]].
 - [[http://eye-dropper.kepi.cz/][Eye dropper Chrome extension (pick colors in browser)]].
 - [[https://coolors.co/1a181b-5d4d66-703d89-9e2bd8-a304f2][Generate - Coolors.co]].
@@ -12594,7 +12668,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-10-19 Mon]
+[2020-10-25 Sun]
 :END:
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
@@ -12655,6 +12729,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.reddit.com/r/emacs/comments/9d8i7y/org_mode_habits/][Org Mode Habits : emacs]].
 - [[https://gist.github.com/drj42/1755992][Org mode reference card]].
 - [[https://orgmode.org/worg/org-tutorials/][Org tutorials]].
+- [[https://alphapapa.github.io/org-almanac/][org-almanac]].
 - [[https://github.com/sprig/org-capture-extension/blob/master/README.md][org-capture-extension (GitHub)]].
 - [[https://github.com/eschulte/org-ehtml][org-ehtml: Export Org-mode files as editable web pages]].
 - [[https://github.com/theodorewiles/org-mind-map][org-mind-map: creates graphviz directed graphs from org-mode files]].
@@ -15111,7 +15186,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-lisp-bookmarks
 :END:
 :MODIFIED:
-[2020-10-19 Mon]
+[2020-10-25 Sun]
 :END:
 - [[https://twitter.com/kaushalmodi/status/1059873868175826946?s=12][(setq search-whitespace-regexp ".*?") isearch "abc ghi" matches "abcdefghi"]].
 - [[https://github.com/kinghom/elisp-guide][A quick guide to Emacs Lisp programming]].
@@ -15136,6 +15211,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/larsmagne/emacs-sqlite3][Emacs sqlite binding of Emacs Lisp inspired by mruby-sqlite3]].
 - [[http://www.emacswiki.org/emacs/EmacsSymbolNotation][Emacs symbol notation]].
 - [[https://github.com/skeeto/emacs-bencode][emacs-bencode: Bencode package for Emacs Lisp (encoding losely structured data)]].
+- [[http://newartisans.com/2016/01/pattern-matching-with-pcase/][Emacs: Pattern Matching with pcase]].
 - [[https://curiousprogrammer.wordpress.com/2009/06/08/error-handling-in-emacs-lisp/][Error Handling in Emacs Lisp]].
 - [[https://www.reddit.com/r/emacs/comments/9auzla/example_showing_how_useful_the_ampleregexps/][Example showing how useful the ample-regexps package is : emacs]].
 - [[http://www.emacswiki.org/emacs/find-library.el][find-library]].
@@ -15192,7 +15268,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2020-10-17 Sat]
+[2020-10-25 Sun]
 :END:
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
@@ -15201,6 +15277,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://spin.atomicobject.com/2016/05/27/write-emacs-package/][A Simple Guide to Writing & Publishing Emacs Packages]].
 - [[https://www.reddit.com/r/emacs/comments/ggnekq/a_very_minimal_but_elegant_emacs_i_think/][A very minimal but elegant emacs (I think) : emacs]].
 - [[http://blog.aaronbieber.com][Aaron Bieber's blog]].
+- [[http://www.jesshamrick.com/2012/09/10/absolute-beginners-guide-to-emacs/][Absolute Beginner's Guide to Emacs]].
 - [[https://scripter.co/accessing-devdocs-from-emacs/][Accessing Devdocs from Emacs]].
 - [[https://blog.d46.us/advanced-emacs-startup][Advanced Techniques for Reducing Emacs Startup Time]].
 - [[https://github.com/baohaojun/ajoke][Ajoke]].

@@ -6,7 +6,98 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 25 Oct 2020 11:00:35 +0000</lastBuildDate>
+<lastBuildDate>Tue, 27 Oct 2020 22:32:48 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: chaining org babel blocks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-chaining-org-babel-blocks" class="outline-2">
+ <h2 id="emacs-chaining-org-babel-blocks"> <span class="timestamp-wrapper"> <span class="timestamp">27 October 2020</span></span> Emacs: chaining org babel blocks</h2>
+ <div class="outline-text-2" id="text-emacs-chaining-org-babel-blocks">
+ <p>
+Recently wanted to chain org babel blocks. That is, aggregate separate source blocks and execute as one combined block.
+</p>
+
+
+ <div id="org1cac422" class="figure">
+ <p> <img src="../images/emacs-chaining-org-babel-blocks/chain.gif" alt="chain.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+I wanted the chaining primarily driven through header arguments as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+name: block-0
+#+begin_src swift
+  print("hello 0")
+#+end_src
+
+#+name: block-1
+#+begin_src swift :include block-0
+  print("hello 1")
+#+end_src
+
+#+RESULTS: block-1
+: hello 0
+: hello 1
+</pre>
+</div>
+
+ <p>
+I didn't find the above syntax and behaviour supported out of the box (or didn't search hard enough?). Fortunately, this is our beloved and malleable editor, so we can always bend it our way! Wasn't quite sure how to go about it, so I looked at other babel packages for inspiration.  <a href="https://github.com/astahlman/ob-async">ob-async</a> was great for that.
+</p>
+
+ <p>
+Turns out, advicing  <i>org-babel-execute-src-block</i> did the job:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">adviced:org-babel-execute-src-block</span> (<span style="color: #0086b3;">&optional</span> orig-fun arg info params)
+  (<span style="color: #a71d5d;">let</span> ((body (nth 1 info))
+        (include (assoc  <span style="color: #a71d5d;">:include</span> (nth 2 info)))
+        (named-blocks (org-element-map (org-element-parse-buffer)
+                          'src-block (<span style="color: #a71d5d;">lambda</span> (item)
+                                       (<span style="color: #a71d5d;">when</span> (org-element-property  <span style="color: #a71d5d;">:name</span> item)
+                                         (cons (org-element-property  <span style="color: #a71d5d;">:name</span> item)
+                                               item))))))
+    (<span style="color: #a71d5d;">while</span> include
+      (<span style="color: #a71d5d;">unless</span> (cdr include)
+        (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">":include without value"</span> (cdr include)))
+      (<span style="color: #a71d5d;">unless</span> (assoc (cdr include) named-blocks)
+        (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"source block \"%s\" not found"</span> (cdr include)))
+      (<span style="color: #a71d5d;">setq</span> body (concat (org-element-property  <span style="color: #a71d5d;">:value</span> (cdr (assoc (cdr include) named-blocks)))
+                         body))
+      (<span style="color: #a71d5d;">setf</span> (nth 1 info) body)
+      (<span style="color: #a71d5d;">setq</span> include (assoc  <span style="color: #a71d5d;">:include</span>
+                           (org-babel-parse-header-arguments
+                            (org-element-property  <span style="color: #a71d5d;">:parameters</span> (cdr (assoc (cdr include) named-blocks)))))))
+    (funcall orig-fun arg info params)))
+
+(advice-add 'org-babel-execute-src-block  <span style="color: #a71d5d;">:around</span> 'adviced:org-babel-execute-src-block)
+</pre>
+</div>
+
+ <p>
+Before I built my own support, I did find that  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> got me most of what I needed, but required sprinkling blocks with placeholder references.
+</p>
+
+
+ <div id="org45f1a04" class="figure">
+ <p> <img src="../images/emacs-chaining-org-babel-blocks/noweb.gif" alt="noweb.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+Combining  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">:noweb</a> and  <a href="https://org-babel.readthedocs.io/en/latest/header-args/#prologue">:prologue</a> would have been a great match, if only prologue did expand the noweb reference. I'm sure there's an alternative I'm missing. Either way, it was fun to poke at babel blocks and build my own chaining support.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-chaining-org-babel-blocks</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-chaining-org-babel-blocks</guid>
+  <pubDate>Tue, 27 Oct 2020 22:32:48 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: quote wrap all in region</title>
