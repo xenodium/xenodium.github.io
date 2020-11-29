@@ -6,7 +6,217 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 27 Oct 2020 22:30:33 +0000</lastBuildDate>
+<lastBuildDate>Sun, 29 Nov 2020 17:31:24 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: Clone git repo from clipboard</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-clone-git-repo-from-clipboard" class="outline-2">
+ <h2 id="emacs-clone-git-repo-from-clipboard"> <span class="timestamp-wrapper"> <span class="timestamp">29 November 2020</span></span> Emacs: Clone git repo from clipboard</h2>
+ <div class="outline-text-2" id="text-emacs-clone-git-repo-from-clipboard">
+ <p>
+Cloning git repositories is a pretty common task. For me, it typically goes something like:
+</p>
+
+ <ul class="org-ul"> <li>Copy git repo URL from browser.</li>
+ <li>Drop to Emacs eshell.</li>
+ <li>Change current directory.</li>
+ <li>Type "git clone ".</li>
+ <li>Paste git repo URL.</li>
+ <li>Run git command.</li>
+ <li>Change directory to cloned repo.</li>
+ <li>Open dired.</li>
+</ul> <p>
+No biggie, but why go through the same steps every time? We can do better. We have a hyper malleable editor, so let's get it to grab the URL from clipboard and do its thing.
+</p>
+
+ <p>
+ <i>shell-command</i> or  <i>async-shell-command</i> can help in this space, but require additional work: change location, re-type command, what if directory already exists… This is Emacs, so we can craft the exact experience we want. I did take inspiration from  <i>shell-command</i> to display the process buffer correctly (git progress, control codes, etc.) and landed on the following experience:
+</p>
+
+
+ <div id="orgd5fe93f" class="figure">
+ <p> <img src="../images/emacs-clone-git-repo-from-clipboard/git_clone_dired.gif" alt="git_clone_dired.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/git-clone-clipboard-url</span> ()
+   <span style="color: #183691;">"Clone git URL in clipboard asynchronously and open in dired when finished."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (string-match-p  <span style="color: #183691;">"^http"</span> (current-kill 0)) nil  <span style="color: #183691;">"No URL in clipboard"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((url (current-kill 0))
+         (download-dir (expand-file-name  <span style="color: #183691;">"~/Downloads/"</span>))
+         (project-dir (concat (file-name-as-directory download-dir)
+                              (file-name-base url)))
+         (default-directory download-dir)
+         (command (format  <span style="color: #183691;">"git clone %s"</span> url))
+         (buffer (generate-new-buffer (format  <span style="color: #183691;">"*%s*"</span> command)))
+         (proc))
+    (<span style="color: #a71d5d;">when</span> (file-exists-p project-dir)
+      (<span style="color: #a71d5d;">if</span> (y-or-n-p (format  <span style="color: #183691;">"%s exists. delete?"</span> (file-name-base url)))
+          (delete-directory project-dir t)
+        (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"Bailed"</span>)))
+    (switch-to-buffer buffer)
+    (<span style="color: #a71d5d;">setq</span> proc (start-process-shell-command (nth 0 (split-string command)) buffer command))
+    (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+      (<span style="color: #a71d5d;">setq</span> default-directory download-dir)
+      (shell-command-save-pos-or-erase)
+      (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">shell</span>)
+      (shell-mode)
+      (view-mode +1))
+    (set-process-sentinel proc (<span style="color: #a71d5d;">lambda</span> (process state)
+                                 (<span style="color: #a71d5d;">let</span> ((output (<span style="color: #a71d5d;">with-current-buffer</span> (process-buffer process)
+                                                 (buffer-string))))
+                                   (kill-buffer (process-buffer process))
+                                   (<span style="color: #a71d5d;">if</span> (= (process-exit-status process) 0)
+                                       (<span style="color: #a71d5d;">progn</span>
+                                         (message  <span style="color: #183691;">"finished: %s"</span> command)
+                                         (dired project-dir))
+                                     (<span style="color: #333333;">user-error</span> (format  <span style="color: #183691;">"%s\n%s"</span> command output))))))
+    (set-process-filter proc #'comint-output-filter)))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-clone-git-repo-from-clipboard</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-clone-git-repo-from-clipboard</guid>
+  <lastBuildDate>Sun, 29 Nov 2020 17:30:58 +0000</lastBuildDate>
+</item>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Pulled pork recipe</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-pulled-pork-recipe" class="outline-2">
+ <h2 id="pulled-pork-recipe"> <span class="timestamp-wrapper"> <span class="timestamp">23 November 2020</span></span> Pulled pork recipe</h2>
+ <div class="outline-text-2" id="text-pulled-pork-recipe">
+ <p>
+Made pulled pork for the first time. Freestyled a bit. No expert here, but result was yummie.
+</p>
+</div>
+
+ <div id="outline-container-orgb87642d" class="outline-3">
+ <h3 id="orgb87642d">Grind/blend spices</h3>
+ <div class="outline-text-3" id="text-orgb87642d">
+ <ul class="org-ul"> <li>2 teaspoons smoked paprika</li>
+ <li>2 teaspoons cumin seeds</li>
+ <li>2 teaspoons whole pepper corn mix</li>
+ <li>2 teaspoons chilly flakes</li>
+</ul> <p>
+If spices are whole, grind or blend them. Set aside.
+</p>
+
+
+ <div id="org1ade832" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/grind.png" alt="grind.png" width="50%" height="50%"></img></p>
+</div>
+
+
+ <div id="org4f9459a" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/ground.png" alt="ground.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org9bc4f85" class="outline-3">
+ <h3 id="org9bc4f85">Mix non-solids</h3>
+ <div class="outline-text-3" id="text-org9bc4f85">
+ <ul class="org-ul"> <li>2 tablespoons honey</li>
+ <li>1 teaspoon of dijon mustard</li>
+</ul> <p>
+Mix the two.
+</p>
+
+
+ <div id="orgba3bdf0" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/honey_mustard.png" alt="honey_mustard.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc36e8f3" class="outline-3">
+ <h3 id="orgc36e8f3">Rub non-solids</h3>
+ <div class="outline-text-3" id="text-orgc36e8f3">
+ <p>
+Rub non-solids thoroughly through pork shoulder.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orga1e42de" class="outline-3">
+ <h3 id="orga1e42de">Sprinkle spices</h3>
+ <div class="outline-text-3" id="text-orga1e42de">
+ <p>
+Sprinkle the blended spices all over the pork shoulder. Use the back of a spoon to press the spices on to the meat.
+</p>
+
+
+ <div id="org2f3b1df" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/going_in.png" alt="going_in.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgf3cbf71" class="outline-3">
+ <h3 id="orgf3cbf71">Bake (1 hour)</h3>
+ <div class="outline-text-3" id="text-orgf3cbf71">
+ <p>
+Place in a pot (lid off) and bake in the oven for 1 hour at 200 °C.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org0d9be51" class="outline-3">
+ <h3 id="org0d9be51">Add liquids</h3>
+ <div class="outline-text-3" id="text-org0d9be51">
+ <ul class="org-ul"> <li>1 cup of water.</li>
+ <li>4 tablespoons of apple cider vinegar.</li>
+</ul> <p>
+Add liquids to pot.
+</p>
+
+
+ <div id="org5225c93" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/almost.png" alt="almost.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org80ba563" class="outline-3">
+ <h3 id="org80ba563">Bake (3-5 hours)</h3>
+ <div class="outline-text-3" id="text-org80ba563">
+ <p>
+Bake between 3 to 5 hours 150 °C. Check every hour or two. Does the meat fall easily when spread with two forks? If so, you're done.
+</p>
+
+
+ <div id="org89e993c" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/out.png" alt="out.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgbca520d" class="outline-3">
+ <h3 id="orgbca520d">Pull apart</h3>
+ <div class="outline-text-3" id="text-orgbca520d">
+ <p>
+Use two forks to pull the meat apart.
+</p>
+
+
+ <div id="org88aad17" class="figure">
+ <p> <img src="../images/pulled-pork-recipe/final.png" alt="final.png" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/pulled-pork-recipe</link>
+  <guid isPermaLink="false">http://xenodium.com/pulled-pork-recipe</guid>
+  <pubDate>Mon, 23 Nov 2020 00:00:00 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: chaining org babel blocks</title>

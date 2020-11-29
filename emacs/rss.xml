@@ -6,7 +6,84 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 27 Oct 2020 22:32:48 +0000</lastBuildDate>
+<lastBuildDate>Sun, 29 Nov 2020 17:30:58 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: Clone git repo from clipboard</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-clone-git-repo-from-clipboard" class="outline-2">
+ <h2 id="emacs-clone-git-repo-from-clipboard"> <span class="timestamp-wrapper"> <span class="timestamp">29 November 2020</span></span> Emacs: Clone git repo from clipboard</h2>
+ <div class="outline-text-2" id="text-emacs-clone-git-repo-from-clipboard">
+ <p>
+Cloning git repositories is a pretty common task. For me, it typically goes something like:
+</p>
+
+ <ul class="org-ul"> <li>Copy git repo URL from browser.</li>
+ <li>Drop to Emacs eshell.</li>
+ <li>Change current directory.</li>
+ <li>Type "git clone ".</li>
+ <li>Paste git repo URL.</li>
+ <li>Run git command.</li>
+ <li>Change directory to cloned repo.</li>
+ <li>Open dired.</li>
+</ul> <p>
+No biggie, but why go through the same steps every time? We can do better. We have a hyper malleable editor, so let's get it to grab the URL from clipboard and do its thing.
+</p>
+
+ <p>
+ <i>shell-command</i> or  <i>async-shell-command</i> can help in this space, but require additional work: change location, re-type command, what if directory already exists… This is Emacs, so we can craft the exact experience we want. I did take inspiration from  <i>shell-command</i> to display the process buffer correctly (git progress, control codes, etc.) and landed on the following experience:
+</p>
+
+
+ <div id="orgd5fe93f" class="figure">
+ <p> <img src="../images/emacs-clone-git-repo-from-clipboard/git_clone_dired.gif" alt="git_clone_dired.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/git-clone-clipboard-url</span> ()
+   <span style="color: #183691;">"Clone git URL in clipboard asynchronously and open in dired when finished."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #333333;">cl-assert</span> (string-match-p  <span style="color: #183691;">"^http"</span> (current-kill 0)) nil  <span style="color: #183691;">"No URL in clipboard"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((url (current-kill 0))
+         (download-dir (expand-file-name  <span style="color: #183691;">"~/Downloads/"</span>))
+         (project-dir (concat (file-name-as-directory download-dir)
+                              (file-name-base url)))
+         (default-directory download-dir)
+         (command (format  <span style="color: #183691;">"git clone %s"</span> url))
+         (buffer (generate-new-buffer (format  <span style="color: #183691;">"*%s*"</span> command)))
+         (proc))
+    (<span style="color: #a71d5d;">when</span> (file-exists-p project-dir)
+      (<span style="color: #a71d5d;">if</span> (y-or-n-p (format  <span style="color: #183691;">"%s exists. delete?"</span> (file-name-base url)))
+          (delete-directory project-dir t)
+        (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"Bailed"</span>)))
+    (switch-to-buffer buffer)
+    (<span style="color: #a71d5d;">setq</span> proc (start-process-shell-command (nth 0 (split-string command)) buffer command))
+    (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+      (<span style="color: #a71d5d;">setq</span> default-directory download-dir)
+      (shell-command-save-pos-or-erase)
+      (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">shell</span>)
+      (shell-mode)
+      (view-mode +1))
+    (set-process-sentinel proc (<span style="color: #a71d5d;">lambda</span> (process state)
+                                 (<span style="color: #a71d5d;">let</span> ((output (<span style="color: #a71d5d;">with-current-buffer</span> (process-buffer process)
+                                                 (buffer-string))))
+                                   (kill-buffer (process-buffer process))
+                                   (<span style="color: #a71d5d;">if</span> (= (process-exit-status process) 0)
+                                       (<span style="color: #a71d5d;">progn</span>
+                                         (message  <span style="color: #183691;">"finished: %s"</span> command)
+                                         (dired project-dir))
+                                     (<span style="color: #333333;">user-error</span> (format  <span style="color: #183691;">"%s\n%s"</span> command output))))))
+    (set-process-filter proc #'comint-output-filter)))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-clone-git-repo-from-clipboard</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-clone-git-repo-from-clipboard</guid>
+  <pubDate>Sun, 29 Nov 2020 17:30:58 +0000</pubDate
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: chaining org babel blocks</title>

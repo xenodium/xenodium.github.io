@@ -1,10 +1,71 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-11-29 Sun] Emacs: Clone git repo from clipboard
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-clone-git-repo-from-clipboard
+  :END:
+Cloning git repositories is a pretty common task. For me, it typically goes something like:
+
+- Copy git repo URL from browser.
+- Drop to Emacs eshell.
+- Change current directory.
+- Type "git clone ".
+- Paste git repo URL.
+- Run git command.
+- Change directory to cloned repo.
+- Open dired.
+
+No biggie, but why go through the same steps every time? We can do better. We have a hyper malleable editor, so let's get it to grab the URL from clipboard and do its thing.
+
+/shell-command/ or /async-shell-command/ can help in this space, but require additional work: change location, re-type command, what if directory already exists... This is Emacs, so we can craft the exact experience we want. I did take inspiration from /shell-command/ to display the process buffer correctly (git progress, control codes, etc.) and landed on the following experience:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-clone-git-repo-from-clipboard/git_clone_dired.gif]]
+
+#+begin_src emacs-lisp
+  (defun ar/git-clone-clipboard-url ()
+    "Clone git URL in clipboard asynchronously and open in dired when finished."
+    (interactive)
+    (cl-assert (string-match-p "^http" (current-kill 0)) nil "No URL in clipboard")
+    (let* ((url (current-kill 0))
+           (download-dir (expand-file-name "~/Downloads/"))
+           (project-dir (concat (file-name-as-directory download-dir)
+                                (file-name-base url)))
+           (default-directory download-dir)
+           (command (format "git clone %s" url))
+           (buffer (generate-new-buffer (format "*%s*" command)))
+           (proc))
+      (when (file-exists-p project-dir)
+        (if (y-or-n-p (format "%s exists. delete?" (file-name-base url)))
+            (delete-directory project-dir t)
+          (user-error "Bailed")))
+      (switch-to-buffer buffer)
+      (setq proc (start-process-shell-command (nth 0 (split-string command)) buffer command))
+      (with-current-buffer buffer
+        (setq default-directory download-dir)
+        (shell-command-save-pos-or-erase)
+        (require 'shell)
+        (shell-mode)
+        (view-mode +1))
+      (set-process-sentinel proc (lambda (process state)
+                                   (let ((output (with-current-buffer (process-buffer process)
+                                                   (buffer-string))))
+                                     (kill-buffer (process-buffer process))
+                                     (if (= (process-exit-status process) 0)
+                                         (progn
+                                           (message "finished: %s" command)
+                                           (dired project-dir))
+                                       (user-error (format "%s\n%s" command output))))))
+      (set-process-filter proc #'comint-output-filter)))
+#+end_src
+
 * [2020-11-23 Mon] Pulled pork recipe
 :PROPERTIES:
 :CUSTOM_ID: pulled-pork-recipe
 :END:
+Made pulled pork for the first time. Freestyled a bit. No expert here, but result was yummie.
+
 ** Grind/blend spices
 
 - 2 teaspoons smoked paprika
@@ -14,12 +75,21 @@
 
 If spices are whole, grind or blend them. Set aside.
 
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/grind.png]]
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/ground.png]]
+
 ** Mix non-solids
 
 - 2 tablespoons honey
 - 1 teaspoon of dijon mustard
 
 Mix the two.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/honey_mustard.png]]
 
 ** Rub non-solids
 
@@ -28,6 +98,9 @@ Rub non-solids thoroughly through pork shoulder.
 ** Sprinkle spices
 
 Sprinkle the blended spices all over the pork shoulder. Use the back of a spoon to press the spices on to the meat.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/going_in.png]]
 
 ** Bake (1 hour)
 
@@ -40,20 +113,29 @@ Place in a pot (lid off) and bake in the oven for 1 hour at 200 °C.
 
 Add liquids to pot.
 
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/almost.png]]
+
 ** Bake (3-5 hours)
 
 Bake between 3 to 5 hours 150 °C. Check every hour or two. Does the meat fall easily when spread with two forks? If so, you're done.
 
-** Shred
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/out.png]]
+
+** Pull apart
 
 Use two forks to pull the meat apart.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/pulled-pork-recipe/final.png]]
 
 * [2020-11-01 Sun] Zettelkasten bookmarks
   :PROPERTIES:
   :CUSTOM_ID: zettelkasten-bookmarks
   :END:
 - [[https://zettelkasten.de/introduction/][Introduction to the Zettelkasten Method]].
-* [2020-10-28 Wed] battlestation bookmarks
+* [2020-10-28 Wed] Battlestation bookmarks
 :PROPERTIES:
 :CUSTOM_ID: battlestation-bookmarks
 :END:
