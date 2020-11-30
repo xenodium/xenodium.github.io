@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 29 Nov 2020 17:31:24 +0000</lastBuildDate>
+<lastBuildDate>Mon, 30 Nov 2020 08:32:56 +0000</lastBuildDate>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: Clone git repo from clipboard</title>
@@ -36,15 +36,17 @@ No biggie, but why go through the same steps every time? We can do better. We ha
 </p>
 
 
- <div id="orgd5fe93f" class="figure">
+ <div id="org1be178c" class="figure">
  <p> <img src="../images/emacs-clone-git-repo-from-clipboard/git_clone_dired.gif" alt="git_clone_dired.gif" width="75%" height="75%"></img></p>
 </div>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/git-clone-clipboard-url</span> ()
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;; </span> <span style="color: #969896;">-*- lexical-binding: t -*-</span>
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/git-clone-clipboard-url</span> ()
    <span style="color: #183691;">"Clone git URL in clipboard asynchronously and open in dired when finished."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (<span style="color: #333333;">cl-assert</span> (string-match-p  <span style="color: #183691;">"^http"</span> (current-kill 0)) nil  <span style="color: #183691;">"No URL in clipboard"</span>)
+  (<span style="color: #333333;">cl-assert</span> (string-match-p  <span style="color: #183691;">"^</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">http</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">|</span> <span style="color: #183691;">https</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">|</span> <span style="color: #183691;">ssh</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">://"</span> (current-kill 0)) nil  <span style="color: #183691;">"No URL in clipboard"</span>)
   (<span style="color: #a71d5d;">let*</span> ((url (current-kill 0))
          (download-dir (expand-file-name  <span style="color: #183691;">"~/Downloads/"</span>))
          (project-dir (concat (file-name-as-directory download-dir)
@@ -77,6 +79,18 @@ No biggie, but why go through the same steps every time? We can do better. We ha
     (set-process-filter proc #'comint-output-filter)))
 </pre>
 </div>
+
+ <p>
+Comment on  <a href="https://www.reddit.com/r/emacs/comments/k3iter/simplequick_git_repo_clone_from_browser_to_emacs/">reddit</a> or  <a href="https://twitter.com/xenodium/status/1333111043791458309">twitter</a>.
+</p>
+</div>
+
+ <div id="outline-container-orgae0ae20" class="outline-3">
+ <h3 id="orgae0ae20">Updates</h3>
+ <div class="outline-text-3" id="text-orgae0ae20">
+ <ul class="org-ul"> <li>Added lexical binding.</li>
+ <li>Checks clipboard for ssh urls also.</li>
+</ul></div>
 </div>
 </div>
 </div>]]></description>
