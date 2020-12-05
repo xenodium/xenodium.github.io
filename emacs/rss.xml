@@ -6,7 +6,62 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 30 Nov 2020 08:32:42 +0000</lastBuildDate>
+<lastBuildDate>Sat, 05 Dec 2020 18:00:22 +0000</lastBuildDate>
+<item>
+  <author>Álvaro Ramírez</author>
+  <title>Emacs: Rotate my macOS display</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-rotate-my-macos-display" class="outline-2">
+ <h2 id="emacs-rotate-my-macos-display"> <span class="timestamp-wrapper"> <span class="timestamp">05 December 2020</span></span> Emacs: Rotate my macOS display</h2>
+ <div class="outline-text-2" id="text-emacs-rotate-my-macos-display">
+ <p>
+Every so often, I rotate my monitor (vertical vs horizontal) for either work or to watch a movie. macOS enables changing the display rotation via a dropdown menu (under  <i>Preferences > Displays > Rotation</i>) where you can pick between  <i>Standard</i>,  <i>90°</i>,  <i>180°</i>, and  <i>270°</i>. That's all fine, but what I'd really like is a quick way to toggle between my preferred two choices:  <i>Standard</i> and  <i>270°</i>.
+</p>
+
+ <p>
+Unsurprisingly, I'd also like to invoke it as an interactive command via Emacs's  <i>M-x</i> (see  <a href="http://xenodium.com/emacs-connect-my-bluetooth-speaker/index.html">Emacs: connect my Bluetooth speaker</a>). With narrowing frameworks like  <a href="https://github.com/abo-abo/swiper">ivy</a>,  <a href="https://emacs-helm.github.io/helm/">helm</a>, and  <a href="https://www.gnu.org/software/emacs/manual/html_mono/ido.html">ido</a>, invoking these commands is just a breeze.
+</p>
+
+ <p>
+Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's  <a href="https://github.com/CdLbB/fb-rotate">fb-rotate</a> command line utility. All that's left to do is wrap it in a tiny elisp  <del>function</del> hack, add the toggling logic, and voila!
+</p>
+
+
+ <div id="org792763b" class="figure">
+ <p> <img src="../images/emacs-rotate-my-macos-display/rotate.gif" alt="rotate.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+ <i>The screen capture goes a little funky when rotating the display, but you get the idea. It works better in person :)</i>
+</p>
+
+ <p>
+…and here's the snippet:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/display-toggle-rotation</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Requires fb-rotate in `</span> <span style="color: #0086b3;">exec-path</span> <span style="color: #969896;">'.</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">https://github.com/CdLbB/fb-rotate</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">#  Display_ID    Resolution  ____Display_Bounds____  Rotation</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">2  0x2b347692    1440x2560      0     0  1440  2560    270    [main]</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">From fb-rotate output, get the `</span> <span style="color: #0086b3;">current-rotation</span> <span style="color: #969896;">' from Column 7, row 1 zero-based.</span>
+  (<span style="color: #a71d5d;">let</span> ((current-rotation (nth 7 (split-string (nth 1 (process-lines  <span style="color: #183691;">"fb-rotate"</span>  <span style="color: #183691;">"-i"</span>))))))
+    (call-process-shell-command (format  <span style="color: #183691;">"fb-rotate -d 1 -r %s"</span>
+                                        (<span style="color: #a71d5d;">if</span> (equal current-rotation  <span style="color: #183691;">"270"</span>)
+                                             <span style="color: #183691;">"0"</span>
+                                           <span style="color: #183691;">"270"</span>)))))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-rotate-my-macos-display</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-rotate-my-macos-display</guid>
+  <pubDate>Sat, 05 Dec 2020 18:00:22 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: Clone git repo from clipboard</title>

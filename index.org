@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2020-12-05 Sat] Emacs: Rotate my macOS display
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-rotate-my-macos-display
+  :END:
+Every so often, I rotate my monitor (vertical vs horizontal) for either work or to watch a movie. macOS enables changing the display rotation via a dropdown menu (under /Preferences > Displays > Rotation/) where you can pick between /Standard/, /90°/, /180°/, and /270°/. That's all fine, but what I'd really like is a quick way to toggle between my preferred two choices: /Standard/ and /270°/.
+
+Unsurprisingly, I'd also like to invoke it as an interactive command via Emacs's /M-x/ (see [[http://xenodium.com/emacs-connect-my-bluetooth-speaker/index.html][Emacs: connect my Bluetooth speaker]]). With narrowing frameworks like [[https://github.com/abo-abo/swiper][ivy]], [[https://emacs-helm.github.io/helm/][helm]], and [[https://www.gnu.org/software/emacs/manual/html_mono/ido.html][ido]], invoking these commands is just a breeze.
+
+Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's [[https://github.com/CdLbB/fb-rotate][fb-rotate]] command line utility. All that's left to do is wrap it in a tiny elisp +function+ hack, add the toggling logic, and voila!
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-rotate-my-macos-display/rotate.gif]]
+
+/The screen capture goes a little funky when rotating the display, but you get the idea. It works better in person :)/
+
+...and here's the snippet:
+
+#+begin_src emacs-lisp
+  (defun ar/display-toggle-rotation ()
+    (interactive)
+    ;; Requires fb-rotate in `exec-path'.
+    ;; https://github.com/CdLbB/fb-rotate
+    ;; #  Display_ID    Resolution  ____Display_Bounds____  Rotation
+    ;; 2  0x2b347692    1440x2560      0     0  1440  2560    270    [main]
+    ;; From fb-rotate output, get the `current-rotation' from Column 7, row 1 zero-based.
+    (let ((current-rotation (nth 7 (split-string (nth 1 (process-lines "fb-rotate" "-i"))))))
+      (call-process-shell-command (format "fb-rotate -d 1 -r %s"
+                                          (if (equal current-rotation "270")
+                                              "0"
+                                            "270")))))
+#+end_src
 * [2020-11-29 Sun] Emacs: Clone git repo from clipboard
   :PROPERTIES:
   :CUSTOM_ID: emacs-clone-git-repo-from-clipboard
