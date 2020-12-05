@@ -990,9 +990,6 @@ Create configure-gccemacs.sh
   # Configures Emacs for building native comp support
   # http://akrl.sdf.org/gccemacs.html
 
-  # Installing under homebrew's opt, but could be anywhere.
-  readonly GCCEMACS_PREFIX="$(realpath $(brew --prefix)/opt/gccemacs)"
-
   readonly GCC_DIR="$(realpath $(brew --prefix)/opt/gcc)"
   [[ -d $GCC_DIR ]] ||  { echo "${GCC_DIR} not found"; exit 1; }
 
@@ -1021,8 +1018,8 @@ Create configure-gccemacs.sh
   ./autogen.sh
 
   ./configure \
-       --prefix="${GCCEMACS_PREFIX}" \
-       --enable-locallisppath="${GCCEMACS_PREFIX}/opt/gccemacs/site-lisp" \
+       --prefix="$PWD/nextstep/Emacs.app/Contents/MacOS" \
+       --enable-locallisppath="${PWD}/nextstep/Emacs.app/Contents/MacOS" \
        --with-mailutils \
        --with-ns \
        --with-imagemagick \
@@ -1047,7 +1044,7 @@ Make it executable
 ** Clone Emacs source
 
 #+begin_src shell
-  git clone https://github.com/emacs-mirror/emacs gccemacs
+  git clone --branch feature/native-comp https://github.com/emacs-mirror/emacs emacs
 #+end_src
 
 ** Check out native-comp feature branch
@@ -1086,33 +1083,14 @@ Ok so build with:
 
 #+begin_src sh
   make -j4 NATIVE_FAST_BOOT=1
+  cp -r lisp nextstep/Emacs.app/Contents/Resources/
+  cp -r native-lisp nextstep/Emacs.app/Contents
   make install
 #+end_src
 
 *Note:* Using /NATIVE_FAST_BOOT=1/ significantly improves build time (totalling between 20-30 mins, depending on your specs). Without it, the build can take *hours*.
 
-** Symlink Emacs.app/Contents/lisp
-
-Without synlinking, opening Emacs.app from Finder fails silently, so symlink as follows. Btw, if you changed $GCCEMACS_PREFIX, use that path prefix instead.
-
-#+begin_src sh
-  ln -s $(brew --prefix)/opt/gccemacs/share/emacs/28.0.50/native-lisp nextstep/Emacs.app/Contents/
-#+end_src
-
-ps. Without symlink, you won't see an error unless the binary is executed explicitly from the terminal (ie. nextstep/Emacs.app/Contents/MacOS/Emacs), and then you'd see something like
-
-#+begin_src sh
-  nextstep/Emacs.app/Contents/MacOS/Emacs
-  emacs: dlopen(nextstep/Emacs.app/Contents/MacOS/../lisp/emacs-lisp/eln-x86_64-apple-darwin19.4.0-abff6ce99a055711/lisp-mode.eln, 1): image not found
-#+end_src
-
-** Symlink Emacs.app/Contents/eln-cache
-
-As of [[http://akrl.sdf.org/gccemacs.html#org4b11ea1][update 11]], the following symbolic link is also needed.
-
-#+begin_src sh
-  ln -s $(brew --prefix)/opt/gccemacs/libexec/emacs/28.0.50/x86_64-apple-darwin19.6.0/eln-cache nextstep/Emacs.app/Contents/
-#+end_src
+The macOS app build (under nextstep/Emacs.app) is ready, but read on before launching.
 
 ** Remove ~/emacs.d
 
@@ -2415,7 +2393,7 @@ Thank you Internet strangers! :)
 - [[https://swiftuipropertywrappers.com/][Swift UI Property Wrappers (@State, @StateObject, @EnvironmentObject, @ObservedObject, @Binding)]].
 - [[https://stackoverflow.com/questions/62840571/not-receiving-scenephase-changes][swiftui - Not Receiving scenePhase Changes (foreground/background)]].
 - [[https://medium.com/better-programming/swiftui-and-redux-clean-code-and-small-independent-components-6f46a5eb46b3][SwiftUI and Redux — Clean Code and Small, Independent Components]].
-- [[https://sarunw.com/posts/swiftui-animation/][SwiftUI Animation (buttons, rotations, etc) | Sarun]].
+- [[https://sarunw.com/posts/swiftui-animation/][SwiftUI Animation (buttons, current-rotations, etc) | Sarun]].
 - [[https://sarunw.com/posts/swiftui-animation/][SwiftUI Animation | Sarun]].
 - [[https://medium.com/swlh/learn-master-%EF%B8%8F-swiftui-basic-components-in-10-minutes-dc327e71d245][SwiftUI basic components (form example)]].
 - [[https://www.hackingwithswift.com/books/ios-swiftui/buttons-and-images][SwiftUI Buttons and images (using systemName)]].
