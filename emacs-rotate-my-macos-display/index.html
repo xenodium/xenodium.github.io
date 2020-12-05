@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-12-05 Sat 17:59 -->
+<!-- 2020-12-05 Sat 22:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs: Rotate my macOS display</title>
@@ -446,7 +446,7 @@ Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's <a hre
 </p>
 
 
-<div id="org792763b" class="figure">
+<div id="org8b58c50" class="figure">
 <p><img src="../images/emacs-rotate-my-macos-display/rotate.gif" alt="rotate.gif" width="75%" height="75%" />
 </p>
 </div>
@@ -462,8 +462,9 @@ Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's <a hre
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/display-toggle-rotation</span> ()
   (<span style="color: #a71d5d;">interactive</span>)
-  <span style="color: #969896;">;; </span><span style="color: #969896;">Requires fb-rotate in `</span><span style="color: #0086b3;">exec-path</span><span style="color: #969896;">'.</span>
-  <span style="color: #969896;">;; </span><span style="color: #969896;">https://github.com/CdLbB/fb-rotate</span>
+  (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">cl-lib</span>)
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"fb-rotate"</span>) nil
+             <span style="color: #183691;">"Install fb-rotate from https://github.com/CdLbB/fb-rotate"</span>)
   <span style="color: #969896;">;; </span><span style="color: #969896;">#  Display_ID    Resolution  ____Display_Bounds____  Rotation</span>
   <span style="color: #969896;">;; </span><span style="color: #969896;">2  0x2b347692    1440x2560      0     0  1440  2560    270    [main]</span>
   <span style="color: #969896;">;; </span><span style="color: #969896;">From fb-rotate output, get the `</span><span style="color: #0086b3;">current-rotation</span><span style="color: #969896;">' from Column 7, row 1 zero-based.</span>
