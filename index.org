@@ -1098,7 +1098,7 @@ You likely want to start with a clean install, byte-compiling all packages with 
 
 ** init.el config
 
-Ensure /exec-path/ and /LIBRARY_PATH/ both point to locations in $GCCEMACS_PREFIX and finally set /comp-deferred-compilation/. I wrapped mine in /exec-path-from-shell/, setting early in init.el should be enough.
+Ensure /exec-path/ includes the script's "--prefix=" value, /LIBRARY_PATH/ points to gcc's lib dir, and finally set /comp-deferred-compilation/. I wrapped the snippet in my  /exec-path-from-shell/ config, but setting early in init.el should be enough.
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
@@ -1109,10 +1109,13 @@ Ensure /exec-path/ and /LIBRARY_PATH/ both point to locations in $GCCEMACS_PREFI
              (native-comp-available-p))
         (progn
           (message "Native comp is available")
-          (add-to-list 'exec-path (expand-file-name "~/homebrew/opt/gccemacs/bin"))
+          ;; Using Emacs.app/Contents/MacOS/bin since it was compiled with
+          ;; ./configure --prefix="$PWD/nextstep/Emacs.app/Contents/MacOS"
+          (add-to-list 'exec-path (concat invocation-directory "bin") t)
           (setenv "LIBRARY_PATH" (concat (getenv "LIBRARY_PATH")
                                          (when (getenv "LIBRARY_PATH")
                                            ":")
+                                         ;; This is where Homebrew puts gcc libraries.
                                          (car (file-expand-wildcards
                                                (expand-file-name "~/homebrew/opt/gcc/lib/gcc/*")))))
           ;; Only set after LIBRARY_PATH can find gcc libraries.
@@ -1154,6 +1157,8 @@ Can also check for .eln files:
 UPDATE1: Added /Symlink Emacs.app/Contents/eln-cache/ section for [[http://akrl.sdf.org/gccemacs.html#org4b11ea1][update 11]].
 
 UPDATE2: Noted using NATIVE_FAST_BOOT makes the build much faster.
+
+UPDATE3: Removed symlinks and copied content instead. This simplifies things.
 
 * [2020-08-02 Sun] SwiftUI macOS desk clock
 :PROPERTIES:
