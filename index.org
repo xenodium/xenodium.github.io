@@ -1,7 +1,80 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2020-12-20 Sun] 40 Coolest neighborhoods in the world
+* [2020-12-29 Tue] Swift package code coverage (plus Emacs overlay)
+  :PROPERTIES:
+  :CUSTOM_ID: swift-package-code-coverage
+  :END:
+While playing around with Swift package, I had a quick look into code coverage options. Luckily, coverage reporting and exporting are supported out of the box (via [[https://llvm.org/docs/CommandGuide/llvm-cov.html][llvm-cov]]).
+
+Ensure tests are invoked as follows:
+
+#+begin_src sh
+  swift test --enable-code-coverage
+#+end_src
+
+A high level report can be generated with:
+
+#+begin_src bash :results verbatim
+  xcrun llvm-cov report .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests \
+        -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex=".build|Tests"
+#+end_src
+
+#+RESULTS:
+: Filename                                   Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover
+: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+: /tmp/Foo/Sources/Foo/Foo.swift                   1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+: TOTAL                                            1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+
+llvm-cov can export as lcov format:
+
+#+begin_src sh
+  xcrun llvm-cov export -format="lcov" .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex=".build|Tests" > coverage.lcov
+#+end_src
+
+With the report in lcov format, we can look for an Emacs package to visualize coverage in source files. Found [[https://github.com/twada/coverlay.el][coverlay.el]] to require minimal setup. I was interested in highlighting only untested areas, so I set /tested-line-background-color/
+ to nil:
+
+#+begin_src emacs-lisp
+  (use-package coverlay
+    :ensure t
+    :config
+    (setq coverlay:tested-line-background-color nil))
+#+end_src
+
+After installing coverlay, I enabled the minor mode via /M-x coverlay-minor-mode/, invoked /M-x coverlay-watch-file/ to watch /coverage.lcov/ for changes, and voilà!
+
+[[file:images/swift-package-code-coverage/coverage.png]]
+
+* [2020-12-29 Tue] Hiking bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: hiking-bookmarks
+  :END:
+- [[https://news.ycombinator.com/item?id=25568856][A growing list of long distance hikes around the world (Hacker News)]].
+
+* [2020-12-28 Mon] Patience
+  :PROPERTIES:
+  :CUSTOM_ID: patience
+  :END:
+Via [[https://twitter.com/orangebook_/status/1291844997097099265?s=12][Orange Book]], a reminder to myself:
+
+- In investing, patience is rewarded.
+- In growing a talent, patience is rewarded.
+- In building a business, patience is rewarded.
+- In love and friendships, patience is rewarded.
+- Patience = success
+
+I feel like there's an Emacs lesson somewhere in there...
+
+* [2020-12-26 Sat] Chess bookmarks
+  :PROPERTIES:
+  :CUSTOM_ID: chess-bookmarks
+  :END:
+  - [[https://dwheeler.com/chess-openings/][A Beginner's Garden of Chess Openings]].
+  - [[https://news.ycombinator.com/item?id=25446399][A Beginner's Garden of Chess Openings (2002) (Hacker News)]].
+
+* [2020-12-20 Sun] 40 Coolest neighbourhoods in the world
 :PROPERTIES:
 :CUSTOM_ID: 40-coolest-neighborhoods-in-the-world
 :END:
@@ -218,10 +291,14 @@ Use two forks to pull the meat apart.
 [[file:images/pulled-pork-recipe/final.jpg]]
 
 * [2020-11-01 Sun] Zettelkasten bookmarks
-  :PROPERTIES:
-  :CUSTOM_ID: zettelkasten-bookmarks
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: zettelkasten-bookmarks
+:END:
+:MODIFIED:
+[2020-12-25 Fri]
+:END:
 - [[https://zettelkasten.de/introduction/][Introduction to the Zettelkasten Method]].
+- [[https://blog.viktomas.com/posts/slip-box/#fnref:1][Zettelkasten note-taking in 10 minutes · Tomas Vik]].
 * [2020-10-28 Wed] Battlestation bookmarks
 :PROPERTIES:
 :CUSTOM_ID: battlestation-bookmarks
@@ -978,10 +1055,11 @@ ps. Can get the SDK path with:
   :PROPERTIES:
   :CUSTOM_ID: qr-code-bookmarks
   :END:
-  :MODIFIED:
-  [2020-08-23 Sun]
-  :END:
+:MODIFIED:
+[2020-12-26 Sat]
+:END:
 - [[https://github.com/divan/txqr][divan/txqr: Transfer data via animated QR codes]].
+- [[https://research.swtch.com/qart][research!rsc: QArt Codes]].
 - [[https://news.ycombinator.com/item?id=24158125][Show HN: Photo Realistic QR-Codes (Hacker News)]].
 * [2020-08-16 Sun] Trying out gccemacs on macOS
   :PROPERTIES:
@@ -992,37 +1070,10 @@ Been wanting to try Andrea Corallo's [[http://akrl.sdf.org/gccemacs.html][gccema
 
 Though not had much of a chance to play with the new install, here's what I did to get up and running...
 
-** Patch gcc homebrew formula
-
-Edit /$(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb/
-
-#+begin_src diff
-  $ diff -u $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched
-  --- $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb		2020-08-16 14:12:13.000000000 +0100
-  +++ $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/gcc.rb.patched	2020-08-07 09:16:42.000000000 +0100
-  @@ -47,7 +47,7 @@
-       #  - Go, currently not supported on macOS
-       #  - BRIG
-       # GCCEMACS
-  -    languages = %w[c c++ objc obj-c++ fortran]
-  +    languages = %w[c c++ objc obj-c++ fortran jit]
-
-       osmajor = `uname -r`.split(".").first
-       pkgversion = "Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip
-  @@ -67,6 +67,7 @@
-         --with-system-zlib
-         --with-pkgversion=#{pkgversion}
-         --with-bugurl=https://github.com/Homebrew/homebrew-core/issues
-  +      --enable-host-shared
-       ]
-
-       # Xcode 10 dropped 32-bit support
-#+end_src
-
-** Install gcc via homebrew
+** Install gcc and libgccjit via homebrew
 
 #+begin_src sh
-  brew install gcc --build-from-source --force
+  brew install gcc libgccjit
 #+end_src
 
 ** Save configure script
@@ -1038,10 +1089,10 @@ Create configure-gccemacs.sh
   # Configures Emacs for building native comp support
   # http://akrl.sdf.org/gccemacs.html
 
-  readonly GCC_DIR="$(realpath $(brew --prefix)/opt/gcc)"
+  readonly GCC_DIR="$(realpath $(brew --prefix libgccjit))"
   [[ -d $GCC_DIR ]] ||  { echo "${GCC_DIR} not found"; exit 1; }
 
-  readonly SED_DIR="$(realpath $(brew --prefix)/opt/gnu-sed)"
+  readonly SED_DIR="$(realpath $(brew --prefix gnu-sed))"
   [[ -d $SED_DIR ]] ||  { echo "${SED_DIR} not found"; exit 1; }
 
   readonly GCC_INCLUDE_DIR=${GCC_DIR}/include
@@ -1051,8 +1102,9 @@ Create configure-gccemacs.sh
   [[ -d $GCC_LIB_DIR ]] ||  { echo "${GCC_LIB_DIR} not found"; exit 1; }
 
   export PATH="${SED_DIR}/libexec/gnubin:${PATH}"
-  export CFLAGS="-I${GCC_INCLUDE_DIR}"
+  export CFLAGS="-O2 -I${GCC_INCLUDE_DIR}"
   export LDFLAGS="-L${GCC_LIB_DIR} -I${GCC_INCLUDE_DIR}"
+  export LD_LIBRARY_PATH="${GCC_LIB_DIR}"
   export DYLD_FALLBACK_LIBRARY_PATH="${GCC_LIB_DIR}"
 
   echo "Environment"
@@ -1208,6 +1260,7 @@ UPDATE2: Noted using NATIVE_FAST_BOOT makes the build much faster.
 
 UPDATE3: Removed symlinks and copied content instead. This simplifies things. Inspired by Ian Wahbe's [[https://github.com/iwahbe/doom-config/blob/master/build-emacs.sh][build-emacs.sh]].
 
+UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's [[https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md][instructions]].
 * [2020-08-02 Sun] SwiftUI macOS desk clock
 :PROPERTIES:
 :CUSTOM_ID: swiftui-desk-clock
@@ -2364,7 +2417,7 @@ Thank you Internet strangers! :)
   :CUSTOM_ID: swiftui-bookmarks
   :END:
 :MODIFIED:
-[2020-11-08 Sun]
+[2020-12-26 Sat]
 :END:
 - [[https://twitter.com/clarko/status/1284940951031439361][ SwiftUI live-blur materials that you can use like a background color]].
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
@@ -2410,6 +2463,7 @@ Thank you Internet strangers! :)
 - [[https://github.com/SwiftUIX/SwiftUIX][GitHub - SwiftUIX/SwiftUIX: An extension to the standard SwiftUI library.]].
 - [[https://swiftwithmajid.com/2019/11/13/gradient-in-swiftui/][Gradient in SwiftUI | Majid’s blog about Swift development]].
 - [[https://www.hackingwithswift.com/example-code/uikit/how-to-add-a-toolbar-above-the-keyboard-using-inputaccessoryview][How to add a toolbar above the keyboard using inputAccessoryView]].
+- [[https://twitter.com/myridiphis/status/1339840448689549312][How to animate along zIndex in SwiftUI]].
 - [[https://blckbirds.com/post/side-menu-hamburger-menu-in-swiftui/][How to create a side menu (hamburger menu) in SwiftUI | BLCKBIRDS]].
 - [[https://www.raywenderlich.com/4503153-how-to-create-a-splash-screen-with-swiftui][How to Create a Splash Screen With SwiftUI | raywenderlich.com]].
 - [[https://stackoverflow.com/questions/56490963/how-to-display-a-search-bar-with-swiftui][how to display a search bar with SwiftUI - Stack Overflow]].
@@ -2426,6 +2480,7 @@ Thank you Internet strangers! :)
 - [[https://twitter.com/dmartincy/status/1275913911506780161][LLDB "_regexp-break <file>:<line>:<column>", breakpoint at a particular source code line and column]].
 - [[https://swiftwithmajid.com/2020/07/08/mastering-grids-in-swiftui/][Mastering grids in SwiftUI | Swift with Majid]].
 - [[https://swiftwithmajid.com/2020/09/24/mastering-scrollview-in-swiftui/][Mastering ScrollView in SwiftUI | Swift with Majid]].
+- [[https://github.com/jordansinger/messages-multiplatform-swiftui-sample][Multiplatform Messages app for macOS, iOS, iPadOS in SwiftUI]].
 - [[https://swiftwithmajid.com/2019/12/04/must-have-swiftui-extensions/][Must-have SwiftUI extensions | Majid’s blog about Swift development]].
 - [[https://swiftwithmajid.com/2020/06/29/new-property-wrappers-in-swiftui/][New property wrappers in SwiftUI (@ScaledMetric, @SceneStorage, @AppStorage, @StateObject)]].
 - [[https://twitter.com/natpanferova/status/1296725502305034240][On iOS 14, the keyboard is added to safe area]].
@@ -4949,9 +5004,10 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   :PROPERTIES:
   :CUSTOM_ID: lua-bookmarks
   :END:
-  :MODIFIED:
-  [2018-12-28 Fri]
-  :END:
+:MODIFIED:
+[2020-12-26 Sat]
+:END:
+- [[https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)][Build and Run (Standalone) · sumneko/lua-language-server Wiki · GitHub]].
 - [[https://sepisoad.com/blog/how%20to%20lua%20and%20c%20-%20a%20short%20novel.html][how to lua and c - a short novel]].
 - [[https://luadigest.immortalin.com/][Lua Digest]].
 - [[https://news.ycombinator.com/item?id=17969795][Lua tables (Hacker News)]].
@@ -7684,7 +7740,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2020-08-03 Mon]
+[2020-12-25 Fri]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
@@ -7828,6 +7884,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.co-oplegalservices.co.uk/media-centre/articles-may-aug-2017/what-does-a-declaration-of-trust-do/][What Does a Declaration of Trust / Deed of Trust Do?]].
 - [[https://awealthofcommonsense.com/2014/02/worlds-worst-market-timer/][What if You Only Invested at Market Peaks?]].
 - [[https://www.quora.com/What-is-the-smartest-financial-habit-that-you-have][What is the smartest financial habit that you have? - Quora]].
+- [[https://oec.world/en/visualize/tree_map/hs92/export/gbr/show/all/2018/][Where does export to? (2018) | OEC - The Observatory of Economic Complexity]].
 - [[http://monevator.com/why-a-total-world-equity-index-tracker-is-the-only-index-fund-you-need][Why a world equity index tracker?]].
 - [[https://www.quora.com/Why-are-most-people-broke][Why are most people broke? - Quora]].
 - [[https://www.thebalance.com/why-do-bond-prices-and-yields-move-in-opposite-directions-417082][Why Bond Prices and Yields Move in Opposite Directions]].
@@ -9714,7 +9771,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: unix-linux-tools-bookmarks
 :END:
 :MODIFIED:
-[2020-07-12 Sun]
+[2020-12-26 Sat]
 :END:
 - [[https://forums.freebsd.org/threads/small-guide-on-using-mtree.61113/][(small) Guide on using mtree (The FreeBSD Forums)]].
 - [[http://www.thegeekstuff.com/2012/04/curl-examples/][15 Practical Linux cURL Command Examples]].
@@ -9772,6 +9829,7 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 - [[https://sneak.berlin/20191011/stupid-unix-tricks/][Jeffrey Paul: Stupid Unix Tricks (Yubikey ssh on macOS)]].
 - [[https://blog.jessfraz.com/post/for-the-love-of-pipes/][Jessie Frazelle's Blog: For the Love of Pipes]].
 - [[https://jvns.ca/zines/][Julia Evans's zines (unix tools)]].
+- [[https://kiramclean.com/blog/how-to-set-up-your-own-nextcloud-server/][Kira McLean | How To Set Up Your Own Nextcloud Server]].
 - [[https://twitter.com/beorn__/status/1281504590073073666][LD_DEBUG awesomeness (using ls)]].
 - [[http://irreal.org/blog/?p=7323][Learn a Little AWK (Irreal)]].
 - [[https://linuxhint.com/linux_cp_command/][Linux cp Command (Linux Hint)]].
@@ -10834,8 +10892,9 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 :CUSTOM_ID: cooking-bookmarks
 :END:
 :MODIFIED:
-[2020-12-13 Sun]
+[2020-12-23 Wed]
 :END:
+- [[https://food.ndtv.com/lists/10-best-indian-breakfast-recipes-696080][14 Best Indian Breakfast Recipes | Easy Indian Breakfast Recipes - NDTV Food]].
 - [[http://drinks.seriouseats.com/2013/05/25-essential-cocktails-everyone-should-know-cocktail-101-easy-mixed-drink-recipes-classic-cocktail-guide.html][25 Cocktails Everyone Should Know]].
 - [[https://www.amazon.com/Taylor-Precision-Products-Stainless-11-Pound/dp/B002SXV8G2/ref=sr_1_1?s=home-garden&ie=UTF8&qid=1481553229&sr=1-1-spons&keywords=Taylor+Precision+stainless+steel&psc=1][Amazon.com: Taylor Precision Products Stainless Steel Kitchen Scale]].
 - [[https://www.seriouseats.com/recipes/2012/07/basic-new-york-style-pizza-dough.html][Basic New York-Style Pizza Dough Recipe | Serious Eats]].
@@ -11888,7 +11947,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: japan-travel-bookmarks
 :END:
 :MODIFIED:
-[2020-09-20 Sun]
+[2020-12-25 Fri]
 :END:
 - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
 - [[http://www.tokyoweekender.com/2017/11/6-tokyo-travel-tips-to-help-you-get-around-the-city/][6 Tokyo Travel Tips to Help You Get Around the City | Tokyo Weekender]].
@@ -11932,6 +11991,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[http://eng.shukubo.net/][Koyasan (needs booking)]].
 - [[http://landedbook.com/landed-japan/][Landed Japan Book (local knowledge to buy Japanese real estate)]].
 - [[http://www.japan-guide.com/e/e3912.html][Lots of goodies. Bamboo forest, oh my]].
+- [[https://blackshipcoffee.com/cafe/][Michael’s Cafe American – Black Ship Coffee]].
 - [[http://visit-miyajima-japan.com/en/][Miyajima: One of the top three scenic spots in Japan]].
 - [[https://www.flickr.com/photos/26608745@N05/2845439357/][Monument in front of the Shin-Yatsushiro Station]].
 - [[https://duckduckgo.com/?q=Nagakushiyama+park%2C+Japan+&t=ffsb&iax=1&ia=images][Nagakushiyama park]].
@@ -11962,12 +12022,13 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: kyoto-travel-bookmarks
 :END:
 :MODIFIED:
-[2020-12-18 Fri]
+[2020-12-29 Tue]
 :END:
 - [[http://www.everintransit.com/nishiki-market-tour-kyoto/][Eating My Way Through Nishiki Market, Kyoto | Ever In Transit]].
 - [[http://en.wikipedia.org/wiki/Fushimi_Inari-taisha][Fushimi Inari Temple]]: 4KM mountain trail lined with bright orange shinto gates.
 - Golden Pavillion (macha and biscuits at tea house).
 - Hakone (day trip for hot baths), see Yuryo spa. Also the pirate boat.
+- [[http://www.aaronwilliamson.com/old_web/travel/japan/kibune/kibune.htm][Kibune]].
 - [[http://en.wikipedia.org/wiki/Kinkaku-ji][Kinkakuji Temple]].
 - [[http://en.wikipedia.org/wiki/Kiyomizu-dera][Kiyomizu Temple]].
 - Kuramadera Temple & Kibune Shrine: More peaceful shrine.
@@ -12911,7 +12972,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2020-12-12 Sat]
+[2020-12-26 Sat]
 :END:
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
@@ -12980,6 +13041,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://github.com/theodorewiles/org-mind-map][org-mind-map: creates graphviz directed graphs from org-mode files]].
 - [[http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/][Org-mode basics VII: A TODO list with schedules and deadlines | Pragmatic Emacs]].
 - [[https://bzg.fr/en/some-emacs-org-mode-features-you-may-not-know.html/][Org-mode features You May Not Know · Bastien Guerry - Liberté, informatique]].
+- [[https://yiufung.net/post/org-mode-hidden-gems-pt2/][Org-mode Hidden Gems - 02 Tables]].
 - [[https://github.com/flexibeast/org-vcard/][org-mode support for vCard export and import]].
 - [[https://github.com/weirdNox/org-noter][org-noter: Emacs document annotator, using Org-mode]].
 - [[https://alhassy.github.io/org-special-block-extras/README.html][org-special-block-extras]].
@@ -13011,8 +13073,10 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.diegoberrocal.com/blog/2015/08/19/org-protocol/][Using org-capture with org-protocol be like - Diego Berrocal]].
 - [[http://kitchingroup.cheme.cmu.edu/blog/2019/02/12/Using-results-from-one-code-block-in-another-org-mode/][Using results from one code block in another org-mode]].
 - [[https://www.reddit.com/r/emacs/comments/jof1p3/visit_tangled_file_with_orgopenatpoint/][Visit tangled file with org-open-at-point (supports tramp/ssh)]].
+- [[https://pjs64.wordpress.com/2020/12/07/worgsheet-calc-intro/][WorgSheet Calc Intro – Dj Pj (lots of tips and shortcuts)]].
 - [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][Writing Specs with Org-mode]].
 - [[https://www.youtube.com/watch][YouTube: org introduction]].
+- [[https://github.com/nobiot/Zero-to-Emacs-and-Org-roam][Zero to Emacs and Org-roam: a step-by-step guide]].
 
 * [2018-09-11 Tue] London bar backlog
   :PROPERTIES:
@@ -13528,7 +13592,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: startup-bookmarks
 :END:
 :MODIFIED:
-[2020-12-13 Sun]
+[2020-12-28 Mon]
 :END:
 - [[https://news.ycombinator.com/item?id%3D10101209][16 Startup Metrics (Hacker News)]].
 - [[http://a16z.com/2015/08/21/16-metrics/][16 Startup Metrics]].
@@ -13548,6 +13612,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://www.raywenderlich.com/55384/ios-7-best-practices-part-1][An iOS Weather app case study]].
 - [[https://hbr.org/2015/04/how-to-launch-your-digital-platform][Answer these questions about potential digital platform]].
 - [[https://github.com/aphyr/distsys-class][aphyr/distsys-class: Class materials for a distributed systems lecture]].
+- [[https://news.ycombinator.com/item?id=25547716][API pagination design | Hacker News]].
 - [[https://appfigures.com/][AppFigures:]] App tracking platform.
 - [[https://news.ycombinator.com/item?id=22328822][Apple Edge Cache (CDNs) | Hacker News]].
 - [[https://news.ycombinator.com/item?id=19497788][Application-Level Logging Best Practices (Hacker News)]].
@@ -13887,7 +13952,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: lifestyle-bookmarks
 :END:
 :MODIFIED:
-[2020-12-12 Sat]
+[2020-12-26 Sat]
 :END:
 - "Do not spoil what you have by desiring what you have not; what you now have was once among the things you only hoped for." - Epicurus
 - [[https://www.thesleepjudge.com/23-weird-plants-for-your-bedroom-that-will-help-you-sleep-like-a-baby/][23 Weird Plants For Your Bedroom That Will Help You Sleep Like A Baby]].
@@ -13910,6 +13975,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://www.recipes-news.co.nz/news/2019/11/6/game-changer-or-fame-gainer][Game Changer or Fame Gainer? — News & Features]].
 - [[https://betterhumans.coach.me/how-to-set-up-your-iphone-for-productivity-focus-and-your-own-longevity-bb27a68cc3d8][How to Configure Your iPhone to Work for You, Not Against You]].
 - [[https://www.quora.com/How-do-I-get-six-pack-abs-in-one-year][How to get six pack abs in one year - Quora]].
+- [[https://docs.google.com/document/d/1j4rj883slFvh1zZLGedqQFM0wqCrHlIEPE62K0LkKak/edit][ICEBREAKERS, via The Art of Noticing by Rob Walker]].
 - [[https://www.quora.com/What-is-the-best-way-to-improve-life/answer/Jon-Brosio][Jon Brosio's answer to What is the best way to improve life? - Quora]].
 - [[https://www.dezeen.com/2019/05/02/minimod-curucaca-mapa-prefab-house-brazil/][MAPA hides prefab Minimod Curucaca in Brazilian forest]].
 - [[https://news.ycombinator.com/item?id=17632668][Melatonin: Much More Than You Wanted to Know (Hacker News)]].
@@ -14124,7 +14190,6 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[http://lingua.ly/][lingua.ly]].
 - [[https://www.coursera.org/learn/the-science-of-well-being][The Science of Well-Being (Coursera)]].
 - [[http://tutsplus.com/][Tuts+ courses]].
-
 * [2015-03-05 Thu] Reload inputrc
 :PROPERTIES:
 :CUSTOM_ID: reload-inputrc
@@ -14610,12 +14675,13 @@ If FROM or TO is negative, it counts from the end.
 :CUSTOM_ID: git-bookmarks
 :END:
 :MODIFIED:
-[2020-09-26 Sat]
+[2020-12-23 Wed]
 :END:
 - [[https://citizen428.net/10-common-git-problems-and-how-to-fix-them-e8d809299f08][10 Common Git Problems and How to Fix Them – citizen428.blog]].
 - [[http://wildlyinaccurate.com/a-hackers-guide-to-git][a hackers guide to git]]
 - [[https://blog.scottnonnenberg.com/better-git-configuration/][Better Git configuration | Scott Nonnenberg]].
 - [[http://nakkaya.com/2009/09/24/git-delete-last-commit/][delete last commit]]
+- [[https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-and-shallow-clone/][Get up to speed with partial clone and shallow clone - The GitHub Blog]].
 - [[http://jr0cket.co.uk/slides/getting-started-with-git.html#/][Getting Started with Git & Github]].
 - [[https://easyengine.io/tutorials/git/git-resolve-merge-conflicts/][Git - Quickest Way to Resolve Most Merge Conflicts]].
 - [[https://commonflow.org/][Git Common-Flow]].
@@ -14797,9 +14863,9 @@ maps key to action.
   :PROPERTIES:
   :CUSTOM_ID: frugal-bookmarks
   :END:
-  :MODIFIED:
-  [2020-08-24 Mon]
-  :END:
+:MODIFIED:
+[2020-12-21 Mon]
+:END:
 - [[https://www.acornishmum.com/9-great-frugal-blogs-in-the-uk/][9 Great Frugal Blogs in The UK - A Cornish Mum]].
 - [[https://www.reddit.com/r/UKFrugal/comments/ha28n9/any_tips_for_buying_cheap_red_wine/][Any tips for buying Cheap Red Wine? : UKFrugal]].
 - [[https://mobile.asda.com/][Asda Mobile | Pay as you go SIM (Order your free SIM)]].
@@ -14826,6 +14892,7 @@ maps key to action.
 - [[https://www.reddit.com/r/UKFrugal/comments/ctgzl6/ukfrugal_health_and_beauty_list/][UKFrugal: Health and Beauty list : UKFrugal]].
 - [[https://www.choosefi.com/want-to-buy-it-for-life-consider-this/][Want To Buy It For Life? (lots of item suggestions)]].
 - [[https://www.reddit.com/r/UKPersonalFinance/comments/ekavj5/what_are_the_best_bits_about_lidl/][What are the best bits about lidl? : UKPersonalFinance]].
+- [[https://www.quora.com/What-should-you-not-say-when-buying-a-car][What should you not say when buying a car? - Quora]].
 * [2014-09-18 Thu] Charities bookmarks
   :PROPERTIES:
   :CUSTOM_ID: charities-bookmarks
@@ -14846,8 +14913,10 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2020-12-12 Sat]
+[2020-12-26 Sat]
 :END:
+**** TODO [[https://www.amazon.co.uk/If-Something-Happens-Lauren-Nieuwland][if something happens]].
+**** TODO [[https://docs.google.com/spreadsheets/d/1TrLhiplUxXgqe0Cc7T4MdibZVKF4yeLZ1ptHzkz6d48/edit#gid=256281926][The Essentials Movie Recs - Google Sheets]].
 **** TODO [[https://www.imdb.com/title/tt1239426/][Hipsters (2008) - IMDb]].
 **** TODO [[https://www.imdb.com/title/tt1217565/][Den radio (2008) - IMDb]].
 **** TODO [[https://www.imdb.com/title/tt0415481/][Alyosha Popovich i Tugarin Zmey (2004) - IMDb]].

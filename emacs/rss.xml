@@ -6,7 +6,109 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 05 Dec 2020 22:07:39 +0000</lastBuildDate>
+<lastBuildDate>Tue, 29 Dec 2020 20:56:41 +0000</lastBuildDate>
+<item>
+  <title>Swift package code coverage (plus Emacs overlay)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-swift-package-code-coverage" class="outline-2">
+ <h2 id="swift-package-code-coverage"> <span class="timestamp-wrapper"> <span class="timestamp">29 December 2020</span></span> Swift package code coverage (plus Emacs overlay)</h2>
+ <div class="outline-text-2" id="text-swift-package-code-coverage">
+ <p>
+While playing around with Swift package, I had a quick look into code coverage options. Luckily, coverage reporting and exporting are supported out of the box (via  <a href="https://llvm.org/docs/CommandGuide/llvm-cov.html">llvm-cov</a>).
+</p>
+
+ <p>
+Ensure tests are invoked as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">swift test --enable-code-coverage
+</pre>
+</div>
+
+ <p>
+A high level report can be generated with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcrun llvm-cov report .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests \
+      -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex=".build|Tests"
+</pre>
+</div>
+
+ <pre class="example">
+Filename                                   Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/tmp/Foo/Sources/Foo/Foo.swift                   1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                            1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+</pre>
+
+
+ <p>
+llvm-cov can export as lcov format:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">xcrun llvm-cov export -format= <span style="color: #183691;">"lcov"</span> .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex= <span style="color: #183691;">".build|Tests"</span> > coverage.lcov
+</pre>
+</div>
+
+ <p>
+With the report in lcov format, we can look for an Emacs package to visualize coverage in source files. Found  <a href="https://github.com/twada/coverlay.el">coverlay.el</a> to require minimal setup. I was interested in highlighting only untested areas, so I set  <i>tested-line-background-color</i>
+ to nil:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">coverlay</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:config</span>
+  (<span style="color: #a71d5d;">setq</span> coverlay:tested-line-background-color nil))
+</pre>
+</div>
+
+ <p>
+After installing coverlay, I enabled the minor mode via  <i>M-x coverlay-minor-mode</i>, invoked  <i>M-x coverlay-watch-file</i> to watch  <i>coverage.lcov</i> for changes, and voilà!
+</p>
+
+
+ <div id="orgda4ab0f" class="figure">
+ <p> <img src="../images/swift-package-code-coverage/coverage.png" alt="coverage.png"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/swift-package-code-coverage</link>
+  <guid isPermaLink="false">http://xenodium.com/swift-package-code-coverage</guid>
+  <pubDate>Tue, 29 Dec 2020 20:56:41 +0000</pubDate>
+</item>
+<item>
+  <title>Patience</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-patience" class="outline-2">
+ <h2 id="patience"> <span class="timestamp-wrapper"> <span class="timestamp">28 December 2020</span></span> Patience</h2>
+ <div class="outline-text-2" id="text-patience">
+ <p>
+Via  <a href="https://twitter.com/orangebook_/status/1291844997097099265?s=12">Orange Book</a>, a reminder to myself:
+</p>
+
+ <ul class="org-ul"> <li>In investing, patience is rewarded.</li>
+ <li>In growing a talent, patience is rewarded.</li>
+ <li>In building a business, patience is rewarded.</li>
+ <li>In love and friendships, patience is rewarded.</li>
+ <li>Patience = success</li>
+</ul> <p>
+I feel like there's an Emacs lesson somewhere in there…
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/patience</link>
+  <guid isPermaLink="false">http://xenodium.com/patience</guid>
+  <pubDate>Mon, 28 Dec 2020 20:56:41 +0000</pubDate>
+</item>
 <item>
   <author>Álvaro Ramírez</author>
   <title>Emacs: Rotate my macOS display</title>
@@ -24,11 +126,11 @@ Unsurprisingly, I'd also like to invoke it as an interactive command via Emacs's
 </p>
 
  <p>
-Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's  <a href="https://github.com/CdLbB/fb-rotate">fb-rotate</a> command line utility. All that's left to do is wrap it in a tiny elisp  <del>function</del> hack, add the toggling logic, and voila!
+Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's  <a href="https://github.com/CdLbB/fb-rotate">fb-rotate</a> command line utility. All that's left to do is wrap it in a tiny elisp  <del>function</del> hack, add the toggling logic, and voilà!
 </p>
 
 
- <div id="org213894b" class="figure">
+ <div id="org8b58c50" class="figure">
  <p> <img src="../images/emacs-rotate-my-macos-display/rotate.gif" alt="rotate.gif" width="75%" height="75%"></img></p>
 </div>
 

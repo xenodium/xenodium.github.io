@@ -6,9 +6,199 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 05 Dec 2020 18:01:56 +0000</lastBuildDate>
+<lastBuildDate>Tue, 29 Dec 2020 20:56:32 +0000</lastBuildDate>
 <item>
-  <author>Álvaro Ramírez</author>
+  <title>Hiking bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-hiking-bookmarks" class="outline-2">
+ <h2 id="hiking-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">29 December 2020</span></span> Hiking bookmarks</h2>
+ <div class="outline-text-2" id="text-hiking-bookmarks">
+ <ul class="org-ul"> <li> <a href="https://news.ycombinator.com/item?id=25568856">A growing list of long distance hikes around the world (Hacker News)</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/hiking-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/hiking-bookmarks</guid>
+  <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Swift package code coverage (plus Emacs overlay)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-swift-package-code-coverage" class="outline-2">
+ <h2 id="swift-package-code-coverage"> <span class="timestamp-wrapper"> <span class="timestamp">29 December 2020</span></span> Swift package code coverage (plus Emacs overlay)</h2>
+ <div class="outline-text-2" id="text-swift-package-code-coverage">
+ <p>
+While playing around with Swift package, I had a quick look into code coverage options. Luckily, coverage reporting and exporting are supported out of the box (via  <a href="https://llvm.org/docs/CommandGuide/llvm-cov.html">llvm-cov</a>).
+</p>
+
+ <p>
+Ensure tests are invoked as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">swift test --enable-code-coverage
+</pre>
+</div>
+
+ <p>
+A high level report can be generated with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcrun llvm-cov report .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests \
+      -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex=".build|Tests"
+</pre>
+</div>
+
+ <pre class="example">
+Filename                                   Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/tmp/Foo/Sources/Foo/Foo.swift                   1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                            1                 0   100.00%           1                 0   100.00%           3                 0   100.00%
+</pre>
+
+
+ <p>
+llvm-cov can export as lcov format:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">xcrun llvm-cov export -format= <span style="color: #183691;">"lcov"</span> .build/x86_64-apple-macosx/debug/FooPackageTests.xctest/Contents/MacOS/FooPackageTests -instr-profile=.build/x86_64-apple-macosx/debug/codecov/default.profdata -ignore-filename-regex= <span style="color: #183691;">".build|Tests"</span> > coverage.lcov
+</pre>
+</div>
+
+ <p>
+With the report in lcov format, we can look for an Emacs package to visualize coverage in source files. Found  <a href="https://github.com/twada/coverlay.el">coverlay.el</a> to require minimal setup. I was interested in highlighting only untested areas, so I set  <i>tested-line-background-color</i>
+ to nil:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">coverlay</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:config</span>
+  (<span style="color: #a71d5d;">setq</span> coverlay:tested-line-background-color nil))
+</pre>
+</div>
+
+ <p>
+After installing coverlay, I enabled the minor mode via  <i>M-x coverlay-minor-mode</i>, invoked  <i>M-x coverlay-watch-file</i> to watch  <i>coverage.lcov</i> for changes, and voilà!
+</p>
+
+
+ <div id="orgda4ab0f" class="figure">
+ <p> <img src="../images/swift-package-code-coverage/coverage.png" alt="coverage.png"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/swift-package-code-coverage</link>
+  <guid isPermaLink="false">http://xenodium.com/swift-package-code-coverage</guid>
+  <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Patience</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-patience" class="outline-2">
+ <h2 id="patience"> <span class="timestamp-wrapper"> <span class="timestamp">28 December 2020</span></span> Patience</h2>
+ <div class="outline-text-2" id="text-patience">
+ <p>
+Via  <a href="https://twitter.com/orangebook_/status/1291844997097099265?s=12">Orange Book</a>, a reminder to myself:
+</p>
+
+ <ul class="org-ul"> <li>In investing, patience is rewarded.</li>
+ <li>In growing a talent, patience is rewarded.</li>
+ <li>In building a business, patience is rewarded.</li>
+ <li>In love and friendships, patience is rewarded.</li>
+ <li>Patience = success</li>
+</ul> <p>
+I feel like there's an Emacs lesson somewhere in there…
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/patience</link>
+  <guid isPermaLink="false">http://xenodium.com/patience</guid>
+  <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Chess bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-chess-bookmarks" class="outline-2">
+ <h2 id="chess-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">26 December 2020</span></span> Chess bookmarks</h2>
+ <div class="outline-text-2" id="text-chess-bookmarks">
+ <ul class="org-ul"> <li> <a href="https://dwheeler.com/chess-openings/">A Beginner's Garden of Chess Openings</a>.</li>
+ <li> <a href="https://news.ycombinator.com/item?id=25446399">A Beginner's Garden of Chess Openings (2002) (Hacker News)</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/chess-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/chess-bookmarks</guid>
+  <pubDate>Sat, 26 Dec 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>40 Coolest neighbourhoods in the world</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-40-coolest-neighborhoods-in-the-world" class="outline-2">
+ <h2 id="40-coolest-neighborhoods-in-the-world"> <span class="timestamp-wrapper"> <span class="timestamp">20 December 2020</span></span> 40 Coolest neighbourhoods in the world</h2>
+ <div class="outline-text-2" id="text-40-coolest-neighborhoods-in-the-world">
+ <p>
+Via TimeOut's  <a href="https://www.timeout.com/coolest-neighbourhoods-in-the-world">40 Coolest Neighbourhoods in the World Right Now</a>:
+</p>
+
+ <ol class="org-ol"> <li>Esquerra de l’Eixample, Barcelona</li>
+ <li>Downtown, Los Angeles</li>
+ <li>Sham Shui Po, Hong Kong</li>
+ <li>Bedford-Stuyvesant, New York</li>
+ <li>Yarraville, Melbourne</li>
+ <li>Wedding, Berlin</li>
+ <li>Shaanxi Bei Lu/Kangding Lu, Shanghai</li>
+ <li>Dennistoun, Glasgow</li>
+ <li>Haut-Marais, Paris</li>
+ <li>Marrickville, Sydney</li>
+ <li>Verdun, Montreal</li>
+ <li>Kalamaja, Tallinn</li>
+ <li>Hannam-dong, Seoul</li>
+ <li>Bonfim, Porto</li>
+ <li>Ghosttown, Oakland</li>
+ <li>Chula-Samyan, Bangkok</li>
+ <li>Alvalade, Lisbon</li>
+ <li>Noord, Amsterdam</li>
+ <li>Centro, São Paulo</li>
+ <li>Holešovice, Prague</li>
+ <li>Lavapiés, Madrid</li>
+ <li>Opebi, Lagos</li>
+ <li>Narvarte, Mexico City</li>
+ <li>Uptown, Chicago</li>
+ <li>Little Five Points, Atlanta</li>
+ <li>Wynwood, Miami</li>
+ <li>Phibsboro, Dublin</li>
+ <li>Nørrebro, Copenhagen</li>
+ <li>Bugis, Singapore</li>
+ <li>Gongguan, Taipei</li>
+ <li>Soho, London</li>
+ <li>Binh Thanh, Ho Chi Minh City</li>
+ <li>Melville, Johannesburg</li>
+ <li>Kabutocho, Tokyo</li>
+ <li>Porta Venezia, Milan</li>
+ <li>Taman Paramount, Kuala Lumpur</li>
+ <li>Allston, Boston</li>
+ <li>Bandra West, Mumbai</li>
+ <li>Arnavutköy, Istanbul</li>
+ <li>Banjar Nagi, Ubud</li>
+</ol></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/40-coolest-neighborhoods-in-the-world</link>
+  <guid isPermaLink="false">http://xenodium.com/40-coolest-neighborhoods-in-the-world</guid>
+  <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
   <title>Emacs: Rotate my macOS display</title>
   <description><![CDATA[<div id="content">
 
@@ -28,7 +218,7 @@ Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's  <a hr
 </p>
 
 
- <div id="org213894b" class="figure">
+ <div id="org8b58c50" class="figure">
  <p> <img src="../images/emacs-rotate-my-macos-display/rotate.gif" alt="rotate.gif" width="75%" height="75%"></img></p>
 </div>
 
@@ -152,10 +342,9 @@ Comment on  <a href="https://www.reddit.com/r/emacs/comments/k3iter/simplequick_
 </div>]]></description>
   <link>http://xenodium.com/emacs-clone-git-repo-from-clipboard</link>
   <guid isPermaLink="false">http://xenodium.com/emacs-clone-git-repo-from-clipboard</guid>
-  <lastBuildDate>Sun, 29 Nov 2020 17:30:58 +0000</lastBuildDate>
+  <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pulled pork recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -288,7 +477,40 @@ Use two forks to pull the meat apart.
   <pubDate>Mon, 23 Nov 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
+  <title>Zettelkasten bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-zettelkasten-bookmarks" class="outline-2">
+ <h2 id="zettelkasten-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">01 November 2020</span></span> Zettelkasten bookmarks</h2>
+ <div class="outline-text-2" id="text-zettelkasten-bookmarks">
+ <span class="modified-timestamp">   <em>updated: 25 December 2020  </em></span>
+ <ul class="org-ul"> <li> <a href="https://zettelkasten.de/introduction/">Introduction to the Zettelkasten Method</a>.</li>
+ <li> <a href="https://blog.viktomas.com/posts/slip-box/#fnref:1">Zettelkasten note-taking in 10 minutes · Tomas Vik</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/zettelkasten-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/zettelkasten-bookmarks</guid>
+  <pubDate>Sun, 01 Nov 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Battlestation bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-battlestation-bookmarks" class="outline-2">
+ <h2 id="battlestation-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">28 October 2020</span></span> Battlestation bookmarks</h2>
+ <div class="outline-text-2" id="text-battlestation-bookmarks">
+ <span class="modified-timestamp">   <em>updated: 28 October 2020  </em></span>
+ <ul class="org-ul"> <li> <a href="https://twitter.com/twostraws/status/1321064772276789248">Hacking with Swift's battlestation.</a>.</li>
+ <li> <a href="https://www.reddit.com/r/battlestations/">/r/battlestations</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/battlestation-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/battlestation-bookmarks</guid>
+  <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
+</item>
+<item>
   <title>Emacs: chaining org babel blocks</title>
   <description><![CDATA[<div id="content">
 
@@ -379,7 +601,6 @@ Combining  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">:now
   <pubDate>Tue, 27 Oct 2020 22:30:33 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: quote wrap all in region</title>
   <description><![CDATA[<div id="content">
 
@@ -421,7 +642,6 @@ As I find myself moving more shell commands into Emacs interactive commands to  
   <pubDate>Sun, 25 Oct 2020 11:00:35 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: org block complete and edit</title>
   <description><![CDATA[<div id="content">
 
@@ -475,7 +695,6 @@ The new option is now in the  <a href="https://github.com/xenodium/dotsies/blob/
   <pubDate>Sun, 18 Oct 2020 18:38:08 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: create a Swift package/project</title>
   <description><![CDATA[<div id="content">
 
@@ -554,7 +773,6 @@ Bonus: I won't have to look up SPM options if I ever forget them.
   <pubDate>Sun, 11 Oct 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Basmati rice pudding recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -633,7 +851,6 @@ Optionally garnish with either pistachios or cinnamon (or both).
   <pubDate>Sun, 04 Oct 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Improved Ctrl-p/Ctrl-n macOS movement</title>
   <description><![CDATA[<div id="content">
 
@@ -826,7 +1043,6 @@ UPDATE: Ensure bindings are only active when Emacs is  <span class="underline">n
   <pubDate>Sun, 04 Oct 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>DIY bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -842,7 +1058,6 @@ UPDATE: Ensure bindings are only active when Emacs is  <span class="underline">n
   <pubDate>Sun, 27 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Adding images to pdfs (macOS)</title>
   <description><![CDATA[<div id="content">
 
@@ -869,7 +1084,6 @@ In any case, I found  <a href="https://code.google.com/archive/p/formulatepro/">
   <pubDate>Sun, 27 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Skiing bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -885,7 +1099,6 @@ In any case, I found  <a href="https://code.google.com/archive/p/formulatepro/">
   <pubDate>Thu, 24 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: search/play Music (macOS)</title>
   <description><![CDATA[<div id="content">
 
@@ -1102,7 +1315,6 @@ UPDATE2: Checked in to  <a href="https://github.com/xenodium/dotsies/blob/master
   <pubDate>Sat, 19 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cheese cake recipe (no crust)</title>
   <description><![CDATA[<div id="content">
 
@@ -1271,7 +1483,6 @@ I winged this one and it worked out well. Heated up frozen berries with some hon
   <pubDate>Sat, 12 Sep 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Faster macOS dock auto-hide</title>
   <description><![CDATA[<div id="content">
 
@@ -1299,7 +1510,6 @@ Via Marcin Swieczkowski's  <a href="https://www.bytedude.com/upgrading-the-osx-d
   <pubDate>Fri, 28 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Smarter Swift snippets</title>
   <description><![CDATA[<div id="content">
 
@@ -1373,7 +1583,6 @@ init(<span style="color: #a71d5d;">${</span> <span style="color: #333333;">1</sp
   <pubDate>Tue, 25 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>QR code bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -1391,7 +1600,6 @@ init(<span style="color: #a71d5d;">${</span> <span style="color: #333333;">1</sp
   <pubDate>Sun, 23 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Swift package manager build for iOS</title>
   <description><![CDATA[<div id="content">
 
@@ -1423,7 +1631,6 @@ ps. Can get the SDK path with:
   <pubDate>Sun, 23 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out gccemacs on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -1749,7 +1956,6 @@ UPDATE3: Removed symlinks and copied content instead. This simplifies things.
   <pubDate>Sun, 16 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>SwiftUI macOS desk clock</title>
   <description><![CDATA[<div id="content">
 
@@ -1880,7 +2086,6 @@ application. <span style="color: #a71d5d;">run</span>()
   <pubDate>Sun, 02 Aug 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mending bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -1896,7 +2101,6 @@ application. <span style="color: #a71d5d;">run</span>()
   <pubDate>Thu, 30 Jul 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>ffmpeg bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -1913,7 +2117,6 @@ application. <span style="color: #a71d5d;">run</span>()
   <pubDate>Wed, 17 Jun 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Dogs bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -1929,7 +2132,6 @@ application. <span style="color: #a71d5d;">run</span>()
   <pubDate>Sun, 14 Jun 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Black lives matter (BLM) bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -1947,7 +2149,6 @@ application. <span style="color: #a71d5d;">run</span>()
   <pubDate>Sun, 14 Jun 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs, search hackingwithswift.com</title>
   <description><![CDATA[<div id="content">
 
@@ -2008,7 +2209,6 @@ Turns out, hackingwithswift uses a JSON HTTP request for querying code examples.
   <pubDate>Sat, 06 Jun 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Preview SwiftUI layouts using Emacs org blocks</title>
   <description><![CDATA[<div id="content">
 
@@ -2234,7 +2434,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1194224168709083137">t
   <pubDate>Sat, 23 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Open Emacs elfeed links in the background</title>
   <description><![CDATA[<div id="content">
 
@@ -2312,7 +2511,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1263839324023525376">t
   <pubDate>Fri, 22 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Enrich Emacs dired's batching toolbox</title>
   <description><![CDATA[<div id="content">
 
@@ -2420,7 +2618,6 @@ Thanks to  <a href="https://github.com/pbeliveau">Philippe Beliveau</a> for poin
   <pubDate>Mon, 11 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Banana oats pancakes recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -2461,7 +2658,6 @@ Medium to low heat. Cook for 3 minutes. Flip. Cook for 1 minute. You're done.
   <pubDate>Sat, 09 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: connect my Bluetooth speaker</title>
   <description><![CDATA[<div id="content">
 
@@ -2544,7 +2740,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1258148035319734273">t
   <pubDate>Wed, 06 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Duti: changing default macOS apps</title>
   <description><![CDATA[<div id="content">
 
@@ -2567,7 +2762,6 @@ Future self example, setting  <a href="https://mpv.io/">mpv.io</a> to open all a
   <pubDate>Sat, 02 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Neapolitan pizza recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -2838,7 +3032,6 @@ Controversial, but I really like anchovies. Add them post-baking and you're good
   <pubDate>Sun, 26 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>TIL (today I learned) bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -2860,7 +3053,6 @@ Controversial, but I really like anchovies. Add them post-baking and you're good
   <pubDate>Tue, 21 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Oatmeal cookie recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -2966,7 +3158,6 @@ ps. Full recipe source in  <a href="https://github.com/xenodium/xenodium.github.
   <pubDate>Tue, 21 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>mu/mu4e 1.4 released</title>
   <description><![CDATA[<div id="content">
 
@@ -3025,7 +3216,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1251852526246379520">t
   <pubDate>Sun, 19 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Libya travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3041,7 +3231,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1251852526246379520">t
   <pubDate>Tue, 14 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trimming videos with ffmpeg</title>
   <description><![CDATA[<div id="content">
 
@@ -3077,7 +3266,6 @@ Start time + end time
   <pubDate>Tue, 07 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs's counsel-M-x meets multiple cursors</title>
   <description><![CDATA[<div id="content">
 
@@ -3130,7 +3318,6 @@ Back in December 2019, I made a note to revisit  <a href="https://www.reddit.com
   <pubDate>Mon, 06 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Portland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3146,7 +3333,6 @@ Back in December 2019, I made a note to revisit  <a href="https://www.reddit.com
   <pubDate>Sun, 05 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>String inflection Emacs package</title>
   <description><![CDATA[<div id="content">
 
@@ -3181,7 +3367,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1244355205698912261?s=
   <pubDate>Sun, 29 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Turkey travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3197,7 +3382,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1244355205698912261?s=
   <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Dal Makhani (black lentils) recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -3301,7 +3485,6 @@ Basmati rice, rotis, buttered buns, or even corn tortillas (unorthodox, but hey)
   <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Modern Emacs lisp libraries</title>
   <description><![CDATA[<div id="content">
 
@@ -3361,7 +3544,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241439306511720448">t
   <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Solarpunk bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3379,7 +3561,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241439306511720448">t
   <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs smartparens auto-indent</title>
   <description><![CDATA[<div id="content">
 
@@ -3441,7 +3622,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>sqlite bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3461,7 +3641,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>covid-19 bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3488,7 +3667,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Wed, 26 Feb 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Nix bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3507,7 +3685,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Sat, 15 Feb 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Security bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3527,7 +3704,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Sat, 15 Feb 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Plants bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3549,7 +3725,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Fri, 10 Jan 2020 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>SwiftUI bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3680,7 +3855,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Sun, 29 Dec 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fixing Honeywell CM927's dead screen</title>
   <description><![CDATA[<div id="content">
 
@@ -3742,7 +3916,6 @@ Thank you Internet strangers! :)
   <pubDate>Sun, 29 Dec 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Studying for Life in the UK test</title>
   <description><![CDATA[<div id="content">
 
@@ -3904,7 +4077,6 @@ Took some notes along the way (mostly data with years attached) and dumped it in
   <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Georgia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -3920,7 +4092,6 @@ Took some notes along the way (mostly data with years attached) and dumped it in
   <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Wizard zines comics in Emacs eshell</title>
   <description><![CDATA[<div id="content">
 
@@ -4009,7 +4180,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1198542659704504321">t
   <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs counsel default search switches</title>
   <description><![CDATA[<div id="content">
 
@@ -4045,7 +4215,6 @@ comments on  <a href="https://twitter.com/xenodium/status/1197673205688864768?s=
   <pubDate>Thu, 21 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs org block company completion</title>
   <description><![CDATA[<div id="content">
 
@@ -4178,7 +4347,6 @@ To use, add the backend enable  <i>company-mode</i> in  <i>org-mode</i>:
   <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Enhanced Emacs searching with counsel switches</title>
   <description><![CDATA[<div id="content">
 
@@ -4217,7 +4385,6 @@ rg: -g Make* – install
   <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>IRC bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4233,7 +4400,6 @@ rg: -g Make* – install
   <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>A more reusable Emacs shell-command history</title>
   <description><![CDATA[<div id="content">
 
@@ -4307,7 +4473,6 @@ On a final note, searching minibuffer history for cache hits is way more useful 
   <pubDate>Sun, 03 Nov 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Taiwan travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4323,7 +4488,6 @@ On a final note, searching minibuffer history for cache hits is way more useful 
   <pubDate>Sun, 20 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs swiper and multiple cursors</title>
   <description><![CDATA[<div id="content">
 
@@ -4364,7 +4528,6 @@ If you happen to choose "y" by mistake, take a look at  <b>~/.emacs.d/.mc-lists.
   <pubDate>Thu, 10 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Spam blacklisting with Emacs org babel</title>
   <description><![CDATA[<div id="content">
 
@@ -4453,7 +4616,6 @@ UPDATE: Tweaked elisp and regex (but not animation) also found John Bokma's post
   <pubDate>Tue, 08 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Speeding up gifs with gifsycle</title>
   <description><![CDATA[<div id="content">
 
@@ -4485,7 +4647,6 @@ ps. 398 is the total number of frames, which you can get with:
   <pubDate>Tue, 08 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Rewriting dates with Emacs multiple cursors</title>
   <description><![CDATA[<div id="content">
 
@@ -4538,7 +4699,6 @@ and voilà!
   <pubDate>Sun, 06 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Show/hide Emacs dired details in style</title>
   <description><![CDATA[<div id="content">
 
@@ -4607,7 +4767,6 @@ Binding  <i>dired-git-info-mode</i> to ")" is a nice complement to  <i>dired-hid
   <pubDate>Sat, 05 Oct 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bulk buying bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4623,7 +4782,6 @@ Binding  <i>dired-git-info-mode</i> to ")" is a nice complement to  <i>dired-hid
   <pubDate>Sun, 29 Sep 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>csv bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4643,7 +4801,6 @@ Binding  <i>dired-git-info-mode</i> to ")" is a nice complement to  <i>dired-hid
   <pubDate>Sun, 01 Sep 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Speeding up Emacs tramp via ControlMaster</title>
   <description><![CDATA[<div id="content">
 
@@ -4673,7 +4830,6 @@ In your ~/.ssh/config add:
   <pubDate>Sun, 01 Sep 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Slovakia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4689,7 +4845,6 @@ In your ~/.ssh/config add:
   <pubDate>Sat, 10 Aug 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Thumbnailing pdf page</title>
   <description><![CDATA[<div id="content">
 
@@ -4726,7 +4881,6 @@ However, I had the error above (missing gs), resolved by installing ghostscript.
   <pubDate>Sun, 14 Jul 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Outdoor bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4742,7 +4896,6 @@ However, I had the error above (missing gs), resolved by installing ghostscript.
   <pubDate>Fri, 12 Jul 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>gnuplot bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -4760,7 +4913,6 @@ However, I had the error above (missing gs), resolved by installing ghostscript.
   <pubDate>Sun, 07 Jul 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>gnu global, ctags, and Emacs setup</title>
   <description><![CDATA[<div id="content">
 
@@ -4925,7 +5077,6 @@ Helpful references
   <pubDate>Tue, 04 Jun 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>mu4e as macOS mail composer</title>
   <description><![CDATA[<div id="content">
 
@@ -4955,7 +5106,6 @@ end open location
   <pubDate>Wed, 29 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>New sudo user snippet</title>
   <description><![CDATA[<div id="content">
 
@@ -4979,7 +5129,6 @@ usermod -aG sudo <username>
   <pubDate>Sun, 26 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Plotting ledger reports in org</title>
   <description><![CDATA[<div id="content">
 
@@ -5076,7 +5225,6 @@ Plot income vs expenses.
   <pubDate>Fri, 24 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Changing MAC address in org</title>
   <description><![CDATA[<div id="content">
 
@@ -5116,7 +5264,6 @@ ps. Also see  <a href="http://xenodium.com/execute-org-blocks-as-root/">Execute 
   <pubDate>Tue, 21 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Charting bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5134,7 +5281,6 @@ ps. Also see  <a href="http://xenodium.com/execute-org-blocks-as-root/">Execute 
   <pubDate>Fri, 17 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Building swift-format</title>
   <description><![CDATA[<div id="content">
 
@@ -5185,7 +5331,6 @@ UPDATE: Now uses swift-5.2-branch (for Xcode 11.4), according to  <a href="https
   <pubDate>Sat, 11 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ledger query snippets</title>
   <description><![CDATA[<div id="content">
 
@@ -5227,7 +5372,6 @@ UPDATE: Now uses swift-5.2-branch (for Xcode 11.4), according to  <a href="https
   <pubDate>Mon, 06 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Batch file renaming with counsel, find-dired, and wdired</title>
   <description><![CDATA[<div id="content">
 
@@ -5262,7 +5406,6 @@ The code for  <i>ar/counsel-find</i> is a little rough but can be found at  <a h
   <pubDate>Sat, 04 May 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>VPS bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5279,7 +5422,6 @@ The code for  <i>ar/counsel-find</i> is a little rough but can be found at  <a h
   <pubDate>Fri, 26 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Svelte bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5296,7 +5438,6 @@ The code for  <i>ar/counsel-find</i> is a little rough but can be found at  <a h
   <pubDate>Mon, 22 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mark region, indent, restore location</title>
   <description><![CDATA[<div id="content">
 
@@ -5465,7 +5606,6 @@ UPDATE(2019-04-20): Source  <a href="https://github.com/xenodium/dotsies/blob/ma
   <pubDate>Tue, 16 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Compound interest calculations</title>
   <description><![CDATA[<div id="content">
 
@@ -5538,7 +5678,6 @@ Year 20: 773936.89
   <pubDate>Sun, 14 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Wider web bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5564,7 +5703,6 @@ Year 20: 773936.89
   <pubDate>Sun, 14 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Building mu/mu4e on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -5624,7 +5762,6 @@ UPDATE(2019-04-16): Another approach at Irreal's  <a href="https://irreal.org/bl
   <pubDate>Thu, 11 Apr 2019 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Reading spreadsheets with python/pandas</title>
   <description><![CDATA[<div id="content">
 
@@ -5667,7 +5804,6 @@ Read with:
   <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Half marathon training</title>
   <description><![CDATA[<div id="content">
 
@@ -5810,7 +5946,6 @@ Starting from week 4:
   <pubDate>Sun, 17 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bath travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5826,7 +5961,6 @@ Starting from week 4:
   <pubDate>Sun, 17 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Brazil travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5842,7 +5976,6 @@ Starting from week 4:
   <pubDate>Sun, 17 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Inserting numbers with Emacs multiple cursors</title>
   <description><![CDATA[<div id="content">
 
@@ -5869,7 +6002,6 @@ Came in handy when numbering an org table:
   <pubDate>Sun, 17 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Checksums on linux/macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -5911,7 +6043,6 @@ Came in handy when numbering an org table:
   <pubDate>Sat, 16 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>No Emacs frame refocus on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -5965,7 +6096,6 @@ Balance restored.
   <pubDate>Sat, 16 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Language server protocol (LSP) bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -5984,7 +6114,6 @@ Balance restored.
   <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Copy from desktop to mobile via QR code</title>
   <description><![CDATA[<div id="content">
 
@@ -6045,7 +6174,6 @@ qrencode -o 00wifi.png  <span style="color: #183691;">"WIFI:T:WPA;S:${SSID};P:$(
   <pubDate>Sun, 24 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Parsing dates in Go</title>
   <description><![CDATA[<div id="content">
 
@@ -6098,7 +6226,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Life in the UK bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6116,7 +6243,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Wed, 13 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Icons bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6137,7 +6263,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Video editing bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6168,7 +6293,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>C language bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6184,7 +6308,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Geneva travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6200,7 +6323,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Sun, 27 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Salt beef recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -6217,7 +6339,6 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
   <pubDate>Sun, 27 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Swapping Emacs ivy collections/sources</title>
   <description><![CDATA[<div id="content">
 
@@ -6334,7 +6455,6 @@ ps. Menu data from  <a href="https://starofkings.co.uk/food-and-drink/">Star of 
   <pubDate>Sun, 13 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs on macOS Mojave</title>
   <description><![CDATA[<div id="content">
 
@@ -6469,7 +6589,6 @@ Or, if you don't want/need a background service you can just run:
   <pubDate>Sat, 12 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Podcast bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6494,7 +6613,6 @@ Or, if you don't want/need a background service you can just run:
   <pubDate>Sat, 12 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out Emacs pdf tools</title>
   <description><![CDATA[<div id="content">
 
@@ -6556,7 +6674,6 @@ ps. (pdf-tools-install) may not find libffi on macOS. Try:
   <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>ASCII art generator bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6572,7 +6689,6 @@ ps. (pdf-tools-install) may not find libffi on macOS. Try:
   <pubDate>Thu, 27 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Osaka travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6588,7 +6704,6 @@ ps. (pdf-tools-install) may not find libffi on macOS. Try:
   <pubDate>Wed, 26 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emailing pdfs to kindle from mu4e</title>
   <description><![CDATA[<div id="content">
 
@@ -6629,7 +6744,6 @@ I should add a convenience elisp function for this, but that's for another time�
   <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cookbook bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6648,7 +6762,6 @@ I should add a convenience elisp function for this, but that's for another time�
   <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Audiobook providers bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6669,7 +6782,6 @@ I should add a convenience elisp function for this, but that's for another time�
   <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Using OCR to create searchable pdfs from images</title>
   <description><![CDATA[<div id="content">
 
@@ -6733,7 +6845,6 @@ ps.  <a href="https://pdfgrep.org">pdfgrep</a> is great for searching pdfs.
   <pubDate>Tue, 25 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>org tip: convert csv to table</title>
   <description><![CDATA[<div id="content">
 
@@ -6756,7 +6867,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Marketing bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6774,7 +6884,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Artistic/creative bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6792,7 +6901,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sponsoring platform bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6811,7 +6919,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bluetooth low energy (BLE) bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6830,7 +6937,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Wed, 19 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fun project bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6846,7 +6952,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Tue, 18 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Snowboarding bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6862,7 +6967,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Fri, 14 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Passive income bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6883,7 +6987,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Tue, 11 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Scam bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -6902,7 +7005,6 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
   <pubDate>Tue, 11 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>DWIM ivy quit</title>
   <description><![CDATA[<div id="content">
 
@@ -6954,7 +7056,6 @@ Added  <i>`ar/ivy-keyboard-quit-dwim'</i> for this purpose. Binding it to C-g in
   <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Diffing directories content size</title>
   <description><![CDATA[<div id="content">
 
@@ -7061,7 +7162,6 @@ I've added Emacs ediff to the mix:
   <pubDate>Wed, 05 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Swift nil-coalescing operator</title>
   <description><![CDATA[<div id="content">
 
@@ -7095,7 +7195,6 @@ ps. Swift snippet run on Emacs  <a href="https://orgmode.org/worg/org-contrib/ba
   <pubDate>Sun, 02 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ocado vs Asda (org table)</title>
   <description><![CDATA[<div id="content">
 
@@ -7184,7 +7283,6 @@ Here's the org source for the table above (prior to exporting to HTML):
   <pubDate>Sat, 01 Dec 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Execute org blocks as root</title>
   <description><![CDATA[<div id="content">
 
@@ -7225,7 +7323,6 @@ As root:
   <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Multiline Swift strings</title>
   <description><![CDATA[<div id="content">
 
@@ -7292,7 +7389,6 @@ Hello World
   <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Inline Swift computed properties</title>
   <description><![CDATA[<div id="content">
 
@@ -7327,7 +7423,6 @@ hello world
   <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Quickly swapping elfeed filters</title>
   <description><![CDATA[<div id="content">
 
@@ -7412,7 +7507,6 @@ We don't actually need two functions, but  <i>ar/elfeed-filter-results-count</i>
   <pubDate>Sat, 17 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Converting docx to pdf on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -7466,7 +7560,6 @@ Convert with:
   <pubDate>Wed, 14 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Faster elfeed browsing with paging</title>
   <description><![CDATA[<div id="content">
 
@@ -7512,7 +7605,6 @@ If on  <a href="https://github.com/jwiegley/use-package">use-package</a>, the fu
   <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Faster junk mail deletion with mu4e</title>
   <description><![CDATA[<div id="content">
 
@@ -7578,7 +7670,6 @@ I'm a  <a href="https://github.com/jwiegley/use-package">use-package</a> fan, so
   <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Working with vultr's ipv6-only instances</title>
   <description><![CDATA[<div id="content">
 
@@ -7666,7 +7757,6 @@ For scp:
   <pubDate>Tue, 06 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Buy it for life bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7683,7 +7773,6 @@ For scp:
   <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Shaving bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7699,7 +7788,6 @@ For scp:
   <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Rust bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7717,7 +7805,6 @@ For scp:
   <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fonts bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7739,7 +7826,6 @@ For scp:
   <pubDate>Sun, 28 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>imenu on Emacs eshell</title>
   <description><![CDATA[<div id="content">
 
@@ -7784,7 +7870,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Wed, 17 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Encrypted disk image on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -7807,7 +7892,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sun, 14 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Headsphones bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7827,7 +7911,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 13 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sheffield travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7845,7 +7928,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 13 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>macOS app bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7878,7 +7960,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Fri, 05 Oct 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Gaming bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7894,7 +7975,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sun, 30 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Investment platform bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7925,7 +8005,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 29 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sustainability bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7941,7 +8020,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 29 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Skin product bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7961,7 +8039,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 29 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Lua bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7980,7 +8057,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Sat, 29 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Minimalist bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -7998,7 +8074,6 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Fri, 28 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Recover from Time Machine's "backup already in use"</title>
   <description><![CDATA[<div id="content">
 
@@ -8021,7 +8096,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Sun, 23 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>London bar backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -8042,7 +8116,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Tue, 11 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>CMake bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8061,7 +8134,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Mon, 03 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pandoc bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8080,7 +8152,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Tue, 28 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>GTD/Get things done bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8100,7 +8171,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Tue, 28 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Scala bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8116,7 +8186,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Mon, 27 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mauritius travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8143,7 +8212,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Mon, 27 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bazel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8163,7 +8231,6 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
   <pubDate>Wed, 22 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Actionable URLs in Emacs buffers</title>
   <description><![CDATA[<div id="content">
 
@@ -8200,7 +8267,6 @@ Should have enabled actionable URLs in my Emacs buffers long ago. Can now click 
   <pubDate>Wed, 22 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Enabling Control-Meta(⌘)-D on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -8223,7 +8289,6 @@ I use command (⌘) as my Emacs Meta key. Recently discovered C-M-d is not avail
   <pubDate>Sat, 18 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Palestine travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8239,7 +8304,6 @@ I use command (⌘) as my Emacs Meta key. Recently discovered C-M-d is not avail
   <pubDate>Sat, 18 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Recycling bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8256,7 +8320,6 @@ I use command (⌘) as my Emacs Meta key. Recently discovered C-M-d is not avail
   <pubDate>Mon, 13 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>M-r history search in git-commit-mode</title>
   <description><![CDATA[<div id="content">
 
@@ -8310,7 +8373,6 @@ May also want to persist  <i>log-edit-comment-ring</i> across Emacs sessions by 
   <pubDate>Sun, 12 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mozambique travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8326,7 +8388,6 @@ May also want to persist  <i>log-edit-comment-ring</i> across Emacs sessions by 
   <pubDate>Sun, 12 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Corsica travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8342,7 +8403,6 @@ May also want to persist  <i>log-edit-comment-ring</i> across Emacs sessions by 
   <pubDate>Sun, 12 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>France travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8360,7 +8420,6 @@ May also want to persist  <i>log-edit-comment-ring</i> across Emacs sessions by 
   <pubDate>Sun, 12 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Comoro islands travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8376,7 +8435,6 @@ May also want to persist  <i>log-edit-comment-ring</i> across Emacs sessions by 
   <pubDate>Sun, 12 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Morning smoothie</title>
   <description><![CDATA[<div id="content">
 
@@ -8407,7 +8465,6 @@ ps. I have no affiliation to either retailer. Prices may change.
   <pubDate>Thu, 09 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ledger bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8467,7 +8524,6 @@ ps. I have no affiliation to either retailer. Prices may change.
   <pubDate>Wed, 08 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing ludget (ledger visualization</title>
   <description><![CDATA[<div id="content">
 
@@ -8499,7 +8555,6 @@ Use pip3 to install ludget:
   <pubDate>Wed, 08 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Tip: Convert .texi to .info</title>
   <description><![CDATA[<div id="content">
 
@@ -8539,7 +8594,6 @@ Open in Emacs and render as info with:
   <pubDate>Tue, 07 Aug 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Marking 20k emails as read</title>
   <description><![CDATA[<div id="content">
 
@@ -8636,7 +8690,6 @@ Let's sync the local changes.
   <pubDate>Wed, 25 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Show iOS simulator touches</title>
   <description><![CDATA[<div id="content">
 
@@ -8659,7 +8712,6 @@ TIL from  <a href="https://twitter.com/liamnichols_/status/1018812142693253120?s
   <pubDate>Tue, 24 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Amsterdam travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8675,7 +8727,6 @@ TIL from  <a href="https://twitter.com/liamnichols_/status/1018812142693253120?s
   <pubDate>Sun, 15 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hardware bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8693,7 +8744,6 @@ TIL from  <a href="https://twitter.com/liamnichols_/status/1018812142693253120?s
   <pubDate>Sat, 14 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>fitbit API, org babel, and gnuplot</title>
   <description><![CDATA[<div id="content">
 
@@ -8855,7 +8905,6 @@ Fetching data and plotting through org babel and gnuplot is pretty sweet. I've b
   <pubDate>Wed, 11 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Human memory bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -8875,7 +8924,6 @@ Fetching data and plotting through org babel and gnuplot is pretty sweet. I've b
   <pubDate>Sun, 08 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>PIPESTATUS for all return codes</title>
   <description><![CDATA[<div id="content">
 
@@ -8903,7 +8951,6 @@ From  <a href="https://twitter.com/saruspete">@saruspete</a>'s  <a href="https:/
   <pubDate>Sun, 08 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs utilities for your OS</title>
   <description><![CDATA[<div id="content">
 
@@ -9092,7 +9139,6 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   <pubDate>Sat, 07 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Web serving tools bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -9120,7 +9166,6 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   <pubDate>Sun, 01 Jul 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>URL shortener bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -9137,7 +9182,6 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
   <pubDate>Sun, 24 Jun 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out mu4e with mbsync</title>
   <description><![CDATA[<div id="content">
 
@@ -9323,7 +9367,6 @@ I had issues with duplicate IDs after moving and deleting messages from mu4e.  <
   <pubDate>Sun, 17 Jun 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sticky function keys on touch bar</title>
   <description><![CDATA[<div id="content">
 
@@ -9346,7 +9389,6 @@ Visible (and sticky) function keys are not the touch bar default for Emacs. Let'
   <pubDate>Fri, 15 Jun 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>PlantUML bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -9365,7 +9407,6 @@ Visible (and sticky) function keys are not the touch bar default for Emacs. Let'
   <pubDate>Wed, 13 Jun 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>GNU find on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -9437,7 +9478,6 @@ brew install wget
   <pubDate>Wed, 13 Jun 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Adding mu4e maildirs extension</title>
   <description><![CDATA[<div id="content">
 
@@ -9460,7 +9500,6 @@ Continuing the mu4e fun, added mu4e-maildirs-extension to display a mail dirs su
   <pubDate>Tue, 29 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out mu4e and offlineimap</title>
   <description><![CDATA[<div id="content">
 
@@ -9823,7 +9862,6 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
   <pubDate>Mon, 28 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Lunette: Like Spectacle but for Hammerspoon</title>
   <description><![CDATA[<div id="content">
 
@@ -9840,7 +9878,6 @@ Came across  <a href="https://github.com/scottwhudson/Lunette">Lunette</a>. Give
   <pubDate>Thu, 24 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Transparent Emacs titlebars on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -9884,7 +9921,6 @@ Config:
   <pubDate>Thu, 24 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Train Emacs to open files externally</title>
   <description><![CDATA[<div id="content">
 
@@ -9911,7 +9947,6 @@ TIL about the  <a href="https://bitbucket.org/jpkotta/openwith">openwith</a> pac
   <pubDate>Wed, 23 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ejecting USB drives on Synology</title>
   <description><![CDATA[<div id="content">
 
@@ -9934,7 +9969,6 @@ Control panel > External devices > USB Disk 1 > Eject
   <pubDate>Tue, 22 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Show hidden files in Finder</title>
   <description><![CDATA[<div id="content">
 
@@ -9954,7 +9988,6 @@ killall Finder
   <pubDate>Tue, 22 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Remounting Synology encrypted share</title>
   <description><![CDATA[<div id="content">
 
@@ -9977,7 +10010,6 @@ Control panel > Shared Folder > Encryption > Mount
   <pubDate>Mon, 21 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Synology user had no home</title>
   <description><![CDATA[<div id="content">
 
@@ -10011,7 +10043,6 @@ Control Panel > User > Advanced > User Home > [x] Enable user home service
   <pubDate>Sun, 20 May 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pre-commit hooks to save you from yourself</title>
   <description><![CDATA[<div id="content">
 
@@ -10062,7 +10093,6 @@ Save to a file and create a symbolic link to your .git/hooks directory:
   <pubDate>Mon, 30 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Paper less bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10088,7 +10118,6 @@ Save to a file and create a symbolic link to your .git/hooks directory:
   <pubDate>Thu, 19 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Debugging Emacs binary</title>
   <description><![CDATA[<div id="content">
 
@@ -10128,7 +10157,6 @@ And good 'ol gdb (lldb works too):
   <pubDate>Thu, 19 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Azores travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10147,7 +10175,6 @@ And good 'ol gdb (lldb works too):
   <pubDate>Thu, 19 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bologna travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10163,7 +10190,6 @@ And good 'ol gdb (lldb works too):
   <pubDate>Wed, 18 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Grep through pdfs</title>
   <description><![CDATA[<div id="content">
 
@@ -10189,7 +10215,6 @@ Balance restored.</p>
   <pubDate>Tue, 17 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Options to reduce Go binary size</title>
   <description><![CDATA[<div id="content">
 
@@ -10221,7 +10246,6 @@ A Hacker News's thread  <a href="https://news.ycombinator.com/item?id=16834181">
   <pubDate>Sat, 14 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hammerspoon bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10248,7 +10272,6 @@ A Hacker News's thread  <a href="https://news.ycombinator.com/item?id=16834181">
   <pubDate>Sat, 14 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out tesseract</title>
   <description><![CDATA[<div id="content">
 
@@ -10283,7 +10306,6 @@ $ tesseract receipt.png receipt.png.txt
   <pubDate>Mon, 09 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Image editing bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10307,7 +10329,6 @@ $ tesseract receipt.png receipt.png.txt
   <pubDate>Sun, 08 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out ShellCheck</title>
   <description><![CDATA[<div id="content">
 
@@ -10333,7 +10354,6 @@ Bonus: If using Emacs's  <a href="https://github.com/flycheck/flycheck">flycheck
   <pubDate>Sun, 08 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Gif bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10354,7 +10374,6 @@ Bonus: If using Emacs's  <a href="https://github.com/flycheck/flycheck">flycheck
   <pubDate>Sun, 08 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sapporo travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -10370,7 +10389,6 @@ Bonus: If using Emacs's  <a href="https://github.com/flycheck/flycheck">flycheck
   <pubDate>Sun, 08 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Buying matcha powder online</title>
   <description><![CDATA[<div id="content">
 
@@ -10403,7 +10421,6 @@ From Reddit's  <a href="https://www.reddit.com/r/tea/comments/6qbh4l/matcha/">th
   <pubDate>Thu, 05 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Getting macOS app bundle ID</title>
   <description><![CDATA[<div id="content">
 
@@ -10439,7 +10456,6 @@ Option 2
   <pubDate>Wed, 04 Apr 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Trying out chunkwm</title>
   <description><![CDATA[<div id="content">
 
@@ -10555,7 +10571,6 @@ Some additional Mission Control and keyboard shortcut preferences:
   <pubDate>Sat, 31 Mar 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Building bazel on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -10609,7 +10624,6 @@ Self-contained binary in bazel-bin/src/bazel
   <pubDate>Tue, 06 Feb 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing Inkscape with homebrew</title>
   <description><![CDATA[<div id="content">
 
@@ -10629,7 +10643,6 @@ brew install caskformula/caskformula/inkscape
   <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Extracting files from pkg</title>
   <description><![CDATA[<div id="content">
 
@@ -10651,7 +10664,6 @@ cat Payload | gunzip -dc |cpio -i
   <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Magit amend commit author</title>
   <description><![CDATA[<div id="content">
 
@@ -10681,7 +10693,6 @@ Rarely use it, but handy. Use Magit to amend git commit author.
   <pubDate>Sat, 16 Dec 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Homebrew install from cache</title>
   <description><![CDATA[<div id="content">
 
@@ -10708,7 +10719,6 @@ Came across a 404 while installing graphviz-2.40.1.tar.gz via homebrew. If you c
   <pubDate>Wed, 13 Dec 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>org-babel Objective-C support</title>
   <description><![CDATA[<div id="content">
 
@@ -10782,7 +10792,6 @@ Add  <i>objc</i> to  <i>org-babel-load-languages</i>, and you can subsequently c
   <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>iOS dev command-line goodies</title>
   <description><![CDATA[<div id="content">
 
@@ -10859,7 +10868,6 @@ xcrun simctl launch booted  <span style="color: #183691;">"${BUNDLE_ID}"</span>
   <pubDate>Sun, 12 Nov 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Eshell pcomplete company completion</title>
   <description><![CDATA[<div id="content">
 
@@ -10929,7 +10937,6 @@ Don't forget to add  <i>company-pcomplete</i> to  <i>company-backends,</i> and i
   <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Basic imenu in helpful-mode</title>
   <description><![CDATA[<div id="content">
 
@@ -10983,7 +10990,6 @@ I'm finding Wilfred Hughes's  <a href="https://github.com/Wilfred/helpful">helpf
   <pubDate>Sun, 10 Sep 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Projectile shell dir company completion</title>
   <description><![CDATA[<div id="content">
 
@@ -11078,7 +11084,6 @@ Standing on the shoulders of package giants ( <a href="https://github.com/magnar
   <pubDate>Sat, 19 Aug 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Creating icns icons</title>
   <description><![CDATA[<div id="content">
 
@@ -11131,7 +11136,6 @@ rm -R ${ <span style="color: #333333;">BASENAME</span>}.iconset
   <pubDate>Wed, 09 Aug 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Forcing aptX on MacOS bluetooth audio</title>
   <description><![CDATA[<div id="content">
 
@@ -11189,7 +11193,6 @@ Don't forget to disconnect and reconnect your Bluetooth device.
   <pubDate>Sun, 06 Aug 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hungary travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11205,7 +11208,6 @@ Don't forget to disconnect and reconnect your Bluetooth device.
   <pubDate>Mon, 10 Jul 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Faster cursor movement on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -11228,7 +11230,6 @@ defaults write -g InitialKeyRepeat -int 10
   <pubDate>Sat, 08 Jul 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Search/insert one-liners with Emacs helm-ag</title>
   <description><![CDATA[<div id="content">
 
@@ -11286,7 +11287,6 @@ Emacs  <a href="https://github.com/emacs-helm/helm">helm</a> is awesome.  <a hre
   <pubDate>Fri, 07 Jul 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sleep bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11305,7 +11305,6 @@ Emacs  <a href="https://github.com/emacs-helm/helm">helm</a> is awesome.  <a hre
   <pubDate>Mon, 29 May 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Tea bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11323,7 +11322,6 @@ Emacs  <a href="https://github.com/emacs-helm/helm">helm</a> is awesome.  <a hre
   <pubDate>Sun, 28 May 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>GnuPG and macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -11382,7 +11380,6 @@ May need to kill gpg-agent to reload config.
   <pubDate>Sun, 23 Apr 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Math bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11398,7 +11395,6 @@ May need to kill gpg-agent to reload config.
   <pubDate>Sun, 23 Apr 2017 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing gnuplot on macOS</title>
   <description><![CDATA[<div id="content">
 
@@ -11569,7 +11565,6 @@ Success.
   <pubDate>Mon, 13 Mar 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Nepal travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11585,7 +11580,6 @@ Success.
   <pubDate>Sun, 22 Jan 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Jerusalem travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11601,7 +11595,6 @@ Success.
   <pubDate>Sun, 22 Jan 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Tel Aviv travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11625,7 +11618,6 @@ Success.
   <pubDate>Sun, 22 Jan 2017 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Email provider bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11650,7 +11642,6 @@ Success.
   <pubDate>Fri, 02 Dec 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Singapore notes</title>
   <description><![CDATA[<div id="content">
 
@@ -11763,7 +11754,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Fri, 02 Dec 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Javascript snippets</title>
   <description><![CDATA[<div id="content">
 
@@ -11778,7 +11768,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Go snippets</title>
   <description><![CDATA[<div id="content">
 
@@ -11844,7 +11833,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sydney travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11875,7 +11863,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Sun, 27 Nov 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Laos travel bookmark</title>
   <description><![CDATA[<div id="content">
 
@@ -11891,7 +11878,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Sun, 16 Oct 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Singapore travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11917,7 +11903,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Sat, 08 Oct 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>New York travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11934,7 +11919,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Sat, 01 Oct 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cambodia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -11950,7 +11934,6 @@ Hours: Tues-Sun: 11am to 4pm or till sold out, Wed and Sun: 11am to 2pm, Closed 
   <pubDate>Sat, 01 Oct 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Handy pdf utilities</title>
   <description><![CDATA[<div id="content">
 
@@ -12031,7 +12014,6 @@ pdfjam --booklet true --landscape --suffix book --letterpaper --signature 12 --b
   <pubDate>Sun, 18 Sep 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>API design bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12073,7 +12055,6 @@ pdfjam --booklet true --landscape --suffix book --letterpaper --signature 12 --b
   <pubDate>Sun, 18 Sep 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fuzzy search Emacs compile history</title>
   <description><![CDATA[<div id="content">
 
@@ -12110,7 +12091,6 @@ Here's a simple way to combine  <i>completing-read</i> and the  <i>compile</i> c
   <pubDate>Thu, 15 Sep 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Jumping on the Emacs 25 bandwagon</title>
   <description><![CDATA[<div id="content">
 
@@ -12140,7 +12120,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Mon, 05 Sep 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>San Francisco's Mission District travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12174,7 +12153,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Sun, 31 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Moscow travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12202,7 +12180,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Mon, 25 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Vietnam travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12236,7 +12213,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Sun, 24 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pokémon Go bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12256,7 +12232,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Tue, 19 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Machine learning bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12278,7 +12253,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Sun, 03 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Coffee bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12295,7 +12269,6 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Sun, 03 Jul 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs and emotional vocab</title>
   <description><![CDATA[<div id="content">
 
@@ -12357,7 +12330,6 @@ UPDATE: Just came across  <a href="http://blog.josephwilk.net/art/emacs-animatio
   <pubDate>Fri, 17 Jun 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs: Find number of days between dates</title>
   <description><![CDATA[<div id="content">
 
@@ -12395,7 +12367,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Tue, 10 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>RoutingHTTPServer snippet</title>
   <description><![CDATA[<div id="content">
 
@@ -12430,7 +12401,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Sun, 08 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UIViewController bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12459,7 +12429,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Fri, 06 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Alaska travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12481,7 +12450,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Fri, 06 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>When OOO impulse kicks in...</title>
   <description><![CDATA[<div id="content">
 
@@ -12498,7 +12466,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Tue, 03 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Haskell bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12526,7 +12493,6 @@ using `C-<SPC>', move point to another date, and type `M-='
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>8 week half-marathon training</title>
   <description><![CDATA[<div id="content">
 
@@ -12681,7 +12647,6 @@ An 8-week training schedule:
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>St. Petersburg travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12703,7 +12668,6 @@ An 8-week training schedule:
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Scotland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12720,7 +12684,6 @@ An 8-week training schedule:
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Money bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12885,7 +12848,6 @@ An 8-week training schedule:
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pakistan travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -12903,7 +12865,6 @@ An 8-week training schedule:
   <pubDate>Mon, 02 May 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Haskell notes</title>
   <description><![CDATA[<div id="content">
 
@@ -12933,7 +12894,6 @@ An expression consistently evaluating to the same result, regardless of context.
   <pubDate>Sun, 17 Apr 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs Objective-C tagging with RTags</title>
   <description><![CDATA[<div id="content">
 
@@ -13049,7 +13009,6 @@ M-x rtags-find-symbol
   <pubDate>Mon, 28 Mar 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Database bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13067,7 +13026,6 @@ M-x rtags-find-symbol
   <pubDate>Thu, 10 Mar 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Python tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -13083,7 +13041,6 @@ M-x rtags-find-symbol
   <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bruges travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13113,7 +13070,6 @@ M-x rtags-find-symbol
   <pubDate>Sat, 05 Mar 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs lisp snippets</title>
   <description><![CDATA[<div id="content">
 
@@ -13181,7 +13137,6 @@ M-x rtags-find-symbol
   <pubDate>Wed, 02 Mar 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Some modern Objective-C idioms</title>
   <description><![CDATA[<div id="content">
 
@@ -13223,7 +13178,6 @@ M-x rtags-find-symbol
   <pubDate>Thu, 18 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cross-platform development bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13239,7 +13193,6 @@ M-x rtags-find-symbol
   <pubDate>Tue, 16 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Generating a random MAC address</title>
   <description><![CDATA[<div id="content">
 
@@ -13276,7 +13229,6 @@ MAC => 00:16:3e:7e:f7:fa
   <pubDate>Mon, 15 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Defined elisp variables matching regexp</title>
   <description><![CDATA[<div id="content">
 
@@ -13342,7 +13294,6 @@ tern-command => (tern)
   <pubDate>Sun, 14 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Proselint via Emacs flycheck</title>
   <description><![CDATA[<div id="content">
 
@@ -13390,7 +13341,6 @@ Also needs a flycheck checker defined:
   <pubDate>Sat, 13 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Doh! undo last commit (Magit edition)</title>
   <description><![CDATA[<div id="content">
 
@@ -13425,7 +13375,6 @@ Or if you want a single function:
   <pubDate>Thu, 11 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Generate go struct definition from json file</title>
   <description><![CDATA[<div id="content">
 
@@ -13448,7 +13397,6 @@ From  <a href="https://github.com/bittersweet/dotfiles/blob/master/notes/go.txt#
   <pubDate>Thu, 11 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs lisp tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -13480,7 +13428,6 @@ From  <a href="https://github.com/bittersweet/dotfiles/blob/master/notes/go.txt#
   <pubDate>Sat, 06 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Javascript tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -13502,7 +13449,6 @@ From  <a href="https://github.com/bittersweet/dotfiles/blob/master/notes/go.txt#
   <pubDate>Sat, 06 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Redux bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13549,7 +13495,6 @@ From  <a href="https://github.com/bittersweet/dotfiles/blob/master/notes/go.txt#
   <pubDate>Sat, 06 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Really delete iPhone photos</title>
   <description><![CDATA[<div id="content">
 
@@ -13573,7 +13518,6 @@ Albums -> Recently Deleted -> Select -> Delete All
   <pubDate>Thu, 04 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Entering accents in Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -13595,7 +13539,6 @@ C-x 8 ' A -> Á
   <pubDate>Thu, 04 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Objective-C bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13624,7 +13567,6 @@ C-x 8 ' A -> Á
   <pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Converting Unix epoc time to human readable date</title>
   <description><![CDATA[<div id="content">
 
@@ -13670,7 +13612,6 @@ Tue Feb  3 07:15:00 GMT 1976
   <pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hot reloading with react and redux</title>
   <description><![CDATA[<div id="content">
 
@@ -13703,7 +13644,6 @@ Tue Feb  3 07:15:00 GMT 1976
   <pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Schnitzel recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -13760,7 +13700,6 @@ Since  <a href="../fischers-london-yes-but">eating at Fischers's</a>, I've been 
   <pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Vancouver travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13776,7 +13715,6 @@ Since  <a href="../fischers-london-yes-but">eating at Fischers's</a>, I've been 
   <pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hiding HTML elements</title>
   <description><![CDATA[<div id="content">
 
@@ -13793,7 +13731,6 @@ Hide with  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display">di
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Typescript bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13819,7 +13756,6 @@ Hide with  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display">di
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Regular expressions bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13841,7 +13777,6 @@ Hide with  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display">di
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Append jpegs in a video sequence</title>
   <description><![CDATA[<div id="content">
 
@@ -13865,7 +13800,6 @@ Via  <a href="https://twitter.com/climagic">climagic</a>'s  <a href="https://twi
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Meditation tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -13882,7 +13816,6 @@ Via  <a href="https://twitter.com/climagic">climagic</a>'s  <a href="https://twi
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Czech Republic travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13898,7 +13831,6 @@ Via  <a href="https://twitter.com/climagic">climagic</a>'s  <a href="https://twi
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Suspend and reattach processes</title>
   <description><![CDATA[<div id="content">
 
@@ -13921,7 +13853,6 @@ Via  <a href="https://twitter.com/climagic">climagic</a>'s  <a href="https://twi
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Timesinking bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -13941,7 +13872,6 @@ Via  <a href="https://twitter.com/climagic">climagic</a>'s  <a href="https://twi
   <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs dired for batch byte compilation</title>
   <description><![CDATA[<div id="content">
 
@@ -13968,7 +13898,6 @@ Just learned dired enables you to mark files and byte compile via  <i>M-x dired-
   <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Echo Emacs keybiding from function name</title>
   <description><![CDATA[<div id="content">
 
@@ -13994,7 +13923,6 @@ Press <f6> to export org file
   <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Serializing to JSON on iOS</title>
   <description><![CDATA[<div id="content">
 
@@ -14028,7 +13956,6 @@ Press <f6> to export org file
   <pubDate>Fri, 29 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Polar travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14044,7 +13971,6 @@ Press <f6> to export org file
   <pubDate>Mon, 25 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fischer's London: yes, but...</title>
   <description><![CDATA[<div id="content">
 
@@ -14082,7 +14008,6 @@ Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing specta
   <pubDate>Mon, 25 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sweden travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14100,7 +14025,6 @@ Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing specta
   <pubDate>Sun, 24 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Parenting bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14139,7 +14063,6 @@ Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing specta
   <pubDate>Wed, 20 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Chocolate fondant recipe</title>
   <description><![CDATA[<div id="content">
 
@@ -14177,7 +14100,6 @@ My girlfriend recently made a delicious chocolate fondant. Saving the  <a href="
   <pubDate>Wed, 20 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Handwriting bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14194,7 +14116,6 @@ My girlfriend recently made a delicious chocolate fondant. Saving the  <a href="
   <pubDate>Wed, 20 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Safari's Web Inspector keyboard shortcuts</title>
   <description><![CDATA[<div id="content">
 
@@ -14216,7 +14137,6 @@ Via WebKit's blog,  <a href="https://webkit.org/blog/4038/web-inspector-keyboard
   <pubDate>Tue, 19 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Added Emacs zone-rainbow</title>
   <description><![CDATA[<div id="content">
 
@@ -14247,7 +14167,6 @@ Via WebKit's blog,  <a href="https://webkit.org/blog/4038/web-inspector-keyboard
   <pubDate>Tue, 19 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ippudo London: yes, but...</title>
   <description><![CDATA[<div id="content">
 
@@ -14285,7 +14204,6 @@ The space feels soulless. Think generic, chain, Pizza Express…
   <pubDate>Tue, 19 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Copenhagen travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14309,7 +14227,6 @@ The space feels soulless. Think generic, chain, Pizza Express…
   <pubDate>Thu, 14 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>iOS development tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -14330,7 +14247,6 @@ The space feels soulless. Think generic, chain, Pizza Express…
   <pubDate>Tue, 12 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Import UIKit for simpler debugging</title>
   <description><![CDATA[<div id="content">
 
@@ -14358,7 +14274,6 @@ command alias foundation expr @import Foundation
   <pubDate>Tue, 12 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Basic Emacs keybindings on Linux desktop</title>
   <description><![CDATA[<div id="content">
 
@@ -14397,7 +14312,6 @@ More at  <a href="http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gn
   <pubDate>Mon, 11 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs Objective-C completion with Irony</title>
   <description><![CDATA[<div id="content">
 
@@ -14495,7 +14409,6 @@ M-x irony-cdb-json-add-compile-commands-path
   <pubDate>Fri, 08 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Northern lights travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14519,7 +14432,6 @@ M-x irony-cdb-json-add-compile-commands-path
   <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Finland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14542,7 +14454,6 @@ M-x irony-cdb-json-add-compile-commands-path
   <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mexico travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14558,7 +14469,6 @@ M-x irony-cdb-json-add-compile-commands-path
   <pubDate>Wed, 06 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Gandhi's ever-contemporary wisdom</title>
   <description><![CDATA[<div id="content">
 
@@ -14664,7 +14574,6 @@ Nishkulanand sings: "Renunciation of objects, without the renunciation of desire
   <pubDate>Sun, 03 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs highlight-symbol-mode</title>
   <description><![CDATA[<div id="content">
 
@@ -14700,7 +14609,6 @@ Been a fan of  <a href="https://github.com/fgeller/highlight-thing.el">highlight
   <pubDate>Sun, 03 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>9 Productivity tips</title>
   <description><![CDATA[<div id="content">
 
@@ -14727,7 +14635,6 @@ From HBR's  <a href="https://hbr.org/2015/12/9-productivity-tips-from-people-who
   <pubDate>Sat, 02 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Functional programming bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -14749,7 +14656,6 @@ From HBR's  <a href="https://hbr.org/2015/12/9-productivity-tips-from-people-who
   <pubDate>Sat, 02 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Last meal of 2015</title>
   <description><![CDATA[<div id="content">
 
@@ -14783,7 +14689,6 @@ For our last meal of 2015, I contributed dal and rotis. This is my first attempt
   <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>First meal of 2016</title>
   <description><![CDATA[<div id="content">
 
@@ -14819,7 +14724,6 @@ Makes 10/11 pancakes.
   <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>npm basics</title>
   <description><![CDATA[<div id="content">
 
@@ -14992,7 +14896,6 @@ Online documentation is great so far. More at  <a href="https://docs.npmjs.com">
   <pubDate>Wed, 30 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Find in $PATH with type and which</title>
   <description><![CDATA[<div id="content">
 
@@ -15034,7 +14937,6 @@ emacsclient is /usr/bin/emacsclient
   <pubDate>Wed, 30 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Clojure bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15053,7 +14955,6 @@ emacsclient is /usr/bin/emacsclient
   <pubDate>Fri, 25 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mac OS X tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -15080,7 +14981,6 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.kwm.plist
   <pubDate>Mon, 21 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Search bash history with Emacs helm</title>
   <description><![CDATA[<div id="content">
 
@@ -15143,7 +15043,6 @@ Bonus: Replace existing M-r binding to use ar/helm-shell-search-history.
   <pubDate>Sun, 20 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>View DICOM files from your X-ray</title>
   <description><![CDATA[<div id="content">
 
@@ -15315,7 +15214,6 @@ Of interest, David Clunie's  <a href="http://www.dclunie.com/">Medical Image For
   <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Medicine bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15331,7 +15229,6 @@ Of interest, David Clunie's  <a href="http://www.dclunie.com/">Medical Image For
   <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Organize your data with camlistore</title>
   <description><![CDATA[<div id="content">
 
@@ -15349,7 +15246,6 @@ Checking out  <a href="https://camlistore.org">camlistore</a> to organize all so
   <pubDate>Fri, 18 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Tip: GOOGLETRANSLATE your Spreadsheet</title>
   <description><![CDATA[<div id="content">
 
@@ -15374,7 +15270,6 @@ Examples from  <a href="https://support.google.com/docs/answer/3093331">referenc
   <pubDate>Fri, 18 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Use ImageMagick to convert image to grayscale</title>
   <description><![CDATA[<div id="content">
 
@@ -15396,7 +15291,6 @@ Another ImageMagick one-liner I'll likely forget.
   <pubDate>Thu, 17 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Maps dev bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15436,7 +15330,6 @@ Another ImageMagick one-liner I'll likely forget.
   <pubDate>Thu, 17 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>CSS bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15465,7 +15358,6 @@ Another ImageMagick one-liner I'll likely forget.
   <pubDate>Mon, 14 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>GPG (GnuPG) examples</title>
   <description><![CDATA[<div id="content">
 
@@ -15562,7 +15454,6 @@ gpg> save
   <pubDate>Mon, 14 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Drill down Emacs dired with dired-subtree</title>
   <description><![CDATA[<div id="content">
 
@@ -15594,7 +15485,6 @@ JCS, from  <a href="http://irreal.org/blog">Irreal</a>, recently  <a href="http:
   <pubDate>Mon, 14 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Simple ssh tunnel</title>
   <description><![CDATA[<div id="content">
 
@@ -15616,7 +15506,6 @@ Via  <a href="https://twitter.com/climagic/status/674688454526136320?refsrc%3Dem
   <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs text faces</title>
   <description><![CDATA[<div id="content">
 
@@ -15637,7 +15526,6 @@ Via  <a href="https://twitter.com/climagic/status/674688454526136320?refsrc%3Dem
   <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Resume partial downloads with ssh and rsync</title>
   <description><![CDATA[<div id="content">
 
@@ -15661,7 +15549,6 @@ Via  <a href="https://twitter.com/climagic/status/674688454526136320?refsrc%3Dem
   <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Preview HTML pages on github</title>
   <description><![CDATA[<div id="content">
 
@@ -15679,7 +15566,6 @@ Prepend with  <a href="http://htmlpreview.github.io/">http://htmlpreview.github.
   <pubDate>Tue, 08 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Dart bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15698,7 +15584,6 @@ Prepend with  <a href="http://htmlpreview.github.io/">http://htmlpreview.github.
   <pubDate>Mon, 07 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Playing with Dart's analysis server</title>
   <description><![CDATA[<div id="content">
 
@@ -15747,7 +15632,6 @@ NOTE: The server reads requests from standard input. Either escape or execute th
   <pubDate>Mon, 07 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Flutter setup</title>
   <description><![CDATA[<div id="content">
 
@@ -15778,7 +15662,6 @@ Verify with:
   <pubDate>Mon, 07 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Swift bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15891,7 +15774,6 @@ Verify with:
   <pubDate>Sun, 06 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Flutter bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -15911,7 +15793,6 @@ Verify with:
   <pubDate>Sun, 06 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing Emacs spaceline</title>
   <description><![CDATA[<div id="content">
 
@@ -15958,7 +15839,6 @@ Gave  <a href="https://github.com/TheBB/spaceline/">Spaceline</a> a try.  <a hre
   <pubDate>Mon, 30 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Online reading backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -15984,7 +15864,6 @@ Gave  <a href="https://github.com/TheBB/spaceline/">Spaceline</a> a try.  <a hre
   <pubDate>Sun, 29 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Leading bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16013,7 +15892,6 @@ Gave  <a href="https://github.com/TheBB/spaceline/">Spaceline</a> a try.  <a hre
   <pubDate>Sun, 29 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>package.el incomprehensible buffer</title>
   <description><![CDATA[<div id="content">
 
@@ -16045,7 +15923,6 @@ Came across "incomprehensible buffer" error in package.el.  <a href="http://osdi
   <pubDate>Sun, 29 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Travel lifestyle bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16077,7 +15954,6 @@ Came across "incomprehensible buffer" error in package.el.  <a href="http://osdi
   <pubDate>Sat, 28 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing Emacs 25 devel on Mac OS X</title>
   <description><![CDATA[<div id="content">
 
@@ -16122,7 +15998,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Thu, 26 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Couchbase React Native bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16143,7 +16018,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Thu, 26 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Unix/Linux tools bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16257,7 +16131,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Thu, 26 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>SQL bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16279,7 +16152,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Thu, 26 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Diagram tools bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16305,7 +16177,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Wed, 25 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Licensing bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16323,7 +16194,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Tue, 24 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Synology bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16349,7 +16219,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Mon, 23 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Nara travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16366,7 +16235,6 @@ Had problems loading seq. Removed byte-compiled packages:
   <pubDate>Sun, 22 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Making hummus</title>
   <description><![CDATA[<div id="content">
 
@@ -16409,7 +16277,6 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
   <pubDate>Sun, 22 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Backup bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16430,7 +16297,6 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
   <pubDate>Sun, 22 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>easy_install->pip->conda</title>
   <description><![CDATA[<div id="content">
 
@@ -16452,7 +16318,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Sat, 21 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mac OS bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16486,7 +16351,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Sat, 21 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Angular bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16502,7 +16366,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Sat, 21 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Docker bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16525,7 +16388,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Sat, 21 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Kubernetes bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16549,7 +16411,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Sat, 21 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Traditional music bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16568,7 +16429,6 @@ Can't find a python package in Binstar? Here's a post on  <a href="http://www.pe
   <pubDate>Mon, 16 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Recover from an unresponsive Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -16595,7 +16455,6 @@ ps. Not had a chance to try it, but next time it happens…
   <pubDate>Wed, 04 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Reading a running training plan</title>
   <description><![CDATA[<div id="content">
 
@@ -16625,7 +16484,6 @@ Is read from left to right as:
   <pubDate>Sun, 25 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Training for under 50 min 10k run</title>
   <description><![CDATA[<div id="content">
 
@@ -16735,7 +16593,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Sun, 25 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Find binary in PATH using python</title>
   <description><![CDATA[<div id="content">
 
@@ -16759,7 +16616,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Fri, 23 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Media player bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16781,7 +16637,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Thu, 22 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Running bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16807,7 +16662,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Thu, 22 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mongolia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16825,7 +16679,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Thu, 22 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Malaysia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16843,7 +16696,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Thu, 22 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Indonesia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16861,7 +16713,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Thu, 22 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Kyoto travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16897,7 +16748,6 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
   <pubDate>Wed, 21 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Get Emacs to gather links in posts</title>
   <description><![CDATA[<div id="content">
 
@@ -16969,7 +16819,6 @@ UPDATE(2019-04-13): Refreshed post with latest code from my  <a href="https://gi
   <pubDate>Sat, 17 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UX toolbox bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -16994,7 +16843,6 @@ UPDATE(2019-04-13): Refreshed post with latest code from my  <a href="https://gi
   <pubDate>Fri, 16 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Travel blog bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17013,7 +16861,6 @@ UPDATE(2019-04-13): Refreshed post with latest code from my  <a href="https://gi
   <pubDate>Fri, 09 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Change Emacs shell's CWD with helm projectile</title>
   <description><![CDATA[<div id="content">
 
@@ -17065,7 +16912,6 @@ If using Emacs shell and helm projectile, you can wire these up to quickly chang
   <pubDate>Thu, 08 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Thermostat reset on Bosch WKD28350GB</title>
   <description><![CDATA[<div id="content">
 
@@ -17090,7 +16936,6 @@ Edit: Similar post  <a href="https://www.diynot.com/diy/threads/bosch-wkd28350gb
   <pubDate>Wed, 07 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Javascript fetch node sample</title>
   <description><![CDATA[<div id="content">
 
@@ -17128,7 +16973,6 @@ fetch(<span style="color: #183691;">"http://xenodium.com/data/javascript-fetch-n
   <pubDate>Mon, 05 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Extract dominant colors in images</title>
   <description><![CDATA[<div id="content">
 
@@ -17146,7 +16990,6 @@ There's a handy  <a href="https://news.ycombinator.com/item?id%3D10309441">HN po
   <pubDate>Thu, 01 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Find a word with regex and WordNet</title>
   <description><![CDATA[<div id="content">
 
@@ -17203,7 +17046,6 @@ wholesome
   <pubDate>Mon, 28 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Soundcloud's Go best practices (GopherCon 2014)</title>
   <description><![CDATA[<div id="content">
 
@@ -17352,7 +17194,6 @@ Having watched the  <a href="https://www.youtube.com/watch?v%3DY1-RLAl7iOI">vide
   <pubDate>Sat, 26 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sync pip with Mac OS updates</title>
   <description><![CDATA[<div id="content">
 
@@ -17390,7 +17231,6 @@ Updating my pip installation fixes the break:
   <pubDate>Wed, 23 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Chinatown treats review</title>
   <description><![CDATA[<div id="content">
 
@@ -17489,7 +17329,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
   <pubDate>Sun, 20 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>React bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17610,7 +17449,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
   <pubDate>Fri, 18 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Chinese rice vinegar</title>
   <description><![CDATA[<div id="content">
 
@@ -17633,7 +17471,6 @@ Note to self to buy  <a href="http://www.amazon.co.uk/dp/B00OG3L7N6/ref%3Dsr_1_1
   <pubDate>Wed, 16 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Use ImageMagick to batch-resize images</title>
   <description><![CDATA[<div id="content">
 
@@ -17696,7 +17533,6 @@ Fix image aspect ratios for Instagram:
   <pubDate>Sun, 13 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Lucky 7 review</title>
   <description><![CDATA[<div id="content">
 
@@ -17790,7 +17626,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
   <pubDate>Tue, 08 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>London travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17813,7 +17648,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
   <pubDate>Wed, 02 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sierra Leone travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17830,7 +17664,6 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
   <pubDate>Wed, 02 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bengali Macher Jhol</title>
   <description><![CDATA[<div id="content">
 
@@ -17851,7 +17684,6 @@ My friend Sakhya brought me the wonderful  <a href="http://www.nitamehta.com/Coo
   <pubDate>Sun, 23 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Use ImageMagick to auto-orient images</title>
   <description><![CDATA[<div id="content">
 
@@ -17873,7 +17705,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sun, 23 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bundi travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17893,7 +17724,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sat, 22 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Learning bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17918,7 +17748,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sat, 22 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mindfulness/meditation bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17961,7 +17790,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sat, 22 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Meditation retreats bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -17981,7 +17809,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sat, 22 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>New habits for 2015</title>
   <description><![CDATA[<div id="content">
 
@@ -18003,7 +17830,6 @@ Recently needed to rotate images based on EXIF metadata. ImageMagick to the resc
   <pubDate>Sat, 22 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Upgrading PL30 headphones</title>
   <description><![CDATA[<div id="content">
 
@@ -18029,7 +17855,6 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
   <pubDate>Fri, 14 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bhutan travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18045,7 +17870,6 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
   <pubDate>Thu, 13 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Quotes</title>
   <description><![CDATA[<div id="content">
 
@@ -18063,7 +17887,6 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
   <pubDate>Thu, 13 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cooking bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18104,7 +17927,6 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
   <pubDate>Wed, 12 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Shanghai travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18128,7 +17950,6 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
   <pubDate>Tue, 11 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>9 week half-marathon training</title>
   <description><![CDATA[<div id="content">
 
@@ -18311,7 +18132,6 @@ My times:
   <pubDate>Tue, 11 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Singapore job board bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18331,7 +18151,6 @@ My times:
   <pubDate>Mon, 10 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Philippines travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18351,7 +18170,6 @@ My times:
   <pubDate>Sat, 08 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Travel tools bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18388,7 +18206,6 @@ My times:
   <pubDate>Sat, 08 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Menorca travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18406,7 +18223,6 @@ My times:
   <pubDate>Sat, 08 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Germany travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18428,7 +18244,6 @@ My times:
   <pubDate>Sat, 08 Aug 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Add site-specific browsers to your workflow</title>
   <description><![CDATA[<div id="content">
 
@@ -18481,7 +18296,6 @@ And choose the default browser to open URLs.
   <pubDate>Thu, 23 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sardinia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18510,7 +18324,6 @@ And choose the default browser to open URLs.
   <pubDate>Mon, 20 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Open closest build file in Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -18567,7 +18380,6 @@ Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances a
   <pubDate>Fri, 17 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Settling scores with an org table</title>
   <description><![CDATA[<div id="content">
 
@@ -18641,7 +18453,6 @@ Recently kept track of expenses between a group of us. To settle the scores, I e
   <pubDate>Wed, 15 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Create iOS static fat libraries</title>
   <description><![CDATA[<div id="content">
 
@@ -18663,7 +18474,6 @@ Have separate static libraries for different iOS architectures? Stitch 'em up in
   <pubDate>Wed, 15 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Recognize new password prompts in Emacs shell</title>
   <description><![CDATA[<div id="content">
 
@@ -18687,7 +18497,6 @@ At some point, you may come across a trusted command-line utility prompting you 
   <pubDate>Mon, 13 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ireland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18708,7 +18517,6 @@ At some point, you may come across a trusted command-line utility prompting you 
   <pubDate>Sat, 11 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bosnia and Hercegovina travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18724,7 +18532,6 @@ At some point, you may come across a trusted command-line utility prompting you 
   <pubDate>Sat, 11 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>mp4 to gif</title>
   <description><![CDATA[<div id="content">
 
@@ -18779,7 +18586,6 @@ UPDATE:  <a href="https://gist.github.com/dergachev/4627207">Also consider for .
   <pubDate>Thu, 09 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Pizza in London</title>
   <description><![CDATA[<div id="content">
 
@@ -18803,7 +18609,6 @@ Not tried these yet. Taking note:
   <pubDate>Thu, 09 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Keyboards bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18828,7 +18633,6 @@ Not tried these yet. Taking note:
   <pubDate>Mon, 06 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Belgium travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18846,7 +18650,6 @@ Not tried these yet. Taking note:
   <pubDate>Sun, 05 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Slovenia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18862,7 +18665,6 @@ Not tried these yet. Taking note:
   <pubDate>Sun, 05 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Lebanon travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18878,7 +18680,6 @@ Not tried these yet. Taking note:
   <pubDate>Sun, 05 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>United States travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18903,7 +18704,6 @@ Not tried these yet. Taking note:
   <pubDate>Sun, 05 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>California travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -18919,7 +18719,6 @@ Not tried these yet. Taking note:
   <pubDate>Fri, 03 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Fishing with Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -18962,7 +18761,6 @@ Here's the equivalent in Emacs lisp:
   <pubDate>Fri, 03 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Rebind caps lock to control key on Mac OS X</title>
   <description><![CDATA[<div id="content">
 
@@ -18991,7 +18789,6 @@ System Preferences -> Keyboard -> Keyboard Tab -> Modifier Keys…
   <pubDate>Wed, 01 Jul 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Searchable ebooks in Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -19035,7 +18832,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Tue, 30 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bali travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19053,7 +18849,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Sun, 21 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Presenting bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19072,7 +18867,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Sun, 21 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bulgaria travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19089,7 +18883,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Sun, 21 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Portugal travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19146,7 +18939,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Sun, 21 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>WWDC app for OS X</title>
   <description><![CDATA[<div id="content">
 
@@ -19168,7 +18960,6 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
   <pubDate>Wed, 17 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Debugging Objective-C reference cycles</title>
   <description><![CDATA[<div id="content">
 
@@ -19203,7 +18994,6 @@ Overriding retain/release/autorelease may be handy while debugging:
   <pubDate>Mon, 15 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>London grub</title>
   <description><![CDATA[<div id="content">
 
@@ -19237,7 +19027,6 @@ Beyond the hype, buzz, and pricey gimmicks… Places to eat in London:
   <pubDate>Sat, 13 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>My working playlist</title>
   <description><![CDATA[<div id="content">
 
@@ -19286,7 +19075,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Mon, 08 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Los Angeles travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19304,7 +19092,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Norway travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19330,7 +19117,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Samoa travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19346,7 +19132,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Australia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19369,7 +19154,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Costa Rica travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19386,7 +19170,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Xcode bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19407,7 +19190,6 @@ It's been a while since I spotted  <a href="http://www.asianefficiency.com/motiv
   <pubDate>Tue, 02 Jun 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Mastering Emacs is out</title>
   <description><![CDATA[<div id="content">
 
@@ -19431,7 +19213,6 @@ Emacs is amazingly alive. New packages are regularly listed on  <a href="http://
   <pubDate>Thu, 28 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>define-word</title>
   <description><![CDATA[<div id="content">
 
@@ -19454,7 +19235,6 @@ Installed  <a href="https://github.com/abo-abo">Abo Abo's</a>  <a href="https://
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Skeuomorph</title>
   <description><![CDATA[<div id="content">
 
@@ -19472,7 +19252,6 @@ From  <a href="https://en.wikipedia.org/wiki/Skeuomorph">Wikipedia</a>, skeuomor
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Berlin travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19492,7 +19271,6 @@ From  <a href="https://en.wikipedia.org/wiki/Skeuomorph">Wikipedia</a>, skeuomor
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Seatle travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19511,7 +19289,6 @@ From  <a href="https://en.wikipedia.org/wiki/Skeuomorph">Wikipedia</a>, skeuomor
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>restclient.el</title>
   <description><![CDATA[<div id="content">
 
@@ -19534,7 +19311,6 @@ Installed  <a href="https://github.com/pashky/restclient.el">Pashky's</a>  <a hr
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Bash bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19563,7 +19339,6 @@ Installed  <a href="https://github.com/pashky/restclient.el">Pashky's</a>  <a hr
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Colorado travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19579,7 +19354,6 @@ Installed  <a href="https://github.com/pashky/restclient.el">Pashky's</a>  <a hr
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>South Carolina travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19595,7 +19369,6 @@ Installed  <a href="https://github.com/pashky/restclient.el">Pashky's</a>  <a hr
   <pubDate>Mon, 25 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Regex bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19616,7 +19389,6 @@ Installed  <a href="https://github.com/pashky/restclient.el">Pashky's</a>  <a hr
   <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Flushing empty lines in Emacs</title>
   <description><![CDATA[<div id="content">
 
@@ -19637,7 +19409,6 @@ M-x flush-lines RET ^$ RET
   <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Write to temp iOS snippet</title>
   <description><![CDATA[<div id="content">
 
@@ -19659,7 +19430,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Wed, 06 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Iceland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19698,7 +19468,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Barcelona travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19717,7 +19486,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hong Kong travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19741,7 +19509,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Madagascar travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19757,7 +19524,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Thailand travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19779,7 +19545,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Switzerland travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19799,7 +19564,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sri Lanka travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19818,7 +19582,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Greece travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -19843,7 +19606,6 @@ NSLog(@ <span style="color: #183691;">"%@\n"</span>, tempDir);
   <pubDate>Mon, 04 May 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Programmatic iOS Auto Layout</title>
   <description><![CDATA[<div id="content">
 
@@ -19909,7 +19671,6 @@ Basic iOS auto layout usage. See  <a href="https://developer.apple.com/library/i
   <pubDate>Thu, 30 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Building clang-format</title>
   <description><![CDATA[<div id="content">
 
@@ -19975,7 +19736,6 @@ Bonus: use  <a href="http://zed0.co.uk/clang-format-configurator/">clang-format-
   <pubDate>Thu, 30 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs key bindings and maps</title>
   <description><![CDATA[<div id="content">
 
@@ -20076,7 +19836,6 @@ maps key to action.
   <pubDate>Thu, 23 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Japan travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20157,7 +19916,6 @@ maps key to action.
   <pubDate>Thu, 23 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Meet up bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20175,7 +19933,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Spain travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20207,7 +19964,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Development philosophy</title>
   <description><![CDATA[<div id="content">
 
@@ -20224,7 +19980,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Development quotes</title>
   <description><![CDATA[<div id="content">
 
@@ -20244,7 +19999,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UK travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20272,7 +20026,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Tokyo travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20376,7 +20129,6 @@ maps key to action.
   <pubDate>Sun, 19 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Plantuml example</title>
   <description><![CDATA[<div id="content">
 
@@ -20445,7 +20197,6 @@ ps2. More handy UML examples in this  <a href="https://github.com/xenodium/uml">
   <pubDate>Fri, 17 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Helm-describe-helm-attribute</title>
   <description><![CDATA[<div id="content">
 
@@ -20472,7 +20223,6 @@ ps2. More handy UML examples in this  <a href="https://github.com/xenodium/uml">
   <pubDate>Tue, 14 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>.net bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20489,7 +20239,6 @@ ps2. More handy UML examples in this  <a href="https://github.com/xenodium/uml">
   <pubDate>Sun, 12 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Youtube videos in your org html export</title>
   <description><![CDATA[<div id="content">
 
@@ -20528,7 +20277,6 @@ results in an embedded video when exporting your org file:
   <pubDate>Sun, 12 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UK property bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20545,7 +20293,6 @@ results in an embedded video when exporting your org file:
   <pubDate>Fri, 10 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Git commit message style</title>
   <description><![CDATA[<div id="content">
 
@@ -20576,7 +20323,6 @@ Another great  <a href="http://chris.beams.io/posts/git-commit/">post</a> by Chr
   <pubDate>Thu, 09 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>fci-mode and org-html-export-to-html bug</title>
   <description><![CDATA[<div id="content">
 
@@ -20606,7 +20352,6 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
   <pubDate>Mon, 06 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Austria travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20624,7 +20369,6 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
   <pubDate>Fri, 03 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cornwall travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20640,7 +20384,6 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
   <pubDate>Fri, 03 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Try cocoapods out</title>
   <description><![CDATA[<div id="content">
 
@@ -20662,7 +20405,6 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
   <pubDate>Fri, 03 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Cinnamon desktop run dialog</title>
   <description><![CDATA[<div id="content">
 
@@ -20680,7 +20422,6 @@ Note to self. Open with Alt-f2.
   <pubDate>Thu, 02 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ayahuasca bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20700,7 +20441,6 @@ Note to self. Open with Alt-f2.
   <pubDate>Sun, 29 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Books for 2015</title>
   <description><![CDATA[<div id="content">
 
@@ -20719,7 +20459,6 @@ Note to self. Open with Alt-f2.
   <pubDate>Sun, 29 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>CSS vertical align using flex</title>
   <description><![CDATA[<div id="content">
 
@@ -20751,7 +20490,6 @@ Codepen  <a href="http://codepen.io/oisinlavery/pen/Jmjtz">snippet</a>:
   <pubDate>Sat, 28 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs init.el bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -20803,7 +20541,6 @@ Codepen  <a href="http://codepen.io/oisinlavery/pen/Jmjtz">snippet</a>:
   <pubDate>Sat, 28 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Helm buffer URLs</title>
   <description><![CDATA[<div id="content">
 
@@ -20849,7 +20586,6 @@ Venturing into Emacs lisp and  <a href="https://github.com/emacs-helm/helm">Helm
   <pubDate>Thu, 26 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>London diving schools</title>
   <description><![CDATA[<div id="content">
 
@@ -20871,7 +20607,6 @@ Venturing into Emacs lisp and  <a href="https://github.com/emacs-helm/helm">Helm
   <pubDate>Thu, 26 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Doh! undo last git commit</title>
   <description><![CDATA[<div id="content">
 
@@ -20890,7 +20625,6 @@ Venturing into Emacs lisp and  <a href="https://github.com/emacs-helm/helm">Helm
   <pubDate>Mon, 23 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Born to Run references</title>
   <description><![CDATA[<div id="content">
 
@@ -20932,7 +20666,6 @@ Recipe by  <a href="http://www.bellaonline.com/articles/art51802.asp">Megan Mign
   <pubDate>Sun, 22 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Broken Xcode plugins?</title>
   <description><![CDATA[<div id="content">
 
@@ -20958,7 +20691,6 @@ Additional suggestions as  <a href="http://stackoverflow.com/questions/30361228/
   <pubDate>Sun, 22 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Resetting variables using defvar</title>
   <description><![CDATA[<div id="content">
 
@@ -20985,7 +20717,6 @@ similarly.
   <pubDate>Sun, 22 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>China travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21023,7 +20754,6 @@ similarly.
   <pubDate>Thu, 19 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Ethiopia travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21039,7 +20769,6 @@ similarly.
   <pubDate>Thu, 19 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Food bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21058,7 +20787,6 @@ similarly.
   <pubDate>Thu, 19 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Org tips from 2015-03-18 Emacs hangout</title>
   <description><![CDATA[<div id="content">
 
@@ -21090,7 +20818,6 @@ My super duper secret text I don't want to export.
   <pubDate>Thu, 19 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Rome travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21108,7 +20835,6 @@ My super duper secret text I don't want to export.
   <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Istanbul travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21131,7 +20857,6 @@ My super duper secret text I don't want to export.
   <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>San Francisco travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21151,7 +20876,6 @@ My super duper secret text I don't want to export.
   <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Sharing on iOS</title>
   <description><![CDATA[<div id="content">
 
@@ -21206,7 +20930,6 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
   <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>South Korea travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21224,7 +20947,6 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
   <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Burma travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21248,7 +20970,6 @@ viewServiceDidTerminateWithError: Error Domain=_UIViewServiceInterfaceErrorDomai
   <pubDate>Tue, 17 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs lisp debug on entry</title>
   <description><![CDATA[<div id="content">
 
@@ -21277,7 +20998,6 @@ When done, use cancel.
   <pubDate>Tue, 17 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Italy travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21329,7 +21049,6 @@ When done, use cancel.
   <pubDate>Tue, 17 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>OS X Screencasts to animated GIF</title>
   <description><![CDATA[<div id="content">
 
@@ -21346,7 +21065,6 @@ When done, use cancel.
   <pubDate>Mon, 16 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Uninstalling Alcatraz from Xcode</title>
   <description><![CDATA[<div id="content">
 
@@ -21373,7 +21091,6 @@ ps. Removing all plugins:
   <pubDate>Sun, 15 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Writing Xcode plugins</title>
   <description><![CDATA[<div id="content">
 
@@ -21405,7 +21122,6 @@ ps. Removing all plugins:
   <pubDate>Sun, 15 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Change macOS app icon</title>
   <description><![CDATA[<div id="content">
 
@@ -21437,7 +21153,6 @@ ps. Removing all plugins:
   <pubDate>Sat, 14 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Prefill Emacs swiper with current region</title>
   <description><![CDATA[<div id="content">
 
@@ -21469,7 +21184,6 @@ The new  <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is
   <pubDate>Sat, 14 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Hack on Emacs London meetup bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -21488,7 +21202,6 @@ The new  <a href="https://github.com/abo-abo/swiper">swiper</a> Emacs package is
   <pubDate>Wed, 11 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Building ycmd</title>
   <description><![CDATA[<div id="content">
 
@@ -21532,7 +21245,6 @@ $ ./build.sh --clang-completer
   <pubDate>Mon, 09 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Working with OS X and Emacs tips</title>
   <description><![CDATA[<div id="content">
 
@@ -21569,7 +21281,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Mon, 09 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>London food backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -22149,7 +21860,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Org mode bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22253,7 +21963,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Paris travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22296,7 +22005,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Photography bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22319,7 +22027,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Regular bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22337,7 +22044,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Music backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -22367,7 +22073,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sat, 07 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Recipes</title>
   <description><![CDATA[<div id="content">
 
@@ -22497,7 +22202,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sat, 07 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UX bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22554,7 +22258,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Sat, 07 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Apple Watch bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22570,7 +22273,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Courses bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22595,7 +22297,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>GitHub bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22614,7 +22315,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Golang bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22769,7 +22469,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Nexus Q bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22787,7 +22486,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Graphics bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22807,7 +22505,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Lifestyle/wellbeing/health bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22866,7 +22563,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Privacy bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22946,7 +22642,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Productivity bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -22978,7 +22673,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Productivity tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -22996,7 +22690,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Romania travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23014,7 +22707,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Startup bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23251,7 +22943,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23321,7 +23012,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>UX scrapbook bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23360,7 +23050,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Fri, 06 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Git bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23405,7 +23094,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>India travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23498,7 +23186,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Kerala travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23522,7 +23209,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>iOS bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23711,7 +23397,6 @@ From  <a href="http://emacsblog.org">M-x all-things-emacs</a>, Ryan McGeary's OS
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Learning Emacs lisp</title>
   <description><![CDATA[<div id="content">
 
@@ -23935,7 +23620,6 @@ If FROM or TO is negative, it counts from the end.
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Reload inputrc</title>
   <description><![CDATA[<div id="content">
 
@@ -23953,7 +23637,6 @@ Reload .iputrc from bash prompt: C-x C-r.  <a href="http://www.gnu.org/software/
   <pubDate>Thu, 05 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Language learning bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -23975,7 +23658,6 @@ Reload .iputrc from bash prompt: C-x C-r.  <a href="http://www.gnu.org/software/
   <pubDate>Wed, 04 Mar 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Git conflict resolution déjà vu?</title>
   <description><![CDATA[<div id="content">
 
@@ -23993,7 +23675,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Graphics design tools bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24026,7 +23707,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Sat, 17 Jan 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Books backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -24160,7 +23840,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Movie backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -24346,7 +24025,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Video backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -24402,7 +24080,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Gardening bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24420,7 +24097,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Mon, 29 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Microservices bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24439,7 +24115,6 @@ use git  <a href="http://git-scm.com/blog/2010/03/08/rerere.html">rerere</a>. he
   <pubDate>Mon, 29 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs tips backlog</title>
   <description><![CDATA[<div id="content">
 
@@ -24649,7 +24324,6 @@ $ <span style="color: #333333;">0</span>
   <pubDate>Wed, 03 Dec 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Xcode6 tips</title>
   <description><![CDATA[<div id="content">
 
@@ -24702,7 +24376,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Sun, 02 Nov 2014 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>C++ bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24729,7 +24402,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Thu, 09 Oct 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs lisp bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24817,7 +24489,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Sat, 20 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>gpg/pgp bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -24841,7 +24512,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Sat, 20 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Emacs bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25171,7 +24841,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Fri, 19 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Origami bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25189,7 +24858,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Thu, 18 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Charities bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25205,7 +24873,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Thu, 18 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Frugal bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25247,7 +24914,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Thu, 18 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Flight-booking bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25267,7 +24933,6 @@ From Ray Wenderlich's  <a href="http://www.raywenderlich.com/85999/xcode-6-tips-
   <pubDate>Fri, 12 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Resetting gnome-terminal preferences</title>
   <description><![CDATA[<div id="content">
 
@@ -25329,7 +24994,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Thu, 11 Sep 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Networking bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25347,7 +25011,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>HTML5 bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25382,7 +25045,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>JavaScript bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25456,7 +25118,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Node bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25472,7 +25133,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Browser bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25492,7 +25152,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Java bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25514,7 +25173,6 @@ Bonus: See  <a href="http://codefork.com/blog/index.php/2011/11/27/getting-the-s
   <pubDate>Mon, 14 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Paswordless ssh with authorized keys</title>
   <description><![CDATA[<div id="content">
 
@@ -25553,7 +25211,6 @@ UPDATE:  <a href="https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-auto
   <pubDate>Sun, 13 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Development bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25649,7 +25306,6 @@ UPDATE:  <a href="https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-auto
   <pubDate>Sun, 13 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Python bookmarks</title>
   <description><![CDATA[<div id="content">
 
@@ -25695,7 +25351,6 @@ UPDATE:  <a href="https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-auto
   <pubDate>Sun, 13 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing Emacs 24.4 on Mac OS X</title>
   <description><![CDATA[<div id="content">
 
@@ -25718,7 +25373,6 @@ $ brew install emacs-mac
   <pubDate>Wed, 09 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Installing Emacs 24.4 on Linux</title>
   <description><![CDATA[<div id="content">
 
@@ -25737,7 +25391,6 @@ $ brew install emacs-mac
   <pubDate>Wed, 09 Jul 2014 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <author>Álvaro Ramírez</author>
   <title>Some python idioms</title>
   <description><![CDATA[<div id="content">
 
