@@ -1238,9 +1238,7 @@ ps. Can get the SDK path with:
   :CUSTOM_ID: trying-out-gccemacs-on-macos
   :END:
 
-Been wanting to try Andrea Corallo's [[http://akrl.sdf.org/gccemacs.html][gccemacs]]. Followed [[https://github.com/AllenDang][Allen Dang]]'s handy [[https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e][instructions]] to build it on macOS.
-
-Though not had much of a chance to play with the new install, here's what I did to get up and running...
+Below are the instructions I use to build Andrea Corallo's [[http://akrl.sdf.org/gccemacs.html][gccemacs]] on macOS. It is based on [[https://github.com/AllenDang][Allen Dang]]'s handy [[https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e][instructions]] plus some changes of my own.
 
 ** Install gcc and libgccjit via homebrew
 
@@ -1301,7 +1299,7 @@ Create configure-gccemacs.sh
        --with-gnutls \
        --with-json \
        --with-rsvg \
-       --with-nativecomp \
+       --with-native-compilation \
        --disable-silent-rules \
        --disable-ns-self-contained \
        --without-dbus
@@ -1316,19 +1314,13 @@ Make it executable
 ** Clone Emacs source
 
 #+begin_src shell
-  git clone --branch feature/native-comp https://github.com/emacs-mirror/emacs emacs
-#+end_src
-
-** Check out native-comp feature branch
-
-#+begin_src sh
-  cd gccemacs
-  git checkout feature/native-comp
+  git clone --branch master https://github.com/emacs-mirror/emacs gccemacs
 #+end_src
 
 ** Configure build
 
 #+begin_src sh
+  cd gccemacs
   ../configure-gccemacs.sh
 #+end_src
 
@@ -1433,6 +1425,8 @@ UPDATE2: Noted using NATIVE_FAST_BOOT makes the build much faster.
 UPDATE3: Removed symlinks and copied content instead. This simplifies things. Inspired by Ian Wahbe's [[https://github.com/iwahbe/doom-config/blob/master/build-emacs.sh][build-emacs.sh]].
 
 UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's [[https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md][instructions]].
+
+UPDATE5: Use new flag --with-native-compilation and master branch.
 * [2020-08-02 Sun] SwiftUI macOS desk clock
 :PROPERTIES:
 :CUSTOM_ID: swiftui-desk-clock
