@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:44 -->
+<!-- 2021-05-02 Sun 19:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs lisp snippets</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -387,50 +387,26 @@
 //         };
        </script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -454,49 +430,133 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org33e57a0" class="outline-2">
+<div id="outline-container-emacs-lisp-snippets" class="outline-2">
 <h2 id="emacs-lisp-snippets"><span class="timestamp-wrapper"><span class="timestamp">02 March 2016</span></span> Emacs lisp snippets</h2>
 <div class="outline-text-2" id="text-emacs-lisp-snippets">
 </div>
-<div id="outline-container-org33ec874" class="outline-3">
-<h3 id="org33ec874">Find file upwards, up parents, up hierarchy</h3>
-<div class="outline-text-3" id="text-org33ec874">
+<div id="outline-container-orga649dfd" class="outline-3">
+<h3 id="orga649dfd">cl-loop for in</h3>
+<div class="outline-text-3" id="text-orga649dfd">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for day in '(<span style="color: #183691;">"mon"</span> <span style="color: #183691;">"tue"</span> <span style="color: #183691;">"wed"</span> <span style="color: #183691;">"thu"</span> <span style="color: #183691;">"fri"</span> <span style="color: #183691;">"sat"</span> <span style="color: #183691;">"sun"</span>)
+         do (print day))
+</pre>
+</div>
+
+<pre class="example" id="orga7463b3">
+
+"mon"
+
+"tue"
+
+"wed"
+
+"thu"
+
+"fri"
+
+"sat"
+
+"sun"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7c562e0" class="outline-3">
+<h3 id="org7c562e0">cl-loop for from to</h3>
+<div class="outline-text-3" id="text-org7c562e0">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for x from 1 to 5
+         do (print x))
+</pre>
+</div>
+
+<pre class="example" id="org3d6ee14">
+
+1
+
+2
+
+3
+
+4
+
+5
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4a6c5f1" class="outline-3">
+<h3 id="org4a6c5f1">pcase literal matching</h3>
+<div class="outline-text-3" id="text-org4a6c5f1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">pcase</span> <span style="color: #183691;">"word"</span>
+  ('word (message <span style="color: #183691;">"Matched 'word symbol"</span>))
+  (<span style="color: #183691;">"word"</span> (message <span style="color: #183691;">"Matched \"word\" string"</span>)))
+</pre>
+</div>
+
+<pre class="example">
+Matched "word" string
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org611fde0" class="outline-3">
+<h3 id="org611fde0">Avoid nesting with the help of thread-first and thread-last.</h3>
+<div class="outline-text-3" id="text-org611fde0">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">thread-last</span> <span style="color: #183691;">"12.....34"</span>
+  (string-remove-prefix <span style="color: #183691;">"1"</span>)
+  (string-remove-suffix <span style="color: #183691;">"4"</span>))
+</pre>
+</div>
+
+<pre class="example">
+2.....3
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf8c2048" class="outline-3">
+<h3 id="orgf8c2048">Find file upwards, up parents, up hierarchy</h3>
+<div class="outline-text-3" id="text-orgf8c2048">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(locate-dominating-file FILE NAME)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8550e57" class="outline-3">
-<h3 id="org8550e57">Find executable in PATH</h3>
-<div class="outline-text-3" id="text-org8550e57">
+<div id="outline-container-org938a1f5" class="outline-3">
+<h3 id="org938a1f5">Find executable in PATH</h3>
+<div class="outline-text-3" id="text-org938a1f5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(executable-find COMMAND)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgdda2033" class="outline-3">
-<h3 id="orgdda2033">Read string with completion (helm/ido/ivy friendly)</h3>
-<div class="outline-text-3" id="text-orgdda2033">
+<div id="outline-container-org27b7492" class="outline-3">
+<h3 id="org27b7492">Read string with completion (helm/ido/ivy friendly)</h3>
+<div class="outline-text-3" id="text-org27b7492">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(completing-read PROMPT COLLECTION <span style="color: #0086b3;">&amp;optional</span> PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7a8a0ff" class="outline-3">
-<h3 id="org7a8a0ff">Execute command/process and return list (similar to shell-command-to-string)</h3>
-<div class="outline-text-3" id="text-org7a8a0ff">
+<div id="outline-container-org81a2e84" class="outline-3">
+<h3 id="org81a2e84">Execute command/process and return list (similar to shell-command-to-string)</h3>
+<div class="outline-text-3" id="text-org81a2e84">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(process-lines PROGRAM <span style="color: #0086b3;">&amp;rest</span> ARGS)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org3eeb82e" class="outline-3">
-<h3 id="org3eeb82e">Iterating org buffer</h3>
-<div class="outline-text-3" id="text-org3eeb82e">
+<div id="outline-container-orgfe3521e" class="outline-3">
+<h3 id="orgfe3521e">Iterating org buffer</h3>
+<div class="outline-text-3" id="text-orgfe3521e">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(org-element-map (org-element-parse-buffer) '(headline link)
   (<span style="color: #a71d5d;">lambda</span> (element)
