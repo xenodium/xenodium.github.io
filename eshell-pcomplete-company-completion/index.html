@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:42 -->
+<!-- 2021-05-07 Fri 11:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Eshell pcomplete company completion</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -387,50 +387,26 @@
 //         };
        </script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -454,7 +430,7 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orge65ccb4" class="outline-2">
+<div id="outline-container-eshell-pcomplete-company-completion" class="outline-2">
 <h2 id="eshell-pcomplete-company-completion"><span class="timestamp-wrapper"><span class="timestamp">01 November 2017</span></span> Eshell pcomplete company completion</h2>
 <div class="outline-text-2" id="text-eshell-pcomplete-company-completion">
 <p>
@@ -462,7 +438,7 @@ Howard Abrams's <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introducti
 </p>
 
 
-<div class="figure">
+<div id="orga72106c" class="figure">
 <p><img src="../images/eshell-pcomplete-company-completion/company-pcomplete.png" alt="company-pcomplete.png" width="75%" height="75%" />
 </p>
 </div>
@@ -475,33 +451,33 @@ Howard Abrams's <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introducti
 (<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">s</span>)
 
 (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-pcomplete--overlap-tail</span> (a b)
-  <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\\n"</span>, return \"eloper\".<span style="color: #183691;">"</span>
-<span style="color: #183691;">  (let ((prefix a)</span>
-<span style="color: #183691;">        (remaining nil))</span>
-<span style="color: #183691;">    (while (and (not remaining) (&gt; (length prefix) 0))</span>
-<span style="color: #183691;">      (when (s-starts-with? prefix b)</span>
-<span style="color: #183691;">        (setq remaining (substring b (length prefix))))</span>
-<span style="color: #183691;">      (setq prefix (substring prefix 1)))</span>
-<span style="color: #183691;">    remaining))</span>
+  <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."</span>
+  (<span style="color: #a71d5d;">let</span> ((prefix a)
+        (remaining nil))
+    (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (not remaining) (&gt; (length prefix) 0))
+      (<span style="color: #a71d5d;">when</span> (s-starts-with? prefix b)
+        (<span style="color: #a71d5d;">setq</span> remaining (substring b (length prefix))))
+      (<span style="color: #a71d5d;">setq</span> prefix (substring prefix 1)))
+    remaining))
 
-<span style="color: #183691;">(defun company-pcomplete--candidates (prefix)</span>
-<span style="color: #183691;">  "</span>Get candidates for PREFIX company completion using `<span style="color: #0086b3;">pcomplete</span>'.<span style="color: #183691;">"</span>
-<span style="color: #183691;">  ;; When prefix is: "</span>~/Down<span style="color: #183691;">" and completion is "</span>Downloads\n<span style="color: #183691;">", need</span>
-<span style="color: #183691;">  ;; to find common string and join into "</span>~/Downloads/<span style="color: #183691;">".</span>
-<span style="color: #183691;">  (-map (lambda (item)</span>
-<span style="color: #183691;">          (if (s-starts-with? prefix item)</span>
-<span style="color: #183691;">              item</span>
-<span style="color: #183691;">            (concat prefix (company-pcomplete--overlap-tail prefix item))))</span>
-<span style="color: #183691;">        (all-completions prefix (pcomplete-completions))))</span>
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-pcomplete--candidates</span> (prefix)
+  <span style="color: #183691;">"Get candidates for PREFIX company completion using `</span><span style="color: #0086b3;">pcomplete</span><span style="color: #183691;">'."</span>
+  <span style="color: #969896;">;; </span><span style="color: #969896;">When prefix is: "~/Down" and completion is "Downloads", need</span>
+  <span style="color: #969896;">;; </span><span style="color: #969896;">to find common string and join into "~/Downloads/".</span>
+  (-map (<span style="color: #a71d5d;">lambda</span> (item)
+          (<span style="color: #a71d5d;">if</span> (s-starts-with? prefix item)
+              item
+            (concat prefix (company-pcomplete--overlap-tail prefix item))))
+        (all-completions prefix (pcomplete-completions))))
 
-<span style="color: #183691;">(defun company-pcomplete (command &amp;optional arg &amp;rest ignored)</span>
-<span style="color: #183691;">  "</span>Complete using pcomplete. See `<span style="color: #0086b3;">company</span>''s COMMAND ARG and IGNORED for details.<span style="color: #183691;">"</span>
-<span style="color: #183691;">  (interactive (list 'interactive))</span>
-<span style="color: #183691;">  (case command</span>
-<span style="color: #183691;">    (interactive (company-begin-backend 'company-pcomplete))</span>
-<span style="color: #183691;">    (prefix (company-grab-symbol))</span>
-<span style="color: #183691;">    (candidates</span>
-<span style="color: #183691;">     (company-pcomplete--candidates arg))))</span>
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">company-pcomplete</span> (command <span style="color: #0086b3;">&amp;optional</span> arg <span style="color: #0086b3;">&amp;rest</span> ignored)
+  <span style="color: #183691;">"Complete using pcomplete. See `</span><span style="color: #0086b3;">company</span><span style="color: #183691;">''s COMMAND ARG and IGNORED for details."</span>
+  (<span style="color: #a71d5d;">interactive</span> (list 'interactive))
+  (case command
+    (<span style="color: #a71d5d;">interactive</span> (company-begin-backend 'company-pcomplete))
+    (prefix (company-grab-symbol))
+    (candidates
+     (company-pcomplete--candidates arg))))
 </pre>
 </div>
 
