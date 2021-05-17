@@ -6,7 +6,59 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 10 Apr 2021 16:45:18 +0100</lastBuildDate>
+<lastBuildDate>Mon, 17 May 2021 22:59:52 +0100</lastBuildDate>
+<item>
+  <title>Emacs plus --with-native-comp</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-plus-with-native-comp" class="outline-2">
+ <h2 id="emacs-plus-with-native-comp"> <span class="timestamp-wrapper"> <span class="timestamp">17 May 2021</span></span> Emacs plus –with-native-comp</h2>
+ <div class="outline-text-2" id="text-emacs-plus-with-native-comp">
+
+ <div id="org7087029" class="figure">
+ <p> <img src="../images/emacs-plus-with-native-comp/brew-native-comp.png" alt="brew-native-comp.png" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+I'm a big fan of  <a href="https://d12frosted.io/">Boris Buliga</a>'s  <a href="https://github.com/d12frosted/homebrew-emacs-plus">Emacs Plus</a>  <a href="https://brew.sh/">homebrew</a> recipe for customizing and installing Emacs builds on macOS.
+</p>
+
+ <p>
+For a little while, I took a detour and built Emacs myself, so I could enable  <a href="https://twitter.com/Koral_001">Andrea Corallo</a>'s fantastic  <a href="http://akrl.sdf.org/gccemacs.html">native compilation</a>. I documented the steps  <a href="https://xenodium.com/trying-out-gccemacs-on-macos/">here</a>. Though it was fairly straightforward, I did miss Emacs Plus's convenience.
+</p>
+
+ <p>
+I had been meaning to check back on Emacs Plus for native compilation support. Turns out, it was merged back in  <a href="https://github.com/d12frosted/homebrew-emacs-plus/pull/188">Dec 2020</a>, and it works great!
+</p>
+
+ <p>
+Enabling native compilation is simple (just use  <i>–with-native-comp</i>). As a bonus, you get all the Emacs Plus goodies. I'm loving  <i>–with-elrumo2-icon</i>, enabling a spiffy icon to go with macOS Big Sur.  <i>–with-no-frame-refocus</i> is also handy to  <a href="https://xenodium.com/no-emacs-frame-refocus-on-macos/">avoid refocusing other frames</a> when another one is closed.
+</p>
+
+ <p>
+In any case, here's the minimum needed to install Emacs Plus with native compilation support enabled:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew tap d12frosted/emacs-plus
+brew install emacs-plus@28 --with-native-comp
+</pre>
+</div>
+
+ <p>
+Sit tight. Homebrew will build and install some chunky dependencies (including gcc and libgccjit).
+</p>
+
+ <p>
+Note: Your init.el needs tweaking to take advantage of native compilation. See my  <a href="https://xenodium.com/trying-out-gccemacs-on-macos/">previous post</a> for how I set mine, or go straight to  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19">my config</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-plus-with-native-comp</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-plus-with-native-comp</guid>
+  <pubDate>Mon, 17 May 2021 22:59:52 +0100</pubDate>
+</item>
 <item>
   <title>Flat Habits meets org agenda</title>
   <description><![CDATA[<div id="content">
@@ -1290,17 +1342,13 @@ init(<span style="color: #a71d5d;">${</span> <span style="color: #333333;">1</sp
  <h2 id="trying-out-gccemacs-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
  <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
  <p>
-Been wanting to try Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a>. Followed  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> to build it on macOS.
-</p>
-
- <p>
-Though not had much of a chance to play with the new install, here's what I did to get up and running…
+Below are the instructions I use to build Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a> on macOS. It is based on  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> plus some changes of my own.
 </p>
 </div>
 
- <div id="outline-container-orgac7b60b" class="outline-3">
- <h3 id="orgac7b60b">Install gcc and libgccjit via homebrew</h3>
- <div class="outline-text-3" id="text-orgac7b60b">
+ <div id="outline-container-orgb054a0b" class="outline-3">
+ <h3 id="orgb054a0b">Install gcc and libgccjit via homebrew</h3>
+ <div class="outline-text-3" id="text-orgb054a0b">
  <div class="org-src-container">
  <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -1308,9 +1356,9 @@ Though not had much of a chance to play with the new install, here's what I did 
 </div>
 </div>
 
- <div id="outline-container-org41c718c" class="outline-3">
- <h3 id="org41c718c">Save configure script</h3>
- <div class="outline-text-3" id="text-org41c718c">
+ <div id="outline-container-orgaaf9a9d" class="outline-3">
+ <h3 id="orgaaf9a9d">Save configure script</h3>
+ <div class="outline-text-3" id="text-orgaaf9a9d">
  <p>
 Create configure-gccemacs.sh
 </p>
@@ -1364,7 +1412,7 @@ Create configure-gccemacs.sh
      --with-gnutls  <span style="color: #183691;">\</span>
      --with-json  <span style="color: #183691;">\</span>
      --with-rsvg  <span style="color: #183691;">\</span>
-     --with-nativecomp  <span style="color: #183691;">\</span>
+     --with-native-compilation  <span style="color: #183691;">\</span>
      --disable-silent-rules  <span style="color: #183691;">\</span>
      --disable-ns-self-contained  <span style="color: #183691;">\</span>
      --without-dbus
@@ -1382,40 +1430,30 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-org523e554" class="outline-3">
- <h3 id="org523e554">Clone Emacs source</h3>
- <div class="outline-text-3" id="text-org523e554">
+ <div id="outline-container-orgf52f8f3" class="outline-3">
+ <h3 id="orgf52f8f3">Clone Emacs source</h3>
+ <div class="outline-text-3" id="text-orgf52f8f3">
  <div class="org-src-container">
- <pre class="src src-shell">git clone  <span style="color: #969896;">--branch</span> feature/native-comp https://github.com/emacs-mirror/emacs emacs
+ <pre class="src src-shell">git clone  <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org159cb0f" class="outline-3">
- <h3 id="org159cb0f">Check out native-comp feature branch</h3>
- <div class="outline-text-3" id="text-org159cb0f">
+ <div id="outline-container-org619e482" class="outline-3">
+ <h3 id="org619e482">Configure build</h3>
+ <div class="outline-text-3" id="text-org619e482">
  <div class="org-src-container">
  <pre class="src src-sh"> <span style="color: #a71d5d;">cd</span> gccemacs
-git checkout feature/native-comp
+../configure-gccemacs.sh
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgd9441ae" class="outline-3">
- <h3 id="orgd9441ae">Configure build</h3>
- <div class="outline-text-3" id="text-orgd9441ae">
- <div class="org-src-container">
- <pre class="src src-sh">../configure-gccemacs.sh
-</pre>
-</div>
-</div>
-</div>
-
- <div id="outline-container-org7aa41a7" class="outline-3">
- <h3 id="org7aa41a7">Native lisp compiler found?</h3>
- <div class="outline-text-3" id="text-org7aa41a7">
+ <div id="outline-container-orgd8163bc" class="outline-3">
+ <h3 id="orgd8163bc">Native lisp compiler found?</h3>
+ <div class="outline-text-3" id="text-orgd8163bc">
  <p>
 Verify native lisp compiler is found:
 </p>
@@ -1427,9 +1465,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
- <div id="outline-container-orgb18f8a0" class="outline-3">
- <h3 id="orgb18f8a0">Build</h3>
- <div class="outline-text-3" id="text-orgb18f8a0">
+ <div id="outline-container-org289ffa5" class="outline-3">
+ <h3 id="org289ffa5">Build</h3>
+ <div class="outline-text-3" id="text-org289ffa5">
  <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -1466,18 +1504,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
- <div id="outline-container-orgd6acb8e" class="outline-3">
- <h3 id="orgd6acb8e">Remove ~/emacs.d</h3>
- <div class="outline-text-3" id="text-orgd6acb8e">
+ <div id="outline-container-org78ba82a" class="outline-3">
+ <h3 id="org78ba82a">Remove ~/emacs.d</h3>
+ <div class="outline-text-3" id="text-org78ba82a">
  <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org9f20449" class="outline-3">
- <h3 id="org9f20449">init.el config</h3>
- <div class="outline-text-3" id="text-org9f20449">
+ <div id="outline-container-org30ca6ec" class="outline-3">
+ <h3 id="org30ca6ec">init.el config</h3>
+ <div class="outline-text-3" id="text-org30ca6ec">
  <p>
 Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set  <i>comp-deferred-compilation</i>. I wrapped the snippet in my   <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -1508,9 +1546,9 @@ Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_P
 </div>
 </div>
 
- <div id="outline-container-org4e316f9" class="outline-3">
- <h3 id="org4e316f9">Launch Emacs.app</h3>
- <div class="outline-text-3" id="text-org4e316f9">
+ <div id="outline-container-org5340511" class="outline-3">
+ <h3 id="org5340511">Launch Emacs.app</h3>
+ <div class="outline-text-3" id="text-org5340511">
  <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -1522,9 +1560,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
- <div id="outline-container-org481fbaa" class="outline-3">
- <h3 id="org481fbaa">Deferred compilation logs</h3>
- <div class="outline-text-3" id="text-org481fbaa">
+ <div id="outline-container-org0238cd7" class="outline-3">
+ <h3 id="org0238cd7">Deferred compilation logs</h3>
+ <div class="outline-text-3" id="text-org0238cd7">
  <p>
 After setting  <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>
@@ -1569,7 +1607,11 @@ UPDATE3: Removed symlinks and copied content instead. This simplifies things. In
 </p>
 
  <p>
-UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's  <a href="https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md">instructions</a>.</p>
+UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's  <a href="https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md">instructions</a>.
+</p>
+
+ <p>
+UPDATE5: Use new flag –with-native-compilation and master branch.</p>
 </div>
 </div>
 </div>
@@ -6433,7 +6475,7 @@ Add  <i>objc</i> to  <i>org-babel-load-languages</i>, and you can subsequently c
   <title>Eshell pcomplete company completion</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orge65ccb4" class="outline-2">
+ <div id="outline-container-eshell-pcomplete-company-completion" class="outline-2">
  <h2 id="eshell-pcomplete-company-completion"> <span class="timestamp-wrapper"> <span class="timestamp">01 November 2017</span></span> Eshell pcomplete company completion</h2>
  <div class="outline-text-2" id="text-eshell-pcomplete-company-completion">
  <p>
@@ -6441,7 +6483,7 @@ Howard Abrams's  <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introduct
 </p>
 
 
- <div class="figure">
+ <div id="orga72106c" class="figure">
  <p> <img src="../images/eshell-pcomplete-company-completion/company-pcomplete.png" alt="company-pcomplete.png" width="75%" height="75%"></img></p>
 </div>
 
@@ -6453,33 +6495,33 @@ Howard Abrams's  <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introduct
 (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">s</span>)
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete--overlap-tail</span> (a b)
-   <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\\n"</span>, return \"eloper\". <span style="color: #183691;">"</span>
- <span style="color: #183691;">  (let ((prefix a)</span>
- <span style="color: #183691;">        (remaining nil))</span>
- <span style="color: #183691;">    (while (and (not remaining) (> (length prefix) 0))</span>
- <span style="color: #183691;">      (when (s-starts-with? prefix b)</span>
- <span style="color: #183691;">        (setq remaining (substring b (length prefix))))</span>
- <span style="color: #183691;">      (setq prefix (substring prefix 1)))</span>
- <span style="color: #183691;">    remaining))</span>
+   <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."</span>
+  (<span style="color: #a71d5d;">let</span> ((prefix a)
+        (remaining nil))
+    (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (not remaining) (> (length prefix) 0))
+      (<span style="color: #a71d5d;">when</span> (s-starts-with? prefix b)
+        (<span style="color: #a71d5d;">setq</span> remaining (substring b (length prefix))))
+      (<span style="color: #a71d5d;">setq</span> prefix (substring prefix 1)))
+    remaining))
 
- <span style="color: #183691;">(defun company-pcomplete--candidates (prefix)</span>
- <span style="color: #183691;">  "</span>Get candidates for PREFIX company completion using ` <span style="color: #0086b3;">pcomplete</span>'. <span style="color: #183691;">"</span>
- <span style="color: #183691;">  ;; When prefix is: "</span>~/Down <span style="color: #183691;">" and completion is "</span>Downloads\n <span style="color: #183691;">", need</span>
- <span style="color: #183691;">  ;; to find common string and join into "</span>~/Downloads/ <span style="color: #183691;">".</span>
- <span style="color: #183691;">  (-map (lambda (item)</span>
- <span style="color: #183691;">          (if (s-starts-with? prefix item)</span>
- <span style="color: #183691;">              item</span>
- <span style="color: #183691;">            (concat prefix (company-pcomplete--overlap-tail prefix item))))</span>
- <span style="color: #183691;">        (all-completions prefix (pcomplete-completions))))</span>
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete--candidates</span> (prefix)
+   <span style="color: #183691;">"Get candidates for PREFIX company completion using `</span> <span style="color: #0086b3;">pcomplete</span> <span style="color: #183691;">'."</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">When prefix is: "~/Down" and completion is "Downloads", need</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">to find common string and join into "~/Downloads/".</span>
+  (-map (<span style="color: #a71d5d;">lambda</span> (item)
+          (<span style="color: #a71d5d;">if</span> (s-starts-with? prefix item)
+              item
+            (concat prefix (company-pcomplete--overlap-tail prefix item))))
+        (all-completions prefix (pcomplete-completions))))
 
- <span style="color: #183691;">(defun company-pcomplete (command &optional arg &rest ignored)</span>
- <span style="color: #183691;">  "</span>Complete using pcomplete. See ` <span style="color: #0086b3;">company</span>''s COMMAND ARG and IGNORED for details. <span style="color: #183691;">"</span>
- <span style="color: #183691;">  (interactive (list 'interactive))</span>
- <span style="color: #183691;">  (case command</span>
- <span style="color: #183691;">    (interactive (company-begin-backend 'company-pcomplete))</span>
- <span style="color: #183691;">    (prefix (company-grab-symbol))</span>
- <span style="color: #183691;">    (candidates</span>
- <span style="color: #183691;">     (company-pcomplete--candidates arg))))</span>
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete</span> (command  <span style="color: #0086b3;">&optional</span> arg  <span style="color: #0086b3;">&rest</span> ignored)
+   <span style="color: #183691;">"Complete using pcomplete. See `</span> <span style="color: #0086b3;">company</span> <span style="color: #183691;">''s COMMAND ARG and IGNORED for details."</span>
+  (<span style="color: #a71d5d;">interactive</span> (list 'interactive))
+  (case command
+    (<span style="color: #a71d5d;">interactive</span> (company-begin-backend 'company-pcomplete))
+    (prefix (company-grab-symbol))
+    (candidates
+     (company-pcomplete--candidates arg))))
 </pre>
 </div>
 
@@ -7042,49 +7084,133 @@ M-x rtags-find-symbol
   <title>Emacs lisp snippets</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org33e57a0" class="outline-2">
+ <div id="outline-container-emacs-lisp-snippets" class="outline-2">
  <h2 id="emacs-lisp-snippets"> <span class="timestamp-wrapper"> <span class="timestamp">02 March 2016</span></span> Emacs lisp snippets</h2>
  <div class="outline-text-2" id="text-emacs-lisp-snippets">
 </div>
- <div id="outline-container-org33ec874" class="outline-3">
- <h3 id="org33ec874">Find file upwards, up parents, up hierarchy</h3>
- <div class="outline-text-3" id="text-org33ec874">
+ <div id="outline-container-orga649dfd" class="outline-3">
+ <h3 id="orga649dfd">cl-loop for in</h3>
+ <div class="outline-text-3" id="text-orga649dfd">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for day in '(<span style="color: #183691;">"mon"</span>  <span style="color: #183691;">"tue"</span>  <span style="color: #183691;">"wed"</span>  <span style="color: #183691;">"thu"</span>  <span style="color: #183691;">"fri"</span>  <span style="color: #183691;">"sat"</span>  <span style="color: #183691;">"sun"</span>)
+         do (print day))
+</pre>
+</div>
+
+ <pre class="example" id="orga7463b3">
+
+"mon"
+
+"tue"
+
+"wed"
+
+"thu"
+
+"fri"
+
+"sat"
+
+"sun"
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org7c562e0" class="outline-3">
+ <h3 id="org7c562e0">cl-loop for from to</h3>
+ <div class="outline-text-3" id="text-org7c562e0">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for x from 1 to 5
+         do (print x))
+</pre>
+</div>
+
+ <pre class="example" id="org3d6ee14">
+
+1
+
+2
+
+3
+
+4
+
+5
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org4a6c5f1" class="outline-3">
+ <h3 id="org4a6c5f1">pcase literal matching</h3>
+ <div class="outline-text-3" id="text-org4a6c5f1">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">pcase</span>  <span style="color: #183691;">"word"</span>
+  ('word (message  <span style="color: #183691;">"Matched 'word symbol"</span>))
+  (<span style="color: #183691;">"word"</span> (message  <span style="color: #183691;">"Matched \"word\" string"</span>)))
+</pre>
+</div>
+
+ <pre class="example">
+Matched "word" string
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org611fde0" class="outline-3">
+ <h3 id="org611fde0">Avoid nesting with the help of thread-first and thread-last.</h3>
+ <div class="outline-text-3" id="text-org611fde0">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">thread-last</span>  <span style="color: #183691;">"12.....34"</span>
+  (string-remove-prefix  <span style="color: #183691;">"1"</span>)
+  (string-remove-suffix  <span style="color: #183691;">"4"</span>))
+</pre>
+</div>
+
+ <pre class="example">
+2.....3
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-orgf8c2048" class="outline-3">
+ <h3 id="orgf8c2048">Find file upwards, up parents, up hierarchy</h3>
+ <div class="outline-text-3" id="text-orgf8c2048">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(locate-dominating-file FILE NAME)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org8550e57" class="outline-3">
- <h3 id="org8550e57">Find executable in PATH</h3>
- <div class="outline-text-3" id="text-org8550e57">
+ <div id="outline-container-org938a1f5" class="outline-3">
+ <h3 id="org938a1f5">Find executable in PATH</h3>
+ <div class="outline-text-3" id="text-org938a1f5">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(executable-find COMMAND)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-orgdda2033" class="outline-3">
- <h3 id="orgdda2033">Read string with completion (helm/ido/ivy friendly)</h3>
- <div class="outline-text-3" id="text-orgdda2033">
+ <div id="outline-container-org27b7492" class="outline-3">
+ <h3 id="org27b7492">Read string with completion (helm/ido/ivy friendly)</h3>
+ <div class="outline-text-3" id="text-org27b7492">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(completing-read PROMPT COLLECTION  <span style="color: #0086b3;">&optional</span> PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org7a8a0ff" class="outline-3">
- <h3 id="org7a8a0ff">Execute command/process and return list (similar to shell-command-to-string)</h3>
- <div class="outline-text-3" id="text-org7a8a0ff">
+ <div id="outline-container-org81a2e84" class="outline-3">
+ <h3 id="org81a2e84">Execute command/process and return list (similar to shell-command-to-string)</h3>
+ <div class="outline-text-3" id="text-org81a2e84">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(process-lines PROGRAM  <span style="color: #0086b3;">&rest</span> ARGS)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org3eeb82e" class="outline-3">
- <h3 id="org3eeb82e">Iterating org buffer</h3>
- <div class="outline-text-3" id="text-org3eeb82e">
+ <div id="outline-container-orgfe3521e" class="outline-3">
+ <h3 id="orgfe3521e">Iterating org buffer</h3>
+ <div class="outline-text-3" id="text-orgfe3521e">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(org-element-map (org-element-parse-buffer) '(headline link)
   (<span style="color: #a71d5d;">lambda</span> (element)

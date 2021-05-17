@@ -1,6 +1,32 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-05-17 Mon] Emacs plus --with-native-comp
+:PROPERTIES:
+:CUSTOM_ID: emacs-plus-with-native-comp
+:END:
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-plus-with-native-comp/brew-native-comp.png]]
+
+I'm a big fan of [[https://d12frosted.io/][Boris Buliga]]'s [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs Plus]] [[https://brew.sh/][homebrew]] recipe for customizing and installing Emacs builds on macOS.
+
+For a little while, I took a detour and built Emacs myself, so I could enable [[https://twitter.com/Koral_001][Andrea Corallo]]'s fantastic [[http://akrl.sdf.org/gccemacs.html][native compilation]]. I documented the steps [[https://xenodium.com/trying-out-gccemacs-on-macos/][here]]. Though it was fairly straightforward, I did miss Emacs Plus's convenience.
+
+I had been meaning to check back on Emacs Plus for native compilation support. Turns out, it was merged back in [[https://github.com/d12frosted/homebrew-emacs-plus/pull/188][Dec 2020]], and it works great!
+
+Enabling native compilation is simple (just use /--with-native-comp/). As a bonus, you get all the Emacs Plus goodies. I'm loving /--with-elrumo2-icon/, enabling a spiffy icon to go with macOS Big Sur. /--with-no-frame-refocus/ is also handy to [[https://xenodium.com/no-emacs-frame-refocus-on-macos/][avoid refocusing other frames]] when another one is closed.
+
+In any case, here's the minimum needed to install Emacs Plus with native compilation support enabled:
+
+#+begin_src sh
+  brew tap d12frosted/emacs-plus
+  brew install emacs-plus@28 --with-native-comp
+#+end_src
+
+Sit tight. Homebrew will build and install some chunky dependencies (including gcc and libgccjit).
+
+Note: Your init.el needs tweaking to take advantage of native compilation. See my [[https://xenodium.com/trying-out-gccemacs-on-macos/][previous post]] for how I set mine, or go straight to [[https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19][my config]].
+
 * [2021-05-02 Sun] Cycling window layouts with hammerspoon
   :PROPERTIES:
   :CUSTOM_ID: cycling-window-layouts-via-hammerspoon
