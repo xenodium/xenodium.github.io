@@ -1,6 +1,26 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-05-19 Wed] gpg: decryption failed: No secret key (macOS)
+:PROPERTIES:
+:CUSTOM_ID: gpg-decryption-failed-no-secret-key-macos
+:END:
+#+begin_src
+  gpg: decryption failed: No secret key
+#+end_src
+
+OMG! Where's my secret key gone!?
+
+But but but, /gpg --list-secret-keys/ says they're there. Puzzled...
+
+Ray Oei's Stack Overflow [[https://stackoverflow.com/a/66234166][answer]] solved the mystery for me: pinentry never got invoked, so likely something's up with the agent... Killing (and thus restaring) the gpg-agent did the trick:
+
+#+begin_src sh
+  gpgconf --kill gpg-agent
+#+end_src
+
+Thank you internet stranger. Balance restored.
+
 * [2021-05-17 Mon] Emacs plus --with-native-comp
 :PROPERTIES:
 :CUSTOM_ID: emacs-plus-with-native-comp
