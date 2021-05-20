@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:41 -->
+<!-- 2021-05-20 Thu 07:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out mu4e and offlineimap</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -387,50 +387,26 @@
 //         };
        </script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -454,11 +430,11 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org943543c" class="outline-2">
+<div id="outline-container-trying-out-mu4e-and-offlineimap" class="outline-2">
 <h2 id="trying-out-mu4e-and-offlineimap"><span class="timestamp-wrapper"><span class="timestamp">28 May 2018</span></span> Trying out mu4e and offlineimap</h2>
 <div class="outline-text-2" id="text-trying-out-mu4e-and-offlineimap">
 
-<div class="figure">
+<div id="org98e5b34" class="figure">
 <p><img src="../images/trying-out-mu4e-and-offlineimap/mu4e.png" alt="mu4e.png" width="75%" height="75%" />
 </p>
 </div>
@@ -468,9 +444,9 @@ Managing Email from Emacs. Surely that's crazy-talk, but hey&#x2026; let's give 
 </p>
 </div>
 
-<div id="outline-container-org7442946" class="outline-3">
-<h3 id="org7442946">Install offlineimap</h3>
-<div class="outline-text-3" id="text-org7442946">
+<div id="outline-container-orgd11210c" class="outline-3">
+<h3 id="orgd11210c">Install offlineimap</h3>
+<div class="outline-text-3" id="text-orgd11210c">
 <p>
 Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
 </p>
@@ -486,9 +462,9 @@ Before can configure offlineimap, we'll need to handle a few things first.
 </div>
 </div>
 
-<div id="outline-container-orgd5e3c3f" class="outline-3">
-<h3 id="orgd5e3c3f">Get a cert fingerprint</h3>
-<div class="outline-text-3" id="text-orgd5e3c3f">
+<div id="outline-container-org290d8ef" class="outline-3">
+<h3 id="org290d8ef">Get a cert fingerprint</h3>
+<div class="outline-text-3" id="text-org290d8ef">
 <p>
 Use openssl for getting a certificate fingerprint. From offlineimap's <a href="http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint">FAQ:</a>
 </p>
@@ -510,9 +486,9 @@ SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
 </div>
 </div>
 
-<div id="outline-container-org666c620" class="outline-3">
-<h3 id="org666c620">Encrypt password</h3>
-<div class="outline-text-3" id="text-org666c620">
+<div id="outline-container-org448c207" class="outline-3">
+<h3 id="org448c207">Encrypt password</h3>
+<div class="outline-text-3" id="text-org448c207">
 <p>
 Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
 </p>
@@ -542,9 +518,9 @@ Generate an offlineimap account password file.
 </div>
 </div>
 
-<div id="outline-container-org3d6d459" class="outline-3">
-<h3 id="org3d6d459">Python password  wrapper</h3>
-<div class="outline-text-3" id="text-org3d6d459">
+<div id="outline-container-org149d6d3" class="outline-3">
+<h3 id="org149d6d3">Python password  wrapper</h3>
+<div class="outline-text-3" id="text-org149d6d3">
 <p>
 Based on Fabian's <a href="https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html">Encrypt OfflineIMAP and msmtp password with GnuPG</a>, I created ~/.read_password.py with:
 </p>
@@ -564,9 +540,9 @@ ps. Alternatively, see <a href="http://stevelosh.com/blog/2012/10/the-homely-mut
 </div>
 </div>
 
-<div id="outline-container-org71fc170" class="outline-3">
-<h3 id="org71fc170">Configure offlineimap</h3>
-<div class="outline-text-3" id="text-org71fc170">
+<div id="outline-container-org2209c1c" class="outline-3">
+<h3 id="org2209c1c">Configure offlineimap</h3>
+<div class="outline-text-3" id="text-org2209c1c">
 <p>
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 </p>
@@ -610,9 +586,9 @@ Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to 
 </div>
 </div>
 
-<div id="outline-container-orge4b3663" class="outline-4">
-<h4 id="orge4b3663">Cert file</h4>
-<div class="outline-text-4" id="text-orge4b3663">
+<div id="outline-container-orge7cf120" class="outline-4">
+<h4 id="orge7cf120">Cert file</h4>
+<div class="outline-text-4" id="text-orge7cf120">
 <p>
 You can use macOS's certificates from Keychain Access -&gt; System Roots -&gt; Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
 </p>
@@ -630,9 +606,9 @@ Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate 
 </div>
 </div>
 
-<div id="outline-container-org47d8277" class="outline-3">
-<h3 id="org47d8277">Install mu4e</h3>
-<div class="outline-text-3" id="text-org47d8277">
+<div id="outline-container-orgfa32455" class="outline-3">
+<h3 id="orgfa32455">Install mu4e</h3>
+<div class="outline-text-3" id="text-orgfa32455">
 <p>
 Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
 </p>
@@ -664,9 +640,9 @@ Finally installed mu4e:
 </div>
 </div>
 
-<div id="outline-container-orgbc1c0b8" class="outline-3">
-<h3 id="orgbc1c0b8">Configure mu4e</h3>
-<div class="outline-text-3" id="text-orgbc1c0b8">
+<div id="outline-container-orgf5b1565" class="outline-3">
+<h3 id="orgf5b1565">Configure mu4e</h3>
+<div class="outline-text-3" id="text-orgf5b1565">
 <p>
 Lastly, configure mu4e:
 </p>
@@ -744,9 +720,9 @@ Lastly, configure mu4e:
 </div>
 </div>
 </div>
-<div id="outline-container-org814c02e" class="outline-3">
-<h3 id="org814c02e">Authinfo</h3>
-<div class="outline-text-3" id="text-org814c02e">
+<div id="outline-container-orgc354d78" class="outline-3">
+<h3 id="orgc354d78">Authinfo</h3>
+<div class="outline-text-3" id="text-orgc354d78">
 <p>
 Create an ~/.authinfo file for sendmail authentication with:
 </p>
@@ -762,9 +738,9 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 </div>
 </div>
 
-<div id="outline-container-org2c3395a" class="outline-3">
-<h3 id="org2c3395a">Mu4e helpful references</h3>
-<div class="outline-text-3" id="text-org2c3395a">
+<div id="outline-container-org0d91262" class="outline-3">
+<h3 id="org0d91262">Mu4e helpful references</h3>
+<div class="outline-text-3" id="text-org0d91262">
 <ul class="org-ul">
 <li><a href="http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-">A Complete Guide to Email in Emacs using Mu and Mu4e</a>.</li>
 <li><a href="https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/">A year with Notmuch mail - a super-fast email client available on Emacs</a>.</li>
@@ -790,6 +766,7 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 <li><a href="https://github.com/djcb/mu">Mu's github mirror</a>.</li>
 <li><a href="http://www.djcbsoftware.nl/code/mu">Mu's page</a>.</li>
 <li><a href="http://wenshanren.org/?p=111">mu4e: an E-mail Client for Emacs</a>.</li>
+<li><a href="https://github.com/danielfleischer/mu4easy">mu4easy: mu4e + mbsync configuration for multiple accounts.</a>.</li>
 <li><a href="http://rudolfochrist.github.io/blog/2015/03/21/offlineimap-with-ssl-files-on-osx/">OfflineIMAP with SSL files on OSX - Sebastian Christ</a>.</li>
 <li><a href="https://news.ycombinator.com/item?id=14221501">OfflineIMAP: sync and backup tool for IMAP (Hacker News) and mbsync in comments</a>.</li>
 <li><a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org">Practical guide to use Gnus with Gmail</a>.</li>
