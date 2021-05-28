@@ -6,7 +6,195 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 17 May 2021 22:59:52 +0100</lastBuildDate>
+<lastBuildDate>Fri, 28 May 2021 17:51:13 +0100</lastBuildDate>
+<item>
+  <title>Emacs link scraping (2021 edition)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-link-scraping-2021-edition" class="outline-2">
+ <h2 id="emacs-link-scraping-2021-edition"> <span class="timestamp-wrapper"> <span class="timestamp">28 May 2021</span></span> Emacs link scraping (2021 edition)</h2>
+ <div class="outline-text-2" id="text-emacs-link-scraping-2021-edition">
+ <p>
+A recent Hacker News post,  <a href="https://news.ycombinator.com/item?id=27302195">Ask HN: Favorite Blogs by Individuals</a>, led me to dust off my oldie but trusty  <a href="https://github.com/xenodium/dotsies/blob/92ef8259f016cdd4f67caf0e520096f6da4f7a18/emacs/ar/ar-url.el#L42">command to extract comment links</a>. I use it to dissect these wonderful references more effectively.
+</p>
+
+ <p>
+You see, I wrote this command  <a href="https://xenodium.com/get-emacs-to-gather-links-in-posts/">back in 2015</a>. We can likely revisit and improve. The  <a href="https://github.com/zweifisch/enlive">enlive</a> package continues to do a fine job  <a href="https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L39">fetching</a>, parsing, and  <a href="https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L142">querying</a> HTML. Let's improve my code instead… we can shed a few redundant bits and maybe use  <a href="https://xenodium.com/modern-elisp-libraries/">newer libraries and features</a>.
+</p>
+
+ <p>
+Most importantly, let's improve the user experience by sanitizing and filtering URLs a little better.
+</p>
+
+ <p>
+We start by writing a function that looks for a URL in the clipboard and subsequently fetches, parses, and extracts all links found in the target page.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">enlive</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/scrape-links-from-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and return as a list. Fails if no URL in clipboard."</span>
+  (<span style="color: #a71d5d;">unless</span> (string-prefix-p  <span style="color: #183691;">"http"</span> (current-kill 0))
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"no URL in clipboard"</span>))
+  (<span style="color: #a71d5d;">thread-last</span> (enlive-query-all (enlive-fetch (current-kill 0)) [a])
+    (mapcar (<span style="color: #a71d5d;">lambda</span> (element)
+              (string-remove-suffix  <span style="color: #183691;">"/"</span> (enlive-attr element 'href))))
+    (seq-filter (<span style="color: #a71d5d;">lambda</span> (link)
+                  (string-prefix-p  <span style="color: #183691;">"http"</span> link)))
+    (seq-uniq)
+    (seq-sort (<span style="color: #a71d5d;">lambda</span> (l1 l2)
+                (string-lessp (replace-regexp-in-string  <span style="color: #183691;">"^http</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">s</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">*://"</span>  <span style="color: #183691;">""</span> l1)
+                              (replace-regexp-in-string  <span style="color: #183691;">"^http</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">s</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">*://"</span>  <span style="color: #183691;">""</span> l2))))))
+</pre>
+</div>
+
+ <p>
+Let's chat  <i>(current-kill 0)</i> for a sec. No improvement from my previous usage, but let's just say building interactive commands that work with your current clipboard (or  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Kill-Ring.html">kill ring</a> in Emacs terminology) is super handy (see  <a href="https://xenodium.com/emacs-clone-git-repo-from-clipboard/">clone git repo from clipboard</a>).
+</p>
+
+ <p>
+Moving on to sanitizing and filtering URLs… Links often have trailing slashes. Let's flush them.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L261">string-remove-suffix</a> to the rescue. This and other handy string-manipulating functions are built into Emacs since 24.4 as part of  <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/subr-x.el">subr-x.el</a>.
+</p>
+
+ <p>
+Next, we can keep http(s) links and ditch everything else. The end-goal is to extract links posted by users, so these are typically fully qualified external URLs.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el">seq-filter</a> steps up to the task, included in Emacs since 25.1 as part of the  <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/seq.el">seq.el family</a>. We remove duplicate links using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L431">seq-uniq</a> and sort them via  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L255">seq-sort</a>. All part of the same package.
+</p>
+
+ <p>
+When sorting, we could straight up use  <i>seq-sort</i> and  <i>string-lessp</i> and nothing else, but it would separate http and https links. Let's not do that, so we drop  <i>http(s)</i> prior to comparing strings in  <i>seq-sort</i>'s predicate.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L4468">replace-regexp-in-string</a> does the job here, but if you'd like to skip regular expressions,  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L255">string-remove-prefix</a> works just as well.
+</p>
+
+ <p>
+Yay, sorting no longer cares about http vs https:
+</p>
+
+ <pre class="example">
+https://andymatuschak.org
+http://antirez.com
+https://apenwarr.ca/log
+...
+</pre>
+
+ <p>
+With all that in mind, let's flatten list processing using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L69">thread-last</a>. This isn't strictly necessary, but since this is the 2021 edition, we'll throw in this macro added to Emacs in 2016 as part of 25.1. Arthur Malabarba has a  <a href="https://endlessparentheses.com/new-in-emacs-25-1-more-flow-control-macros.html">great post on thread-last</a>.
+</p>
+
+ <p>
+Now that we've built out  <i>ar/scrape-links-from-clipboard-url</i> function, let's make its content consumable!
+</p>
+</div>
+
+ <div id="outline-container-org8ba449a" class="outline-3">
+ <h3 id="org8ba449a">The completing frameworks way</h3>
+ <div class="outline-text-3" id="text-org8ba449a">
+ <p>
+This is the 2021 edition, so power up your completion framework du jour and feed the output of  <i>ar/scrape-links-from-clipboard-url</i> to our completion robots…
+</p>
+
+
+ <div id="orgbb1eea3" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_complete.gif" alt="scrape_complete.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+I'm heavily vested in  <a href="https://github.com/abo-abo/swiper">ivy</a>, but since we're using the built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> function, any completion framework like  <a href="https://github.com/minad/vertico">vertico</a>,  <a href="https://github.com/raxod502/selectrum/">selectrum</a>,  <a href="https://github.com/emacs-helm/helm">helm</a>, or  <a href="https://www.gnu.org/software/emacs/manual/html_node/ido/index.html">ido</a> should kick right in to give you extra powers.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/view-completing-links-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and open all in external browser."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (browse-url (completing-read  <span style="color: #183691;">"links: "</span>
+                               (ar/scrape-links-from-clipboard-url))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org12167ba" class="outline-3">
+ <h3 id="org12167ba">The auto-open way (use with caution)</h3>
+ <div class="outline-text-3" id="text-org12167ba">
+ <p>
+Sometimes you just want to open every link posted in the comments and use your browser to discard, closing tabs as needed. The recent HN news instance wasn't one of these cases, with a whopping 398 links returned by our  <i>ar/scrape-links-from-clipboard-url</i>.
+</p>
+
+
+ <div id="org43e879f" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_browse.gif" alt="scrape_browse.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+ <i>Note: I capped the results to 5 in this gif/demo to prevent a Firefox tragedy (see  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L231">seq-take</a>).</i>
+</p>
+
+ <p>
+In a case like Hacker News's, we don't want to surprise-attack the user and bomb their browser by opening a gazillion tabs, so let's give a little heads-up using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L2869">y-or-n-p</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/browse-links-at-clipboard-url</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((links (ar/scrape-links-from-clipboard-url)))
+    (<span style="color: #a71d5d;">when</span> (y-or-n-p (format  <span style="color: #183691;">"Open all %d links? "</span> (length links)))
+      (mapc (<span style="color: #a71d5d;">lambda</span> (link)
+              (browse-url link))
+            links))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org54c44ce" class="outline-3">
+ <h3 id="org54c44ce">The org way</h3>
+ <div class="outline-text-3" id="text-org54c44ce">
+ <p>
+My  <a href="https://xenodium.com/get-emacs-to-gather-links-in-posts/">2015 solution</a> leveraged an  <a href="https://orgmode.org/">org mode</a> buffer to dump the fetched links. The org way is still my favorite. You can use whatever existing Emacs super powers you already have on top of the org buffer, including searching and filtering fueled by your favourite completion framework. I'm a fan of  <a href="https://oremacs.com/">Oleh</a>'s  <a href="https://github.com/abo-abo/swiper">swiper</a>.
+</p>
+
+
+ <div id="orgc84737b" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_org.gif" alt="scrape_org.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+The 2021 implementation is mostly a tidy-up, removing some cruft, but also uses our new  <i>ar/scrape-links-from-clipboard-url</i> function to filter and sort accordingly.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/view-links-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and dump to an org buffer."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create  <span style="color: #183691;">"*links*"</span>)
+    (org-mode)
+    (erase-buffer)
+    (mapc (<span style="color: #a71d5d;">lambda</span> (link)
+            (insert (org-make-link-string link)  <span style="color: #183691;">"\n"</span>))
+          (ar/scrape-links-from-clipboard-url))
+    (goto-char (point-min))
+    (switch-to-buffer (current-buffer))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org4fdfe48" class="outline-3">
+ <h3 id="org4fdfe48">Emacs + community + packages + your own glue = awesome</h3>
+ <div class="outline-text-3" id="text-org4fdfe48">
+ <p>
+To power our 2021 link scraper, we've used newer libraries included in more recent versions of Emacs, leveraged an older but solid HTML-parsing package, pulled in org mode (the epicenter of Emacs note-taking), dragged in our favorite completion framework, and tickled our handy browser all by smothering the lot with some elisp glue to make Emacs do exactly what we want.  <a href="http://emacsrocks.com/">Emacs does rock</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-link-scraping-2021-edition</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-link-scraping-2021-edition</guid>
+  <pubDate>Fri, 28 May 2021 17:51:13 +0100</pubDate>
+</item>
 <item>
   <title>Emacs plus --with-native-comp</title>
   <description><![CDATA[<div id="content">

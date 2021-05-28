@@ -1,6 +1,129 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-05-28 Fri] Emacs link scraping (2021 edition)
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-link-scraping-2021-edition
+  :END:
+A recent Hacker News post, [[https://news.ycombinator.com/item?id=27302195][Ask HN: Favorite Blogs by Individuals]], led me to dust off my oldie but trusty [[https://github.com/xenodium/dotsies/blob/92ef8259f016cdd4f67caf0e520096f6da4f7a18/emacs/ar/ar-url.el#L42][command to extract comment links]]. I use it to dissect these wonderful references more effectively.
+
+You see, I wrote this command [[https://xenodium.com/get-emacs-to-gather-links-in-posts/][back in 2015]]. We can likely revisit and improve. The [[https://github.com/zweifisch/enlive][enlive]] package continues to do a fine job [[https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L39][fetching]], parsing, and [[https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L142][querying]] HTML. Let's improve my code instead... we can shed a few redundant bits and maybe use [[https://xenodium.com/modern-elisp-libraries/][newer libraries and features]].
+
+Most importantly, let's improve the user experience by sanitizing and filtering URLs a little better.
+
+We start by writing a function that looks for a URL in the clipboard and subsequently fetches, parses, and extracts all links found in the target page.
+
+#+begin_src emacs-lisp
+  (require 'enlive)
+  (require 'seq)
+
+  (defun ar/scrape-links-from-clipboard-url ()
+    "Scrape links from clipboard URL and return as a list. Fails if no URL in clipboard."
+    (unless (string-prefix-p "http" (current-kill 0))
+      (user-error "no URL in clipboard"))
+    (thread-last (enlive-query-all (enlive-fetch (current-kill 0)) [a])
+      (mapcar (lambda (element)
+                (string-remove-suffix "/" (enlive-attr element 'href))))
+      (seq-filter (lambda (link)
+                    (string-prefix-p "http" link)))
+      (seq-uniq)
+      (seq-sort (lambda (l1 l2)
+                  (string-lessp (replace-regexp-in-string "^http\\(s\\)*://" "" l1)
+                                (replace-regexp-in-string "^http\\(s\\)*://" "" l2))))))
+#+end_src
+
+Let's chat /(current-kill 0)/ for a sec. No improvement from my previous usage, but let's just say building interactive commands that work with your current clipboard (or [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Kill-Ring.html][kill ring]] in Emacs terminology) is super handy (see [[https://xenodium.com/emacs-clone-git-repo-from-clipboard/][clone git repo from clipboard]]).
+
+Moving on to sanitizing and filtering URLs... Links often have trailing slashes. Let's flush them. [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L261][string-remove-suffix]] to the rescue. This and other handy string-manipulating functions are built into Emacs since 24.4 as part of [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/subr-x.el][subr-x.el]].
+
+Next, we can keep http(s) links and ditch everything else. The end-goal is to extract links posted by users, so these are typically fully qualified external URLs. [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el][seq-filter]] steps up to the task, included in Emacs since 25.1 as part of the [[https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/seq.el][seq.el family]]. We remove duplicate links using [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L431][seq-uniq]] and sort them via [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L255][seq-sort]]. All part of the same package.
+
+When sorting, we could straight up use /seq-sort/ and /string-lessp/ and nothing else, but it would separate http and https links. Let's not do that, so we drop /http(s)/ prior to comparing strings in /seq-sort/'s predicate. [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L4468][replace-regexp-in-string]] does the job here, but if you'd like to skip regular expressions, [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L255][string-remove-prefix]] works just as well.
+
+Yay, sorting no longer cares about http vs https:
+
+#+begin_src
+  https://andymatuschak.org
+  http://antirez.com
+  https://apenwarr.ca/log
+  ...
+#+end_src
+
+With all that in mind, let's flatten list processing using [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L69][thread-last]]. This isn't strictly necessary, but since this is the 2021 edition, we'll throw in this macro added to Emacs in 2016 as part of 25.1. Arthur Malabarba has a [[https://endlessparentheses.com/new-in-emacs-25-1-more-flow-control-macros.html][great post on thread-last]].
+
+Now that we've built out /ar/scrape-links-from-clipboard-url/ function, let's make its content consumable!
+
+** The completing frameworks way
+This is the 2021 edition, so power up your completion framework du jour and feed the output of /ar/scrape-links-from-clipboard-url/ to our completion robots...
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/emacs-link-scraping-2021-edition/scrape_complete.gif]]
+
+I'm heavily vested in [[https://github.com/abo-abo/swiper][ivy]], but since we're using the built-in [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] function, any completion framework like [[https://github.com/minad/vertico][vertico]], [[https://github.com/raxod502/selectrum/][selectrum]], [[https://github.com/emacs-helm/helm][helm]], or [[https://www.gnu.org/software/emacs/manual/html_node/ido/index.html][ido]] should kick right in to give you extra powers.
+
+#+begin_src emacs-lisp
+  (defun ar/view-completing-links-at-clipboard-url ()
+    "Scrape links from clipboard URL and open all in external browser."
+    (interactive)
+    (browse-url (completing-read "links: "
+                                 (ar/scrape-links-from-clipboard-url))))
+#+end_src
+
+** The auto-open way (use with caution)
+
+Sometimes you just want to open every link posted in the comments and use your browser to discard, closing tabs as needed. The recent HN news instance wasn't one of these cases, with a whopping 398 links returned by our /ar/scrape-links-from-clipboard-url/.
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/emacs-link-scraping-2021-edition/scrape_browse.gif]]
+
+/Note: I capped the results to 5 in this gif/demo to prevent a Firefox tragedy (see [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L231][seq-take]])./
+
+In a case like Hacker News's, we don't want to surprise-attack the user and bomb their browser by opening a gazillion tabs, so let's give a little heads-up using [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L2869][y-or-n-p]].
+
+#+begin_src emacs-lisp
+  (defun ar/browse-links-at-clipboard-url ()
+    (interactive)
+    (let ((links (ar/scrape-links-from-clipboard-url)))
+      (when (y-or-n-p (format "Open all %d links? " (length links)))
+        (mapc (lambda (link)
+                (browse-url link))
+              links))))
+#+end_src
+
+** The org way
+
+My [[https://xenodium.com/get-emacs-to-gather-links-in-posts/][2015 solution]] leveraged an [[https://orgmode.org/][org mode]] buffer to dump the fetched links. The org way is still my favorite. You can use whatever existing Emacs super powers you already have on top of the org buffer, including searching and filtering fueled by your favourite completion framework. I'm a fan of [[https://oremacs.com/][Oleh]]'s [[https://github.com/abo-abo/swiper][swiper]].
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/emacs-link-scraping-2021-edition/scrape_org.gif]]
+
+The 2021 implementation is mostly a tidy-up, removing some cruft, but also uses our new /ar/scrape-links-from-clipboard-url/ function to filter and sort accordingly.
+
+#+begin_src emacs-lisp
+  (require 'org)
+
+  (defun ar/view-links-at-clipboard-url ()
+    "Scrape links from clipboard URL and dump to an org buffer."
+    (interactive)
+    (with-current-buffer (get-buffer-create "*links*")
+      (org-mode)
+      (erase-buffer)
+      (mapc (lambda (link)
+              (insert (org-make-link-string link) "\n"))
+            (ar/scrape-links-from-clipboard-url))
+      (goto-char (point-min))
+      (switch-to-buffer (current-buffer))))
+#+end_src
+
+** Emacs + community + packages + your own glue = awesome
+
+To power our 2021 link scraper, we've used newer libraries included in more recent versions of Emacs, leveraged an older but solid HTML-parsing package, pulled in org mode (the epicenter of Emacs note-taking), dragged in our favorite completion framework, and tickled our handy browser all by smothering the lot with some elisp glue to make Emacs do exactly what we want. [[http://emacsrocks.com/][Emacs does rock]].
+
+* [2021-05-23 Sun] OCR bookmarks
+:PROPERTIES:
+:CUSTOM_ID: ocr-bookmarks
+:END:
+- [[https://github.com/schappim/macOCR][schappim/macOCR: Get any text on your screen into your clipboard.]].
 * [2021-05-19 Wed] gpg: decryption failed: No secret key (macOS)
 :PROPERTIES:
 :CUSTOM_ID: gpg-decryption-failed-no-secret-key-macos
