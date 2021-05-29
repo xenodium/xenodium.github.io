@@ -6,7 +6,378 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 10 Apr 2021 16:45:42 +0100</lastBuildDate>
+<lastBuildDate>Sat, 29 May 2021 17:41:25 +0100</lastBuildDate>
+<item>
+  <title>Emacs link scraping (2021 edition)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-link-scraping-2021-edition" class="outline-2">
+ <h2 id="emacs-link-scraping-2021-edition"> <span class="timestamp-wrapper"> <span class="timestamp">28 May 2021</span></span> Emacs link scraping (2021 edition)</h2>
+ <div class="outline-text-2" id="text-emacs-link-scraping-2021-edition">
+
+ <div id="org8bf8984" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape.png" alt="scrape.png" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+A recent Hacker News post,  <a href="https://news.ycombinator.com/item?id=27302195">Ask HN: Favorite Blogs by Individuals</a>, led me to dust off my oldie but trusty  <a href="https://github.com/xenodium/dotsies/blob/92ef8259f016cdd4f67caf0e520096f6da4f7a18/emacs/ar/ar-url.el#L42">command to extract comment links</a>. I use it to dissect these wonderful references more effectively.
+</p>
+
+ <p>
+You see, I wrote this command  <a href="https://xenodium.com/get-emacs-to-gather-links-in-posts/">back in 2015</a>. We can likely revisit and improve. The  <a href="https://github.com/zweifisch/enlive">enlive</a> package continues to do a fine job  <a href="https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L39">fetching</a>, parsing, and  <a href="https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L142">querying</a> HTML. Let's improve my code instead… we can shed a few redundant bits and maybe use  <a href="https://xenodium.com/modern-elisp-libraries/">newer libraries and features</a>.
+</p>
+
+ <p>
+Most importantly, let's improve the user experience by sanitizing and filtering URLs a little better.
+</p>
+
+ <p>
+We start by writing a function that looks for a URL in the clipboard and subsequently fetches, parses, and extracts all links found in the target page.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">enlive</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/scrape-links-from-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and return as a list. Fails if no URL in clipboard."</span>
+  (<span style="color: #a71d5d;">unless</span> (string-prefix-p  <span style="color: #183691;">"http"</span> (current-kill 0))
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"no URL in clipboard"</span>))
+  (<span style="color: #a71d5d;">thread-last</span> (enlive-query-all (enlive-fetch (current-kill 0)) [a])
+    (mapcar (<span style="color: #a71d5d;">lambda</span> (element)
+              (string-remove-suffix  <span style="color: #183691;">"/"</span> (enlive-attr element 'href))))
+    (seq-filter (<span style="color: #a71d5d;">lambda</span> (link)
+                  (string-prefix-p  <span style="color: #183691;">"http"</span> link)))
+    (seq-uniq)
+    (seq-sort (<span style="color: #a71d5d;">lambda</span> (l1 l2)
+                (string-lessp (replace-regexp-in-string  <span style="color: #183691;">"^http</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">s</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">*://"</span>  <span style="color: #183691;">""</span> l1)
+                              (replace-regexp-in-string  <span style="color: #183691;">"^http</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">s</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">*://"</span>  <span style="color: #183691;">""</span> l2))))))
+</pre>
+</div>
+
+ <p>
+Let's chat  <i>(current-kill 0)</i> for a sec. No improvement from my previous usage, but let's just say building interactive commands that work with your current clipboard (or  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Kill-Ring.html">kill ring</a> in Emacs terminology) is super handy (see  <a href="https://xenodium.com/emacs-clone-git-repo-from-clipboard/">clone git repo from clipboard</a>).
+</p>
+
+ <p>
+Moving on to sanitizing and filtering URLs… Links often have trailing slashes. Let's flush them.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L261">string-remove-suffix</a> to the rescue. This and other handy string-manipulating functions are built into Emacs since 24.4 as part of  <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/subr-x.el">subr-x.el</a>.
+</p>
+
+ <p>
+Next, we can keep http(s) links and ditch everything else. The end-goal is to extract links posted by users, so these are typically fully qualified external URLs.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el">seq-filter</a> steps up to the task, included in Emacs since 25.1 as part of the  <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/seq.el">seq.el family</a>. We remove duplicate links using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L431">seq-uniq</a> and sort them via  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L255">seq-sort</a>. All part of the same package.
+</p>
+
+ <p>
+When sorting, we could straight up use  <i>seq-sort</i> and  <i>string-lessp</i> and nothing else, but it would separate http and https links. Let's not do that, so we drop  <i>http(s)</i> prior to comparing strings in  <i>seq-sort</i>'s predicate.  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L4468">replace-regexp-in-string</a> does the job here, but if you'd like to skip regular expressions,  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L255">string-remove-prefix</a> works just as well.
+</p>
+
+ <p>
+Yay, sorting no longer cares about http vs https:
+</p>
+
+ <pre class="example">
+https://andymatuschak.org
+http://antirez.com
+https://apenwarr.ca/log
+...
+</pre>
+
+ <p>
+With all that in mind, let's flatten list processing using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L69">thread-last</a>. This isn't strictly necessary, but since this is the 2021 edition, we'll throw in this macro added to Emacs in 2016 as part of 25.1. Arthur Malabarba has a  <a href="https://endlessparentheses.com/new-in-emacs-25-1-more-flow-control-macros.html">great post on thread-last</a>.
+</p>
+
+ <p>
+Now that we've built out  <i>ar/scrape-links-from-clipboard-url</i> function, let's make its content consumable!
+</p>
+</div>
+
+ <div id="outline-container-orgc7fb038" class="outline-3">
+ <h3 id="orgc7fb038">The completing frameworks way</h3>
+ <div class="outline-text-3" id="text-orgc7fb038">
+ <p>
+This is the 2021 edition, so power up your completion framework du jour and feed the output of  <i>ar/scrape-links-from-clipboard-url</i> to our completion robots…
+</p>
+
+
+ <div id="org159a3b4" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_complete.gif" alt="scrape_complete.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+I'm heavily vested in  <a href="https://github.com/abo-abo/swiper">ivy</a>, but since we're using the built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> function, any completion framework like  <a href="https://github.com/minad/vertico">vertico</a>,  <a href="https://github.com/raxod502/selectrum/">selectrum</a>,  <a href="https://github.com/emacs-helm/helm">helm</a>, or  <a href="https://www.gnu.org/software/emacs/manual/html_node/ido/index.html">ido</a> should kick right in to give you extra powers.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/view-completing-links-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and open all in external browser."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (browse-url (completing-read  <span style="color: #183691;">"links: "</span>
+                               (ar/scrape-links-from-clipboard-url))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org3a4dba2" class="outline-3">
+ <h3 id="org3a4dba2">The auto-open way (use with caution)</h3>
+ <div class="outline-text-3" id="text-org3a4dba2">
+ <p>
+Sometimes you just want to open every link posted in the comments and use your browser to discard, closing tabs as needed. The recent HN news instance wasn't one of these cases, with a whopping 398 links returned by our  <i>ar/scrape-links-from-clipboard-url</i>.
+</p>
+
+
+ <div id="orgb2f7679" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_browse.gif" alt="scrape_browse.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+ <i>Note: I capped the results to 5 in this gif/demo to prevent a Firefox tragedy (see  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/seq.el#L231">seq-take</a>).</i>
+</p>
+
+ <p>
+In a case like Hacker News's, we don't want to surprise-attack the user and bomb their browser by opening a gazillion tabs, so let's give a little heads-up using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/subr.el#L2869">y-or-n-p</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/browse-links-at-clipboard-url</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((links (ar/scrape-links-from-clipboard-url)))
+    (<span style="color: #a71d5d;">when</span> (y-or-n-p (format  <span style="color: #183691;">"Open all %d links? "</span> (length links)))
+      (mapc (<span style="color: #a71d5d;">lambda</span> (link)
+              (browse-url link))
+            links))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgba4bbd6" class="outline-3">
+ <h3 id="orgba4bbd6">The org way</h3>
+ <div class="outline-text-3" id="text-orgba4bbd6">
+ <p>
+My  <a href="https://xenodium.com/get-emacs-to-gather-links-in-posts/">2015 solution</a> leveraged an  <a href="https://orgmode.org/">org mode</a> buffer to dump the fetched links. The org way is still my favorite. You can use whatever existing Emacs super powers you already have on top of the org buffer, including searching and filtering fueled by your favourite completion framework. I'm a fan of  <a href="https://oremacs.com/">Oleh</a>'s  <a href="https://github.com/abo-abo/swiper">swiper</a>.
+</p>
+
+
+ <div id="org6d56d32" class="figure">
+ <p> <img src="../images/emacs-link-scraping-2021-edition/scrape_org.gif" alt="scrape_org.gif" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+The 2021 implementation is mostly a tidy-up, removing some cruft, but also uses our new  <i>ar/scrape-links-from-clipboard-url</i> function to filter and sort accordingly.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/view-links-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Scrape links from clipboard URL and dump to an org buffer."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create  <span style="color: #183691;">"*links*"</span>)
+    (org-mode)
+    (erase-buffer)
+    (mapc (<span style="color: #a71d5d;">lambda</span> (link)
+            (insert (org-make-link-string link)  <span style="color: #183691;">"\n"</span>))
+          (ar/scrape-links-from-clipboard-url))
+    (goto-char (point-min))
+    (switch-to-buffer (current-buffer))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org6368908" class="outline-3">
+ <h3 id="org6368908">Emacs + community + packages + your own glue = awesome</h3>
+ <div class="outline-text-3" id="text-org6368908">
+ <p>
+To power our 2021 link scraper, we've used newer libraries included in more recent versions of Emacs, leveraged an older but solid HTML-parsing package, pulled in org mode (the epicenter of Emacs note-taking), dragged in our favorite completion framework, and tickled our handy browser all by smothering the lot with some elisp glue to make Emacs do exactly what we want.  <a href="http://emacsrocks.com/">Emacs does rock</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-link-scraping-2021-edition</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-link-scraping-2021-edition</guid>
+  <pubDate>Fri, 28 May 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>OCR bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-ocr-bookmarks" class="outline-2">
+ <h2 id="ocr-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">23 May 2021</span></span> OCR bookmarks</h2>
+ <div class="outline-text-2" id="text-ocr-bookmarks">
+ <ul class="org-ul"> <li> <a href="https://github.com/schappim/macOCR">schappim/macOCR: Get any text on your screen into your clipboard.</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/ocr-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/ocr-bookmarks</guid>
+  <pubDate>Sun, 23 May 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>gpg: decryption failed: No secret key (macOS)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-gpg-decryption-failed-no-secret-key-macos" class="outline-2">
+ <h2 id="gpg-decryption-failed-no-secret-key-macos"> <span class="timestamp-wrapper"> <span class="timestamp">19 May 2021</span></span> gpg: decryption failed: No secret key (macOS)</h2>
+ <div class="outline-text-2" id="text-gpg-decryption-failed-no-secret-key-macos">
+ <pre class="example">
+gpg: decryption failed: No secret key
+</pre>
+
+ <p>
+OMG! Where's my secret key gone!?
+</p>
+
+ <p>
+But but but,  <i>gpg –list-secret-keys</i> says they're there. Puzzled…
+</p>
+
+ <p>
+Ray Oei's Stack Overflow  <a href="https://stackoverflow.com/a/66234166">answer</a> solved the mystery for me: pinentry never got invoked, so likely something's up with the agent… Killing (and thus restaring) the gpg-agent did the trick:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">gpgconf --kill gpg-agent
+</pre>
+</div>
+
+ <p>
+Thank you internet stranger. Balance restored.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/gpg-decryption-failed-no-secret-key-macos</link>
+  <guid isPermaLink="false">http://xenodium.com/gpg-decryption-failed-no-secret-key-macos</guid>
+  <pubDate>Wed, 19 May 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Emacs plus --with-native-comp</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-plus-with-native-comp" class="outline-2">
+ <h2 id="emacs-plus-with-native-comp"> <span class="timestamp-wrapper"> <span class="timestamp">17 May 2021</span></span> Emacs plus –with-native-comp</h2>
+ <div class="outline-text-2" id="text-emacs-plus-with-native-comp">
+
+ <div id="org7087029" class="figure">
+ <p> <img src="../images/emacs-plus-with-native-comp/brew-native-comp.png" alt="brew-native-comp.png" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+I'm a big fan of  <a href="https://d12frosted.io/">Boris Buliga</a>'s  <a href="https://github.com/d12frosted/homebrew-emacs-plus">Emacs Plus</a>  <a href="https://brew.sh/">homebrew</a> recipe for customizing and installing Emacs builds on macOS.
+</p>
+
+ <p>
+For a little while, I took a detour and built Emacs myself, so I could enable  <a href="https://twitter.com/Koral_001">Andrea Corallo</a>'s fantastic  <a href="http://akrl.sdf.org/gccemacs.html">native compilation</a>. I documented the steps  <a href="https://xenodium.com/trying-out-gccemacs-on-macos/">here</a>. Though it was fairly straightforward, I did miss Emacs Plus's convenience.
+</p>
+
+ <p>
+I had been meaning to check back on Emacs Plus for native compilation support. Turns out, it was merged back in  <a href="https://github.com/d12frosted/homebrew-emacs-plus/pull/188">Dec 2020</a>, and it works great!
+</p>
+
+ <p>
+Enabling native compilation is simple (just use  <i>–with-native-comp</i>). As a bonus, you get all the Emacs Plus goodies. I'm loving  <i>–with-elrumo2-icon</i>, enabling a spiffy icon to go with macOS Big Sur.  <i>–with-no-frame-refocus</i> is also handy to  <a href="https://xenodium.com/no-emacs-frame-refocus-on-macos/">avoid refocusing other frames</a> when another one is closed.
+</p>
+
+ <p>
+In any case, here's the minimum needed to install Emacs Plus with native compilation support enabled:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew tap d12frosted/emacs-plus
+brew install emacs-plus@28 --with-native-comp
+</pre>
+</div>
+
+ <p>
+Sit tight. Homebrew will build and install some chunky dependencies (including gcc and libgccjit).
+</p>
+
+ <p>
+Note: Your init.el needs tweaking to take advantage of native compilation. See my  <a href="https://xenodium.com/trying-out-gccemacs-on-macos/">previous post</a> for how I set mine, or go straight to  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19">my config</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-plus-with-native-comp</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-plus-with-native-comp</guid>
+  <pubDate>Mon, 17 May 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Cycling window layouts with hammerspoon</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-cycling-window-layouts-via-hammerspoon" class="outline-2">
+ <h2 id="cycling-window-layouts-via-hammerspoon"> <span class="timestamp-wrapper"> <span class="timestamp">02 May 2021</span></span> Cycling window layouts with hammerspoon</h2>
+ <div class="outline-text-2" id="text-cycling-window-layouts-via-hammerspoon">
+ <p>
+Back in January, Patrik Collison  <a href="https://twitter.com/patrickc/status/1351650517869465601">tweeted</a> about  <a href="https://rectangleapp.com/">Rectangle</a>'s  <a href="https://github.com/rxhanson/Rectangle/wiki/Todo-Mode">Todo mode</a>. Rectangle looks great. Although I've not yet adopted it, Todo mode really resonates with me. I've been achieving similar functionality with  <a href="https://www.hammerspoon.org/">hammerspoon</a>.
+</p>
+
+
+ <div id="orgf0333f7" class="figure">
+ <p> <img src="../images/cycling-window-layouts-via-hammerspoon/cycle.gif" alt="cycle.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+Here's a quick and dirty function to cycle through my window layouts:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-python">function reframeFocusedWindow()
+   local  <span style="color: #333333;">win</span> = hs.window.focusedWindow()
+   local  <span style="color: #333333;">maximizedFrame</span> =  <span style="color: #333333;">win</span>:screen():frame()
+   maximizedFrame.x = maximizedFrame.x + 15
+   maximizedFrame. <span style="color: #333333;">y</span> = maximizedFrame.y + 15
+   maximizedFrame. <span style="color: #333333;">w</span> = maximizedFrame.w - 30
+   maximizedFrame. <span style="color: #333333;">h</span> = maximizedFrame.h - 30
+
+   local  <span style="color: #333333;">leftFrame</span> =  <span style="color: #333333;">win</span>:screen():frame()
+   leftFrame.x = leftFrame.x + 15
+   leftFrame. <span style="color: #333333;">y</span> = leftFrame.y + 15
+   leftFrame. <span style="color: #333333;">w</span> = leftFrame.w - 250
+   leftFrame. <span style="color: #333333;">h</span> = leftFrame.h - 30
+
+   local  <span style="color: #333333;">rightFrame</span> =  <span style="color: #333333;">win</span>:screen():frame()
+   rightFrame.x = rightFrame.w - 250 + 15
+   rightFrame. <span style="color: #333333;">y</span> = rightFrame.y + 15
+   rightFrame. <span style="color: #333333;">w</span> = 250 - 15 - 15
+   rightFrame. <span style="color: #333333;">h</span> = rightFrame.h - 30
+
+   -- Make space on right
+    <span style="color: #a71d5d;">if</span> win:frame() == maximizedFrame then
+     win:setFrame(leftFrame)
+      <span style="color: #a71d5d;">return</span>
+   end
+
+   -- Make space on left
+    <span style="color: #a71d5d;">if</span> win:frame() == leftFrame then
+     win:setFrame(rightFrame)
+      <span style="color: #a71d5d;">return</span>
+   end
+
+   win:setFrame(maximizedFrame)
+end
+</pre>
+</div>
+
+ <p>
+A here's my  <b>⌥-F</b> binding to  <b>reframeFocusedWindow</b>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-python">hs.hotkey.bind({ <span style="color: #183691;">"alt"</span>},  <span style="color: #183691;">"F"</span>, reframeFocusedWindow)
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/cycling-window-layouts-via-hammerspoon</link>
+  <guid isPermaLink="false">http://xenodium.com/cycling-window-layouts-via-hammerspoon</guid>
+  <pubDate>Sun, 02 May 2021 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Flat Habits meets org agenda</title>
   <description><![CDATA[<div id="content">
@@ -36,7 +407,7 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda \o
 </div>]]></description>
   <link>http://xenodium.com/flat-habits-meets-org-agenda</link>
   <guid isPermaLink="false">http://xenodium.com/flat-habits-meets-org-agenda</guid>
-  <pubDate>Sat, 10 Apr 2021 16:45:18 +0100</pubDate>
+  <pubDate>Sat, 10 Apr 2021 00:00:00 +0100</pubDate>
 </item>
 <item>
   <title>Flat Habits v1.0.1 (org import menu)</title>
@@ -77,7 +448,7 @@ Good luck with your habits!
 </div>]]></description>
   <link>http://xenodium.com/flat-habits-v101-org-import-menu</link>
   <guid isPermaLink="false">http://xenodium.com/flat-habits-v101-org-import-menu</guid>
-  <pubDate>Tue, 23 Mar 2021 21:51:04 +0000</pubDate>
+  <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
 </item>
 <item>
   <title>Flat Habits for iOS (powered by org)</title>
@@ -655,13 +1026,13 @@ Comment on  <a href="https://www.reddit.com/r/emacs/comments/k3iter/simplequick_
  <h2 id="pulled-pork-recipe"> <span class="timestamp-wrapper"> <span class="timestamp">23 November 2020</span></span> Pulled pork recipe</h2>
  <div class="outline-text-2" id="text-pulled-pork-recipe">
  <p>
-Made pulled pork for the first time. Freestyled a bit. No expert here, but result was yummie.
+Made pulled pork a couple of times. Freestyled a bit. No expert here, but result was yummie.
 </p>
 </div>
 
- <div id="outline-container-orgb87642d" class="outline-3">
- <h3 id="orgb87642d">Grind/blend spices</h3>
- <div class="outline-text-3" id="text-orgb87642d">
+ <div id="outline-container-org58e5579" class="outline-3">
+ <h3 id="org58e5579">Grind/blend spices</h3>
+ <div class="outline-text-3" id="text-org58e5579">
  <ul class="org-ul"> <li>2 teaspoons smoked paprika</li>
  <li>2 teaspoons cumin seeds</li>
  <li>2 teaspoons whole pepper corn mix</li>
@@ -670,105 +1041,90 @@ Made pulled pork for the first time. Freestyled a bit. No expert here, but resul
 If spices are whole, grind or blend them. Set aside.
 </p>
 
+ <p>
+Optionally: Substitute 1 teaspoon of paprika with chipotle pepper.
+</p>
 
- <div id="org1ade832" class="figure">
+
+ <div id="org7b466c5" class="figure">
  <p> <img src="../images/pulled-pork-recipe/grind.jpg" alt="grind.jpg" width="50%" height="50%"></img></p>
 </div>
 
 
- <div id="org4f9459a" class="figure">
+ <div id="org2f4f2c2" class="figure">
  <p> <img src="../images/pulled-pork-recipe/ground.jpg" alt="ground.jpg" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org9bc4f85" class="outline-3">
- <h3 id="org9bc4f85">Mix non-solids</h3>
- <div class="outline-text-3" id="text-org9bc4f85">
+ <div id="outline-container-orgbe1f195" class="outline-3">
+ <h3 id="orgbe1f195">Mix into a paste</h3>
+ <div class="outline-text-3" id="text-orgbe1f195">
  <ul class="org-ul"> <li>2 tablespoons honey</li>
  <li>1 teaspoon of dijon mustard</li>
 </ul> <p>
-Mix the two.
+Mix the honey, mustard, and previous spices into a paste.
 </p>
-
-
- <div id="orgba3bdf0" class="figure">
- <p> <img src="../images/pulled-pork-recipe/honey_mustard.jpg" alt="honey_mustard.jpg" width="50%" height="50%"></img></p>
-</div>
 </div>
 </div>
 
- <div id="outline-container-orgc36e8f3" class="outline-3">
- <h3 id="orgc36e8f3">Rub non-solids</h3>
- <div class="outline-text-3" id="text-orgc36e8f3">
+ <div id="outline-container-org3e1bce3" class="outline-3">
+ <h3 id="org3e1bce3">Rub the mix in</h3>
+ <div class="outline-text-3" id="text-org3e1bce3">
  <p>
-Rub non-solids thoroughly through pork shoulder.
+Rub mix thoroughly into the pork shoulder.
 </p>
 </div>
 </div>
 
- <div id="outline-container-orga1e42de" class="outline-3">
- <h3 id="orga1e42de">Sprinkle spices</h3>
- <div class="outline-text-3" id="text-orga1e42de">
- <p>
-Sprinkle the blended spices all over the pork shoulder. Use the back of a spoon to press the spices on to the meat.
-</p>
-
-
- <div id="org2f3b1df" class="figure">
- <p> <img src="../images/pulled-pork-recipe/going_in.jpg" alt="going_in.jpg" width="50%" height="50%"></img></p>
-</div>
-</div>
-</div>
-
- <div id="outline-container-orgf3cbf71" class="outline-3">
- <h3 id="orgf3cbf71">Bake (1 hour)</h3>
- <div class="outline-text-3" id="text-orgf3cbf71">
+ <div id="outline-container-org304be6c" class="outline-3">
+ <h3 id="org304be6c">Bake (1 hour)</h3>
+ <div class="outline-text-3" id="text-org304be6c">
  <p>
 Place in a pot (lid off) and bake in the oven for 1 hour at 200 °C.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org0d9be51" class="outline-3">
- <h3 id="org0d9be51">Add liquids</h3>
- <div class="outline-text-3" id="text-org0d9be51">
- <ul class="org-ul"> <li>1 cup of water.</li>
+ <div id="outline-container-orgb884c83" class="outline-3">
+ <h3 id="orgb884c83">Add liquids</h3>
+ <div class="outline-text-3" id="text-orgb884c83">
+ <ul class="org-ul"> <li>1/2 cup of water.</li>
  <li>4 tablespoons of apple cider vinegar.</li>
 </ul> <p>
 Add liquids to pot.
 </p>
 
 
- <div id="org5225c93" class="figure">
+ <div id="org56c7279" class="figure">
  <p> <img src="../images/pulled-pork-recipe/almost.jpg" alt="almost.jpg" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org80ba563" class="outline-3">
- <h3 id="org80ba563">Bake (3-5 hours)</h3>
- <div class="outline-text-3" id="text-org80ba563">
+ <div id="outline-container-orgfc83ac0" class="outline-3">
+ <h3 id="orgfc83ac0">Bake (3-5 hours)</h3>
+ <div class="outline-text-3" id="text-orgfc83ac0">
  <p>
 Bake between 3 to 5 hours 150 °C. Check every hour or two. Does the meat fall easily when spread with two forks? If so, you're done.
 </p>
 
 
- <div id="org89e993c" class="figure">
+ <div id="org80dd7d5" class="figure">
  <p> <img src="../images/pulled-pork-recipe/out.jpg" alt="out.jpg" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgbca520d" class="outline-3">
- <h3 id="orgbca520d">Pull apart</h3>
- <div class="outline-text-3" id="text-orgbca520d">
+ <div id="outline-container-orgb504f59" class="outline-3">
+ <h3 id="orgb504f59">Pull apart</h3>
+ <div class="outline-text-3" id="text-orgb504f59">
  <p>
 Use two forks to pull the meat apart.
 </p>
 
 
- <div id="org88aad17" class="figure">
+ <div id="orgfe25b7e" class="figure">
  <p> <img src="../images/pulled-pork-recipe/final.jpg" alt="final.jpg" width="50%" height="50%"></img></p>
 </div>
 </div>
@@ -1941,17 +2297,13 @@ ps. Can get the SDK path with:
  <h2 id="trying-out-gccemacs-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
  <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
  <p>
-Been wanting to try Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a>. Followed  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> to build it on macOS.
-</p>
-
- <p>
-Though not had much of a chance to play with the new install, here's what I did to get up and running…
+Below are the instructions I use to build Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a> on macOS. It is based on  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> plus some changes of my own.
 </p>
 </div>
 
- <div id="outline-container-orgac7b60b" class="outline-3">
- <h3 id="orgac7b60b">Install gcc and libgccjit via homebrew</h3>
- <div class="outline-text-3" id="text-orgac7b60b">
+ <div id="outline-container-orgb054a0b" class="outline-3">
+ <h3 id="orgb054a0b">Install gcc and libgccjit via homebrew</h3>
+ <div class="outline-text-3" id="text-orgb054a0b">
  <div class="org-src-container">
  <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -1959,9 +2311,9 @@ Though not had much of a chance to play with the new install, here's what I did 
 </div>
 </div>
 
- <div id="outline-container-org41c718c" class="outline-3">
- <h3 id="org41c718c">Save configure script</h3>
- <div class="outline-text-3" id="text-org41c718c">
+ <div id="outline-container-orgaaf9a9d" class="outline-3">
+ <h3 id="orgaaf9a9d">Save configure script</h3>
+ <div class="outline-text-3" id="text-orgaaf9a9d">
  <p>
 Create configure-gccemacs.sh
 </p>
@@ -2015,7 +2367,7 @@ Create configure-gccemacs.sh
      --with-gnutls  <span style="color: #183691;">\</span>
      --with-json  <span style="color: #183691;">\</span>
      --with-rsvg  <span style="color: #183691;">\</span>
-     --with-nativecomp  <span style="color: #183691;">\</span>
+     --with-native-compilation  <span style="color: #183691;">\</span>
      --disable-silent-rules  <span style="color: #183691;">\</span>
      --disable-ns-self-contained  <span style="color: #183691;">\</span>
      --without-dbus
@@ -2033,40 +2385,30 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-org523e554" class="outline-3">
- <h3 id="org523e554">Clone Emacs source</h3>
- <div class="outline-text-3" id="text-org523e554">
+ <div id="outline-container-orgf52f8f3" class="outline-3">
+ <h3 id="orgf52f8f3">Clone Emacs source</h3>
+ <div class="outline-text-3" id="text-orgf52f8f3">
  <div class="org-src-container">
- <pre class="src src-shell">git clone  <span style="color: #969896;">--branch</span> feature/native-comp https://github.com/emacs-mirror/emacs emacs
+ <pre class="src src-shell">git clone  <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org159cb0f" class="outline-3">
- <h3 id="org159cb0f">Check out native-comp feature branch</h3>
- <div class="outline-text-3" id="text-org159cb0f">
+ <div id="outline-container-org619e482" class="outline-3">
+ <h3 id="org619e482">Configure build</h3>
+ <div class="outline-text-3" id="text-org619e482">
  <div class="org-src-container">
  <pre class="src src-sh"> <span style="color: #a71d5d;">cd</span> gccemacs
-git checkout feature/native-comp
+../configure-gccemacs.sh
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgd9441ae" class="outline-3">
- <h3 id="orgd9441ae">Configure build</h3>
- <div class="outline-text-3" id="text-orgd9441ae">
- <div class="org-src-container">
- <pre class="src src-sh">../configure-gccemacs.sh
-</pre>
-</div>
-</div>
-</div>
-
- <div id="outline-container-org7aa41a7" class="outline-3">
- <h3 id="org7aa41a7">Native lisp compiler found?</h3>
- <div class="outline-text-3" id="text-org7aa41a7">
+ <div id="outline-container-orgd8163bc" class="outline-3">
+ <h3 id="orgd8163bc">Native lisp compiler found?</h3>
+ <div class="outline-text-3" id="text-orgd8163bc">
  <p>
 Verify native lisp compiler is found:
 </p>
@@ -2078,9 +2420,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
- <div id="outline-container-orgb18f8a0" class="outline-3">
- <h3 id="orgb18f8a0">Build</h3>
- <div class="outline-text-3" id="text-orgb18f8a0">
+ <div id="outline-container-org289ffa5" class="outline-3">
+ <h3 id="org289ffa5">Build</h3>
+ <div class="outline-text-3" id="text-org289ffa5">
  <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -2117,18 +2459,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
- <div id="outline-container-orgd6acb8e" class="outline-3">
- <h3 id="orgd6acb8e">Remove ~/emacs.d</h3>
- <div class="outline-text-3" id="text-orgd6acb8e">
+ <div id="outline-container-org78ba82a" class="outline-3">
+ <h3 id="org78ba82a">Remove ~/emacs.d</h3>
+ <div class="outline-text-3" id="text-org78ba82a">
  <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org9f20449" class="outline-3">
- <h3 id="org9f20449">init.el config</h3>
- <div class="outline-text-3" id="text-org9f20449">
+ <div id="outline-container-org30ca6ec" class="outline-3">
+ <h3 id="org30ca6ec">init.el config</h3>
+ <div class="outline-text-3" id="text-org30ca6ec">
  <p>
 Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set  <i>comp-deferred-compilation</i>. I wrapped the snippet in my   <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -2159,9 +2501,9 @@ Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_P
 </div>
 </div>
 
- <div id="outline-container-org4e316f9" class="outline-3">
- <h3 id="org4e316f9">Launch Emacs.app</h3>
- <div class="outline-text-3" id="text-org4e316f9">
+ <div id="outline-container-org5340511" class="outline-3">
+ <h3 id="org5340511">Launch Emacs.app</h3>
+ <div class="outline-text-3" id="text-org5340511">
  <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -2173,9 +2515,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
- <div id="outline-container-org481fbaa" class="outline-3">
- <h3 id="org481fbaa">Deferred compilation logs</h3>
- <div class="outline-text-3" id="text-org481fbaa">
+ <div id="outline-container-org0238cd7" class="outline-3">
+ <h3 id="org0238cd7">Deferred compilation logs</h3>
+ <div class="outline-text-3" id="text-org0238cd7">
  <p>
 After setting  <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>
@@ -2220,7 +2562,11 @@ UPDATE3: Removed symlinks and copied content instead. This simplifies things. In
 </p>
 
  <p>
-UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's  <a href="https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md">instructions</a>.</p>
+UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's  <a href="https://github.com/shshkn/emacs.d/blob/master/docs/nativecomp.md">instructions</a>.
+</p>
+
+ <p>
+UPDATE5: Use new flag –with-native-compilation and master branch.</p>
 </div>
 </div>
 </div>
@@ -9777,11 +10123,11 @@ Continuing the mu4e fun, added mu4e-maildirs-extension to display a mail dirs su
   <title>Trying out mu4e and offlineimap</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org943543c" class="outline-2">
+ <div id="outline-container-trying-out-mu4e-and-offlineimap" class="outline-2">
  <h2 id="trying-out-mu4e-and-offlineimap"> <span class="timestamp-wrapper"> <span class="timestamp">28 May 2018</span></span> Trying out mu4e and offlineimap</h2>
  <div class="outline-text-2" id="text-trying-out-mu4e-and-offlineimap">
 
- <div class="figure">
+ <div id="org98e5b34" class="figure">
  <p> <img src="../images/trying-out-mu4e-and-offlineimap/mu4e.png" alt="mu4e.png" width="75%" height="75%"></img></p>
 </div>
 
@@ -9790,9 +10136,9 @@ Managing Email from Emacs. Surely that's crazy-talk, but hey… let's give it a 
 </p>
 </div>
 
- <div id="outline-container-org7442946" class="outline-3">
- <h3 id="org7442946">Install offlineimap</h3>
- <div class="outline-text-3" id="text-org7442946">
+ <div id="outline-container-orgd11210c" class="outline-3">
+ <h3 id="orgd11210c">Install offlineimap</h3>
+ <div class="outline-text-3" id="text-orgd11210c">
  <p>
 Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
 </p>
@@ -9808,9 +10154,9 @@ Before can configure offlineimap, we'll need to handle a few things first.
 </div>
 </div>
 
- <div id="outline-container-orgd5e3c3f" class="outline-3">
- <h3 id="orgd5e3c3f">Get a cert fingerprint</h3>
- <div class="outline-text-3" id="text-orgd5e3c3f">
+ <div id="outline-container-org290d8ef" class="outline-3">
+ <h3 id="org290d8ef">Get a cert fingerprint</h3>
+ <div class="outline-text-3" id="text-org290d8ef">
  <p>
 Use openssl for getting a certificate fingerprint. From offlineimap's  <a href="http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint">FAQ:</a>
 </p>
@@ -9832,9 +10178,9 @@ SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
 </div>
 </div>
 
- <div id="outline-container-org666c620" class="outline-3">
- <h3 id="org666c620">Encrypt password</h3>
- <div class="outline-text-3" id="text-org666c620">
+ <div id="outline-container-org448c207" class="outline-3">
+ <h3 id="org448c207">Encrypt password</h3>
+ <div class="outline-text-3" id="text-org448c207">
  <p>
 Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
 </p>
@@ -9864,9 +10210,9 @@ Generate an offlineimap account password file.
 </div>
 </div>
 
- <div id="outline-container-org3d6d459" class="outline-3">
- <h3 id="org3d6d459">Python password  wrapper</h3>
- <div class="outline-text-3" id="text-org3d6d459">
+ <div id="outline-container-org149d6d3" class="outline-3">
+ <h3 id="org149d6d3">Python password  wrapper</h3>
+ <div class="outline-text-3" id="text-org149d6d3">
  <p>
 Based on Fabian's  <a href="https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html">Encrypt OfflineIMAP and msmtp password with GnuPG</a>, I created ~/.read_password.py with:
 </p>
@@ -9886,9 +10232,9 @@ ps. Alternatively, see  <a href="http://stevelosh.com/blog/2012/10/the-homely-mu
 </div>
 </div>
 
- <div id="outline-container-org71fc170" class="outline-3">
- <h3 id="org71fc170">Configure offlineimap</h3>
- <div class="outline-text-3" id="text-org71fc170">
+ <div id="outline-container-org2209c1c" class="outline-3">
+ <h3 id="org2209c1c">Configure offlineimap</h3>
+ <div class="outline-text-3" id="text-org2209c1c">
  <p>
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 </p>
@@ -9932,9 +10278,9 @@ Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to 
 </div>
 </div>
 
- <div id="outline-container-orge4b3663" class="outline-4">
- <h4 id="orge4b3663">Cert file</h4>
- <div class="outline-text-4" id="text-orge4b3663">
+ <div id="outline-container-orge7cf120" class="outline-4">
+ <h4 id="orge7cf120">Cert file</h4>
+ <div class="outline-text-4" id="text-orge7cf120">
  <p>
 You can use macOS's certificates from Keychain Access -> System Roots -> Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
 </p>
@@ -9952,9 +10298,9 @@ Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate 
 </div>
 </div>
 
- <div id="outline-container-org47d8277" class="outline-3">
- <h3 id="org47d8277">Install mu4e</h3>
- <div class="outline-text-3" id="text-org47d8277">
+ <div id="outline-container-orgfa32455" class="outline-3">
+ <h3 id="orgfa32455">Install mu4e</h3>
+ <div class="outline-text-3" id="text-orgfa32455">
  <p>
 Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
 </p>
@@ -9984,9 +10330,9 @@ Finally installed mu4e:
 </div>
 </div>
 
- <div id="outline-container-orgbc1c0b8" class="outline-3">
- <h3 id="orgbc1c0b8">Configure mu4e</h3>
- <div class="outline-text-3" id="text-orgbc1c0b8">
+ <div id="outline-container-orgf5b1565" class="outline-3">
+ <h3 id="orgf5b1565">Configure mu4e</h3>
+ <div class="outline-text-3" id="text-orgf5b1565">
  <p>
 Lastly, configure mu4e:
 </p>
@@ -10064,9 +10410,9 @@ Lastly, configure mu4e:
 </div>
 </div>
 </div>
- <div id="outline-container-org814c02e" class="outline-3">
- <h3 id="org814c02e">Authinfo</h3>
- <div class="outline-text-3" id="text-org814c02e">
+ <div id="outline-container-orgc354d78" class="outline-3">
+ <h3 id="orgc354d78">Authinfo</h3>
+ <div class="outline-text-3" id="text-orgc354d78">
  <p>
 Create an ~/.authinfo file for sendmail authentication with:
 </p>
@@ -10082,9 +10428,9 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 </div>
 </div>
 
- <div id="outline-container-org2c3395a" class="outline-3">
- <h3 id="org2c3395a">Mu4e helpful references</h3>
- <div class="outline-text-3" id="text-org2c3395a">
+ <div id="outline-container-org0d91262" class="outline-3">
+ <h3 id="org0d91262">Mu4e helpful references</h3>
+ <div class="outline-text-3" id="text-org0d91262">
  <ul class="org-ul"> <li> <a href="http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-">A Complete Guide to Email in Emacs using Mu and Mu4e</a>.</li>
  <li> <a href="https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/">A year with Notmuch mail - a super-fast email client available on Emacs</a>.</li>
  <li> <a href="https://dev.to/shrysr/archaic-text-based-email-clients-rock-3flm">Archaic: text based email clients rock - DEV Community (lots of great links)</a>.</li>
@@ -10109,6 +10455,7 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
  <li> <a href="https://github.com/djcb/mu">Mu's github mirror</a>.</li>
  <li> <a href="http://www.djcbsoftware.nl/code/mu">Mu's page</a>.</li>
  <li> <a href="http://wenshanren.org/?p=111">mu4e: an E-mail Client for Emacs</a>.</li>
+ <li> <a href="https://github.com/danielfleischer/mu4easy">mu4easy: mu4e + mbsync configuration for multiple accounts.</a>.</li>
  <li> <a href="http://rudolfochrist.github.io/blog/2015/03/21/offlineimap-with-ssl-files-on-osx/">OfflineIMAP with SSL files on OSX - Sebastian Christ</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=14221501">OfflineIMAP: sync and backup tool for IMAP (Hacker News) and mbsync in comments</a>.</li>
  <li> <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org">Practical guide to use Gnus with Gmail</a>.</li>
@@ -11145,7 +11492,7 @@ xcrun simctl launch booted  <span style="color: #183691;">"${BUNDLE_ID}"</span>
   <title>Eshell pcomplete company completion</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orge65ccb4" class="outline-2">
+ <div id="outline-container-eshell-pcomplete-company-completion" class="outline-2">
  <h2 id="eshell-pcomplete-company-completion"> <span class="timestamp-wrapper"> <span class="timestamp">01 November 2017</span></span> Eshell pcomplete company completion</h2>
  <div class="outline-text-2" id="text-eshell-pcomplete-company-completion">
  <p>
@@ -11153,7 +11500,7 @@ Howard Abrams's  <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introduct
 </p>
 
 
- <div class="figure">
+ <div id="orga72106c" class="figure">
  <p> <img src="../images/eshell-pcomplete-company-completion/company-pcomplete.png" alt="company-pcomplete.png" width="75%" height="75%"></img></p>
 </div>
 
@@ -11165,33 +11512,33 @@ Howard Abrams's  <a href="https://www.youtube.com/watch?v=RhYNu6i_uY4">Introduct
 (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">s</span>)
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete--overlap-tail</span> (a b)
-   <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\\n"</span>, return \"eloper\". <span style="color: #183691;">"</span>
- <span style="color: #183691;">  (let ((prefix a)</span>
- <span style="color: #183691;">        (remaining nil))</span>
- <span style="color: #183691;">    (while (and (not remaining) (> (length prefix) 0))</span>
- <span style="color: #183691;">      (when (s-starts-with? prefix b)</span>
- <span style="color: #183691;">        (setq remaining (substring b (length prefix))))</span>
- <span style="color: #183691;">      (setq prefix (substring prefix 1)))</span>
- <span style="color: #183691;">    remaining))</span>
+   <span style="color: #183691;">"When A is \"SomeDev\" and B is \"Developer\", return \"eloper\"."</span>
+  (<span style="color: #a71d5d;">let</span> ((prefix a)
+        (remaining nil))
+    (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (not remaining) (> (length prefix) 0))
+      (<span style="color: #a71d5d;">when</span> (s-starts-with? prefix b)
+        (<span style="color: #a71d5d;">setq</span> remaining (substring b (length prefix))))
+      (<span style="color: #a71d5d;">setq</span> prefix (substring prefix 1)))
+    remaining))
 
- <span style="color: #183691;">(defun company-pcomplete--candidates (prefix)</span>
- <span style="color: #183691;">  "</span>Get candidates for PREFIX company completion using ` <span style="color: #0086b3;">pcomplete</span>'. <span style="color: #183691;">"</span>
- <span style="color: #183691;">  ;; When prefix is: "</span>~/Down <span style="color: #183691;">" and completion is "</span>Downloads\n <span style="color: #183691;">", need</span>
- <span style="color: #183691;">  ;; to find common string and join into "</span>~/Downloads/ <span style="color: #183691;">".</span>
- <span style="color: #183691;">  (-map (lambda (item)</span>
- <span style="color: #183691;">          (if (s-starts-with? prefix item)</span>
- <span style="color: #183691;">              item</span>
- <span style="color: #183691;">            (concat prefix (company-pcomplete--overlap-tail prefix item))))</span>
- <span style="color: #183691;">        (all-completions prefix (pcomplete-completions))))</span>
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete--candidates</span> (prefix)
+   <span style="color: #183691;">"Get candidates for PREFIX company completion using `</span> <span style="color: #0086b3;">pcomplete</span> <span style="color: #183691;">'."</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">When prefix is: "~/Down" and completion is "Downloads", need</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">to find common string and join into "~/Downloads/".</span>
+  (-map (<span style="color: #a71d5d;">lambda</span> (item)
+          (<span style="color: #a71d5d;">if</span> (s-starts-with? prefix item)
+              item
+            (concat prefix (company-pcomplete--overlap-tail prefix item))))
+        (all-completions prefix (pcomplete-completions))))
 
- <span style="color: #183691;">(defun company-pcomplete (command &optional arg &rest ignored)</span>
- <span style="color: #183691;">  "</span>Complete using pcomplete. See ` <span style="color: #0086b3;">company</span>''s COMMAND ARG and IGNORED for details. <span style="color: #183691;">"</span>
- <span style="color: #183691;">  (interactive (list 'interactive))</span>
- <span style="color: #183691;">  (case command</span>
- <span style="color: #183691;">    (interactive (company-begin-backend 'company-pcomplete))</span>
- <span style="color: #183691;">    (prefix (company-grab-symbol))</span>
- <span style="color: #183691;">    (candidates</span>
- <span style="color: #183691;">     (company-pcomplete--candidates arg))))</span>
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">company-pcomplete</span> (command  <span style="color: #0086b3;">&optional</span> arg  <span style="color: #0086b3;">&rest</span> ignored)
+   <span style="color: #183691;">"Complete using pcomplete. See `</span> <span style="color: #0086b3;">company</span> <span style="color: #183691;">''s COMMAND ARG and IGNORED for details."</span>
+  (<span style="color: #a71d5d;">interactive</span> (list 'interactive))
+  (case command
+    (<span style="color: #a71d5d;">interactive</span> (company-begin-backend 'company-pcomplete))
+    (prefix (company-grab-symbol))
+    (candidates
+     (company-pcomplete--candidates arg))))
 </pre>
 </div>
 
@@ -13347,49 +13694,133 @@ M-x rtags-find-symbol
   <title>Emacs lisp snippets</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org33e57a0" class="outline-2">
+ <div id="outline-container-emacs-lisp-snippets" class="outline-2">
  <h2 id="emacs-lisp-snippets"> <span class="timestamp-wrapper"> <span class="timestamp">02 March 2016</span></span> Emacs lisp snippets</h2>
  <div class="outline-text-2" id="text-emacs-lisp-snippets">
 </div>
- <div id="outline-container-org33ec874" class="outline-3">
- <h3 id="org33ec874">Find file upwards, up parents, up hierarchy</h3>
- <div class="outline-text-3" id="text-org33ec874">
+ <div id="outline-container-orga649dfd" class="outline-3">
+ <h3 id="orga649dfd">cl-loop for in</h3>
+ <div class="outline-text-3" id="text-orga649dfd">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for day in '(<span style="color: #183691;">"mon"</span>  <span style="color: #183691;">"tue"</span>  <span style="color: #183691;">"wed"</span>  <span style="color: #183691;">"thu"</span>  <span style="color: #183691;">"fri"</span>  <span style="color: #183691;">"sat"</span>  <span style="color: #183691;">"sun"</span>)
+         do (print day))
+</pre>
+</div>
+
+ <pre class="example" id="orga7463b3">
+
+"mon"
+
+"tue"
+
+"wed"
+
+"thu"
+
+"fri"
+
+"sat"
+
+"sun"
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org7c562e0" class="outline-3">
+ <h3 id="org7c562e0">cl-loop for from to</h3>
+ <div class="outline-text-3" id="text-org7c562e0">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for x from 1 to 5
+         do (print x))
+</pre>
+</div>
+
+ <pre class="example" id="org3d6ee14">
+
+1
+
+2
+
+3
+
+4
+
+5
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org4a6c5f1" class="outline-3">
+ <h3 id="org4a6c5f1">pcase literal matching</h3>
+ <div class="outline-text-3" id="text-org4a6c5f1">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">pcase</span>  <span style="color: #183691;">"word"</span>
+  ('word (message  <span style="color: #183691;">"Matched 'word symbol"</span>))
+  (<span style="color: #183691;">"word"</span> (message  <span style="color: #183691;">"Matched \"word\" string"</span>)))
+</pre>
+</div>
+
+ <pre class="example">
+Matched "word" string
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-org611fde0" class="outline-3">
+ <h3 id="org611fde0">Avoid nesting with the help of thread-first and thread-last.</h3>
+ <div class="outline-text-3" id="text-org611fde0">
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">thread-last</span>  <span style="color: #183691;">"12.....34"</span>
+  (string-remove-prefix  <span style="color: #183691;">"1"</span>)
+  (string-remove-suffix  <span style="color: #183691;">"4"</span>))
+</pre>
+</div>
+
+ <pre class="example">
+2.....3
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-orgf8c2048" class="outline-3">
+ <h3 id="orgf8c2048">Find file upwards, up parents, up hierarchy</h3>
+ <div class="outline-text-3" id="text-orgf8c2048">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(locate-dominating-file FILE NAME)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org8550e57" class="outline-3">
- <h3 id="org8550e57">Find executable in PATH</h3>
- <div class="outline-text-3" id="text-org8550e57">
+ <div id="outline-container-org938a1f5" class="outline-3">
+ <h3 id="org938a1f5">Find executable in PATH</h3>
+ <div class="outline-text-3" id="text-org938a1f5">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(executable-find COMMAND)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-orgdda2033" class="outline-3">
- <h3 id="orgdda2033">Read string with completion (helm/ido/ivy friendly)</h3>
- <div class="outline-text-3" id="text-orgdda2033">
+ <div id="outline-container-org27b7492" class="outline-3">
+ <h3 id="org27b7492">Read string with completion (helm/ido/ivy friendly)</h3>
+ <div class="outline-text-3" id="text-org27b7492">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(completing-read PROMPT COLLECTION  <span style="color: #0086b3;">&optional</span> PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org7a8a0ff" class="outline-3">
- <h3 id="org7a8a0ff">Execute command/process and return list (similar to shell-command-to-string)</h3>
- <div class="outline-text-3" id="text-org7a8a0ff">
+ <div id="outline-container-org81a2e84" class="outline-3">
+ <h3 id="org81a2e84">Execute command/process and return list (similar to shell-command-to-string)</h3>
+ <div class="outline-text-3" id="text-org81a2e84">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(process-lines PROGRAM  <span style="color: #0086b3;">&rest</span> ARGS)
 </pre>
 </div>
 </div>
 </div>
- <div id="outline-container-org3eeb82e" class="outline-3">
- <h3 id="org3eeb82e">Iterating org buffer</h3>
- <div class="outline-text-3" id="text-org3eeb82e">
+ <div id="outline-container-orgfe3521e" class="outline-3">
+ <h3 id="orgfe3521e">Iterating org buffer</h3>
+ <div class="outline-text-3" id="text-orgfe3521e">
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(org-element-map (org-element-parse-buffer) '(headline link)
   (<span style="color: #a71d5d;">lambda</span> (element)
