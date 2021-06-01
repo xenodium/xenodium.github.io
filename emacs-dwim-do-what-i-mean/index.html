@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-06-01 Tue 13:18 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs DWIM: do what ✨I✨ mean</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Álvaro Ramírez" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .title {
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+// Make header clickable.
+//           cursor: pointer;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+// Hides subtree for heading by default.
+//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
+//           display: none;
+//         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+
+       <script>
+// Toggles heading subtree on click.
+//         function getClosest(elem, selector) {
+//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
+//         	if ( elem.matches( selector ) ) return elem;
+//             }
+//             return null;
+//         };
+//
+//
+//         function setNodeVisible (node, visible) {
+//             for (var i = 0; i < node.childNodes.length; i++) {
+//                 var child = node.childNodes[i];
+//                 if (node.classList.contains('outline-text-2') ||
+//                     node.classList.contains('outline-3') ||
+//                     node.classList.contains('outline-4') ||
+//                     node.classList.contains('outline-5') ||
+//                     node.classList.contains('outline-6')) {
+//                     node.style.display = visible ? 'inline' : 'none';
+//                 } else if (node.classList.contains('org-ul')) {
+//                     node.style.display = visible ? 'block' : 'none';
+//                  }
+//                 setNodeVisible(child, visible);
+//             }
+//         }
+//
+//         window.onload = function() {
+//             var parts = document.URL.split('#');
+//             if (parts.length > 1) {
+//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
+//                 setNodeVisible(entry, true)
+//             }
+//
+//             document.body.onclick = function(e){
+//                 if (e.target.tagName.toLowerCase() === 'h2') {
+//                     var entry = getClosest(e.target, '.outline-2');
+//                     var elements = entry.getElementsByClassName('outline-text-2');
+//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
+//                 }
+//             };
+//         };
+       </script>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-emacs-dwim-do-what-i-mean" class="outline-2">
+<h2 id="emacs-dwim-do-what-i-mean"><span class="timestamp-wrapper"><span class="timestamp">01 June 2021</span></span> Emacs DWIM: do what ✨I✨ mean</h2>
+<div class="outline-text-2" id="text-emacs-dwim-do-what-i-mean">
+
+<div id="orgc89859e" class="figure">
+<p><img src="../images/emacs-dwim-do-what-i-mean/link-this-text.gif" alt="link-this-text.gif" width="50%" height="50%" />
+</p>
+</div>
+
+<p>
+I was a rather puzzled the first time I spotted DWIM in an Emacs interactive command name. Don't think I remember what the command itself was. What's important is that <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a> stands for <a href="https://en.wikipedia.org/wiki/DWIM">do what I mean</a>.
+</p>
+
+<p>
+I love DWIM interactive commands. They enable commands to be smarter and thus pack more functionality, without incurring the typical cognitive overhead associated with remembering multiple commands (or key bindings). The Emacs manual does a great job describing DWIM for <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html">comment-dwim</a> command:
+</p>
+
+<pre class="example">
+The word “dwim” is an acronym for “Do What I Mean”; it indicates that this command can be used for many different jobs relating to comments, depending on the situation where you use it.
+</pre>
+
+<p>
+It's really great to find built-in DWIM-powered Emacs commands. Third-party packages often include them too. I typically gravitate towards these commands and bind them in my Emacs config. Examples being upcase-dwim, downcase-dwim, or mc/mark-all-dwim.
+</p>
+
+<p>
+But what if the DWIM command doesn't exist or the author has written a command for what <i>they</i> mean? This is your editor, so you can make it do what <i>you</i> mean.
+</p>
+
+<p>
+Take for example, <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>, bound to <i>C-c C-l</i> by default. It's handy for inserting <a href="https://orgmode.org/guide/Hyperlinks.html">org mode links</a>. I used it so frequently that I quickly internalized its key binding. Having said that, I often found myself doing some lightweight preprocessing prior to invoking <i>org-insert-link</i>. What if I can <i>make org-insert-link do what I mean</i>?
+</p>
+</div>
+
+<div id="outline-container-org9c0bdcc" class="outline-3">
+<h3 id="org9c0bdcc">What do I mean?</h3>
+<div class="outline-text-3" id="text-org9c0bdcc">
+</div>
+<div id="outline-container-org182d680" class="outline-4">
+<h4 id="org182d680">Use URLs when in clipboard</h4>
+<div class="outline-text-4" id="text-org182d680">
+<p>
+If the URL is already in the clipboard, don't ask me for it. Just use it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd850fa0" class="outline-4">
+<h4 id="orgd850fa0">Use the region too</h4>
+<div class="outline-text-4" id="text-orgd850fa0">
+<p>
+If I have a region selected and there's a URL in the clipboard, just sort it out without user interaction.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc1642f6" class="outline-4">
+<h4 id="orgc1642f6">Automatically fetch titles</h4>
+<div class="outline-text-4" id="text-orgc1642f6">
+<p>
+Automatically fetch URL titles from their HTML tag, but ask me for tweaks before insertion.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org92cb23e" class="outline-4">
+<h4 id="org92cb23e">Fallback to org-insert-link</h4>
+<div class="outline-text-4" id="text-org92cb23e">
+<p>
+If my DWIM rules didn't apply, fall back to using good 'ol <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5e26b78" class="outline-3">
+<h3 id="org5e26b78">The code</h3>
+<div class="outline-text-3" id="text-org5e26b78">
+<p>
+This is your own DWIM command that does what <i>you</i> mean. Strive to write a clean implementation, but hey you can be forgiving for not handling all the cases that other folks <i>may</i> want or inlining more code than usual. The goal is to bend your editor a little, not write an Emacs package.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">ar/org-insert-link-dwim</span> ()
+  <span style="color: #183691;">"Like `</span><span style="color: #0086b3;">org-insert-link</span><span style="color: #183691;">' but with personal dwim preferences."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((point-in-link (org-in-regexp org-link-any-re 1))
+         (clipboard-url (<span style="color: #a71d5d;">when</span> (string-match-p <span style="color: #183691;">"^http"</span> (current-kill 0))
+                          (current-kill 0)))
+         (region-content (<span style="color: #a71d5d;">when</span> (region-active-p)
+                           (buffer-substring-no-properties (region-beginning)
+                                                           (region-end)))))
+    (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> region-content clipboard-url (not point-in-link))
+           (delete-region (region-beginning) (region-end))
+           (insert (org-make-link-string clipboard-url region-content)))
+          ((<span style="color: #a71d5d;">and</span> clipboard-url (not point-in-link))
+           (insert (org-make-link-string
+                    clipboard-url
+                    (read-string <span style="color: #183691;">"title: "</span>
+                                 (<span style="color: #a71d5d;">with-current-buffer</span> (url-retrieve-synchronously clipboard-url)
+                                   (dom-text (car
+                                              (dom-by-tag (libxml-parse-html-region
+                                                           (point-min)
+                                                           (point-max))
+                                                          'title))))))))
+          (t
+           (call-interactively 'org-insert-link)))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9dc32ab" class="outline-3">
+<h3 id="org9dc32ab">org-web-tools</h3>
+<div class="outline-text-3" id="text-org9dc32ab">
+<p>
+I showed how to write your own DWIM command, so you can make Emacs do what ✨you✨ mean. <i>ar/org-insert-link-dwim</i> was built for my particular needs. Having said that, alphapapa has a great package to help in the org web/link space, that may work for you: <a href="https://github.com/alphapapa/org-web-tools">org-web-tools: View, capture, and archive Web pages in Org-mode</a><sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+This link was brought to you by <i>ar/org-insert-link-dwim</i>.
+</p></div></div>
+
+
+</div>
+</div></div>
+</body>
+</html>

@@ -1,6 +1,82 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-06-01 Tue] Emacs DWIM: do what ✨I✨ mean
+:PROPERTIES:
+:CUSTOM_ID: emacs-dwim-do-what-i-mean
+:END:
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-do-what-i-mean/link-this-text.gif]]
+
+I was a rather puzzled the first time I spotted DWIM in an Emacs interactive command name. Don't think I remember what the command itself was. What's important is that [[https://en.wikipedia.org/wiki/DWIM][DWIM]] stands for [[https://en.wikipedia.org/wiki/DWIM][do what I mean]].
+
+I love DWIM interactive commands. They enable commands to be smarter and thus pack more functionality, without incurring the typical cognitive overhead associated with remembering multiple commands (or key bindings). The Emacs manual does a great job describing DWIM for [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html][comment-dwim]] command:
+
+#+begin_src
+ The word “dwim” is an acronym for “Do What I Mean”; it indicates that this command can be used for many different jobs relating to comments, depending on the situation where you use it.
+#+end_src
+
+It's really great to find built-in DWIM-powered Emacs commands. Third-party packages often include them too. I typically gravitate towards these commands and bind them in my Emacs config. Examples being upcase-dwim, downcase-dwim, or mc/mark-all-dwim.
+
+But what if the DWIM command doesn't exist or the author has written a command for what /they/ mean? This is your editor, so you can make it do what /you/ mean.
+
+Take for example, [[https://orgmode.org/manual/Handling-Links.html][org-insert-link]], bound to /C-c C-l/ by default. It's handy for inserting [[https://orgmode.org/guide/Hyperlinks.html][org mode links]]. I used it so frequently that I quickly internalized its key binding. Having said that, I often found myself doing some lightweight preprocessing prior to invoking /org-insert-link/. What if I can /make org-insert-link do what I mean/?
+
+** What do I mean?
+
+*** Use URLs when in clipboard
+
+If the URL is already in the clipboard, don't ask me for it. Just use it.
+
+*** Use the region too
+
+If I have a region selected and there's a URL in the clipboard, just sort it out without user interaction.
+
+*** Automatically fetch titles
+Automatically fetch URL titles from their HTML tag, but ask me for tweaks before insertion.
+
+*** Fallback to org-insert-link
+
+If my DWIM rules didn't apply, fall back to using good 'ol [[https://orgmode.org/manual/Handling-Links.html][org-insert-link]].
+
+** The code
+
+This is your own DWIM command that does what /you/ mean. Strive to write a clean implementation, but hey you can be forgiving for not handling all the cases that other folks /may/ want or inlining more code than usual. The goal is to bend your editor a little, not write an Emacs package.
+
+#+begin_src emacs-lisp
+  (defun ar/org-insert-link-dwim ()
+    "Like `org-insert-link' but with personal dwim preferences."
+    (interactive)
+    (let* ((point-in-link (org-in-regexp org-link-any-re 1))
+           (clipboard-url (when (string-match-p "^http" (current-kill 0))
+                            (current-kill 0)))
+           (region-content (when (region-active-p)
+                             (buffer-substring-no-properties (region-beginning)
+                                                             (region-end)))))
+      (cond ((and region-content clipboard-url (not point-in-link))
+             (delete-region (region-beginning) (region-end))
+             (insert (org-make-link-string clipboard-url region-content)))
+            ((and clipboard-url (not point-in-link))
+             (insert (org-make-link-string
+                      clipboard-url
+                      (read-string "title: "
+                                   (with-current-buffer (url-retrieve-synchronously clipboard-url)
+                                     (dom-text (car
+                                                (dom-by-tag (libxml-parse-html-region
+                                                             (point-min)
+                                                             (point-max))
+                                                            'title))))))))
+            (t
+             (call-interactively 'org-insert-link)))))
+#+end_src
+
+** org-web-tools
+
+I showed how to write your own DWIM command, so you can make Emacs do what ✨you✨ mean. /ar/org-insert-link-dwim/ was built for my particular needs. Having said that, alphapapa has a great package to help in the org web/link space, that may work for you: [[https://github.com/alphapapa/org-web-tools][org-web-tools: View, capture, and archive Web pages in Org-mode]][fn:1].
+
+[fn:1] This link was brought to you by /ar/org-insert-link-dwim/.
+
 * [2021-05-28 Fri] Emacs link scraping (2021 edition)
   :PROPERTIES:
   :CUSTOM_ID: emacs-link-scraping-2021-edition
