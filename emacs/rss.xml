@@ -6,7 +6,170 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 28 May 2021 17:51:13 +0100</lastBuildDate>
+<lastBuildDate>Tue, 01 Jun 2021 14:17:41 +0100</lastBuildDate>
+<item>
+  <title>Emacs DWIM: do what ✨I✨ mean</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-dwim-do-what-i-mean" class="outline-2">
+ <h2 id="emacs-dwim-do-what-i-mean"> <span class="timestamp-wrapper"> <span class="timestamp">01 June 2021</span></span> Emacs DWIM: do what ✨I✨ mean</h2>
+ <div class="outline-text-2" id="text-emacs-dwim-do-what-i-mean">
+
+ <div id="org5b11dab" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+I was a rather puzzled the first time I spotted DWIM in an Emacs interactive command name. Don't think I remember what the command itself was, but what's important here is that  <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a> stands for  <a href="https://en.wikipedia.org/wiki/DWIM">do what I mean</a>.
+</p>
+
+ <p>
+I love DWIM interactive commands. They enable commands to be smarter and thus pack more functionality, without incurring the typical cognitive overhead associated with remembering multiple commands (or key bindings). The Emacs manual does a great job describing DWIM for  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html">comment-dwim</a> command:
+</p>
+
+ <pre class="example">
+The word “dwim” is an acronym for “Do What I Mean”; it indicates that this command can be used for many different jobs relating to comments, depending on the situation where you use it.
+</pre>
+
+ <p>
+It's really great to find built-in DWIM-powered Emacs commands. Third-party packages often include them too. I typically gravitate towards these commands and bind them in my Emacs config. Examples being upcase-dwim, downcase-dwim, or mc/mark-all-dwim.
+</p>
+
+ <p>
+But what if the DWIM command doesn't exist or the author has written a command for what  <i>they</i> mean? This is your editor, so you can make it do what  <i>you</i> mean.
+</p>
+
+ <p>
+Take for example,  <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>, bound to  <i>C-c C-l</i> by default. It's handy for inserting  <a href="https://orgmode.org/guide/Hyperlinks.html">org mode links</a>. I used it so frequently that I quickly internalized its key binding. Having said that, I often found myself doing some lightweight preprocessing prior to invoking  <i>org-insert-link</i>. What if I can  <i>make org-insert-link do what I mean</i>?
+</p>
+</div>
+
+ <div id="outline-container-org16c6dcc" class="outline-3">
+ <h3 id="org16c6dcc">What do I mean?</h3>
+ <div class="outline-text-3" id="text-org16c6dcc">
+</div>
+ <div id="outline-container-orgd59fe12" class="outline-4">
+ <h4 id="orgd59fe12">Use URLs when in clipboard</h4>
+ <div class="outline-text-4" id="text-orgd59fe12">
+ <p>
+If the URL is already in the clipboard, don't ask me for it. Just use it.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org55cd1ee" class="outline-4">
+ <h4 id="org55cd1ee">Use the region too</h4>
+ <div class="outline-text-4" id="text-org55cd1ee">
+ <p>
+If I have a region selected and there's a URL in the clipboard, just sort it out without user interaction.
+</p>
+
+
+ <div id="org26af4a8" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/link-this-text.gif" alt="link-this-text.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+
+ <div id="outline-container-org231ae41" class="outline-4">
+ <h4 id="org231ae41">Automatically fetch titles</h4>
+ <div class="outline-text-4" id="text-org231ae41">
+ <p>
+Automatically fetch URL titles from their HTML tag, but ask me for tweaks before insertion.
+</p>
+
+
+ <div id="orge9fbaac" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc3b7371" class="outline-4">
+ <h4 id="orgc3b7371">Fallback to org-insert-link</h4>
+ <div class="outline-text-4" id="text-orgc3b7371">
+ <p>
+If my DWIM rules don't apply, fall back to using good ol'  <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>.
+</p>
+
+ <p>
+My most common use case here is when editing an existing link where I don't want neither its title nor URL automatically handled.
+</p>
+
+
+ <div id="org4022b24" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/edit-link.gif" alt="edit-link.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org7d5a14c" class="outline-3">
+ <h3 id="org7d5a14c">The code</h3>
+ <div class="outline-text-3" id="text-org7d5a14c">
+ <p>
+This is your own DWIM command that does what  <i>you</i> mean. Strive to write a clean implementation, but hey you can be forgiving for not handling all the cases that other folks  <i>may</i> want or inlining more code than usual. The goal is to bend your editor a little, not write an Emacs package.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-insert-link-dwim</span> ()
+   <span style="color: #183691;">"Like `</span> <span style="color: #0086b3;">org-insert-link</span> <span style="color: #183691;">' but with personal dwim preferences."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((point-in-link (org-in-regexp org-link-any-re 1))
+         (clipboard-url (<span style="color: #a71d5d;">when</span> (string-match-p  <span style="color: #183691;">"^http"</span> (current-kill 0))
+                          (current-kill 0)))
+         (region-content (<span style="color: #a71d5d;">when</span> (region-active-p)
+                           (buffer-substring-no-properties (region-beginning)
+                                                           (region-end)))))
+    (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> region-content clipboard-url (not point-in-link))
+           (delete-region (region-beginning) (region-end))
+           (insert (org-make-link-string clipboard-url region-content)))
+          ((<span style="color: #a71d5d;">and</span> clipboard-url (not point-in-link))
+           (insert (org-make-link-string
+                    clipboard-url
+                    (read-string  <span style="color: #183691;">"title: "</span>
+                                 (<span style="color: #a71d5d;">with-current-buffer</span> (url-retrieve-synchronously clipboard-url)
+                                   (dom-text (car
+                                              (dom-by-tag (libxml-parse-html-region
+                                                           (point-min)
+                                                           (point-max))
+                                                          'title))))))))
+          (t
+           (call-interactively 'org-insert-link)))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org59d814c" class="outline-3">
+ <h3 id="org59d814c">Org web tools package</h3>
+ <div class="outline-text-3" id="text-org59d814c">
+ <p>
+I showed how to write your own DWIM command, so you can make Emacs do what ✨you✨ mean.  <i>ar/org-insert-link-dwim</i> was built for my particular needs.
+</p>
+
+ <p>
+Having said all of this, alphapapa has built a great package with helpers for the org web/link space. It doesn't do what I mean (for now anyway), but it may work for you:  <a href="https://github.com/alphapapa/org-web-tools">org-web-tools: View, capture, and archive Web pages in Org-mode</a> <sup> <a id="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+</div>
+</div>
+</div>
+ <div id="footnotes">
+ <h2 class="footnotes">Footnotes: </h2>
+ <div id="text-footnotes">
+
+ <div class="footdef"> <sup> <a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"> <p class="footpara">
+This link was brought to you by  <i>ar/org-insert-link-dwim</i>.
+</p></div></div>
+
+
+</div>
+</div></div>]]></description>
+  <link>http://xenodium.com/emacs-dwim-do-what-i-mean</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-dwim-do-what-i-mean</guid>
+  <pubDate>Tue, 01 Jun 2021 14:17:41 +0100</pubDate>
+</item>
 <item>
   <title>Emacs link scraping (2021 edition)</title>
   <description><![CDATA[<div id="content">
@@ -260,6 +423,10 @@ Note: Your init.el needs tweaking to take advantage of native compilation. See m
  <h2 id="flat-habits-meets-org-agenda"> <span class="timestamp-wrapper"> <span class="timestamp">10 April 2021</span></span> Flat Habits meets org agenda</h2>
  <div class="outline-text-2" id="text-flat-habits-meets-org-agenda">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
 Flat Habits v1.0.2 is  <a href="https://apps.apple.com/app/id1558358855">out today</a>, with habit-toggling now supported from the streak view.
 </p>
 
@@ -291,13 +458,17 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda \o
  <h2 id="flat-habits-v101-org-import-menu"> <span class="timestamp-wrapper"> <span class="timestamp">23 March 2021</span></span> Flat Habits v1.0.1 (org import menu)</h2>
  <div class="outline-text-2" id="text-flat-habits-v101-org-import-menu">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
 Flat Habits v1.0.1 is now released and  <a href="https://apps.apple.com/app/id1558358855">available</a> in the App Store.
 </p>
 </div>
 
- <div id="outline-container-orge83383e" class="outline-3">
- <h3 id="orge83383e">org import (import vs in-place)</h3>
- <div class="outline-text-3" id="text-orge83383e">
+ <div id="outline-container-org7e85638" class="outline-3">
+ <h3 id="org7e85638">org import (import vs in-place)</h3>
+ <div class="outline-text-3" id="text-org7e85638">
  <p>
 We can now import org files from the menu. Importing gives ya the option to either import (copy into the app) or open in-place. The latter enables users to sync org files with other iOS apps or just open/edit from Emacs for the full org-mode/agenda experience.
 </p>
@@ -332,13 +503,17 @@ Good luck with your habits!
  <h2 id="flat-habits-for-ios"> <span class="timestamp-wrapper"> <span class="timestamp">17 March 2021</span></span> Flat Habits for iOS (powered by org)</h2>
  <div class="outline-text-2" id="text-flat-habits-for-ios">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
  <i>No friction. No social. No analytics. No account. No cloud. No lock-in.</i>
 </p>
 </div>
 
- <div id="outline-container-orgf436442" class="outline-3">
- <h3 id="orgf436442">So what is it?</h3>
- <div class="outline-text-3" id="text-orgf436442">
+ <div id="outline-container-org530d140" class="outline-3">
+ <h3 id="org530d140">So what is it?</h3>
+ <div class="outline-text-3" id="text-org530d140">
  <p>
 An iOS app to help you form and track lasting habits.
 </p>
@@ -437,6 +612,10 @@ To join TestFlight as a beta tester, you likely gave your email address. If you'
  <div id="outline-container-frictionless-org-habits-on-ios" class="outline-2">
  <h2 id="frictionless-org-habits-on-ios"> <span class="timestamp-wrapper"> <span class="timestamp">21 February 2021</span></span> Frictionless org habits on iOS</h2>
  <div class="outline-text-2" id="text-frictionless-org-habits-on-ios">
+ <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
 
  <div id="orgf273cf2" class="figure">
  <p> <img src="../images/frictionless-org-habits-on-ios/flat_habits.gif" alt="flat_habits.gif" width="80%" height="80%"></img></p>
@@ -6371,6 +6550,7 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
  <li> <a href="https://github.com/djcb/mu">Mu's github mirror</a>.</li>
  <li> <a href="http://www.djcbsoftware.nl/code/mu">Mu's page</a>.</li>
  <li> <a href="http://wenshanren.org/?p=111">mu4e: an E-mail Client for Emacs</a>.</li>
+ <li> <a href="https://github.com/danielfleischer/mu4easy">mu4easy: mu4e + mbsync configuration for multiple accounts.</a>.</li>
  <li> <a href="http://rudolfochrist.github.io/blog/2015/03/21/offlineimap-with-ssl-files-on-osx/">OfflineIMAP with SSL files on OSX - Sebastian Christ</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=14221501">OfflineIMAP: sync and backup tool for IMAP (Hacker News) and mbsync in comments</a>.</li>
  <li> <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org">Practical guide to use Gnus with Gmail</a>.</li>
