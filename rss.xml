@@ -6,7 +6,170 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 29 May 2021 17:41:25 +0100</lastBuildDate>
+<lastBuildDate>Tue, 01 Jun 2021 16:34:47 +0100</lastBuildDate>
+<item>
+  <title>Emacs DWIM: do what ✨I✨ mean</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-dwim-do-what-i-mean" class="outline-2">
+ <h2 id="emacs-dwim-do-what-i-mean"> <span class="timestamp-wrapper"> <span class="timestamp">01 June 2021</span></span> Emacs DWIM: do what ✨I✨ mean</h2>
+ <div class="outline-text-2" id="text-emacs-dwim-do-what-i-mean">
+
+ <div id="org5b11dab" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+I was a rather puzzled the first time I spotted DWIM in an Emacs interactive command name. Don't think I remember what the command itself was, but what's important here is that  <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a> stands for  <a href="https://en.wikipedia.org/wiki/DWIM">do what I mean</a>.
+</p>
+
+ <p>
+I love DWIM interactive commands. They enable commands to be smarter and thus pack more functionality, without incurring the typical cognitive overhead associated with remembering multiple commands (or key bindings). The Emacs manual does a great job describing DWIM for the  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html">comment-dwim</a> command:
+</p>
+
+ <pre class="example">
+The word “dwim” is an acronym for “Do What I Mean”; it indicates that this command can be used for many different jobs relating to comments, depending on the situation where you use it.
+</pre>
+
+ <p>
+It's really great to find built-in DWIM-powered Emacs commands. Third-party packages often include them too. I typically gravitate towards these commands and bind them in my Emacs config. Examples being upcase-dwim, downcase-dwim, or mc/mark-all-dwim.
+</p>
+
+ <p>
+But what if the DWIM command doesn't exist or the author has written a command for what  <i>they</i> mean? This is your editor, so you can make it do what  <i>you</i> mean.
+</p>
+
+ <p>
+Take for example,  <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>, bound to  <i>C-c C-l</i> by default. It's handy for inserting  <a href="https://orgmode.org/guide/Hyperlinks.html">org mode links</a>. I used it so frequently that I quickly internalized its key binding. Having said that, I often found myself doing some lightweight preprocessing prior to invoking  <i>org-insert-link</i>. What if I can  <i>make org-insert-link do what I mean</i>?
+</p>
+</div>
+
+ <div id="outline-container-org16c6dcc" class="outline-3">
+ <h3 id="org16c6dcc">What do I mean?</h3>
+ <div class="outline-text-3" id="text-org16c6dcc">
+</div>
+ <div id="outline-container-orgd59fe12" class="outline-4">
+ <h4 id="orgd59fe12">Use URLs when in clipboard</h4>
+ <div class="outline-text-4" id="text-orgd59fe12">
+ <p>
+If the URL is already in the clipboard, don't ask me for it. Just use it.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org55cd1ee" class="outline-4">
+ <h4 id="org55cd1ee">Use the region too</h4>
+ <div class="outline-text-4" id="text-org55cd1ee">
+ <p>
+If I have a region selected and there's a URL in the clipboard, just sort it out without user interaction.
+</p>
+
+
+ <div id="org26af4a8" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/link-this-text.gif" alt="link-this-text.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+
+ <div id="outline-container-org231ae41" class="outline-4">
+ <h4 id="org231ae41">Automatically fetch titles</h4>
+ <div class="outline-text-4" id="text-org231ae41">
+ <p>
+Automatically fetch URL titles from their HTML tag, but ask me for tweaks before insertion.
+</p>
+
+
+ <div id="orge9fbaac" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc3b7371" class="outline-4">
+ <h4 id="orgc3b7371">Fallback to org-insert-link</h4>
+ <div class="outline-text-4" id="text-orgc3b7371">
+ <p>
+If my DWIM rules don't apply, fall back to using good ol'  <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>.
+</p>
+
+ <p>
+My most common use case here is when editing an existing link where I don't want neither its title nor URL automatically handled.
+</p>
+
+
+ <div id="org4022b24" class="figure">
+ <p> <img src="../images/emacs-dwim-do-what-i-mean/edit-link.gif" alt="edit-link.gif" width="50%" height="50%"></img></p>
+</div>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org7d5a14c" class="outline-3">
+ <h3 id="org7d5a14c">The code</h3>
+ <div class="outline-text-3" id="text-org7d5a14c">
+ <p>
+This is your own DWIM command that does what  <i>you</i> mean. Strive to write a clean implementation, but hey you can be forgiving for not handling all the cases that other folks  <i>may</i> want or inlining more code than usual. The goal is to bend your editor a little, not write an Emacs package.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-insert-link-dwim</span> ()
+   <span style="color: #183691;">"Like `</span> <span style="color: #0086b3;">org-insert-link</span> <span style="color: #183691;">' but with personal dwim preferences."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((point-in-link (org-in-regexp org-link-any-re 1))
+         (clipboard-url (<span style="color: #a71d5d;">when</span> (string-match-p  <span style="color: #183691;">"^http"</span> (current-kill 0))
+                          (current-kill 0)))
+         (region-content (<span style="color: #a71d5d;">when</span> (region-active-p)
+                           (buffer-substring-no-properties (region-beginning)
+                                                           (region-end)))))
+    (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> region-content clipboard-url (not point-in-link))
+           (delete-region (region-beginning) (region-end))
+           (insert (org-make-link-string clipboard-url region-content)))
+          ((<span style="color: #a71d5d;">and</span> clipboard-url (not point-in-link))
+           (insert (org-make-link-string
+                    clipboard-url
+                    (read-string  <span style="color: #183691;">"title: "</span>
+                                 (<span style="color: #a71d5d;">with-current-buffer</span> (url-retrieve-synchronously clipboard-url)
+                                   (dom-text (car
+                                              (dom-by-tag (libxml-parse-html-region
+                                                           (point-min)
+                                                           (point-max))
+                                                          'title))))))))
+          (t
+           (call-interactively 'org-insert-link)))))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org59d814c" class="outline-3">
+ <h3 id="org59d814c">Org web tools package</h3>
+ <div class="outline-text-3" id="text-org59d814c">
+ <p>
+I showed how to write your own DWIM command, so you can make Emacs do what ✨you✨ mean.  <i>ar/org-insert-link-dwim</i> was built for my particular needs.
+</p>
+
+ <p>
+Having said all of this, alphapapa has built a great package with helpers for the org web/link space. It doesn't do what I mean (for now anyway), but it may work for you:  <a href="https://github.com/alphapapa/org-web-tools">org-web-tools: View, capture, and archive Web pages in Org-mode</a> <sup> <a id="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+</div>
+</div>
+</div>
+ <div id="footnotes">
+ <h2 class="footnotes">Footnotes: </h2>
+ <div id="text-footnotes">
+
+ <div class="footdef"> <sup> <a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"> <p class="footpara">
+This link was brought to you by  <i>ar/org-insert-link-dwim</i>.
+</p></div></div>
+
+
+</div>
+</div></div>]]></description>
+  <link>http://xenodium.com/emacs-dwim-do-what-i-mean</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-dwim-do-what-i-mean</guid>
+  <pubDate>Tue, 01 Jun 2021 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Emacs link scraping (2021 edition)</title>
   <description><![CDATA[<div id="content">
@@ -386,6 +549,10 @@ A here's my  <b>⌥-F</b> binding to  <b>reframeFocusedWindow</b>:
  <h2 id="flat-habits-meets-org-agenda"> <span class="timestamp-wrapper"> <span class="timestamp">10 April 2021</span></span> Flat Habits meets org agenda</h2>
  <div class="outline-text-2" id="text-flat-habits-meets-org-agenda">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
 Flat Habits v1.0.2 is  <a href="https://apps.apple.com/app/id1558358855">out today</a>, with habit-toggling now supported from the streak view.
 </p>
 
@@ -394,7 +561,7 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda \o
 </p>
 
 
- <div id="orgb9055b3" class="figure">
+ <div id="org6ece1ad" class="figure">
  <p> <img src="../images/flat-habits-meets-org-agenda/flat_agenda.gif" alt="flat_agenda.gif" width="75%" height="75%"></img></p>
 </div>
 
@@ -417,13 +584,17 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda \o
  <h2 id="flat-habits-v101-org-import-menu"> <span class="timestamp-wrapper"> <span class="timestamp">23 March 2021</span></span> Flat Habits v1.0.1 (org import menu)</h2>
  <div class="outline-text-2" id="text-flat-habits-v101-org-import-menu">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
 Flat Habits v1.0.1 is now released and  <a href="https://apps.apple.com/app/id1558358855">available</a> in the App Store.
 </p>
 </div>
 
- <div id="outline-container-orge83383e" class="outline-3">
- <h3 id="orge83383e">org import (import vs in-place)</h3>
- <div class="outline-text-3" id="text-orge83383e">
+ <div id="outline-container-org7e85638" class="outline-3">
+ <h3 id="org7e85638">org import (import vs in-place)</h3>
+ <div class="outline-text-3" id="text-org7e85638">
  <p>
 We can now import org files from the menu. Importing gives ya the option to either import (copy into the app) or open in-place. The latter enables users to sync org files with other iOS apps or just open/edit from Emacs for the full org-mode/agenda experience.
 </p>
@@ -458,13 +629,17 @@ Good luck with your habits!
  <h2 id="flat-habits-for-ios"> <span class="timestamp-wrapper"> <span class="timestamp">17 March 2021</span></span> Flat Habits for iOS (powered by org)</h2>
  <div class="outline-text-2" id="text-flat-habits-for-ios">
  <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
+
+ <p>
  <i>No friction. No social. No analytics. No account. No cloud. No lock-in.</i>
 </p>
 </div>
 
- <div id="outline-container-orgf436442" class="outline-3">
- <h3 id="orgf436442">So what is it?</h3>
- <div class="outline-text-3" id="text-orgf436442">
+ <div id="outline-container-org530d140" class="outline-3">
+ <h3 id="org530d140">So what is it?</h3>
+ <div class="outline-text-3" id="text-org530d140">
  <p>
 An iOS app to help you form and track lasting habits.
 </p>
@@ -476,9 +651,9 @@ An iOS app to help you form and track lasting habits.
 </div>
 </div>
 
- <div id="outline-container-orgb183d9f" class="outline-3">
- <h3 id="orgb183d9f">Why an app?</h3>
- <div class="outline-text-3" id="text-orgb183d9f">
+ <div id="outline-container-org3416277" class="outline-3">
+ <h3 id="org3416277">Why an app?</h3>
+ <div class="outline-text-3" id="text-org3416277">
  <p>
 Tracking and accountability may help you develop positive habits. A simple habit-tracking app should make this easy. I'm not a habits expert, but got inspired by James Clear's  <a href="https://jamesclear.com/atomic-habits">Atomic Habits</a>. Read that book if you're interested in the topic.
 </p>
@@ -489,45 +664,45 @@ I wanted a frictionless habit tracker that gets out of the way, so I built one t
 </div>
 </div>
 
- <div id="outline-container-org2163889" class="outline-3">
- <h3 id="org2163889">Sounds like a lot of work?</h3>
- <div class="outline-text-3" id="text-org2163889">
+ <div id="outline-container-org05b648c" class="outline-3">
+ <h3 id="org05b648c">Sounds like a lot of work?</h3>
+ <div class="outline-text-3" id="text-org05b648c">
  <p>
 You mean habit tracking? It's not. I tried to make the app simple and focused. Mark a habit done whenever you do it. It's really encouraging to see your daily streaks grow. I really don't want to break them.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org94cb25d" class="outline-3">
- <h3 id="org94cb25d">What kind of habits?</h3>
- <div class="outline-text-3" id="text-org94cb25d">
+ <div id="outline-container-orgf9ac878" class="outline-3">
+ <h3 id="orgf9ac878">What kind of habits?</h3>
+ <div class="outline-text-3" id="text-orgf9ac878">
  <p>
 Any recurring habit you'd like to form like exercise, water the plants, read, make your bed, recycle, call grandma, yoga, cleaning, drink water, meditate, take a nap, make your lunch, journal, laundry, push-ups, sort out the dryer filter, floz, take your vitamins, take your meds, eat salad, eat fruit, practice a language, practice an instrument, go to bed early…
 </p>
 </div>
 </div>
 
- <div id="outline-container-org4779d85" class="outline-3">
- <h3 id="org4779d85">So it's like a task/todo app?</h3>
- <div class="outline-text-3" id="text-org4779d85">
+ <div id="outline-container-org6f52cbd" class="outline-3">
+ <h3 id="org6f52cbd">So it's like a task/todo app?</h3>
+ <div class="outline-text-3" id="text-org6f52cbd">
  <p>
 Nope. This app focuses solely on habits. Unlike todos/tasks, habits must happen regularly. If you don't water the plants, they will die. If you don't exercise regularly, you won't get the health benefits. Keep your habits separate from that long list of todos. You know, that panic-inducing list you're too afraid to look at.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org420f18f" class="outline-3">
- <h3 id="org420f18f">Where is my data stored?</h3>
- <div class="outline-text-3" id="text-org420f18f">
+ <div id="outline-container-org213d360" class="outline-3">
+ <h3 id="org213d360">Where is my data stored?</h3>
+ <div class="outline-text-3" id="text-org213d360">
  <p>
 On your iPhone as a plain text file (in  <a href="https://orgmode.org/">org mode</a> format). You can view, edit, or migrate your data at any time (use export from the menu). You may also save it to a shared location, so you can access it from multiple devices/apps. Some of us like to  <a href="http://xenodium.com/frictionless-org-habits-on-ios/">use our beloved text editors</a> (Emacs, Vim, VSCode, etc.) to poke at  <a href="https://orgmode.org/manual/Tracking-your-habits.html">habits</a>.
 </p>
 </div>
 </div>
 
- <div id="outline-container-orgc935f56" class="outline-3">
- <h3 id="orgc935f56">Got more questions?</h3>
- <div class="outline-text-3" id="text-orgc935f56">
+ <div id="outline-container-orgc55f7cd" class="outline-3">
+ <h3 id="orgc55f7cd">Got more questions?</h3>
+ <div class="outline-text-3" id="text-orgc55f7cd">
  <p>
 I may not have the answer, but I can try. Ping me at  <i>flathabits*at*xenodium.com</i>.
 </p>
@@ -563,8 +738,12 @@ To join TestFlight as a beta tester, you likely gave your email address. If you'
  <div id="outline-container-frictionless-org-habits-on-ios" class="outline-2">
  <h2 id="frictionless-org-habits-on-ios"> <span class="timestamp-wrapper"> <span class="timestamp">21 February 2021</span></span> Frictionless org habits on iOS</h2>
  <div class="outline-text-2" id="text-frictionless-org-habits-on-ios">
+ <p>
+UPDATE: Flat Habits now has its own page at  <a href="https://flathabits.com/">flathabits.com</a>.
+</p>
 
- <div id="orgf273cf2" class="figure">
+
+ <div id="orgc754329" class="figure">
  <p> <img src="../images/frictionless-org-habits-on-ios/flat_habits.gif" alt="flat_habits.gif" width="80%" height="80%"></img></p>
 </div>
 
@@ -589,15 +768,15 @@ Send me an email address to  <i>flathabits*at*xenodium.com</i> for a TestFlight 
 </p>
 </div>
 
- <div id="outline-container-org2308032" class="outline-3">
- <h3 id="org2308032">2021-03-12 Update: Now with iOS Files app/sync integration</h3>
- <div class="outline-text-3" id="text-org2308032">
+ <div id="outline-container-orgb78c95f" class="outline-3">
+ <h3 id="orgb78c95f">2021-03-12 Update: Now with iOS Files app/sync integration</h3>
+ <div class="outline-text-3" id="text-orgb78c95f">
  <p>
 If you can sync your org file with your iPhone (ie. Drive/Dropbox/iCloud), and list it in the Files app, you should be able to open/edit <sup> <a id="fnr.1.100" class="footref" href="#fn.1">1</a></sup> with  <i>Flat Habits</i> (that's the name now). With iOS Files integration, you should be able to sync your habits between your iPhone and your  <a href="https://www.gnu.org/software/emacs/">funky editor</a> powering org mode <sup> <a id="fnr.2" class="footref" href="#fn.2">2</a></sup>.
 </p>
 
 
- <div id="org2c42460" class="figure">
+ <div id="org60f921c" class="figure">
  <p> <img src="../images/frictionless-org-habits-on-ios/filesapp_shorter.gif" alt="filesapp_shorter.gif" width="40%"></img></p>
 </div>
 </div>
