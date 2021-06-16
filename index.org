@@ -1,6 +1,154 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+
+* [2021-06-16 Wed] xcodebuild's SPM support (Xcode 11)
+  :PROPERTIES:
+  :CUSTOM_ID: xcodebuilds-spm-support-xcode-11
+  :END:
+Had been a while since I looked into generating Xcode projects from a Swift package. On my latest use of the /generate-xcodeproj/ subcommand, I was greeted by a nice +warning+ surprise...
+
+#+begin_src bash :results output
+  swift package generate-xcodeproj
+#+end_src
+
+#+RESULTS:
+: warning: Xcode can open and build Swift Packages directly. 'generate-xcodeproj' is no longer needed and will be deprecated soon.
+: generated: ./FooBar.xcodeproj
+
+Xcode can handle Swift packages directly. Similarly, xcodebuild can handle them too. This isn't new. It's likely been available since Xcode 11. I just totally missed it.
+
+/Note: I've yet to dig into Xcode 13 beta, as Swift packages may already support the build/test features I was after in xcodebuild (like [[https://developer.apple.com/documentation/swift_packages/supportedplatform/3788290-maccatalyst][build/test on Catalyst]])./
+
+In any case, on to xcodebuild... but let's first create a brand new Swift package.
+
+** Creating a Swift package library
+
+#+begin_src bash :results output
+  mkdir FooBar && cd FooBar
+  swift package init --type library
+#+end_src
+
+#+RESULTS:
+: Creating library package: FooBar
+: Creating Package.swift
+: Creating README.md
+: Creating .gitignore
+: Creating Sources/
+: Creating Sources/FooBar/FooBar.swift
+: Creating Tests/
+: Creating Tests/FooBarTests/
+: Creating Tests/FooBarTests/FooBarTests.swift
+
+** List package schemes
+
+We can use xcodebuild to list the available schemes.
+
+#+begin_src bash :results output
+  xcodebuild -list
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -list
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Resolve Package Graph
+
+Resolved source packages:
+  FooBar: /tmp/FooBar
+
+Information about workspace "FooBar":
+    Schemes:
+        FooBar
+
+#+end_example
+
+** Show supported platform, architecture, etc
+
+Similarly, we can list destinations supported for the schemes.
+
+#+begin_src bash :results output
+  xcodebuild -showdestinations -scheme FooBar
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -showdestinations -scheme FooBar
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Resolve Package Graph
+
+Resolved source packages:
+  FooBar: /tmp/FooBar
+
+
+
+	Available destinations for the "FooBar" scheme:
+		{ platform:macOS, arch:x86_64, id:... }
+		{ platform:macOS, arch:x86_64, variant:Mac Catalyst, id:... }
+            ...
+		{ platform:iOS Simulator, id:..., OS:14.5, name:iPhone 12 Pro }
+
+	Ineligible destinations for the "FooBar" scheme:
+            ...
+#+end_example
+
+** macOS builds
+
+Let's build for macOS, though let's first import UIKit into FooBar.swift. This ensures we get an expected failure when building for macOS.
+
+#+begin_src swift
+  import UIKit
+
+  struct FooBar {
+    var text = "Hello, World!"
+  }
+#+end_src
+
+Now let's attempt to build it...
+
+#+begin_src bash :results verbatim
+  xcodebuild build -quiet -scheme FooBar -destination 'platform=macOS'
+#+end_src
+
+#+RESULTS:
+#+begin_example
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:x86_64, id:3D097357-EB7D-565D-9058-CE7C3135927B }
+{ platform:macOS, arch:x86_64, variant:Mac Catalyst, id:3D097357-EB7D-565D-9058-CE7C3135927B }
+/tmp/FooBar/Sources/FooBar/FooBar.swift:1:8: error: no such module 'UIKit'
+import UIKit
+       ^
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Analyzing workspace
+note: Using build description from disk
+note: Build preparation complete
+,** BUILD FAILED **
+
+#+end_example
+
+The failure expected as UIKit isn't available on your typical macOS builds.
+
+** macOS Catalyst builds
+
+We do, however, have Catalyst available, so we can use its variant to build for macOS with UIKit support, and.. voilà!
+
+#+begin_src bash :results verbatim
+  xcodebuild build -quiet -scheme FooBar -destination 'platform=macOS,variant=Mac Catalyst' && echo \\o/
+#+end_src
+
+#+RESULTS:
+: \o/
+
 * [2021-06-06 Sun] Emacs org block completion on melpa
 :PROPERTIES:
 :CUSTOM_ID: emacs-org-block-completion-on-melpa
@@ -16225,8 +16373,10 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2021-05-31 Mon]
+[2021-06-12 Sat]
 :END:
+- [[https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
+][Christian Tietze: Emacs: center window on current monitor]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery (great for previewing)]].
@@ -16404,6 +16554,7 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast][How is Doom’s startup so fast?]]
 - [[http://blog.yitang.uk/2015/09/24/how-to-create-a-screencast-gif-in-emacs/][How to Create a Screencast GIF in Emacs]].
 - [[https://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode]].
+- [[https://yoo2080.wordpress.com/2011/12/01/how-to-run-a-new-instance-of-emacs-from-within-emacs-2/][How to run a new instance of emacs from within emacs | Yoo Box]].
 - [[https://sixty-north.com/blog/series/how-to-write-company-mode-backends.html][How to write company-mode backends]].
 - [[http://tim.hibal.org/blog/how-we-wrote-a-textbook][How We Wrote a Textbook & (Tim Wheeler)]].
 - [[http://www.howardism.org/Technical/Emacs/piper-presentation-transcript.html][Howard Abrams's Death to the Shell presentation]].
