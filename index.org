@@ -2086,12 +2086,14 @@ Turns out, hackingwithswift uses a JSON HTTP request for querying code examples.
               :caller 'ar/counsel-hacking-with-swift-search))
 #+end_src
 * [2020-05-23 Sat] Preview SwiftUI layouts using Emacs org blocks
-  :PROPERTIES:
-  :CUSTOM_ID: swiftui-layout-previews-using-emacs-org-blocks
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: swiftui-layout-previews-using-emacs-org-blocks
+:END:
 
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif]]
+
+✨ /UPDATE: The snippets in this post are outdated. See [[https://github.com/xenodium/ob-swiftui][ob-swiftui]] for better SwiftUI babel support/. ✨
 
 Chris Eidhof [[https://twitter.com/chriseidhof/status/1261360332594974721][twitted]] a handy [[https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff][snippet]] that enables quickly bootstrapping throwaway SwiftUI code. It can be easily integrated into other tools for rapid experimentation.
 
@@ -2101,16 +2103,12 @@ We can piggyback ride off zweifisch's [[https://github.com/zweifisch/ob-swift][o
 
 If you're a [[https://github.com/jwiegley/use-package][use-package]] user, the following snippet should make things fairly self-contained (if you have [[https://melpa.org/][melpa]] set up already).
 
-Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the following snippet. I've also enabled /org-display-inline-images/ when loading org files.
-
 #+begin_src emacs-lisp
   (use-package org
     :hook ((org-mode . org-display-inline-images))
     :config
 
     (use-package ob
-      :bind (:map org-mode-map
-                  ("C-c C-c" . org-ctrl-c-ctrl-c))
       :config
 
       (use-package ob-swift
@@ -2230,7 +2228,9 @@ Note: I like pressing /C-c C-c/ to execute source blocks, so it's bound in the f
                     #'adviced:org-babel-execute:swift))))
 #+end_src
 
-Snippet also at github [[https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b][gist]] and included in [[https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el][my emacs config]].
++Snippet also at github [[https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b][gist]] and included in [[https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el][my emacs config]]+.
+
+/UPDATE: See [[https://github.com/xenodium/ob-swiftui][ob-swiftui]] for a better version of babel SwiftUI support./
 
 Once the snippet is evaluated, we're ready to use in an org babel block. We introduced the /:swiftui/ header param to switch between inline static /preview/ and /interactive/ mode.
 

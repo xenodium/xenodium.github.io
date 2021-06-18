@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:37 -->
+<!-- 2021-06-18 Fri 09:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Preview SwiftUI layouts using Emacs org blocks</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -387,50 +387,26 @@
 //         };
        </script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -454,14 +430,18 @@ for the JavaScript code in this tag.
 </div>
 <div id="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-orged3d07c" class="outline-2">
+<div id="outline-container-swiftui-layout-previews-using-emacs-org-blocks" class="outline-2">
 <h2 id="swiftui-layout-previews-using-emacs-org-blocks"><span class="timestamp-wrapper"><span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
 <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
 
-<div class="figure">
+<div id="orgf2fdffa" class="figure">
 <p><img src="../images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif" alt="ob-swiftui.gif" width="75%" height="75%" />
 </p>
 </div>
+
+<p>
+✨ <i>UPDATE: The snippets in this post are outdated. See <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> for better SwiftUI babel support</i>. ✨
+</p>
 
 <p>
 Chris Eidhof <a href="https://twitter.com/chriseidhof/status/1261360332594974721">twitted</a> a handy <a href="https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff">snippet</a> that enables quickly bootstrapping throwaway SwiftUI code. It can be easily integrated into other tools for rapid experimentation.
@@ -479,18 +459,12 @@ We can piggyback ride off zweifisch's <a href="https://github.com/zweifisch/ob-s
 If you're a <a href="https://github.com/jwiegley/use-package">use-package</a> user, the following snippet should make things fairly self-contained (if you have <a href="https://melpa.org/">melpa</a> set up already).
 </p>
 
-<p>
-Note: I like pressing <i>C-c C-c</i> to execute source blocks, so it's bound in the following snippet. I've also enabled <i>org-display-inline-images</i> when loading org files.
-</p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">org</span>
   <span style="color: #a71d5d;">:hook</span> ((org-mode . org-display-inline-images))
   <span style="color: #a71d5d;">:config</span>
 
   (<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob</span>
-    <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> org-mode-map
-                (<span style="color: #183691;">"C-c C-c"</span> . org-ctrl-c-ctrl-c))
     <span style="color: #a71d5d;">:config</span>
 
     (<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">ob-swift</span>
@@ -514,7 +488,7 @@ Note: I like pressing <i>C-c C-c</i> to execute source blocks, so it's bound in 
                (swiftui (cdr (assoc <span style="color: #a71d5d;">:swiftui</span> params)))
                (output))
           (<span style="color: #a71d5d;">when</span> swiftui
-            (<span style="color: #a71d5d;">assert</span> (<span style="color: #a71d5d;">or</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
+            (assert (<span style="color: #a71d5d;">or</span> (string-equal swiftui <span style="color: #183691;">"preview"</span>)
                         (string-equal swiftui <span style="color: #183691;">"interactive"</span>))
                     nil <span style="color: #183691;">":swiftui must be either preview or interactive"</span>)
             (<span style="color: #a71d5d;">setq</span> body (format
@@ -612,7 +586,11 @@ Note: I like pressing <i>C-c C-c</i> to execute source blocks, so it's bound in 
 </div>
 
 <p>
-Snippet also at github <a href="https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b">gist</a> and included in <a href="https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el">my emacs config</a>.
+<del>Snippet also at github <a href="https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b">gist</a> and included in <a href="https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el">my emacs config</a></del>.
+</p>
+
+<p>
+<i>UPDATE: See <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> for a better version of babel SwiftUI support.</i>
 </p>
 
 <p>
@@ -646,7 +624,7 @@ To try out an inline <i>preview</i>, create a new org file (eg. swiftui.org) and
 </pre>
 </div>
 
-<div class="figure">
+<div id="orgf05ed41" class="figure">
 <p><img src="../images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg" alt="vstack.jpg" />
 </p>
 </div>
@@ -664,9 +642,9 @@ comments on <a href="https://twitter.com/xenodium/status/1194224168709083137">tw
 </p>
 </div>
 
-<div id="outline-container-orgd71c297" class="outline-3">
-<h3 id="orgd71c297">Update</h3>
-<div class="outline-text-3" id="text-orgd71c297">
+<div id="outline-container-orgbc31ea8" class="outline-3">
+<h3 id="orgbc31ea8">Update</h3>
+<div class="outline-text-3" id="text-orgbc31ea8">
 <ul class="org-ul">
 <li>Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> and we can avoid the icky <i>advice-add</i>.</li>
 <li>Thanks to Chris Eidhof for PNG support (instead of TIFF). Also TIL Swift's <i>print</i> has got a terminator param.</li>
