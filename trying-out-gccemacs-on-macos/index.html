@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-02 Sun 19:01 -->
+<!-- 2021-06-18 Fri 09:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out gccemacs on macOS</title>
@@ -387,7 +387,7 @@
 //         };
        </script>
 <script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
      function CodeHighlightOn(elem, id)
      {
@@ -434,13 +434,17 @@
 <h2 id="trying-out-gccemacs-on-macos"><span class="timestamp-wrapper"><span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
 <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
 <p>
+<i>UPDATE: I'm no longer using these steps. See <a href="https://xenodium.com/emacs-plus-with-native-comp/">Emacs plus &#x2013;with-native-comp</a> for an easier alternative.</i>
+</p>
+
+<p>
 Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a> on macOS. It is based on <a href="https://github.com/AllenDang">Allen Dang</a>'s handy <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> plus some changes of my own.
 </p>
 </div>
 
-<div id="outline-container-orgb054a0b" class="outline-3">
-<h3 id="orgb054a0b">Install gcc and libgccjit via homebrew</h3>
-<div class="outline-text-3" id="text-orgb054a0b">
+<div id="outline-container-org7338468" class="outline-3">
+<h3 id="org7338468">Install gcc and libgccjit via homebrew</h3>
+<div class="outline-text-3" id="text-org7338468">
 <div class="org-src-container">
 <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -448,9 +452,9 @@ Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.
 </div>
 </div>
 
-<div id="outline-container-orgaaf9a9d" class="outline-3">
-<h3 id="orgaaf9a9d">Save configure script</h3>
-<div class="outline-text-3" id="text-orgaaf9a9d">
+<div id="outline-container-orgb60ea55" class="outline-3">
+<h3 id="orgb60ea55">Save configure script</h3>
+<div class="outline-text-3" id="text-orgb60ea55">
 <p>
 Create configure-gccemacs.sh
 </p>
@@ -522,9 +526,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-orgf52f8f3" class="outline-3">
-<h3 id="orgf52f8f3">Clone Emacs source</h3>
-<div class="outline-text-3" id="text-orgf52f8f3">
+<div id="outline-container-org0091fb8" class="outline-3">
+<h3 id="org0091fb8">Clone Emacs source</h3>
+<div class="outline-text-3" id="text-org0091fb8">
 <div class="org-src-container">
 <pre class="src src-shell">git clone <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
@@ -532,9 +536,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-org619e482" class="outline-3">
-<h3 id="org619e482">Configure build</h3>
-<div class="outline-text-3" id="text-org619e482">
+<div id="outline-container-org999fd85" class="outline-3">
+<h3 id="org999fd85">Configure build</h3>
+<div class="outline-text-3" id="text-org999fd85">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #a71d5d;">cd</span> gccemacs
 ../configure-gccemacs.sh
@@ -543,9 +547,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-orgd8163bc" class="outline-3">
-<h3 id="orgd8163bc">Native lisp compiler found?</h3>
-<div class="outline-text-3" id="text-orgd8163bc">
+<div id="outline-container-orgc0a2a2b" class="outline-3">
+<h3 id="orgc0a2a2b">Native lisp compiler found?</h3>
+<div class="outline-text-3" id="text-orgc0a2a2b">
 <p>
 Verify native lisp compiler is found:
 </p>
@@ -557,9 +561,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
-<div id="outline-container-org289ffa5" class="outline-3">
-<h3 id="org289ffa5">Build</h3>
-<div class="outline-text-3" id="text-org289ffa5">
+<div id="outline-container-orgb6ff172" class="outline-3">
+<h3 id="orgb6ff172">Build</h3>
+<div class="outline-text-3" id="text-orgb6ff172">
 <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -596,18 +600,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
-<div id="outline-container-org78ba82a" class="outline-3">
-<h3 id="org78ba82a">Remove ~/emacs.d</h3>
-<div class="outline-text-3" id="text-org78ba82a">
+<div id="outline-container-org849def8" class="outline-3">
+<h3 id="org849def8">Remove ~/emacs.d</h3>
+<div class="outline-text-3" id="text-org849def8">
 <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org30ca6ec" class="outline-3">
-<h3 id="org30ca6ec">init.el config</h3>
-<div class="outline-text-3" id="text-org30ca6ec">
+<div id="outline-container-org250957a" class="outline-3">
+<h3 id="org250957a">init.el config</h3>
+<div class="outline-text-3" id="text-org250957a">
 <p>
 Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set <i>comp-deferred-compilation</i>. I wrapped the snippet in my  <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -638,9 +642,9 @@ Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRAR
 </div>
 </div>
 
-<div id="outline-container-org5340511" class="outline-3">
-<h3 id="org5340511">Launch Emacs.app</h3>
-<div class="outline-text-3" id="text-org5340511">
+<div id="outline-container-org481ddfc" class="outline-3">
+<h3 id="org481ddfc">Launch Emacs.app</h3>
+<div class="outline-text-3" id="text-org481ddfc">
 <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -652,9 +656,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
-<div id="outline-container-org0238cd7" class="outline-3">
-<h3 id="org0238cd7">Deferred compilation logs</h3>
-<div class="outline-text-3" id="text-org0238cd7">
+<div id="outline-container-orgcd51f8b" class="outline-3">
+<h3 id="orgcd51f8b">Deferred compilation logs</h3>
+<div class="outline-text-3" id="text-orgcd51f8b">
 <p>
 After setting <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>
