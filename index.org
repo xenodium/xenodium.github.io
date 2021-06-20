@@ -21,8 +21,6 @@ In other words, we aren't merely removing shell restrictions, but opening up pos
 
 Take Emacs eshell looping, for example. I use it so infrequently, I could never remember eshell's syntax. I would refer back to EmacsWiki's [[https://www.emacswiki.org/emacs/EshellForLoop][Eshell For Loop]] or Mastering Emacs's [[https://masteringemacs.org/article/complete-guide-mastering-eshell][Mastering Eshell]] comments for a reminder. It finally dawned on me. I don't need to internalize this eshell syntax. I have [[https://github.com/joaotavora/YASnippet][YASnippet]] available like any other buffer. I could just type "for" and let YASnippet do the rest for me.
 
-Note: if you're a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html][shell-mode]] user, YASnippet should have you covered there just as well.
-
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/yasnippet-in-emacs-eshell/yas-for.gif]]
 
@@ -36,6 +34,22 @@ All I need is a tiny YASnippet:
 #+end_src
 
 Want a gentle and succinct YASnippet intro? Check out Jake's [[https://www.reddit.com/r/emacs/comments/o282fq/YASnippet_snippetstemplating_introductiontutorial/][YASnippet introduction video]].
+
+** UPDATE: Bash, Zsh, and others welcome
+
+If you're a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html][shell-mode]] user, YASnippet would have you covered in your favorite shell. The expansion snippet can be modified to a Bash equivalent, giving us the same benefit. We type "for" and let YASnippet expand and hop over arguments. Here's a Bash equivalent emphasizing the hopping a little more:
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/yasnippet-in-emacs-eshell/yasbash.gif]]
+
+#+begin_src YASnippet
+  #name : bash for loop
+  #key : for
+  # --
+  for f in ${1:*}; do ${2:echo} $f; done $0
+#+end_src
+
+ps. Looks like [[https://github.com/akermu/emacs-libvterm][vterm]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Term-Mode.html][term]], or [[https://www.emacswiki.org/emacs/AnsiTerm][ansi-term]] work too. See Shane Mulligan's post: [[https://mullikine.github.io/posts/use-yasnippets-in-term/][Use YASnippets in term and vterm in emacs]].
 
 * [2021-06-16 Wed] xcodebuild's SPM support (Xcode 11)
   :PROPERTIES:
