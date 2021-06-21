@@ -6,11 +6,216 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 20 Jun 2021 13:01:11 +0100</lastBuildDate>
+<lastBuildDate>Mon, 21 Jun 2021 09:44:33 +0100</lastBuildDate>
+<item>
+  <title>Previewing SwiftUI layouts in Emacs (revisited)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-previewing-swiftui-layouts-in-emacs-revisited" class="outline-2">
+ <h2 id="previewing-swiftui-layouts-in-emacs-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">20 June 2021</span></span> Previewing SwiftUI layouts in Emacs (revisited)</h2>
+ <div class="outline-text-2" id="text-previewing-swiftui-layouts-in-emacs-revisited">
+ <p>
+Back in May 2020, I shared a snippet to extend  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> to  <a href="https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/">preview SwiftUI layouts using Emacs org blocks</a>.
+</p>
+
+
+ <div id="org46dfc54" class="figure">
+ <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif" alt="ob-swiftui.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+When I say extend, I didn't quite modify ob-swift itself, but rather  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html">advised</a>  <a href="https://github.com/zweifisch/ob-swift/blob/ed478ddbbe41ce5373efde06b4dd0c3663c9055f/ob-swift.el#L37">org-babel-execute:swift</a> to modify its behavior at runtime.
+</p>
+
+ <p>
+Fast-forward to June 2021 and Scott Nicholes  <a href="https://github.com/zweifisch/ob-swift/issues/4#issuecomment-858196354">reminded me there's still interest</a> in org babel SwiftUI support. ob-swift  <a href="https://github.com/zweifisch/ob-swift/commits/master">seems a little inactive</a>, but no worries there. The package offers great general-purpose Swift support. On the other hand, SwiftUI previews can likely live as a single-purpose package all on its own… and so I set off to bundle the rendering functionality into a new  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> package.
+</p>
+
+ <p>
+Luckily, org babel's documentation has a straightforward section to help you  <a href="https://orgmode.org/worg/org-contrib/babel/languages/index.html">develop support for new babel languages</a>. They simplified things by offering  <a href="https://code.orgmode.org/bzg/worg/raw/master/org-contrib/babel/ob-template.el">template.el</a>, which serves as the foundation for your language implementation. For the most part, it's a matter of searching, replacing strings, and removing the bits you don't need.
+</p>
+
+ <p>
+The elisp core of ob-swiftui is fairly simple. It expands the org block body, inserts the expanded body into a temporary buffer, and finally feeds the code to the Swift toolchain for execution.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">org-babel-execute:swiftui</span> (body params)
+   <span style="color: #183691;">"Execute a block of SwiftUI code in BODY with org-babel header PARAMS.</span>
+ <span style="color: #183691;">This function is called by `</span> <span style="color: #0086b3;">org-babel-execute-src-block</span> <span style="color: #183691;">'"</span>
+  (message  <span style="color: #183691;">"executing SwiftUI source code block"</span>)
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (insert (ob-swiftui--expand-body body params))
+    (shell-command-on-region
+     (point-min)
+     (point-max)
+      <span style="color: #183691;">"swift -"</span> nil 't)
+    (buffer-string)))
+</pre>
+</div>
+
+ <p>
+The expansion in  <i>ob-swiftui–expand-body</i> is a little more interesting. It decorates the block's body, so it can become a fully functional and stand-alone SwiftUI macOS app. If you're familiar with Swift and SwiftUI, the code should be fairly self-explanatory.
+</p>
+
+ <p>
+From an org babel's perspective, the expanded code is executed whenever we press  <i>C-c C-c</i> (or M-x  <a href="https://orgmode.org/manual/The-Very-Busy-C_002dc-C_002dc-Key.html#The-Very-Busy-C_002dc-C_002dc-Key">org-ctrl-c-ctrl-c</a>) within the block itself.
+</p>
+
+ <p>
+It's worthing mentioning that our new implementation supports two babel  <a href="https://www.orgmode.org/worg/org-contrib/babel/header-args.html">header arguments</a> (results and view). Both extracted from params using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/map.el#L106">map-elt</a> and replaced in the expanded Swift code to enable/disable snapshotting or explicitly setting a SwiftUI root view.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ob-swiftui--expand-body</span> (body params)
+   <span style="color: #183691;">"Expand BODY according to PARAMS and PROCESSED-PARAMS, return the expanded body."</span>
+  (<span style="color: #a71d5d;">let</span> ((write-to-file (member  <span style="color: #183691;">"file"</span> (map-elt params  <span style="color: #a71d5d;">:result-params</span>)))
+        (root-view (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (map-elt params  <span style="color: #a71d5d;">:view</span>)
+                              (not (string-equal (map-elt params  <span style="color: #a71d5d;">:view</span>)  <span style="color: #183691;">"none"</span>)))
+                     (map-elt params  <span style="color: #a71d5d;">:view</span>))))
+    (format
+      <span style="color: #183691;">"</span>
+ <span style="color: #183691;">// Swift snippet heavily based on Chris Eidhof's code at:</span>
+ <span style="color: #183691;">// https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff</span>
+
+ <span style="color: #183691;">import Cocoa</span>
+ <span style="color: #183691;">import SwiftUI</span>
+ <span style="color: #183691;">import Foundation</span>
+
+ <span style="color: #183691;">let screenshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".png\")</span>
+ <span style="color: #183691;">let preview = %s</span>
+
+ <span style="color: #183691;">// Body to run.</span>
+ <span style="color: #183691;">%s</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  public func run<V: View>(_ view: V) {</span>
+ <span style="color: #183691;">    let appDelegate = AppDelegate(view)</span>
+ <span style="color: #183691;">    NSApp.setActivationPolicy(.regular)</span>
+ <span style="color: #183691;">    mainMenu = customMenu</span>
+ <span style="color: #183691;">    delegate = appDelegate</span>
+ <span style="color: #183691;">    run()</span>
+ <span style="color: #183691;">  }</span>
+
+ <span style="color: #183691;">  public func run<V: View>(@ViewBuilder view: () -> V) {</span>
+ <span style="color: #183691;">    let appDelegate = AppDelegate(view())</span>
+ <span style="color: #183691;">    NSApp.setActivationPolicy(.regular)</span>
+ <span style="color: #183691;">    mainMenu = customMenu</span>
+ <span style="color: #183691;">    delegate = appDelegate</span>
+ <span style="color: #183691;">    run()</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  var customMenu: NSMenu {</span>
+ <span style="color: #183691;">    let appMenu = NSMenuItem()</span>
+ <span style="color: #183691;">    appMenu.submenu = NSMenu()</span>
+
+ <span style="color: #183691;">    let quitItem = NSMenuItem(</span>
+ <span style="color: #183691;">      title: \"Quit </span> <span style="color: #333333;">\</span> <span style="color: #183691;">(ProcessInfo.processInfo.processName)\",</span>
+ <span style="color: #183691;">      action: #selector(NSApplication.terminate(_:)), keyEquivalent: \"q\")</span>
+ <span style="color: #183691;">    quitItem.keyEquivalentModifierMask = []</span>
+ <span style="color: #183691;">    appMenu.submenu?.addItem(quitItem)</span>
+
+ <span style="color: #183691;">    let mainMenu = NSMenu(title: \"Main Menu\")</span>
+ <span style="color: #183691;">    mainMenu.addItem(appMenu)</span>
+ <span style="color: #183691;">    return mainMenu</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">class AppDelegate<V: View>: NSObject, NSApplicationDelegate, NSWindowDelegate {</span>
+ <span style="color: #183691;">  var window = NSWindow(</span>
+ <span style="color: #183691;">    contentRect: NSRect(x: 0, y: 0, width: 414 * 0.2, height: 896 * 0.2),</span>
+ <span style="color: #183691;">    styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],</span>
+ <span style="color: #183691;">    backing: .buffered, defer: false)</span>
+
+ <span style="color: #183691;">  var contentView: V</span>
+
+ <span style="color: #183691;">  init(_ contentView: V) {</span>
+ <span style="color: #183691;">    self.contentView = contentView</span>
+ <span style="color: #183691;">  }</span>
+
+ <span style="color: #183691;">  func applicationDidFinishLaunching(_ notification: Notification) {</span>
+ <span style="color: #183691;">    window.delegate = self</span>
+ <span style="color: #183691;">    window.center()</span>
+ <span style="color: #183691;">    window.contentView = NSHostingView(rootView: contentView)</span>
+ <span style="color: #183691;">    window.makeKeyAndOrderFront(nil)</span>
+
+ <span style="color: #183691;">    if preview {</span>
+ <span style="color: #183691;">      screenshot(view: window.contentView!, saveTo: screenshotURL)</span>
+ <span style="color: #183691;">      // Write path (without newline) so org babel can parse it.</span>
+ <span style="color: #183691;">      print(screenshotURL.path, terminator: \"\")</span>
+ <span style="color: #183691;">      NSApplication.shared.terminate(self)</span>
+ <span style="color: #183691;">      return</span>
+ <span style="color: #183691;">    }</span>
+
+ <span style="color: #183691;">    window.title = \"press q to exit\"</span>
+ <span style="color: #183691;">    window.setFrameAutosaveName(\"Main Window\")</span>
+ <span style="color: #183691;">    NSApp.activate(ignoringOtherApps: true)</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">func screenshot(view: NSView, saveTo fileURL: URL) {</span>
+ <span style="color: #183691;">  let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!</span>
+ <span style="color: #183691;">  view.cacheDisplay(in: view.bounds, to: rep)</span>
+ <span style="color: #183691;">  let pngData = rep.representation(using: .png, properties: [:])</span>
+ <span style="color: #183691;">  try! pngData?.write(to: fileURL)</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">// Additional view definitions.</span>
+ <span style="color: #183691;">%s</span>
+ <span style="color: #183691;">"</span>
+     (<span style="color: #a71d5d;">if</span> write-to-file
+          <span style="color: #183691;">"true"</span>
+        <span style="color: #183691;">"false"</span>)
+     (<span style="color: #a71d5d;">if</span> root-view
+         (format  <span style="color: #183691;">"NSApplication.shared.run(%s())"</span> root-view)
+       (format  <span style="color: #183691;">"NSApplication.shared.run {%s}"</span> body))
+     (<span style="color: #a71d5d;">if</span> root-view
+         body
+        <span style="color: #183691;">""</span>))))
+</pre>
+</div>
+
+ <p>
+For rendering inline SwiftUI previews in Emacs, we rely on NSView's  <a href="https://developer.apple.com/documentation/appkit/nsview/1483440-bitmapimagerepforcachingdisplay">bitmapImageRepForCachingDisplay</a> to capture an image snapshot. We write its output to a temporary file and piggyback-ride off org babel's  <i>:results file</i> header argument to automatically render the image inline.
+</p>
+
+ <p>
+Here's ob-swiftui inline rendering in action:
+</p>
+
+
+ <div id="org5e6367c" class="figure">
+ <p> <img src="../images/previewing-swiftui-layouts-in-emacs-revisited/obswiftui50.gif" alt="obswiftui50.gif"></img></p>
+</div>
+
+ <p>
+When rendering SwiftUI externally, we're effectively running and interacting with the generated macOS app itself.
+</p>
+
+
+ <div id="orgd58e308" class="figure">
+ <p> <img src="../images/previewing-swiftui-layouts-in-emacs-revisited/ob-swiftui-window.gif" alt="ob-swiftui-window.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+The two snippets give a general sense of what's needed to enable org babel to handle SwiftUI source blocks. Having said that, the full source and setup instructions are both available on  <a href="https://github.com/xenodium/ob-swiftui">github</a>.
+</p>
+
+ <p>
+ <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> is now available on  <a href="https://melpa.org/#/ob-swiftui">melpa</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/previewing-swiftui-layouts-in-emacs-revisited</link>
+  <guid isPermaLink="false">http://xenodium.com/previewing-swiftui-layouts-in-emacs-revisited</guid>
+  <pubDate>Mon, 21 Jun 2021 09:44:33 +0100</pubDate>
+</item>
 <item>
   <title>Blurring the lines between shell and editor</title>
   <description><![CDATA[<div id="content">
-
  <div id="outline-container-yasnippet-in-emacs-eshell" class="outline-2">
  <h2 id="yasnippet-in-emacs-eshell"> <span class="timestamp-wrapper"> <span class="timestamp">19 June 2021</span></span> Blurring the lines between shell and editor</h2>
  <div class="outline-text-2" id="text-yasnippet-in-emacs-eshell">
@@ -63,9 +268,9 @@ Want a gentle and succinct YASnippet intro? Check out Jake's  <a href="https://w
 </p>
 </div>
 
- <div id="outline-container-orgd9acac1" class="outline-3">
- <h3 id="orgd9acac1">UPDATE: Bash, Zsh, and others welcome</h3>
- <div class="outline-text-3" id="text-orgd9acac1">
+ <div id="outline-container-bash-zsh-and-others-welcome" class="outline-3">
+ <h3 id="bash-zsh-and-others-welcome">UPDATE: Bash, Zsh, and others welcome</h3>
+ <div class="outline-text-3" id="text-bash-zsh-and-others-welcome">
  <p>
 If you're a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html">shell-mode</a> user, YASnippet would have you covered in your favorite shell. The expansion snippet can be modified to a Bash equivalent, giving us the same benefit. We type "for" and let YASnippet expand and hop over arguments. Here's a Bash equivalent emphasizing the hopping a little more:
 </p>

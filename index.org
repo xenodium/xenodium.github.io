@@ -1,6 +1,168 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-06-20 Sun] Previewing SwiftUI layouts in Emacs (revisited)
+:PROPERTIES:
+:CUSTOM_ID: previewing-swiftui-layouts-in-emacs-revisited
+:END:
+Back in May 2020, I shared a snippet to extend [[https://github.com/zweifisch/ob-swift][ob-swift]] to [[https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/][preview SwiftUI layouts using Emacs org blocks]].
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif]]
+
+When I say extend, I didn't quite modify ob-swift itself, but rather [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][advised]] [[https://github.com/zweifisch/ob-swift/blob/ed478ddbbe41ce5373efde06b4dd0c3663c9055f/ob-swift.el#L37][org-babel-execute:swift]] to modify its behavior at runtime.
+
+Fast-forward to June 2021 and Scott Nicholes [[https://github.com/zweifisch/ob-swift/issues/4#issuecomment-858196354][reminded me there's still interest]] in org babel SwiftUI support. ob-swift [[https://github.com/zweifisch/ob-swift/commits/master][seems a little inactive]], but no worries there. The package offers great general-purpose Swift support. On the other hand, SwiftUI previews can likely live as a single-purpose package all on its own... and so I set off to bundle the rendering functionality into a new [[https://github.com/xenodium/ob-swiftui][ob-swiftui]] package.
+
+Luckily, org babel's documentation has a straightforward section to help you [[https://orgmode.org/worg/org-contrib/babel/languages/index.html][develop support for new babel languages]]. They simplified things by offering [[https://code.orgmode.org/bzg/worg/raw/master/org-contrib/babel/ob-template.el][template.el]], which serves as the foundation for your language implementation. For the most part, it's a matter of searching, replacing strings, and removing the bits you don't need.
+
+The elisp core of ob-swiftui is fairly simple. It expands the org block body, inserts the expanded body into a temporary buffer, and finally feeds the code to the Swift toolchain for execution.
+
+#+begin_src emacs-lisp
+  (defun org-babel-execute:swiftui (body params)
+    "Execute a block of SwiftUI code in BODY with org-babel header PARAMS.
+  This function is called by `org-babel-execute-src-block'"
+    (message "executing SwiftUI source code block")
+    (with-temp-buffer
+      (insert (ob-swiftui--expand-body body params))
+      (shell-command-on-region
+       (point-min)
+       (point-max)
+       "swift -" nil 't)
+      (buffer-string)))
+#+end_src
+
+The expansion in /ob-swiftui--expand-body/ is a little more interesting. It decorates the block's body, so it can become a fully functional and stand-alone SwiftUI macOS app. If you're familiar with Swift and SwiftUI, the code should be fairly self-explanatory.
+
+From an org babel's perspective, the expanded code is executed whenever we press /C-c C-c/ (or M-x [[https://orgmode.org/manual/The-Very-Busy-C_002dc-C_002dc-Key.html#The-Very-Busy-C_002dc-C_002dc-Key][org-ctrl-c-ctrl-c]]) within the block itself.
+
+It's worthing mentioning that our new implementation supports two babel [[https://www.orgmode.org/worg/org-contrib/babel/header-args.html][header arguments]] (results and view). Both extracted from params using [[https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/map.el#L106][map-elt]] and replaced in the expanded Swift code to enable/disable snapshotting or explicitly setting a SwiftUI root view.
+
+#+begin_src emacs-lisp
+  (defun ob-swiftui--expand-body (body params)
+    "Expand BODY according to PARAMS and PROCESSED-PARAMS, return the expanded body."
+    (let ((write-to-file (member "file" (map-elt params :result-params)))
+          (root-view (when (and (map-elt params :view)
+                                (not (string-equal (map-elt params :view) "none")))
+                       (map-elt params :view))))
+      (format
+       "
+  // Swift snippet heavily based on Chris Eidhof's code at:
+  // https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff
+
+  import Cocoa
+  import SwiftUI
+  import Foundation
+
+  let screenshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".png\")
+  let preview = %s
+
+  // Body to run.
+  %s
+
+  extension NSApplication {
+    public func run<V: View>(_ view: V) {
+      let appDelegate = AppDelegate(view)
+      NSApp.setActivationPolicy(.regular)
+      mainMenu = customMenu
+      delegate = appDelegate
+      run()
+    }
+
+    public func run<V: View>(@ViewBuilder view: () -> V) {
+      let appDelegate = AppDelegate(view())
+      NSApp.setActivationPolicy(.regular)
+      mainMenu = customMenu
+      delegate = appDelegate
+      run()
+    }
+  }
+
+  extension NSApplication {
+    var customMenu: NSMenu {
+      let appMenu = NSMenuItem()
+      appMenu.submenu = NSMenu()
+
+      let quitItem = NSMenuItem(
+        title: \"Quit \(ProcessInfo.processInfo.processName)\",
+        action: #selector(NSApplication.terminate(_:)), keyEquivalent: \"q\")
+      quitItem.keyEquivalentModifierMask = []
+      appMenu.submenu?.addItem(quitItem)
+
+      let mainMenu = NSMenu(title: \"Main Menu\")
+      mainMenu.addItem(appMenu)
+      return mainMenu
+    }
+  }
+
+  class AppDelegate<V: View>: NSObject, NSApplicationDelegate, NSWindowDelegate {
+    var window = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 414 * 0.2, height: 896 * 0.2),
+      styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+      backing: .buffered, defer: false)
+
+    var contentView: V
+
+    init(_ contentView: V) {
+      self.contentView = contentView
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+      window.delegate = self
+      window.center()
+      window.contentView = NSHostingView(rootView: contentView)
+      window.makeKeyAndOrderFront(nil)
+
+      if preview {
+        screenshot(view: window.contentView!, saveTo: screenshotURL)
+        // Write path (without newline) so org babel can parse it.
+        print(screenshotURL.path, terminator: \"\")
+        NSApplication.shared.terminate(self)
+        return
+      }
+
+      window.title = \"press q to exit\"
+      window.setFrameAutosaveName(\"Main Window\")
+      NSApp.activate(ignoringOtherApps: true)
+    }
+  }
+
+  func screenshot(view: NSView, saveTo fileURL: URL) {
+    let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
+    view.cacheDisplay(in: view.bounds, to: rep)
+    let pngData = rep.representation(using: .png, properties: [:])
+    try! pngData?.write(to: fileURL)
+  }
+
+  // Additional view definitions.
+  %s
+  "
+       (if write-to-file
+           "true"
+         "false")
+       (if root-view
+           (format "NSApplication.shared.run(%s())" root-view)
+         (format "NSApplication.shared.run {%s}" body))
+       (if root-view
+           body
+         ""))))
+#+end_src
+
+For rendering inline SwiftUI previews in Emacs, we rely on NSView's [[https://developer.apple.com/documentation/appkit/nsview/1483440-bitmapimagerepforcachingdisplay][bitmapImageRepForCachingDisplay]] to capture an image snapshot. We write its output to a temporary file and piggyback-ride off org babel's /:results file/ header argument to automatically render the image inline.
+
+Here's ob-swiftui inline rendering in action:
+
+[[file:images/previewing-swiftui-layouts-in-emacs-revisited/obswiftui50.gif]]
+
+When rendering SwiftUI externally, we're effectively running and interacting with the generated macOS app itself.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/previewing-swiftui-layouts-in-emacs-revisited/ob-swiftui-window.gif]]
+
+The two snippets give a general sense of what's needed to enable org babel to handle SwiftUI source blocks. Having said that, the full source and setup instructions are both available on [[https://github.com/xenodium/ob-swiftui][github]].
+
+[[https://github.com/xenodium/ob-swiftui][ob-swiftui]] is now available on [[https://melpa.org/#/ob-swiftui][melpa]].
+
 * [2021-06-19 Sat] Blurring the lines between shell and editor
 :PROPERTIES:
 :CUSTOM_ID: yasnippet-in-emacs-eshell
