@@ -6,7 +6,589 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 06 Jun 2021 12:46:00 +0100</lastBuildDate>
+<lastBuildDate>Sun, 27 Jun 2021 14:27:24 +0100</lastBuildDate>
+<item>
+  <title>Emacs: smarter search and replace</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-smarter-search-and-replace" class="outline-2">
+ <h2 id="emacs-smarter-search-and-replace"> <span class="timestamp-wrapper"> <span class="timestamp">27 June 2021</span></span> Emacs: smarter search and replace</h2>
+ <div class="outline-text-2" id="text-emacs-smarter-search-and-replace">
+
+ <div id="org23e3c63" class="figure">
+ <p> <img src="../images/emacs-smarter-search-and-replace/smarter_replace.gif" alt="smarter_replace.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+Not long ago, I made a note to go back and read  <a href="https://mac4translators.blogspot.com">Mac for Translators</a>'s  <a href="https://mac4translators.blogspot.com/2021/06/regex-with-elisp.html">Emacs regex with Emacs lisp</a> post. The author highlights Emacs's ability to apply additional logic when replacing text during a search-and-replace session. It does so by leveraging elisp expressions.
+</p>
+
+ <p>
+Coincidentally, a redditor recently asked  <a href="https://www.reddit.com/r/emacs/comments/o878am/what_is_the_simplest_way_to_apply_a_math_formula/">What is the simplest way to apply a math formula to all numbers in a buffer/region?</a>, which generated multiple answers. Some also pointing to  <i>search and replace</i> leveraging elisp expressions.
+</p>
+
+ <p>
+While I rarely need to apply additional logic when replacing matches, it's nice to know we have options  available in our Emacs toolbox. This prompted me to check out  <a href="https://github.com/emacs-mirror/emacs/blob/b8f9e58ef72402e69a1f0960816184d52e5d2d29/lisp/replace.el#L709">replace-regexp</a>'s documentation (via M-x  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Name-Help.html">describe-function</a> or my favorite M-x  <a href="https://github.com/Wilfred/helpful">helpful-callable</a>). There's lots in there. Go check its docs out. You may be pleasantly surprised by all the featured packed under this humble function.
+</p>
+
+ <p>
+For instance, \& expands to the current match. Similarly, \#& expands to the current match, fed through  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Conversion.html">string-to-number</a>. But what if you'd like to feed the match to another function? You can use \, to signal evaluation of an elisp expression. In other words, you could multiply by 3 using \,(* 3 \#&) or inserting whether a number is odd or even with something like \,(if (oddp \#&) "(odd)" "(even)").
+</p>
+
+ <p>
+Take the following text:
+</p>
+
+ <pre class="example" id="org9b17430">
+1
+2
+3
+4
+5
+6
+</pre>
+
+ <p>
+We can label each value "(odd)" or "(even)" as well as multiply by 3, by invoking  <i>replace-regexp</i> as follows:
+</p>
+
+ <blockquote>
+ <p>
+M-x replace-regexp
+</p>
+</blockquote>
+
+ <p>
+[PCRE] Replace regex:
+</p>
+ <blockquote>
+ <p>
+[-0-9.]+
+</p>
+</blockquote>
+
+ <p>
+Replace regex [-0-9.]+:
+</p>
+ <blockquote>
+ <p>
+\& \,(if (oddp \#&) "(odd)" "(even)") x 3 = \,(* 3 \#&)
+</p>
+</blockquote>
+
+ <pre class="example" id="org84bc96d">
+1 (odd) x 3 = 3
+2 (even) x 3 = 6
+3 (odd) x 3 = 9
+4 (even) x 3 = 12
+5 (odd) x 3 = 15
+6 (even) x 3 = 18
+</pre>
+
+ <p>
+It's worth noting that  <i>replace-regexp</i>'s cousin  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Query-Replace.html">query-replace-regexp</a> also handles all this wonderful magic.
+</p>
+
+ <p>
+Happy searching and replacing!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-smarter-search-and-replace</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-smarter-search-and-replace</guid>
+  <pubDate>Sun, 27 Jun 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Previewing SwiftUI layouts in Emacs (revisited)</title>
+  <description><![CDATA[<div id="content">
+ <div id="outline-container-previewing-swiftui-layouts-in-emacs-revisited" class="outline-2">
+ <h2 id="previewing-swiftui-layouts-in-emacs-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">20 June 2021</span></span> Previewing SwiftUI layouts in Emacs (revisited)</h2>
+ <div class="outline-text-2" id="text-previewing-swiftui-layouts-in-emacs-revisited">
+ <p>
+Back in May 2020, I shared a snippet to extend  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> to  <a href="https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/">preview SwiftUI layouts using Emacs org blocks</a>.
+</p>
+
+
+ <div id="org46dfc54" class="figure">
+ <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif" alt="ob-swiftui.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+When I say extend, I didn't quite modify ob-swift itself, but rather  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html">advised</a>  <a href="https://github.com/zweifisch/ob-swift/blob/ed478ddbbe41ce5373efde06b4dd0c3663c9055f/ob-swift.el#L37">org-babel-execute:swift</a> to modify its behavior at runtime.
+</p>
+
+ <p>
+Fast-forward to June 2021 and Scott Nicholes  <a href="https://github.com/zweifisch/ob-swift/issues/4#issuecomment-858196354">reminded me there's still interest</a> in org babel SwiftUI support. ob-swift  <a href="https://github.com/zweifisch/ob-swift/commits/master">seems a little inactive</a>, but no worries there. The package offers great general-purpose Swift support. On the other hand, SwiftUI previews can likely live as a single-purpose package all on its own… and so I set off to bundle the rendering functionality into a new  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> package.
+</p>
+
+ <p>
+Luckily, org babel's documentation has a straightforward section to help you  <a href="https://orgmode.org/worg/org-contrib/babel/languages/index.html">develop support for new babel languages</a>. They simplified things by offering  <a href="https://code.orgmode.org/bzg/worg/raw/master/org-contrib/babel/ob-template.el">template.el</a>, which serves as the foundation for your language implementation. For the most part, it's a matter of searching, replacing strings, and removing the bits you don't need.
+</p>
+
+ <p>
+The elisp core of ob-swiftui is fairly simple. It expands the org block body, inserts the expanded body into a temporary buffer, and finally feeds the code to the Swift toolchain for execution.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">org-babel-execute:swiftui</span> (body params)
+   <span style="color: #183691;">"Execute a block of SwiftUI code in BODY with org-babel header PARAMS.</span>
+ <span style="color: #183691;">This function is called by `</span> <span style="color: #0086b3;">org-babel-execute-src-block</span> <span style="color: #183691;">'"</span>
+  (message  <span style="color: #183691;">"executing SwiftUI source code block"</span>)
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (insert (ob-swiftui--expand-body body params))
+    (shell-command-on-region
+     (point-min)
+     (point-max)
+      <span style="color: #183691;">"swift -"</span> nil 't)
+    (buffer-string)))
+</pre>
+</div>
+
+ <p>
+The expansion in  <i>ob-swiftui–expand-body</i> is a little more interesting. It decorates the block's body, so it can become a fully functional and stand-alone SwiftUI macOS app. If you're familiar with Swift and SwiftUI, the code should be fairly self-explanatory.
+</p>
+
+ <p>
+From an org babel's perspective, the expanded code is executed whenever we press  <i>C-c C-c</i> (or M-x  <a href="https://orgmode.org/manual/The-Very-Busy-C_002dc-C_002dc-Key.html#The-Very-Busy-C_002dc-C_002dc-Key">org-ctrl-c-ctrl-c</a>) within the block itself.
+</p>
+
+ <p>
+It's worthing mentioning that our new implementation supports two babel  <a href="https://www.orgmode.org/worg/org-contrib/babel/header-args.html">header arguments</a> (results and view). Both extracted from params using  <a href="https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/map.el#L106">map-elt</a> and replaced in the expanded Swift code to enable/disable snapshotting or explicitly setting a SwiftUI root view.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ob-swiftui--expand-body</span> (body params)
+   <span style="color: #183691;">"Expand BODY according to PARAMS and PROCESSED-PARAMS, return the expanded body."</span>
+  (<span style="color: #a71d5d;">let</span> ((write-to-file (member  <span style="color: #183691;">"file"</span> (map-elt params  <span style="color: #a71d5d;">:result-params</span>)))
+        (root-view (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (map-elt params  <span style="color: #a71d5d;">:view</span>)
+                              (not (string-equal (map-elt params  <span style="color: #a71d5d;">:view</span>)  <span style="color: #183691;">"none"</span>)))
+                     (map-elt params  <span style="color: #a71d5d;">:view</span>))))
+    (format
+      <span style="color: #183691;">"</span>
+ <span style="color: #183691;">// Swift snippet heavily based on Chris Eidhof's code at:</span>
+ <span style="color: #183691;">// https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff</span>
+
+ <span style="color: #183691;">import Cocoa</span>
+ <span style="color: #183691;">import SwiftUI</span>
+ <span style="color: #183691;">import Foundation</span>
+
+ <span style="color: #183691;">let screenshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + \".png\")</span>
+ <span style="color: #183691;">let preview = %s</span>
+
+ <span style="color: #183691;">// Body to run.</span>
+ <span style="color: #183691;">%s</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  public func run<V: View>(_ view: V) {</span>
+ <span style="color: #183691;">    let appDelegate = AppDelegate(view)</span>
+ <span style="color: #183691;">    NSApp.setActivationPolicy(.regular)</span>
+ <span style="color: #183691;">    mainMenu = customMenu</span>
+ <span style="color: #183691;">    delegate = appDelegate</span>
+ <span style="color: #183691;">    run()</span>
+ <span style="color: #183691;">  }</span>
+
+ <span style="color: #183691;">  public func run<V: View>(@ViewBuilder view: () -> V) {</span>
+ <span style="color: #183691;">    let appDelegate = AppDelegate(view())</span>
+ <span style="color: #183691;">    NSApp.setActivationPolicy(.regular)</span>
+ <span style="color: #183691;">    mainMenu = customMenu</span>
+ <span style="color: #183691;">    delegate = appDelegate</span>
+ <span style="color: #183691;">    run()</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">extension NSApplication {</span>
+ <span style="color: #183691;">  var customMenu: NSMenu {</span>
+ <span style="color: #183691;">    let appMenu = NSMenuItem()</span>
+ <span style="color: #183691;">    appMenu.submenu = NSMenu()</span>
+
+ <span style="color: #183691;">    let quitItem = NSMenuItem(</span>
+ <span style="color: #183691;">      title: \"Quit </span> <span style="color: #333333;">\</span> <span style="color: #183691;">(ProcessInfo.processInfo.processName)\",</span>
+ <span style="color: #183691;">      action: #selector(NSApplication.terminate(_:)), keyEquivalent: \"q\")</span>
+ <span style="color: #183691;">    quitItem.keyEquivalentModifierMask = []</span>
+ <span style="color: #183691;">    appMenu.submenu?.addItem(quitItem)</span>
+
+ <span style="color: #183691;">    let mainMenu = NSMenu(title: \"Main Menu\")</span>
+ <span style="color: #183691;">    mainMenu.addItem(appMenu)</span>
+ <span style="color: #183691;">    return mainMenu</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">class AppDelegate<V: View>: NSObject, NSApplicationDelegate, NSWindowDelegate {</span>
+ <span style="color: #183691;">  var window = NSWindow(</span>
+ <span style="color: #183691;">    contentRect: NSRect(x: 0, y: 0, width: 414 * 0.2, height: 896 * 0.2),</span>
+ <span style="color: #183691;">    styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],</span>
+ <span style="color: #183691;">    backing: .buffered, defer: false)</span>
+
+ <span style="color: #183691;">  var contentView: V</span>
+
+ <span style="color: #183691;">  init(_ contentView: V) {</span>
+ <span style="color: #183691;">    self.contentView = contentView</span>
+ <span style="color: #183691;">  }</span>
+
+ <span style="color: #183691;">  func applicationDidFinishLaunching(_ notification: Notification) {</span>
+ <span style="color: #183691;">    window.delegate = self</span>
+ <span style="color: #183691;">    window.center()</span>
+ <span style="color: #183691;">    window.contentView = NSHostingView(rootView: contentView)</span>
+ <span style="color: #183691;">    window.makeKeyAndOrderFront(nil)</span>
+
+ <span style="color: #183691;">    if preview {</span>
+ <span style="color: #183691;">      screenshot(view: window.contentView!, saveTo: screenshotURL)</span>
+ <span style="color: #183691;">      // Write path (without newline) so org babel can parse it.</span>
+ <span style="color: #183691;">      print(screenshotURL.path, terminator: \"\")</span>
+ <span style="color: #183691;">      NSApplication.shared.terminate(self)</span>
+ <span style="color: #183691;">      return</span>
+ <span style="color: #183691;">    }</span>
+
+ <span style="color: #183691;">    window.title = \"press q to exit\"</span>
+ <span style="color: #183691;">    window.setFrameAutosaveName(\"Main Window\")</span>
+ <span style="color: #183691;">    NSApp.activate(ignoringOtherApps: true)</span>
+ <span style="color: #183691;">  }</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">func screenshot(view: NSView, saveTo fileURL: URL) {</span>
+ <span style="color: #183691;">  let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!</span>
+ <span style="color: #183691;">  view.cacheDisplay(in: view.bounds, to: rep)</span>
+ <span style="color: #183691;">  let pngData = rep.representation(using: .png, properties: [:])</span>
+ <span style="color: #183691;">  try! pngData?.write(to: fileURL)</span>
+ <span style="color: #183691;">}</span>
+
+ <span style="color: #183691;">// Additional view definitions.</span>
+ <span style="color: #183691;">%s</span>
+ <span style="color: #183691;">"</span>
+     (<span style="color: #a71d5d;">if</span> write-to-file
+          <span style="color: #183691;">"true"</span>
+        <span style="color: #183691;">"false"</span>)
+     (<span style="color: #a71d5d;">if</span> root-view
+         (format  <span style="color: #183691;">"NSApplication.shared.run(%s())"</span> root-view)
+       (format  <span style="color: #183691;">"NSApplication.shared.run {%s}"</span> body))
+     (<span style="color: #a71d5d;">if</span> root-view
+         body
+        <span style="color: #183691;">""</span>))))
+</pre>
+</div>
+
+ <p>
+For rendering inline SwiftUI previews in Emacs, we rely on NSView's  <a href="https://developer.apple.com/documentation/appkit/nsview/1483440-bitmapimagerepforcachingdisplay">bitmapImageRepForCachingDisplay</a> to capture an image snapshot. We write its output to a temporary file and piggyback-ride off org babel's  <i>:results file</i> header argument to automatically render the image inline.
+</p>
+
+ <p>
+Here's ob-swiftui inline rendering in action:
+</p>
+
+
+ <div id="org5e6367c" class="figure">
+ <p> <img src="../images/previewing-swiftui-layouts-in-emacs-revisited/obswiftui50.gif" alt="obswiftui50.gif"></img></p>
+</div>
+
+ <p>
+When rendering SwiftUI externally, we're effectively running and interacting with the generated macOS app itself.
+</p>
+
+
+ <div id="orgd58e308" class="figure">
+ <p> <img src="../images/previewing-swiftui-layouts-in-emacs-revisited/ob-swiftui-window.gif" alt="ob-swiftui-window.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+The two snippets give a general sense of what's needed to enable org babel to handle SwiftUI source blocks. Having said that, the full source and setup instructions are both available on  <a href="https://github.com/xenodium/ob-swiftui">github</a>.
+</p>
+
+ <p>
+ <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> is now available on  <a href="https://melpa.org/#/ob-swiftui">melpa</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/previewing-swiftui-layouts-in-emacs-revisited</link>
+  <guid isPermaLink="false">http://xenodium.com/previewing-swiftui-layouts-in-emacs-revisited</guid>
+  <pubDate>Sun, 20 Jun 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Blurring the lines between shell and editor</title>
+  <description><![CDATA[<div id="content">
+ <div id="outline-container-yasnippet-in-emacs-eshell" class="outline-2">
+ <h2 id="yasnippet-in-emacs-eshell"> <span class="timestamp-wrapper"> <span class="timestamp">19 June 2021</span></span> Blurring the lines between shell and editor</h2>
+ <div class="outline-text-2" id="text-yasnippet-in-emacs-eshell">
+
+ <div id="org1718bc9" class="figure">
+ <p> <img src="../images/yasnippet-in-emacs-eshell/yas-eshell.gif" alt="yas-eshell.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+I recently  <a href="https://twitter.com/xenodium/status/1404746233860837378">tweeted</a> that Vivek Haldar's  <a href="https://blog.vivekhaldar.com/post/3996068979/the-levels-of-emacs-proficiency">10-year old post</a> rings true today just the same. He writes about  <a href="https://blog.vivekhaldar.com/post/3996068979/the-levels-of-emacs-proficiency">the levels of Emacs proficiency</a>. All 6 levels are insightful in their own right, but for the sake of this post, let's quote an extract from level  <i>4. Shell inside Emacs</i>:
+</p>
+
+ <blockquote>
+ <p>
+"And then, you learned about it: M-x shell.
+</p>
+
+ <p>
+It was all just text. Why did you need another application for it? Why should only the shell prompt be editable? Why can’t I move my cursor up a few lines to where the last command spewed out its results? All these problems simply disappear when your shell (or shells) simply becomes another Emacs buffer, upon which all of the text manipulation power of Emacs can be brought to bear."
+</p>
+</blockquote>
+
+ <p>
+In other words, we aren't merely removing shell restrictions, but opening up possibilities…
+</p>
+
+ <p>
+Take Emacs eshell looping, for example. I use it so infrequently, I could never remember eshell's syntax. I would refer back to EmacsWiki's  <a href="https://www.emacswiki.org/emacs/EshellForLoop">Eshell For Loop</a> or Mastering Emacs's  <a href="https://masteringemacs.org/article/complete-guide-mastering-eshell">Mastering Eshell</a> comments for a reminder. It finally dawned on me. I don't need to internalize this eshell syntax. I have  <a href="https://github.com/joaotavora/YASnippet">YASnippet</a> available like any other buffer. I could just type "for" and let YASnippet do the rest for me.
+</p>
+
+
+ <div id="orgba7dfa0" class="figure">
+ <p> <img src="../images/yasnippet-in-emacs-eshell/yas-for.gif" alt="yas-for.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+All I need is a tiny YASnippet:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-YASnippet">#name : Eshell for loop
+#key : for
+# --
+for f in ${1:*} { ${2:echo} "$f"; $3} $0
+</pre>
+</div>
+
+ <p>
+Want a gentle and succinct YASnippet intro? Check out Jake's  <a href="https://www.reddit.com/r/emacs/comments/o282fq/YASnippet_snippetstemplating_introductiontutorial/">YASnippet introduction video</a>.
+</p>
+</div>
+
+ <div id="outline-container-bash-zsh-and-others-welcome" class="outline-3">
+ <h3 id="bash-zsh-and-others-welcome">UPDATE: Bash, Zsh, and others welcome</h3>
+ <div class="outline-text-3" id="text-bash-zsh-and-others-welcome">
+ <p>
+If you're a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html">shell-mode</a> user, YASnippet would have you covered in your favorite shell. The expansion snippet can be modified to a Bash equivalent, giving us the same benefit. We type "for" and let YASnippet expand and hop over arguments. Here's a Bash equivalent emphasizing the hopping a little more:
+</p>
+
+
+ <div id="org7e3595d" class="figure">
+ <p> <img src="../images/yasnippet-in-emacs-eshell/yasbash.gif" alt="yasbash.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-YASnippet">#name : bash for loop
+#key : for
+# --
+for f in ${1:*}; do ${2:echo} $f; done $0
+</pre>
+</div>
+
+ <p>
+ps. Looks like  <a href="https://github.com/akermu/emacs-libvterm">vterm</a>,  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Term-Mode.html">term</a>, or  <a href="https://www.emacswiki.org/emacs/AnsiTerm">ansi-term</a> work too. See Shane Mulligan's post:  <a href="https://mullikine.github.io/posts/use-yasnippets-in-term/">Use YASnippets in term and vterm in emacs</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/yasnippet-in-emacs-eshell</link>
+  <guid isPermaLink="false">http://xenodium.com/yasnippet-in-emacs-eshell</guid>
+  <pubDate>Sat, 19 Jun 2021 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>xcodebuilds SPM support (Xcode 11)</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-xcodebuilds-spm-support-xcode-11" class="outline-2">
+ <h2 id="xcodebuilds-spm-support-xcode-11"> <span class="timestamp-wrapper"> <span class="timestamp">16 June 2021</span></span> xcodebuild's SPM support (Xcode 11)</h2>
+ <div class="outline-text-2" id="text-xcodebuilds-spm-support-xcode-11">
+ <p>
+Had been a while since I looked into generating Xcode projects from a Swift package. On my latest use of the  <i>generate-xcodeproj</i> subcommand, I was greeted by a nice  <del>warning</del> surprise…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">swift package generate-xcodeproj
+</pre>
+</div>
+
+ <pre class="example">
+warning: Xcode can open and build Swift Packages directly. 'generate-xcodeproj' is no longer needed and will be deprecated soon.
+generated: ./FooBar.xcodeproj
+</pre>
+
+
+ <p>
+Xcode can handle Swift packages directly. Similarly, xcodebuild can handle them too. This isn't new. It's likely been available since Xcode 11. I just totally missed it.
+</p>
+
+ <p>
+ <i>Note: I've yet to dig into Xcode 13 beta, as Swift packages may already support the build/test features I was after in xcodebuild (like  <a href="https://developer.apple.com/documentation/swift_packages/supportedplatform/3788290-maccatalyst">build/test on Catalyst</a>).</i>
+</p>
+
+ <p>
+In any case, on to xcodebuild… but let's first create a brand new Swift package.
+</p>
+</div>
+
+ <div id="outline-container-orge7b189e" class="outline-3">
+ <h3 id="orge7b189e">Creating a Swift package library</h3>
+ <div class="outline-text-3" id="text-orge7b189e">
+ <div class="org-src-container">
+ <pre class="src src-bash">mkdir FooBar && cd FooBar
+swift package init --type library
+</pre>
+</div>
+
+ <pre class="example">
+Creating library package: FooBar
+Creating Package.swift
+Creating README.md
+Creating .gitignore
+Creating Sources/
+Creating Sources/FooBar/FooBar.swift
+Creating Tests/
+Creating Tests/FooBarTests/
+Creating Tests/FooBarTests/FooBarTests.swift
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-orgc205fc5" class="outline-3">
+ <h3 id="orgc205fc5">List package schemes</h3>
+ <div class="outline-text-3" id="text-orgc205fc5">
+ <p>
+We can use xcodebuild to list the available schemes.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcodebuild -list
+</pre>
+</div>
+
+ <pre class="example" id="org528be9e">
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -list
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Resolve Package Graph
+
+Resolved source packages:
+  FooBar: /tmp/FooBar
+
+Information about workspace "FooBar":
+    Schemes:
+        FooBar
+
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-orgcbb8478" class="outline-3">
+ <h3 id="orgcbb8478">Show supported platform, architecture, etc</h3>
+ <div class="outline-text-3" id="text-orgcbb8478">
+ <p>
+Similarly, we can list destinations supported for the schemes.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcodebuild -showdestinations -scheme FooBar
+</pre>
+</div>
+
+ <pre class="example" id="orgeeec718">
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -showdestinations -scheme FooBar
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Resolve Package Graph
+
+Resolved source packages:
+  FooBar: /tmp/FooBar
+
+
+
+	Available destinations for the "FooBar" scheme:
+		{ platform:macOS, arch:x86_64, id:... }
+		{ platform:macOS, arch:x86_64, variant:Mac Catalyst, id:... }
+            ...
+		{ platform:iOS Simulator, id:..., OS:14.5, name:iPhone 12 Pro }
+
+	Ineligible destinations for the "FooBar" scheme:
+            ...
+</pre>
+</div>
+</div>
+
+ <div id="outline-container-orgb798001" class="outline-3">
+ <h3 id="orgb798001">macOS builds</h3>
+ <div class="outline-text-3" id="text-orgb798001">
+ <p>
+Let's build for macOS, though let's first import UIKit into FooBar.swift. This ensures we get an expected failure when building for macOS.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">import</span> UIKit
+
+ <span style="color: #a71d5d;">struct</span>  <span style="color: #795da3;">FooBar</span> {
+   <span style="color: #a71d5d;">var</span> text =  <span style="color: #183691;">"Hello, World!"</span>
+}
+</pre>
+</div>
+
+ <p>
+Now let's attempt to build it…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcodebuild build -quiet -scheme FooBar -destination 'platform=macOS'
+</pre>
+</div>
+
+ <pre class="example" id="org5b856f1">
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:x86_64, id:3D097357-EB7D-565D-9058-CE7C3135927B }
+{ platform:macOS, arch:x86_64, variant:Mac Catalyst, id:3D097357-EB7D-565D-9058-CE7C3135927B }
+/tmp/FooBar/Sources/FooBar/FooBar.swift:1:8: error: no such module 'UIKit'
+import UIKit
+       ^
+note: Using new build system
+note: Building targets in parallel
+note: Planning build
+note: Analyzing workspace
+note: Using build description from disk
+note: Build preparation complete
+** BUILD FAILED **
+
+</pre>
+
+ <p>
+The failure expected as UIKit isn't available on your typical macOS builds.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org3ab890c" class="outline-3">
+ <h3 id="org3ab890c">macOS Catalyst builds</h3>
+ <div class="outline-text-3" id="text-org3ab890c">
+ <p>
+We do, however, have Catalyst available, so we can use its variant to build for macOS with UIKit support, and.. voilà!
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">xcodebuild build -quiet -scheme FooBar -destination 'platform=macOS,variant=Mac Catalyst' && echo \\o/
+</pre>
+</div>
+
+ <pre class="example">
+\o/
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/xcodebuilds-spm-support-xcode-11</link>
+  <guid isPermaLink="false">http://xenodium.com/xcodebuilds-spm-support-xcode-11</guid>
+  <pubDate>Wed, 16 Jun 2021 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Emacs org block completion on melpa</title>
   <description><![CDATA[<div id="content">
@@ -2506,13 +3088,17 @@ ps. Can get the SDK path with:
  <h2 id="trying-out-gccemacs-on-macos"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
  <div class="outline-text-2" id="text-trying-out-gccemacs-on-macos">
  <p>
+ <i>UPDATE: I'm no longer using these steps. See  <a href="https://xenodium.com/emacs-plus-with-native-comp/">Emacs plus –with-native-comp</a> for an easier alternative.</i>
+</p>
+
+ <p>
 Below are the instructions I use to build Andrea Corallo's  <a href="http://akrl.sdf.org/gccemacs.html">gccemacs</a> on macOS. It is based on  <a href="https://github.com/AllenDang">Allen Dang</a>'s handy  <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">instructions</a> plus some changes of my own.
 </p>
 </div>
 
- <div id="outline-container-orgb054a0b" class="outline-3">
- <h3 id="orgb054a0b">Install gcc and libgccjit via homebrew</h3>
- <div class="outline-text-3" id="text-orgb054a0b">
+ <div id="outline-container-org7338468" class="outline-3">
+ <h3 id="org7338468">Install gcc and libgccjit via homebrew</h3>
+ <div class="outline-text-3" id="text-org7338468">
  <div class="org-src-container">
  <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -2520,9 +3106,9 @@ Below are the instructions I use to build Andrea Corallo's  <a href="http://akrl
 </div>
 </div>
 
- <div id="outline-container-orgaaf9a9d" class="outline-3">
- <h3 id="orgaaf9a9d">Save configure script</h3>
- <div class="outline-text-3" id="text-orgaaf9a9d">
+ <div id="outline-container-orgb60ea55" class="outline-3">
+ <h3 id="orgb60ea55">Save configure script</h3>
+ <div class="outline-text-3" id="text-orgb60ea55">
  <p>
 Create configure-gccemacs.sh
 </p>
@@ -2594,9 +3180,9 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-orgf52f8f3" class="outline-3">
- <h3 id="orgf52f8f3">Clone Emacs source</h3>
- <div class="outline-text-3" id="text-orgf52f8f3">
+ <div id="outline-container-org0091fb8" class="outline-3">
+ <h3 id="org0091fb8">Clone Emacs source</h3>
+ <div class="outline-text-3" id="text-org0091fb8">
  <div class="org-src-container">
  <pre class="src src-shell">git clone  <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
@@ -2604,9 +3190,9 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-org619e482" class="outline-3">
- <h3 id="org619e482">Configure build</h3>
- <div class="outline-text-3" id="text-org619e482">
+ <div id="outline-container-org999fd85" class="outline-3">
+ <h3 id="org999fd85">Configure build</h3>
+ <div class="outline-text-3" id="text-org999fd85">
  <div class="org-src-container">
  <pre class="src src-sh"> <span style="color: #a71d5d;">cd</span> gccemacs
 ../configure-gccemacs.sh
@@ -2615,9 +3201,9 @@ Make it executable
 </div>
 </div>
 
- <div id="outline-container-orgd8163bc" class="outline-3">
- <h3 id="orgd8163bc">Native lisp compiler found?</h3>
- <div class="outline-text-3" id="text-orgd8163bc">
+ <div id="outline-container-orgc0a2a2b" class="outline-3">
+ <h3 id="orgc0a2a2b">Native lisp compiler found?</h3>
+ <div class="outline-text-3" id="text-orgc0a2a2b">
  <p>
 Verify native lisp compiler is found:
 </p>
@@ -2629,9 +3215,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
- <div id="outline-container-org289ffa5" class="outline-3">
- <h3 id="org289ffa5">Build</h3>
- <div class="outline-text-3" id="text-org289ffa5">
+ <div id="outline-container-orgb6ff172" class="outline-3">
+ <h3 id="orgb6ff172">Build</h3>
+ <div class="outline-text-3" id="text-orgb6ff172">
  <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -2668,18 +3254,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
- <div id="outline-container-org78ba82a" class="outline-3">
- <h3 id="org78ba82a">Remove ~/emacs.d</h3>
- <div class="outline-text-3" id="text-org78ba82a">
+ <div id="outline-container-org849def8" class="outline-3">
+ <h3 id="org849def8">Remove ~/emacs.d</h3>
+ <div class="outline-text-3" id="text-org849def8">
  <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
- <div id="outline-container-org30ca6ec" class="outline-3">
- <h3 id="org30ca6ec">init.el config</h3>
- <div class="outline-text-3" id="text-org30ca6ec">
+ <div id="outline-container-org250957a" class="outline-3">
+ <h3 id="org250957a">init.el config</h3>
+ <div class="outline-text-3" id="text-org250957a">
  <p>
 Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set  <i>comp-deferred-compilation</i>. I wrapped the snippet in my   <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -2710,9 +3296,9 @@ Ensure  <i>exec-path</i> includes the script's "–prefix=" value,  <i>LIBRARY_P
 </div>
 </div>
 
- <div id="outline-container-org5340511" class="outline-3">
- <h3 id="org5340511">Launch Emacs.app</h3>
- <div class="outline-text-3" id="text-org5340511">
+ <div id="outline-container-org481ddfc" class="outline-3">
+ <h3 id="org481ddfc">Launch Emacs.app</h3>
+ <div class="outline-text-3" id="text-org481ddfc">
  <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -2724,9 +3310,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
- <div id="outline-container-org0238cd7" class="outline-3">
- <h3 id="org0238cd7">Deferred compilation logs</h3>
- <div class="outline-text-3" id="text-org0238cd7">
+ <div id="outline-container-orgcd51f8b" class="outline-3">
+ <h3 id="orgcd51f8b">Deferred compilation logs</h3>
+ <div class="outline-text-3" id="text-orgcd51f8b">
  <p>
 After setting  <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>
@@ -3041,13 +3627,17 @@ Turns out, hackingwithswift uses a JSON HTTP request for querying code examples.
   <title>Preview SwiftUI layouts using Emacs org blocks</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-orged3d07c" class="outline-2">
+ <div id="outline-container-swiftui-layout-previews-using-emacs-org-blocks" class="outline-2">
  <h2 id="swiftui-layout-previews-using-emacs-org-blocks"> <span class="timestamp-wrapper"> <span class="timestamp">23 May 2020</span></span> Preview SwiftUI layouts using Emacs org blocks</h2>
  <div class="outline-text-2" id="text-swiftui-layout-previews-using-emacs-org-blocks">
 
- <div class="figure">
+ <div id="orgf2fdffa" class="figure">
  <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif" alt="ob-swiftui.gif" width="75%" height="75%"></img></p>
 </div>
+
+ <p>
+✨  <i>UPDATE: The snippets in this post are outdated. See  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> for better SwiftUI babel support</i>. ✨
+</p>
 
  <p>
 Chris Eidhof  <a href="https://twitter.com/chriseidhof/status/1261360332594974721">twitted</a> a handy  <a href="https://gist.github.com/chriseidhof/26768f0b63fa3cdf8b46821e099df5ff">snippet</a> that enables quickly bootstrapping throwaway SwiftUI code. It can be easily integrated into other tools for rapid experimentation.
@@ -3065,18 +3655,12 @@ We can piggyback ride off zweifisch's  <a href="https://github.com/zweifisch/ob-
 If you're a  <a href="https://github.com/jwiegley/use-package">use-package</a> user, the following snippet should make things fairly self-contained (if you have  <a href="https://melpa.org/">melpa</a> set up already).
 </p>
 
- <p>
-Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in the following snippet. I've also enabled  <i>org-display-inline-images</i> when loading org files.
-</p>
-
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">org</span>
    <span style="color: #a71d5d;">:hook</span> ((org-mode . org-display-inline-images))
    <span style="color: #a71d5d;">:config</span>
 
   (<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">ob</span>
-     <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> org-mode-map
-                (<span style="color: #183691;">"C-c C-c"</span> . org-ctrl-c-ctrl-c))
      <span style="color: #a71d5d;">:config</span>
 
     (<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">ob-swift</span>
@@ -3100,7 +3684,7 @@ Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in
                (swiftui (cdr (assoc  <span style="color: #a71d5d;">:swiftui</span> params)))
                (output))
           (<span style="color: #a71d5d;">when</span> swiftui
-            (<span style="color: #a71d5d;">assert</span> (<span style="color: #a71d5d;">or</span> (string-equal swiftui  <span style="color: #183691;">"preview"</span>)
+            (assert (<span style="color: #a71d5d;">or</span> (string-equal swiftui  <span style="color: #183691;">"preview"</span>)
                         (string-equal swiftui  <span style="color: #183691;">"interactive"</span>))
                     nil  <span style="color: #183691;">":swiftui must be either preview or interactive"</span>)
             (<span style="color: #a71d5d;">setq</span> body (format
@@ -3198,7 +3782,11 @@ Note: I like pressing  <i>C-c C-c</i> to execute source blocks, so it's bound in
 </div>
 
  <p>
-Snippet also at github  <a href="https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b">gist</a> and included in  <a href="https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el">my emacs config</a>.
+ <del>Snippet also at github  <a href="https://gist.github.com/xenodium/79154033bc26e733b8c43af228cbce5b">gist</a> and included in  <a href="https://github.com/xenodium/dotsies/blob/master/emacs/features/fe-org.el">my emacs config</a></del>.
+</p>
+
+ <p>
+ <i>UPDATE: See  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> for a better version of babel SwiftUI support.</i>
 </p>
 
  <p>
@@ -3232,7 +3820,7 @@ To try out an inline  <i>preview</i>, create a new org file (eg. swiftui.org) an
 </pre>
 </div>
 
- <div class="figure">
+ <div id="orgf05ed41" class="figure">
  <p> <img src="../images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg" alt="vstack.jpg"></img></p>
 </div>
 
@@ -3249,9 +3837,9 @@ comments on  <a href="https://twitter.com/xenodium/status/1194224168709083137">t
 </p>
 </div>
 
- <div id="outline-container-orgd71c297" class="outline-3">
- <h3 id="orgd71c297">Update</h3>
- <div class="outline-text-3" id="text-orgd71c297">
+ <div id="outline-container-orgbc31ea8" class="outline-3">
+ <h3 id="orgbc31ea8">Update</h3>
+ <div class="outline-text-3" id="text-orgbc31ea8">
  <ul class="org-ul"> <li>Tweaked the snippet to make it more self-contained and made the steps more reproducible. Need to work out how to package things to make them more accessible. May be best to contribute as a patch to  <a href="https://github.com/zweifisch/ob-swift">ob-swift</a> and we can avoid the icky  <i>advice-add</i>.</li>
  <li>Thanks to Chris Eidhof for PNG support (instead of TIFF). Also TIL Swift's  <i>print</i> has got a terminator param.</li>
 </ul></div>
@@ -3340,7 +3928,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1263839324023525376">t
   <pubDate>Fri, 22 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Enrich Emacs dired's batching toolbox</title>
+  <title>Enrich Emacs dired&apos;s batching toolbox</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org28e9fcb" class="outline-2">
@@ -4095,7 +4683,7 @@ Start time + end time
   <pubDate>Tue, 07 Apr 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Emacs's counsel-M-x meets multiple cursors</title>
+  <title>Emacs&apos;s counsel-M-x meets multiple cursors</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org3dc51fc" class="outline-2">
@@ -4684,7 +5272,7 @@ comments on  <a href="https://twitter.com/xenodium/status/1241104117264781312">t
   <pubDate>Sun, 29 Dec 2019 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Fixing Honeywell CM927's dead screen</title>
+  <title>Fixing Honeywell CM927&apos;s dead screen</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org42aa372" class="outline-2">
@@ -5047,9 +5635,13 @@ comments on  <a href="https://twitter.com/xenodium/status/1197673205688864768?s=
   <title>Emacs org block company completion</title>
   <description><![CDATA[<div id="content">
 
- <div id="outline-container-org82c139a" class="outline-2">
+ <div id="outline-container-emacs-org-block-company-completion" class="outline-2">
  <h2 id="emacs-org-block-company-completion"> <span class="timestamp-wrapper"> <span class="timestamp">10 November 2019</span></span> Emacs org block company completion</h2>
  <div class="outline-text-2" id="text-emacs-org-block-company-completion">
+ <p>
+UPDATE: This is now available  <a href="https://melpa.org/#/company-org-block">on melpa</a>.
+</p>
+
  <p>
 Back in 2015, I bound the "<" key to a hydra for quickly inserting org blocks. The idea came from Oleg's post on  <a href="https://oremacs.com/2015/03/07/hydra-org-templates/">org-mode block templates in Hydra</a>. The suggested binding settled in my muscle memory without much effort.
 </p>
@@ -5067,12 +5659,16 @@ Writing a small  <a href="https://company-mode.github.io/">company mode</a> comp
 </p>
 
 
- <div class="figure">
+ <div id="org9ab52e3" class="figure">
  <p> <img src="../images/emacs-org-block-company-completion/company-org-block.gif" alt="company-org-block.gif" width="50%" height="50%"></img></p>
 </div>
 
  <p>
-The company backend looks as follow ( <b>Warning:</b>  <a href="https://twitter.com/tpanum/status/1197772426072997888">Snippet needs Org v9.2</a>):
+The company backend looks as follow ( <b>Warning:</b>  <a href="https://twitter.com/tpanum/status/1197772426072997888">Snippet needs Org v9.2</a>).
+</p>
+
+ <p>
+Note: This code is not up to date. Install via  <a href="https://melpa.org/#/company-org-block">melpa</a> or see  <a href="https://github.com/xenodium/company-org-block">its repository</a>.
 </p>
 
  <div class="org-src-container">
@@ -5158,9 +5754,9 @@ To use, add the backend enable  <i>company-mode</i> in  <i>org-mode</i>:
 </div>
 </div>
 
- <div id="outline-container-org9cf1c94" class="outline-3">
- <h3 id="org9cf1c94">Updates</h3>
- <div class="outline-text-3" id="text-org9cf1c94">
+ <div id="outline-container-org52325ff" class="outline-3">
+ <h3 id="org52325ff">Updates</h3>
+ <div class="outline-text-3" id="text-org52325ff">
  <ul class="org-ul"> <li>Removed language-specific header logic (use  <i> <a href="https://www.orgmode.org/worg/org-contrib/babel/header-args.html">org-babel-default-header-args</a></i> instead).</li>
  <li>Also completes non-source block templates from  <a href="https://orgmode.org/manual/Easy-templates.html">org-structure-template-alist</a>.</li>
  <li>Source in my  <a href="https://github.com/xenodium/dotsies/blob/master/emacs/ar/company-org-block.el">dot files</a>.</li>
@@ -8499,7 +9095,7 @@ I'm a  <a href="https://github.com/jwiegley/use-package">use-package</a> fan, so
   <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Working with vultr's ipv6-only instances</title>
+  <title>Working with vultr&apos;s ipv6-only instances</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org3295c4b" class="outline-2">
@@ -8903,7 +9499,7 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   <pubDate>Fri, 28 Sep 2018 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Recover from Time Machine's "backup already in use"</title>
+  <title>Recover from Time Machine&apos;s &quot;backup already in use&quot;</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-orga331aef" class="outline-2">
@@ -12950,7 +13546,7 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
   <pubDate>Mon, 05 Sep 2016 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>San Francisco's Mission District travel bookmarks</title>
+  <title>San Francisco&apos;s Mission District travel bookmarks</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-orgc1b24ba" class="outline-2">
@@ -14885,7 +15481,7 @@ Press <f6> to export org file
   <pubDate>Mon, 25 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Fischer's London: yes, but...</title>
+  <title>Fischer&apos;s London: yes, but...</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-orgc7cfc56" class="outline-2">
@@ -15030,7 +15626,7 @@ My girlfriend recently made a delicious chocolate fondant. Saving the  <a href="
   <pubDate>Wed, 20 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Safari's Web Inspector keyboard shortcuts</title>
+  <title>Safari&apos;s Web Inspector keyboard shortcuts</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org5a6bda4" class="outline-2">
@@ -15383,7 +15979,7 @@ M-x irony-cdb-json-add-compile-commands-path
   <pubDate>Wed, 06 Jan 2016 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Gandhi's ever-contemporary wisdom</title>
+  <title>Gandhi&apos;s ever-contemporary wisdom</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org4c000bc" class="outline-2">
@@ -16498,7 +17094,7 @@ Prepend with  <a href="http://htmlpreview.github.io/">http://htmlpreview.github.
   <pubDate>Mon, 07 Dec 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>Playing with Dart's analysis server</title>
+  <title>Playing with Dart&apos;s analysis server</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org6800819" class="outline-2">
@@ -17211,7 +17807,7 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
   <pubDate>Sun, 22 Nov 2015 00:00:00 +0000</pubDate>
 </item>
 <item>
-  <title>easy_install->pip->conda</title>
+  <title>easy_install-&gt;pip-&gt;conda</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-orgde9bd25" class="outline-2">
@@ -17775,7 +18371,7 @@ UPDATE(2019-04-13): Refreshed post with latest code from my  <a href="https://gi
   <pubDate>Fri, 09 Oct 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Change Emacs shell's CWD with helm projectile</title>
+  <title>Change Emacs shell&apos;s CWD with helm projectile</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org0cd8b95" class="outline-2">
@@ -17960,7 +18556,7 @@ wholesome
   <pubDate>Mon, 28 Sep 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Soundcloud's Go best practices (GopherCon 2014)</title>
+  <title>Soundcloud&apos;s Go best practices (GopherCon 2014)</title>
   <description><![CDATA[<div id="content">
 
  <div id="outline-container-org19d1802" class="outline-2">

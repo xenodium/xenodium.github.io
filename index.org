@@ -1,6 +1,61 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-06-27 Sun] Emacs: smarter search and replace
+:PROPERTIES:
+:CUSTOM_ID: emacs-smarter-search-and-replace
+:END:
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-smarter-search-and-replace/smarter_replace.gif]]
+
+Not long ago, I made a note to go back and read [[https://mac4translators.blogspot.com][Mac for Translators]]'s [[https://mac4translators.blogspot.com/2021/06/regex-with-elisp.html][Emacs regex with Emacs lisp]] post. The author highlights Emacs's ability to apply additional logic when replacing text during a search-and-replace session. It does so by leveraging elisp expressions.
+
+Coincidentally, a redditor recently asked [[https://www.reddit.com/r/emacs/comments/o878am/what_is_the_simplest_way_to_apply_a_math_formula/][What is the simplest way to apply a math formula to all numbers in a buffer/region?]], which generated multiple answers. Some also pointing to /search and replace/ leveraging elisp expressions.
+
+While I rarely need to apply additional logic when replacing matches, it's nice to know we have options  available in our Emacs toolbox. This prompted me to check out [[https://github.com/emacs-mirror/emacs/blob/b8f9e58ef72402e69a1f0960816184d52e5d2d29/lisp/replace.el#L709][replace-regexp]]'s documentation (via M-x [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Name-Help.html][describe-function]] or my favorite M-x [[https://github.com/Wilfred/helpful][helpful-callable]]). There's lots in there. Go check its docs out. You may be pleasantly surprised by all the featured packed under this humble function.
+
+For instance, \& expands to the current match. Similarly, \#& expands to the current match, fed through [[https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Conversion.html][string-to-number]]. But what if you'd like to feed the match to another function? You can use \, to signal evaluation of an elisp expression. In other words, you could multiply by 3 using \,(* 3 \#&) or inserting whether a number is odd or even with something like \,(if (oddp \#&) "(odd)" "(even)").
+
+Take the following text:
+
+#+begin_example
+  1
+  2
+  3
+  4
+  5
+  6
+#+end_example
+
+We can label each value "(odd)" or "(even)" as well as multiply by 3, by invoking /replace-regexp/ as follows:
+
+#+begin_quote
+  M-x replace-regexp
+#+end_quote
+
+[PCRE] Replace regex:
+#+begin_quote
+  [-0-9.]+
+#+end_quote
+
+Replace regex [-0-9.]+:
+#+begin_quote
+  \& \,(if (oddp \#&) "(odd)" "(even)") x 3 = \,(* 3 \#&)
+#+end_quote
+
+#+begin_example
+  1 (odd) x 3 = 3
+  2 (even) x 3 = 6
+  3 (odd) x 3 = 9
+  4 (even) x 3 = 12
+  5 (odd) x 3 = 15
+  6 (even) x 3 = 18
+#+end_example
+
+It's worth noting that /replace-regexp/'s cousin [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Query-Replace.html][query-replace-regexp]] also handles all this wonderful magic.
+
+Happy searching and replacing!
+
 * [2021-06-20 Sun] Previewing SwiftUI layouts in Emacs (revisited)
 :PROPERTIES:
 :CUSTOM_ID: previewing-swiftui-layouts-in-emacs-revisited

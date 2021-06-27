@@ -6,11 +6,102 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 21 Jun 2021 09:44:33 +0100</lastBuildDate>
+<lastBuildDate>Sun, 27 Jun 2021 14:25:34 +0100</lastBuildDate>
+<item>
+  <title>Emacs: smarter search and replace</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-smarter-search-and-replace" class="outline-2">
+ <h2 id="emacs-smarter-search-and-replace"> <span class="timestamp-wrapper"> <span class="timestamp">27 June 2021</span></span> Emacs: smarter search and replace</h2>
+ <div class="outline-text-2" id="text-emacs-smarter-search-and-replace">
+
+ <div id="org23e3c63" class="figure">
+ <p> <img src="../images/emacs-smarter-search-and-replace/smarter_replace.gif" alt="smarter_replace.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+Not long ago, I made a note to go back and read  <a href="https://mac4translators.blogspot.com">Mac for Translators</a>'s  <a href="https://mac4translators.blogspot.com/2021/06/regex-with-elisp.html">Emacs regex with Emacs lisp</a> post. The author highlights Emacs's ability to apply additional logic when replacing text during a search-and-replace session. It does so by leveraging elisp expressions.
+</p>
+
+ <p>
+Coincidentally, a redditor recently asked  <a href="https://www.reddit.com/r/emacs/comments/o878am/what_is_the_simplest_way_to_apply_a_math_formula/">What is the simplest way to apply a math formula to all numbers in a buffer/region?</a>, which generated multiple answers. Some also pointing to  <i>search and replace</i> leveraging elisp expressions.
+</p>
+
+ <p>
+While I rarely need to apply additional logic when replacing matches, it's nice to know we have options  available in our Emacs toolbox. This prompted me to check out  <a href="https://github.com/emacs-mirror/emacs/blob/b8f9e58ef72402e69a1f0960816184d52e5d2d29/lisp/replace.el#L709">replace-regexp</a>'s documentation (via M-x  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Name-Help.html">describe-function</a> or my favorite M-x  <a href="https://github.com/Wilfred/helpful">helpful-callable</a>). There's lots in there. Go check its docs out. You may be pleasantly surprised by all the featured packed under this humble function.
+</p>
+
+ <p>
+For instance, \& expands to the current match. Similarly, \#& expands to the current match, fed through  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Conversion.html">string-to-number</a>. But what if you'd like to feed the match to another function? You can use \, to signal evaluation of an elisp expression. In other words, you could multiply by 3 using \,(* 3 \#&) or inserting whether a number is odd or even with something like \,(if (oddp \#&) "(odd)" "(even)").
+</p>
+
+ <p>
+Take the following text:
+</p>
+
+ <pre class="example" id="org9b17430">
+1
+2
+3
+4
+5
+6
+</pre>
+
+ <p>
+We can label each value "(odd)" or "(even)" as well as multiply by 3, by invoking  <i>replace-regexp</i> as follows:
+</p>
+
+ <blockquote>
+ <p>
+M-x replace-regexp
+</p>
+</blockquote>
+
+ <p>
+[PCRE] Replace regex:
+</p>
+ <blockquote>
+ <p>
+[-0-9.]+
+</p>
+</blockquote>
+
+ <p>
+Replace regex [-0-9.]+:
+</p>
+ <blockquote>
+ <p>
+\& \,(if (oddp \#&) "(odd)" "(even)") x 3 = \,(* 3 \#&)
+</p>
+</blockquote>
+
+ <pre class="example" id="org84bc96d">
+1 (odd) x 3 = 3
+2 (even) x 3 = 6
+3 (odd) x 3 = 9
+4 (even) x 3 = 12
+5 (odd) x 3 = 15
+6 (even) x 3 = 18
+</pre>
+
+ <p>
+It's worth noting that  <i>replace-regexp</i>'s cousin  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Query-Replace.html">query-replace-regexp</a> also handles all this wonderful magic.
+</p>
+
+ <p>
+Happy searching and replacing!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-smarter-search-and-replace</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-smarter-search-and-replace</guid>
+  <pubDate>Sun, 27 Jun 2021 14:25:34 +0100</pubDate>
+</item>
 <item>
   <title>Previewing SwiftUI layouts in Emacs (revisited)</title>
   <description><![CDATA[<div id="content">
-
  <div id="outline-container-previewing-swiftui-layouts-in-emacs-revisited" class="outline-2">
  <h2 id="previewing-swiftui-layouts-in-emacs-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">20 June 2021</span></span> Previewing SwiftUI layouts in Emacs (revisited)</h2>
  <div class="outline-text-2" id="text-previewing-swiftui-layouts-in-emacs-revisited">
@@ -5695,6 +5786,23 @@ I'm a  <a href="https://github.com/jwiegley/use-package">use-package</a> fan, so
   <link>http://xenodium.com/faster-junk-mail-deletion-with-mu4e</link>
   <guid isPermaLink="false">http://xenodium.com/faster-junk-mail-deletion-with-mu4e</guid>
   <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Rust bookmarks</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-org1cacdff" class="outline-2">
+ <h2 id="rust-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">29 October 2018</span></span> Rust bookmarks</h2>
+ <div class="outline-text-2" id="text-rust-bookmarks">
+ <span class="modified-timestamp">   <em>updated: 10 August 2019  </em></span>
+ <ul class="org-ul"> <li> <a href="https://www.snoyman.com/blog/2018/10/introducing-rust-crash-course">Introducing the Rust crash course</a>.</li>
+ <li> <a href="https://news.ycombinator.com/item">Rust Language Cheat Sheet (cheats.rs) </a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/rust-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/rust-bookmarks</guid>
+  <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
 </item>
 <item>
   <title>imenu on Emacs eshell</title>
