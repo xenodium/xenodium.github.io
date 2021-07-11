@@ -6,7 +6,77 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 27 Jun 2021 14:25:34 +0100</lastBuildDate>
+<lastBuildDate>Sun, 11 Jul 2021 12:03:04 +0100</lastBuildDate>
+<item>
+  <title>macOS: Show in Finder / Show in Emacs</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-show-in-finder--show-in-emacs" class="outline-2">
+ <h2 id="show-in-finder--show-in-emacs"> <span class="timestamp-wrapper"> <span class="timestamp">10 July 2021</span></span> macOS: Show in Finder / Show in Emacs</h2>
+ <div class="outline-text-2" id="text-show-in-finder--show-in-emacs">
+ <p>
+From Christian Tietze's  <a href="https://christiantietze.de/posts/2021/07/open-finder-window-in-dired/">Open macOS Finder Window in Emacs Dired</a>, I learned about  <a href="https://github.com/kaz-yos/reveal-in-osx-finder">reveal-in-osx-finder</a>. This is handy for the few times I want to transition from Emacs to Finder for file management. I say few times since Emacs's directory editor,  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a>, is just awesome. I've written about dired customizations  <a href="https://xenodium.com/showhide-emacs-dired-details-in-style/">here</a> and  <a href="https://xenodium.com/showhide-emacs-dired-details-in-style/">here</a>. Since dired is  <i>just another buffer,</i> you can apply your Emacs magic like multiple cursors to  <a href="https://xenodium.com/batch-renaming-with-counsel-find-dired-and-wdired/">batch rename files in an editable dired buffer</a>.
+</p>
+
+ <p>
+To transition from macOS Finder to Emacs, Christian offers an Emacs interactive command that fetches Finder's location and opens a dired buffer via AppleScript. On a similar note, I learned from redditor  <a href="https://www.reddit.com/user/pndc/">u/pndc</a> that  <a href="https://www.reddit.com/r/emacs/comments/ohgz0s/open_macos_finder_windows_path_in_dired/h4p8a8f?utm_source=share&utm_medium=web2x&context=3">Finder's proxy icons can be dragged over to Emacs</a>, which handily drops ya into a dired buffer.
+</p>
+
+ <p>
+With these two solutions in mind, I looked into a third one to offer a context menu option in Finder to show the file in Emacs. This turned out to be fairly easy using Automator, which I've rarely used.
+</p>
+
+
+ <div id="org00f625c" class="figure">
+ <p> <img src="../images/show-in-finder--show-in-emacs/show_in_emacs.gif" alt="show_in_emacs.gif" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+I created a flow that runs a shell script to "Show in Emacs", revealing the selected file or folder in an dired buffer. This is similar to Christian's solution, but invoked from Finder itself. The flow also uses  <i>dired-goto-file</i> which moves the point (cursor) to the file listed under dired.
+</p>
+
+
+ <div id="org27b4e63" class="figure">
+ <p> <img src="../images/show-in-finder--show-in-emacs/show_in_emacs.png" alt="show_in_emacs.png" width="98%" height="98%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #333333;">current_dir</span>=$(<span style="color: #183691;">dirname "$1"</span>)
+osascript -e  <span style="color: #183691;">'tell application "Emacs" to activate'</span>
+path/to/emacsclient --eval  <span style="color: #183691;">"(progn (dired \"$current_dir\") (dired-goto-file \"$1\"))"</span>
+</pre>
+</div>
+
+ <p>
+As a bonus, I added an "Open in Emacs" option, which does as it says on the tin. Rather than show the file listed in a dired buffer, it gets Emacs to open it in your favorite major mode. This option is not technically needed since Finder already provides an "Open With" context menu, but it does remove a few click here and there.
+</p>
+
+
+ <div id="org0a3615d" class="figure">
+ <p> <img src="../images/show-in-finder--show-in-emacs/open_in_emacs.png" alt="open_in_emacs.png" width="98%" height="98%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">osascript -e  <span style="color: #183691;">'tell application "Emacs" to activate'</span>
+/Users/alvaro/homebrew/bin/emacsclient --eval  <span style="color: #183691;">"(find-file \"$1\")"</span>
+</pre>
+</div>
+
+ <p>
+On a side note, Emacs defaults to creating new frames when opening files via "Open With" menu (or "open -a Emacs foo.txt"). I prefer to use my existing Emacs frame, which can be accomplished by setting ns-pop-up-frames to nil.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> ns-pop-up-frames nil)
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/show-in-finder--show-in-emacs</link>
+  <guid isPermaLink="false">http://xenodium.com/show-in-finder--show-in-emacs</guid>
+  <pubDate>Sat, 10 Jul 2021 12:03:04 +0100</pubDate>
+</item>
 <item>
   <title>Emacs: smarter search and replace</title>
   <description><![CDATA[<div id="content">

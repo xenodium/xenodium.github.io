@@ -1,6 +1,47 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-07-10 Sat] macOS: Show in Finder / Show in Emacs
+:PROPERTIES:
+:CUSTOM_ID: show-in-finder--show-in-emacs
+:END:
+
+From Christian Tietze's [[https://christiantietze.de/posts/2021/07/open-finder-window-in-dired/][Open macOS Finder Window in Emacs Dired]], I learned about [[https://github.com/kaz-yos/reveal-in-osx-finder][reveal-in-osx-finder]]. This is handy for the few times I want to transition from Emacs to Finder for file management. I say few times since Emacs's directory editor, [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]], is just awesome. I've written about dired customizations [[https://xenodium.com/showhide-emacs-dired-details-in-style/][here]] and [[https://xenodium.com/showhide-emacs-dired-details-in-style/][here]]. Since dired is /just another buffer,/ you can apply your Emacs magic like multiple cursors to [[https://xenodium.com/batch-renaming-with-counsel-find-dired-and-wdired/][batch rename files in an editable dired buffer]].
+
+To transition from macOS Finder to Emacs, Christian offers an Emacs interactive command that fetches Finder's location and opens a dired buffer via AppleScript. On a similar note, I learned from redditor [[https://www.reddit.com/user/pndc/][u/pndc]] that [[https://www.reddit.com/r/emacs/comments/ohgz0s/open_macos_finder_windows_path_in_dired/h4p8a8f?utm_source=share&utm_medium=web2x&context=3][Finder's proxy icons can be dragged over to Emacs]], which handily drops ya into a dired buffer.
+
+With these two solutions in mind, I looked into a third one to offer a context menu option in Finder to show the file in Emacs. This turned out to be fairly easy using Automator, which I've rarely used.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/show-in-finder--show-in-emacs/show_in_emacs.gif]]
+
+I created a flow that runs a shell script to "Show in Emacs", revealing the selected file or folder in an dired buffer. This is similar to Christian's solution, but invoked from Finder itself. The flow also uses /dired-goto-file/ which moves the point (cursor) to the file listed under dired.
+
+#+ATTR_HTML: :width 98% :height 98%
+[[file:images/show-in-finder--show-in-emacs/show_in_emacs.png]]
+
+#+begin_src sh
+  current_dir=$(dirname "$1")
+  osascript -e 'tell application "Emacs" to activate'
+  path/to/emacsclient --eval "(progn (dired \"$current_dir\") (dired-goto-file \"$1\"))"
+#+end_src
+
+As a bonus, I added an "Open in Emacs" option, which does as it says on the tin. Rather than show the file listed in a dired buffer, it gets Emacs to open it in your favorite major mode. This option is not technically needed since Finder already provides an "Open With" context menu, but it does remove a few click here and there.
+
+#+ATTR_HTML: :width 98% :height 98%
+[[file:images/show-in-finder--show-in-emacs/open_in_emacs.png]]
+
+#+begin_src sh
+  osascript -e 'tell application "Emacs" to activate'
+  /Users/alvaro/homebrew/bin/emacsclient --eval "(find-file \"$1\")"
+#+end_src
+
+On a side note, Emacs defaults to creating new frames when opening files via "Open With" menu (or "open -a Emacs foo.txt"). I prefer to use my existing Emacs frame, which can be accomplished by setting ns-pop-up-frames to nil.
+
+#+begin_src emacs-lisp :lexical no
+  (setq ns-pop-up-frames nil)
+#+end_src
+
 * [2021-06-27 Sun] Emacs: smarter search and replace
 :PROPERTIES:
 :CUSTOM_ID: emacs-smarter-search-and-replace
