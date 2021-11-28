@@ -6,7 +6,228 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 10 Nov 2021 22:18:14 +0000</lastBuildDate>
+<lastBuildDate>Sun, 28 Nov 2021 17:50:38 +0000</lastBuildDate>
+<item>
+  <title>Emacs bends again</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-bends-again" class="outline-2">
+ <h2 id="emacs-bends-again"> <span class="timestamp-wrapper"> <span class="timestamp">28 November 2021</span></span> Emacs bends again</h2>
+ <div class="outline-text-2" id="text-emacs-bends-again">
+ <p>
+While adding more rendering capabilities to  <a href="https://plainorg.com">Plain Org</a>, it soon became apparent some sort of screenshot/snapshot testing was necessary to prevent regressing existing features. That is, we first generate a rendered snapshot from a given org snippet, followed by some visual inspection, right before we go and save the blessed snapshot (often referred to as golden) to our project. Future changes are validated against the golden snapshot to ensure rendering is still behaving as expected.
+</p>
+
+ <p>
+Let's say we'd like to validate table rendering with links, we can write a test as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">func</span>  <span style="color: #795da3;">testTableWithLinks</span>()  <span style="color: #a71d5d;">throws</span> {
+   <span style="color: #795da3;">assertSnapshot</span>(
+    matching: OrgMarkupText. <span style="color: #795da3;">make</span>(
+       <span style="color: #183691;">"""</span>
+ <span style="color: #183691;">      | URL                    | Org link    |</span>
+ <span style="color: #183691;">      |------------------------+-------------|</span>
+ <span style="color: #183691;">      | https://flathabits.com | [[https://flathabits.com][Flat Habits]] |</span>
+ <span style="color: #183691;">      | Regular text           | Here too    |</span>
+ <span style="color: #183691;">      |------------------------+-------------|</span>
+ <span style="color: #183691;">      """</span>),
+     <span style="color: #a71d5d;">as</span>: . <span style="color: #a71d5d;">image</span>(layout: . <span style="color: #333333;">sizeThatFits</span>))
+}
+</pre>
+</div>
+
+ <p>
+The corresponding snapshot golden can be seen below.
+</p>
+
+
+ <div id="org3be58ab" class="figure">
+ <p> <img src="../images/emacs-bends-again/testTableWithLinks.1.png" alt="testTableWithLinks.1.png" width="50%"></img></p>
+</div>
+
+ <p>
+This is all done rather effortlessly thanks to  <a href="https://twitter.com/pointfreeco">Point Free</a>'s wonderful  <a href="https://github.com/pointfreeco/swift-snapshot-testing">swift-snapshot-testing</a> utilities.
+</p>
+
+ <p>
+So what does any of this have to do with Emacs? You see, as I added more snapshot tests and made modifications to the rendering logic, I needed a quick way to visually inspect and override all goldens. All the main pieces were already there, I just needed some elisp glue to  <i>bend Emacs my way™.</i>
+</p>
+
+ <p>
+First, I needed to run my Xcode builds from the command line. This is already  <a href="https://developer.apple.com/library/archive/technotes/tn2339/_index.html">supported via xcodebuild</a>. Next, I needed a way to parse test execution data to extract failing tests.  <a href="https://twitter.com/davidahouse">David House</a>'s  <a href="https://github.com/davidahouse/xcodebuild-to-json">xcodebuild-to-json</a> handles this perfectly. What's left? Glue it all up with some elisp.
+</p>
+
+ <p>
+Beware, the following code snippet is packed with assumptions about my project, it's messy, surely has bugs, can be optimized, etc. But the important point here is that Emacs is such an amazing malleable power tool. Throw some elisp at it and you can to bend it to your liking. After all, it's  <span class="underline">your</span> editor.
+</p>
+
+ <p>
+And so here we are, I can now run snapshot tests from Emacs using my hacked up  <code>plainorg-snapshot-test-all</code> function and quickly override (or ignore) all newly generated snapshots by merely pressing y/n keys. Oh, and our beloved web browser was also invited to the party. Press "d" to open two browser tabs if you'd like to take a closer look (not demoed below).
+</p>
+
+ <p>
+Success.  <i>Emacs bends again</i>.
+</p>
+
+
+ <div id="org7aeee83" class="figure">
+ <p> <img src="../images/emacs-bends-again/diff.gif" alt="diff.gif" width="95%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;;; </span> <span style="color: #969896;">-*- lexical-binding: t; -*-</span>
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">plainorg-snapshot-test-all</span> ()
+   <span style="color: #183691;">"Invoke xcodebuild, compare failed tests screenshots side-to-side,</span>
+ <span style="color: #183691;">and offer to override them."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((project (cdr (project-current)))
+         (json-tmp-file (make-temp-file  <span style="color: #183691;">"PlainOrg_Tests_"</span> nil  <span style="color: #183691;">".json"</span>))
+         (default-directory project))
+    (<span style="color: #a71d5d;">unless</span> (file-exists-p (concat project  <span style="color: #183691;">"PlainOrg.xcodeproj"</span>))
+      (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"Not in PlainOrg project"</span>))
+    (set-process-sentinel
+     (start-process
+       <span style="color: #183691;">"xcodebuild"</span>
+      (<span style="color: #a71d5d;">with-current-buffer</span>
+          (get-buffer-create  <span style="color: #183691;">"*xcodebuild*"</span>)
+        (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+          (erase-buffer))
+        (current-buffer))
+       <span style="color: #183691;">"/usr/bin/xcodebuild"</span>
+       <span style="color: #183691;">"-scheme"</span>  <span style="color: #183691;">"PlainOrg"</span>  <span style="color: #183691;">"-target"</span>  <span style="color: #183691;">"PlainOrgTests"</span>  <span style="color: #183691;">"-destination"</span>  <span style="color: #183691;">"name=iPhone 13"</span>  <span style="color: #183691;">"-quiet"</span>  <span style="color: #183691;">"test"</span>)
+     (<span style="color: #a71d5d;">lambda</span> (p e)
+       (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer  <span style="color: #183691;">"*xcodebuild*"</span>)
+         (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+           (insert (format  <span style="color: #183691;">"xcodebuild exit code: %d\n\n"</span> (process-exit-status p)))))
+       (<span style="color: #a71d5d;">when</span> (not (eq 0 (process-exit-status p)))
+         (set-process-sentinel
+          (start-process
+            <span style="color: #183691;">"xcodebuild-to-json"</span>
+            <span style="color: #183691;">"*xcodebuild*"</span>
+            <span style="color: #183691;">"/opt/homebrew/bin/xcodebuild-to-json"</span>
+            <span style="color: #183691;">"--derived-data-folder"</span> (format  <span style="color: #183691;">"/Users/%s/Library/Developer/Xcode/DerivedData/"</span>
+                                           (user-login-name))  <span style="color: #333333;">"--output"</span> <span style="color: #333333;"> json-tmp-file)</span>
+          (<span style="color: #a71d5d;">lambda</span> (p e)
+            (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer  <span style="color: #183691;">"*xcodebuild*"</span>)
+              (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                (insert (format  <span style="color: #183691;">"xcodebuild-to-json exit code: %d\n\n"</span> (process-exit-status p)))))
+            (<span style="color: #a71d5d;">when</span> (= 0 (process-exit-status p))
+              (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer  <span style="color: #183691;">"*xcodebuild*"</span>)
+                (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                  (insert  <span style="color: #183691;">"Screenshot comparison started\n\n"</span>)))
+              (plainorg--snapshot-process-json (get-buffer  <span style="color: #183691;">"*xcodebuild*"</span>) json-tmp-file)
+              (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer  <span style="color: #183691;">"*xcodebuild*"</span>)
+                (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                  (insert  <span style="color: #183691;">"\nScreenshot comparison finished\n"</span>))
+                (read-only-mode +1))))))))
+    (switch-to-buffer-other-window  <span style="color: #183691;">"*xcodebuild*"</span>)))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">plainorg--snapshot-process-json</span> (result-buffer json)
+   <span style="color: #183691;">"Find all failed snapshot tests in JSON and offer to override</span>
+ <span style="color: #183691;"> screenshots, comparing them side to side."</span>
+  (<span style="color: #a71d5d;">let</span> ((hashtable (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create  <span style="color: #183691;">"*build json*"</span>)
+                     (erase-buffer)
+                     (insert-file-contents json)
+                     (json-parse-buffer))))
+    (mapc
+     (<span style="color: #a71d5d;">lambda</span> (item)
+       (<span style="color: #a71d5d;">when</span> (equal (gethash  <span style="color: #183691;">"id"</span> item)
+                     <span style="color: #183691;">"SnapshotTests"</span>)
+         (mapc
+          (<span style="color: #a71d5d;">lambda</span> (testCase)
+            (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (gethash  <span style="color: #183691;">"failureMessage"</span> testCase)
+                       (string-match-p  <span style="color: #183691;">"Snapshot does not match reference"</span>
+                                       (gethash  <span style="color: #183691;">"failureMessage"</span> testCase)))
+              (<span style="color: #a71d5d;">let*</span> ((paths (plainorg--snapshot-screenshot-paths
+                             (gethash  <span style="color: #183691;">"failureMessage"</span> testCase)))
+                     (override-result (plainorg--snapshot-override-image
+                                        <span style="color: #183691;">"Expected screenshot"</span>
+                                       (nth 0 paths)  <span style="color: #969896;">;; </span> <span style="color: #969896;">old</span>
+                                        <span style="color: #183691;">"Actual screenshot"</span>
+                                       (nth 1 paths)  <span style="color: #969896;">;; </span> <span style="color: #969896;">new</span>
+                                       (nth 0 paths))))
+                (<span style="color: #a71d5d;">when</span> override-result
+                  (<span style="color: #a71d5d;">with-current-buffer</span> result-buffer
+                    (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                      (insert override-result)
+                      (insert  <span style="color: #183691;">"\n"</span>)))))))
+          (gethash  <span style="color: #183691;">"testCases"</span> item))))
+     (gethash  <span style="color: #183691;">"classes"</span> (gethash  <span style="color: #183691;">"details"</span> hashtable)))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">plainorg--snapshot-screenshot-paths</span> (failure-message)
+   <span style="color: #183691;">"Extract a paths list from FAILURE-MESSAGE of the form:</span>
+
+ <span style="color: #183691;">failed - Snapshot does not match reference.</span>
+
+ <span style="color: #183691;">@−</span>
+ <span style="color: #183691;">\"/path/to/expected/screenshot.1.png\"</span>
+ <span style="color: #183691;">@+</span>
+ <span style="color: #183691;">\"/path/to/actual/screenshot.1.png\"</span>
+
+ <span style="color: #183691;">Newly-taken snapshot does not match reference.</span>
+ <span style="color: #183691;">"</span>
+  (mapcar
+   (<span style="color: #a71d5d;">lambda</span> (line)
+     (string-remove-suffix  <span style="color: #183691;">"\""</span>
+                           (string-remove-prefix  <span style="color: #183691;">"\""</span> line)))
+   (seq-filter
+    (<span style="color: #a71d5d;">lambda</span> (line)
+      (string-prefix-p  <span style="color: #183691;">"\""</span> line))
+    (split-string failure-message  <span style="color: #183691;">"\n"</span>))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">plainorg--snapshot-override-image</span> (old-buffer old new-buffer new destination)
+  (<span style="color: #a71d5d;">let</span> ((window-configuration (current-window-configuration))
+        (action)
+        (result))
+    (<span style="color: #a71d5d;">unwind-protect</span>
+        (<span style="color: #a71d5d;">progn</span>
+          (delete-other-windows)
+          (split-window-horizontally)
+          (switch-to-buffer (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create old-buffer)
+                              (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                                (erase-buffer))
+                              (insert-file-contents old)
+                              (image-mode)
+                              (current-buffer)))
+          (switch-to-buffer-other-window (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create new-buffer)
+                                           (<span style="color: #a71d5d;">let</span> ((inhibit-read-only t))
+                                             (erase-buffer))
+                                           (insert-file-contents new)
+                                           (image-mode)
+                                           (current-buffer)))
+          (<span style="color: #a71d5d;">while</span> (null result)
+            (<span style="color: #a71d5d;">setq</span> action (read-char-choice (format  <span style="color: #183691;">"Override %s? (y)es (n)o (d)iff in browser? "</span>
+                                                   (file-name-base old))
+                                           '(?y ?n ?d ?q)))
+            (<span style="color: #a71d5d;">cond</span> ((eq action ?n)
+                   (<span style="color: #a71d5d;">setq</span> result
+                         (format  <span style="color: #183691;">"Keeping old %s"</span> (file-name-base old))))
+                  ((eq action ?y)
+                   (copy-file new old t)
+                   (<span style="color: #a71d5d;">setq</span> result
+                         (format  <span style="color: #183691;">"Overriding old %s"</span> (file-name-base old))))
+                  ((eq action ?d)
+                   (shell-command (format  <span style="color: #183691;">"open -a Firefox %s --args --new-tab"</span> old))
+                   (shell-command (format  <span style="color: #183691;">"open -a Firefox %s --args --new-tab"</span> new)))
+                  ((eq action ?q)
+                   (set-window-configuration window-configuration)
+                   (<span style="color: #a71d5d;">setq</span> result (format  <span style="color: #183691;">"Quit %s"</span> (file-name-base old)))))))
+      (set-window-configuration window-configuration)
+      (kill-buffer old-buffer)
+      (kill-buffer new-buffer))
+    result))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-bends-again</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-bends-again</guid>
+  <pubDate>Sun, 28 Nov 2021 17:50:54 +0000</pubDate>
+</item>
 <item>
   <title>Plain Org has joined the chat (iOS)</title>
   <description><![CDATA[<div id="content">

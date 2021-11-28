@@ -1,6 +1,194 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2021-11-28 Sun] Emacs bends again
+:PROPERTIES:
+:CUSTOM_ID: emacs-bends-again
+:END:
+While adding more rendering capabilities to [[https://plainorg.com][Plain Org]], it soon became apparent some sort of screenshot/snapshot testing was necessary to prevent regressing existing features. That is, we first generate a rendered snapshot from a given org snippet, followed by some visual inspection, right before we go and save the blessed snapshot (often referred to as golden) to our project. Future changes are validated against the golden snapshot to ensure rendering is still behaving as expected.
+
+Let's say we'd like to validate table rendering with links, we can write a test as follows:
+
+#+begin_src swift
+  func testTableWithLinks() throws {
+    assertSnapshot(
+      matching: OrgMarkupText.make(
+        """
+        | URL                    | Org link    |
+        |------------------------+-------------|
+        | https://flathabits.com | [[https://flathabits.com][Flat Habits]] |
+        | Regular text           | Here too    |
+        |------------------------+-------------|
+        """),
+      as: .image(layout: .sizeThatFits))
+  }
+#+end_src
+
+The corresponding snapshot golden can be seen below.
+
+#+ATTR_HTML: :width 50%
+[[file:images/emacs-bends-again/testTableWithLinks.1.png]]
+
+This is all done rather effortlessly thanks to [[https://twitter.com/pointfreeco][Point Free]]'s wonderful [[https://github.com/pointfreeco/swift-snapshot-testing][swift-snapshot-testing]] utilities.
+
+So what does any of this have to do with Emacs? You see, as I added more snapshot tests and made modifications to the rendering logic, I needed a quick way to visually inspect and override all goldens. All the main pieces were already there, I just needed some elisp glue to /bend Emacs my way™./
+
+First, I needed to run my Xcode builds from the command line. This is already [[https://developer.apple.com/library/archive/technotes/tn2339/_index.html][supported via xcodebuild]]. Next, I needed a way to parse test execution data to extract failing tests. [[https://twitter.com/davidahouse][David House]]'s [[https://github.com/davidahouse/xcodebuild-to-json][xcodebuild-to-json]] handles this perfectly. What's left? Glue it all up with some elisp.
+
+Beware, the following code snippet is packed with assumptions about my project, it's messy, surely has bugs, can be optimized, etc. But the important point here is that Emacs is such an amazing malleable power tool. Throw some elisp at it and you can to bend it to your liking. After all, it's _your_ editor.
+
+And so here we are, I can now run snapshot tests from Emacs using my hacked up ~plainorg-snapshot-test-all~ function and quickly override (or ignore) all newly generated snapshots by merely pressing y/n keys. Oh, and our beloved web browser was also invited to the party. Press "d" to open two browser tabs if you'd like to take a closer look (not demoed below).
+
+Success. /Emacs bends again/.
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-bends-again/diff.gif]]
+
+#+begin_src emacs-lisp :lexical no
+  ;;; -*- lexical-binding: t; -*-
+
+  (defun plainorg-snapshot-test-all ()
+    "Invoke xcodebuild, compare failed tests screenshots side-to-side,
+  and offer to override them."
+    (interactive)
+    (let* ((project (cdr (project-current)))
+           (json-tmp-file (make-temp-file "PlainOrg_Tests_" nil ".json"))
+           (default-directory project))
+      (unless (file-exists-p (concat project "PlainOrg.xcodeproj"))
+        (user-error "Not in PlainOrg project"))
+      (set-process-sentinel
+       (start-process
+        "xcodebuild"
+        (with-current-buffer
+            (get-buffer-create "*xcodebuild*")
+          (let ((inhibit-read-only t))
+            (erase-buffer))
+          (current-buffer))
+        "/usr/bin/xcodebuild"
+        "-scheme" "PlainOrg" "-target" "PlainOrgTests" "-destination" "name=iPhone 13" "-quiet" "test")
+       (lambda (p e)
+         (with-current-buffer (get-buffer "*xcodebuild*")
+           (let ((inhibit-read-only t))
+             (insert (format "xcodebuild exit code: %d\n\n" (process-exit-status p)))))
+         (when (not (eq 0 (process-exit-status p)))
+           (set-process-sentinel
+            (start-process
+             "xcodebuild-to-json"
+             "*xcodebuild*"
+             "/opt/homebrew/bin/xcodebuild-to-json"
+             "--derived-data-folder" (format "/Users/%s/Library/Developer/Xcode/DerivedData/"
+                                             (user-login-name)) "--output" json-tmp-file)
+            (lambda (p e)
+              (with-current-buffer (get-buffer "*xcodebuild*")
+                (let ((inhibit-read-only t))
+                  (insert (format "xcodebuild-to-json exit code: %d\n\n" (process-exit-status p)))))
+              (when (= 0 (process-exit-status p))
+                (with-current-buffer (get-buffer "*xcodebuild*")
+                  (let ((inhibit-read-only t))
+                    (insert "Screenshot comparison started\n\n")))
+                (plainorg--snapshot-process-json (get-buffer "*xcodebuild*") json-tmp-file)
+                (with-current-buffer (get-buffer "*xcodebuild*")
+                  (let ((inhibit-read-only t))
+                    (insert "\nScreenshot comparison finished\n"))
+                  (read-only-mode +1))))))))
+      (switch-to-buffer-other-window "*xcodebuild*")))
+
+  (defun plainorg--snapshot-process-json (result-buffer json)
+    "Find all failed snapshot tests in JSON and offer to override
+   screenshots, comparing them side to side."
+    (let ((hashtable (with-current-buffer (get-buffer-create "*build json*")
+                       (erase-buffer)
+                       (insert-file-contents json)
+                       (json-parse-buffer))))
+      (mapc
+       (lambda (item)
+         (when (equal (gethash "id" item)
+                      "SnapshotTests")
+           (mapc
+            (lambda (testCase)
+              (when (and (gethash "failureMessage" testCase)
+                         (string-match-p "Snapshot does not match reference"
+                                         (gethash "failureMessage" testCase)))
+                (let* ((paths (plainorg--snapshot-screenshot-paths
+                               (gethash "failureMessage" testCase)))
+                       (override-result (plainorg--snapshot-override-image
+                                         "Expected screenshot"
+                                         (nth 0 paths) ;; old
+                                         "Actual screenshot"
+                                         (nth 1 paths) ;; new
+                                         (nth 0 paths))))
+                  (when override-result
+                    (with-current-buffer result-buffer
+                      (let ((inhibit-read-only t))
+                        (insert override-result)
+                        (insert "\n")))))))
+            (gethash "testCases" item))))
+       (gethash "classes" (gethash "details" hashtable)))))
+
+  (defun plainorg--snapshot-screenshot-paths (failure-message)
+    "Extract a paths list from FAILURE-MESSAGE of the form:
+
+  failed - Snapshot does not match reference.
+
+  @−
+  \"/path/to/expected/screenshot.1.png\"
+  @+
+  \"/path/to/actual/screenshot.1.png\"
+
+  Newly-taken snapshot does not match reference.
+  "
+    (mapcar
+     (lambda (line)
+       (string-remove-suffix "\""
+                             (string-remove-prefix "\"" line)))
+     (seq-filter
+      (lambda (line)
+        (string-prefix-p "\"" line))
+      (split-string failure-message "\n"))))
+
+  (defun plainorg--snapshot-override-image (old-buffer old new-buffer new destination)
+    (let ((window-configuration (current-window-configuration))
+          (action)
+          (result))
+      (unwind-protect
+          (progn
+            (delete-other-windows)
+            (split-window-horizontally)
+            (switch-to-buffer (with-current-buffer (get-buffer-create old-buffer)
+                                (let ((inhibit-read-only t))
+                                  (erase-buffer))
+                                (insert-file-contents old)
+                                (image-mode)
+                                (current-buffer)))
+            (switch-to-buffer-other-window (with-current-buffer (get-buffer-create new-buffer)
+                                             (let ((inhibit-read-only t))
+                                               (erase-buffer))
+                                             (insert-file-contents new)
+                                             (image-mode)
+                                             (current-buffer)))
+            (while (null result)
+              (setq action (read-char-choice (format "Override %s? (y)es (n)o (d)iff in browser? "
+                                                     (file-name-base old))
+                                             '(?y ?n ?d ?q)))
+              (cond ((eq action ?n)
+                     (setq result
+                           (format "Keeping old %s" (file-name-base old))))
+                    ((eq action ?y)
+                     (copy-file new old t)
+                     (setq result
+                           (format "Overriding old %s" (file-name-base old))))
+                    ((eq action ?d)
+                     (shell-command (format "open -a Firefox %s --args --new-tab" old))
+                     (shell-command (format "open -a Firefox %s --args --new-tab" new)))
+                    ((eq action ?q)
+                     (set-window-configuration window-configuration)
+                     (setq result (format "Quit %s" (file-name-base old)))))))
+        (set-window-configuration window-configuration)
+        (kill-buffer old-buffer)
+        (kill-buffer new-buffer))
+      result))
+#+end_src
+
 * [2021-11-10 Wed] Plain Org has joined the chat (iOS)
 :PROPERTIES:
 :CUSTOM_ID: plain-org-has-joined-the-chat
