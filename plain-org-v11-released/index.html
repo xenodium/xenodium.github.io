@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-12-09 Thu 21:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plain Org v1.1 released</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Álvaro Ramírez" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-plain-org-v11-released" class="outline-2">
+<h2 id="plain-org-v11-released"><span class="timestamp-wrapper"><span class="timestamp">08 December 2021</span></span> Plain Org v1.1 released</h2>
+<div class="outline-text-2" id="text-plain-org-v11-released">
+<p>
+Plain Org v1.1 is now available on the <a href="https://apps.apple.com/app/id1578965002">App Store</a>. The update receives new features and bugfixes.
+</p>
+
+<p>
+If you're finding Plain Org useful, <b>please help support this effort</b> by getting the word out. Tell your friends, <a href="https://twitter.com/intent/tweet?text=Plain%20Org%20https%3A%2F%2Fapps.apple.com%2Fapp%2Fid1578965002%20">tweet</a>, or blog about it.
+</p>
+
+<p>
+Ok, now on to what's included in the v1.1 release&#x2026;
+</p>
+</div>
+
+<div id="outline-container-org7e6c746" class="outline-3">
+<h3 id="org7e6c746">Compact mode</h3>
+<div class="outline-text-3" id="text-org7e6c746">
+<p>
+By default, Plain Org layout uses generous padding. The new option <code>Menu -&gt; View -&gt; Compact mode</code> packs more content into your screen.
+</p>
+
+
+<div id="orgf6059f1" class="figure">
+<p><img src="../images/plain-org-v11-released/compact.gif" alt="compact.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgadbed0e" class="outline-3">
+<h3 id="orgadbed0e">Regroup active and inactive tasks</h3>
+<div class="outline-text-3" id="text-orgadbed0e">
+<p>
+Regrouping tasks now bubbles active ones up. Similarly, inactive tasks drop to the bottom of their node. Changes are persisted to the org file.
+</p>
+
+
+<div id="orge46d455" class="figure">
+<p><img src="../images/plain-org-v11-released/regroup.gif" alt="regroup.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga233960" class="outline-3">
+<h3 id="orga233960">Native table rendering</h3>
+<div class="outline-text-3" id="text-orga233960">
+<p>
+Tables are now rendered natively but also support displaying links and other formatting within cells.
+</p>
+
+
+<div id="orgb85600c" class="figure">
+<p><img src="../images/plain-org-v11-released/table.gif" alt="table.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org11528b5" class="outline-3">
+<h3 id="org11528b5">Open local ID link</h3>
+<div class="outline-text-3" id="text-org11528b5">
+<p>
+If your file provider supports granting access to folders, local ID links (ie. <code>id:eb155a82-92b2-4f25-a3c6-0304591af2f9</code>) can now be resolved and opened from Plain Org. Note that for ID links to resolve, other org files must live in either the same directory or a subdirectory.
+</p>
+
+
+<div id="org740a17a" class="figure">
+<p><img src="../images/plain-org-v11-released/idlink.gif" alt="idlink.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org166b84c" class="outline-3">
+<h3 id="org166b84c">Fill paragraphs</h3>
+<div class="outline-text-3" id="text-org166b84c">
+<p>
+If your org paragraphs contain newlines optimizing for bigger screens, you can toggle <code>Menu -&gt; View -&gt; Fill paragraph</code> to optimize rendering for your iPhone. This rendering option makes no file modifications.
+</p>
+
+
+<div id="org5ed3d2e" class="figure">
+<p><img src="../images/plain-org-v11-released/fillparagraph.gif" alt="fillparagraph.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8fa8d68" class="outline-3">
+<h3 id="org8fa8d68">Show/hide basic scheduling</h3>
+<div class="outline-text-3" id="text-org8fa8d68">
+<p>
+Use the new <code>Menu -&gt; View -&gt; Scheduling</code> to toggle showing <code>SCHEDULED</code> or <code>DEADLINE</code> dates.
+</p>
+
+
+<div id="org1bd4e5a" class="figure">
+<p><img src="../images/plain-org-v11-released/scheduling.gif" alt="scheduling.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org6c6595a" class="outline-3">
+<h3 id="org6c6595a">Show/hide tags</h3>
+<div class="outline-text-3" id="text-org6c6595a">
+<p>
+Similarly, the new <code>Menu -&gt; View -&gt; Tags</code> option toggles displaying tags.
+</p>
+
+
+<div id="org4354943" class="figure">
+<p><img src="../images/plain-org-v11-released/hidetags.gif" alt="hidetags.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org5d0625b" class="outline-3">
+<h3 id="org5d0625b">Native list rendering</h3>
+<div class="outline-text-3" id="text-org5d0625b">
+<p>
+Lists are now rendered natively. With the exception of numbered cases, list items now share a common bullet icon. Description lists are also recognized and receive additional formatting when rendered.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">- First list item
+* Second list item
++ Third list item
+1. Numbered list item
++ Term :: Description for term
+</pre>
+</div>
+
+
+<div id="org4ae8822" class="figure">
+<p><img src="../images/plain-org-v11-released/listitems.png" alt="listitems.png" width="50%" height="50%" />
+</p>
+</div>
+
+<p>
+Numbered checkboxes are now recognized and receive the same formatting and interaction as their non-numbered counterparts.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">1. [ ] First checkbox
+2. [X] Second checkbox
+3. [X] Third checkbox
+</pre>
+</div>
+
+
+<div id="orga073f49" class="figure">
+<p><img src="../images/plain-org-v11-released/numbered.png" alt="numbered.png" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org113fddf" class="outline-3">
+<h3 id="org113fddf">Reload current file</h3>
+<div class="outline-text-3" id="text-org113fddf">
+<p>
+Plain Org may not be able to automatically reload files for some syncing providers. In those instances, use <code>Menu -&gt; Reload</code> to explicitly request a reload.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9810313" class="outline-3">
+<h3 id="org9810313">Open .txt files</h3>
+<div class="outline-text-3" id="text-org9810313">
+<p>
+Although .org files are plain text files, they aren't always recognized by iOS text-editing apps. This release enables opening .txt files, so you can choose to render them in Plain Org, while giving you the option to edit them elsewhere.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org21d3838" class="outline-3">
+<h3 id="org21d3838">Bugfixes</h3>
+<div class="outline-text-3" id="text-org21d3838">
+<ul class="org-ul">
+<li>Improve vertical whitespace handling.</li>
+<li>Fixes rendering edge cases.</li>
+<li>Fail gracefully when creating new files on unsupported cloud providers.</li>
+<li>Prevent creating new files with redundant extensions.</li>
+<li>File access improvements.</li>
+<li>Replicates property spacing behaviour using <code>org-property-format</code> default value.</li>
+<li>Fixes keyword picker border rendering.</li>
+<li>Improves rendering performance for large nodes.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
