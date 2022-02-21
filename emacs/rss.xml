@@ -6,7 +6,80 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 13 Feb 2022 21:15:52 +0000</lastBuildDate>
+<lastBuildDate>Mon, 21 Feb 2022 22:53:43 +0000</lastBuildDate>
+<item>
+  <title>Emacs: Fuzzy search Apples online docs</title>
+  <description><![CDATA[<div id="content">
+
+ <div id="outline-container-emacs-fuzzy-search-apples-online-docs" class="outline-2">
+ <h2 id="emacs-fuzzy-search-apples-online-docs"> <span class="timestamp-wrapper"> <span class="timestamp">21 February 2022</span></span> Emacs: Fuzzy search Apple's online docs</h2>
+ <div class="outline-text-2" id="text-emacs-fuzzy-search-apples-online-docs">
+
+ <div id="org65ea0f8" class="figure">
+ <p> <img src="../images/emacs-fuzzy-search-apples-online-docs/color_search.gif" alt="color_search.gif" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+When building software for the Apple ecosystem, Xcode is often the editor of choice. With  <a href="https://www.gnu.org/software/emacs/">Emacs</a> being my personal preference, I rarely find other iOS devs with a similar mindset.
+</p>
+
+ <p>
+When I saw  <a href="https://twitter.com/konrad1977">Mikael Konradsson</a>'s post describing  <a href="https://www.reddit.com/r/emacs/comments/sndriv/i_finally_got_full_autocompetion_in_swift_with/">his Emacs Swift development setup</a>, I reached out to say hello. While exchanging tips and tricks, the topic of searching Apple's docs came up. It had been a while since I looked into this, so it was a great reminder to revisit the space.
+</p>
+
+ <p>
+Back in June 2020, I wrote a snippet to  <a href="https://xenodium.com/emacs-search-hackingwithswiftcom/">fuzzy search hackingwithswift.com</a>, using Emacs's  <a href="https://github.com/abo-abo/swiper">ivy</a> completion framework. With a similar online API, we could also search Apple's docs. Turns out, there is and we can we can use it to search  <a href="https://developer.apple.com/search">developer.apple.com</a> from our beloved editor.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;;; </span> <span style="color: #969896;">counsel-apple-search.el -*- lexical-binding: t; -*-</span>
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/counsel-apple-search</span> ()
+   <span style="color: #183691;">"Ivy interface for dynamically querying apple.com docs."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">request</span>)
+  (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">json</span>)
+  (ivy-read  <span style="color: #183691;">"apple docs: "</span>
+            (<span style="color: #a71d5d;">lambda</span> (input)
+              (<span style="color: #a71d5d;">let*</span> ((url (url-encode-url (format  <span style="color: #183691;">"https://developer.apple.com/search/search_data.php?q=%s"</span> input)))
+                     (c1-width (round (* (- (window-width) 9) 0.3)))
+                     (c2-width (round (* (- (window-width) 9) 0.5)))
+                     (c3-width (- (window-width) 9 c1-width c2-width)))
+                (<span style="color: #a71d5d;">or</span>
+                 (ivy-more-chars)
+                 (<span style="color: #a71d5d;">let</span> ((request-curl-options (list  <span style="color: #183691;">"-H"</span> (string-trim (url-http-user-agent-string)))))
+                   (request url
+                      <span style="color: #a71d5d;">:type</span>  <span style="color: #183691;">"GET"</span>
+                      <span style="color: #a71d5d;">:parser</span> 'json-read
+                      <span style="color: #a71d5d;">:success</span> (<span style="color: #a71d5d;">cl-function</span>
+                               (<span style="color: #a71d5d;">lambda</span> (<span style="color: #0086b3;">&key</span> data  <span style="color: #0086b3;">&allow-other-keys</span>)
+                                 (ivy-update-candidates
+                                  (mapcar (<span style="color: #a71d5d;">lambda</span> (item)
+                                            (<span style="color: #a71d5d;">let-alist</span> item
+                                              (propertize
+                                               (format  <span style="color: #183691;">"%s   %s   %s"</span>
+                                                       (truncate-string-to-width (propertize (<span style="color: #a71d5d;">or</span> .title  <span style="color: #183691;">""</span>)
+                                                                                             'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"yellow"</span>))  <span style="color: #333333;">c1-width nil ?\s </span> <span style="color: #333333;">"…"</span> <span style="color: #333333;">)</span>
+                                                       (truncate-string-to-width (<span style="color: #a71d5d;">or</span> .description  <span style="color: #183691;">""</span>) c2-width nil ?\s  <span style="color: #183691;">"…"</span>)
+                                                       (truncate-string-to-width (propertize (string-join (<span style="color: #a71d5d;">or</span> .api_ref_data.languages  <span style="color: #183691;">""</span>)  <span style="color: #183691;">"/"</span>)
+                                                                                             'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"cyan1"</span>))  <span style="color: #333333;">c3-width nil ?\s </span> <span style="color: #333333;">"…"</span> <span style="color: #333333;">))</span>
+                                               'url .url)))
+                                          (cdr (car data)))))))
+                   0))))
+             <span style="color: #a71d5d;">:action</span> (<span style="color: #a71d5d;">lambda</span> (selection)
+                      (browse-url (concat  <span style="color: #183691;">"https://developer.apple.com"</span>
+                                          (get-text-property 0 'url selection))))
+             <span style="color: #a71d5d;">:dynamic-collection</span> t
+             <span style="color: #a71d5d;">:caller</span> 'ar/counsel-apple-search))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-fuzzy-search-apples-online-docs</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-fuzzy-search-apples-online-docs</guid>
+  <pubDate>Mon, 21 Feb 2022 22:53:43 +0000</pubDate>
+</item>
 <item>
   <title>Plain Org v1.2 released</title>
   <description><![CDATA[<div id="content">
@@ -199,7 +272,7 @@ v1.2 makes the navigation bar feel more at home on your iPhone. It uses a large 
 </div>]]></description>
   <link>http://xenodium.com/plain-org-v12-released</link>
   <guid isPermaLink="false">http://xenodium.com/plain-org-v12-released</guid>
-  <pubDate>Sun, 13 Feb 2022 21:15:52 +0000</pubDate>
+  <pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate>
 </item>
 <item>
   <title>Happy New Year and forming new habits</title>
