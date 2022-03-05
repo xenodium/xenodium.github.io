@@ -6,7 +6,76 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 21 Feb 2022 22:53:52 +0000</lastBuildDate>
+<lastBuildDate>Sat, 05 Mar 2022 11:31:52 +0000</lastBuildDate>
+<item>
+  <title>Emacs: viewing webp images</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-viewing-webp-images" class="outline-2">
+ <h2 id="emacs-viewing-webp-images"> <span class="timestamp-wrapper"> <span class="timestamp">05 March 2022</span></span> Emacs: viewing webp images</h2>
+ <div class="outline-text-2" id="text-emacs-viewing-webp-images">
+ <p>
+There's a recent reddit post asking how to  <a href="https://www.reddit.com/r/emacs/comments/t76isx/viewing_webp_images_in_emacs/">view webp images in Emacs</a>. I didn't know the answer, but it's something I had wanted for some time. This post was a nice reminder to go and check things out. Was happy to  <a href="https://www.reddit.com/r/emacs/comments/t76isx/comment/hzft7ww/?utm_source=share&utm_medium=web2x&context=3">contribute an answer</a>.
+</p>
+
+ <p>
+Turns out, it's very simple. Just set  <code>image-use-external-converter</code> and install relevant external tools.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> image-use-external-converter t)
+</pre>
+</div>
+
+ <p>
+I'm a  <code>use-package</code> user, so I prefer to set with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">image</span>
+   <span style="color: #a71d5d;">:custom</span>
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Enable converting external formats (ie. webp) to internal ones.</span>
+  (image-use-external-converter t))
+</pre>
+</div>
+
+ <p>
+So what are the external tools needed?  <code>C-h v</code>  <code>image-use-external-converter</code> gives us the info we need:
+</p>
+
+ <blockquote>
+ <p>
+If non-nil, create-image will use external converters for exotic formats.
+</p>
+
+ <p>
+Emacs handles most of the common image formats (SVG, JPEG, PNG, GIF
+and some others) internally, but images that don't have native
+support in Emacs can still be displayed if an external conversion
+program (like ImageMagick "convert", GraphicsMagick "gm"
+or "ffmpeg") is installed.
+</p>
+
+ <p>
+This variable was added, or its default value changed, in Emacs 27.1.
+</p>
+</blockquote>
+
+ <p>
+I happen to be a macOS user, so I install ImageMagick with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install imagemagick
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-viewing-webp-images</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-viewing-webp-images</guid>
+  <pubDate>Sat, 05 Mar 2022 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: Fuzzy search Apples online docs</title>
   <description><![CDATA[<div id="content">
@@ -15,7 +84,7 @@
  <h2 id="emacs-fuzzy-search-apples-online-docs"> <span class="timestamp-wrapper"> <span class="timestamp">21 February 2022</span></span> Emacs: Fuzzy search Apple's online docs</h2>
  <div class="outline-text-2" id="text-emacs-fuzzy-search-apples-online-docs">
 
- <div id="org65ea0f8" class="figure">
+ <div id="orgdae3a97" class="figure">
  <p> <img src="../images/emacs-fuzzy-search-apples-online-docs/color_search.gif" alt="color_search.gif" width="90%" height="90%"></img></p>
 </div>
 
@@ -39,6 +108,7 @@ Back in June 2020, I wrote a snippet to  <a href="https://xenodium.com/emacs-sea
   (<span style="color: #a71d5d;">interactive</span>)
   (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">request</span>)
   (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">json</span>)
+  (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">url-http</span>)
   (ivy-read  <span style="color: #183691;">"apple docs: "</span>
             (<span style="color: #a71d5d;">lambda</span> (input)
               (<span style="color: #a71d5d;">let*</span> ((url (url-encode-url (format  <span style="color: #183691;">"https://developer.apple.com/search/search_data.php?q=%s"</span> input)))

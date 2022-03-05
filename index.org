@@ -1,6 +1,47 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-03-05 Sat] Emacs: viewing webp images
+:PROPERTIES:
+:CUSTOM_ID: emacs-viewing-webp-images
+:END:
+There's a recent reddit post asking how to [[https://www.reddit.com/r/emacs/comments/t76isx/viewing_webp_images_in_emacs/][view webp images in Emacs]]. I didn't know the answer, but it's something I had wanted for some time. This post was a nice reminder to go and check things out. Was happy to [[https://www.reddit.com/r/emacs/comments/t76isx/comment/hzft7ww/?utm_source=share&utm_medium=web2x&context=3][contribute an answer]].
+
+Turns out, it's very simple. Just set =image-use-external-converter= and install relevant external tools.
+
+#+begin_src emacs-lisp :lexical no
+  (setq image-use-external-converter t)
+#+end_src
+
+I'm a =use-package= user, so I prefer to set with:
+
+#+begin_src emacs-lisp :lexical no
+  (use-package image
+    :custom
+    ;; Enable converting external formats (ie. webp) to internal ones.
+    (image-use-external-converter t))
+#+end_src
+
+So what are the external tools needed? =C-h v= =image-use-external-converter= gives us the info we need:
+
+#+begin_quote
+If non-nil, create-image will use external converters for exotic formats.
+
+Emacs handles most of the common image formats (SVG, JPEG, PNG, GIF
+and some others) internally, but images that don't have native
+support in Emacs can still be displayed if an external conversion
+program (like ImageMagick "convert", GraphicsMagick "gm"
+or "ffmpeg") is installed.
+
+This variable was added, or its default value changed, in Emacs 27.1.
+#+end_quote
+
+I happen to be a macOS user, so I install ImageMagick with:
+
+#+begin_src sh
+  brew install imagemagick
+#+end_src
+
 * [2022-02-21 Mon] Emacs: Fuzzy search Apple's online docs
 :PROPERTIES:
 :CUSTOM_ID: emacs-fuzzy-search-apples-online-docs
