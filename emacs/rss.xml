@@ -6,7 +6,99 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 05 Mar 2022 11:31:43 +0000</lastBuildDate>
+<lastBuildDate>Sat, 26 Mar 2022 21:22:35 +0000</lastBuildDate>
+<item>
+  <title>Emacs DWIM: swiper vs isearch vs phi-search</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-dwim-swiper-vs-isearch-vs-phi-search" class="outline-2">
+ <h2 id="emacs-dwim-swiper-vs-isearch-vs-phi-search"> <span class="timestamp-wrapper"> <span class="timestamp">26 March 2022</span></span> Emacs DWIM: swiper vs isearch vs phi-search</h2>
+ <div class="outline-text-2" id="text-emacs-dwim-swiper-vs-isearch-vs-phi-search">
+
+ <div id="orgf473e39" class="figure">
+ <p> <img src="../images/emacs-dwim-swiper-vs-isearch-vs-phi-search/search-dwim.gif" alt="search-dwim.gif" width="75%" height="75%"></img></p>
+</div>
+
+ <p>
+I've  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">talked about DWIM</a> in the past, that wonderful Emacs ability to  <a href="https://en.wikipedia.org/wiki/DWIM">do what ✨I✨ mean</a>.
+</p>
+
+ <p>
+Emacs being hyper-configurable, we can always teach it more things, so it can do exactly what we mean.
+</p>
+
+ <p>
+There are no shortages of buffer searching packages for Emacs. I'm a fan of Oleh Krehel's  <a href="https://github.com/abo-abo/swiper">swiper</a>, but before that, I often relied on the built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">isearch</a>. Swiper is my default goto mechanism and have it bound to  <code>C-s</code> (replacing the built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">isearch-forward</a>).
+</p>
+
+ <p>
+Swiper services most needs until I start combining with other tools. Take  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">keyboard macros</a> and  <a href="https://github.com/magnars/multiple-cursors.el">multiple cursors</a>. Both wonderful, but neither can rely on swiper to do their thing. Ok, swiper does, but  <a href="https://xenodium.com/emacs-swiper-and-multiple-cursors/">in a different way</a>.
+</p>
+
+ <p>
+Rather than binding  <code>C-s</code> to swiper, let's write a DWIM function that's aware of macros and multiple cursors. It must switch between swiper, isearch, and  <a href="https://github.com/avkoval/phi-search">phi-search</a> depending on what I want (search buffer, define macro, or search multiple cursors).
+</p>
+
+ <p>
+Let's tweak swiper's behavior a little further and prepopulate its search term with the active region. Oh, and I also would like it swiper to wrap around (see  <a href="http://oremacs.com/swiper/">ivy-wrap</a>). But only swiper, not other ivy utilities. I know, I'm picky, but that's the whole point of DWIM… so here's my function to search forward that does exactly what ✨I✨ mean:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/swiper-isearch-dwim</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
+              multiple-cursors-mode
+              (fboundp  'phi-search))
+         (call-interactively 'phi-search))
+        (defining-kbd-macro
+          (call-interactively 'isearch-forward))
+        (t
+          <span style="color: #969896;">;; </span> <span style="color: #969896;">Wrap around swiper results.</span>
+         (<span style="color: #a71d5d;">let</span> ((ivy-wrap t))
+            <span style="color: #969896;">;; </span> <span style="color: #969896;">If region is active, prepopulate swiper's search term.</span>
+           (<span style="color: #a71d5d;">if</span> (<span style="color: #a71d5d;">and</span> transient-mark-mode mark-active (not (eq (mark) (point))))
+               (<span style="color: #a71d5d;">let</span> ((region (buffer-substring-no-properties (mark) (point))))
+                 (deactivate-mark)
+                 (swiper-isearch region))
+             (swiper-isearch))))))
+</pre>
+</div>
+
+ <p>
+We're searching forward, but I'm feeling a little off-balance. Let's write an equivalent to search backwards. We can then bind it to  <code>C-r</code>, also overriding the built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">isearch-backward</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/swiper-isearch-backward-dwim</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
+              multiple-cursors-mode
+              (fboundp  'phi-search-backward))
+         (call-interactively 'phi-search-backward))
+        (defining-kbd-macro
+          (call-interactively 'isearch-backward))
+        (t
+          <span style="color: #969896;">;; </span> <span style="color: #969896;">Wrap around swiper results.</span>
+         (<span style="color: #a71d5d;">let</span> ((ivy-wrap t))
+            <span style="color: #969896;">;; </span> <span style="color: #969896;">If region is active, prepopulate swiper's search term.</span>
+           (<span style="color: #a71d5d;">if</span> (<span style="color: #a71d5d;">and</span> transient-mark-mode mark-active (not (eq (mark) (point))))
+               (<span style="color: #a71d5d;">let</span> ((region (buffer-substring-no-properties (mark) (point))))
+                 (deactivate-mark)
+                 (swiper-isearch-backward region))
+             (swiper-isearch-backward))))))
+</pre>
+</div>
+
+ <p>
+These may be on the hacky side of things, but hey… they do the job. If there are better/supported ways of accomplishing a similar thing, I'd love to  <a href="https://twitter.com/xenodium">hear about it</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-dwim-swiper-vs-isearch-vs-phi-search</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-dwim-swiper-vs-isearch-vs-phi-search</guid>
+  <pubDate>Sat, 26 Mar 2022 21:22:35 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: viewing webp images</title>
   <description><![CDATA[<div id="content" class="content">
