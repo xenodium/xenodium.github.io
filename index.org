@@ -1,74 +1,69 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2022-03-26 Sat] Plain Org v1.2.1 released
-  :PROPERTIES:
-  :CUSTOM_ID: plain-org-v121-released
-  :END:
-[[https://plainorg.com][Plain Org]] v1.2.1 is now available on the [[https://apps.apple.com/app/id1578965002][App Store]]. The update receives minor features, bug fixes, and improvements.
+* [2022-03-26 Sat] Emacs DWIM: swiper vs isearch vs phi-search
+:PROPERTIES:
+:CUSTOM_ID: emacs-dwim-swiper-vs-isearch-vs-phi-search
+:END:
 
-If you haven't heard of [[https://plainorg.com][Plain Org]], it gives you access to [[https://orgmode.org][org]] files on iPhone while away from your beloved [[https://www.gnu.org/software/emacs/][Emacs]].
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/emacs-dwim-swiper-vs-isearch-vs-phi-search/search-dwim.gif]]
 
-I love org markup, but we (iPhone + org users) are a fairly niche userbase. If you're finding Plain Org useful, *please help support this effort* by getting the word out. Tell your friends, [[https://twitter.com/intent/tweet?text=Plain%20Org%20https%3A%2F%2Fapps.apple.com%2Fapp%2Fid1578965002%20][tweet]], or blog about it.
+I've [[https://xenodium.com/emacs-dwim-do-what-i-mean/][talked about DWIM]] in the past, that wonderful Emacs ability to [[https://en.wikipedia.org/wiki/DWIM][do what ✨I✨ mean]].
 
-On to v1.2.1 release notes...
+Emacs being hyper-configurable, we can always teach it more things, so it can do exactly what we mean.
 
-** Render LOGBOOK
-State transitions and LOGBOOK drawers are now recognized and rendered as such.
+There are no shortages of buffer searching packages for Emacs. I'm a fan of Oleh Krehel's [[https://github.com/abo-abo/swiper][swiper]], but before that, I often relied on the built-in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html][isearch]]. Swiper is my default goto mechanism and have it bound to =C-s= (replacing the built-in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html][isearch-forward]]).
 
-Either of the following snippets are rendered as togglable LOGBOOK drawers.
+Swiper services most needs until I start combining with other tools. Take [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html][keyboard macros]] and [[https://github.com/magnars/multiple-cursors.el][multiple cursors]]. Both wonderful, but neither can rely on swiper to do their thing. Ok, swiper does, but [[https://xenodium.com/emacs-swiper-and-multiple-cursors/][in a different way]].
 
-#+begin_src org
-  ,* TODO Feed the fish
-  - State "DONE"       from "TODO"       [2022-03-11 Fri 12:23]
+Rather than binding =C-s= to swiper, let's write a DWIM function that's aware of macros and multiple cursors. It must switch between swiper, isearch, and [[https://github.com/avkoval/phi-search][phi-search]] depending on what I want (search buffer, define macro, or search multiple cursors).
+
+Let's tweak swiper's behavior a little further and prepopulate its search term with the active region. Oh, and I also would like it swiper to wrap around (see [[http://oremacs.com/swiper/][ivy-wrap]]). But only swiper, not other ivy utilities. I know, I'm picky, but that's the whole point of DWIM... so here's my function to search forward that does exactly what ✨I✨ mean:
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/swiper-isearch-dwim ()
+    (interactive)
+    (cond ((and (boundp 'multiple-cursors-mode)
+                multiple-cursors-mode
+                (fboundp  'phi-search))
+           (call-interactively 'phi-search))
+          (defining-kbd-macro
+            (call-interactively 'isearch-forward))
+          (t
+           ;; Wrap around swiper results.
+           (let ((ivy-wrap t))
+             ;; If region is active, prepopulate swiper's search term.
+             (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+                 (let ((region (buffer-substring-no-properties (mark) (point))))
+                   (deactivate-mark)
+                   (swiper-isearch region))
+               (swiper-isearch))))))
 #+end_src
 
-#+begin_src org
-  ,* TODO Feed the cat
-  :LOGBOOK:
-  - State "DONE"       from "TODO"       [2022-03-11 Fri 12:23]
-  :END:
+We're searching forward, but I'm feeling a little off-balance. Let's write an equivalent to search backwards. We can then bind it to =C-r=, also overriding the built-in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html][isearch-backward]].
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/swiper-isearch-backward-dwim ()
+    (interactive)
+    (cond ((and (boundp 'multiple-cursors-mode)
+                multiple-cursors-mode
+                (fboundp  'phi-search-backward))
+           (call-interactively 'phi-search-backward))
+          (defining-kbd-macro
+            (call-interactively 'isearch-backward))
+          (t
+           ;; Wrap around swiper results.
+           (let ((ivy-wrap t))
+             ;; If region is active, prepopulate swiper's search term.
+             (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+                 (let ((region (buffer-substring-no-properties (mark) (point))))
+                   (deactivate-mark)
+                   (swiper-isearch-backward region))
+               (swiper-isearch-backward))))))
 #+end_src
 
-#+ATTR_HTML: :width 50% :height 50%
-[[file:images/plain-org-v121-released/logbook.jpg]]
-
-** Add task to top/bottom
-Up until now, tasks were always appended to the bottom of things. This didn't work so well if you like seeing recent items bubbling up to the top.
-
-This version adds a new setting: /Settings/ > /Add new tasks to/ > /Top/Bottom/, giving you the choice.
-
-Note: Top is the new default value, please change this setting if you'd like to keep the previous behaviour.
-
-#+ATTR_HTML: :width 50% :height 50%
-[[file:images/plain-org-v121-released/top_bottom.png]]
-
-
-** Checking for changes
-Local file changes aren't always detected via [[https://developer.apple.com/documentation/uikit/uidocument/1619945-statechangednotification][state change notifications]], so additional checks are now in place to offer reloading files.
-
-#+ATTR_HTML: :width 50% :height 50%
-[[file:images/plain-org-v121-released/reload.jpg]]
-
-** Open inactive files
-After adding new tasks via iOS's share sheet, if the item was added to a file other than the active one, offer to open that instead.
-
-#+ATTR_HTML: :width 50% :height 50%
-[[file:images/plain-org-v121-released/load_other.jpg]]
-
-** Other improvements
-- Color keyword red/green depending on #+TODO: position.
-- Round-trip planning order (SCHEDULED, CLOSED, DEADLINE).
-- Improve tag alignment to match org mode behaviour (best effort, sorry).
-- Improve vertical spacing prior to lists.
-- Improve share sheet reliability.
-- Fix opening local links from list items.
-- Fix indent for list items without previous content.
-- Fix race condition in adding TITLE and ID to new files.
-- Fix incorrect keyword color selection in search toolbar.
-- Fix menu inadvertently closing.
-- Fix menu tapping for iPad.
-
+These may be on the hacky side of things, but hey... they do the job. If there are better/supported ways of accomplishing a similar thing, I'd love to [[https://twitter.com/xenodium][hear about it]].
 * [2022-03-12 Sat] Grandma's vanilla pound cake
   :PROPERTIES:
   :CUSTOM_ID: grandmas-vanilla-pound-cake
