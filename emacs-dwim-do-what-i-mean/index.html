@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-06-01 Tue 14:15 -->
+<!-- 2022-03-27 Sun 15:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs DWIM: do what ✨I✨ mean</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,71 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -426,15 +364,32 @@
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-emacs-dwim-do-what-i-mean" class="outline-2">
 <h2 id="emacs-dwim-do-what-i-mean"><span class="timestamp-wrapper"><span class="timestamp">01 June 2021</span></span> Emacs DWIM: do what ✨I✨ mean</h2>
 <div class="outline-text-2" id="text-emacs-dwim-do-what-i-mean">
+<p>
+Update: There's a DWIM <a href="https://xenodium.com/emacs-dwim-swiper-vs-isearch-vs-phi-search/">follow-up for searching</a>.
+</p>
 
-<div id="org5b11dab" class="figure">
+
+<div id="org21b6a1c" class="figure">
 <p><img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%" />
 </p>
 </div>
@@ -464,28 +419,28 @@ Take for example, <a href="https://orgmode.org/manual/Handling-Links.html">org-i
 </p>
 </div>
 
-<div id="outline-container-org16c6dcc" class="outline-3">
-<h3 id="org16c6dcc">What do I mean?</h3>
-<div class="outline-text-3" id="text-org16c6dcc">
+<div id="outline-container-orga641cc2" class="outline-3">
+<h3 id="orga641cc2">What do I mean?</h3>
+<div class="outline-text-3" id="text-orga641cc2">
 </div>
-<div id="outline-container-orgd59fe12" class="outline-4">
-<h4 id="orgd59fe12">Use URLs when in clipboard</h4>
-<div class="outline-text-4" id="text-orgd59fe12">
+<div id="outline-container-org3435c34" class="outline-4">
+<h4 id="org3435c34">Use URLs when in clipboard</h4>
+<div class="outline-text-4" id="text-org3435c34">
 <p>
 If the URL is already in the clipboard, don't ask me for it. Just use it.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org55cd1ee" class="outline-4">
-<h4 id="org55cd1ee">Use the region too</h4>
-<div class="outline-text-4" id="text-org55cd1ee">
+<div id="outline-container-orgebcebce" class="outline-4">
+<h4 id="orgebcebce">Use the region too</h4>
+<div class="outline-text-4" id="text-orgebcebce">
 <p>
 If I have a region selected and there's a URL in the clipboard, just sort it out without user interaction.
 </p>
 
 
-<div id="org26af4a8" class="figure">
+<div id="orgb0a123c" class="figure">
 <p><img src="../images/emacs-dwim-do-what-i-mean/link-this-text.gif" alt="link-this-text.gif" width="50%" height="50%" />
 </p>
 </div>
@@ -493,24 +448,24 @@ If I have a region selected and there's a URL in the clipboard, just sort it out
 </div>
 
 
-<div id="outline-container-org231ae41" class="outline-4">
-<h4 id="org231ae41">Automatically fetch titles</h4>
-<div class="outline-text-4" id="text-org231ae41">
+<div id="outline-container-orga3448c6" class="outline-4">
+<h4 id="orga3448c6">Automatically fetch titles</h4>
+<div class="outline-text-4" id="text-orga3448c6">
 <p>
 Automatically fetch URL titles from their HTML tag, but ask me for tweaks before insertion.
 </p>
 
 
-<div id="orge9fbaac" class="figure">
+<div id="org1c5ec8c" class="figure">
 <p><img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc3b7371" class="outline-4">
-<h4 id="orgc3b7371">Fallback to org-insert-link</h4>
-<div class="outline-text-4" id="text-orgc3b7371">
+<div id="outline-container-orgef375a1" class="outline-4">
+<h4 id="orgef375a1">Fallback to org-insert-link</h4>
+<div class="outline-text-4" id="text-orgef375a1">
 <p>
 If my DWIM rules don't apply, fall back to using good ol' <a href="https://orgmode.org/manual/Handling-Links.html">org-insert-link</a>.
 </p>
@@ -520,7 +475,7 @@ My most common use case here is when editing an existing link where I don't want
 </p>
 
 
-<div id="org4022b24" class="figure">
+<div id="orgceceb16" class="figure">
 <p><img src="../images/emacs-dwim-do-what-i-mean/edit-link.gif" alt="edit-link.gif" width="50%" height="50%" />
 </p>
 </div>
@@ -528,9 +483,9 @@ My most common use case here is when editing an existing link where I don't want
 </div>
 </div>
 
-<div id="outline-container-org7d5a14c" class="outline-3">
-<h3 id="org7d5a14c">The code</h3>
-<div class="outline-text-3" id="text-org7d5a14c">
+<div id="outline-container-orgcf99a0c" class="outline-3">
+<h3 id="orgcf99a0c">The code</h3>
+<div class="outline-text-3" id="text-orgcf99a0c">
 <p>
 This is your own DWIM command that does what <i>you</i> mean. Strive to write a clean implementation, but hey you can be forgiven for not handling all the cases that other folks <i>may</i> want or inlining more code than usual. The goal is to bend your editor a little, not write an Emacs package.
 </p>
@@ -565,15 +520,15 @@ This is your own DWIM command that does what <i>you</i> mean. Strive to write a 
 </div>
 </div>
 
-<div id="outline-container-org59d814c" class="outline-3">
-<h3 id="org59d814c">Org web tools package</h3>
-<div class="outline-text-3" id="text-org59d814c">
+<div id="outline-container-org9e2f620" class="outline-3">
+<h3 id="org9e2f620">Org web tools package</h3>
+<div class="outline-text-3" id="text-org9e2f620">
 <p>
 I showed how to write your own DWIM command, so you can make Emacs do what ✨you✨ mean. <i>ar/org-insert-link-dwim</i> was built for my particular needs.
 </p>
 
 <p>
-Having said all of this, alphapapa has built a great package with helpers for the org web/link space. It doesn't do what I mean (for now anyway), but it may work for you: <a href="https://github.com/alphapapa/org-web-tools">org-web-tools: View, capture, and archive Web pages in Org-mode</a><sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+Having said all of this, alphapapa has built a great package with helpers for the org web/link space. It doesn't do what I mean (for now anyway), but it may work for you: <a href="https://github.com/alphapapa/org-web-tools">org-web-tools: View, capture, and archive Web pages in Org-mode</a><sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.
 </p>
 </div>
 </div>
@@ -582,7 +537,7 @@ Having said all of this, alphapapa has built a great package with helpers for th
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
 
-<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
 This link was brought to you by <i>ar/org-insert-link-dwim</i>.
 </p></div></div>
 
