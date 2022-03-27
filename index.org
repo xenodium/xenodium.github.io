@@ -1,6 +1,73 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-03-27 Sun] Plain Org v1.2.1 released
+:PROPERTIES:
+:CUSTOM_ID: plain-org-v121-released
+:END:
+[[https://plainorg.com][Plain Org]] v1.2.1 is now available on the [[https://apps.apple.com/app/id1578965002][App Store]]. The update receives minor features, bug fixes, and improvements.
+
+If you haven't heard of [[https://plainorg.com][Plain Org]], it gives you access to [[https://orgmode.org][org]] files on iPhone while away from your beloved [[https://www.gnu.org/software/emacs/][Emacs]].
+
+I love org markup, but we (iPhone + org users) are a fairly niche userbase. If you're finding Plain Org useful, *please help support this effort* by getting the word out. Tell your friends, [[https://twitter.com/intent/tweet?text=Plain%20Org%20https%3A%2F%2Fapps.apple.com%2Fapp%2Fid1578965002%20][tweet]], or blog about it.
+
+On to v1.2.1 release notes...
+
+** Render LOGBOOK
+State transitions and LOGBOOK drawers are now recognized and rendered as such.
+
+Either of the following snippets are rendered as togglable LOGBOOK drawers.
+
+#+begin_src org
+  ,* TODO Feed the fish
+  - State "DONE"       from "TODO"       [2022-03-11 Fri 12:23]
+#+end_src
+
+#+begin_src org
+  ,* TODO Feed the cat
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2022-03-11 Fri 12:23]
+  :END:
+#+end_src
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/plain-org-v121-released/logbook.jpg]]
+
+** Add task to top/bottom
+Up until now, tasks were always appended to the bottom of things. This didn't work so well if you like seeing recent items bubbling up to the top.
+
+This version adds a new setting: /Settings/ > /Add new tasks to/ > /Top/Bottom/, giving you the choice.
+
+Note: Top is the new default value, please change this setting if you'd like to keep the previous behaviour.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/plain-org-v121-released/top_bottom.png]]
+
+
+** Checking for changes
+Local file changes aren't always detected via [[https://developer.apple.com/documentation/uikit/uidocument/1619945-statechangednotification][state change notifications]], so additional checks are now in place to offer reloading files.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/plain-org-v121-released/reload.jpg]]
+
+** Open inactive files
+After adding new tasks via iOS's share sheet, if the item was added to a file other than the active one, offer to open that instead.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/plain-org-v121-released/load_other.jpg]]
+
+** Other improvements
+- Color keyword red/green depending on #+TODO: position.
+- Round-trip planning order (SCHEDULED, CLOSED, DEADLINE).
+- Improve tag alignment to match org mode behaviour (best effort, sorry).
+- Improve vertical spacing prior to lists.
+- Improve share sheet reliability.
+- Fix opening local links from list items.
+- Fix indent for list items without previous content.
+- Fix race condition in adding TITLE and ID to new files.
+- Fix incorrect keyword color selection in search toolbar.
+- Fix menu inadvertently closing.
+- Fix menu tapping for iPad.
 * [2022-03-26 Sat] Emacs DWIM: swiper vs isearch vs phi-search
 :PROPERTIES:
 :CUSTOM_ID: emacs-dwim-swiper-vs-isearch-vs-phi-search
