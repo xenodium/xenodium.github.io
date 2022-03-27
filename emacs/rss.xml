@@ -46,12 +46,15 @@ Let's also tweak swiper's behavior a little further and prepopulate its search t
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/swiper-isearch-dwim</span> ()
   (<span style="color: #a71d5d;">interactive</span>)
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Are we using multiple cursors?</span>
   (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
               multiple-cursors-mode
               (fboundp  'phi-search))
          (call-interactively 'phi-search))
+         <span style="color: #969896;">;; </span> <span style="color: #969896;">Are we defining a macro?</span>
         (defining-kbd-macro
           (call-interactively 'isearch-forward))
+         <span style="color: #969896;">;; </span> <span style="color: #969896;">Fall back to swiper.</span>
         (t
           <span style="color: #969896;">;; </span> <span style="color: #969896;">Wrap around swiper results.</span>
          (<span style="color: #a71d5d;">let</span> ((ivy-wrap t))
@@ -71,12 +74,15 @@ The above snippet searches forward, but I'm feeling a little off-balance. Let's 
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/swiper-isearch-backward-dwim</span> ()
   (<span style="color: #a71d5d;">interactive</span>)
+   <span style="color: #969896;">;; </span> <span style="color: #969896;">Are we using multiple cursors?</span>
   (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> (boundp 'multiple-cursors-mode)
               multiple-cursors-mode
               (fboundp  'phi-search-backward))
          (call-interactively 'phi-search-backward))
+         <span style="color: #969896;">;; </span> <span style="color: #969896;">Are we defining a macro?</span>
         (defining-kbd-macro
           (call-interactively 'isearch-backward))
+         <span style="color: #969896;">;; </span> <span style="color: #969896;">Fall back to swiper.</span>
         (t
           <span style="color: #969896;">;; </span> <span style="color: #969896;">Wrap around swiper results.</span>
          (<span style="color: #a71d5d;">let</span> ((ivy-wrap t))
@@ -90,8 +96,7 @@ The above snippet searches forward, but I'm feeling a little off-balance. Let's 
 </div>
 
  <p>
-These may be on the hacky side of things, but hey… they do the job. If there are better/supported ways of accomplishing a similar thing, I'd love to  <a href="https://twitter.com/xenodium">hear about it</a>.
-</p>
+These may be on the hacky side of things, but hey… they do the job. If there are better/supported ways of accomplishing a similar thing, I'd love to  <a href="https://twitter.com/xenodium">hear about it</a>.</p>
 </div>
 </div>
 </div>]]></description>

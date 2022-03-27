@@ -24,12 +24,15 @@ Let's also tweak swiper's behavior a little further and prepopulate its search t
 #+begin_src emacs-lisp :lexical no
   (defun ar/swiper-isearch-dwim ()
     (interactive)
+    ;; Are we using multiple cursors?
     (cond ((and (boundp 'multiple-cursors-mode)
                 multiple-cursors-mode
                 (fboundp  'phi-search))
            (call-interactively 'phi-search))
+          ;; Are we defining a macro?
           (defining-kbd-macro
             (call-interactively 'isearch-forward))
+          ;; Fall back to swiper.
           (t
            ;; Wrap around swiper results.
            (let ((ivy-wrap t))
@@ -46,12 +49,15 @@ The above snippet searches forward, but I'm feeling a little off-balance. Let's 
 #+begin_src emacs-lisp :lexical no
   (defun ar/swiper-isearch-backward-dwim ()
     (interactive)
+    ;; Are we using multiple cursors?
     (cond ((and (boundp 'multiple-cursors-mode)
                 multiple-cursors-mode
                 (fboundp  'phi-search-backward))
            (call-interactively 'phi-search-backward))
+          ;; Are we defining a macro?
           (defining-kbd-macro
             (call-interactively 'isearch-backward))
+          ;; Fall back to swiper.
           (t
            ;; Wrap around swiper results.
            (let ((ivy-wrap t))
