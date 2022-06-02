@@ -6,7 +6,59 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 24 Apr 2022 22:24:21 +0100</lastBuildDate>
+<lastBuildDate>Thu, 02 Jun 2022 22:31:19 +0100</lastBuildDate>
+<item>
+  <title>Emacs: Password-protect current pdf</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-password-protect-current-pdf" class="outline-2">
+ <h2 id="emacs-password-protect-current-pdf"> <span class="timestamp-wrapper"> <span class="timestamp">02 June 2022</span></span> Emacs: Password-protect current pdf</h2>
+ <div class="outline-text-2" id="text-emacs-password-protect-current-pdf">
+ <p>
+Every so often, I need to password-protect a pdf. On macOS,  <a href="https://support.apple.com/en-gb/guide/preview/prvw587dd90f/mac">Preview has a simple solution</a>, but I figured there must be a command line utility to make this happen. There are options, but  <a href="https://github.com/qpdf/qpdf">qdf</a> did the job just fine.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">qpdf --verbose --encrypt USER-PASSWORD OWNER-PASSWORD KEY-LENGTH -- input.pdf output.pdf
+</pre>
+</div>
+
+ <p>
+So what does  <code>qpdf</code> have to do with Emacs? Command-line utilities are easy to invoke from Emacs via  <code>shell-command</code> (M-!), but I don't want to remember the command nor the parameters. I may as well add a function that  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">does what I mean</a> and password-protect either buffers or  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> files.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">pdf-password-protect</span> ()
+     <span style="color: #183691;">"Password protect current pdf in buffer or `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">' file."</span>
+    (<span style="color: #a71d5d;">interactive</span>)
+    (<span style="color: #a71d5d;">unless</span> (executable-find  <span style="color: #183691;">"qpdf"</span>)
+      (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"qpdf not installed"</span>))
+    (<span style="color: #a71d5d;">unless</span> (equal  <span style="color: #183691;">"pdf"</span>
+                   (<span style="color: #a71d5d;">or</span> (<span style="color: #a71d5d;">when</span> (buffer-file-name)
+                         (downcase (file-name-extension (buffer-file-name))))
+                       (<span style="color: #a71d5d;">when</span> (dired-get-filename nil t)
+                         (downcase (file-name-extension (dired-get-filename nil t))))))
+      (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"no pdf to act on"</span>))
+    (<span style="color: #a71d5d;">let*</span> ((user-password (read-passwd  <span style="color: #183691;">"user-password: "</span>))
+           (owner-password (read-passwd  <span style="color: #183691;">"owner-password: "</span>))
+           (input (<span style="color: #a71d5d;">or</span> (buffer-file-name)
+                      (dired-get-filename nil t)))
+           (output (concat (file-name-sans-extension input)
+                            <span style="color: #183691;">"_enc.pdf"</span>)))
+      (message
+       (string-trim
+        (shell-command-to-string
+         (format  <span style="color: #183691;">"qpdf --verbose --encrypt %s %s 256 -- %s %s"</span>
+                 user-password owner-password input output))))))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-password-protect-current-pdf</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-password-protect-current-pdf</guid>
+  <pubDate>Thu, 02 Jun 2022 22:31:19 +0100</pubDate>
+</item>
 <item>
   <title>Plain Org v1.4 released</title>
   <description><![CDATA[<div id="content" class="content">

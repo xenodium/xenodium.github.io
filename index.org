@@ -1,6 +1,43 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-06-02 Thu] Emacs: Password-protect current pdf
+:PROPERTIES:
+:CUSTOM_ID: emacs-password-protect-current-pdf
+:END:
+Every so often, I need to password-protect a pdf. On macOS, [[https://support.apple.com/en-gb/guide/preview/prvw587dd90f/mac][Preview has a simple solution]], but I figured there must be a command line utility to make this happen. There are options, but [[https://github.com/qpdf/qpdf][qdf]] did the job just fine.
+
+#+begin_src sh
+  qpdf --verbose --encrypt USER-PASSWORD OWNER-PASSWORD KEY-LENGTH -- input.pdf output.pdf
+#+end_src
+
+So what does ~qpdf~ have to do with Emacs? Command-line utilities are easy to invoke from Emacs via ~shell-command~ (M-!), but I don't want to remember the command nor the parameters. I may as well add a function that [[https://xenodium.com/emacs-dwim-do-what-i-mean/][does what I mean]] and password-protect either buffers or [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] files.
+
+#+begin_src emacs-lisp :lexical no
+  (defun pdf-password-protect ()
+      "Password protect current pdf in buffer or `dired' file."
+      (interactive)
+      (unless (executable-find "qpdf")
+        (user-error "qpdf not installed"))
+      (unless (equal "pdf"
+                     (or (when (buffer-file-name)
+                           (downcase (file-name-extension (buffer-file-name))))
+                         (when (dired-get-filename nil t)
+                           (downcase (file-name-extension (dired-get-filename nil t))))))
+        (user-error "no pdf to act on"))
+      (let* ((user-password (read-passwd "user-password: "))
+             (owner-password (read-passwd "owner-password: "))
+             (input (or (buffer-file-name)
+                        (dired-get-filename nil t)))
+             (output (concat (file-name-sans-extension input)
+                             "_enc.pdf")))
+        (message
+         (string-trim
+          (shell-command-to-string
+           (format "qpdf --verbose --encrypt %s %s 256 -- %s %s"
+                   user-password owner-password input output))))))
+#+end_src
+
 * [2022-04-24 Sun] Plain Org v1.4 released
 :PROPERTIES:
 :CUSTOM_ID: plain-org-v14-released
