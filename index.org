@@ -1,6 +1,106 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-06 Wed] Emacs DWIM shell-command
+:PROPERTIES:
+:CUSTOM_ID: emacs-dwim-shell-command
+:END:
+I've [[https://xenodium.com/emacs-dwim-do-what-i-mean/][talked about DWIM before]], where I bend Emacs to help me do what I mean. Emacs is also great for [[https://xenodium.com/emacs-password-protect-current-pdf/][wrapping command-line one-liners with elisp]], so I can quickly invoke commands without thinking too much about flags, arguments, etc.
+
+I keep thinking the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html][shell-command]] is ripe for plenty of enhancements using our DWIM fairydust.
+
+** Do what I mean how?
+
+*** Smart template instantiation
+I've drawn inspiration from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Commands-in-Dired.html][dired-do-shell-command]], which substitutes special characters like * and ? with marked files. I'm also drawing inspiration from [[https://orgmode.org/worg/org-contrib/babel/][org babel]]'s [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] syntax to substitute =<<f>>= (file path), =<<fne>>= (file path without extension), and =<<e>>= (extension). My initial preference was to use something like =$f=, =$fne=, and =$e=, but felt they clashed with shell variables.
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/emacs-dwim-shell-command/template.png]]
+
+*** Operate on dired marked files
+This is DWIM, so if we're visiting a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] buffer, the shell command should operate on all the marked files.
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/emacs-dwim-shell-command/diredmark.gif]]
+
+*** Operate on current buffer file
+
+Similarly, if visiting a buffer with an associated file, operate on that file instead.
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/emacs-dwim-shell-command/blur.png]]
+
+*** Automatically take me to created files
+Did the command create a new file in the current directory? Take me to it, right away.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-shell-command/showme.png]]
+
+*** Show me output on error
+
+I'm not usually interested in the command output when generating new files, unless there was an error of course. Offer to show it.
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/emacs-dwim-shell-command/couldnt.png]]
+
+*** Show me output if no new files
+
+Not all commands generate new files, so automatically show me the output for these instances.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-shell-command/apple.gif]]
+
+*** Make it easy to create utilities
+
+[[https://ffmpeg.org/][ffmpeg]] is awesome, but man I can never remember all the flags and arguments. I may as well wrap commands like these in a convenient elisp function and invoke via [[https://www.gnu.org/software/emacs/manual/html_node/efaq/Extended-commands.html][execute-extended-command]], or my favorite [[http://oremacs.com/swiper/#minibuffer-key-bindings][counsel-M-x]] (with completion), bound to the vital =M-x=.
+
+All those gifs you see in this post were created with =dwim-shell-command-convert-to-gif=, powered by the same elisp magic.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-convert-to-gif ()
+    "Convert all marked videos to optimized gif(s)."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "ffmpeg -loglevel quiet -stats -y -i <<f>> -pix_fmt rgb24 -r 15 <<fne>>.gif"
+     "Convert to gif" '("ffmpeg")))
+#+end_src
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/emacs-dwim-shell-command/togif_x1.5.gif]]
+
+This makes wrapping one-liners a breeze, so let's do some more...
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-convert-audio-to-mp3 ()
+    "Convert all marked audio to mp3(s)."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "ffmpeg -stats -n -i <<f>> -acodec libmp3lame <<fne>>.mp3"
+     "Convert to mp3" '("ffmpeg")))
+
+  (defun dwim-shell-command-convert-image-to-jpg ()
+    "Convert all marked images to jpg(s)."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "convert -verbose <<f>> <<fne>>.jpg"
+     "Convert to jpg" '("convert")))
+
+  (defun dwim-shell-command-drop-video-audio ()
+    "Drop audio from all marked videos."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"
+     "Drop audio" '("ffmpeg")))
+#+end_src
+
+*** Make it spin ;)
+Ok, not quite, but use Emacs's [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Progress.html][progress-reporter]] just for kicks.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-shell-command/progress.gif]]
+
+** Where's the code?
+The code for [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el][dwim-shell-command.el]] is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.
 * [2022-06-02 Thu] Emacs: Password-protect current pdf
 :PROPERTIES:
 :CUSTOM_ID: emacs-password-protect-current-pdf
