@@ -1,6 +1,57 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-09 Sat] Emacs: Password-protect current pdf (revisited)
+:PROPERTIES:
+:CUSTOM_ID: emacs-password-protect-current-pdf-revisited
+:END:
+With my recent look at writing a [[https://xenodium.com/emacs-dwim-shell-command/][DWIM shell-command]], I've been revisiting my custom Emacs functions invoking command line utilities.
+
+Take this [[https://xenodium.com/emacs-password-protect-current-pdf/][post]], for example, where I invoke [[https://github.com/qpdf/qpdf][qpdf]] via a elisp. Using the new =dwim-shell-command--on-marked-files= in [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el][dwim-shell-command.el]], the code is stripped down to a bare minimum:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-pdf-password-protect ()
+    "Speeds up gif(s)."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "Password protect pdf"
+     (format "qpdf --verbose --encrypt '%s' '%s' 256 -- <<f>> <<fne>>_enc.<<e>>"
+             (read-passwd "user-password: ")
+             (read-passwd "owner-password: "))
+     :utils "qpdf"))
+#+end_src
+
+Compare the above =dwim-shell-command--on-marked-files= usage to my [[https://xenodium.com/emacs-password-protect-current-pdf/][previous implementation]]:
+
+#+begin_src emacs-lisp :lexical no
+  (defun pdf-password-protect ()
+    "Password protect current pdf in buffer or `dired' file."
+    (interactive)
+    (unless (executable-find "qpdf")
+      (user-error "qpdf not installed"))
+    (unless (equal "pdf"
+                   (or (when (buffer-file-name)
+                         (downcase (file-name-extension (buffer-file-name))))
+                       (when (dired-get-filename nil t)
+                         (downcase (file-name-extension (dired-get-filename nil t))))))
+      (user-error "no pdf to act on"))
+    (let* ((user-password (read-passwd "user-password: "))
+           (owner-password (read-passwd "owner-password: "))
+           (input (or (buffer-file-name)
+                      (dired-get-filename nil t)))
+           (output (concat (file-name-sans-extension input)
+                           "_enc.pdf")))
+      (message
+       (string-trim
+        (shell-command-to-string
+         (format "qpdf --verbose --encrypt '%s' '%s' 256 -- '%s' '%s'"
+                 user-password owner-password input output))))))
+#+end_src
+
+This really changes things for me. I'll be more inclined to add more of these tiny integrations to lots of great command line utilities. Take this recent [[https://news.ycombinator.com/item?id=32028752][Hacker News post]] on [[https://github.com/ocrmypdf/OCRmyPDF][ocrmypdf]] as an example. Their [[https://ocrmypdf.readthedocs.io/en/latest/cookbook.html][cookbook]] has lots of examples that can be easily used via  =dwim-shell-command--on-marked-files=.
+
+What command line utils would you use?
+
 * [2022-07-07 Thu] Emacs DWIM shell-command
 :PROPERTIES:
 :CUSTOM_ID: emacs-dwim-shell-command
@@ -118,12 +169,19 @@ Ok, not quite, but use Emacs's [[https://www.gnu.org/software/emacs/manual/html_
                 ([remap dired-smart-shell-command] . dwim-shell-command)))
 #+end_src
 
+** Bring those command line utilities
+
+On the whole, this really changes things for me. I'll be more inclined to bring command line utilities to seamless Emacs usage. Take this recent [[https://news.ycombinator.com/item?id=32028752][Hacker News post]] on [[https://github.com/ocrmypdf/OCRmyPDF][ocrmypdf]] as an example. Their [[https://ocrmypdf.readthedocs.io/en/latest/cookbook.html][cookbook]] has lots of examples that can be easily used via =dwim-shell-command--on-marked-files=. What command line utilities would you bring?
+
 ** Where's the code?
+
 The code for [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el][dwim-shell-command.el]] is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.
 * [2022-06-02 Thu] Emacs: Password-protect current pdf
 :PROPERTIES:
 :CUSTOM_ID: emacs-password-protect-current-pdf
 :END:
+UPDATE: Check out [[https://xenodium.com/emacs-password-protect-current-pdf-revisited][Password-protect current pdf (revisted)]] for a simpler version.
+
 Every so often, I need to password-protect a pdf. On macOS, [[https://support.apple.com/en-gb/guide/preview/prvw587dd90f/mac][Preview has a simple solution]], but I figured there must be a command line utility to make this happen. There are options, but [[https://github.com/qpdf/qpdf][qdf]] did the job just fine.
 
 #+begin_src sh

@@ -6,7 +6,79 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 07 Jul 2022 08:51:49 +0100</lastBuildDate>
+<lastBuildDate>Sat, 09 Jul 2022 12:21:50 +0100</lastBuildDate>
+<item>
+  <title>Emacs: Password-protect current pdf (revisited)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-password-protect-current-pdf-revisited" class="outline-2">
+ <h2 id="emacs-password-protect-current-pdf-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">09 July 2022</span></span> Emacs: Password-protect current pdf (revisited)</h2>
+ <div class="outline-text-2" id="text-emacs-password-protect-current-pdf-revisited">
+ <p>
+With my recent look at writing a  <a href="https://xenodium.com/emacs-dwim-shell-command/">DWIM shell-command</a>, I've been revisiting my custom Emacs functions invoking command line utilities.
+</p>
+
+ <p>
+Take this  <a href="https://xenodium.com/emacs-password-protect-current-pdf/">post</a>, for example, where I invoke  <a href="https://github.com/qpdf/qpdf">qpdf</a> via a elisp. Using the new  <code>dwim-shell-command--on-marked-files</code> in  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a>, the code is stripped down to a bare minimum:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-pdf-password-protect</span> ()
+   <span style="color: #183691;">"Speeds up gif(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command--on-marked-files
+    <span style="color: #183691;">"Password protect pdf"</span>
+   (format  <span style="color: #183691;">"qpdf --verbose --encrypt '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' 256 -- <<f>> <<fne>>_enc.<<e>>"</span>
+           (read-passwd  <span style="color: #183691;">"user-password: "</span>)
+           (read-passwd  <span style="color: #183691;">"owner-password: "</span>))
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"qpdf"</span>))
+</pre>
+</div>
+
+ <p>
+Compare the above  <code>dwim-shell-command--on-marked-files</code> usage to my  <a href="https://xenodium.com/emacs-password-protect-current-pdf/">previous implementation</a>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">pdf-password-protect</span> ()
+   <span style="color: #183691;">"Password protect current pdf in buffer or `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">' file."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">unless</span> (executable-find  <span style="color: #183691;">"qpdf"</span>)
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"qpdf not installed"</span>))
+  (<span style="color: #a71d5d;">unless</span> (equal  <span style="color: #183691;">"pdf"</span>
+                 (<span style="color: #a71d5d;">or</span> (<span style="color: #a71d5d;">when</span> (buffer-file-name)
+                       (downcase (file-name-extension (buffer-file-name))))
+                     (<span style="color: #a71d5d;">when</span> (dired-get-filename nil t)
+                       (downcase (file-name-extension (dired-get-filename nil t))))))
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"no pdf to act on"</span>))
+  (<span style="color: #a71d5d;">let*</span> ((user-password (read-passwd  <span style="color: #183691;">"user-password: "</span>))
+         (owner-password (read-passwd  <span style="color: #183691;">"owner-password: "</span>))
+         (input (<span style="color: #a71d5d;">or</span> (buffer-file-name)
+                    (dired-get-filename nil t)))
+         (output (concat (file-name-sans-extension input)
+                          <span style="color: #183691;">"_enc.pdf"</span>)))
+    (message
+     (string-trim
+      (shell-command-to-string
+       (format  <span style="color: #183691;">"qpdf --verbose --encrypt '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' 256 -- '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">'"</span>
+               user-password owner-password input output))))))
+</pre>
+</div>
+
+ <p>
+This really changes things for me. I'll be more inclined to add more of these tiny integrations to lots of great command line utilities. Take this recent  <a href="https://news.ycombinator.com/item?id=32028752">Hacker News post</a> on  <a href="https://github.com/ocrmypdf/OCRmyPDF">ocrmypdf</a> as an example. Their  <a href="https://ocrmypdf.readthedocs.io/en/latest/cookbook.html">cookbook</a> has lots of examples that can be easily used via   <code>dwim-shell-command--on-marked-files</code>.
+</p>
+
+ <p>
+What command line utils would you use?
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-password-protect-current-pdf-revisited</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-password-protect-current-pdf-revisited</guid>
+  <pubDate>Sat, 09 Jul 2022 12:21:50 +0100</pubDate>
+</item>
 <item>
   <title>Emacs DWIM shell-command</title>
   <description><![CDATA[<div id="content" class="content">
@@ -23,97 +95,97 @@ I keep thinking the  <a href="https://www.gnu.org/software/emacs/manual/html_nod
 </p>
 </div>
 
- <div id="outline-container-org673adeb" class="outline-3">
- <h3 id="org673adeb">Do what I mean how?</h3>
- <div class="outline-text-3" id="text-org673adeb">
+ <div id="outline-container-orgc2b6e4f" class="outline-3">
+ <h3 id="orgc2b6e4f">Do what I mean how?</h3>
+ <div class="outline-text-3" id="text-orgc2b6e4f">
 </div>
- <div id="outline-container-org11ae8d0" class="outline-4">
- <h4 id="org11ae8d0">Smart template instantiation</h4>
- <div class="outline-text-4" id="text-org11ae8d0">
+ <div id="outline-container-org0019d39" class="outline-4">
+ <h4 id="org0019d39">Smart template instantiation</h4>
+ <div class="outline-text-4" id="text-org0019d39">
  <p>
 I've drawn inspiration from  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Commands-in-Dired.html">dired-do-shell-command</a>, which substitutes special characters like * and ? with marked files. I'm also drawing inspiration from  <a href="https://orgmode.org/worg/org-contrib/babel/">org babel</a>'s  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> syntax to substitute  <code><<f>></code> (file path),  <code><<fne>></code> (file path without extension), and  <code><<e>></code> (extension). My initial preference was to use something like  <code>$f</code>,  <code>$fne</code>, and  <code>$e</code>, but felt they clashed with shell variables.
 </p>
 
 
- <div id="orgfaeae70" class="figure">
+ <div id="org19545ae" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/template.png" alt="template.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org7acf1d1" class="outline-4">
- <h4 id="org7acf1d1">Operate on dired marked files</h4>
- <div class="outline-text-4" id="text-org7acf1d1">
+ <div id="outline-container-org0d9e3e1" class="outline-4">
+ <h4 id="org0d9e3e1">Operate on dired marked files</h4>
+ <div class="outline-text-4" id="text-org0d9e3e1">
  <p>
 This is DWIM, so if we're visiting a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffer, the shell command should operate on all the marked files.
 </p>
 
 
- <div id="org95a2ad8" class="figure">
+ <div id="orgc0c3086" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/diredmark.gif" alt="diredmark.gif" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgcec8d32" class="outline-4">
- <h4 id="orgcec8d32">Operate on current buffer file</h4>
- <div class="outline-text-4" id="text-orgcec8d32">
+ <div id="outline-container-org6101be4" class="outline-4">
+ <h4 id="org6101be4">Operate on current buffer file</h4>
+ <div class="outline-text-4" id="text-org6101be4">
  <p>
 Similarly, if visiting a buffer with an associated file, operate on that file instead.
 </p>
 
 
- <div id="orgb4498a7" class="figure">
+ <div id="org593a7cc" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/blur.png" alt="blur.png" width="90%" height="90%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgca30da2" class="outline-4">
- <h4 id="orgca30da2">Automatically take me to created files</h4>
- <div class="outline-text-4" id="text-orgca30da2">
+ <div id="outline-container-org332f61b" class="outline-4">
+ <h4 id="org332f61b">Automatically take me to created files</h4>
+ <div class="outline-text-4" id="text-org332f61b">
  <p>
 Did the command create a new file in the current directory? Take me to it, right away.
 </p>
 
 
- <div id="org0561206" class="figure">
+ <div id="org9fb592e" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/showme.png" alt="showme.png" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org24a569b" class="outline-4">
- <h4 id="org24a569b">Show me output on error</h4>
- <div class="outline-text-4" id="text-org24a569b">
+ <div id="outline-container-org3107855" class="outline-4">
+ <h4 id="org3107855">Show me output on error</h4>
+ <div class="outline-text-4" id="text-org3107855">
  <p>
 I'm not usually interested in the command output when generating new files, unless there was an error of course. Offer to show it.
 </p>
 
 
- <div id="org27e78b5" class="figure">
+ <div id="orge432e8d" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/couldnt.png" alt="couldnt.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org0c574c8" class="outline-4">
- <h4 id="org0c574c8">Show me output if no new files</h4>
- <div class="outline-text-4" id="text-org0c574c8">
+ <div id="outline-container-org491a94a" class="outline-4">
+ <h4 id="org491a94a">Show me output if no new files</h4>
+ <div class="outline-text-4" id="text-org491a94a">
  <p>
 Not all commands generate new files, so automatically show me the output for these instances.
 </p>
 
 
- <div id="org149803a" class="figure">
+ <div id="org74f0665" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/apple.gif" alt="apple.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orge686d14" class="outline-4">
- <h4 id="orge686d14">Make it easy to create utilities</h4>
- <div class="outline-text-4" id="text-orge686d14">
+ <div id="outline-container-orge895318" class="outline-4">
+ <h4 id="orge895318">Make it easy to create utilities</h4>
+ <div class="outline-text-4" id="text-orge895318">
  <p>
  <a href="https://ffmpeg.org/">ffmpeg</a> is awesome, but man I can never remember all the flags and arguments. I may as well wrap commands like these in a convenient elisp function and invoke via  <a href="https://www.gnu.org/software/emacs/manual/html_node/efaq/Extended-commands.html">execute-extended-command</a>, or my favorite  <a href="http://oremacs.com/swiper/#minibuffer-key-bindings">counsel-M-x</a> (with completion), bound to the vital  <code>M-x</code>.
 </p>
@@ -134,7 +206,7 @@ All those gifs you see in this post were created with  <code>dwim-shell-command-
 </div>
 
 
- <div id="orge42a85b" class="figure">
+ <div id="org5e48d69" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/togif_x1.5.gif" alt="togif_x1.5.gif" width="70%" height="70%"></img></p>
 </div>
 
@@ -170,24 +242,24 @@ This makes wrapping one-liners a breeze, so let's do some more…
 </div>
 </div>
 
- <div id="outline-container-orgbeb8ad2" class="outline-4">
- <h4 id="orgbeb8ad2">Make it spin ;)</h4>
- <div class="outline-text-4" id="text-orgbeb8ad2">
+ <div id="outline-container-org62a7d38" class="outline-4">
+ <h4 id="org62a7d38">Make it spin ;)</h4>
+ <div class="outline-text-4" id="text-org62a7d38">
  <p>
 Ok, not quite, but use Emacs's  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Progress.html">progress-reporter</a> just for kicks.
 </p>
 
 
- <div id="org05df0e7" class="figure">
+ <div id="org143c6c3" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/progress.gif" alt="progress.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org6685594" class="outline-3">
- <h3 id="org6685594">Use it everywhere</h3>
- <div class="outline-text-3" id="text-org6685594">
+ <div id="outline-container-org1dcfb21" class="outline-3">
+ <h3 id="org1dcfb21">Use it everywhere</h3>
+ <div class="outline-text-3" id="text-org1dcfb21">
  <p>
  <code>dwim-shell-command</code> covers my needs (so far anyway), so I'm binding it to existing bindings.
 </p>
@@ -207,9 +279,18 @@ Ok, not quite, but use Emacs's  <a href="https://www.gnu.org/software/emacs/manu
 </div>
 </div>
 
- <div id="outline-container-org069b699" class="outline-3">
- <h3 id="org069b699">Where's the code?</h3>
- <div class="outline-text-3" id="text-org069b699">
+ <div id="outline-container-org0dad37d" class="outline-3">
+ <h3 id="org0dad37d">Bring those command line utilities</h3>
+ <div class="outline-text-3" id="text-org0dad37d">
+ <p>
+On the whole, this really changes things for me. I'll be more inclined to bring command line utilities to seamless Emacs usage. Take this recent  <a href="https://news.ycombinator.com/item?id=32028752">Hacker News post</a> on  <a href="https://github.com/ocrmypdf/OCRmyPDF">ocrmypdf</a> as an example. Their  <a href="https://ocrmypdf.readthedocs.io/en/latest/cookbook.html">cookbook</a> has lots of examples that can be easily used via  <code>dwim-shell-command--on-marked-files</code>. What command line utilities would you bring?
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org5224c21" class="outline-3">
+ <h3 id="org5224c21">Where's the code?</h3>
+ <div class="outline-text-3" id="text-org5224c21">
  <p>
 The code for  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a> is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.</p>
 </div>
@@ -227,6 +308,10 @@ The code for  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dw
  <div id="outline-container-emacs-password-protect-current-pdf" class="outline-2">
  <h2 id="emacs-password-protect-current-pdf"> <span class="timestamp-wrapper"> <span class="timestamp">02 June 2022</span></span> Emacs: Password-protect current pdf</h2>
  <div class="outline-text-2" id="text-emacs-password-protect-current-pdf">
+ <p>
+UPDATE: Check out  <a href="https://xenodium.com/emacs-password-protect-current-pdf-revisited">Password-protect current pdf (revisted)</a> for a simpler version.
+</p>
+
  <p>
 Every so often, I need to password-protect a pdf. On macOS,  <a href="https://support.apple.com/en-gb/guide/preview/prvw587dd90f/mac">Preview has a simple solution</a>, but I figured there must be a command line utility to make this happen. There are options, but  <a href="https://github.com/qpdf/qpdf">qdf</a> did the job just fine.
 </p>
