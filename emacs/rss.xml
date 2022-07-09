@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 09 Jul 2022 12:21:50 +0100</lastBuildDate>
+<lastBuildDate>Sat, 09 Jul 2022 13:56:39 +0100</lastBuildDate>
 <item>
   <title>Emacs: Password-protect current pdf (revisited)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -82,7 +82,53 @@ What command line utils would you use?
 </div>]]></description>
   <link>http://xenodium.com/emacs-password-protect-current-pdf-revisited</link>
   <guid isPermaLink="false">http://xenodium.com/emacs-password-protect-current-pdf-revisited</guid>
-  <pubDate>Sat, 09 Jul 2022 12:21:50 +0100</pubDate>
+  <pubDate>Sat, 09 Jul 2022 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>png to icns (Emacs DWIM style)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-png-to-icns-emacs-dwim-style" class="outline-2">
+ <h2 id="png-to-icns-emacs-dwim-style"> <span class="timestamp-wrapper"> <span class="timestamp">09 July 2022</span></span> png to icns (Emacs DWIM style)</h2>
+ <div class="outline-text-2" id="text-png-to-icns-emacs-dwim-style">
+
+ <div id="org5be844a" class="figure">
+ <p> <img src="../images/png-to-icns-emacs-dwim-style/icns.gif" alt="icns.gif" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+Since  <a href="https://xenodium.com/emacs-dwim-shell-command/">writing a DWIM version of the shell-command</a>, I've been having a little fun  <a href="https://xenodium.com/emacs-password-protect-current-pdf-revisited/">revisiting command line utilities</a> I sometimes invoke from my beloved editor. In this instance, converting a png file to an icns icon. What's more interesting about this case is that it's not just a one-liner, but a short script in itself. Either way, it's just as easy to invoke from Emacs using  <code>dwim-shell-command--on-marked-files</code>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-convert-image-to-icns</span> ()
+   <span style="color: #183691;">"Drop audio from all marked videos."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command--on-marked-files
+    <span style="color: #183691;">"Convert png to icns icon"</span>
+    <span style="color: #183691;">"mkdir <<fne>>.iconset</span>
+ <span style="color: #183691;">sips -z 16 16 <<f>> --out <<fne>>.iconset/icon16x16.png</span>
+ <span style="color: #183691;">sips -z 32 32 <<f>> --out <<fne>>.iconset/icon16x16@2x.png</span>
+ <span style="color: #183691;">sips -z 32 32 <<f>> --out <<fne>>.iconset/icon32x32.png</span>
+ <span style="color: #183691;">sips -z 64 64 <<f>> --out <<fne>>.iconset/icon32x32@2x.png</span>
+ <span style="color: #183691;">sips -z 128 128 <<f>> --out <<fne>>.iconset/icon128x128.png</span>
+ <span style="color: #183691;">sips -z 256 256 <<f>> --out <<fne>>.iconset/icon128x128@2x.png</span>
+ <span style="color: #183691;">sips -z 256 256 <<f>> --out <<fne>>.iconset/icon256x256@2x.png</span>
+ <span style="color: #183691;">sips -z 512 512 <<f>> --out <<fne>>.iconset/icon512x512.png</span>
+ <span style="color: #183691;">sips -z 512 512 <<f>> --out <<fne>>.iconset/icon256x256@2x.png</span>
+ <span style="color: #183691;">sips -z 1024 1024 <<f>> --out <<fne>>.iconset/icon_512x512@2x.png</span>
+ <span style="color: #183691;">iconutil -c icns <<fne>>.iconset</span>
+ <span style="color: #183691;">"</span>
+    <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"sips"</span>  <span style="color: #183691;">"iconutil"</span>)
+    <span style="color: #a71d5d;">:extensions</span>  <span style="color: #183691;">"png"</span>))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/png-to-icns-emacs-dwim-style</link>
+  <guid isPermaLink="false">http://xenodium.com/png-to-icns-emacs-dwim-style</guid>
+  <pubDate>Sat, 09 Jul 2022 13:56:39 +0100</pubDate>
 </item>
 <item>
   <title>Emacs DWIM shell-command</title>

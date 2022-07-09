@@ -1,6 +1,38 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-09 Sat] png to icns (Emacs DWIM style)
+:PROPERTIES:
+:CUSTOM_ID: png-to-icns-emacs-dwim-style
+:END:
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/png-to-icns-emacs-dwim-style/icns.gif]]
+
+Since [[https://xenodium.com/emacs-dwim-shell-command/][writing a DWIM version of the shell-command]], I've been having a little fun [[https://xenodium.com/emacs-password-protect-current-pdf-revisited/][revisiting command line utilities]] I sometimes invoke from my beloved editor. In this instance, converting a png file to an icns icon. What's more interesting about this case is that it's not just a one-liner, but a short script in itself. Either way, it's just as easy to invoke from Emacs using =dwim-shell-command--on-marked-files=.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-convert-image-to-icns ()
+    "Drop audio from all marked videos."
+    (interactive)
+    (dwim-shell-command--on-marked-files
+     "Convert png to icns icon"
+     "mkdir <<fne>>.iconset
+  sips -z 16 16 <<f>> --out <<fne>>.iconset/icon16x16.png
+  sips -z 32 32 <<f>> --out <<fne>>.iconset/icon16x16@2x.png
+  sips -z 32 32 <<f>> --out <<fne>>.iconset/icon32x32.png
+  sips -z 64 64 <<f>> --out <<fne>>.iconset/icon32x32@2x.png
+  sips -z 128 128 <<f>> --out <<fne>>.iconset/icon128x128.png
+  sips -z 256 256 <<f>> --out <<fne>>.iconset/icon128x128@2x.png
+  sips -z 256 256 <<f>> --out <<fne>>.iconset/icon256x256@2x.png
+  sips -z 512 512 <<f>> --out <<fne>>.iconset/icon512x512.png
+  sips -z 512 512 <<f>> --out <<fne>>.iconset/icon256x256@2x.png
+  sips -z 1024 1024 <<f>> --out <<fne>>.iconset/icon_512x512@2x.png
+  iconutil -c icns <<fne>>.iconset
+  "
+     :utils '("sips" "iconutil")
+     :extensions "png"))
+#+end_src
+
 * [2022-07-09 Sat] Emacs: Password-protect current pdf (revisited)
 :PROPERTIES:
 :CUSTOM_ID: emacs-password-protect-current-pdf-revisited
