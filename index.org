@@ -61,8 +61,9 @@ All those gifs you see in this post were created with =dwim-shell-command-conver
     "Convert all marked videos to optimized gif(s)."
     (interactive)
     (dwim-shell-command--on-marked-files
+     "Convert to gif"
      "ffmpeg -loglevel quiet -stats -y -i <<f>> -pix_fmt rgb24 -r 15 <<fne>>.gif"
-     "Convert to gif" '("ffmpeg")))
+     :utils "ffmpeg"))
 #+end_src
 
 #+ATTR_HTML: :width 70% :height 70%
@@ -75,22 +76,24 @@ This makes wrapping one-liners a breeze, so let's do some more...
     "Convert all marked audio to mp3(s)."
     (interactive)
     (dwim-shell-command--on-marked-files
+     "Convert to mp3"
      "ffmpeg -stats -n -i <<f>> -acodec libmp3lame <<fne>>.mp3"
-     "Convert to mp3" '("ffmpeg")))
+     :utils "ffmpeg"))
 
   (defun dwim-shell-command-convert-image-to-jpg ()
     "Convert all marked images to jpg(s)."
     (interactive)
     (dwim-shell-command--on-marked-files
+     "Convert to jpg"
      "convert -verbose <<f>> <<fne>>.jpg"
-     "Convert to jpg" '("convert")))
+     :utils "convert"))
 
   (defun dwim-shell-command-drop-video-audio ()
     "Drop audio from all marked videos."
     (interactive)
     (dwim-shell-command--on-marked-files
-     "ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"
-     "Drop audio" '("ffmpeg")))
+     "Drop audio" "ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"
+     :utils "ffmpeg"))
 #+end_src
 
 *** Make it spin ;)
@@ -98,6 +101,22 @@ Ok, not quite, but use Emacs's [[https://www.gnu.org/software/emacs/manual/html_
 
 #+ATTR_HTML: :width 50% :height 50%
 [[file:images/emacs-dwim-shell-command/progress.gif]]
+
+** Use it everywhere
+
+=dwim-shell-command= covers my needs (so far anyway), so I'm binding it to existing bindings.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package dwim-shell-command
+    :bind
+    ("M-!" . dwim-shell-command))
+
+  (use-package dired
+    :bind (:map dired-mode-map
+                ([remap dired-do-async-shell-command] . dwim-shell-command)
+                ([remap dired-do-shell-command] . dwim-shell-command)
+                ([remap dired-smart-shell-command] . dwim-shell-command)))
+#+end_src
 
 ** Where's the code?
 The code for [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el][dwim-shell-command.el]] is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.

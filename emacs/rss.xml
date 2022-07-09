@@ -12,7 +12,7 @@
   <description><![CDATA[<div id="content" class="content">
 
  <div id="outline-container-emacs-dwim-shell-command" class="outline-2">
- <h2 id="emacs-dwim-shell-command"> <span class="timestamp-wrapper"> <span class="timestamp">06 July 2022</span></span> Emacs DWIM shell-command</h2>
+ <h2 id="emacs-dwim-shell-command"> <span class="timestamp-wrapper"> <span class="timestamp">07 July 2022</span></span> Emacs DWIM shell-command</h2>
  <div class="outline-text-2" id="text-emacs-dwim-shell-command">
  <p>
 I've  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">talked about DWIM before</a>, where I bend Emacs to help me do what I mean. Emacs is also great for  <a href="https://xenodium.com/emacs-password-protect-current-pdf/">wrapping command-line one-liners with elisp</a>, so I can quickly invoke commands without thinking too much about flags, arguments, etc.
@@ -23,97 +23,97 @@ I keep thinking the  <a href="https://www.gnu.org/software/emacs/manual/html_nod
 </p>
 </div>
 
- <div id="outline-container-org0acc3b5" class="outline-3">
- <h3 id="org0acc3b5">Do what I mean how?</h3>
- <div class="outline-text-3" id="text-org0acc3b5">
+ <div id="outline-container-org673adeb" class="outline-3">
+ <h3 id="org673adeb">Do what I mean how?</h3>
+ <div class="outline-text-3" id="text-org673adeb">
 </div>
- <div id="outline-container-orgc5162be" class="outline-4">
- <h4 id="orgc5162be">Smart template instantiation</h4>
- <div class="outline-text-4" id="text-orgc5162be">
+ <div id="outline-container-org11ae8d0" class="outline-4">
+ <h4 id="org11ae8d0">Smart template instantiation</h4>
+ <div class="outline-text-4" id="text-org11ae8d0">
  <p>
 I've drawn inspiration from  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Commands-in-Dired.html">dired-do-shell-command</a>, which substitutes special characters like * and ? with marked files. I'm also drawing inspiration from  <a href="https://orgmode.org/worg/org-contrib/babel/">org babel</a>'s  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> syntax to substitute  <code><<f>></code> (file path),  <code><<fne>></code> (file path without extension), and  <code><<e>></code> (extension). My initial preference was to use something like  <code>$f</code>,  <code>$fne</code>, and  <code>$e</code>, but felt they clashed with shell variables.
 </p>
 
 
- <div id="orgcb75aa4" class="figure">
+ <div id="orgfaeae70" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/template.png" alt="template.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org51a0efb" class="outline-4">
- <h4 id="org51a0efb">Operate on dired marked files</h4>
- <div class="outline-text-4" id="text-org51a0efb">
+ <div id="outline-container-org7acf1d1" class="outline-4">
+ <h4 id="org7acf1d1">Operate on dired marked files</h4>
+ <div class="outline-text-4" id="text-org7acf1d1">
  <p>
 This is DWIM, so if we're visiting a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffer, the shell command should operate on all the marked files.
 </p>
 
 
- <div id="orga41df98" class="figure">
+ <div id="org95a2ad8" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/diredmark.gif" alt="diredmark.gif" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orge2881af" class="outline-4">
- <h4 id="orge2881af">Operate on current buffer file</h4>
- <div class="outline-text-4" id="text-orge2881af">
+ <div id="outline-container-orgcec8d32" class="outline-4">
+ <h4 id="orgcec8d32">Operate on current buffer file</h4>
+ <div class="outline-text-4" id="text-orgcec8d32">
  <p>
 Similarly, if visiting a buffer with an associated file, operate on that file instead.
 </p>
 
 
- <div id="org02f51a8" class="figure">
+ <div id="orgb4498a7" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/blur.png" alt="blur.png" width="90%" height="90%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org5066375" class="outline-4">
- <h4 id="org5066375">Automatically take me to created files</h4>
- <div class="outline-text-4" id="text-org5066375">
+ <div id="outline-container-orgca30da2" class="outline-4">
+ <h4 id="orgca30da2">Automatically take me to created files</h4>
+ <div class="outline-text-4" id="text-orgca30da2">
  <p>
 Did the command create a new file in the current directory? Take me to it, right away.
 </p>
 
 
- <div id="org164a090" class="figure">
+ <div id="org0561206" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/showme.png" alt="showme.png" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org436cd8d" class="outline-4">
- <h4 id="org436cd8d">Show me output on error</h4>
- <div class="outline-text-4" id="text-org436cd8d">
+ <div id="outline-container-org24a569b" class="outline-4">
+ <h4 id="org24a569b">Show me output on error</h4>
+ <div class="outline-text-4" id="text-org24a569b">
  <p>
 I'm not usually interested in the command output when generating new files, unless there was an error of course. Offer to show it.
 </p>
 
 
- <div id="org9b908d0" class="figure">
+ <div id="org27e78b5" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/couldnt.png" alt="couldnt.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgbe29dc1" class="outline-4">
- <h4 id="orgbe29dc1">Show me output if no new files</h4>
- <div class="outline-text-4" id="text-orgbe29dc1">
+ <div id="outline-container-org0c574c8" class="outline-4">
+ <h4 id="org0c574c8">Show me output if no new files</h4>
+ <div class="outline-text-4" id="text-org0c574c8">
  <p>
 Not all commands generate new files, so automatically show me the output for these instances.
 </p>
 
 
- <div id="org7e8bd10" class="figure">
+ <div id="org149803a" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/apple.gif" alt="apple.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgbea7c79" class="outline-4">
- <h4 id="orgbea7c79">Make it easy to create utilities</h4>
- <div class="outline-text-4" id="text-orgbea7c79">
+ <div id="outline-container-orge686d14" class="outline-4">
+ <h4 id="orge686d14">Make it easy to create utilities</h4>
+ <div class="outline-text-4" id="text-orge686d14">
  <p>
  <a href="https://ffmpeg.org/">ffmpeg</a> is awesome, but man I can never remember all the flags and arguments. I may as well wrap commands like these in a convenient elisp function and invoke via  <a href="https://www.gnu.org/software/emacs/manual/html_node/efaq/Extended-commands.html">execute-extended-command</a>, or my favorite  <a href="http://oremacs.com/swiper/#minibuffer-key-bindings">counsel-M-x</a> (with completion), bound to the vital  <code>M-x</code>.
 </p>
@@ -127,13 +127,14 @@ All those gifs you see in this post were created with  <code>dwim-shell-command-
    <span style="color: #183691;">"Convert all marked videos to optimized gif(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command--on-marked-files
+    <span style="color: #183691;">"Convert to gif"</span>
     <span style="color: #183691;">"ffmpeg -loglevel quiet -stats -y -i <<f>> -pix_fmt rgb24 -r 15 <<fne>>.gif"</span>
-    <span style="color: #183691;">"Convert to gif"</span> '(<span style="color: #183691;">"ffmpeg"</span>)))
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
 </pre>
 </div>
 
 
- <div id="org7d9093c" class="figure">
+ <div id="orge42a85b" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/togif_x1.5.gif" alt="togif_x1.5.gif" width="70%" height="70%"></img></p>
 </div>
 
@@ -146,45 +147,69 @@ This makes wrapping one-liners a breeze, so let's do some more…
    <span style="color: #183691;">"Convert all marked audio to mp3(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command--on-marked-files
+    <span style="color: #183691;">"Convert to mp3"</span>
     <span style="color: #183691;">"ffmpeg -stats -n -i <<f>> -acodec libmp3lame <<fne>>.mp3"</span>
-    <span style="color: #183691;">"Convert to mp3"</span> '(<span style="color: #183691;">"ffmpeg"</span>)))
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-convert-image-to-jpg</span> ()
    <span style="color: #183691;">"Convert all marked images to jpg(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command--on-marked-files
+    <span style="color: #183691;">"Convert to jpg"</span>
     <span style="color: #183691;">"convert -verbose <<f>> <<fne>>.jpg"</span>
-    <span style="color: #183691;">"Convert to jpg"</span> '(<span style="color: #183691;">"convert"</span>)))
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-drop-video-audio</span> ()
    <span style="color: #183691;">"Drop audio from all marked videos."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command--on-marked-files
-    <span style="color: #183691;">"ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"</span>
-    <span style="color: #183691;">"Drop audio"</span> '(<span style="color: #183691;">"ffmpeg"</span>)))
+    <span style="color: #183691;">"Drop audio"</span>  <span style="color: #183691;">"ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org7a75d7e" class="outline-4">
- <h4 id="org7a75d7e">Make it spin ;)</h4>
- <div class="outline-text-4" id="text-org7a75d7e">
+ <div id="outline-container-orgbeb8ad2" class="outline-4">
+ <h4 id="orgbeb8ad2">Make it spin ;)</h4>
+ <div class="outline-text-4" id="text-orgbeb8ad2">
  <p>
 Ok, not quite, but use Emacs's  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Progress.html">progress-reporter</a> just for kicks.
 </p>
 
 
- <div id="orgb99f807" class="figure">
+ <div id="org05df0e7" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/progress.gif" alt="progress.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgbba3239" class="outline-3">
- <h3 id="orgbba3239">Where's the code?</h3>
- <div class="outline-text-3" id="text-orgbba3239">
+ <div id="outline-container-org6685594" class="outline-3">
+ <h3 id="org6685594">Use it everywhere</h3>
+ <div class="outline-text-3" id="text-org6685594">
+ <p>
+ <code>dwim-shell-command</code> covers my needs (so far anyway), so I'm binding it to existing bindings.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">dwim-shell-command</span>
+   <span style="color: #a71d5d;">:bind</span>
+  (<span style="color: #183691;">"M-!"</span> . dwim-shell-command))
+
+(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">dired</span>
+   <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> dired-mode-map
+              ([remap dired-do-async-shell-command] . dwim-shell-command)
+              ([remap dired-do-shell-command] . dwim-shell-command)
+              ([remap dired-smart-shell-command] . dwim-shell-command)))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org069b699" class="outline-3">
+ <h3 id="org069b699">Where's the code?</h3>
+ <div class="outline-text-3" id="text-org069b699">
  <p>
 The code for  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a> is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.</p>
 </div>
@@ -567,7 +592,7 @@ After adding new tasks via iOS's share sheet, if the item was added to a file ot
  <h2 id="emacs-dwim-swiper-vs-isearch-vs-phi-search"> <span class="timestamp-wrapper"> <span class="timestamp">26 March 2022</span></span> Emacs DWIM: swiper vs isearch vs phi-search</h2>
  <div class="outline-text-2" id="text-emacs-dwim-swiper-vs-isearch-vs-phi-search">
 
- <div id="orgf473e39" class="figure">
+ <div id="org13de927" class="figure">
  <p> <img src="../images/emacs-dwim-swiper-vs-isearch-vs-phi-search/search-dwim.gif" alt="search-dwim.gif" width="75%" height="75%"></img></p>
 </div>
 
