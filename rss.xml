@@ -6,7 +6,88 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 09 Jul 2022 13:56:46 +0100</lastBuildDate>
+<lastBuildDate>Sun, 10 Jul 2022 22:50:59 +0100</lastBuildDate>
+<item>
+  <title>Emacs: DWIM shell command (multi-language)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-dwim-shell-command-multi-language" class="outline-2">
+ <h2 id="emacs-dwim-shell-command-multi-language"> <span class="timestamp-wrapper"> <span class="timestamp">10 July 2022</span></span> Emacs: DWIM shell command (multi-language)</h2>
+ <div class="outline-text-2" id="text-emacs-dwim-shell-command-multi-language">
+
+ <div id="org3f0a5e5" class="figure">
+ <p> <img src="../images/emacs-dwim-shell-command-multi-language/csv.gif" alt="csv.gif" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+I continue  <a href="https://xenodium.com/png-to-icns-emacs-dwim-style/">goofying around</a> with  <a href="https://xenodium.com/emacs-dwim-shell-command/">dwim-shell-command</a> and it's sibling  <code>dwim-shell-command-on-marked-files</code> from  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a>.
+</p>
+
+ <p>
+In addition to defaulting to  <a href="https://en.wikipedia.org/wiki/Z_shell">zsh</a>,  <code>dwim-shell-command-on-marked-files</code> now support other shells and languages. This comes in handy if you have snippets in different languages and would like to easily invoke them from Emacs. Multi-language support enables "using the best tool for the job" kinda thing. Or maybe you just happen to know how to solve a particular problem in a specific language.
+</p>
+
+ <p>
+Let's assume you have an existing Python snippet to convert files from csv to json. With  <code>dwim-shell-command-on-marked-files</code>, you can invoke the Python snippet to operate on either  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> or buffer files.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-csv-to-json-via-python</span> ()
+   <span style="color: #183691;">"Convert csv file to json (via Python)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Convert csv file to json (via Python)."</span>
+    <span style="color: #183691;">"</span>
+ <span style="color: #183691;">import csv</span>
+ <span style="color: #183691;">import json</span>
+ <span style="color: #183691;">text = json.dumps({ \"values\": list(csv.reader(open('</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">')))})</span>
+ <span style="color: #183691;">fpath = '</span> <span style="color: #0086b3;"><<fne>>.json</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">with open(fpath , '</span> <span style="color: #0086b3;">w</span> <span style="color: #183691;">') as f:</span>
+ <span style="color: #183691;">  f.write(text)"</span>
+    <span style="color: #a71d5d;">:shell-util</span>  <span style="color: #183691;">"python"</span>
+    <span style="color: #a71d5d;">:shell-args</span>  <span style="color: #183691;">"-c"</span>))
+</pre>
+</div>
+
+ <p>
+Or, maybe you prefer Swift and already had a snippet for the same thing?
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-csv-to-json-via-swift</span> ()
+   <span style="color: #183691;">"Convert csv file to json (via Swift)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Convert csv file to json (via Swift)."</span>
+    <span style="color: #183691;">"</span>
+ <span style="color: #183691;">    import Foundation</span>
+ <span style="color: #183691;">    import TabularData</span>
+ <span style="color: #183691;">    let filePath = \"<<f>>\"</span>
+ <span style="color: #183691;">    print(\"reading </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">filePath)\")</span>
+ <span style="color: #183691;">    let content = try String(contentsOfFile: filePath).trimmingCharacters(in: .whitespacesAndNewlines)</span>
+ <span style="color: #183691;">    let parsedCSV = content.components(separatedBy: CSVWritingOptions().newline).map{</span>
+ <span style="color: #183691;">      $0.components(separatedBy: \",\")</span>
+ <span style="color: #183691;">    }</span>
+ <span style="color: #183691;">    let jsonEncoder = JSONEncoder()</span>
+ <span style="color: #183691;">    let jsonData = try jsonEncoder.encode([\"value\": parsedCSV])</span>
+ <span style="color: #183691;">    let json = String(data: jsonData, encoding: String.Encoding.utf8)</span>
+ <span style="color: #183691;">    let outURL = URL(fileURLWithPath:\"<<fne>>.json\")</span>
+ <span style="color: #183691;">    try json!.write(to: outURL, atomically: true, encoding: String.Encoding.utf8)</span>
+ <span style="color: #183691;">    print(\"wrote </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">outURL)\")"</span>
+    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>))
+</pre>
+</div>
+
+ <p>
+You can surely solve the same problem in elisp, but hey it's nice to have options and flexibility.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-dwim-shell-command-multi-language</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-dwim-shell-command-multi-language</guid>
+  <pubDate>Sun, 10 Jul 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Emacs: Password-protect current pdf (revisited)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -15,7 +96,7 @@
  <h2 id="emacs-password-protect-current-pdf-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">09 July 2022</span></span> Emacs: Password-protect current pdf (revisited)</h2>
  <div class="outline-text-2" id="text-emacs-password-protect-current-pdf-revisited">
 
- <div id="org3c94fbb" class="figure">
+ <div id="org68e2a67" class="figure">
  <p> <img src="../images/emacs-password-protect-current-pdf-revisited/passprotect.gif" alt="passprotect.gif" width="70%" height="70%"></img></p>
 </div>
 
@@ -31,9 +112,9 @@ Take this  <a href="https://xenodium.com/emacs-password-protect-current-pdf/">po
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-pdf-password-protect</span> ()
    <span style="color: #183691;">"Speeds up gif(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command--on-marked-files
+  (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Password protect pdf"</span>
-   (format  <span style="color: #183691;">"qpdf --verbose --encrypt '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' 256 -- <<f>> <<fne>>_enc.<<e>>"</span>
+   (format  <span style="color: #183691;">"qpdf --verbose --encrypt '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' 256 -- '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_enc.<<e>></span> <span style="color: #183691;">'"</span>
            (read-passwd  <span style="color: #183691;">"user-password: "</span>)
            (read-passwd  <span style="color: #183691;">"owner-password: "</span>))
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"qpdf"</span>))
@@ -92,7 +173,7 @@ What command line utils would you use?
  <h2 id="png-to-icns-emacs-dwim-style"> <span class="timestamp-wrapper"> <span class="timestamp">09 July 2022</span></span> png to icns (Emacs DWIM style)</h2>
  <div class="outline-text-2" id="text-png-to-icns-emacs-dwim-style">
 
- <div id="org5be844a" class="figure">
+ <div id="org541c54b" class="figure">
  <p> <img src="../images/png-to-icns-emacs-dwim-style/icns.gif" alt="icns.gif" width="70%" height="70%"></img></p>
 </div>
 
@@ -104,21 +185,23 @@ Since  <a href="https://xenodium.com/emacs-dwim-shell-command/">writing a DWIM v
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-convert-image-to-icns</span> ()
    <span style="color: #183691;">"Convert png to icns icon."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command--on-marked-files
+  (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Convert png to icns icon"</span>
-    <span style="color: #183691;">"mkdir <<fne>>.iconset</span>
- <span style="color: #183691;">sips -z 16 16 <<f>> --out <<fne>>.iconset/icon16x16.png</span>
- <span style="color: #183691;">sips -z 32 32 <<f>> --out <<fne>>.iconset/icon16x16@2x.png</span>
- <span style="color: #183691;">sips -z 32 32 <<f>> --out <<fne>>.iconset/icon32x32.png</span>
- <span style="color: #183691;">sips -z 64 64 <<f>> --out <<fne>>.iconset/icon32x32@2x.png</span>
- <span style="color: #183691;">sips -z 128 128 <<f>> --out <<fne>>.iconset/icon128x128.png</span>
- <span style="color: #183691;">sips -z 256 256 <<f>> --out <<fne>>.iconset/icon128x128@2x.png</span>
- <span style="color: #183691;">sips -z 256 256 <<f>> --out <<fne>>.iconset/icon256x256@2x.png</span>
- <span style="color: #183691;">sips -z 512 512 <<f>> --out <<fne>>.iconset/icon512x512.png</span>
- <span style="color: #183691;">sips -z 512 512 <<f>> --out <<fne>>.iconset/icon256x256@2x.png</span>
- <span style="color: #183691;">sips -z 1024 1024 <<f>> --out <<fne>>.iconset/icon_512x512@2x.png</span>
- <span style="color: #183691;">iconutil -c icns <<fne>>.iconset</span>
- <span style="color: #183691;">"</span>
+    <span style="color: #183691;">"</span>
+ <span style="color: #183691;">    # Based on http://stackoverflow.com/questions/12306223/how-to-manually-create-icns-files-using-iconutil</span>
+ <span style="color: #183691;">    # Note: png must be 1024x1024</span>
+ <span style="color: #183691;">    mkdir <<fne>>.iconset</span>
+ <span style="color: #183691;">    sips -z 16 16 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_16x16.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 32 32 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_16x16@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 32 32 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_32x32.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 64 64 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_32x32@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 128 128 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_128x128.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 256 256 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_128x128@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 256 256 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_256x256@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 512 512 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_512x512.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 512 512 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_256x256@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    sips -z 1024 1024 '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --out '</span> <span style="color: #0086b3;"><<fne>>.iconset/icon_512x512@2x.png</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">    iconutil -c icns `</span> <span style="color: #0086b3;"><<fne>>.iconset</span> <span style="color: #183691;">'"</span>
     <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"sips"</span>  <span style="color: #183691;">"iconutil"</span>)
     <span style="color: #a71d5d;">:extensions</span>  <span style="color: #183691;">"png"</span>))
 </pre>
@@ -146,97 +229,97 @@ I keep thinking the  <a href="https://www.gnu.org/software/emacs/manual/html_nod
 </p>
 </div>
 
- <div id="outline-container-orgc2b6e4f" class="outline-3">
- <h3 id="orgc2b6e4f">Do what I mean how?</h3>
- <div class="outline-text-3" id="text-orgc2b6e4f">
+ <div id="outline-container-orgea99c45" class="outline-3">
+ <h3 id="orgea99c45">Do what I mean how?</h3>
+ <div class="outline-text-3" id="text-orgea99c45">
 </div>
- <div id="outline-container-org0019d39" class="outline-4">
- <h4 id="org0019d39">Smart template instantiation</h4>
- <div class="outline-text-4" id="text-org0019d39">
+ <div id="outline-container-orgf09948a" class="outline-4">
+ <h4 id="orgf09948a">Smart template instantiation</h4>
+ <div class="outline-text-4" id="text-orgf09948a">
  <p>
 I've drawn inspiration from  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Commands-in-Dired.html">dired-do-shell-command</a>, which substitutes special characters like * and ? with marked files. I'm also drawing inspiration from  <a href="https://orgmode.org/worg/org-contrib/babel/">org babel</a>'s  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> syntax to substitute  <code><<f>></code> (file path),  <code><<fne>></code> (file path without extension), and  <code><<e>></code> (extension). My initial preference was to use something like  <code>$f</code>,  <code>$fne</code>, and  <code>$e</code>, but felt they clashed with shell variables.
 </p>
 
 
- <div id="org19545ae" class="figure">
+ <div id="org7a9d296" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/template.png" alt="template.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org0d9e3e1" class="outline-4">
- <h4 id="org0d9e3e1">Operate on dired marked files</h4>
- <div class="outline-text-4" id="text-org0d9e3e1">
+ <div id="outline-container-orgff60185" class="outline-4">
+ <h4 id="orgff60185">Operate on dired marked files</h4>
+ <div class="outline-text-4" id="text-orgff60185">
  <p>
 This is DWIM, so if we're visiting a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffer, the shell command should operate on all the marked files.
 </p>
 
 
- <div id="orgc0c3086" class="figure">
+ <div id="orgdba63f0" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/diredmark.gif" alt="diredmark.gif" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org6101be4" class="outline-4">
- <h4 id="org6101be4">Operate on current buffer file</h4>
- <div class="outline-text-4" id="text-org6101be4">
+ <div id="outline-container-orgbe1391a" class="outline-4">
+ <h4 id="orgbe1391a">Operate on current buffer file</h4>
+ <div class="outline-text-4" id="text-orgbe1391a">
  <p>
 Similarly, if visiting a buffer with an associated file, operate on that file instead.
 </p>
 
 
- <div id="org593a7cc" class="figure">
+ <div id="orgb56d2b6" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/blur.png" alt="blur.png" width="90%" height="90%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org332f61b" class="outline-4">
- <h4 id="org332f61b">Automatically take me to created files</h4>
- <div class="outline-text-4" id="text-org332f61b">
+ <div id="outline-container-orgce41234" class="outline-4">
+ <h4 id="orgce41234">Automatically take me to created files</h4>
+ <div class="outline-text-4" id="text-orgce41234">
  <p>
 Did the command create a new file in the current directory? Take me to it, right away.
 </p>
 
 
- <div id="org9fb592e" class="figure">
+ <div id="org06ea172" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/showme.png" alt="showme.png" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org3107855" class="outline-4">
- <h4 id="org3107855">Show me output on error</h4>
- <div class="outline-text-4" id="text-org3107855">
+ <div id="outline-container-orgc9bbc53" class="outline-4">
+ <h4 id="orgc9bbc53">Show me output on error</h4>
+ <div class="outline-text-4" id="text-orgc9bbc53">
  <p>
 I'm not usually interested in the command output when generating new files, unless there was an error of course. Offer to show it.
 </p>
 
 
- <div id="orge432e8d" class="figure">
+ <div id="org53e082e" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/couldnt.png" alt="couldnt.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org491a94a" class="outline-4">
- <h4 id="org491a94a">Show me output if no new files</h4>
- <div class="outline-text-4" id="text-org491a94a">
+ <div id="outline-container-orge943614" class="outline-4">
+ <h4 id="orge943614">Show me output if no new files</h4>
+ <div class="outline-text-4" id="text-orge943614">
  <p>
 Not all commands generate new files, so automatically show me the output for these instances.
 </p>
 
 
- <div id="org74f0665" class="figure">
+ <div id="org7c0aa5c" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/apple.gif" alt="apple.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orge895318" class="outline-4">
- <h4 id="orge895318">Make it easy to create utilities</h4>
- <div class="outline-text-4" id="text-orge895318">
+ <div id="outline-container-orgd4a3cdb" class="outline-4">
+ <h4 id="orgd4a3cdb">Make it easy to create utilities</h4>
+ <div class="outline-text-4" id="text-orgd4a3cdb">
  <p>
  <a href="https://ffmpeg.org/">ffmpeg</a> is awesome, but man I can never remember all the flags and arguments. I may as well wrap commands like these in a convenient elisp function and invoke via  <a href="https://www.gnu.org/software/emacs/manual/html_node/efaq/Extended-commands.html">execute-extended-command</a>, or my favorite  <a href="http://oremacs.com/swiper/#minibuffer-key-bindings">counsel-M-x</a> (with completion), bound to the vital  <code>M-x</code>.
 </p>
@@ -257,7 +340,7 @@ All those gifs you see in this post were created with  <code>dwim-shell-command-
 </div>
 
 
- <div id="org5e48d69" class="figure">
+ <div id="org1ea24e6" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/togif_x1.5.gif" alt="togif_x1.5.gif" width="70%" height="70%"></img></p>
 </div>
 
@@ -269,48 +352,48 @@ This makes wrapping one-liners a breeze, so let's do some more…
  <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-convert-audio-to-mp3</span> ()
    <span style="color: #183691;">"Convert all marked audio to mp3(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command--on-marked-files
+  (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Convert to mp3"</span>
-    <span style="color: #183691;">"ffmpeg -stats -n -i <<f>> -acodec libmp3lame <<fne>>.mp3"</span>
+    <span style="color: #183691;">"ffmpeg -stats -n -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -acodec libmp3lame '</span> <span style="color: #0086b3;"><<fne>>.mp3</span> <span style="color: #183691;">'"</span>
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-convert-image-to-jpg</span> ()
    <span style="color: #183691;">"Convert all marked images to jpg(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command--on-marked-files
+  (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Convert to jpg"</span>
-    <span style="color: #183691;">"convert -verbose <<f>> <<fne>>.jpg"</span>
+    <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>.jpg</span> <span style="color: #183691;">'"</span>
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
 
 (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-drop-video-audio</span> ()
    <span style="color: #183691;">"Drop audio from all marked videos."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command--on-marked-files
-    <span style="color: #183691;">"Drop audio"</span>  <span style="color: #183691;">"ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"</span>
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Drop audio"</span>  <span style="color: #183691;">"ffmpeg -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -c copy -an '</span> <span style="color: #0086b3;"><<fne>>_no_audio.<<e>></span> <span style="color: #183691;">'"</span>
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
 </pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org62a7d38" class="outline-4">
- <h4 id="org62a7d38">Make it spin ;)</h4>
- <div class="outline-text-4" id="text-org62a7d38">
+ <div id="outline-container-org3beb375" class="outline-4">
+ <h4 id="org3beb375">Make it spin ;)</h4>
+ <div class="outline-text-4" id="text-org3beb375">
  <p>
 Ok, not quite, but use Emacs's  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Progress.html">progress-reporter</a> just for kicks.
 </p>
 
 
- <div id="org143c6c3" class="figure">
+ <div id="orgaa5aa92" class="figure">
  <p> <img src="../images/emacs-dwim-shell-command/progress.gif" alt="progress.gif" width="50%" height="50%"></img></p>
 </div>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org1dcfb21" class="outline-3">
- <h3 id="org1dcfb21">Use it everywhere</h3>
- <div class="outline-text-3" id="text-org1dcfb21">
+ <div id="outline-container-orgd8782e8" class="outline-3">
+ <h3 id="orgd8782e8">Use it everywhere</h3>
+ <div class="outline-text-3" id="text-orgd8782e8">
  <p>
  <code>dwim-shell-command</code> covers my needs (so far anyway), so I'm binding it to existing bindings.
 </p>
@@ -330,18 +413,18 @@ Ok, not quite, but use Emacs's  <a href="https://www.gnu.org/software/emacs/manu
 </div>
 </div>
 
- <div id="outline-container-org0dad37d" class="outline-3">
- <h3 id="org0dad37d">Bring those command line utilities</h3>
- <div class="outline-text-3" id="text-org0dad37d">
+ <div id="outline-container-org041e6be" class="outline-3">
+ <h3 id="org041e6be">Bring those command line utilities</h3>
+ <div class="outline-text-3" id="text-org041e6be">
  <p>
 On the whole, this really changes things for me. I'll be more inclined to bring command line utilities to seamless Emacs usage. Take this recent  <a href="https://news.ycombinator.com/item?id=32028752">Hacker News post</a> on  <a href="https://github.com/ocrmypdf/OCRmyPDF">ocrmypdf</a> as an example. Their  <a href="https://ocrmypdf.readthedocs.io/en/latest/cookbook.html">cookbook</a> has lots of examples that can be easily used via  <code>dwim-shell-command--on-marked-files</code>. What command line utilities would you bring?
 </p>
 </div>
 </div>
 
- <div id="outline-container-org5224c21" class="outline-3">
- <h3 id="org5224c21">Where's the code?</h3>
- <div class="outline-text-3" id="text-org5224c21">
+ <div id="outline-container-orgc4a64c7" class="outline-3">
+ <h3 id="orgc4a64c7">Where's the code?</h3>
+ <div class="outline-text-3" id="text-orgc4a64c7">
  <p>
 The code for  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a> is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.</p>
 </div>

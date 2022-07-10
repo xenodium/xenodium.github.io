@@ -1,6 +1,64 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-10 Sun] Emacs: DWIM shell command (multi-language)
+  :PROPERTIES:
+  :CUSTOM_ID: emacs-dwim-shell-command-multi-language
+  :END:
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/emacs-dwim-shell-command-multi-language/csv.gif]]
+
+I continue [[https://xenodium.com/png-to-icns-emacs-dwim-style/][goofying around]] with [[https://xenodium.com/emacs-dwim-shell-command/][dwim-shell-command]] and it's sibling =dwim-shell-command-on-marked-files= from [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el][dwim-shell-command.el]].
+
+In addition to defaulting to [[https://en.wikipedia.org/wiki/Z_shell][zsh]], =dwim-shell-command-on-marked-files= now support other shells and languages. This comes in handy if you have snippets in different languages and would like to easily invoke them from Emacs. Multi-language support enables "using the best tool for the job" kinda thing. Or maybe you just happen to know how to solve a particular problem in a specific language.
+
+Let's assume you have an existing Python snippet to convert files from csv to json. With =dwim-shell-command-on-marked-files=, you can invoke the Python snippet to operate on either [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] or buffer files.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-csv-to-json-via-python ()
+    "Convert csv file to json (via Python)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert csv file to json (via Python)."
+     "
+  import csv
+  import json
+  text = json.dumps({ \"values\": list(csv.reader(open('<<f>>')))})
+  fpath = '<<fne>>.json'
+  with open(fpath , 'w') as f:
+    f.write(text)"
+     :shell-util "python"
+     :shell-args "-c"))
+#+end_src
+
+Or, maybe you prefer Swift and already had a snippet for the same thing?
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-csv-to-json-via-swift ()
+    "Convert csv file to json (via Swift)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert csv file to json (via Swift)."
+     "
+      import Foundation
+      import TabularData
+      let filePath = \"<<f>>\"
+      print(\"reading \\(filePath)\")
+      let content = try String(contentsOfFile: filePath).trimmingCharacters(in: .whitespacesAndNewlines)
+      let parsedCSV = content.components(separatedBy: CSVWritingOptions().newline).map{
+        $0.components(separatedBy: \",\")
+      }
+      let jsonEncoder = JSONEncoder()
+      let jsonData = try jsonEncoder.encode([\"value\": parsedCSV])
+      let json = String(data: jsonData, encoding: String.Encoding.utf8)
+      let outURL = URL(fileURLWithPath:\"<<fne>>.json\")
+      try json!.write(to: outURL, atomically: true, encoding: String.Encoding.utf8)
+      print(\"wrote \\(outURL)\")"
+     :shell-pipe "swift -"))
+#+end_src
+
+You can surely solve the same problem in elisp, but hey it's nice to have options and flexibility.
+
 * [2022-07-09 Sat] png to icns (Emacs DWIM style)
 :PROPERTIES:
 :CUSTOM_ID: png-to-icns-emacs-dwim-style
@@ -14,21 +72,23 @@ Since [[https://xenodium.com/emacs-dwim-shell-command/][writing a DWIM version o
   (defun dwim-shell-command-convert-image-to-icns ()
     "Convert png to icns icon."
     (interactive)
-    (dwim-shell-command--on-marked-files
+    (dwim-shell-command-on-marked-files
      "Convert png to icns icon"
-     "mkdir <<fne>>.iconset
-  sips -z 16 16 <<f>> --out <<fne>>.iconset/icon_16x16.png
-  sips -z 32 32 <<f>> --out <<fne>>.iconset/icon_16x16@2x.png
-  sips -z 32 32 <<f>> --out <<fne>>.iconset/icon_32x32.png
-  sips -z 64 64 <<f>> --out <<fne>>.iconset/icon_32x32@2x.png
-  sips -z 128 128 <<f>> --out <<fne>>.iconset/icon_128x128.png
-  sips -z 256 256 <<f>> --out <<fne>>.iconset/icon_128x128@2x.png
-  sips -z 256 256 <<f>> --out <<fne>>.iconset/icon_256x256@2x.png
-  sips -z 512 512 <<f>> --out <<fne>>.iconset/icon_512x512.png
-  sips -z 512 512 <<f>> --out <<fne>>.iconset/icon_256x256@2x.png
-  sips -z 1024 1024 <<f>> --out <<fne>>.iconset/icon_512x512@2x.png
-  iconutil -c icns <<fne>>.iconset
-  "
+     "
+      # Based on http://stackoverflow.com/questions/12306223/how-to-manually-create-icns-files-using-iconutil
+      # Note: png must be 1024x1024
+      mkdir <<fne>>.iconset
+      sips -z 16 16 '<<f>>' --out '<<fne>>.iconset/icon_16x16.png'
+      sips -z 32 32 '<<f>>' --out '<<fne>>.iconset/icon_16x16@2x.png'
+      sips -z 32 32 '<<f>>' --out '<<fne>>.iconset/icon_32x32.png'
+      sips -z 64 64 '<<f>>' --out '<<fne>>.iconset/icon_32x32@2x.png'
+      sips -z 128 128 '<<f>>' --out '<<fne>>.iconset/icon_128x128.png'
+      sips -z 256 256 '<<f>>' --out '<<fne>>.iconset/icon_128x128@2x.png'
+      sips -z 256 256 '<<f>>' --out '<<fne>>.iconset/icon_256x256@2x.png'
+      sips -z 512 512 '<<f>>' --out '<<fne>>.iconset/icon_512x512.png'
+      sips -z 512 512 '<<f>>' --out '<<fne>>.iconset/icon_256x256@2x.png'
+      sips -z 1024 1024 '<<f>>' --out '<<fne>>.iconset/icon_512x512@2x.png'
+      iconutil -c icns `<<fne>>.iconset'"
      :utils '("sips" "iconutil")
      :extensions "png"))
 #+end_src
@@ -48,9 +108,9 @@ Take this [[https://xenodium.com/emacs-password-protect-current-pdf/][post]], fo
   (defun dwim-shell-command-pdf-password-protect ()
     "Speeds up gif(s)."
     (interactive)
-    (dwim-shell-command--on-marked-files
+    (dwim-shell-command-on-marked-files
      "Password protect pdf"
-     (format "qpdf --verbose --encrypt '%s' '%s' 256 -- <<f>> <<fne>>_enc.<<e>>"
+     (format "qpdf --verbose --encrypt '%s' '%s' 256 -- '<<f>>' '<<fne>>_enc.<<e>>'"
              (read-passwd "user-password: ")
              (read-passwd "owner-password: "))
      :utils "qpdf"))
@@ -161,24 +221,24 @@ This makes wrapping one-liners a breeze, so let's do some more...
   (defun dwim-shell-command-convert-audio-to-mp3 ()
     "Convert all marked audio to mp3(s)."
     (interactive)
-    (dwim-shell-command--on-marked-files
+    (dwim-shell-command-on-marked-files
      "Convert to mp3"
-     "ffmpeg -stats -n -i <<f>> -acodec libmp3lame <<fne>>.mp3"
+     "ffmpeg -stats -n -i '<<f>>' -acodec libmp3lame '<<fne>>.mp3'"
      :utils "ffmpeg"))
 
   (defun dwim-shell-command-convert-image-to-jpg ()
     "Convert all marked images to jpg(s)."
     (interactive)
-    (dwim-shell-command--on-marked-files
+    (dwim-shell-command-on-marked-files
      "Convert to jpg"
-     "convert -verbose <<f>> <<fne>>.jpg"
+     "convert -verbose '<<f>>' '<<fne>>.jpg'"
      :utils "convert"))
 
   (defun dwim-shell-command-drop-video-audio ()
     "Drop audio from all marked videos."
     (interactive)
-    (dwim-shell-command--on-marked-files
-     "Drop audio" "ffmpeg -i <<f>> -c copy -an <<fne>>_no_audio.<<e>>"
+    (dwim-shell-command-on-marked-files
+     "Drop audio" "ffmpeg -i '<<f>>' -c copy -an '<<fne>>_no_audio.<<e>>'"
      :utils "ffmpeg"))
 #+end_src
 

@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-10 Sun 21:49 -->
+<!-- 2022-07-10 Sun 22:49 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Emacs: Password-protect current pdf (revisited)</title>
+<title>Emacs: DWIM shell command (multi-language)</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -381,72 +381,76 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-emacs-password-protect-current-pdf-revisited" class="outline-2">
-<h2 id="emacs-password-protect-current-pdf-revisited"><span class="timestamp-wrapper"><span class="timestamp">09 July 2022</span></span> Emacs: Password-protect current pdf (revisited)</h2>
-<div class="outline-text-2" id="text-emacs-password-protect-current-pdf-revisited">
+<div id="outline-container-emacs-dwim-shell-command-multi-language" class="outline-2">
+<h2 id="emacs-dwim-shell-command-multi-language"><span class="timestamp-wrapper"><span class="timestamp">10 July 2022</span></span> Emacs: DWIM shell command (multi-language)</h2>
+<div class="outline-text-2" id="text-emacs-dwim-shell-command-multi-language">
 
-<div id="org68e2a67" class="figure">
-<p><img src="../images/emacs-password-protect-current-pdf-revisited/passprotect.gif" alt="passprotect.gif" width="70%" height="70%" />
+<div id="org3f0a5e5" class="figure">
+<p><img src="../images/emacs-dwim-shell-command-multi-language/csv.gif" alt="csv.gif" width="70%" height="70%" />
 </p>
 </div>
 
 <p>
-With a recent look at writing <a href="https://xenodium.com/emacs-dwim-shell-command/">DWIM shell commands</a>, I've been revisiting my custom Emacs functions invoking command line utilities.
+I continue <a href="https://xenodium.com/png-to-icns-emacs-dwim-style/">goofying around</a> with <a href="https://xenodium.com/emacs-dwim-shell-command/">dwim-shell-command</a> and it's sibling <code>dwim-shell-command-on-marked-files</code> from <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a>.
 </p>
 
 <p>
-Take this <a href="https://xenodium.com/emacs-password-protect-current-pdf/">post</a>, for example, where I invoke <a href="https://github.com/qpdf/qpdf">qpdf</a> via a elisp. Using the new <code>dwim-shell-command--on-marked-files</code> in <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el">dwim-shell-command.el</a>, the code is stripped down to a bare minimum:
+In addition to defaulting to <a href="https://en.wikipedia.org/wiki/Z_shell">zsh</a>, <code>dwim-shell-command-on-marked-files</code> now support other shells and languages. This comes in handy if you have snippets in different languages and would like to easily invoke them from Emacs. Multi-language support enables "using the best tool for the job" kinda thing. Or maybe you just happen to know how to solve a particular problem in a specific language.
+</p>
+
+<p>
+Let's assume you have an existing Python snippet to convert files from csv to json. With <code>dwim-shell-command-on-marked-files</code>, you can invoke the Python snippet to operate on either <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> or buffer files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-command-pdf-password-protect</span> ()
-  <span style="color: #183691;">"Speeds up gif(s)."</span>
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-command-csv-to-json-via-python</span> ()
+  <span style="color: #183691;">"Convert csv file to json (via Python)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
-   <span style="color: #183691;">"Password protect pdf"</span>
-   (format <span style="color: #183691;">"qpdf --verbose --encrypt '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' 256 -- '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_enc.&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">'"</span>
-           (read-passwd <span style="color: #183691;">"user-password: "</span>)
-           (read-passwd <span style="color: #183691;">"owner-password: "</span>))
-   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"qpdf"</span>))
+   <span style="color: #183691;">"Convert csv file to json (via Python)."</span>
+   <span style="color: #183691;">"</span>
+<span style="color: #183691;">import csv</span>
+<span style="color: #183691;">import json</span>
+<span style="color: #183691;">text = json.dumps({ \"values\": list(csv.reader(open('</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">')))})</span>
+<span style="color: #183691;">fpath = '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;.json</span><span style="color: #183691;">'</span>
+<span style="color: #183691;">with open(fpath , '</span><span style="color: #0086b3;">w</span><span style="color: #183691;">') as f:</span>
+<span style="color: #183691;">  f.write(text)"</span>
+   <span style="color: #a71d5d;">:shell-util</span> <span style="color: #183691;">"python"</span>
+   <span style="color: #a71d5d;">:shell-args</span> <span style="color: #183691;">"-c"</span>))
 </pre>
 </div>
 
 <p>
-Compare the above <code>dwim-shell-command--on-marked-files</code> usage to my <a href="https://xenodium.com/emacs-password-protect-current-pdf/">previous implementation</a>:
+Or, maybe you prefer Swift and already had a snippet for the same thing?
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">pdf-password-protect</span> ()
-  <span style="color: #183691;">"Password protect current pdf in buffer or `</span><span style="color: #0086b3;">dired</span><span style="color: #183691;">' file."</span>
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-command-csv-to-json-via-swift</span> ()
+  <span style="color: #183691;">"Convert csv file to json (via Swift)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (<span style="color: #a71d5d;">unless</span> (executable-find <span style="color: #183691;">"qpdf"</span>)
-    (<span style="color: #333333;">user-error</span> <span style="color: #183691;">"qpdf not installed"</span>))
-  (<span style="color: #a71d5d;">unless</span> (equal <span style="color: #183691;">"pdf"</span>
-                 (<span style="color: #a71d5d;">or</span> (<span style="color: #a71d5d;">when</span> (buffer-file-name)
-                       (downcase (file-name-extension (buffer-file-name))))
-                     (<span style="color: #a71d5d;">when</span> (dired-get-filename nil t)
-                       (downcase (file-name-extension (dired-get-filename nil t))))))
-    (<span style="color: #333333;">user-error</span> <span style="color: #183691;">"no pdf to act on"</span>))
-  (<span style="color: #a71d5d;">let*</span> ((user-password (read-passwd <span style="color: #183691;">"user-password: "</span>))
-         (owner-password (read-passwd <span style="color: #183691;">"owner-password: "</span>))
-         (input (<span style="color: #a71d5d;">or</span> (buffer-file-name)
-                    (dired-get-filename nil t)))
-         (output (concat (file-name-sans-extension input)
-                         <span style="color: #183691;">"_enc.pdf"</span>)))
-    (message
-     (string-trim
-      (shell-command-to-string
-       (format <span style="color: #183691;">"qpdf --verbose --encrypt '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' 256 -- '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">'"</span>
-               user-password owner-password input output))))))
+  (dwim-shell-command-on-marked-files
+   <span style="color: #183691;">"Convert csv file to json (via Swift)."</span>
+   <span style="color: #183691;">"</span>
+<span style="color: #183691;">    import Foundation</span>
+<span style="color: #183691;">    import TabularData</span>
+<span style="color: #183691;">    let filePath = \"&lt;&lt;f&gt;&gt;\"</span>
+<span style="color: #183691;">    print(\"reading </span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">filePath)\")</span>
+<span style="color: #183691;">    let content = try String(contentsOfFile: filePath).trimmingCharacters(in: .whitespacesAndNewlines)</span>
+<span style="color: #183691;">    let parsedCSV = content.components(separatedBy: CSVWritingOptions().newline).map{</span>
+<span style="color: #183691;">      $0.components(separatedBy: \",\")</span>
+<span style="color: #183691;">    }</span>
+<span style="color: #183691;">    let jsonEncoder = JSONEncoder()</span>
+<span style="color: #183691;">    let jsonData = try jsonEncoder.encode([\"value\": parsedCSV])</span>
+<span style="color: #183691;">    let json = String(data: jsonData, encoding: String.Encoding.utf8)</span>
+<span style="color: #183691;">    let outURL = URL(fileURLWithPath:\"&lt;&lt;fne&gt;&gt;.json\")</span>
+<span style="color: #183691;">    try json!.write(to: outURL, atomically: true, encoding: String.Encoding.utf8)</span>
+<span style="color: #183691;">    print(\"wrote </span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">outURL)\")"</span>
+   <span style="color: #a71d5d;">:shell-pipe</span> <span style="color: #183691;">"swift -"</span>))
 </pre>
 </div>
 
 <p>
-This really changes things for me. I'll be more inclined to add more of these tiny integrations to lots of great command line utilities. Take this recent <a href="https://news.ycombinator.com/item?id=32028752">Hacker News post</a> on <a href="https://github.com/ocrmypdf/OCRmyPDF">ocrmypdf</a> as an example. Their <a href="https://ocrmypdf.readthedocs.io/en/latest/cookbook.html">cookbook</a> has lots of examples that can be easily used via  <code>dwim-shell-command--on-marked-files</code>.
-</p>
-
-<p>
-What command line utils would you use?
+You can surely solve the same problem in elisp, but hey it's nice to have options and flexibility.
 </p>
 </div>
 </div>
