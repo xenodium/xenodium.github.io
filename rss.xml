@@ -6,17 +6,111 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 13 Jul 2022 23:39:53 +0100</lastBuildDate>
+<lastBuildDate>Sat, 16 Jul 2022 14:30:16 +0100</lastBuildDate>
 <item>
-  <title>Emacs zones to lift ya up</title>
+  <title>A lifehack for your shell</title>
   <description><![CDATA[<div id="content" class="content">
 
- <div id="outline-container-emacs-zones-to-lift-ya-up" class="outline-2">
- <h2 id="emacs-zones-to-lift-ya-up"> <span class="timestamp-wrapper"> <span class="timestamp">13 July 2022</span></span> Emacs zones to lift ya up</h2>
- <div class="outline-text-2" id="text-emacs-zones-to-lift-ya-up">
+ <div id="outline-container-a-lifehack-for-your-shell" class="outline-2">
+ <h2 id="a-lifehack-for-your-shell"> <span class="timestamp-wrapper"> <span class="timestamp">16 July 2022</span></span> A lifehack for your shell</h2>
+ <div class="outline-text-2" id="text-a-lifehack-for-your-shell">
 
- <div id="orgac708a5" class="figure">
- <p> <img src="../images/emacs-zoneb-tob-lift-ya-up/zone.gif" alt="zone.gif" width="90%" height="90%"></img></p>
+ <div id="orga161d82" class="figure">
+ <p> <img src="../images/a-lifehack-for-your-shell/unzip_x2.gif" alt="unzip_x2.gif" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+I'm a fan of the  <a href="http://infozip.sourceforge.net/mans/unzip.html">unzip</a> command line utility that ships with macOS. I give it a .zip file and it unzips it for me. No flags or arguments to remember (for my typical usages anyway). Most importantly, I've fully internalized the  <code>unzip</code> command into muscle memory, probably because of its  <i>perfect mnemonic</i>.
+</p>
+
+ <p>
+But then there's .tar, .tar.gz, .tar.xz, .rar, and a whole world of compression archives, often requiring different tools, flags, etc. and I need to remember those too.
+</p>
+
+ <p>
+Can't remember where I got this "life hack" from, but it suggests something along the lines of…
+</p>
+
+ <div class="org-center">
+ <p>
+ <i>Once you find a lost item at home, place it in the first spot you looked.</i>
+</p>
+</div>
+
+ <p>
+Great, next time I'll actually find things…  <b>but quickly</b>!
+</p>
+
+ <p>
+Now, I still remember a couple of unarchiving commands from memory (looking at you  <code>tar xvzf</code>), but I've noticed the first word that pops into mind when extracting is always  <code>unzip</code>.
+</p>
+
+ <p>
+There's the great  <a href="https://www.nongnu.org/atool/">atool</a> wrapper out there to extract all kinds of archives (would love to hear of others), but unlucky for me, its name never comes to mind as quickly as  <code>unzip</code> does.
+</p>
+
+ <p>
+With "life hack" in mind, let's just create an  <code>unzip</code>  <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a> alias to  <code>atool</code>. Next time I need to unarchive anything, the first word that comes to mind (unzip!) will quickly get me on my way…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #a71d5d;">alias</span> unzip  <span style="color: #183691;">'atool --extract --explain $1'</span>
+</pre>
+</div>
+
+ <p>
+Or if you prefer to add to your Emacs config:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(eshell/alias  <span style="color: #183691;">"unzip"</span>  <span style="color: #183691;">"atool --extract --explain $1"</span>)
+</pre>
+</div>
+
+ <p>
+While  <a href="https://xenodium.com/yasnippet-in-emacs-eshell/">I'm fan of Emacs eshell</a>, it's not be everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
+</p>
+</div>
+
+ <div id="outline-container-org7aaab74" class="outline-3">
+ <h3 id="org7aaab74">Bonus</h3>
+ <div class="outline-text-3" id="text-org7aaab74">
+ <p>
+Since I'm a keen on using "unzip" mnemonic everywhere in Emacs (not just my shell), I now have a  <a href="https://xenodium.com/emacs-dwim-shell-command/">DWIM shell-command</a> for it:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-unzip</span> ()
+   <span style="color: #183691;">"Unzip all marked archives (of any kind) using `</span> <span style="color: #0086b3;">atool</span> <span style="color: #183691;">'."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Unzip"</span>  <span style="color: #183691;">"atool --extract --explain '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"atool"</span>))
+</pre>
+</div>
+
+
+ <div id="org5e5c849" class="figure">
+ <p> <img src="../images/a-lifehack-for-your-shell/unzip-dired_x1.5.gif" alt="unzip-dired_x1.5.gif" width="70%" height="70%"></img></p>
+</div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-lifehack-for-your-shell</link>
+  <guid isPermaLink="false">http://xenodium.com/a-lifehack-for-your-shell</guid>
+  <pubDate>Sat, 16 Jul 2022 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Emacs zones to lift you up</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-zones-to-lift-you-up" class="outline-2">
+ <h2 id="emacs-zones-to-lift-you-up"> <span class="timestamp-wrapper"> <span class="timestamp">13 July 2022</span></span> Emacs zones to lift you up</h2>
+ <div class="outline-text-2" id="text-emacs-zones-to-lift-you-up">
+
+ <div id="org8beb67f" class="figure">
+ <p> <img src="../images/emacs-zoneb-tob-lift-you-up/zone.gif" alt="zone.gif" width="90%" height="90%"></img></p>
 </div>
 
  <p>
@@ -37,8 +131,8 @@ So, my nostalgic bit of elisp dates  <code>Jun 17 2016</code>: a basic but funct
 </div>
 </div>
 </div>]]></description>
-  <link>http://xenodium.com/emacs-zones-to-lift-ya-up</link>
-  <guid isPermaLink="false">http://xenodium.com/emacs-zones-to-lift-ya-up</guid>
+  <link>http://xenodium.com/emacs-zones-to-lift-you-up</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-zones-to-lift-you-up</guid>
   <pubDate>Wed, 13 Jul 2022 00:00:00 +0100</pubDate>
 </item>
 <item>

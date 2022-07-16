@@ -1,6 +1,59 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-16 Sat] A lifehack for your shell
+:PROPERTIES:
+:CUSTOM_ID: a-lifehack-for-your-shell
+:END:
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/a-lifehack-for-your-shell/unzip_x2.gif]]
+
+I'm a fan of the [[http://infozip.sourceforge.net/mans/unzip.html][unzip]] command line utility that ships with macOS. I give it a .zip file and it unzips it for me. No flags or arguments to remember (for my typical usages anyway). Most importantly, I've fully internalized the =unzip= command into muscle memory, probably because of its /perfect mnemonic/.
+
+But then there's .tar, .tar.gz, .tar.xz, .rar, and a whole world of compression archives, often requiring different tools, flags, etc. and I need to remember those too.
+
+Can't remember where I got this "life hack" from, but it suggests something along the lines of...
+
+#+begin_center
+  /Once you find a lost item at home, place it in the first spot you looked./
+#+end_center
+
+Great, next time I'll actually find things... *but quickly*!
+
+Now, I still remember a couple of unarchiving commands from memory (looking at you =tar xvzf=), but I've noticed the first word that pops into mind when extracting is always =unzip=.
+
+There's the great [[https://www.nongnu.org/atool/][atool]] wrapper out there to extract all kinds of archives (would love to hear of others), but unlucky for me, its name never comes to mind as quickly as =unzip= does.
+
+With "life hack" in mind, let's just create an =unzip= [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]] alias to =atool=. Next time I need to unarchive anything, the first word that comes to mind (unzip!) will quickly get me on my way...
+
+#+begin_src sh
+  alias unzip 'atool --extract --explain $1'
+#+end_src
+
+Or if you prefer to add to your Emacs config:
+
+#+begin_src emacs-lisp :lexical no
+  (eshell/alias "unzip" "atool --extract --explain $1")
+#+end_src
+
+While [[https://xenodium.com/yasnippet-in-emacs-eshell/][I'm fan of Emacs eshell]], it's not be everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
+
+** Bonus
+
+Since I'm a keen on using "unzip" mnemonic everywhere in Emacs (not just my shell), I now have a [[https://xenodium.com/emacs-dwim-shell-command/][DWIM shell-command]] for it:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-unzip ()
+    "Unzip all marked archives (of any kind) using `atool'."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Unzip" "atool --extract --explain '<<f>>'"
+     :utils "atool"))
+#+end_src
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/a-lifehack-for-your-shell/unzip-dired_x1.5.gif]]
+
 * [2022-07-13 Wed] Emacs zones to lift you up
 :PROPERTIES:
 :CUSTOM_ID: emacs-zones-to-lift-you-up
