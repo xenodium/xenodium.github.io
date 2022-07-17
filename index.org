@@ -18,7 +18,7 @@ Can't remember where I got this "life hack" from, but it suggests something alon
   /Once you find a lost item at home, place it in the first spot you looked./
 #+end_center
 
-Great, next time I'll actually find things... *but quickly*!
+Great, I'll find things quickly. Win.
 
 Now, I still remember a couple of unarchiving commands from memory (looking at you =tar xvzf=), but I've noticed the first word that pops into mind when extracting is always =unzip=.
 
@@ -36,7 +36,7 @@ Or if you prefer to add to your Emacs config:
   (eshell/alias "unzip" "atool --extract --explain $1")
 #+end_src
 
-While [[https://xenodium.com/yasnippet-in-emacs-eshell/][I'm fan of Emacs eshell]], it's not be everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
+While [[https://xenodium.com/yasnippet-in-emacs-eshell/][I'm fan of Emacs eshell]], it's not everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
 
 ** Bonus
 
@@ -53,6 +53,33 @@ Since I'm a keen on using "unzip" mnemonic everywhere in Emacs (not just my shel
 
 #+ATTR_HTML: :width 70% :height 70%
 [[file:images/a-lifehack-for-your-shell/unzip-dired_x1.5.gif]]
+
+** UPDATE:
+[[https://lobste.rs/][Lobste.rs]] has great [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell][comments]]. Thanks all:
+
+*** Aliases missing on remote machines
+
+Concerns about aliases [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_mqxo73][not available on remote machines]]. Valid. Certainly brings challenges if you can't modify the environment on the remote machine. The severity would depend on how frequently you have to do this. Fortunately for me, it's infrequent.
+
+*** Unzip keyword is overloaded
+
+The alias is [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_78nnwt][overloading the unzip command]]. I know. It's a little naughty. Going with it for now. I used to use "extract" (also in comments), which I still like but somehow "unzip" still wins my memory race. [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_73bzze][There's also "x"]] (nice option), which seems to originate from [[https://github.com/sorin-ionescu/prezto][prezto]]. I could consider unzipp, unzip1, or some other variation.
+
+*** Pause before extracting archives
+
+Valid [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_73bzze][point]]. In my case, the pause typically happens /before/ I invoke the alias.
+
+*** Littering
+
+If the archive didn't have a root dir, it can [[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_7fsart][litter your current directory]]. Indeed a pain to clean up. For this, we can atool's =--subdir= param to /always create subdirectory when extracting/.
+
+*** Alias to retrain
+
+[[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_yr1jby][Neat trick]]: =alias unzip = “echo ‘use atool’”= to help retrain yourself. Reminds me of Emacs [[https://github.com/bbatsov/guru-mode][guru-mode]].
+
+*** atool alternatives
+
+Nice to see other options suggested [[https://github.com/moonpyk/dtrx][dtrx]] ([[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_mutdjl][comment]]), [[https://github.com/mholt/archiver][archiver]] ([[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_nlsk7w][comment]]), [[https://github.com/ashang/unar][unar]] ([[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_90dk1l][comment]]), bsdtar from [[https://github.com/libarchive/libarchive][libarchive]] ([[https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_ojy6ah][comment]]).
 
 * [2022-07-13 Wed] Emacs zones to lift you up
 :PROPERTIES:
