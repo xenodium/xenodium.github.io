@@ -1,6 +1,45 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-24 Sun] dwim-shell-command on Melpa
+:PROPERTIES:
+:CUSTOM_ID: dwim-shell-command-on-melpa
+:END:
+#+ATTR_HTML: :width 70% :height 70%
+#+CAPTION: =<<cb>>= gets replaced by a clipboard (kill ring) URL
+[[file:images/dwim-shell-command-on-melpa/clone.webp]]
+
+My pull request to add [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] to [[https://melpa.org/][melpa]] has been [[https://github.com/melpa/melpa/pull/8129][merged]]. Soon, you'll be able to install directly from Milkypostman’s Emacs Lisp Package Archive.
+
+=dwim-shell-command= is another way to invoke shell commands from our beloved editor. Why a different way? It does lots of little things for you, removing friction you didn't realise you had. You can check out the [[https://github.com/xenodium/dwim-shell-command][README]], but you'll appreciate it much more once you try it out.
+
+In addition, it's enabled me to bring lots of command-line tools into my Emacs config and make them highly accessible. You can see my usages over at [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command-commands.el][dwim-shell-command-commands.el]].
+
+What kind of command-line tools? ffmpeg, convert, gifsycle, atool, qdpf, plutil, qrencode, du, sips, iconutil, and git (so far anyway). Below is a simple example, but would love to [[https://twitter.com/xenodium][hear]] how you get to use it.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-audio-to-mp3 ()
+    "Convert all marked audio to mp3(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert to mp3"
+     "ffmpeg -stats -n -i '<<f>>' -acodec libmp3lame '<<fne>>.mp3'"
+     :utils "ffmpeg"))
+#+end_src
+
+I've written about =dwim-shell-command= before:
+
+- [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][Emacs: DWIM shell command (multi-language)]]
+- [[https://xenodium.com/png-to-icns-emacs-dwim-style/][png to icns (Emacs DWIM style)]]
+- [[https://xenodium.com/emacs-password-protect-current-pdf-revisited/][Emacs: Password-protect current pdf (revisited)]]
+- [[https://xenodium.com/emacs-dwim-shell-command/][Emacs DWIM shell-command]]
+
+[[https://irreal.org/blog/][Irreal]]'s also covered it:
+
+- [[https://irreal.org/blog/?p=10674][DWIM Shell Now Supports Multiple Languages]]
+- [[https://irreal.org/blog/?p=10653][DWIM Shell Commands]]
+- [[https://irreal.org/blog/?p=10660  ][More Examples of DWIM Shell Commands]]
+
 * [2022-07-16 Sat] A lifehack for your shell
 :PROPERTIES:
 :CUSTOM_ID: a-lifehack-for-your-shell
