@@ -1,6 +1,69 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-07-27 Wed] dwim-shell-command improvements
+:PROPERTIES:
+:CUSTOM_ID: dwim-shell-command-improvements
+:END:
+Added a few improvements to [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]].
+
+** Dired region
+In DWIM style, if you happen to have a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] region selected, use region files instead (no need to explicitly mark them).
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/dwim-shell-command-improvements/backup_x2.webp]]
+
+** Clipboard (kill-ring) replacement
+
+Use =<<cb>>= to substitute with clipboard content. This is handy for cloning git repos, using a URL copied from your browser.
+
+#+begin_src sh
+  git clone <<cb>>
+#+end_src
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/dwim-shell-command-improvements/clone.webp]]
+
+** Counter replacement
+
+Use =<<n>>= to substitute with a counter. You can also use =<<3n>>= to start the counter at 3.
+
+Handy if you'd like to consistently rename or copy files.
+
+#+begin_src sh
+  mv '<<f>>' 'image(<<n>>).png'
+#+end_src
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/dwim-shell-command-improvements/numberedsorted_x2.2.webp]]
+
+Can also use an alphabetic counter with =<<an>>=. Like the numeric version, can use any letter to start the counter with.
+
+#+begin_src sh
+mv '<<f>>' 'image(<<an>>).png'
+#+end_src
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/dwim-shell-command-improvements/alphacount_x2.2.webp]]
+
+** Optional error prompt
+
+Set =dwim-shell-command-prompt-on-error= to nil to skip error prompt. Go straight to process buffer.
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/dwim-shell-command-improvements/couldnt.png]]
+
+** Configurable prompt
+
+By default, =dwim-shell-command= shows all supported placeholders. You can change the prompt to something shorter if preferred using =dwim-shell-command-prompt=.
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/dwim-shell-command-improvements/prompt.jpg]]
+
+** ⚠️ Use with care ⚠️
+
+The changes are pretty fresh. Please use with caution (specially the counter support).
+
 * [2022-07-24 Sun] dwim-shell-command on Melpa
 :PROPERTIES:
 :CUSTOM_ID: dwim-shell-command-on-melpa
