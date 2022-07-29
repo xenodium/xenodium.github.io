@@ -8,7 +8,7 @@
 Added a few improvements to [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]].
 
 ** Dired region
-In DWIM style, if you happen to have a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] region selected, use region files instead (no need to explicitly mark them).
+In DWIM style, if you happen to have a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] region selected, use region files instead. There's no need to explicitly mark them.
 
 #+ATTR_HTML: :width 70% :height 70%
 [[file:images/dwim-shell-command-improvements/backup_x2.webp]]
@@ -23,6 +23,18 @@ Use =<<cb>>= to substitute with clipboard content. This is handy for cloning git
 
 #+ATTR_HTML: :width 70% :height 70%
 [[file:images/dwim-shell-command-improvements/clone.webp]]
+
+This illustrates =<<cb>>= usage, but you may want to use =dwim-shell-commands-git-clone-clipboard-url= from [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]] instead. It does the same thing internally, but makes the command more accessible.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-git-clone-clipboard-url ()
+    "Clone git URL in clipboard to `default-directory'."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     (format "Clone %s" (file-name-base (current-kill 0)))
+     "git clone <<cb>>"
+     :utils "git"))
+#+end_src
 
 ** Counter replacement
 
@@ -48,14 +60,14 @@ mv '<<f>>' 'image(<<an>>).png'
 
 ** Optional error prompt
 
-Set =dwim-shell-command-prompt-on-error= to nil to skip error prompt. Go straight to process buffer.
+Set =dwim-shell-command-prompt-on-error= to nil to skip error prompts. Focus process buffers automatically instead.
 
 #+ATTR_HTML: :width 70% :height 70%
 [[file:images/dwim-shell-command-improvements/couldnt.png]]
 
 ** Configurable prompt
 
-By default, =dwim-shell-command= shows all supported placeholders. You can change the prompt to something shorter if preferred using =dwim-shell-command-prompt=.
+By default, =dwim-shell-command= shows all supported placeholders. You can change that prompt to something shorter using =dwim-shell-command-prompt=.
 
 #+ATTR_HTML: :width 90% :height 90%
 [[file:images/dwim-shell-command-improvements/prompt.jpg]]

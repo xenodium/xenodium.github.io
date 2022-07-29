@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 29 Jul 2022 07:04:40 +0100</lastBuildDate>
+<lastBuildDate>Fri, 29 Jul 2022 07:34:57 +0100</lastBuildDate>
 <item>
   <title>dwim-shell-command improvements</title>
   <description><![CDATA[<div id="content" class="content">
@@ -19,23 +19,23 @@ Added a few improvements to  <a href="https://github.com/xenodium/dwim-shell-com
 </p>
 </div>
 
- <div id="outline-container-orga130caf" class="outline-3">
- <h3 id="orga130caf">Dired region</h3>
- <div class="outline-text-3" id="text-orga130caf">
+ <div id="outline-container-orgbfa373c" class="outline-3">
+ <h3 id="orgbfa373c">Dired region</h3>
+ <div class="outline-text-3" id="text-orgbfa373c">
  <p>
-In DWIM style, if you happen to have a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> region selected, use region files instead (no need to explicitly mark them).
+In DWIM style, if you happen to have a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> region selected, use region files instead. There's no need to explicitly mark them.
 </p>
 
 
- <div id="orga7960d6" class="figure">
+ <div id="org1d18ffd" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/backup_x2.webp" alt="backup_x2.webp" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org2a9f9b0" class="outline-3">
- <h3 id="org2a9f9b0">Clipboard (kill-ring) replacement</h3>
- <div class="outline-text-3" id="text-org2a9f9b0">
+ <div id="outline-container-org66251c0" class="outline-3">
+ <h3 id="org66251c0">Clipboard (kill-ring) replacement</h3>
+ <div class="outline-text-3" id="text-org66251c0">
  <p>
 Use  <code><<cb>></code> to substitute with clipboard content. This is handy for cloning git repos, using a URL copied from your browser.
 </p>
@@ -46,15 +46,30 @@ Use  <code><<cb>></code> to substitute with clipboard content. This is handy for
 </div>
 
 
- <div id="org5b3c751" class="figure">
+ <div id="org45f08f5" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/clone.webp" alt="clone.webp" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+This illustrates  <code><<cb>></code> usage, but you may want to use  <code>dwim-shell-commands-git-clone-clipboard-url</code> from  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a> instead. It does the same thing internally, but makes the command more accessible.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-git-clone-clipboard-url</span> ()
+   <span style="color: #183691;">"Clone git URL in clipboard to `</span> <span style="color: #0086b3;">default-directory</span> <span style="color: #183691;">'."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+   (format  <span style="color: #183691;">"Clone %s"</span> (file-name-base (current-kill 0)))
+    <span style="color: #183691;">"git clone <<cb>>"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"git"</span>))
+</pre>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org5a68048" class="outline-3">
- <h3 id="org5a68048">Counter replacement</h3>
- <div class="outline-text-3" id="text-org5a68048">
+ <div id="outline-container-org17df6ef" class="outline-3">
+ <h3 id="org17df6ef">Counter replacement</h3>
+ <div class="outline-text-3" id="text-org17df6ef">
  <p>
 Use  <code><<n>></code> to substitute with a counter. You can also use  <code><<3n>></code> to start the counter at 3.
 </p>
@@ -69,7 +84,7 @@ Handy if you'd like to consistently rename or copy files.
 </div>
 
 
- <div id="org279a62c" class="figure">
+ <div id="org415a489" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/numberedsorted_x2.2.webp" alt="numberedsorted_x2.2.webp" width="70%" height="70%"></img></p>
 </div>
 
@@ -83,43 +98,43 @@ Can also use an alphabetic counter with  <code><<an>></code>. Like the numeric v
 </div>
 
 
- <div id="org363ec6d" class="figure">
+ <div id="orgb3a2809" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/alphacount_x2.2.webp" alt="alphacount_x2.2.webp" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-orgba25139" class="outline-3">
- <h3 id="orgba25139">Optional error prompt</h3>
- <div class="outline-text-3" id="text-orgba25139">
+ <div id="outline-container-org482f17f" class="outline-3">
+ <h3 id="org482f17f">Optional error prompt</h3>
+ <div class="outline-text-3" id="text-org482f17f">
  <p>
-Set  <code>dwim-shell-command-prompt-on-error</code> to nil to skip error prompt. Go straight to process buffer.
+Set  <code>dwim-shell-command-prompt-on-error</code> to nil to skip error prompts. Focus process buffers automatically instead.
 </p>
 
 
- <div id="orgeb61725" class="figure">
+ <div id="org96ecdb7" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/couldnt.png" alt="couldnt.png" width="70%" height="70%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org376b633" class="outline-3">
- <h3 id="org376b633">Configurable prompt</h3>
- <div class="outline-text-3" id="text-org376b633">
+ <div id="outline-container-orga6bdb3a" class="outline-3">
+ <h3 id="orga6bdb3a">Configurable prompt</h3>
+ <div class="outline-text-3" id="text-orga6bdb3a">
  <p>
-By default,  <code>dwim-shell-command</code> shows all supported placeholders. You can change the prompt to something shorter if preferred using  <code>dwim-shell-command-prompt</code>.
+By default,  <code>dwim-shell-command</code> shows all supported placeholders. You can change that prompt to something shorter using  <code>dwim-shell-command-prompt</code>.
 </p>
 
 
- <div id="org9e6e4fa" class="figure">
+ <div id="org2129570" class="figure">
  <p> <img src="../images/dwim-shell-command-improvements/prompt.jpg" alt="prompt.jpg" width="90%" height="90%"></img></p>
 </div>
 </div>
 </div>
 
- <div id="outline-container-org804c4ac" class="outline-3">
- <h3 id="org804c4ac">⚠️ Use with care ⚠️</h3>
- <div class="outline-text-3" id="text-org804c4ac">
+ <div id="outline-container-org0823659" class="outline-3">
+ <h3 id="org0823659">⚠️ Use with care ⚠️</h3>
+ <div class="outline-text-3" id="text-org0823659">
  <p>
 The changes are pretty fresh. Please use with caution (specially the counter support).
 </p>
