@@ -6,7 +6,168 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 29 Jul 2022 08:22:53 +0100</lastBuildDate>
+<lastBuildDate>Sat, 30 Jul 2022 10:58:52 +0100</lastBuildDate>
+<item>
+  <title>An accentuated Emacs experiment (à la macOS)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-an-accentuated-emacs-experiment" class="outline-2">
+ <h2 id="an-accentuated-emacs-experiment"> <span class="timestamp-wrapper"> <span class="timestamp">30 July 2022</span></span> An accentuated Emacs experiment (à la macOS)</h2>
+ <div class="outline-text-2" id="text-an-accentuated-emacs-experiment">
+ <p>
+macOS has a wonderful input mechanism where you press and hold a key on your keyboard to display the accent menu. It's easy to internalize:  <i>long press "a" if you want to input "á"</i>.
+</p>
+
+
+ <div id="org594f08b" class="figure">
+ <p> <img src="../images/an-accentuated-emacs-experiment/macosaccent.webp" alt="macosaccent.webp" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+On Emacs,  <i>C-x 8 ' a</i> would be the equivalent, but it just didn't stick for me. Fortunately, there's an alternative, using dead keys. Mickey Petersen gives a  <a href="https://www.masteringemacs.org/article/diacritics-in-emacs">wonderful introduction</a>. Having said all this, I still longed for macOS's input mechanism.
+</p>
+
+ <p>
+Thanks to Christian Tietze's  <a href="https://twitter.com/ctietze/status/1552446492559958017">post</a>, I discovered the  <a href="https://github.com/elias94/accent">accent</a> package. While it doesn't handle  <i>press-and-hold</i>, it does the heavy lifting of offering a menu with character options. If I could just bring that  <i>press-and-hold</i>…
+</p>
+
+ <p>
+My initial attempt was to use  <a href="https://github.com/emacsorphanage/key-chord">key chords</a> (via  <a href="https://github.com/jwiegley/use-package">use-package</a>):
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">accent</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:chords</span> ((<span style="color: #183691;">"aa"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"ee"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"ii"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"oo"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"uu"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"AA"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"EE"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"II"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"OO"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"UU"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"nn"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"NN"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"??"</span> . ar/spanish-accent-menu)
+           (<span style="color: #183691;">"!!"</span> . ar/spanish-accent-menu))
+   <span style="color: #a71d5d;">:config</span>
+  (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/spanish-accent-menu</span> ()
+    (<span style="color: #a71d5d;">interactive</span>)
+    (<span style="color: #a71d5d;">let</span> ((accent-diacritics
+           '((a (á))
+             (e (é))
+             (i (í))
+             (o (ó))
+             (u (ú ü))
+             (A (Á))
+             (E (É))
+             (I (Í))
+             (O (Ó))
+             (U (Ú Ü))
+             (n (ñ))
+             (N (Ñ))
+             (\? (¿))
+             (! (¡)))))
+      (<span style="color: #a71d5d;">ignore-error</span> quit
+        (accent-menu)))))
+</pre>
+</div>
+
+ <p>
+While it kinda works, "nn" quickly got in the way of my n/p  <a href="https://magit.vc/">magit</a> navigation. Perhaps key chords are still an option for someone who doesn't need the "nn" chord, but being a Spanish speaker, I need that "ñ" from long "n" presses!
+</p>
+
+ <p>
+I'm now trying a little experiment using an  <code>after-change-functions</code> hook to monitor text input and present the accent menu. I'm sure there's a better way (anyone with ideas?). For now, it gives me something akin to  <i>press-and-hold.</i>
+</p>
+
+
+ <div id="orgce38f7d" class="figure">
+ <p> <img src="../images/an-accentuated-emacs-experiment/accentuated.webp" alt="accentuated.webp" width="80%" height="80%"></img></p>
+</div>
+
+ <p>
+I'm wrapping the hook with a minor mode to easily enable/disable whenever needed. I'm also overriding  <code>accent-diacritics</code> to only include the characters I typically need.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">accent</span>
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:hook</span> ((text-mode . accent-menu-mode)
+         (org-mode . accent-menu-mode)
+         (message-mode . accent-menu-mode))
+   <span style="color: #a71d5d;">:config</span>
+  (<span style="color: #a71d5d;">setq</span> accent-diacritics '((a (á))
+                            (e (é))
+                            (i (í))
+                            (o (ó))
+                            (u (ú ü))
+                            (A (Á))
+                            (E (É))
+                            (I (Í))
+                            (O (Ó))
+                            (U (Ú Ü))
+                            (n (ñ))
+                            (N (Ñ))
+                            (\? (¿))
+                            (! (¡))))
+  (<span style="color: #a71d5d;">defvar</span>  <span style="color: #333333;">accent-menu-monitor--last-edit-time</span> nil)
+
+  (<span style="color: #a71d5d;">define-minor-mode</span>  <span style="color: #795da3;">accent-menu-mode</span>
+     <span style="color: #183691;">"Toggle `</span> <span style="color: #0086b3;">accent-menu</span> <span style="color: #183691;">' if repeated keys are detected."</span>
+     <span style="color: #a71d5d;">:lighter</span>  <span style="color: #183691;">" accent-menu mode"</span>
+    (<span style="color: #a71d5d;">if</span> accent-menu-mode
+        (<span style="color: #a71d5d;">progn</span>
+          (remove-hook 'after-change-functions #'accent-menu-monitor--text-change t)
+          (add-hook 'after-change-functions #'accent-menu-monitor--text-change 0 t))
+      (remove-hook 'after-change-functions #'accent-menu-monitor--text-change t)))
+
+  (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">accent-menu-monitor--text-change</span> (beginning end length)
+     <span style="color: #183691;">"Monitors text change BEGINNING, END, and LENGTH."</span>
+    (<span style="color: #a71d5d;">let</span> ((last-edit-time accent-menu-monitor--last-edit-time)
+          (edit-time (float-time)))
+      (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (> end beginning)
+                 (eq length 0)
+                 last-edit-time
+                  <span style="color: #969896;">;; </span> <span style="color: #969896;">0.27 seems to work for my macOS keyboard settings.</span>
+                  <span style="color: #969896;">;; </span> <span style="color: #969896;">Key Repeat: Fast | Delay Until Repeat: Short.</span>
+                 (< (- edit-time last-edit-time) 0.27)
+                 (float-time (time-subtract (current-time) edit-time))
+                 (accent-menu-monitor--buffer-char-string (1- beginning))
+                 (seq-contains-p (mapcar (<span style="color: #a71d5d;">lambda</span> (item)
+                                           (symbol-name (car item)))
+                                         accent-diacritics)
+                                 (accent-menu-monitor--buffer-char-string beginning))
+                 (string-equal (accent-menu-monitor--buffer-char-string (1- beginning))
+                               (accent-menu-monitor--buffer-char-string beginning)))
+        (delete-backward-char 1)
+        (<span style="color: #a71d5d;">ignore-error</span> quit
+          (accent-menu)))
+      (<span style="color: #a71d5d;">setq</span> accent-menu-monitor--last-edit-time edit-time)))
+
+  (<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">accent-menu-monitor--buffer-char-string</span> (at)
+    (<span style="color: #a71d5d;">when</span> (> at 0)
+      (buffer-substring-no-properties at (+ at 1)))))
+</pre>
+</div>
+
+ <p>
+As a bonus, it ocurred to me that I could use the same  <i>press-and-hold</i> to handle question marks in Spanish (from my UK keyboard).
+</p>
+
+
+ <div id="org0f1bff4" class="figure">
+ <p> <img src="../images/an-accentuated-emacs-experiment/porque.webp" alt="porque.webp" width="40%" height="40%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/an-accentuated-emacs-experiment</link>
+  <guid isPermaLink="false">http://xenodium.com/an-accentuated-emacs-experiment</guid>
+  <pubDate>Sat, 30 Jul 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>dwim-shell-command improvements</title>
   <description><![CDATA[<div id="content" class="content">
