@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-08-01 Mon] dwim-shell-command video streams
+:PROPERTIES:
+:CUSTOM_ID: dwim-shell-command-video-streams
+:END:
+
+I continue hunting for use-cases I can migrate to [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]... After adding [[https://xenodium.com/dwim-shell-command-improvements/][clipboard support]] (via <<cb>>) I found one more.
+
+1. Copy URL from browser.
+2. Invoke =dwim-shell-commands-mpv-stream-clipboard-url=.
+3. Enjoy picture in picture from Emacs ;)
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/dwim-shell-command-video-streams/mpv.webp]]
+
+What's the secret sauce? Very little. Invoke the awesome [[https://mpv.io/][mpv]] with a wrapping function using =dwim-shell-command-on-marked-files=.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-mpv-stream-clipboard-url ()
+    "Stream clipboard URL using mpv."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Streaming"
+     "mpv --geometry=30%x30%+100%+0% \"<<cb>>\""
+     :utils "mpv"
+     :no-progress t
+     :error-autofocus t
+     :silent-success t))
+#+end_src
+
+The typical progress bar kinda got in the way, so I added a new option =:no-progress= to =dwim-shell-command-on-marked-files=, so it can be used for cases like this one.
+
 * [2022-07-30 Sat] An accentuated Emacs experiment (à la macOS)
 :PROPERTIES:
 :CUSTOM_ID: an-accentuated-emacs-experiment

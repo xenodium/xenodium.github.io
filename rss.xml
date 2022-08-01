@@ -6,7 +6,53 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 30 Jul 2022 20:01:12 +0100</lastBuildDate>
+<lastBuildDate>Mon, 01 Aug 2022 22:39:28 +0100</lastBuildDate>
+<item>
+  <title>dwim-shell-command video streams</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-dwim-shell-command-video-streams" class="outline-2">
+ <h2 id="dwim-shell-command-video-streams"> <span class="timestamp-wrapper"> <span class="timestamp">01 August 2022</span></span> dwim-shell-command video streams</h2>
+ <div class="outline-text-2" id="text-dwim-shell-command-video-streams">
+ <p>
+I continue hunting for use-cases I can migrate to  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>… After adding  <a href="https://xenodium.com/dwim-shell-command-improvements/">clipboard support</a> (via  <a id="orgceb34c6"></a>) I found one more.
+</p>
+
+ <ol class="org-ol"> <li>Copy URL from browser.</li>
+ <li>Invoke  <code>dwim-shell-commands-mpv-stream-clipboard-url</code>.</li>
+ <li>Enjoy picture in picture from Emacs ;)</li>
+</ol> <div id="orgd61850d" class="figure">
+ <p> <img src="../images/dwim-shell-command-video-streams/mpv.webp" alt="mpv.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+What's the secret sauce? Very little. Invoke the awesome  <a href="https://mpv.io/">mpv</a> with a wrapping function using  <code>dwim-shell-command-on-marked-files</code>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-mpv-stream-clipboard-url</span> ()
+   <span style="color: #183691;">"Stream clipboard URL using mpv."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Streaming"</span>
+    <span style="color: #183691;">"mpv --geometry=30%x30%+100%+0% \"<<cb>>\""</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"mpv"</span>
+    <span style="color: #a71d5d;">:no-progress</span> t
+    <span style="color: #a71d5d;">:error-autofocus</span> t
+    <span style="color: #a71d5d;">:silent-success</span> t))
+</pre>
+</div>
+
+ <p>
+The typical progress bar kinda got in the way, so I added a new option  <code>:no-progress</code> to  <code>dwim-shell-command-on-marked-files</code>, so it can be used for cases like this one.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/dwim-shell-command-video-streams</link>
+  <guid isPermaLink="false">http://xenodium.com/dwim-shell-command-video-streams</guid>
+  <pubDate>Mon, 01 Aug 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>An accentuated Emacs experiment (à la macOS)</title>
   <description><![CDATA[<div id="content" class="content">
