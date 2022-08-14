@@ -6,7 +6,130 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 04 Aug 2022 07:20:49 +0100</lastBuildDate>
+<lastBuildDate>Sun, 14 Aug 2022 13:11:46 +0100</lastBuildDate>
+<item>
+  <title>Seamless command-line utils</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-seamless-command-line-utils" class="outline-2">
+ <h2 id="seamless-command-line-utils"> <span class="timestamp-wrapper"> <span class="timestamp">14 August 2022</span></span> Seamless command-line utils</h2>
+ <div class="outline-text-2" id="text-seamless-command-line-utils">
+ <p>
+Just the other day, I received a restaurant menu split into a handful of image files. I wanted to forward the menu to others but figured I should probably send it as a single file.
+</p>
+
+ <p>
+ImageMagick's  <a href="https://imagemagick.org/script/convert.php">convert</a> command-line utility works great for this purpose. Feed it some images and it creates a pdf for you:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">convert image1.png image2.png image3.png combined.pdf
+</pre>
+</div>
+
+ <p>
+Using  <code>convert</code> for this purpose was pretty straightforward. I'm sure I'll use it again in a similar context, but what if I can make future usage more seamless? In the past, I would just make a note of it and revisit when needed. Though this works well enough, it often requires a some amount of manual work (looking things up, tweaking command, etc) if you don't remember the command syntax.
+</p>
+
+ <p>
+I wanted common one-liners (or  <a href="https://xenodium.com/png-to-icns-emacs-dwim-style/">longer shell scripts</a>) to be easily reusable and accessible from Emacs. Turns out, the  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> experiment is working fairly well for this purpose. In addition to providing template expansion, it generally  <a href="https://xenodium.com/emacs-dwim-shell-command/">tries to do what I mean</a>.
+</p>
+
+ <p>
+Here's how I saved the  <code>convert</code> command instance for future usage:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-join-as-pdf</span> ()
+   <span style="color: #183691;">"Join all marked images as a single pdf."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Join as pdf"</span>
+    <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">' '<<joined.pdf(u)>>'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+
+ <p>
+From now on, any time I'd like to join multiple files into a pdf, I can now select them all and invoke  <code>dwim-shell-commands-join-as-pdf</code>.
+</p>
+
+
+ <div id="org7b58667" class="figure">
+ <p> <img src="../images/seamless-command-line-utils/joined_minimal_x1.2.webp" alt="joined_minimal_x1.2.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+In the saved command,  <code>'<<*>>'</code> expands to either  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> selected files or whatever file happens to be open in the current buffer. The buffer file isn't of much help for joining multiple items, but can be handy for other instances (say I want to convert current image to jpeg).
+</p>
+
+ <p>
+Moving on to  <code>'<<joined.pdf(u)>>'</code>, we could have just written as  <code>joined.pdf</code>, but wrapping it ensures the resulting file name is unique. That is, if  <code>joined.pdf</code> already exists, write  <code>joined(1).pdf</code> instead.
+</p>
+
+ <p>
+These kinds of command-line integrations are working well for me. Take the webp animation above, it was created by invoking  <code>dwim-shell-commands-video-to-webp</code> on a  <code>.mov</code> file. Easy peasy. While I can easily memorize the  <code>convert</code> command for the pdf instance, I'm hopeless in the webp scenario:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">ffmpeg -i  <span style="color: #183691;">'<<f>>'</span> -vcodec libwebp -filter:v  <span style="color: #333333;">fps</span>= <span style="color: #333333;">fps</span>=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0  <span style="color: #183691;">'<<fne>>'</span>.webp
+</pre>
+</div>
+
+ <p>
+While searching through command line history helps to quickly re-spin previous commands, it requires remembering the actual utility used for any particular action. On the other hand, wrapping with Emacs functions enables me to remember the action itself, using more memorable names. Also, fuzzy searching works a treat.
+</p>
+
+
+ <div id="org4ffca40" class="figure">
+ <p> <img src="../images/seamless-command-line-utils/fuzzy.png" alt="fuzzy.png" width="70%" height="70%"></img></p>
+</div>
+
+ <p>
+It's been roughly a month since I started playing around with this idea of wrapping command-line utilities more seamlessly. Since then, I've brought in a bunch of use-cases that are now quickly accessible (all in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>):
+</p>
+
+ <ul class="org-ul"> <li>dwim-shell-commands-audio-to-mp3</li>
+ <li>dwim-shell-commands-bin-plist-to-xml</li>
+ <li>dwim-shell-commands-clipboard-to-qr</li>
+ <li>dwim-shell-commands-docx-to-pdf</li>
+ <li>dwim-shell-commands-download-clipboard-url</li>
+ <li>dwim-shell-commands-drop-video-audio</li>
+ <li>dwim-shell-commands-epub-to-org</li>
+ <li>dwim-shell-commands-files-combined-size</li>
+ <li>dwim-shell-commands-git-clone-clipboard-url</li>
+ <li>dwim-shell-commands-git-clone-clipboard-url-to-downloads</li>
+ <li>dwim-shell-commands-image-to-grayscale</li>
+ <li>dwim-shell-commands-image-to-icns</li>
+ <li>dwim-shell-commands-image-to-jpg</li>
+ <li>dwim-shell-commands-image-to-png</li>
+ <li>dwim-shell-commands-install-iphone-device-ipa</li>
+ <li>dwim-shell-commands-join-as-pdf</li>
+ <li>dwim-shell-commands-macos-hardware-overview</li>
+ <li>dwim-shell-commands-macos-toggle-display-rotation</li>
+ <li>dwim-shell-commands-mpv-stream-clipboard-url</li>
+ <li>dwim-shell-commands-pdf-password-protect</li>
+ <li>dwim-shell-commands-ping-google</li>
+ <li>dwim-shell-commands-reorient-image</li>
+ <li>dwim-shell-commands-resize-gif</li>
+ <li>dwim-shell-commands-resize-image</li>
+ <li>dwim-shell-commands-resize-video</li>
+ <li>dwim-shell-commands-speed-up-gif</li>
+ <li>dwim-shell-commands-speed-up-video</li>
+ <li>dwim-shell-commands-unzip</li>
+ <li>dwim-shell-commands-video-to-gif</li>
+ <li>dwim-shell-commands-video-to-optimized-gif</li>
+ <li>dwim-shell-commands-video-to-webp</li>
+</ul> <p>
+What other use-cases would you consider?  <code>dwim-shell-command</code> is  <a href="https://melpa.org/#/dwim-shell-command">available on melpa</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/seamless-command-line-utils</link>
+  <guid isPermaLink="false">http://xenodium.com/seamless-command-line-utils</guid>
+  <pubDate>Sun, 14 Aug 2022 13:11:46 +0100</pubDate>
+</item>
 <item>
   <title>Emacs freebie: macOS emoji picker</title>
   <description><![CDATA[<div id="content" class="content">

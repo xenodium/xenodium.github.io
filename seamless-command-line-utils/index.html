@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-08-14 Sun 13:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Seamless command-line utils</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-seamless-command-line-utils" class="outline-2">
+<h2 id="seamless-command-line-utils"><span class="timestamp-wrapper"><span class="timestamp">14 August 2022</span></span> Seamless command-line utils</h2>
+<div class="outline-text-2" id="text-seamless-command-line-utils">
+<p>
+Just the other day, I received a restaurant menu split into a handful of image files. I wanted to forward the menu to others but figured I should probably send it as a single file.
+</p>
+
+<p>
+ImageMagick's <a href="https://imagemagick.org/script/convert.php">convert</a> command-line utility works great for this purpose. Feed it some images and it creates a pdf for you:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">convert image1.png image2.png image3.png combined.pdf
+</pre>
+</div>
+
+<p>
+Using <code>convert</code> for this purpose was pretty straightforward. I'm sure I'll use it again in a similar context, but what if I can make future usage more seamless? In the past, I would just make a note of it and revisit when needed. Though this works well enough, it often requires a some amount of manual work (looking things up, tweaking command, etc) if you don't remember the command syntax.
+</p>
+
+<p>
+I wanted common one-liners (or <a href="https://xenodium.com/png-to-icns-emacs-dwim-style/">longer shell scripts</a>) to be easily reusable and accessible from Emacs. Turns out, the <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> experiment is working fairly well for this purpose. In addition to providing template expansion, it generally <a href="https://xenodium.com/emacs-dwim-shell-command/">tries to do what I mean</a>.
+</p>
+
+<p>
+Here's how I saved the <code>convert</code> command instance for future usage:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-join-as-pdf</span> ()
+  <span style="color: #183691;">"Join all marked images as a single pdf."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+   <span style="color: #183691;">"Join as pdf"</span>
+   <span style="color: #183691;">"convert -verbose '</span><span style="color: #0086b3;">&lt;&lt;*&gt;&gt;</span><span style="color: #183691;">' '&lt;&lt;joined.pdf(u)&gt;&gt;'"</span>
+   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+
+<p>
+From now on, any time I'd like to join multiple files into a pdf, I can now select them all and invoke <code>dwim-shell-commands-join-as-pdf</code>.
+</p>
+
+
+<div id="org7b58667" class="figure">
+<p><img src="../images/seamless-command-line-utils/joined_minimal_x1.2.webp" alt="joined_minimal_x1.2.webp" width="90%" height="90%" />
+</p>
+</div>
+
+<p>
+In the saved command, <code>'&lt;&lt;*&gt;&gt;'</code> expands to either <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> selected files or whatever file happens to be open in the current buffer. The buffer file isn't of much help for joining multiple items, but can be handy for other instances (say I want to convert current image to jpeg).
+</p>
+
+<p>
+Moving on to <code>'&lt;&lt;joined.pdf(u)&gt;&gt;'</code>, we could have just written as <code>joined.pdf</code>, but wrapping it ensures the resulting file name is unique. That is, if <code>joined.pdf</code> already exists, write <code>joined(1).pdf</code> instead.
+</p>
+
+<p>
+These kinds of command-line integrations are working well for me. Take the webp animation above, it was created by invoking <code>dwim-shell-commands-video-to-webp</code> on a <code>.mov</code> file. Easy peasy. While I can easily memorize the <code>convert</code> command for the pdf instance, I'm hopeless in the webp scenario:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ffmpeg -i <span style="color: #183691;">'&lt;&lt;f&gt;&gt;'</span> -vcodec libwebp -filter:v <span style="color: #333333;">fps</span>=<span style="color: #333333;">fps</span>=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 <span style="color: #183691;">'&lt;&lt;fne&gt;&gt;'</span>.webp
+</pre>
+</div>
+
+<p>
+While searching through command line history helps to quickly re-spin previous commands, it requires remembering the actual utility used for any particular action. On the other hand, wrapping with Emacs functions enables me to remember the action itself, using more memorable names. Also, fuzzy searching works a treat.
+</p>
+
+
+<div id="org4ffca40" class="figure">
+<p><img src="../images/seamless-command-line-utils/fuzzy.png" alt="fuzzy.png" width="70%" height="70%" />
+</p>
+</div>
+
+<p>
+It's been roughly a month since I started playing around with this idea of wrapping command-line utilities more seamlessly. Since then, I've brought in a bunch of use-cases that are now quickly accessible (all in <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>):
+</p>
+
+<ul class="org-ul">
+<li>dwim-shell-commands-audio-to-mp3</li>
+<li>dwim-shell-commands-bin-plist-to-xml</li>
+<li>dwim-shell-commands-clipboard-to-qr</li>
+<li>dwim-shell-commands-docx-to-pdf</li>
+<li>dwim-shell-commands-download-clipboard-url</li>
+<li>dwim-shell-commands-drop-video-audio</li>
+<li>dwim-shell-commands-epub-to-org</li>
+<li>dwim-shell-commands-files-combined-size</li>
+<li>dwim-shell-commands-git-clone-clipboard-url</li>
+<li>dwim-shell-commands-git-clone-clipboard-url-to-downloads</li>
+<li>dwim-shell-commands-image-to-grayscale</li>
+<li>dwim-shell-commands-image-to-icns</li>
+<li>dwim-shell-commands-image-to-jpg</li>
+<li>dwim-shell-commands-image-to-png</li>
+<li>dwim-shell-commands-install-iphone-device-ipa</li>
+<li>dwim-shell-commands-join-as-pdf</li>
+<li>dwim-shell-commands-macos-hardware-overview</li>
+<li>dwim-shell-commands-macos-toggle-display-rotation</li>
+<li>dwim-shell-commands-mpv-stream-clipboard-url</li>
+<li>dwim-shell-commands-pdf-password-protect</li>
+<li>dwim-shell-commands-ping-google</li>
+<li>dwim-shell-commands-reorient-image</li>
+<li>dwim-shell-commands-resize-gif</li>
+<li>dwim-shell-commands-resize-image</li>
+<li>dwim-shell-commands-resize-video</li>
+<li>dwim-shell-commands-speed-up-gif</li>
+<li>dwim-shell-commands-speed-up-video</li>
+<li>dwim-shell-commands-unzip</li>
+<li>dwim-shell-commands-video-to-gif</li>
+<li>dwim-shell-commands-video-to-optimized-gif</li>
+<li>dwim-shell-commands-video-to-webp</li>
+</ul>
+
+<p>
+What other use-cases would you consider? <code>dwim-shell-command</code> is <a href="https://melpa.org/#/dwim-shell-command">available on melpa</a>.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

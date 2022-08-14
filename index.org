@@ -1,6 +1,90 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-08-14 Sun] Seamless command-line utils
+:PROPERTIES:
+:CUSTOM_ID: seamless-command-line-utils
+:END:
+Just the other day, I received a restaurant menu split into a handful of image files. I wanted to forward the menu to others but figured I should probably send it as a single file.
+
+ImageMagick's [[https://imagemagick.org/script/convert.php][convert]] command-line utility works great for this purpose. Feed it some images and it creates a pdf for you:
+
+#+begin_src sh
+  convert image1.png image2.png image3.png combined.pdf
+#+end_src
+
+Using =convert= for this purpose was pretty straightforward. I'm sure I'll use it again in a similar context, but what if I can make future usage more seamless? In the past, I would just make a note of it and revisit when needed. Though this works well enough, it often requires a some amount of manual work (looking things up, tweaking command, etc) if you don't remember the command syntax.
+
+I wanted common one-liners (or [[https://xenodium.com/png-to-icns-emacs-dwim-style/][longer shell scripts]]) to be easily reusable and accessible from Emacs. Turns out, the [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] experiment is working fairly well for this purpose. In addition to providing template expansion, it generally [[https://xenodium.com/emacs-dwim-shell-command/][tries to do what I mean]].
+
+Here's how I saved the =convert= command instance for future usage:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-join-as-pdf ()
+    "Join all marked images as a single pdf."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Join as pdf"
+     "convert -verbose '<<*>>' '<<joined.pdf(u)>>'"
+     :utils "convert"))
+#+end_src
+
+From now on, any time I'd like to join multiple files into a pdf, I can now select them all and invoke =dwim-shell-commands-join-as-pdf=.
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/seamless-command-line-utils/joined_minimal_x1.2.webp]]
+
+In the saved command, ='<<*>>'= expands to either [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] selected files or whatever file happens to be open in the current buffer. The buffer file isn't of much help for joining multiple items, but can be handy for other instances (say I want to convert current image to jpeg).
+
+Moving on to ='<<joined.pdf(u)>>'=, we could have just written as =joined.pdf=, but wrapping it ensures the resulting file name is unique. That is, if =joined.pdf= already exists, write =joined(1).pdf= instead.
+
+These kinds of command-line integrations are working well for me. Take the webp animation above, it was created by invoking =dwim-shell-commands-video-to-webp= on a =.mov= file. Easy peasy. While I can easily memorize the =convert= command for the pdf instance, I'm hopeless in the webp scenario:
+
+#+begin_src sh
+  ffmpeg -i '<<f>>' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '<<fne>>'.webp
+#+end_src
+
+While searching through command line history helps to quickly re-spin previous commands, it requires remembering the actual utility used for any particular action. On the other hand, wrapping with Emacs functions enables me to remember the action itself, using more memorable names. Also, fuzzy searching works a treat.
+
+#+ATTR_HTML: :width 70% :height 70%
+[[file:images/seamless-command-line-utils/fuzzy.png]]
+
+It's been roughly a month since I started playing around with this idea of wrapping command-line utilities more seamlessly. Since then, I've brought in a bunch of use-cases that are now quickly accessible (all in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]]):
+
+- dwim-shell-commands-audio-to-mp3
+- dwim-shell-commands-bin-plist-to-xml
+- dwim-shell-commands-clipboard-to-qr
+- dwim-shell-commands-docx-to-pdf
+- dwim-shell-commands-download-clipboard-url
+- dwim-shell-commands-drop-video-audio
+- dwim-shell-commands-epub-to-org
+- dwim-shell-commands-files-combined-size
+- dwim-shell-commands-git-clone-clipboard-url
+- dwim-shell-commands-git-clone-clipboard-url-to-downloads
+- dwim-shell-commands-image-to-grayscale
+- dwim-shell-commands-image-to-icns
+- dwim-shell-commands-image-to-jpg
+- dwim-shell-commands-image-to-png
+- dwim-shell-commands-install-iphone-device-ipa
+- dwim-shell-commands-join-as-pdf
+- dwim-shell-commands-macos-hardware-overview
+- dwim-shell-commands-macos-toggle-display-rotation
+- dwim-shell-commands-mpv-stream-clipboard-url
+- dwim-shell-commands-pdf-password-protect
+- dwim-shell-commands-ping-google
+- dwim-shell-commands-reorient-image
+- dwim-shell-commands-resize-gif
+- dwim-shell-commands-resize-image
+- dwim-shell-commands-resize-video
+- dwim-shell-commands-speed-up-gif
+- dwim-shell-commands-speed-up-video
+- dwim-shell-commands-unzip
+- dwim-shell-commands-video-to-gif
+- dwim-shell-commands-video-to-optimized-gif
+- dwim-shell-commands-video-to-webp
+
+What other use-cases would you consider? =dwim-shell-command= is [[https://melpa.org/#/dwim-shell-command][available on melpa]].
+
 * [2022-08-03 Wed] Emacs freebie: macOS emoji picker
 :PROPERTIES:
 :CUSTOM_ID: emacs-freebie-macos-emoji-picker
