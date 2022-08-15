@@ -595,15 +595,16 @@ With a recent look at writing [[https://xenodium.com/emacs-dwim-shell-command/][
 Take this [[https://xenodium.com/emacs-password-protect-current-pdf/][post]], for example, where I invoke [[https://github.com/qpdf/qpdf][qpdf]] via a elisp. Using the new =dwim-shell-command--on-marked-files= in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-command.el][dwim-shell-command.el]], the code is stripped down to a bare minimum:
 
 #+begin_src emacs-lisp :lexical no
-  (defun dwim-shell-command-pdf-password-protect ()
-    "Speeds up gif(s)."
+  (defun dwim-shell-commands-pdf-password-protect ()
+    "Password protect pdf."
     (interactive)
     (dwim-shell-command-on-marked-files
      "Password protect pdf"
      (format "qpdf --verbose --encrypt '%s' '%s' 256 -- '<<f>>' '<<fne>>_enc.<<e>>'"
              (read-passwd "user-password: ")
              (read-passwd "owner-password: "))
-     :utils "qpdf"))
+     :utils "qpdf"
+     :extensions "pdf"))
 #+end_src
 
 Compare the above =dwim-shell-command--on-marked-files= usage to my [[https://xenodium.com/emacs-password-protect-current-pdf/][previous implementation]]:
