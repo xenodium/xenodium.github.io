@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-30 Sat 19:58 -->
+<!-- 2022-08-18 Thu 09:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>An accentuated Emacs experiment (à la macOS)</title>
@@ -389,7 +389,7 @@ macOS has a wonderful input mechanism where you press and hold a key on your key
 </p>
 
 
-<div id="org03a361f" class="figure">
+<div id="orgc3fef82" class="figure">
 <p><img src="../images/an-accentuated-emacs-experiment/macosaccent.webp" alt="macosaccent.webp" width="70%" height="70%" />
 </p>
 </div>
@@ -455,7 +455,7 @@ I'm now trying a little experiment using an <code>after-change-functions</code> 
 </p>
 
 
-<div id="org44868c9" class="figure">
+<div id="orga60db90" class="figure">
 <p><img src="../images/an-accentuated-emacs-experiment/accentuated.webp" alt="accentuated.webp" width="80%" height="80%" />
 </p>
 </div>
@@ -521,7 +521,8 @@ I'm wrapping the hook with a minor mode to easily enable/disable whenever needed
       (<span style="color: #a71d5d;">setq</span> accent-menu-monitor--last-edit-time edit-time)))
 
   (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">accent-menu-monitor--buffer-char-string</span> (at)
-    (<span style="color: #a71d5d;">when</span> (&gt; at 0)
+    (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (&gt;= at (point-min))
+               (&lt; at (point-max)))
       (buffer-substring-no-properties at (+ at 1)))))
 </pre>
 </div>
@@ -531,7 +532,7 @@ As a bonus, it ocurred to me that I could use the same <i>press-and-hold</i> to 
 </p>
 
 
-<div id="org6a3786e" class="figure">
+<div id="org2e62981" class="figure">
 <p><img src="../images/an-accentuated-emacs-experiment/porque.webp" alt="porque.webp" width="40%" height="40%" />
 </p>
 </div>
