@@ -6,7 +6,80 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 14 Aug 2022 13:11:46 +0100</lastBuildDate>
+<lastBuildDate>Thu, 18 Aug 2022 09:23:59 +0100</lastBuildDate>
+<item>
+  <title>dwim-shell-command with template prompts</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-dwim-shell-command-with-template-prompts" class="outline-2">
+ <h2 id="dwim-shell-command-with-template-prompts"> <span class="timestamp-wrapper"> <span class="timestamp">18 August 2022</span></span> dwim-shell-command with template prompts</h2>
+ <div class="outline-text-2" id="text-dwim-shell-command-with-template-prompts">
+ <p>
+Somewhat recently, I wanted to quickly create an empty/transparent png file.  <a href="https://imagemagick.org/">ImageMagick</a>'s convert has you covered here. Say you want a transparent 200x400 image, you can get it with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">convert -verbose -size 200x400 xc:none empty200x400.png
+</pre>
+</div>
+
+ <p>
+Great, I now know the one-liner for it. But because I'm in the mood of saving these as  <a href="https://xenodium.com/seamless-command-line-utils/">seamless command-line utils</a>, I figured I should save the
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> equivalent.
+</p>
+
+ <p>
+I wanted configurable image dimensions, so I used  <a href="https://www.gnu.org/software/emacs/manual/html_node/calc/Formatting-Lisp-Functions.html">read-number</a> together with  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Formatting-Strings.html">format</a> to create the templated command and fed it to  <code>dwim-shell-command-on-marked-files</code>. Job done:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-make-transparent-png</span> ()
+   <span style="color: #183691;">"Create a transparent png."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((width (read-number  <span style="color: #183691;">"Width: "</span> 200))
+        (height (read-number  <span style="color: #183691;">"Height: "</span> 200)))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Create transparent png"</span>
+     (format  <span style="color: #183691;">"convert -verbose -size %dx%d xc:none '<<empty%dx%d.png(u)>>'"</span>
+             width height width height)
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>)))
+</pre>
+</div>
+
+ <p>
+The resulting  <code>dwim-shell-commands-make-transparent-png</code> is fairly simple, but  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> aims to remove friction so you're more inclined to save reusable commands. In this case, we can shift querying and formatting into the template.  <code><<width:200>></code> can be interpreted as "ask the user for a value using the suggested prompt and default value."
+</p>
+
+
+ <div id="org554532f" class="figure">
+ <p> <img src="../images/dwim-shell-command-with-template-prompts/query.png" alt="query.png" width="50%" height="50%"></img></p>
+</div>
+
+ <p>
+With template queries in mind,  <code>dwim-shell-commands-make-transparent-png</code> can be further reduced to essentially the interactive command boilerplate and the template itself:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-make-transparent-png</span> ()
+   <span style="color: #183691;">"Create a transparent png."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Create transparent png"</span>
+    <span style="color: #183691;">"convert -verbose -size <<Width:200>>x<<Height:200>> xc:none '<<empty<<Width:200>>x<<Height:200>>.png(u)>>'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+
+ <p>
+Note: Any repeated queries (same prompt and default) are treated as equal. That is, ask the user once and replace everywhere. If you'd like to request separate values, change either prompt or the default value.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/dwim-shell-command-with-template-prompts</link>
+  <guid isPermaLink="false">http://xenodium.com/dwim-shell-command-with-template-prompts</guid>
+  <pubDate>Thu, 18 Aug 2022 09:23:59 +0100</pubDate>
+</item>
 <item>
   <title>Seamless command-line utils</title>
   <description><![CDATA[<div id="content" class="content">
@@ -901,15 +974,16 @@ Take this  <a href="https://xenodium.com/emacs-password-protect-current-pdf/">po
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-command-pdf-password-protect</span> ()
-   <span style="color: #183691;">"Speeds up gif(s)."</span>
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-pdf-password-protect</span> ()
+   <span style="color: #183691;">"Password protect pdf."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Password protect pdf"</span>
    (format  <span style="color: #183691;">"qpdf --verbose --encrypt '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' 256 -- '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_enc.<<e>></span> <span style="color: #183691;">'"</span>
            (read-passwd  <span style="color: #183691;">"user-password: "</span>)
            (read-passwd  <span style="color: #183691;">"owner-password: "</span>))
-    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"qpdf"</span>))
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"qpdf"</span>
+    <span style="color: #a71d5d;">:extensions</span>  <span style="color: #183691;">"pdf"</span>))
 </pre>
 </div>
 

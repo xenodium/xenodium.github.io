@@ -1,6 +1,53 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-08-18 Thu] dwim-shell-command with template prompts
+:PROPERTIES:
+:CUSTOM_ID: dwim-shell-command-with-template-prompts
+:END:
+Somewhat recently, I wanted to quickly create an empty/transparent png file. [[https://imagemagick.org/][ImageMagick]]'s convert has you covered here. Say you want a transparent 200x400 image, you can get it with:
+
+#+begin_src sh
+  convert -verbose -size 200x400 xc:none empty200x400.png
+#+end_src
+
+Great, I now know the one-liner for it. But because I'm in the mood of saving these as [[https://xenodium.com/seamless-command-line-utils/][seamless command-line utils]], I figured I should save the
+[[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] equivalent.
+
+I wanted configurable image dimensions, so I used [[https://www.gnu.org/software/emacs/manual/html_node/calc/Formatting-Lisp-Functions.html][read-number]] together with [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Formatting-Strings.html][format]] to create the templated command and fed it to =dwim-shell-command-on-marked-files=. Job done:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-make-transparent-png ()
+    "Create a transparent png."
+    (interactive)
+    (let ((width (read-number "Width: " 200))
+          (height (read-number "Height: " 200)))
+      (dwim-shell-command-on-marked-files
+       "Create transparent png"
+       (format "convert -verbose -size %dx%d xc:none '<<empty%dx%d.png(u)>>'"
+               width height width height)
+       :utils "convert")))
+#+end_src
+
+The resulting =dwim-shell-commands-make-transparent-png= is fairly simple, but [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] aims to remove friction so you're more inclined to save reusable commands. In this case, we can shift querying and formatting into the template. =<<width:200>>= can be interpreted as "ask the user for a value using the suggested prompt and default value."
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/dwim-shell-command-with-template-prompts/query.png]]
+
+With template queries in mind, =dwim-shell-commands-make-transparent-png= can be further reduced to essentially the interactive command boilerplate and the template itself:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-make-transparent-png ()
+    "Create a transparent png."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Create transparent png"
+     "convert -verbose -size <<Width:200>>x<<Height:200>> xc:none '<<empty<<Width:200>>x<<Height:200>>.png(u)>>'"
+     :utils "convert"))
+#+end_src
+
+Note: Any repeated queries (same prompt and default) are treated as equal. That is, ask the user once and replace everywhere. If you'd like to request separate values, change either prompt or the default value.
+
 * [2022-08-14 Sun] Seamless command-line utils
 :PROPERTIES:
 :CUSTOM_ID: seamless-command-line-utils
