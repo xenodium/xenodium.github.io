@@ -6,7 +6,75 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 18 Aug 2022 09:49:02 +0100</lastBuildDate>
+<lastBuildDate>Sun, 11 Sep 2022 13:26:51 +0100</lastBuildDate>
+<item>
+  <title>Cycling through window layouts (revisited)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-cycling-through-window-layout-revisited" class="outline-2">
+ <h2 id="cycling-through-window-layout-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">11 September 2022</span></span> Cycling through window layouts (revisited)</h2>
+ <div class="outline-text-2" id="text-cycling-through-window-layout-revisited">
+ <p>
+Last year, I wrote a little script to  <a href="https://xenodium.com/cycling-window-layouts-via-hammerspoon">cycle through window layouts via Hammerspoon</a>. The cycling set I chose didn't stick, so here's another go.
+</p>
+
+
+ <div id="orgec4df27" class="figure">
+ <p> <img src="../images/cycling-through-window-layout-revisited/cycle_layout.webp" alt="cycle_layout.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-lua"> <span style="color: #a71d5d;">function</span>  <span style="color: #795da3;">reframeFocusedWindow</span>()
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">win</span> = hs.window.focusedWindow()
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">maximizedFrame</span> = win:screen():frame()
+   maximizedFrame.x = maximizedFrame.x + 15
+   maximizedFrame.y = maximizedFrame.y + 15
+   maximizedFrame.w = maximizedFrame.w - 30
+   maximizedFrame.h = maximizedFrame.h - 30
+
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">leftFrame</span> = win:screen():frame()
+   leftFrame.x = leftFrame.x + 15
+   leftFrame.y = leftFrame.y + 15
+   leftFrame.w = leftFrame.w / 2 - 15
+   leftFrame.h = leftFrame.h - 30
+
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">rightFrame</span> = win:screen():frame()
+   rightFrame.x = rightFrame.w / 2 - 15
+   rightFrame.y = rightFrame.y + 15
+   rightFrame.w = rightFrame.w / 2
+   rightFrame.h = rightFrame.h - 30
+
+    <span style="color: #a71d5d;">if</span> win:frame() == maximizedFrame  <span style="color: #a71d5d;">then</span>
+     win:setFrame(leftFrame)
+      <span style="color: #a71d5d;">return</span>
+    <span style="color: #a71d5d;">end</span>
+
+    <span style="color: #a71d5d;">if</span> win:frame() == leftFrame  <span style="color: #a71d5d;">then</span>
+     win:setFrame(rightFrame)
+      <span style="color: #a71d5d;">return</span>
+    <span style="color: #a71d5d;">end</span>
+
+   win:setFrame(maximizedFrame)
+ <span style="color: #a71d5d;">end</span>
+
+hs.hotkey.bind({ <span style="color: #183691;">"alt"</span>},  <span style="color: #183691;">"F"</span>, reframeFocusedWindow)
+</pre>
+</div>
+
+ <p>
+Looping through layouts is done with a global key-binding of  <code>option f</code> or, if familiar with a macOS keyboard,  <code>⌥ f</code>.
+</p>
+
+ <p>
+For those unfamiliar with  <a href="http://hammerspoon.org/">Hammerspoon</a>… If you're a tinkerer and a macOS user, you'd love  <a href="http://hammerspoon.org/">Hammerspoon</a>. Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. For example, here's a stint at  <a href="https://xenodium.com/emacs-utilities-for-your-os/">writing a narrowing utility for macOS</a> using  <a href="http://www.hammerspoon.org/docs/hs.chooser.html">chooser</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/cycling-through-window-layout-revisited</link>
+  <guid isPermaLink="false">http://xenodium.com/cycling-through-window-layout-revisited</guid>
+  <pubDate>Sun, 11 Sep 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>dwim-shell-command with template prompts</title>
   <description><![CDATA[<div id="content" class="content">
@@ -51,11 +119,11 @@ The resulting  <code>dwim-shell-commands-make-transparent-png</code> is fairly s
 </p>
 
  <p>
- <code><<width:200>></code> can be interpreted as "ask the user for a value using the suggested prompt and default value."
+ <code><<Width:200>></code> can be interpreted as "ask the user for a value using the suggested prompt and default value."
 </p>
 
 
- <div id="org8ee657b" class="figure">
+ <div id="org75217c1" class="figure">
  <p> <img src="../images/dwim-shell-command-with-template-prompts/query.png" alt="query.png" width="50%" height="50%"></img></p>
 </div>
 
@@ -72,6 +140,11 @@ With template queries in mind,  <code>dwim-shell-commands-make-transparent-png</
     <span style="color: #183691;">"convert -verbose -size <<Width:200>>x<<Height:200>> xc:none '<<empty<<Width:200>>x<<Height:200>>.png(u)>>'"</span>
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
 </pre>
+</div>
+
+
+ <div id="orge7bfef8" class="figure">
+ <p> <img src="../images/dwim-shell-command-with-template-prompts/empty.webp" alt="empty.webp" width="90%" height="90%"></img></p>
 </div>
 
  <p>
