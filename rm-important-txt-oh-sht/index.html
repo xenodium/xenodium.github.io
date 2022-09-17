@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-17 Sat 15:26 -->
+<!-- 2022-09-17 Sat 19:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cycling through window layouts (revisited)</title>
+<title>$ rm Important.txt (uh oh!)</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -381,64 +381,37 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-cycling-through-window-layout-revisited" class="outline-2">
-<h2 id="cycling-through-window-layout-revisited"><span class="timestamp-wrapper"><span class="timestamp">11 September 2022</span></span> Cycling through window layouts (revisited)</h2>
-<div class="outline-text-2" id="text-cycling-through-window-layout-revisited">
+<div id="outline-container-rm-important-txt-oh-sht" class="outline-2">
+<h2 id="rm-important-txt-oh-sht"><span class="timestamp-wrapper"><span class="timestamp">17 September 2022</span></span> $ rm Important.txt (uh oh!)</h2>
+<div class="outline-text-2" id="text-rm-important-txt-oh-sht">
 <p>
-Last year, I wrote a little script to <a href="https://xenodium.com/cycling-window-layouts-via-hammerspoon">cycle through window layouts via Hammerspoon</a>. The cycling set I chose didn't stick, so here's another go.
+Setting Emacs up to use your system trash can potentially save your bacon if you mistakenly delete a file, say from <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a>.
+</p>
+
+<p>
+Unsurprisingly, the trash safety net also extends to other Emacs areas. For example, discarding files from <a href="https://magit.vc/">Magit</a> (via <code>magit-discard</code>) becomes a recoverable operation. As an <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a> user, the trash can also help you recover from <code>rm</code> blunders.
 </p>
 
 
-<div id="org3284bd6" class="figure">
-<p><img src="../images/cycling-through-window-layout-revisited/cycle_layout.webp" alt="cycle_layout.webp" width="90%" height="90%" />
+<div id="org91520f1" class="figure">
+<p><img src="../images/rm-important-txt-oh-sht/recovered_x1.6.webp" alt="recovered_x1.6.webp" width="90%" height="90%" />
 </p>
 </div>
+
+<p>
+You can enable macOS system trash in Emacs by setting <code>trash-directory</code> along with defining <code>system-move-file-to-trash</code>:
+</p>
 
 <div class="org-src-container">
-<pre class="src src-lua"><span style="color: #a71d5d;">function</span> <span style="color: #795da3;">reframeFocusedWindow</span>()
-   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">win</span> = hs.window.focusedWindow()
-   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">maximizedFrame</span> = win:screen():frame()
-   maximizedFrame.x = maximizedFrame.x + 15
-   maximizedFrame.y = maximizedFrame.y + 15
-   maximizedFrame.w = maximizedFrame.w - 30
-   maximizedFrame.h = maximizedFrame.h - 30
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> trash-directory <span style="color: #183691;">"~/.Trash"</span>)
 
-   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">leftFrame</span> = win:screen():frame()
-   leftFrame.x = leftFrame.x + 15
-   leftFrame.y = leftFrame.y + 15
-   leftFrame.w = leftFrame.w / 2 - 15
-   leftFrame.h = leftFrame.h - 30
-
-   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">rightFrame</span> = win:screen():frame()
-   rightFrame.x = rightFrame.w / 2
-   rightFrame.y = rightFrame.y + 15
-   rightFrame.w = rightFrame.w / 2 - 15
-   rightFrame.h = rightFrame.h - 30
-
-   <span style="color: #a71d5d;">if</span> win:frame() == maximizedFrame <span style="color: #a71d5d;">then</span>
-     win:setFrame(leftFrame)
-     <span style="color: #a71d5d;">return</span>
-   <span style="color: #a71d5d;">end</span>
-
-   <span style="color: #a71d5d;">if</span> win:frame() == leftFrame <span style="color: #a71d5d;">then</span>
-     win:setFrame(rightFrame)
-     <span style="color: #a71d5d;">return</span>
-   <span style="color: #a71d5d;">end</span>
-
-   win:setFrame(maximizedFrame)
-<span style="color: #a71d5d;">end</span>
-
-hs.hotkey.bind({<span style="color: #183691;">"alt"</span>}, <span style="color: #183691;">"F"</span>, reframeFocusedWindow)
+<span style="color: #969896;">;; </span><span style="color: #969896;">See `</span><span style="color: #0086b3;">trash-directory</span><span style="color: #969896;">' as it requires defining `</span><span style="color: #0086b3;">system-move-file-to-trash</span><span style="color: #969896;">'.</span>
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">system-move-file-to-trash</span> (file)
+  <span style="color: #183691;">"Use \"trash\" to move FILE to the system trash."</span>
+  (<span style="color: #333333;">cl-assert</span> (executable-find <span style="color: #183691;">"trash"</span>) nil <span style="color: #183691;">"'</span><span style="color: #0086b3;">trash</span><span style="color: #183691;">' must be installed. Needs \"brew install trash\""</span>)
+  (call-process <span style="color: #183691;">"trash"</span> nil 0 nil <span style="color: #183691;">"-F"</span>  file))
 </pre>
 </div>
-
-<p>
-Looping through layouts is done with a global key-binding of <code>option f</code> or, if familiar with a macOS keyboard, <code>⌥ f</code>.
-</p>
-
-<p>
-For those unfamiliar with <a href="http://hammerspoon.org/">Hammerspoon</a>&#x2026; If you're a tinkerer and a macOS user, you'd love <a href="http://hammerspoon.org/">Hammerspoon</a>. Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. For example, here's a stint at <a href="https://xenodium.com/emacs-utilities-for-your-os/">writing a narrowing utility for macOS</a> using <a href="http://www.hammerspoon.org/docs/hs.chooser.html">chooser</a>.
-</p>
 </div>
 </div>
 </div>

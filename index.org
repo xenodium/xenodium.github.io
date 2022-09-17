@@ -1,6 +1,29 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-09-17 Sat] $ rm Important.txt (uh oh!)
+:PROPERTIES:
+:CUSTOM_ID: rm-important-txt-oh-sht
+:END:
+Setting Emacs up to use your system trash can potentially save your bacon if you mistakenly delete a file, say from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]].
+
+Unsurprisingly, the trash safety net also extends to other Emacs areas. For example, discarding files from [[https://magit.vc/][Magit]] (via =magit-discard=) becomes a recoverable operation. As an [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]] user, the trash can also help you recover from =rm= blunders.
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/rm-important-txt-oh-sht/recovered_x1.6.webp]]
+
+You can enable macOS system trash in Emacs by setting =trash-directory= along with defining =system-move-file-to-trash=:
+
+#+begin_src emacs-lisp :lexical no
+  (setq trash-directory "~/.Trash")
+
+  ;; See `trash-directory' as it requires defining `system-move-file-to-trash'.
+  (defun system-move-file-to-trash (file)
+    "Use \"trash\" to move FILE to the system trash."
+    (cl-assert (executable-find "trash") nil "'trash' must be installed. Needs \"brew install trash\"")
+    (call-process "trash" nil 0 nil "-F"  file))
+#+end_src
+
 * [2022-09-11 Sun] Cycling through window layouts (revisited)
 :PROPERTIES:
 :CUSTOM_ID: cycling-through-window-layout-revisited
