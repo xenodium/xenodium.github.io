@@ -1,6 +1,46 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-10-01 Sat] dwim-shell-command usages: pdftotext and scp
+:PROPERTIES:
+:CUSTOM_ID: dwim-shell-command-usages-pdftotext-and-scp
+:END:
+[[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] is a little Emacs package I wrote to enable crafting more reusable shell commands. I intended to use it as an [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html][async-shell-command]] alternative (and I do these days). The more surprising win was bringing lots of command-line utilities (sometimes with complicated invocations) and making them quickly accessible. I no longer need to remember their respective parameters, order, flags, etc.
+
+I've migrated most [[https://xenodium.com/emacs-password-protect-current-pdf-revisited/][one-liners]] and [[https://xenodium.com/png-to-icns-emacs-dwim-style/][scripts]] I had to [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] equivalents. They are available at [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]]. Having said that, it's great to discover new usages from =dwim-shell-command= users.
+
+Take [[https://www.reddit.com/user/TiMueller/][u/TiMueller]]'s Reddit comment, [[https://www.reddit.com/r/emacs/comments/w8s2ov/comment/iq7idav/?utm_source=share&utm_medium=web2x&context=3][showcasing pdftotext]]. Neat utility I was unaware of. It does as it says on the tin and converts a pdf to text. Can be easily saved to your accessible repertoire with:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-pdf-to-txt ()
+    "Convert pdf to txt."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "pdf to txt"
+     "pdftotext -layout '<<f>>' '<<fne>>.txt'"
+     :utils "pdftotext"))
+#+end_src
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/dwim-shell-command-usages-pdftotext-and-scp/pdf-to-txt_x2.webp]]
+
+[[https://github.com/tareefdev][tareefdev]] wanted a quick command to [[https://linux.die.net/man/1/scp][secure copy]] remote files to a local directory. Though this use-case is already covered by Tramp, I suspect a DWIM command would make it a little more convenient (async by default). However, Tramp paths aren't usable from the shell unless we massage them a little. We can use =dwim-shell-command-on-marked-files='s =:post-process-template= to drop the "/ssh:" prefix.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-copy-remote-to-downloads ()
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Copy remote to local Downloads"
+     "scp '<<f>>' ~/Downloads/"
+     :utils "scp"
+     :post-process-template
+     (lambda (script file)
+       ;; Tramp file path start with "/ssh:". Drop it.
+       (string-replace file
+                       (string-remove-prefix "/ssh:" file)
+                       script))))
+#+end_src
+
 * [2022-09-17 Sat] $ rm Important.txt (uh oh!)
 :PROPERTIES:
 :CUSTOM_ID: rm-important-txt-oh-sht

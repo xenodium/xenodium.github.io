@@ -6,7 +6,68 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 17 Sep 2022 19:44:47 +0100</lastBuildDate>
+<lastBuildDate>Sat, 01 Oct 2022 15:42:46 +0100</lastBuildDate>
+<item>
+  <title>dwim-shell-command usages: pdftotext and scp</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-dwim-shell-command-usages-pdftotext-and-scp" class="outline-2">
+ <h2 id="dwim-shell-command-usages-pdftotext-and-scp"> <span class="timestamp-wrapper"> <span class="timestamp">01 October 2022</span></span> dwim-shell-command usages: pdftotext and scp</h2>
+ <div class="outline-text-2" id="text-dwim-shell-command-usages-pdftotext-and-scp">
+ <p>
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is a little Emacs package I wrote to enable crafting more reusable shell commands. I intended to use it as an  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html">async-shell-command</a> alternative (and I do these days). The more surprising win was bringing lots of command-line utilities (sometimes with complicated invocations) and making them quickly accessible. I no longer need to remember their respective parameters, order, flags, etc.
+</p>
+
+ <p>
+I've migrated most  <a href="https://xenodium.com/emacs-password-protect-current-pdf-revisited/">one-liners</a> and  <a href="https://xenodium.com/png-to-icns-emacs-dwim-style/">scripts</a> I had to  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> equivalents. They are available at  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>. Having said that, it's great to discover new usages from  <code>dwim-shell-command</code> users.
+</p>
+
+ <p>
+Take  <a href="https://www.reddit.com/user/TiMueller/">u/TiMueller</a>'s Reddit comment,  <a href="https://www.reddit.com/r/emacs/comments/w8s2ov/comment/iq7idav/?utm_source=share&utm_medium=web2x&context=3">showcasing pdftotext</a>. Neat utility I was unaware of. It does as it says on the tin and converts a pdf to text. Can be easily saved to your accessible repertoire with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-pdf-to-txt</span> ()
+   <span style="color: #183691;">"Convert pdf to txt."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"pdf to txt"</span>
+    <span style="color: #183691;">"pdftotext -layout '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>.txt</span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"pdftotext"</span>))
+</pre>
+</div>
+
+
+ <div id="org23409a7" class="figure">
+ <p> <img src="../images/dwim-shell-command-usages-pdftotext-and-scp/pdf-to-txt_x2.webp" alt="pdf-to-txt_x2.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+ <a href="https://github.com/tareefdev">tareefdev</a> wanted a quick command to  <a href="https://linux.die.net/man/1/scp">secure copy</a> remote files to a local directory. Though this use-case is already covered by Tramp, I suspect a DWIM command would make it a little more convenient (async by default). However, Tramp paths aren't usable from the shell unless we massage them a little. We can use  <code>dwim-shell-command-on-marked-files</code>'s  <code>:post-process-template</code> to drop the "/ssh:" prefix.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-copy-remote-to-downloads</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Copy remote to local Downloads"</span>
+    <span style="color: #183691;">"scp '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' ~/Downloads/"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"scp"</span>
+    <span style="color: #a71d5d;">:post-process-template</span>
+   (<span style="color: #a71d5d;">lambda</span> (script file)
+      <span style="color: #969896;">;; </span> <span style="color: #969896;">Tramp file path start with "/ssh:". Drop it.</span>
+     (string-replace file
+                     (string-remove-prefix  <span style="color: #183691;">"/ssh:"</span> file)
+                     script))))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp</link>
+  <guid isPermaLink="false">http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp</guid>
+  <pubDate>Sat, 01 Oct 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>$ rm Important.txt (uh oh!)</title>
   <description><![CDATA[<div id="content" class="content">
