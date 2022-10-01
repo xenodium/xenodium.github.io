@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 01 Oct 2022 15:42:55 +0100</lastBuildDate>
+<lastBuildDate>Sat, 01 Oct 2022 19:00:10 +0100</lastBuildDate>
 <item>
   <title>dwim-shell-command usages: pdftotext and scp</title>
   <description><![CDATA[<div id="content" class="content">
@@ -27,9 +27,9 @@ Take  <a href="https://www.reddit.com/user/TiMueller/">u/TiMueller</a>'s Reddit 
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-pdf-to-txt</span> ()
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-pdf-to-txt</span> ()
    <span style="color: #183691;">"Convert pdf to txt."</span>
-  ( <span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"pdf to txt"</span>
     <span style="color: #183691;">"pdftotext -layout '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>.txt</span> <span style="color: #183691;">'"</span>
@@ -38,7 +38,7 @@ Take  <a href="https://www.reddit.com/user/TiMueller/">u/TiMueller</a>'s Reddit 
 </div>
 
 
- <div id="org23409a7" class="figure">
+ <div id="org50faa3f" class="figure">
  <p> <img src="../images/dwim-shell-command-usages-pdftotext-and-scp/pdf-to-txt_x2.webp" alt="pdf-to-txt_x2.webp" width="90%" height="90%"></img></p>
 </div>
 
@@ -47,26 +47,63 @@ Take  <a href="https://www.reddit.com/user/TiMueller/">u/TiMueller</a>'s Reddit 
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-copy-remote-to-downloads</span> ()
-  ( <span style="color: #a71d5d;">interactive</span>)
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-copy-remote-to-downloads</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Copy remote to local Downloads"</span>
     <span style="color: #183691;">"scp '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' ~/Downloads/"</span>
     <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"scp"</span>
     <span style="color: #a71d5d;">:post-process-template</span>
-   ( <span style="color: #a71d5d;">lambda</span> (script file)
+   (<span style="color: #a71d5d;">lambda</span> (script file)
       <span style="color: #969896;">;; </span> <span style="color: #969896;">Tramp file path start with "/ssh:". Drop it.</span>
      (string-replace file
                      (string-remove-prefix  <span style="color: #183691;">"/ssh:"</span> file)
                      script))))
 </pre>
 </div>
+
+ <p>
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">MELPA</a> (531 downloads as of 2022-10-01).
+</p>
 </div>
 </div>
 </div>]]></description>
-  <link>http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/index.html</link>
-  <guid isPermaLink="false">http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/index.html</guid>
-  <pubDate>Sat, 01 Oct 2022 15:42:55 +0100</pubDate>
+  <link>http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp</link>
+  <guid isPermaLink="false">http://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp</guid>
+  <pubDate>Sat, 01 Oct 2022 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Plain Org v1.5 released</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-plain-org-v15-released" class="outline-2">
+ <h2 id="plain-org-v15-released"> <span class="timestamp-wrapper"> <span class="timestamp">01 October 2022</span></span> Plain Org v1.5 released</h2>
+ <div class="outline-text-2" id="text-plain-org-v15-released">
+ <p>
+If you haven't heard of  <a href="https://plainorg.com">Plain Org</a>, it gives you access to  <a href="https://orgmode.org">org</a> files on iOS while away from your beloved  <a href="https://www.gnu.org/software/emacs/">Emacs</a>.
+</p>
+
+ <p>
+Hadn't had time to post, but v1.5 has been available on the  <a href="https://apps.apple.com/app/id1578965002">App Store</a> for a couple of weeks now. The update is mostly a bugfix release, primarily addressing inline editing issues that appeared on iOS 16, along with a few other changes:
+</p>
+
+ <ul class="org-ul"> <li>Render form feeds at end of headings at all times.</li>
+ <li>Fixes new files not recognized by org-roam.</li>
+ <li>Fixes share sheet saving from cold launch.</li>
+ <li>Fixes inline editing on iOS 16.</li>
+</ul> <div id="orgf918f4e" class="figure">
+ <p> <img src="../images/plain-org-v15-released/po.png" alt="po.png" width="60%" height="60%"></img></p>
+</div>
+
+ <p>
+I love org markup, but we (iPhone + org users) are a fairly niche bunch. If you're finding Plain Org useful,  <b>please help support this effort</b> by getting the word out. Tell your friends,  <a href="https://twitter.com/intent/tweet?text=Plain%20Org%20https%3A%2F%2Fapps.apple.com%2Fapp%2Fid1578965002%20">tweet</a>, or blog about it. Or just support via the  <a href="https://apps.apple.com/app/id1578965002">App Store</a> :)
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/plain-org-v15-released</link>
+  <guid isPermaLink="false">http://xenodium.com/plain-org-v15-released</guid>
+  <pubDate>Sat, 01 Oct 2022 19:00:10 +0100</pubDate>
 </item>
 <item>
   <title>$ rm Important.txt (uh oh!)</title>
