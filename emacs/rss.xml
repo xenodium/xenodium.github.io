@@ -6,7 +6,125 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 01 Oct 2022 19:00:10 +0100</lastBuildDate>
+<lastBuildDate>Sun, 09 Oct 2022 19:19:29 +0100</lastBuildDate>
+<item>
+  <title>Emacs: Reveal in macOS Finder (DWIM style)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-reveal-in-finder-dwim-style" class="outline-2">
+ <h2 id="emacs-reveal-in-finder-dwim-style"> <span class="timestamp-wrapper"> <span class="timestamp">09 October 2022</span></span> Emacs: Reveal in macOS Finder (DWIM style)</h2>
+ <div class="outline-text-2" id="text-emacs-reveal-in-finder-dwim-style">
+ <p>
+Just the other day,  <a href="https://github.com/gvoysey">Graham Voysey</a> filed an  <a href="https://github.com/xenodium/dwim-shell-command/issues/3">escaping bug</a> against  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. Once he verified the the fix, he also posted two uses of  <code>dwim-shell-command-on-marked-files</code>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-feh-marked-files</span> ()
+   <span style="color: #183691;">"View all marked files with feh."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"View with feh"</span>
+    <span style="color: #183691;">"feh --auto-zoom --scale-down '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"feh"</span>))
+
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-dragon-marked-files</span> ()
+   <span style="color: #183691;">"Share all marked files with dragon."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"display marked files with dragon drag-and-drop utility for easy sharing with GUI applications"</span>
+    <span style="color: #183691;">"dragon --on-top '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"dragon"</span>))
+</pre>
+</div>
+
+ <p>
+I love seeing what others get up to by using  <code>dwim-shell-command</code>. Are there new magical command-line utilities out there I don't know about? In this instance, I got to learn about  <a href="https://feh.finalrewind.org/">feh</a> and  <a href="https://github.com/mwh/dragon">dragon</a>.
+</p>
+
+ <p>
+ <a href="https://feh.finalrewind.org/">feh</a> is a no-frills image viewer for console users while  <a href="https://github.com/mwh/dragon">dragon</a> is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of  <code>dwim-shell-command</code>, enabling a seamless transition from Emacs to the  <i>outside world</i>. These days I'm rarely on a linux box, so I was keen to ensure macOS had these covered.
+</p>
+
+ <p>
+ <a href="https://en.wikipedia.org/wiki/Preview_(macOS)">Preview</a> is a solid macOS equivalent to  <a href="https://feh.finalrewind.org/">feh</a>.  <code>Preview</code> is already macOS's default image viewer. A simple  <code>open '<<f>>'</code> would do the job, but if we'd like make this command more portable, we can accomodate as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-open-externally</span> ()
+   <span style="color: #183691;">"Open file(s) externally."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Open externally"</span>
+   (<span style="color: #a71d5d;">if</span> (eq system-type 'darwin)
+        <span style="color: #183691;">"open '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>
+      <span style="color: #183691;">"xdg-open '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>)
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"open"</span>))
+</pre>
+</div>
+
+ <p>
+Special mention goes to Bozhidar Batsov's  <a href="https://github.com/bbatsov/crux">crux</a> which achieves similar functionality via  <code>crux-open-with</code>.  <a href="https://github.com/bbatsov/crux">crux</a> provides a bunch of other useful functions. Some of my favourites being  <code>crux-duplicate-current-line-or-region</code>,  <code>crux-transpose-windows</code>,  <code>crux-delete-file-and-buffer</code>, and  <code>crux-rename-buffer-and-file</code>, but I digress.
+</p>
+
+ <p>
+Moving on to a  <a href="https://github.com/mwh/dragon">dragon</a> equivalent on macOS, I thought I had it covered via  <a href="https://github.com/kaz-yos/reveal-in-osx-finder">reveal-in-osx-finder</a> or  <a href="https://github.com/jcs-elpa/reveal-in-folder">reveal-in-folder</a>. Turns out, neither of these reveal multiple  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a>-selected files within  <a href="https://en.wikipedia.org/wiki/Finder_(software)">Finder</a>. At first, I thought this could be easily achieved by passing additional flags/params to macOS's  <code>open</code> command, but it doesn't seem to be the case. Having said that, this  <a href="https://stackoverflow.com/questions/7652928/launch-finder-window-with-specific-files-selected">Stack Overflow post</a>, has a solution in Objective-C, which is where things got a little more interesting. You see, back in July I  <a href="https://xenodium.com/emacs-dwim-shell-command-multi-language/">added multi-language support</a> to  <a href="https://xenodium.com/emacs-dwim-shell-command-multi-language/">dwim-shell-command</a> and while it highlighted language flexibility, I hadn't yet taken advantage of this feature myself. That is, until today.
+</p>
+
+ <p>
+The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add. The magic here being the  <code><<*>></code> template, which gets instantiated with a list of files using  <code>", "</code> to join the list.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-reveal-in-finder</span> ()
+   <span style="color: #183691;">"Reveal selected files in macOS Finder."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Reveal in Finder"</span>
+    <span style="color: #183691;">"import AppKit</span>
+ <span style="color: #183691;">    NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"</span>
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>
+    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>))
+</pre>
+</div>
+
+ <p>
+The proof of the pudding is of course in the eating, so ummm let's show it in action:
+</p>
+
+
+ <div id="org58c0575" class="figure">
+ <p> <img src="../images/emacs-reveal-in-finder-dwim-style/dwim-reveal.webp" alt="dwim-reveal.webp" width="80%" height="80%"></img></p>
+</div>
+
+ <p>
+I should mention the webp animation above was also created using my trusty  <code>dwim-shell-commands-video-to-webp</code> also backed by  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.
+</p>
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-video-to-webp</span> ()
+   <span style="color: #183691;">"Convert all marked videos to webp(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Convert to webp"</span>
+    <span style="color: #183691;">"ffmpeg -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '</span> <span style="color: #0086b3;"><<fne>></span> <span style="color: #183691;">'.webp"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
+</pre>
+</div>
+
+ <p>
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-reveal-in-finder-dwim-style</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-reveal-in-finder-dwim-style</guid>
+  <pubDate>Sun, 09 Oct 2022 19:19:29 +0100</pubDate>
+</item>
 <item>
   <title>dwim-shell-command usages: pdftotext and scp</title>
   <description><![CDATA[<div id="content" class="content">

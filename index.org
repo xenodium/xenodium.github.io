@@ -1,6 +1,89 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-10-09 Sun] Emacs: Reveal in macOS Finder (DWIM style)
+:PROPERTIES:
+:CUSTOM_ID: emacs-reveal-in-finder-dwim-style
+:END:
+Just the other day, [[https://github.com/gvoysey][Graham Voysey]] filed an [[https://github.com/xenodium/dwim-shell-command/issues/3][escaping bug]] against [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. Once he verified the the fix, he also posted two uses of =dwim-shell-command-on-marked-files=:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-feh-marked-files ()
+    "View all marked files with feh."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "View with feh"
+     "feh --auto-zoom --scale-down '<<*>>'"
+     :silent-success t
+     :utils "feh"))
+
+
+  (defun dwim-shell-commands-dragon-marked-files ()
+    "Share all marked files with dragon."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "display marked files with dragon drag-and-drop utility for easy sharing with GUI applications"
+     "dragon --on-top '<<*>>'"
+     :silent-success t
+     :utils "dragon"))
+#+end_src
+
+I love seeing what others get up to by using =dwim-shell-command=. Are there new magical command-line utilities out there I don't know about? In this instance, I got to learn about [[https://feh.finalrewind.org/][feh]] and [[https://github.com/mwh/dragon][dragon]].
+
+[[https://feh.finalrewind.org/][feh]] is a no-frills image viewer for console users while [[https://github.com/mwh/dragon][dragon]] is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of =dwim-shell-command=, enabling a seamless transition from Emacs to the /outside world/. These days I'm rarely on a linux box, so I was keen to ensure macOS had these covered.
+
+[[https://en.wikipedia.org/wiki/Preview_(macOS)][Preview]] is a solid macOS equivalent to [[https://feh.finalrewind.org/][feh]]. =Preview= is already macOS's default image viewer. A simple =open '<<f>>'= would do the job, but if we'd like make this command more portable, we can accomodate as follows:
+
+#+begin_src emacs-lisp
+  (defun dwim-shell-commands-open-externally ()
+    "Open file(s) externally."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Open externally"
+     (if (eq system-type 'darwin)
+         "open '<<f>>'"
+       "xdg-open '<<f>>'")
+     :silent-success t
+     :utils "open"))
+#+end_src
+
+Special mention goes to Bozhidar Batsov's [[https://github.com/bbatsov/crux][crux]] which achieves similar functionality via =crux-open-with=. [[https://github.com/bbatsov/crux][crux]] provides a bunch of other useful functions. Some of my favourites being =crux-duplicate-current-line-or-region=, =crux-transpose-windows=, =crux-delete-file-and-buffer=, and =crux-rename-buffer-and-file=, but I digress.
+
+Moving on to a [[https://github.com/mwh/dragon][dragon]] equivalent on macOS, I thought I had it covered via [[https://github.com/kaz-yos/reveal-in-osx-finder][reveal-in-osx-finder]] or [[https://github.com/jcs-elpa/reveal-in-folder][reveal-in-folder]]. Turns out, neither of these reveal multiple [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]]-selected files within [[https://en.wikipedia.org/wiki/Finder_(software)][Finder]]. At first, I thought this could be easily achieved by passing additional flags/params to macOS's =open= command, but it doesn't seem to be the case. Having said that, this [[https://stackoverflow.com/questions/7652928/launch-finder-window-with-specific-files-selected][Stack Overflow post]], has a solution in Objective-C, which is where things got a little more interesting. You see, back in July I [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][added multi-language support]] to [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][dwim-shell-command]] and while it highlighted language flexibility, I hadn't yet taken advantage of this feature myself. That is, until today.
+
+The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add. The magic here being the =<<*>>= template, which gets instantiated with a list of files using =", "= to join the list.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-macos-reveal-in-finder ()
+    "Reveal selected files in macOS Finder."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Reveal in Finder"
+     "import AppKit
+      NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"
+     :silent-success t
+     :shell-pipe "swift -"
+     :join-separator ", "))
+#+end_src
+
+The proof of the pudding is of course in the eating, so ummm let's show it in action:
+
+#+ATTR_HTML: :width 80% :height 80%
+[[file:images/emacs-reveal-in-finder-dwim-style/dwim-reveal.webp]]
+
+I should mention the webp animation above was also created using my trusty =dwim-shell-commands-video-to-webp= also backed by [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]].
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-video-to-webp ()
+    "Convert all marked videos to webp(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert to webp"
+     "ffmpeg -i '<<f>>' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '<<fne>>'.webp"
+     :utils "ffmpeg"))
+#+end_src
+
+[[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] is available on [[https://melpa.org/#/dwim-shell-command][melpa]]. What other uses can you find for it?
+
 * [2022-10-01 Sat] Plain Org v1.5 released
 :PROPERTIES:
 :CUSTOM_ID: plain-org-v15-released
