@@ -5,7 +5,7 @@
 :PROPERTIES:
 :CUSTOM_ID: emacs-reveal-in-finder-dwim-style
 :END:
-Just the other day, [[https://github.com/gvoysey][Graham Voysey]] filed an [[https://github.com/xenodium/dwim-shell-command/issues/3][escaping bug]] against [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. Once he verified the the fix, he also posted two uses of =dwim-shell-command-on-marked-files=:
+Just the other day, [[https://github.com/gvoysey][Graham Voysey]] filed an [[https://github.com/xenodium/dwim-shell-command/issues/3][escaping bug]] against [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. Once he verified the the fix, he also posted [[https://github.com/xenodium/dwim-shell-command/issues/3#issuecomment-1272413459][two uses]] of =dwim-shell-command-on-marked-files=. I've made some small tweaks, but here's the gist of it:
 
 #+begin_src emacs-lisp :lexical no
   (defun dwim-shell-commands-feh-marked-files ()
@@ -17,12 +17,11 @@ Just the other day, [[https://github.com/gvoysey][Graham Voysey]] filed an [[htt
      :silent-success t
      :utils "feh"))
 
-
   (defun dwim-shell-commands-dragon-marked-files ()
     "Share all marked files with dragon."
     (interactive)
     (dwim-shell-command-on-marked-files
-     "display marked files with dragon drag-and-drop utility for easy sharing with GUI applications"
+     "View with dragon"
      "dragon --on-top '<<*>>'"
      :silent-success t
      :utils "dragon"))
@@ -30,9 +29,9 @@ Just the other day, [[https://github.com/gvoysey][Graham Voysey]] filed an [[htt
 
 I love seeing what others get up to by using =dwim-shell-command=. Are there new magical command-line utilities out there I don't know about? In this instance, I got to learn about [[https://feh.finalrewind.org/][feh]] and [[https://github.com/mwh/dragon][dragon]].
 
-[[https://feh.finalrewind.org/][feh]] is a no-frills image viewer for console users while [[https://github.com/mwh/dragon][dragon]] is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of =dwim-shell-command=, enabling a seamless transition from Emacs to the /outside world/. These days I'm rarely on a linux box, so I was keen to ensure macOS had these covered.
+[[https://feh.finalrewind.org/][feh]] is a no-frills image viewer for console users while [[https://github.com/mwh/dragon][dragon]] is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of =dwim-shell-command=, enabling a seamless transition from Emacs to the /outside world/. These days I'm rarely on a linux box, so I was keen to ensure macOS had these cases covered.
 
-[[https://en.wikipedia.org/wiki/Preview_(macOS)][Preview]] is a solid macOS equivalent to [[https://feh.finalrewind.org/][feh]]. =Preview= is already macOS's default image viewer. A simple =open '<<f>>'= would do the job, but if we'd like make this command more portable, we can accomodate as follows:
+[[https://en.wikipedia.org/wiki/Preview_(macOS)][Preview]] is a solid macOS equivalent to [[https://feh.finalrewind.org/][feh]]. =Preview= is already macOS's default image viewer. A simple =open '<<f>>'= would do the job, but if we'd like to make this command more portable, we can accomodate as follows:
 
 #+begin_src emacs-lisp
   (defun dwim-shell-commands-open-externally ()

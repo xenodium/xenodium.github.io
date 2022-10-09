@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-09 Sun 19:18 -->
+<!-- 2022-10-09 Sun 19:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs: Reveal in macOS Finder (DWIM style)</title>
@@ -385,7 +385,7 @@
 <h2 id="emacs-reveal-in-finder-dwim-style"><span class="timestamp-wrapper"><span class="timestamp">09 October 2022</span></span> Emacs: Reveal in macOS Finder (DWIM style)</h2>
 <div class="outline-text-2" id="text-emacs-reveal-in-finder-dwim-style">
 <p>
-Just the other day, <a href="https://github.com/gvoysey">Graham Voysey</a> filed an <a href="https://github.com/xenodium/dwim-shell-command/issues/3">escaping bug</a> against <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. Once he verified the the fix, he also posted two uses of <code>dwim-shell-command-on-marked-files</code>:
+Just the other day, <a href="https://github.com/gvoysey">Graham Voysey</a> filed an <a href="https://github.com/xenodium/dwim-shell-command/issues/3">escaping bug</a> against <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. Once he verified the the fix, he also posted <a href="https://github.com/xenodium/dwim-shell-command/issues/3#issuecomment-1272413459">two uses</a> of <code>dwim-shell-command-on-marked-files</code>. I've made some small tweaks, but here's the gist of it:
 </p>
 
 <div class="org-src-container">
@@ -398,12 +398,11 @@ Just the other day, <a href="https://github.com/gvoysey">Graham Voysey</a> filed
    <span style="color: #a71d5d;">:silent-success</span> t
    <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"feh"</span>))
 
-
 (<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-dragon-marked-files</span> ()
   <span style="color: #183691;">"Share all marked files with dragon."</span>
   (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
-   <span style="color: #183691;">"display marked files with dragon drag-and-drop utility for easy sharing with GUI applications"</span>
+   <span style="color: #183691;">"View with dragon"</span>
    <span style="color: #183691;">"dragon --on-top '</span><span style="color: #0086b3;">&lt;&lt;*&gt;&gt;</span><span style="color: #183691;">'"</span>
    <span style="color: #a71d5d;">:silent-success</span> t
    <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"dragon"</span>))
@@ -415,11 +414,11 @@ I love seeing what others get up to by using <code>dwim-shell-command</code>. Ar
 </p>
 
 <p>
-<a href="https://feh.finalrewind.org/">feh</a> is a no-frills image viewer for console users while <a href="https://github.com/mwh/dragon">dragon</a> is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of <code>dwim-shell-command</code>, enabling a seamless transition from Emacs to the <i>outside world</i>. These days I'm rarely on a linux box, so I was keen to ensure macOS had these covered.
+<a href="https://feh.finalrewind.org/">feh</a> is a no-frills image viewer for console users while <a href="https://github.com/mwh/dragon">dragon</a> is a simple drag-and-drop source/sink for X or Wayland. Both utilities are great uses of <code>dwim-shell-command</code>, enabling a seamless transition from Emacs to the <i>outside world</i>. These days I'm rarely on a linux box, so I was keen to ensure macOS had these cases covered.
 </p>
 
 <p>
-<a href="https://en.wikipedia.org/wiki/Preview_(macOS)">Preview</a> is a solid macOS equivalent to <a href="https://feh.finalrewind.org/">feh</a>. <code>Preview</code> is already macOS's default image viewer. A simple <code>open '&lt;&lt;f&gt;&gt;'</code> would do the job, but if we'd like make this command more portable, we can accomodate as follows:
+<a href="https://en.wikipedia.org/wiki/Preview_(macOS)">Preview</a> is a solid macOS equivalent to <a href="https://feh.finalrewind.org/">feh</a>. <code>Preview</code> is already macOS's default image viewer. A simple <code>open '&lt;&lt;f&gt;&gt;'</code> would do the job, but if we'd like to make this command more portable, we can accomodate as follows:
 </p>
 
 <div class="org-src-container">
@@ -467,7 +466,7 @@ The proof of the pudding is of course in the eating, so ummm let's show it in ac
 </p>
 
 
-<div id="org58c0575" class="figure">
+<div id="org8b38522" class="figure">
 <p><img src="../images/emacs-reveal-in-finder-dwim-style/dwim-reveal.webp" alt="dwim-reveal.webp" width="80%" height="80%" />
 </p>
 </div>
