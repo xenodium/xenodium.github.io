@@ -50,7 +50,7 @@ Special mention goes to Bozhidar Batsov's [[https://github.com/bbatsov/crux][cru
 
 Moving on to a [[https://github.com/mwh/dragon][dragon]] equivalent on macOS, I thought I had it covered via [[https://github.com/kaz-yos/reveal-in-osx-finder][reveal-in-osx-finder]] or [[https://github.com/jcs-elpa/reveal-in-folder][reveal-in-folder]]. Turns out, neither of these reveal multiple [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]]-selected files within [[https://en.wikipedia.org/wiki/Finder_(software)][Finder]]. At first, I thought this could be easily achieved by passing additional flags/params to macOS's =open= command, but it doesn't seem to be the case. Having said that, this [[https://stackoverflow.com/questions/7652928/launch-finder-window-with-specific-files-selected][Stack Overflow post]], has a solution in Objective-C, which is where things got a little more interesting. You see, back in July I [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][added multi-language support]] to [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][dwim-shell-command]] and while it highlighted language flexibility, I hadn't yet taken advantage of this feature myself. That is, until today.
 
-The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add. The magic here being the =<<*>>= template, which gets instantiated with a list of files using =", "= to join the list.
+The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add.
 
 #+begin_src emacs-lisp :lexical no
   (defun dwim-shell-commands-macos-reveal-in-finder ()
@@ -60,9 +60,15 @@ The Objective-C snippet from the Stack Overflow post can be written as a Swift o
      "Reveal in Finder"
      "import AppKit
       NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"
+     :join-separator ", "
      :silent-success t
-     :shell-pipe "swift -"
-     :join-separator ", "))
+     :shell-pipe "swift -"))
+#+end_src
+
+ =<<*>>= is the centrepiece of the snippet above. It gets instantiated with a list of files joined using the =", "= separator.
+
+#+begin_src swift
+  NSWorkspace.shared.activateFileViewerSelecting(["/path/to/file1", "/path/to/file2"].map { URL(fileURLWithPath: $0) })
 #+end_src
 
 The proof of the pudding is of course in the eating, so ummm let's show it in action:
@@ -82,6 +88,8 @@ I should mention the webp animation above was also created using my trusty =dwim
 #+end_src
 
 [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] is available on [[https://melpa.org/#/dwim-shell-command][melpa]]. What other uses can you find for it?
+
+UPDATE: Most DWIM shell commands I use are available as part of [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]]. See =dwim-shell-command='s [[https://github.com/xenodium/dwim-shell-command#install-command-line-utilities][install command line utilities]].
 
 * [2022-10-01 Sat] Plain Org v1.5 released
 :PROPERTIES:

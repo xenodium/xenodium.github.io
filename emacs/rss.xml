@@ -74,7 +74,7 @@ Moving on to a  <a href="https://github.com/mwh/dragon">dragon</a> equivalent on
 </p>
 
  <p>
-The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add. The magic here being the  <code><<*>></code> template, which gets instantiated with a list of files using  <code>", "</code> to join the list.
+The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add.
 </p>
 
  <div class="org-src-container">
@@ -85,9 +85,18 @@ The Objective-C snippet from the Stack Overflow post can be written as a Swift o
     <span style="color: #183691;">"Reveal in Finder"</span>
     <span style="color: #183691;">"import AppKit</span>
  <span style="color: #183691;">    NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"</span>
+    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>
     <span style="color: #a71d5d;">:silent-success</span> t
-    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>
-    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>))
+    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>))
+</pre>
+</div>
+
+ <p>
+ <code><<*>></code> is the centrepiece of the snippet above. It gets instantiated with a list of files joined using the  <code>", "</code> separator.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift">NSWorkspace. <span style="color: #a71d5d;">shared</span>. <span style="color: #795da3;">activateFileViewerSelecting</span>([ <span style="color: #183691;">"/path/to/file1"</span>,  <span style="color: #183691;">"/path/to/file2"</span>]. <span style="color: #a71d5d;">map</span> {  <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) })
 </pre>
 </div>
 
@@ -116,6 +125,10 @@ I should mention the webp animation above was also created using my trusty  <cod
 
  <p>
  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+
+ <p>
+UPDATE: Most DWIM shell commands I use are available as part of  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>. See  <code>dwim-shell-command</code>'s  <a href="https://github.com/xenodium/dwim-shell-command#install-command-line-utilities">install command line utilities</a>.
 </p>
 </div>
 </div>
