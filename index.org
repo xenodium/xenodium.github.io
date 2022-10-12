@@ -1,6 +1,117 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-10-12 Wed] Emacs: macOS sharing (DWIM style)
+:PROPERTIES:
+:CUSTOM_ID: emacs-macos-share-from-dired-dwim-style
+:END:
+A few days ago, [[https://xenodium.com/emacs-reveal-in-finder-dwim-style/][I wrote dwim-shell-commands-macos-reveal-in-finder]]. While I've written a bunch of other [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands]], what set this case apart was the use of [[https://www.swift.org/][Swift]] to glue an Emacs workflow.
+
+#+begin_src emacs-lisp
+  (defun dwim-shell-commands-macos-reveal-in-finder ()
+    "Reveal selected files in macOS Finder."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Reveal in Finder"
+     "import AppKit
+      NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"
+     :join-separator ", "
+     :silent-success t
+     :shell-pipe "swift -"))
+#+end_src
+
+There is hardly any Swift involved, yet it scratched a real itch I couldn't otherwise reach (reveal multiple dired files in macOS's [[https://en.wikipedia.org/wiki/Finder_(software)][Finder]]).
+
+divinedominion's [[https://www.reddit.com/r/emacs/comments/xzt3gx/comment/irrwoya/?utm_source=share&utm_medium=web2x&context=3][reddit comment]] got me thinking of other use-cases, so I figured why not push this Swift-elisp beeswax a little further... Let's add macOS's sharing ability via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]], so I could invoke it from the comfort of my beloved [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] or any 'ol Emacs buffer visiting a file.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-macos-share ()
+    "Share selected files from macOS."
+    (interactive)
+    (let* ((position (window-absolute-pixel-position))
+           (x (car position))
+           (y (- (x-display-pixel-height)
+                 (cdr position))))
+      (dwim-shell-command-on-marked-files
+       "Share"
+       (format
+        "import AppKit
+
+         _ = NSApplication.shared
+
+         NSApp.setActivationPolicy(.regular)
+
+         let window = InvisibleWindow(
+           contentRect: NSRect(x: %d, y: %s, width: 0, height: 0),
+           styleMask: [],
+           backing: .buffered,
+           defer: false)
+
+         NSApp.activate(ignoringOtherApps: true)
+
+         DispatchQueue.main.async {
+           let picker = NSSharingServicePicker(items: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})
+           picker.delegate = window
+           picker.show(
+             relativeTo: .zero, of: window.contentView!, preferredEdge: .minY)
+         }
+
+         NSApp.run()
+
+         class InvisibleWindow: NSWindow, NSSharingServicePickerDelegate, NSSharingServiceDelegate {
+           func sharingServicePicker(
+             _ sharingServicePicker: NSSharingServicePicker, didChoose service: NSSharingService?
+           ) {
+             if service == nil {
+               print(\"Cancelled\")
+
+               // Delay so \"More...\" menu can launch System Preferences
+               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                 NSApplication.shared.terminate(nil)
+               }
+             }
+           }
+
+           func sharingServicePicker(
+             _ sharingServicePicker: NSSharingServicePicker,
+             delegateFor sharingService: NSSharingService
+           ) -> NSSharingServiceDelegate? {
+             return self
+           }
+
+           func sharingService(
+             _ sharingService: NSSharingService,
+             didShareItems items: [Any]
+           ) {
+             NSApplication.shared.terminate(nil)
+           }
+
+           func sharingService(
+             _ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error
+           ) {
+             let error = error as NSError
+             if error.domain == NSCocoaErrorDomain && error.code == NSUserCancelledError {
+               NSApplication.shared.terminate(nil)
+             }
+             exit(1)
+           }
+         }" x y)
+       :silent-success t
+       :shell-pipe "swift -"
+       :join-separator ", "
+       :no-progress t
+       :utils "swift")))
+#+end_src
+
+Sure there is some trickery involved here (like creating an invisible macOS window to anchor the menu), but hey the results are surprisingly usable. Take a look...
+
+#+ATTR_HTML: :width 80% :height 80%n
+[[file:images/emacs-macos-share-from-dired-dwim-style/share-done_x1.4.webp]]
+
+I've pushed =dwim-shell-commands-macos-share= to [[https://github.com/xenodium/dwim-shell-command/blob/919817520fa507dd3c7e6859eb982976e28b2575/dwim-shell-commands.el#L370][dwim-shell-commands.el]] in case you'd like to give it a try. It's very much an experiment of sorts, so please treat it as such. For now, I'm looking forward to AirDropping more files and seeing if the flow sticks. Oh, and I just realised I can use this to send files to iOS Simulators. Win.
+
+[[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] is available on [[https://melpa.org/#/dwim-shell-command][melpa]]. What other uses can you find for it?
+
 * [2022-10-09 Sun] Emacs: Reveal in macOS Finder (DWIM style)
 :PROPERTIES:
 :CUSTOM_ID: emacs-reveal-in-finder-dwim-style

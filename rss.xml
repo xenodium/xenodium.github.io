@@ -6,7 +6,143 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 09 Oct 2022 19:44:27 +0100</lastBuildDate>
+<lastBuildDate>Wed, 12 Oct 2022 05:01:57 +0100</lastBuildDate>
+<item>
+  <title>Emacs: macOS sharing (DWIM style)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-macos-share-from-dired-dwim-style" class="outline-2">
+ <h2 id="emacs-macos-share-from-dired-dwim-style"> <span class="timestamp-wrapper"> <span class="timestamp">12 October 2022</span></span> Emacs: macOS sharing (DWIM style)</h2>
+ <div class="outline-text-2" id="text-emacs-macos-share-from-dired-dwim-style">
+ <p>
+A few days ago,  <a href="https://xenodium.com/emacs-reveal-in-finder-dwim-style/">I wrote dwim-shell-commands-macos-reveal-in-finder</a>. While I've written a bunch of other  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands</a>, what set this case apart was the use of  <a href="https://www.swift.org/">Swift</a> to glue an Emacs workflow.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-reveal-in-finder</span> ()
+   <span style="color: #183691;">"Reveal selected files in macOS Finder."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Reveal in Finder"</span>
+    <span style="color: #183691;">"import AppKit</span>
+ <span style="color: #183691;">    NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"</span>
+    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>))
+</pre>
+</div>
+
+ <p>
+There is hardly any Swift involved, yet it scratched a real itch I couldn't otherwise reach (reveal multiple dired files in macOS's  <a href="https://en.wikipedia.org/wiki/Finder_(software)">Finder</a>).
+</p>
+
+ <p>
+divinedominion's  <a href="https://www.reddit.com/r/emacs/comments/xzt3gx/comment/irrwoya/?utm_source=share&utm_medium=web2x&context=3">reddit comment</a> got me thinking of other use-cases, so I figured why not push this Swift-elisp beeswax a little further… Let's add macOS's sharing ability via  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>, so I could invoke it from the comfort of my beloved  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> or any 'ol Emacs buffer visiting a file.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-share</span> ()
+   <span style="color: #183691;">"Share selected files from macOS."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((position (window-absolute-pixel-position))
+         (x (car position))
+         (y (- (x-display-pixel-height)
+               (cdr position))))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Share"</span>
+     (format
+       <span style="color: #183691;">"import AppKit</span>
+
+ <span style="color: #183691;">       _ = NSApplication.shared</span>
+
+ <span style="color: #183691;">       NSApp.setActivationPolicy(.regular)</span>
+
+ <span style="color: #183691;">       let window = InvisibleWindow(</span>
+ <span style="color: #183691;">         contentRect: NSRect(x: %d, y: %s, width: 0, height: 0),</span>
+ <span style="color: #183691;">         styleMask: [],</span>
+ <span style="color: #183691;">         backing: .buffered,</span>
+ <span style="color: #183691;">         defer: false)</span>
+
+ <span style="color: #183691;">       NSApp.activate(ignoringOtherApps: true)</span>
+
+ <span style="color: #183691;">       DispatchQueue.main.async {</span>
+ <span style="color: #183691;">         let picker = NSSharingServicePicker(items: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})</span>
+ <span style="color: #183691;">         picker.delegate = window</span>
+ <span style="color: #183691;">         picker.show(</span>
+ <span style="color: #183691;">           relativeTo: .zero, of: window.contentView!, preferredEdge: .minY)</span>
+ <span style="color: #183691;">       }</span>
+
+ <span style="color: #183691;">       NSApp.run()</span>
+
+ <span style="color: #183691;">       class InvisibleWindow: NSWindow, NSSharingServicePickerDelegate, NSSharingServiceDelegate {</span>
+ <span style="color: #183691;">         func sharingServicePicker(</span>
+ <span style="color: #183691;">           _ sharingServicePicker: NSSharingServicePicker, didChoose service: NSSharingService?</span>
+ <span style="color: #183691;">         ) {</span>
+ <span style="color: #183691;">           if service == nil {</span>
+ <span style="color: #183691;">             print(\"Cancelled\")</span>
+
+ <span style="color: #183691;">             // Delay so \"More...\" menu can launch System Preferences</span>
+ <span style="color: #183691;">             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {</span>
+ <span style="color: #183691;">               NSApplication.shared.terminate(nil)</span>
+ <span style="color: #183691;">             }</span>
+ <span style="color: #183691;">           }</span>
+ <span style="color: #183691;">         }</span>
+
+ <span style="color: #183691;">         func sharingServicePicker(</span>
+ <span style="color: #183691;">           _ sharingServicePicker: NSSharingServicePicker,</span>
+ <span style="color: #183691;">           delegateFor sharingService: NSSharingService</span>
+ <span style="color: #183691;">         ) -> NSSharingServiceDelegate? {</span>
+ <span style="color: #183691;">           return self</span>
+ <span style="color: #183691;">         }</span>
+
+ <span style="color: #183691;">         func sharingService(</span>
+ <span style="color: #183691;">           _ sharingService: NSSharingService,</span>
+ <span style="color: #183691;">           didShareItems items: [Any]</span>
+ <span style="color: #183691;">         ) {</span>
+ <span style="color: #183691;">           NSApplication.shared.terminate(nil)</span>
+ <span style="color: #183691;">         }</span>
+
+ <span style="color: #183691;">         func sharingService(</span>
+ <span style="color: #183691;">           _ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error</span>
+ <span style="color: #183691;">         ) {</span>
+ <span style="color: #183691;">           let error = error as NSError</span>
+ <span style="color: #183691;">           if error.domain == NSCocoaErrorDomain && error.code == NSUserCancelledError {</span>
+ <span style="color: #183691;">             NSApplication.shared.terminate(nil)</span>
+ <span style="color: #183691;">           }</span>
+ <span style="color: #183691;">           exit(1)</span>
+ <span style="color: #183691;">         }</span>
+ <span style="color: #183691;">       }"</span> x y)
+      <span style="color: #a71d5d;">:silent-success</span> t
+      <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>
+      <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>
+      <span style="color: #a71d5d;">:no-progress</span> t
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"swift"</span>)))
+</pre>
+</div>
+
+ <p>
+Sure there is some trickery involved here (like creating an invisible macOS window to anchor the menu), but hey the results are surprisingly usable. Take a look…
+</p>
+
+
+ <div id="orgbc64b4f" class="figure">
+ <p> <img src="../images/emacs-macos-share-from-dired-dwim-style/share-done_x1.4.webp" alt="share-done_x1.4.webp" width="80%" height="80%n"></img></p>
+</div>
+
+ <p>
+I've pushed  <code>dwim-shell-commands-macos-share</code> to  <a href="https://github.com/xenodium/dwim-shell-command/blob/919817520fa507dd3c7e6859eb982976e28b2575/dwim-shell-commands.el#L370">dwim-shell-commands.el</a> in case you'd like to give it a try. It's very much an experiment of sorts, so please treat it as such. For now, I'm looking forward to AirDropping more files and seeing if the flow sticks. Oh, and I just realised I can use this to send files to iOS Simulators. Win.
+</p>
+
+ <p>
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-macos-share-from-dired-dwim-style</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-macos-share-from-dired-dwim-style</guid>
+  <pubDate>Wed, 12 Oct 2022 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Emacs: Reveal in macOS Finder (DWIM style)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -74,7 +210,7 @@ Moving on to a  <a href="https://github.com/mwh/dragon">dragon</a> equivalent on
 </p>
 
  <p>
-The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add. The magic here being the  <code><<*>></code> template, which gets instantiated with a list of files using  <code>", "</code> to join the list.
+The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add.
 </p>
 
  <div class="org-src-container">
@@ -85,9 +221,18 @@ The Objective-C snippet from the Stack Overflow post can be written as a Swift o
     <span style="color: #183691;">"Reveal in Finder"</span>
     <span style="color: #183691;">"import AppKit</span>
  <span style="color: #183691;">    NSWorkspace.shared.activateFileViewerSelecting([\"<<*>>\"].map{URL(fileURLWithPath:$0)})"</span>
+    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>
     <span style="color: #a71d5d;">:silent-success</span> t
-    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>
-    <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>))
+    <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>))
+</pre>
+</div>
+
+ <p>
+ <code><<*>></code> is the centrepiece of the snippet above. It gets instantiated with a list of files joined using the  <code>", "</code> separator.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift">NSWorkspace. <span style="color: #a71d5d;">shared</span>. <span style="color: #795da3;">activateFileViewerSelecting</span>([ <span style="color: #183691;">"/path/to/file1"</span>,  <span style="color: #183691;">"/path/to/file2"</span>]. <span style="color: #a71d5d;">map</span> {  <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) })
 </pre>
 </div>
 
@@ -96,7 +241,7 @@ The proof of the pudding is of course in the eating, so ummm let's show it in ac
 </p>
 
 
- <div id="org8b38522" class="figure">
+ <div id="org6c7dd85" class="figure">
  <p> <img src="../images/emacs-reveal-in-finder-dwim-style/dwim-reveal.webp" alt="dwim-reveal.webp" width="80%" height="80%"></img></p>
 </div>
 
@@ -116,6 +261,10 @@ I should mention the webp animation above was also created using my trusty  <cod
 
  <p>
  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+
+ <p>
+UPDATE: Most DWIM shell commands I use are available as part of  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>. See  <code>dwim-shell-command</code>'s  <a href="https://github.com/xenodium/dwim-shell-command#install-command-line-utilities">install command line utilities</a>.
 </p>
 </div>
 </div>
