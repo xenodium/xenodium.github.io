@@ -1,6 +1,99 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-10-12 Wed] Improving on Emacs macOS sharing
+:PROPERTIES:
+:CUSTOM_ID: emacs-macos-sharing-dwim-style-improved
+:END:
+A quick follow-up to [[https://xenodium.com/emacs-macos-share-from-dired-dwim-style/][Emacs: macOS sharing (DWIM style)]]... Though functional, the implementation had a couple of drawbacks.
+
+Tohiko [[https://www.reddit.com/r/emacs/comments/y1tneh/comment/is0pgkf][noticed fullscreen wasn't working at all]] while Calvin [[https://lobste.rs/s/qga1px/emacs_macos_sharing_dwim_style#c_safiuw][proposed enumeration for tighter Emacs integration]].
+
+Calvin's suggestion enables using [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] to pick the sharing service. This makes the integration feel more at home. As a bonus, it also enables sharing from fullscreen Emacs.
+
+As an [[https://github.com/abo-abo/swiper][ivy]] user, you can see a vertical list of sharing services.
+
+#+ATTR_HTML: :width 80% :height 80%n
+[[file:images/emacs-macos-sharing-dwim-style-improved/share-completing_x1.4.webp]]
+
+Here's the new snippet, now [[https://github.com/xenodium/dwim-shell-command/commit/20e782b4bf1ea01fecfce3cc8ac4c5a74518cd80][pushed to dwim-shell-commands.el]]:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands--macos-sharing-services ()
+    "Return a list of sharing services."
+    (let* ((source (format "import AppKit
+                           NSSharingService.sharingServices(forItems: [
+                             %s
+                           ]).forEach {
+                             print(\"\\($0.title)\")
+                           }"
+                           (string-join (mapcar (lambda (file)
+                                                  (format "URL(fileURLWithPath: \"%s\")" file))
+                                                (dwim-shell-command--files))
+                                        ", ")))
+           (services (split-string (string-trim (shell-command-to-string (format "echo '%s' | swift -" source)))
+                                   "\n")))
+      (when (seq-empty-p services)
+        (error "No sharing services available"))
+      services))
+
+  (defun dwim-shell-commands-macos-share ()
+    "Share selected files from macOS."
+    (interactive)
+    (let* ((services (dwim-shell-commands--macos-sharing-services))
+           (service-name (completing-read "Share via: " services))
+           (selection (seq-position services service-name #'string-equal)))
+      (dwim-shell-command-on-marked-files
+       "Share"
+       (format
+        "import AppKit
+
+         _ = NSApplication.shared
+
+         NSApp.setActivationPolicy(.regular)
+
+         class MyWindow: NSWindow, NSSharingServiceDelegate {
+           func sharingService(
+             _ sharingService: NSSharingService,
+             didShareItems items: [Any]
+           ) {
+             NSApplication.shared.terminate(nil)
+           }
+
+           func sharingService(
+             _ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error
+           ) {
+             let error = error as NSError
+             if error.domain == NSCocoaErrorDomain && error.code == NSUserCancelledError {
+               NSApplication.shared.terminate(nil)
+             }
+             exit(1)
+           }
+         }
+
+         let window = MyWindow(
+           contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
+           styleMask: [],
+           backing: .buffered,
+           defer: false)
+
+         let services = NSSharingService.sharingServices(forItems: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})
+
+         let service = services[%s]
+         service.perform(withItems: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})
+
+         service.delegate = window
+
+         NSApp.run()" selection)
+       :silent-success t
+       :shell-pipe "swift -"
+       :join-separator ", "
+       :no-progress t
+       :utils "swift")))
+#+end_src
+
+[[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] is available on [[https://melpa.org/#/dwim-shell-command][melpa]]. What other uses can you find for it?
+
 * [2022-10-12 Wed] Emacs: macOS sharing (DWIM style)
 :PROPERTIES:
 :CUSTOM_ID: emacs-macos-share-from-dired-dwim-style
@@ -10708,7 +10801,7 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 - Kafe 99.
 - Linea cafe.
 - Mission skateboards.
-- Nakamoto's Bitcoin shop.
+- pNakamoto's Bitcoin shop.
 - Philz Coffee.
 - Ritual Coffee roasters.
 - Rodger's coffee & tea.

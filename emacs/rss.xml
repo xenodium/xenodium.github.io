@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 12 Oct 2022 05:01:33 +0100</lastBuildDate>
+<lastBuildDate>Wed, 12 Oct 2022 20:31:03 +0100</lastBuildDate>
 <item>
   <title>Emacs: macOS sharing (DWIM style)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -141,7 +141,124 @@ I've pushed  <code>dwim-shell-commands-macos-share</code> to  <a href="https://g
 </div>]]></description>
   <link>http://xenodium.com/emacs-macos-share-from-dired-dwim-style</link>
   <guid isPermaLink="false">http://xenodium.com/emacs-macos-share-from-dired-dwim-style</guid>
-  <pubDate>Wed, 12 Oct 2022 05:01:33 +0100</pubDate>
+  <pubDate>Wed, 12 Oct 2022 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Improving on Emacs macOS sharing</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-macos-sharing-dwim-style-improved" class="outline-2">
+ <h2 id="emacs-macos-sharing-dwim-style-improved"> <span class="timestamp-wrapper"> <span class="timestamp">12 October 2022</span></span> Improving on Emacs macOS sharing</h2>
+ <div class="outline-text-2" id="text-emacs-macos-sharing-dwim-style-improved">
+ <p>
+A quick follow-up to  <a href="https://xenodium.com/emacs-macos-share-from-dired-dwim-style/">Emacs: macOS sharing (DWIM style)</a>… Though functional, the implementation had a couple of drawbacks.
+</p>
+
+ <p>
+Tohiko  <a href="https://www.reddit.com/r/emacs/comments/y1tneh/comment/is0pgkf">noticed fullscreen wasn't working at all</a> while Calvin  <a href="https://lobste.rs/s/qga1px/emacs_macos_sharing_dwim_style#c_safiuw">proposed enumeration for tighter Emacs integration</a>.
+</p>
+
+ <p>
+Calvin's suggestion enables using  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> to pick the sharing service. This makes the integration feel more at home. As a bonus, it also enables sharing from fullscreen Emacs.
+</p>
+
+ <p>
+As an  <a href="https://github.com/abo-abo/swiper">ivy</a> user, you can see a vertical list of sharing services.
+</p>
+
+
+ <div id="orgfdfbc0d" class="figure">
+ <p> <img src="../images/emacs-macos-sharing-dwim-style-improved/share-completing_x1.4.webp" alt="share-completing_x1.4.webp" width="80%" height="80%n"></img></p>
+</div>
+
+ <p>
+Here's the new snippet, now  <a href="https://github.com/xenodium/dwim-shell-command/commit/20e782b4bf1ea01fecfce3cc8ac4c5a74518cd80">pushed to dwim-shell-commands.el</a>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands--macos-sharing-services</span> ()
+   <span style="color: #183691;">"Return a list of sharing services."</span>
+  (<span style="color: #a71d5d;">let*</span> ((source (format  <span style="color: #183691;">"import AppKit</span>
+ <span style="color: #183691;">                         NSSharingService.sharingServices(forItems: [</span>
+ <span style="color: #183691;">                           %s</span>
+ <span style="color: #183691;">                         ]).forEach {</span>
+ <span style="color: #183691;">                           print(\"</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">$0.title)\")</span>
+ <span style="color: #183691;">                         }"</span>
+                         (string-join (mapcar (<span style="color: #a71d5d;">lambda</span> (file)
+                                                (format  <span style="color: #183691;">"URL(fileURLWithPath: \"%s\")"</span> file))
+                                              (dwim-shell-command--files))
+                                       <span style="color: #183691;">", "</span>)))
+         (services (split-string (string-trim (shell-command-to-string (format  <span style="color: #183691;">"echo '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' | swift -"</span> source)))
+                                  <span style="color: #183691;">"\n"</span>)))
+    (<span style="color: #a71d5d;">when</span> (seq-empty-p services)
+      (<span style="color: #333333;">error</span>  <span style="color: #183691;">"No sharing services available"</span>))
+    services))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-share</span> ()
+   <span style="color: #183691;">"Share selected files from macOS."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((services (dwim-shell-commands--macos-sharing-services))
+         (service-name (completing-read  <span style="color: #183691;">"Share via: "</span> services))
+         (selection (seq-position services service-name #'string-equal)))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Share"</span>
+     (format
+       <span style="color: #183691;">"import AppKit</span>
+
+ <span style="color: #183691;">       _ = NSApplication.shared</span>
+
+ <span style="color: #183691;">       NSApp.setActivationPolicy(.regular)</span>
+
+ <span style="color: #183691;">       class MyWindow: NSWindow, NSSharingServiceDelegate {</span>
+ <span style="color: #183691;">         func sharingService(</span>
+ <span style="color: #183691;">           _ sharingService: NSSharingService,</span>
+ <span style="color: #183691;">           didShareItems items: [Any]</span>
+ <span style="color: #183691;">         ) {</span>
+ <span style="color: #183691;">           NSApplication.shared.terminate(nil)</span>
+ <span style="color: #183691;">         }</span>
+
+ <span style="color: #183691;">         func sharingService(</span>
+ <span style="color: #183691;">           _ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error</span>
+ <span style="color: #183691;">         ) {</span>
+ <span style="color: #183691;">           let error = error as NSError</span>
+ <span style="color: #183691;">           if error.domain == NSCocoaErrorDomain && error.code == NSUserCancelledError {</span>
+ <span style="color: #183691;">             NSApplication.shared.terminate(nil)</span>
+ <span style="color: #183691;">           }</span>
+ <span style="color: #183691;">           exit(1)</span>
+ <span style="color: #183691;">         }</span>
+ <span style="color: #183691;">       }</span>
+
+ <span style="color: #183691;">       let window = MyWindow(</span>
+ <span style="color: #183691;">         contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),</span>
+ <span style="color: #183691;">         styleMask: [],</span>
+ <span style="color: #183691;">         backing: .buffered,</span>
+ <span style="color: #183691;">         defer: false)</span>
+
+ <span style="color: #183691;">       let services = NSSharingService.sharingServices(forItems: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})</span>
+
+ <span style="color: #183691;">       let service = services[%s]</span>
+ <span style="color: #183691;">       service.perform(withItems: [\"<<*>>\"].map{URL(fileURLWithPath:$0)})</span>
+
+ <span style="color: #183691;">       service.delegate = window</span>
+
+ <span style="color: #183691;">       NSApp.run()"</span> selection)
+      <span style="color: #a71d5d;">:silent-success</span> t
+      <span style="color: #a71d5d;">:shell-pipe</span>  <span style="color: #183691;">"swift -"</span>
+      <span style="color: #a71d5d;">:join-separator</span>  <span style="color: #183691;">", "</span>
+      <span style="color: #a71d5d;">:no-progress</span> t
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"swift"</span>)))
+</pre>
+</div>
+
+ <p>
+ <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-macos-sharing-dwim-style-improved</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-macos-sharing-dwim-style-improved</guid>
+  <pubDate>Wed, 12 Oct 2022 20:31:03 +0100</pubDate>
 </item>
 <item>
   <title>Emacs: Reveal in macOS Finder (DWIM style)</title>

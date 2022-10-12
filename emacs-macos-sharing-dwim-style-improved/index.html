@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-10-12 Wed 20:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Improving on Emacs macOS sharing</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-emacs-macos-sharing-dwim-style-improved" class="outline-2">
+<h2 id="emacs-macos-sharing-dwim-style-improved"><span class="timestamp-wrapper"><span class="timestamp">12 October 2022</span></span> Improving on Emacs macOS sharing</h2>
+<div class="outline-text-2" id="text-emacs-macos-sharing-dwim-style-improved">
+<p>
+A quick follow-up to <a href="https://xenodium.com/emacs-macos-share-from-dired-dwim-style/">Emacs: macOS sharing (DWIM style)</a>&#x2026; Though functional, the implementation had a couple of drawbacks.
+</p>
+
+<p>
+Tohiko <a href="https://www.reddit.com/r/emacs/comments/y1tneh/comment/is0pgkf">noticed fullscreen wasn't working at all</a> while Calvin <a href="https://lobste.rs/s/qga1px/emacs_macos_sharing_dwim_style#c_safiuw">proposed enumeration for tighter Emacs integration</a>.
+</p>
+
+<p>
+Calvin's suggestion enables using <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> to pick the sharing service. This makes the integration feel more at home. As a bonus, it also enables sharing from fullscreen Emacs.
+</p>
+
+<p>
+As an <a href="https://github.com/abo-abo/swiper">ivy</a> user, you can see a vertical list of sharing services.
+</p>
+
+
+<div id="orgfdfbc0d" class="figure">
+<p><img src="../images/emacs-macos-sharing-dwim-style-improved/share-completing_x1.4.webp" alt="share-completing_x1.4.webp" width="80%" height="80%n" />
+</p>
+</div>
+
+<p>
+Here's the new snippet, now <a href="https://github.com/xenodium/dwim-shell-command/commit/20e782b4bf1ea01fecfce3cc8ac4c5a74518cd80">pushed to dwim-shell-commands.el</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands--macos-sharing-services</span> ()
+  <span style="color: #183691;">"Return a list of sharing services."</span>
+  (<span style="color: #a71d5d;">let*</span> ((source (format <span style="color: #183691;">"import AppKit</span>
+<span style="color: #183691;">                         NSSharingService.sharingServices(forItems: [</span>
+<span style="color: #183691;">                           %s</span>
+<span style="color: #183691;">                         ]).forEach {</span>
+<span style="color: #183691;">                           print(\"</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">$0.title)\")</span>
+<span style="color: #183691;">                         }"</span>
+                         (string-join (mapcar (<span style="color: #a71d5d;">lambda</span> (file)
+                                                (format <span style="color: #183691;">"URL(fileURLWithPath: \"%s\")"</span> file))
+                                              (dwim-shell-command--files))
+                                      <span style="color: #183691;">", "</span>)))
+         (services (split-string (string-trim (shell-command-to-string (format <span style="color: #183691;">"echo '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' | swift -"</span> source)))
+                                 <span style="color: #183691;">"\n"</span>)))
+    (<span style="color: #a71d5d;">when</span> (seq-empty-p services)
+      (<span style="color: #333333;">error</span> <span style="color: #183691;">"No sharing services available"</span>))
+    services))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-macos-share</span> ()
+  <span style="color: #183691;">"Share selected files from macOS."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((services (dwim-shell-commands--macos-sharing-services))
+         (service-name (completing-read <span style="color: #183691;">"Share via: "</span> services))
+         (selection (seq-position services service-name #'string-equal)))
+    (dwim-shell-command-on-marked-files
+     <span style="color: #183691;">"Share"</span>
+     (format
+      <span style="color: #183691;">"import AppKit</span>
+
+<span style="color: #183691;">       _ = NSApplication.shared</span>
+
+<span style="color: #183691;">       NSApp.setActivationPolicy(.regular)</span>
+
+<span style="color: #183691;">       class MyWindow: NSWindow, NSSharingServiceDelegate {</span>
+<span style="color: #183691;">         func sharingService(</span>
+<span style="color: #183691;">           _ sharingService: NSSharingService,</span>
+<span style="color: #183691;">           didShareItems items: [Any]</span>
+<span style="color: #183691;">         ) {</span>
+<span style="color: #183691;">           NSApplication.shared.terminate(nil)</span>
+<span style="color: #183691;">         }</span>
+
+<span style="color: #183691;">         func sharingService(</span>
+<span style="color: #183691;">           _ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error</span>
+<span style="color: #183691;">         ) {</span>
+<span style="color: #183691;">           let error = error as NSError</span>
+<span style="color: #183691;">           if error.domain == NSCocoaErrorDomain &amp;&amp; error.code == NSUserCancelledError {</span>
+<span style="color: #183691;">             NSApplication.shared.terminate(nil)</span>
+<span style="color: #183691;">           }</span>
+<span style="color: #183691;">           exit(1)</span>
+<span style="color: #183691;">         }</span>
+<span style="color: #183691;">       }</span>
+
+<span style="color: #183691;">       let window = MyWindow(</span>
+<span style="color: #183691;">         contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),</span>
+<span style="color: #183691;">         styleMask: [],</span>
+<span style="color: #183691;">         backing: .buffered,</span>
+<span style="color: #183691;">         defer: false)</span>
+
+<span style="color: #183691;">       let services = NSSharingService.sharingServices(forItems: [\"&lt;&lt;*&gt;&gt;\"].map{URL(fileURLWithPath:$0)})</span>
+
+<span style="color: #183691;">       let service = services[%s]</span>
+<span style="color: #183691;">       service.perform(withItems: [\"&lt;&lt;*&gt;&gt;\"].map{URL(fileURLWithPath:$0)})</span>
+
+<span style="color: #183691;">       service.delegate = window</span>
+
+<span style="color: #183691;">       NSApp.run()"</span> selection)
+     <span style="color: #a71d5d;">:silent-success</span> t
+     <span style="color: #a71d5d;">:shell-pipe</span> <span style="color: #183691;">"swift -"</span>
+     <span style="color: #a71d5d;">:join-separator</span> <span style="color: #183691;">", "</span>
+     <span style="color: #a71d5d;">:no-progress</span> t
+     <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"swift"</span>)))
+</pre>
+</div>
+
+<p>
+<a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> is available on <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>
