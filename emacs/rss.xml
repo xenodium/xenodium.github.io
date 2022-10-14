@@ -6,7 +6,71 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 12 Oct 2022 20:31:03 +0100</lastBuildDate>
+<lastBuildDate>Fri, 14 Oct 2022 17:22:17 +0100</lastBuildDate>
+<item>
+  <title>Emacs: Open with macOS app</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-open-with-macos-app" class="outline-2">
+ <h2 id="emacs-open-with-macos-app"> <span class="timestamp-wrapper"> <span class="timestamp">14 October 2022</span></span> Emacs: Open with macOS app</h2>
+ <div class="outline-text-2" id="text-emacs-open-with-macos-app">
+ <p>
+On a recent Reddit  <a href="https://www.reddit.com/r/emacs/comments/y2dfma/comment/is4ygl8/?utm_source=share&utm_medium=web2x&context=3">comment</a>, tdstoff7 asked if I had considered writing an "Open with" DWIM shell command for those times one would like to open a file externally using an app other than the default. I hadn't, but nice idea.
+</p>
+
+ <p>
+Take images as an example. Though Emacs can display them quickly, I also open images externally using the default app ( <a href="https://en.wikipedia.org/wiki/Preview_(macOS)">Preview</a> in my case). But then there are those times when I'd like to open with a different app for editing (maybe something like GIMP). It'd be nice to quickly choose which app to open with.
+</p>
+
+
+ <div id="org274d6eb" class="figure">
+ <p> <img src="../images/emacs-open-with-macos-app/open-with_x2.webp" alt="open-with_x2.webp" width="80%" height="80%n"></img></p>
+</div>
+
+ <p>
+There isn't much to the code. Get a list of apps, ask user to pick one (via  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Programmed-Completion.html">completing-read</a>), and launch the external app via  <code>dwim-shell-command-on-marked-files</code>.
+</p>
+
+ <p>
+There's likely a better way of getting a list of available apps (happy to take suggestions), but searching in "/Applications" "~/Applications" and "/System/Applications" does the job for now.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-open-with</span> ()
+   <span style="color: #183691;">"Convert all marked images to jpg(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((apps (seq-sort
+                #'string-lessp
+                (seq-mapcat (<span style="color: #a71d5d;">lambda</span> (paths)
+                              (directory-files-recursively
+                               paths  <span style="color: #183691;">"\\.app$"</span> t (<span style="color: #a71d5d;">lambda</span> (path)
+                                                  (not (string-suffix-p  <span style="color: #183691;">".app"</span> path)))))
+                            '(<span style="color: #183691;">"/Applications"</span>  <span style="color: #183691;">"~/Applications"</span>  <span style="color: #183691;">"/System/Applications"</span>))))
+         (selection (<span style="color: #a71d5d;">progn</span>
+                      (<span style="color: #333333;">cl-assert</span> apps nil  <span style="color: #183691;">"No apps found"</span>)
+                      (completing-read  <span style="color: #183691;">"Open with: "</span>
+                                       (mapcar (<span style="color: #a71d5d;">lambda</span> (path)
+                                                 (propertize (file-name-base path) 'path path))
+                                               apps)))))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Open with"</span>
+     (format  <span style="color: #183691;">"open -a '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">'"</span> (get-text-property 0 'path selection))
+      <span style="color: #a71d5d;">:silent-success</span> t
+      <span style="color: #a71d5d;">:no-progress</span> t
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"open"</span>)))
+</pre>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-macos-open-with</code> is now included in  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>, available on  <a href="https://melpa.org/#/dwim-shell-command">melpa</a>. What other uses can you find for it?
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-open-with-macos-app</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-open-with-macos-app</guid>
+  <pubDate>Fri, 14 Oct 2022 17:22:17 +0100</pubDate>
+</item>
 <item>
   <title>Emacs: macOS sharing (DWIM style)</title>
   <description><![CDATA[<div id="content" class="content">
