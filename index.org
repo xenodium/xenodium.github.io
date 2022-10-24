@@ -1,6 +1,59 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-10-23 Sun] Emacs: A welcoming experiment
+:PROPERTIES:
+:CUSTOM_ID: emacs-a-welcoming-experiment
+:END:
+The =*scratch*= buffer is the first thing I see when I launch an Emacs session. Coupled with [[https://github.com/Fanael/persistent-scratch][persistent-scratch]], it's served me well over the years. I gotta say though, my scratch buffer accumulates random bits and often becomes a little messy. It's not the most visually appealing landing buffer when launching Emacs. But who cares, I'm only a =C-x b= binding away from invoking =ivy-switch-buffer= to get me wherever I need to be. It's powered by =ivy-use-virtual-buffers=, which remembers recent files across sessions.
+
+Having said all of this, I recently ran into u/pearcidar43's [[https://www.reddit.com/r/unixporn/comments/yamj5f/exwm_emacs_is_kinda_comfy_as_a_wm/][post]] showcasing a wonderful Emacs banner. Lucky for us, they [[https://www.reddit.com/r/unixporn/comments/yamj5f/comment/itfusm0/?utm_source=share&utm_medium=web2x&context=3][shared]] the [[https://github.com/TanbinIslam43/mydotfiles/blob/main/.doom.d/emacs.png][image]], so I got curious about building a minimal welcome buffer of sorts. Nothing fancy, the only requirements being to load quickly and enable me to get on with my =C-x b= ritual. Throw in a little bonus to exit quickly by pressing just =q= if I so desire.
+
+#+ATTR_HTML: :width 95% :height 95%n
+[[file:images/emacs-a-welcoming-experiment/welcome-minimal_x0.5.webp]]
+
+I didn't know a whole lot on how to go about it, so I took a peak at [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]] for inspiration. Turns out, I needed little code to get
+the desired effect in my =early-init.el=:
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/show-welcome-buffer ()
+    "Show *Welcome* buffer."
+    (with-current-buffer (get-buffer-create "*Welcome*")
+      (setq truncate-lines t)
+      (let* ((buffer-read-only)
+             (image-path "~/.emacs.d/emacs.png")
+             (image (create-image image-path))
+             (size (image-size image))
+             (height (cdr size))
+             (width (car size))
+             (top-margin (floor (/ (- (window-height) height) 2)))
+             (left-margin (floor (/ (- (window-width) width) 2)))
+             (title "Welcome to Emacs!"))
+        (erase-buffer)
+        (setq mode-line-format nil)
+        (goto-char (point-min))
+        (insert (make-string top-margin ?\n ))
+        (insert (make-string left-margin ?\ ))
+        (insert-image image)
+        (insert "\n\n\n")
+        (insert (make-string (floor (/ (- (window-width) (string-width title)) 2)) ?\ ))
+        (insert title))
+      (setq cursor-type nil)
+      (read-only-mode +1)
+      (switch-to-buffer (current-buffer))
+      (local-set-key (kbd "q") 'kill-this-buffer)))
+
+  (setq initial-scratch-message nil)
+  (setq inhibit-startup-screen t)
+
+  (when (< (length command-line-args) 2)
+    (add-hook 'emacs-startup-hook (lambda ()
+                                    (when (display-graphic-p)
+                                      (ar/show-welcome-buffer)))))
+#+end_src
+
+This being Emacs, I can bend it as far as needed. In my case, I didn't need much, so I can probably stop here. It was a fun experiment. I'll even [[https://github.com/xenodium/dotsies/commit/90c689def913a9bccdd408ef609c7f99a5cce1fb][try using it]] for a little while and see if it sticks. I'm sure there's plenty more that could be handled (edge cases, resizes, etc.), but if you want something more established, consider something like [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]] instead. I haven't used it myself, but is [[https://melpa.org/#/dashboard][pretty popular]].
+
 * [2022-10-14 Fri] Emacs: Open with macOS app
 :PROPERTIES:
 :CUSTOM_ID: emacs-open-with-macos-app
