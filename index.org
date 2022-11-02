@@ -1,6 +1,100 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-11-02 Wed] Hey Emacs, where did I take that photo?
+:PROPERTIES:
+:CUSTOM_ID: hey-emacs-where-did-i-take-that-photo
+:END:
+I was recently browsing through an old archive of holiday photos (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] of course). I wanted to know where the photo was taken, which got me interested in extracting [[https://en.wikipedia.org/wiki/Exif][Exif]] metadata.
+
+Luckily the [[https://exiftool.org/][exiftool]] command line utility does the heavy lifting when it comes to extracting metadata. Since I want it quickly accessible from Emacs (in either dired or current buffer), a tiny elisp snippet would give me just that (via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]).
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/hey-emacs-where-did-i-take-that-photo/dwim-exif_x1.3.webp]]
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-image-exif-metadata ()
+    "View EXIF metadata in image(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "View EXIF"
+     "exiftool '<<f>>'"
+     :utils "exiftool"))
+#+end_src
+
+The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I /manually/ feed these values to a reverse geocoding service like [[https://www.openstreetmap.org/][OpenStreetMap]]. /Manually/ you say? This is Emacs, so we can throw more elisp glue at the problem, coupled with some [[https://en.wikipedia.org/wiki/Z_shell][zsh]] snippet, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/hey-emacs-where-did-i-take-that-photo/minibuffer-address_x1.3.webp]]
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-image-reverse-geocode-location ()
+    "Reverse geocode image(s) location."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Reverse geocode"
+     "lat=\"$(exiftool -csv -n -gpslatitude -gpslongitude '<<f>>' | tail -n 1 | cut -s -d',' -f2-2)\"
+      if [ -z \"$lat\" ]; then
+        echo \"no latitude\"
+        exit 1
+      fi
+      lon=\"$(exiftool -csv -n -gpslatitude -gpslongitude '<<f>>' | tail -n 1 | cut -s -d',' -f3-3)\"
+      if [ -z \"$lon\" ]; then
+        echo \"no longitude\"
+        exit 1
+      fi
+      json=$(curl \"https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1\")
+      echo \"json_start $json json_end\""
+     :utils '("exiftool" "curl")
+     :silent-success t
+     :error-autofocus t
+     :on-completion
+     (lambda (buffer)
+       (with-current-buffer buffer
+         (goto-char (point-min))
+         (let ((matches '()))
+           (while (re-search-forward "^json_start\\(.*?\\)json_end" nil t)
+             (push (match-string 1) matches))
+           (message "%s" (string-join (seq-map (lambda (json)
+                                                 (map-elt (json-parse-string json :object-type 'alist) 'display_name))
+                                               matches)
+                                      "\n")))
+         (kill-buffer buffer)))))
+#+end_src
+
+Displaying the photo's address in the minibuffer is indeed pretty nifty, but what if I’d like to drop a pin in a map for further exploration? This is actually simpler, as there's no need for reverse geocoding. Following a similar recipe, we merely construct an [[https://www.openstreetmap.org/][OpenStreetMap]] URL and open it in our favourite browser.
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/hey-emacs-where-did-i-take-that-photo/photo-map_x1.4.webp]]
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-image-browse-location ()
+    "Open image(s) location in browser."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Browse location"
+     "lat=\"$(exiftool -csv -n -gpslatitude -gpslongitude '<<f>>' | tail -n 1 | cut -s -d',' -f2-2)\"
+      if [ -z \"$lat\" ]; then
+        echo \"no latitude\"
+        exit 1
+      fi
+      lon=\"$(exiftool -csv -n -gpslatitude -gpslongitude '<<f>>' | tail -n 1 | cut -s -d',' -f3-3)\"
+      if [ -z \"$lon\" ]; then
+        echo \"no longitude\"
+        exit 1
+      fi
+      if [[ $OSTYPE == darwin* ]]; then
+        open \"http://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&layers=C\"
+      else
+        xdg-open \"http://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&layers=C\"
+      fi"
+     :utils "exiftool"
+     :error-autofocus t
+     :silent-success t))
+#+end_src
+
+Got suggestions? Improvements? All three functions are now included in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]] as part of [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. Pull requests totally welcome ;)
+
 * [2022-10-24 Mon] Emacs: A welcoming experiment
 :PROPERTIES:
 :CUSTOM_ID: emacs-a-welcoming-experiment
@@ -9,7 +103,7 @@ The =*scratch*= buffer is the first thing I see when I launch an Emacs session. 
 
 Having said all of this, I recently ran into u/pearcidar43's [[https://www.reddit.com/r/unixporn/comments/yamj5f/exwm_emacs_is_kinda_comfy_as_a_wm/][post]] showcasing a wonderful Emacs banner. Lucky for us, they [[https://www.reddit.com/r/unixporn/comments/yamj5f/comment/itfusm0/?utm_source=share&utm_medium=web2x&context=3][shared]] the [[https://github.com/TanbinIslam43/mydotfiles/blob/main/.doom.d/emacs.png][image]], so I got curious about building a minimal welcome buffer of sorts. Nothing fancy, the only requirements being to load quickly and enable me to get on with my =C-x b= ritual. Throw in a little bonus to exit quickly by pressing just =q= if I so desire.
 
-#+ATTR_HTML: :width 95% :height 95%n
+#+ATTR_HTML: :width 95% :height 95%
 [[file:images/emacs-a-welcoming-experiment/welcome-minimal_x0.5.webp]]
 
 I didn't know a whole lot on how to go about it, so I took a peak at [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]] for inspiration. Turns out, I needed little code to get
@@ -62,7 +156,7 @@ On a recent Reddit [[https://www.reddit.com/r/emacs/comments/y2dfma/comment/is4y
 
 Take images as an example. Though Emacs can display them quickly, I also open images externally using the default app ([[https://en.wikipedia.org/wiki/Preview_(macOS)][Preview]] in my case). But then there are those times when I'd like to open with a different app for editing (maybe something like GIMP). It'd be nice to quickly choose which app to open with.
 
-#+ATTR_HTML: :width 80% :height 80%n
+#+ATTR_HTML: :width 80% :height 80%
 [[file:images/emacs-open-with-macos-app/open-with_x2.webp]]
 
 There isn't much to the code. Get a list of apps, ask user to pick one (via [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Programmed-Completion.html][completing-read]]), and launch the external app via =dwim-shell-command-on-marked-files=.
@@ -108,7 +202,7 @@ Calvin's suggestion enables using [[https://www.gnu.org/software/emacs/manual/ht
 
 As an [[https://github.com/abo-abo/swiper][ivy]] user, you can see a vertical list of sharing services.
 
-#+ATTR_HTML: :width 80% :height 80%n
+#+ATTR_HTML: :width 80% :height 80%
 [[file:images/emacs-macos-sharing-dwim-style-improved/share-completing_x1.4.webp]]
 
 Here's the new snippet, now [[https://github.com/xenodium/dwim-shell-command/commit/20e782b4bf1ea01fecfce3cc8ac4c5a74518cd80][pushed to dwim-shell-commands.el]]:
@@ -293,7 +387,7 @@ divinedominion's [[https://www.reddit.com/r/emacs/comments/xzt3gx/comment/irrwoy
 
 Sure there is some trickery involved here (like creating an invisible macOS window to anchor the menu), but hey the results are surprisingly usable. Take a look...
 
-#+ATTR_HTML: :width 80% :height 80%n
+#+ATTR_HTML: :width 80% :height 80%
 [[file:images/emacs-macos-share-from-dired-dwim-style/share-done_x1.4.webp]]
 
 I've pushed =dwim-shell-commands-macos-share= to [[https://github.com/xenodium/dwim-shell-command/blob/919817520fa507dd3c7e6859eb982976e28b2575/dwim-shell-commands.el#L370][dwim-shell-commands.el]] in case you'd like to give it a try. It's very much an experiment of sorts, so please treat it as such. For now, I'm looking forward to AirDropping more files and seeing if the flow sticks. Oh, and I just realised I can use this to send files to iOS Simulators. Win.
