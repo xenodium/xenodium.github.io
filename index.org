@@ -1,6 +1,58 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-11-06 Sun] Hey Emacs, change the default macOS app for...
+:PROPERTIES:
+:CUSTOM_ID: hey-emacs-change-the-default-macos-app-for
+:END:
+A few weeks ago, I [[https://xenodium.com/emacs-open-with-macos-app/][added an "open with"]] command to [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]]. It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
+
+=dwim-shell-commands-macos-open-with= and =dwim-shell-commands-open-externally= are typically enough for me to handle opening files outside of Emacs. But every now and then I'd like to change the default macOS app associated with specific file types. Now this isn't particularly challenging in macOS, but it does require a little navigating to get to the right place to change this default setting.
+
+Back in March 2020, I [[https://twitter.com/xenodium/status/1242879439932923909][tweeted]] about [[https://github.com/moretension/duti][duti]]: a command-line utility capable of setting default applications for various document types on macOS. While I liked the ability to change default apps from the command-line, the habit never quite stuck.
+
+Fast forward to 2022. I've been revisiting lots of my command-line usages (specially those that never stuck) and making them more accessible from Emacs via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. I seldom change default apps on macOS, so my brain forgets about =duti= itself, let alone its arguments, order, etc. But with a dwim shell command like =dwim-shell-commands-macos-set-default-app=, I can easily invoke the command via [[https://github.com/abo-abo/swiper][swiper]]'s =counsel-M-x= fuzzy terms: /"dwim set"/.
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/hey-emacs-change-the-default-macos-app-for/set-default_x1.3.webp]]
+
+As an added bonus, I get to reuse =dwim-shell-commands--macos-apps= from "open with" to quickly pick the new default app, making the whole experience pretty snappy.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-macos-set-default-app ()
+    "Set default app for file(s)."
+    (interactive)
+    (let* ((apps (dwim-shell-commands-macos-apps))
+           (selection (progn
+                        (cl-assert apps nil "No apps found")
+                        (completing-read "Set default app: " apps nil t))))
+      (dwim-shell-command-on-marked-files
+       "Set default app"
+       (format "duti -s \"%s\" '<<e>>' all"
+               (string-trim
+                (shell-command-to-string (format "defaults read '%s/Contents/Info.plist' CFBundleIdentifier"
+                                                 (map-elt apps selection)))))
+       :silent-success t
+       :no-progress t
+       :utils "duti")))
+
+  (defun dwim-shell-commands--macos-apps ()
+    "Return alist of macOS apps (\"Emacs\" . \"/Applications/Emacs.app\")."
+    (mapcar (lambda (path)
+              (cons (file-name-base path) path))
+            (seq-sort
+             #'string-lessp
+             (seq-mapcat (lambda (paths)
+                           (directory-files-recursively
+                            paths "\\.app$" t (lambda (path)
+                                               (not (string-suffix-p ".app" path)))))
+                         '("/Applications" "~/Applications" "/System/Applications")))))
+#+end_src
+
+As usual, I've added =dwim-shell-commands-macos-set-default-app= to [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]], which you can install via [[https://melpa.org/#/dwim-shell-command][MELPA]].
+
+Did you find this tiny integration useful? Check out [[https://xenodium.com/hey-emacs-where-did-i-take-that-photo/][Hey Emacs, where did I take that photo?]]
+
 * [2022-11-02 Wed] Hey Emacs, where did I take that photo?
 :PROPERTIES:
 :CUSTOM_ID: hey-emacs-where-did-i-take-that-photo
@@ -22,7 +74,7 @@ Luckily the [[https://exiftool.org/][exiftool]] command line utility does the he
      :utils "exiftool"))
 #+end_src
 
-The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I /manually/ feed these values to a reverse geocoding service like [[https://www.openstreetmap.org/][OpenStreetMap]]. /Manually/ you say? This is Emacs, so we can throw more elisp glue at the problem, coupled with some [[https://en.wikipedia.org/wiki/Z_shell][zsh]] snippet, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
+The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I /manually/ feed these values to a reverse geocoding service like [[https://www.openstreetmap.org/][OpenStreetMap]]. /Manually/ you say? This is Emacs, so we can throw more elisp glue at the problem, mixed in with a little shell script, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
 
 #+ATTR_HTML: :width 95% :height 95%
 [[file:images/hey-emacs-where-did-i-take-that-photo/minibuffer-address_x1.3.webp]]

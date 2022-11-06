@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-03 Thu 09:58 -->
+<!-- 2022-11-06 Sun 14:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hey Emacs, where did I take that photo?</title>
+<title>Hey Emacs, change the default macOS app for...</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -381,119 +381,73 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-hey-emacs-where-did-i-take-that-photo" class="outline-2">
-<h2 id="hey-emacs-where-did-i-take-that-photo"><span class="timestamp-wrapper"><span class="timestamp">02 November 2022</span></span> Hey Emacs, where did I take that photo?</h2>
-<div class="outline-text-2" id="text-hey-emacs-where-did-i-take-that-photo">
+<div id="outline-container-hey-emacs-change-the-default-macos-app-for" class="outline-2">
+<h2 id="hey-emacs-change-the-default-macos-app-for"><span class="timestamp-wrapper"><span class="timestamp">06 November 2022</span></span> Hey Emacs, change the default macOS app for&#x2026;</h2>
+<div class="outline-text-2" id="text-hey-emacs-change-the-default-macos-app-for">
 <p>
-I was recently browsing through an old archive of holiday photos (from <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> of course). I wanted to know where the photo was taken, which got me interested in extracting <a href="https://en.wikipedia.org/wiki/Exif">Exif</a> metadata.
+A few weeks ago, I <a href="https://xenodium.com/emacs-open-with-macos-app/">added an "open with"</a> command to <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>. It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
 </p>
 
 <p>
-Luckily the <a href="https://exiftool.org/">exiftool</a> command line utility does the heavy lifting when it comes to extracting metadata. Since I want it quickly accessible from Emacs (in either dired or current buffer), a tiny elisp snippet would give me just that (via <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>).
+<code>dwim-shell-commands-macos-open-with</code> and <code>dwim-shell-commands-open-externally</code> are typically enough for me to handle opening files outside of Emacs. But every now and then I'd like to change the default macOS app associated with specific file types. Now this isn't particularly challenging in macOS, but it does require a little navigating to get to the right place to change this default setting.
+</p>
+
+<p>
+Back in March 2020, I <a href="https://twitter.com/xenodium/status/1242879439932923909">tweeted</a> about <a href="https://github.com/moretension/duti">duti</a>: a command-line utility capable of setting default applications for various document types on macOS. While I liked the ability to change default apps from the command-line, the habit never quite stuck.
+</p>
+
+<p>
+Fast forward to 2022. I've been revisiting lots of my command-line usages (specially those that never stuck) and making them more accessible from Emacs via <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. I seldom change default apps on macOS, so my brain forgets about <code>duti</code> itself, let alone its arguments, order, etc. But with a dwim shell command like <code>dwim-shell-commands-macos-set-default-app</code>, I can easily invoke the command via <a href="https://github.com/abo-abo/swiper">swiper</a>'s <code>counsel-M-x</code> fuzzy terms: <i>"dwim set"</i>.
 </p>
 
 
-<div id="org9f2648c" class="figure">
-<p><img src="../images/hey-emacs-where-did-i-take-that-photo/dwim-exif_x1.3.webp" alt="dwim-exif_x1.3.webp" width="95%" height="95%" />
+<div id="org3da3843" class="figure">
+<p><img src="../images/hey-emacs-change-the-default-macos-app-for/set-default_x1.3.webp" alt="set-default_x1.3.webp" width="95%" height="95%" />
 </p>
 </div>
 
+<p>
+As an added bonus, I get to reuse <code>dwim-shell-commands--macos-apps</code> from "open with" to quickly pick the new default app, making the whole experience pretty snappy.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-image-exif-metadata</span> ()
-  <span style="color: #183691;">"View EXIF metadata in image(s)."</span>
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-macos-set-default-app</span> ()
+  <span style="color: #183691;">"Set default app for file(s)."</span>
   (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command-on-marked-files
-   <span style="color: #183691;">"View EXIF"</span>
-   <span style="color: #183691;">"exiftool '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">'"</span>
-   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"exiftool"</span>))
+  (<span style="color: #a71d5d;">let*</span> ((apps (dwim-shell-commands-macos-apps))
+         (selection (<span style="color: #a71d5d;">progn</span>
+                      (<span style="color: #333333;">cl-assert</span> apps nil <span style="color: #183691;">"No apps found"</span>)
+                      (completing-read <span style="color: #183691;">"Set default app: "</span> apps nil t))))
+    (dwim-shell-command-on-marked-files
+     <span style="color: #183691;">"Set default app"</span>
+     (format <span style="color: #183691;">"duti -s \"%s\" '</span><span style="color: #0086b3;">&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">' all"</span>
+             (string-trim
+              (shell-command-to-string (format <span style="color: #183691;">"defaults read '</span><span style="color: #0086b3;">%s/Contents/Info.plist</span><span style="color: #183691;">' CFBundleIdentifier"</span>
+                                               (map-elt apps selection)))))
+     <span style="color: #a71d5d;">:silent-success</span> t
+     <span style="color: #a71d5d;">:no-progress</span> t
+     <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"duti"</span>)))
+
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands--macos-apps</span> ()
+  <span style="color: #183691;">"Return alist of macOS apps (\"Emacs\" . \"/Applications/Emacs.app\")."</span>
+  (mapcar (<span style="color: #a71d5d;">lambda</span> (path)
+            (cons (file-name-base path) path))
+          (seq-sort
+           #'string-lessp
+           (seq-mapcat (<span style="color: #a71d5d;">lambda</span> (paths)
+                         (directory-files-recursively
+                          paths <span style="color: #183691;">"\\.app$"</span> t (<span style="color: #a71d5d;">lambda</span> (path)
+                                             (not (string-suffix-p <span style="color: #183691;">".app"</span> path)))))
+                       '(<span style="color: #183691;">"/Applications"</span> <span style="color: #183691;">"~/Applications"</span> <span style="color: #183691;">"/System/Applications"</span>)))))
 </pre>
 </div>
 
 <p>
-The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I <i>manually</i> feed these values to a reverse geocoding service like <a href="https://www.openstreetmap.org/">OpenStreetMap</a>. <i>Manually</i> you say? This is Emacs, so we can throw more elisp glue at the problem, mixed in with a little shell script, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
+As usual, I've added <code>dwim-shell-commands-macos-set-default-app</code> to <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, which you can install via <a href="https://melpa.org/#/dwim-shell-command">MELPA</a>.
 </p>
-
-
-<div id="org61f0bda" class="figure">
-<p><img src="../images/hey-emacs-where-did-i-take-that-photo/minibuffer-address_x1.3.webp" alt="minibuffer-address_x1.3.webp" width="95%" height="95%" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-image-reverse-geocode-location</span> ()
-  <span style="color: #183691;">"Reverse geocode image(s) location."</span>
-  (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command-on-marked-files
-   <span style="color: #183691;">"Reverse geocode"</span>
-   <span style="color: #183691;">"lat=\"$(exiftool -csv -n -gpslatitude -gpslongitude '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' | tail -n 1 | cut -s -d',' -f2-2)\"</span>
-<span style="color: #183691;">    if [ -z \"$lat\" ]; then</span>
-<span style="color: #183691;">      echo \"no latitude\"</span>
-<span style="color: #183691;">      exit 1</span>
-<span style="color: #183691;">    fi</span>
-<span style="color: #183691;">    lon=\"$(exiftool -csv -n -gpslatitude -gpslongitude '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' | tail -n 1 | cut -s -d',' -f3-3)\"</span>
-<span style="color: #183691;">    if [ -z \"$lon\" ]; then</span>
-<span style="color: #183691;">      echo \"no longitude\"</span>
-<span style="color: #183691;">      exit 1</span>
-<span style="color: #183691;">    fi</span>
-<span style="color: #183691;">    json=$(curl \"https://nominatim.openstreetmap.org/reverse?format=json&amp;accept-language=en&amp;lat=${lat}&amp;lon=${lon}&amp;zoom=18&amp;addressdetails=1\")</span>
-<span style="color: #183691;">    echo \"json_start $json json_end\""</span>
-   <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"exiftool"</span> <span style="color: #183691;">"curl"</span>)
-   <span style="color: #a71d5d;">:silent-success</span> t
-   <span style="color: #a71d5d;">:error-autofocus</span> t
-   <span style="color: #a71d5d;">:on-completion</span>
-   (<span style="color: #a71d5d;">lambda</span> (buffer)
-     (<span style="color: #a71d5d;">with-current-buffer</span> buffer
-       (goto-char (point-min))
-       (<span style="color: #a71d5d;">let</span> ((matches '()))
-         (<span style="color: #a71d5d;">while</span> (re-search-forward <span style="color: #183691;">"^json_start</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">(</span><span style="color: #183691;">.*?</span><span style="color: #969896;">\\</span><span style="color: #a71d5d;">)</span><span style="color: #183691;">json_end"</span> nil t)
-           (<span style="color: #a71d5d;">push</span> (match-string 1) matches))
-         (message <span style="color: #183691;">"%s"</span> (string-join (seq-map (<span style="color: #a71d5d;">lambda</span> (json)
-                                               (map-elt (json-parse-string json <span style="color: #a71d5d;">:object-type</span> 'alist) 'display_name))
-                                             matches)
-                                    <span style="color: #183691;">"\n"</span>)))
-       (kill-buffer buffer)))))
-</pre>
-</div>
 
 <p>
-Displaying the photo's address in the minibuffer is indeed pretty nifty, but what if I’d like to drop a pin in a map for further exploration? This is actually simpler, as there's no need for reverse geocoding. Following a similar recipe, we merely construct an <a href="https://www.openstreetmap.org/">OpenStreetMap</a> URL and open it in our favourite browser.
-</p>
-
-
-<div id="orgaa8b836" class="figure">
-<p><img src="../images/hey-emacs-where-did-i-take-that-photo/photo-map_x1.4.webp" alt="photo-map_x1.4.webp" width="95%" height="95%" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-image-browse-location</span> ()
-  <span style="color: #183691;">"Open image(s) location in browser."</span>
-  (<span style="color: #a71d5d;">interactive</span>)
-  (dwim-shell-command-on-marked-files
-   <span style="color: #183691;">"Browse location"</span>
-   <span style="color: #183691;">"lat=\"$(exiftool -csv -n -gpslatitude -gpslongitude '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' | tail -n 1 | cut -s -d',' -f2-2)\"</span>
-<span style="color: #183691;">    if [ -z \"$lat\" ]; then</span>
-<span style="color: #183691;">      echo \"no latitude\"</span>
-<span style="color: #183691;">      exit 1</span>
-<span style="color: #183691;">    fi</span>
-<span style="color: #183691;">    lon=\"$(exiftool -csv -n -gpslatitude -gpslongitude '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' | tail -n 1 | cut -s -d',' -f3-3)\"</span>
-<span style="color: #183691;">    if [ -z \"$lon\" ]; then</span>
-<span style="color: #183691;">      echo \"no longitude\"</span>
-<span style="color: #183691;">      exit 1</span>
-<span style="color: #183691;">    fi</span>
-<span style="color: #183691;">    if [[ $OSTYPE == darwin* ]]; then</span>
-<span style="color: #183691;">      open \"http://www.openstreetmap.org/?mlat=${lat}&amp;mlon=${lon}&amp;layers=C\"</span>
-<span style="color: #183691;">    else</span>
-<span style="color: #183691;">      xdg-open \"http://www.openstreetmap.org/?mlat=${lat}&amp;mlon=${lon}&amp;layers=C\"</span>
-<span style="color: #183691;">    fi"</span>
-   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"exiftool"</span>
-   <span style="color: #a71d5d;">:error-autofocus</span> t
-   <span style="color: #a71d5d;">:silent-success</span> t))
-</pre>
-</div>
-
-<p>
-Got suggestions? Improvements? All three functions are now included in <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a> as part of <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. Pull requests totally welcome ;)
+Did you find this tiny integration useful? Check out <a href="https://xenodium.com/hey-emacs-where-did-i-take-that-photo/">Hey Emacs, where did I take that photo?</a>
 </p>
 </div>
 </div>

@@ -6,7 +6,85 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 02 Nov 2022 20:46:26 +0000</lastBuildDate>
+<lastBuildDate>Sun, 06 Nov 2022 14:46:28 +0000</lastBuildDate>
+<item>
+  <title>Hey Emacs, change the default macOS app for...</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-hey-emacs-change-the-default-macos-app-for" class="outline-2">
+ <h2 id="hey-emacs-change-the-default-macos-app-for"> <span class="timestamp-wrapper"> <span class="timestamp">06 November 2022</span></span> Hey Emacs, change the default macOS app for…</h2>
+ <div class="outline-text-2" id="text-hey-emacs-change-the-default-macos-app-for">
+ <p>
+A few weeks ago, I  <a href="https://xenodium.com/emacs-open-with-macos-app/">added an "open with"</a> command to  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>. It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
+</p>
+
+ <p>
+ <code>dwim-shell-commands-macos-open-with</code> and  <code>dwim-shell-commands-open-externally</code> are typically enough for me to handle opening files outside of Emacs. But every now and then I'd like to change the default macOS app associated with specific file types. Now this isn't particularly challenging in macOS, but it does require a little navigating to get to the right place to change this default setting.
+</p>
+
+ <p>
+Back in March 2020, I  <a href="https://twitter.com/xenodium/status/1242879439932923909">tweeted</a> about  <a href="https://github.com/moretension/duti">duti</a>: a command-line utility capable of setting default applications for various document types on macOS. While I liked the ability to change default apps from the command-line, the habit never quite stuck.
+</p>
+
+ <p>
+Fast forward to 2022. I've been revisiting lots of my command-line usages (specially those that never stuck) and making them more accessible from Emacs via  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. I seldom change default apps on macOS, so my brain forgets about  <code>duti</code> itself, let alone its arguments, order, etc. But with a dwim shell command like  <code>dwim-shell-commands-macos-set-default-app</code>, I can easily invoke the command via  <a href="https://github.com/abo-abo/swiper">swiper</a>'s  <code>counsel-M-x</code> fuzzy terms:  <i>"dwim set"</i>.
+</p>
+
+
+ <div id="org3da3843" class="figure">
+ <p> <img src="../images/hey-emacs-change-the-default-macos-app-for/set-default_x1.3.webp" alt="set-default_x1.3.webp" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+As an added bonus, I get to reuse  <code>dwim-shell-commands--macos-apps</code> from "open with" to quickly pick the new default app, making the whole experience pretty snappy.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-set-default-app</span> ()
+   <span style="color: #183691;">"Set default app for file(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((apps (dwim-shell-commands-macos-apps))
+         (selection (<span style="color: #a71d5d;">progn</span>
+                      (<span style="color: #333333;">cl-assert</span> apps nil  <span style="color: #183691;">"No apps found"</span>)
+                      (completing-read  <span style="color: #183691;">"Set default app: "</span> apps nil t))))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Set default app"</span>
+     (format  <span style="color: #183691;">"duti -s \"%s\" '</span> <span style="color: #0086b3;"><<e>></span> <span style="color: #183691;">' all"</span>
+             (string-trim
+              (shell-command-to-string (format  <span style="color: #183691;">"defaults read '</span> <span style="color: #0086b3;">%s/Contents/Info.plist</span> <span style="color: #183691;">' CFBundleIdentifier"</span>
+                                               (map-elt apps selection)))))
+      <span style="color: #a71d5d;">:silent-success</span> t
+      <span style="color: #a71d5d;">:no-progress</span> t
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"duti"</span>)))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands--macos-apps</span> ()
+   <span style="color: #183691;">"Return alist of macOS apps (\"Emacs\" . \"/Applications/Emacs.app\")."</span>
+  (mapcar (<span style="color: #a71d5d;">lambda</span> (path)
+            (cons (file-name-base path) path))
+          (seq-sort
+           #'string-lessp
+           (seq-mapcat (<span style="color: #a71d5d;">lambda</span> (paths)
+                         (directory-files-recursively
+                          paths  <span style="color: #183691;">"\\.app$"</span> t (<span style="color: #a71d5d;">lambda</span> (path)
+                                             (not (string-suffix-p  <span style="color: #183691;">".app"</span> path)))))
+                       '(<span style="color: #183691;">"/Applications"</span>  <span style="color: #183691;">"~/Applications"</span>  <span style="color: #183691;">"/System/Applications"</span>)))))
+</pre>
+</div>
+
+ <p>
+As usual, I've added  <code>dwim-shell-commands-macos-set-default-app</code> to  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, which you can install via  <a href="https://melpa.org/#/dwim-shell-command">MELPA</a>.
+</p>
+
+ <p>
+Did you find this tiny integration useful? Check out  <a href="https://xenodium.com/hey-emacs-where-did-i-take-that-photo/">Hey Emacs, where did I take that photo?</a>
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/hey-emacs-change-the-default-macos-app-for</link>
+  <guid isPermaLink="false">http://xenodium.com/hey-emacs-change-the-default-macos-app-for</guid>
+  <pubDate>Sun, 06 Nov 2022 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>Hey Emacs, where did I take that photo?</title>
   <description><![CDATA[<div id="content" class="content">
@@ -23,7 +101,7 @@ Luckily the  <a href="https://exiftool.org/">exiftool</a> command line utility d
 </p>
 
 
- <div id="orgbb261a5" class="figure">
+ <div id="org9f2648c" class="figure">
  <p> <img src="../images/hey-emacs-where-did-i-take-that-photo/dwim-exif_x1.3.webp" alt="dwim-exif_x1.3.webp" width="95%" height="95%"></img></p>
 </div>
 
@@ -39,11 +117,11 @@ Luckily the  <a href="https://exiftool.org/">exiftool</a> command line utility d
 </div>
 
  <p>
-The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I  <i>manually</i> feed these values to a reverse geocoding service like  <a href="https://www.openstreetmap.org/">OpenStreetMap</a>.  <i>Manually</i> you say? This is Emacs, so we can throw more elisp glue at the problem, coupled with some  <a href="https://en.wikipedia.org/wiki/Z_shell">zsh</a> snippet, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
+The above makes all Exif metadata easily accessible, including the photo's GPS coordinates. But I haven’t quite answered the original question. Where did I take the photo? I now know the coordinates, but I can’t realistically deduce neither the country nor city unless I  <i>manually</i> feed these values to a reverse geocoding service like  <a href="https://www.openstreetmap.org/">OpenStreetMap</a>.  <i>Manually</i> you say? This is Emacs, so we can throw more elisp glue at the problem, mixed in with a little shell script, and presto! We've now automated the process of extracting metadata, reverse geocoding, and displaying the photo's address in the minibuffer. Pretty nifty.
 </p>
 
 
- <div id="orgeb45e29" class="figure">
+ <div id="org61f0bda" class="figure">
  <p> <img src="../images/hey-emacs-where-did-i-take-that-photo/minibuffer-address_x1.3.webp" alt="minibuffer-address_x1.3.webp" width="95%" height="95%"></img></p>
 </div>
 
@@ -88,7 +166,7 @@ Displaying the photo's address in the minibuffer is indeed pretty nifty, but wha
 </p>
 
 
- <div id="org9640206" class="figure">
+ <div id="orgaa8b836" class="figure">
  <p> <img src="../images/hey-emacs-where-did-i-take-that-photo/photo-map_x1.4.webp" alt="photo-map_x1.4.webp" width="95%" height="95%"></img></p>
 </div>
 
