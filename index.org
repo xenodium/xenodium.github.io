@@ -1,6 +1,66 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-11-12 Sat] Emacs: quickly killing processes
+:PROPERTIES:
+:CUSTOM_ID: emacs-quick-kill-process
+:END:
+Every so often, I need to kill the odd unresponsive process. While I really like =proced= (check out Mickey Petersen's [[https://www.masteringemacs.org/article/displaying-interacting-processes-proced][article]]), I somehow find myself using macOS's [[https://support.apple.com/en-bw/guide/activity-monitor/actmaea30277/mac][Activity Monitor]] to this purpose. Kinda odd, considering I prefer to do these kinds of things from Emacs.
+
+What I'd really like is a way to quickly fuzzy search a list of active processes and choose the unresponsive culprid, using my preferred completion frontend (in my case [[https://github.com/abo-abo/swiper][ivy]]).
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/emacs-quick-kill-process/kill_x1.8.webp]]
+
+Let's implement an interactive function for it... While we could use =ivy-read= directly in our implementation, it's best to use [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] and remain compatible with other completion frameworks. I'm a big fan of the humble =completing-read=. You feed it a list of candidates and it prompts users to pick one. To build our process list, we can reuse =proced='s own source: =proced-process-attributes=. We transform its output to an [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html][alist]], formatting the visible keys to contain the process id, owner, command name, and the command line which invoked the process. Once a process is chosen, we can send a kill signal using =signal-process= and our job is done. Read on for the full snippet.
+
+#+begin_src emacs-lisp :lexical no
+  (require 'map)
+  (require 'proced)
+  (require 'seq)
+
+  (defun ar/quick-kill-process ()
+    (interactive)
+    (let* ((pid-width 5)
+           (comm-width 25)
+           (user-width 10)
+           (processes (proced-process-attributes))
+           (candidates
+            (mapcar (lambda (attributes)
+                      (let* ((process (cdr attributes))
+                             (pid (format (format "%%%ds" pid-width) (map-elt process 'pid)))
+                             (user (format (format "%%-%ds" user-width)
+                                           (truncate-string-to-width
+                                            (map-elt process 'user) user-width nil nil t)))
+                             (comm (format (format "%%-%ds" comm-width)
+                                           (truncate-string-to-width
+                                            (map-elt process 'comm) comm-width nil nil t)))
+                             (args-width (- (window-width) (+ pid-width user-width comm-width 3)))
+                             (args (map-elt process 'args)))
+                        (cons (if args
+                                  (format "%s %s %s %s" pid user comm (truncate-string-to-width args args-width nil nil t))
+                                (format "%s %s %s" pid user comm))
+                              process)))
+                    processes))
+           (selection (map-elt candidates
+                               (completing-read "kill process: "
+                                                (seq-sort
+                                                 (lambda (p1 p2)
+                                                   (string-lessp (nth 2 (split-string (string-trim (car p1))))
+                                                                 (nth 2 (split-string (string-trim (car p2))))))
+                                                 candidates) nil t)))
+           (prompt-title (format "%s %s %s"
+                                 (map-elt selection 'pid)
+                                 (map-elt selection 'user)
+                                 (map-elt selection 'comm))))
+      (when (y-or-n-p (format "Kill? %s" prompt-title))
+        (if (eq (signal-process (map-elt selection 'pid) 9) 0)
+            (message "killed: %s" prompt-title)
+          (message "error: could not kill %s" prompt-title)))))
+#+end_src
+
+I've pushed =ar/quick-kill-process= to my [[https://github.com/xenodium/dotsies/][config]]. Go suggestions? Alternatives? Lemme know.
+
 * [2022-11-06 Sun] Hey Emacs, change the default macOS app for...
 :PROPERTIES:
 :CUSTOM_ID: hey-emacs-change-the-default-macos-app-for
@@ -174,7 +234,7 @@ the desired effect in my =early-init.el=:
              (width (car size))
              (top-margin (floor (/ (- (window-height) height) 2)))
              (left-margin (floor (/ (- (window-width) width) 2)))
-             (title "Welcome to Emacs!"))
+             (prompt-title "Welcome to Emacs!"))
         (erase-buffer)
         (setq mode-line-format nil)
         (goto-char (point-min))
@@ -182,8 +242,8 @@ the desired effect in my =early-init.el=:
         (insert (make-string left-margin ?\ ))
         (insert-image image)
         (insert "\n\n\n")
-        (insert (make-string (floor (/ (- (window-width) (string-width title)) 2)) ?\ ))
-        (insert title))
+        (insert (make-string (floor (/ (- (window-width) (string-width prompt-title)) 2)) ?\ ))
+        (insert prompt-title))
       (setq cursor-type nil)
       (read-only-mode +1)
       (switch-to-buffer (current-buffer))
@@ -266,7 +326,7 @@ Here's the new snippet, now [[https://github.com/xenodium/dwim-shell-command/com
                            NSSharingService.sharingServices(forItems: [
                              %s
                            ]).forEach {
-                             print(\"\\($0.title)\")
+                             print(\"\\($0.prompt-title)\")
                            }"
                            (string-join (mapcar (lambda (file)
                                                   (format "URL(fileURLWithPath: \"%s\")" file))

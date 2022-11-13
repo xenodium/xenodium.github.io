@@ -6,7 +6,87 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 06 Nov 2022 14:45:00 +0000</lastBuildDate>
+<lastBuildDate>Sun, 13 Nov 2022 00:55:20 +0000</lastBuildDate>
+<item>
+  <title>Emacs: quickly killing processes</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-quick-kill-process" class="outline-2">
+ <h2 id="emacs-quick-kill-process"> <span class="timestamp-wrapper"> <span class="timestamp">12 November 2022</span></span> Emacs: quickly killing processes</h2>
+ <div class="outline-text-2" id="text-emacs-quick-kill-process">
+ <p>
+Every so often, I need to kill the odd unresponsive process. While I really like  <code>proced</code> (check out Mickey Petersen's  <a href="https://www.masteringemacs.org/article/displaying-interacting-processes-proced">article</a>), I somehow find myself using macOS's  <a href="https://support.apple.com/en-bw/guide/activity-monitor/actmaea30277/mac">Activity Monitor</a> to this purpose. Kinda odd, considering I prefer to do these kinds of things from Emacs.
+</p>
+
+ <p>
+What I'd really like is a way to quickly fuzzy search a list of active processes and choose the unresponsive culprid, using my preferred completion frontend (in my case  <a href="https://github.com/abo-abo/swiper">ivy</a>).
+</p>
+
+
+ <div id="org4106c37" class="figure">
+ <p> <img src="../images/emacs-quick-kill-process/kill_x1.8.webp" alt="kill_x1.8.webp" width="95%" height="95%"></img></p>
+</div>
+
+ <p>
+Let's implement an interactive function for it… While we could use  <code>ivy-read</code> directly in our implementation, it's best to use  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> and remain compatible with other completion frameworks. I'm a big fan of the humble  <code>completing-read</code>. You feed it a list of candidates and it prompts users to pick one. To build our process list, we can reuse  <code>proced</code>'s own source:  <code>proced-process-attributes</code>. We transform its output to an  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html">alist</a>, formatting the visible keys to contain the process id, owner, command name, and the command line which invoked the process. Once a process is chosen, we can send a kill signal using  <code>signal-process</code> and our job is done. Read on for the full snippet.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">map</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">proced</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/quick-kill-process</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((pid-width 5)
+         (comm-width 25)
+         (user-width 10)
+         (processes (proced-process-attributes))
+         (candidates
+          (mapcar (<span style="color: #a71d5d;">lambda</span> (attributes)
+                    (<span style="color: #a71d5d;">let*</span> ((process (cdr attributes))
+                           (pid (format (format  <span style="color: #183691;">"%%%ds"</span> pid-width) (map-elt process 'pid)))
+                           (user (format (format  <span style="color: #183691;">"%%-%ds"</span> user-width)
+                                         (truncate-string-to-width
+                                          (map-elt process 'user) user-width nil nil t)))
+                           (comm (format (format  <span style="color: #183691;">"%%-%ds"</span> comm-width)
+                                         (truncate-string-to-width
+                                          (map-elt process 'comm) comm-width nil nil t)))
+                           (args-width (- (window-width) (+ pid-width user-width comm-width 3)))
+                           (args (map-elt process 'args)))
+                      (cons (<span style="color: #a71d5d;">if</span> args
+                                (format  <span style="color: #183691;">"%s %s %s %s"</span> pid user comm (truncate-string-to-width args args-width nil nil t))
+                              (format  <span style="color: #183691;">"%s %s %s"</span> pid user comm))
+                            process)))
+                  processes))
+         (selection (map-elt candidates
+                             (completing-read  <span style="color: #183691;">"kill process: "</span>
+                                              (seq-sort
+                                               (<span style="color: #a71d5d;">lambda</span> (p1 p2)
+                                                 (string-lessp (nth 2 (split-string (string-trim (car p1))))
+                                                               (nth 2 (split-string (string-trim (car p2))))))
+                                               candidates)  <span style="color: #333333;">nil t)))</span>
+         (prompt-title (format  <span style="color: #183691;">"%s %s %s"</span>
+                               (map-elt selection 'pid)
+                               (map-elt selection 'user)
+                               (map-elt selection 'comm))))
+    (<span style="color: #a71d5d;">when</span> (y-or-n-p (format  <span style="color: #183691;">"Kill? %s"</span> prompt-title))
+      (<span style="color: #a71d5d;">if</span> (eq (signal-process (map-elt selection 'pid) 9) 0)
+          (message  <span style="color: #183691;">"killed: %s"</span> prompt-title)
+        (message  <span style="color: #183691;">"error: could not kill %s"</span> prompt-title)))))
+</pre>
+</div>
+
+ <p>
+I've pushed  <code>ar/quick-kill-process</code> to my  <a href="https://github.com/xenodium/dotsies/">config</a>. Go suggestions? Alternatives? Lemme know.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-quick-kill-process</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-quick-kill-process</guid>
+  <pubDate>Sat, 12 Nov 2022 00:55:20 +0000</pubDate>
+</item>
 <item>
   <title>Hey Emacs, change the default macOS app for...</title>
   <description><![CDATA[<div id="content" class="content">
