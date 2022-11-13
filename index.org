@@ -1,7 +1,7 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2022-11-12 Sat] Emacs: quickly killing processes
+* [2022-11-13 Sun] Emacs: quickly killing processes
 :PROPERTIES:
 :CUSTOM_ID: emacs-quick-kill-process
 :END:
@@ -12,14 +12,18 @@ What I'd really like is a way to quickly fuzzy search a list of active processes
 #+ATTR_HTML: :width 95% :height 95%
 [[file:images/emacs-quick-kill-process/kill_x1.8.webp]]
 
-Let's implement an interactive function for it... While we could use =ivy-read= directly in our implementation, it's best to use [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] and remain compatible with other completion frameworks. I'm a big fan of the humble =completing-read=. You feed it a list of candidates and it prompts users to pick one. To build our process list, we can reuse =proced='s own source: =proced-process-attributes=. We transform its output to an [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html][alist]], formatting the visible keys to contain the process id, owner, command name, and the command line which invoked the process. Once a process is chosen, we can send a kill signal using =signal-process= and our job is done. Read on for the full snippet.
+The function below gives us a fuzzy-searchable process utility. While we could use =ivy-read= directly in our implementation, we're better of using [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] to remain compatible with other completion frameworks. I'm a big fan of the humble =completing-read=. You feed it a list of candidates and it prompts users to pick one.
+
+To build our process list, we can lean on =proced='s own source: =proced-process-attributes=. We transform its output to an [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html][alist]], formatting the visible keys to contain the process id, owner, command name, and the command line which invoked the process. Once a process is chosen, we can send a kill signal using  +signal-process+ [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] and our /job is done/.
 
 #+begin_src emacs-lisp :lexical no
+  (require 'dwim-shell-command)
   (require 'map)
   (require 'proced)
   (require 'seq)
 
-  (defun ar/quick-kill-process ()
+  (defun dwim-shell-commands-kill-process ()
+    "Select and kill process."
     (interactive)
     (let* ((pid-width 5)
            (comm-width 25)
@@ -54,12 +58,25 @@ Let's implement an interactive function for it... While we could use =ivy-read= 
                                  (map-elt selection 'user)
                                  (map-elt selection 'comm))))
       (when (y-or-n-p (format "Kill? %s" prompt-title))
-        (if (eq (signal-process (map-elt selection 'pid) 9) 0)
-            (message "killed: %s" prompt-title)
-          (message "error: could not kill %s" prompt-title)))))
+        (dwim-shell-command-on-marked-files
+         (format "Kill %s" prompt-title)
+         (format "kill -9 %d" (map-elt selection 'pid))
+         :utils "kill"
+         :error-autofocus t
+         :silent-success t))))
 #+end_src
 
-I've pushed =ar/quick-kill-process= to my [[https://github.com/xenodium/dotsies/][config]]. Go suggestions? Alternatives? Lemme know.
+I've pushed =dwim-shell-commands-kill-process= to my +[[https://github.com/xenodium/dotsies/][config]]+ [[https://github.com/xenodium/dwim-shell-command/commit/b98f45c7901446cf1ab60be2ab648c623e774427][dwim-shell-commands.el]]. Go suggestions? Alternatives? Lemme know.
+
+** Update
+
+I've moved =dwim-shell-commands-kill-process= from my Emacs [[https://github.com/xenodium/dotsies][config]] to [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]]. A few advantages:
+
+- Killing processes is now async.
+- Should anything go wrong, an error message is now accessible.
+- You can easily install via [[https://melpa.org/#/dwim-shell-command][MELPA]].
+
+If you prefer the previous version (without a dependency on [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]), have a look at the [[https://github.com/xenodium/dotsies/commit/eac4f892eab7a80740ee8ce0c727381886442fb6][initial commit]].
 
 * [2022-11-06 Sun] Hey Emacs, change the default macOS app for...
 :PROPERTIES:
