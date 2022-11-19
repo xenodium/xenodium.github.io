@@ -5692,7 +5692,7 @@ Back in December 2019, I made a note to revisit [[https://www.reddit.com/user/sn
   (defun adviced:counsel-M-x-action (orig-fun &rest r)
     "Additional support for multiple cursors."
     (apply orig-fun r)
-    (let ((cmd (intern (counsel--string-trim-left (nth 0 r) "\\^"))))
+    (let ((cmd (intern (car r))))
       (when (and (boundp 'multiple-cursors-mode)
                  multiple-cursors-mode
                  cmd
