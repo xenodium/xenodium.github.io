@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-06-16 Wed 19:35 -->
+<!-- 2022-11-25 Fri 17:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>xcodebuilds SPM support (Xcode 11)</title>
-<meta name="generator" content="Org mode" />
+<title>xcodebuild's SPM support (Xcode 11)</title>
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,71 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -426,9 +364,22 @@
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-xcodebuilds-spm-support-xcode-11" class="outline-2">
 <h2 id="xcodebuilds-spm-support-xcode-11"><span class="timestamp-wrapper"><span class="timestamp">16 June 2021</span></span> xcodebuild's SPM support (Xcode 11)</h2>
@@ -461,9 +412,9 @@ In any case, on to xcodebuild&#x2026; but let's first create a brand new Swift p
 </p>
 </div>
 
-<div id="outline-container-orge7b189e" class="outline-3">
-<h3 id="orge7b189e">Creating a Swift package library</h3>
-<div class="outline-text-3" id="text-orge7b189e">
+<div id="outline-container-org7960006" class="outline-3">
+<h3 id="org7960006">Creating a Swift package library</h3>
+<div class="outline-text-3" id="text-org7960006">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir FooBar &amp;&amp; cd FooBar
 swift package init --type library
@@ -484,9 +435,9 @@ Creating Tests/FooBarTests/FooBarTests.swift
 </div>
 </div>
 
-<div id="outline-container-orgc205fc5" class="outline-3">
-<h3 id="orgc205fc5">List package schemes</h3>
-<div class="outline-text-3" id="text-orgc205fc5">
+<div id="outline-container-org18ac046" class="outline-3">
+<h3 id="org18ac046">List package schemes</h3>
+<div class="outline-text-3" id="text-org18ac046">
 <p>
 We can use xcodebuild to list the available schemes.
 </p>
@@ -496,7 +447,7 @@ We can use xcodebuild to list the available schemes.
 </pre>
 </div>
 
-<pre class="example" id="org528be9e">
+<pre class="example" id="org27821bf">
 Command line invocation:
     /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -list
 
@@ -516,9 +467,9 @@ Information about workspace "FooBar":
 </div>
 </div>
 
-<div id="outline-container-orgcbb8478" class="outline-3">
-<h3 id="orgcbb8478">Show supported platform, architecture, etc</h3>
-<div class="outline-text-3" id="text-orgcbb8478">
+<div id="outline-container-orge251a49" class="outline-3">
+<h3 id="orge251a49">Show supported platform, architecture, etc</h3>
+<div class="outline-text-3" id="text-orge251a49">
 <p>
 Similarly, we can list destinations supported for the schemes.
 </p>
@@ -528,7 +479,7 @@ Similarly, we can list destinations supported for the schemes.
 </pre>
 </div>
 
-<pre class="example" id="orgeeec718">
+<pre class="example" id="org6febcc0">
 Command line invocation:
     /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -showdestinations -scheme FooBar
 
@@ -554,9 +505,9 @@ Resolved source packages:
 </div>
 </div>
 
-<div id="outline-container-orgb798001" class="outline-3">
-<h3 id="orgb798001">macOS builds</h3>
-<div class="outline-text-3" id="text-orgb798001">
+<div id="outline-container-org9f7a206" class="outline-3">
+<h3 id="org9f7a206">macOS builds</h3>
+<div class="outline-text-3" id="text-org9f7a206">
 <p>
 Let's build for macOS, though let's first import UIKit into FooBar.swift. This ensures we get an expected failure when building for macOS.
 </p>
@@ -579,7 +530,7 @@ Now let's attempt to build it&#x2026;
 </pre>
 </div>
 
-<pre class="example" id="org5b856f1">
+<pre class="example" id="org0b3a266">
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:macOS, arch:x86_64, id:3D097357-EB7D-565D-9058-CE7C3135927B }
 { platform:macOS, arch:x86_64, variant:Mac Catalyst, id:3D097357-EB7D-565D-9058-CE7C3135927B }
@@ -602,9 +553,9 @@ The failure expected as UIKit isn't available on your typical macOS builds.
 </div>
 </div>
 
-<div id="outline-container-org3ab890c" class="outline-3">
-<h3 id="org3ab890c">macOS Catalyst builds</h3>
-<div class="outline-text-3" id="text-org3ab890c">
+<div id="outline-container-org5a3c83d" class="outline-3">
+<h3 id="org5a3c83d">macOS Catalyst builds</h3>
+<div class="outline-text-3" id="text-org5a3c83d">
 <p>
 We do, however, have Catalyst available, so we can use its variant to build for macOS with UIKit support, and.. voilà!
 </p>

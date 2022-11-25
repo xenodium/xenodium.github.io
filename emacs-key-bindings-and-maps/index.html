@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:54 -->
+<!-- 2022-11-25 Fri 17:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs key bindings and maps</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -40,22 +41,22 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
+    overflow: auto;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,95 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -450,39 +364,52 @@ for the JavaScript code in this tag.
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org547abbb" class="outline-2">
+<div id="outline-container-emacs-key-bindings-and-maps" class="outline-2">
 <h2 id="emacs-key-bindings-and-maps"><span class="timestamp-wrapper"><span class="timestamp">23 April 2015</span></span> Emacs key bindings and maps</h2>
 <div class="outline-text-2" id="text-emacs-key-bindings-and-maps">
 </div>
-<div id="outline-container-org9ca1348" class="outline-3">
-<h3 id="org9ca1348">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
+<div id="outline-container-org0ccfada" class="outline-3">
+<h3 id="org0ccfada">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
 </div>
-<div id="outline-container-org7639eb3" class="outline-3">
-<h3 id="org7639eb3">bonus tip</h3>
-<div class="outline-text-3" id="text-org7639eb3">
+<div id="outline-container-org349808c" class="outline-3">
+<h3 id="org349808c">bonus tip</h3>
+<div class="outline-text-3" id="text-org349808c">
 <p>
 prefix key, followed by c-h, lists keys in prefix.
 </p>
 </div>
 </div>
-<div id="outline-container-org83e4ae4" class="outline-3">
-<h3 id="org83e4ae4">keymap</h3>
-<div class="outline-text-3" id="text-org83e4ae4">
+<div id="outline-container-org18a35a2" class="outline-3">
+<h3 id="org18a35a2">keymap</h3>
+<div class="outline-text-3" id="text-org18a35a2">
 <p>
 maps key to action.
 </p>
 </div>
 </div>
-<div id="outline-container-org6e8cc53" class="outline-3">
-<h3 id="org6e8cc53">keymap found in buffer and most major modes.</h3>
+<div id="outline-container-org68b12a3" class="outline-3">
+<h3 id="org68b12a3">keymap found in buffer and most major modes.</h3>
 </div>
-<div id="outline-container-org82732b0" class="outline-3">
-<h3 id="org82732b0">keys</h3>
-<div class="outline-text-3" id="text-org82732b0">
+<div id="outline-container-orge034bc4" class="outline-3">
+<h3 id="orge034bc4">keys</h3>
+<div class="outline-text-3" id="text-orge034bc4">
 <ul class="org-ul">
 <li>undefined: self explanatory.</li>
 <li>prefix key: ie. c-x (part of complete key).</li>
@@ -490,9 +417,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org2c901ae" class="outline-3">
-<h3 id="org2c901ae">mapping</h3>
-<div class="outline-text-3" id="text-org2c901ae">
+<div id="outline-container-org0516fae" class="outline-3">
+<h3 id="org0516fae">mapping</h3>
+<div class="outline-text-3" id="text-org0516fae">
 <ul class="org-ul">
 <li>(define-key keymap key def): add to current buffer map.</li>
 <li>(local-set-key key command): add to active buffer (no map option).</li>
@@ -502,9 +429,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org1f14748" class="outline-3">
-<h3 id="org1f14748">key codes</h3>
-<div class="outline-text-3" id="text-org1f14748">
+<div id="outline-container-org0c6958d" class="outline-3">
+<h3 id="org0c6958d">key codes</h3>
+<div class="outline-text-3" id="text-org0c6958d">
 <ul class="org-ul">
 <li>kbd: macro transaltes human-readable key to emacs readable.</li>
 <li>function and navigation keys must be surrounded by &lt;&gt;.</li>
@@ -512,18 +439,18 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org1f67c91" class="outline-3">
-<h3 id="org1f67c91">remapping</h3>
-<div class="outline-text-3" id="text-org1f67c91">
+<div id="outline-container-orgbce2e5d" class="outline-3">
+<h3 id="orgbce2e5d">remapping</h3>
+<div class="outline-text-3" id="text-orgbce2e5d">
 <ul class="org-ul">
 <li>use remap to replace mapping (ie. kill-line with my/kill-line).</li>
 <li>(define-key keymap [remap original-function] 'my-own-function).</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1448ef0" class="outline-3">
-<h3 id="org1448ef0">reserved keys</h3>
-<div class="outline-text-3" id="text-org1448ef0">
+<div id="outline-container-org7e140bb" class="outline-3">
+<h3 id="org7e140bb">reserved keys</h3>
+<div class="outline-text-3" id="text-org7e140bb">
 <ul class="org-ul">
 <li>"c-c ?" generally reserved for you, but third party packages use it.</li>
 <li>function keys (ie. f1-f12).</li>
@@ -531,9 +458,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-orgeb830bc" class="outline-3">
-<h3 id="orgeb830bc">lookup order</h3>
-<div class="outline-text-3" id="text-orgeb830bc">
+<div id="outline-container-org49adf5a" class="outline-3">
+<h3 id="org49adf5a">lookup order</h3>
+<div class="outline-text-3" id="text-org49adf5a">
 <ul class="org-ul">
 <li>in a nutshell: minor mode keys, local keys, global keys.</li>
 <li>full order:
@@ -550,9 +477,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org81e65c1" class="outline-3">
-<h3 id="org81e65c1">mode hooks</h3>
-<div class="outline-text-3" id="text-org81e65c1">
+<div id="outline-container-org544d155" class="outline-3">
+<h3 id="org544d155">mode hooks</h3>
+<div class="outline-text-3" id="text-org544d155">
 <ul class="org-ul">
 <li>(local-set-key (kbd "c-c q") 'my-awesome-method)) in hook-method.</li>
 <li>for key-chord-define, use current-local-map.</li>

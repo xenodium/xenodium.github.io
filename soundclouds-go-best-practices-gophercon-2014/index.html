@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:48 -->
+<!-- 2022-11-25 Fri 17:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Soundcloud's Go best practices (GopherCon 2014)</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -40,22 +41,22 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
+    overflow: auto;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,95 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -450,95 +364,108 @@ for the JavaScript code in this tag.
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org19d1802" class="outline-2">
+<div id="outline-container-soundclouds-go-best-practices-gophercon-2014" class="outline-2">
 <h2 id="soundclouds-go-best-practices-gophercon-2014"><span class="timestamp-wrapper"><span class="timestamp">26 September 2015</span></span> Soundcloud's Go best practices (GopherCon 2014)</h2>
 <div class="outline-text-2" id="text-soundclouds-go-best-practices-gophercon-2014">
 <p>
 Having watched the <a href="https://www.youtube.com/watch?v%3DY1-RLAl7iOI">video</a>, some takeaways:
 </p>
 </div>
-<div id="outline-container-orgbf4af8d" class="outline-3">
-<h3 id="orgbf4af8d">Single GOPATH</h3>
-<div class="outline-text-3" id="text-orgbf4af8d">
+<div id="outline-container-orga628901" class="outline-3">
+<h3 id="orga628901">Single GOPATH</h3>
+<div class="outline-text-3" id="text-orga628901">
 </div>
-<div id="outline-container-orgdc887bb" class="outline-4">
-<h4 id="orgdc887bb">$GOPATH/src/github.com/soundcloud/foo</h4>
+<div id="outline-container-orga584a56" class="outline-4">
+<h4 id="orga584a56">$GOPATH/src/github.com/soundcloud/foo</h4>
 </div>
 </div>
-<div id="outline-container-orge0b2d09" class="outline-3">
-<h3 id="orge0b2d09">Repo structure</h3>
-<div class="outline-text-3" id="text-orge0b2d09">
+<div id="outline-container-orgc239f72" class="outline-3">
+<h3 id="orgc239f72">Repo structure</h3>
+<div class="outline-text-3" id="text-orgc239f72">
 </div>
-<div id="outline-container-org80e945a" class="outline-4">
-<h4 id="org80e945a">github.com/soundcloud/whatever</h4>
-<div class="outline-text-4" id="text-org80e945a">
+<div id="outline-container-orgbd34a1d" class="outline-4">
+<h4 id="orgbd34a1d">github.com/soundcloud/whatever</h4>
+<div class="outline-text-4" id="text-orgbd34a1d">
 </div>
 <ul class="org-ul">
-<li><a id="org228bcf9"></a>README.md<br /></li>
-<li><a id="orgf5fbc36"></a>Makefile<br /></li>
-<li><a id="org4a17f8c"></a>main.go<br /></li>
-<li><a id="orgb183805"></a>support.go<br /></li>
-<li><a id="org4fe0cb2"></a>foo<br />
+<li><a id="org28af539"></a>README.md<br /></li>
+<li><a id="org594e958"></a>Makefile<br /></li>
+<li><a id="orgadf60be"></a>main.go<br /></li>
+<li><a id="org13c3aa9"></a>support.go<br /></li>
+<li><a id="org42d2dc6"></a>foo<br />
 <ul class="org-ul">
-<li><a id="org5bfd97a"></a>foo.go<br /></li>
-<li><a id="org6961ce9"></a>bar.go<br /></li>
+<li><a id="org2994536"></a>foo.go<br /></li>
+<li><a id="org7270a3a"></a>bar.go<br /></li>
 </ul>
 </li>
-<li><a id="org5174e0e"></a>whatever-server<br />
+<li><a id="org7cd205d"></a>whatever-server<br />
 <ul class="org-ul">
-<li><a id="org90f372f"></a>main.go<br /></li>
+<li><a id="org2bd7846"></a>main.go<br /></li>
 </ul>
 </li>
-<li><a id="orgdb5c1b3"></a>wharever-worker<br />
+<li><a id="orgfc37fb2"></a>wharever-worker<br />
 <ul class="org-ul">
-<li><a id="orga73ec64"></a>main.go<br /></li>
+<li><a id="org751162b"></a>main.go<br /></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc488afb" class="outline-3">
-<h3 id="orgc488afb">Formatting and style</h3>
-<div class="outline-text-3" id="text-orgc488afb">
+<div id="outline-container-orge5c8ca4" class="outline-3">
+<h3 id="orge5c8ca4">Formatting and style</h3>
+<div class="outline-text-3" id="text-orge5c8ca4">
 </div>
-<div id="outline-container-org3fcaef8" class="outline-4">
-<h4 id="org3fcaef8">Use gofmt.</h4>
+<div id="outline-container-orgb7c1106" class="outline-4">
+<h4 id="orgb7c1106">Use gofmt.</h4>
 </div>
-<div id="outline-container-orgb55f5ea" class="outline-4">
-<h4 id="orgb55f5ea">Google's codereview <a href="https://github.com/golang/go/wiki/CodeReviewComments">guidelines</a>.</h4>
+<div id="outline-container-orgdfb2d53" class="outline-4">
+<h4 id="orgdfb2d53">Google's codereview <a href="https://github.com/golang/go/wiki/CodeReviewComments">guidelines</a>.</h4>
 </div>
-<div id="outline-container-orge46b4d5" class="outline-4">
-<h4 id="orge46b4d5">Avoid named return parameters.</h4>
+<div id="outline-container-orga9a247d" class="outline-4">
+<h4 id="orga9a247d">Avoid named return parameters.</h4>
 </div>
-<div id="outline-container-org4f14cea" class="outline-4">
-<h4 id="org4f14cea">Avoid make and new (unless you know sizes).</h4>
+<div id="outline-container-org6326a4c" class="outline-4">
+<h4 id="org6326a4c">Avoid make and new (unless you know sizes).</h4>
 </div>
-<div id="outline-container-org568a3a7" class="outline-4">
-<h4 id="org568a3a7">Use struct{} for sentinel values: sets, signal chans.</h4>
-<div class="outline-text-4" id="text-org568a3a7">
-</div>
-<ul class="org-ul">
-<li><a id="org568380b"></a>Conveys no information in it this part.<br /></li>
-<li><a id="orgdad3e27"></a>Instead of empty interface.<br /></li>
-<li><a id="org15b0f42"></a>instead of boolean.<br /></li>
-</ul>
-</div>
-<div id="outline-container-orgf0eda19" class="outline-4">
-<h4 id="orgf0eda19">Break long lines at parameters</h4>
-<div class="outline-text-4" id="text-orgf0eda19">
+<div id="outline-container-org069fd0e" class="outline-4">
+<h4 id="org069fd0e">Use struct{} for sentinel values: sets, signal chans.</h4>
+<div class="outline-text-4" id="text-org069fd0e">
 </div>
 <ul class="org-ul">
-<li><a id="org28d0e30"></a>No need to compact.<br /></li>
-<li><a id="org75e0bb9"></a>Keep trailing coma in last argument.<br /></li>
+<li><a id="org84ef8f3"></a>Conveys no information in it this part.<br /></li>
+<li><a id="org91d584a"></a>Instead of empty interface.<br /></li>
+<li><a id="org4ee9b2a"></a>instead of boolean.<br /></li>
 </ul>
 </div>
-<div id="outline-container-org0c56ac3" class="outline-4">
-<h4 id="org0c56ac3">Flags</h4>
-<div class="outline-text-4" id="text-org0c56ac3">
+<div id="outline-container-org020efb0" class="outline-4">
+<h4 id="org020efb0">Break long lines at parameters</h4>
+<div class="outline-text-4" id="text-org020efb0">
+</div>
+<ul class="org-ul">
+<li><a id="orgc07f14b"></a>No need to compact.<br /></li>
+<li><a id="org8970523"></a>Keep trailing coma in last argument.<br /></li>
+</ul>
+</div>
+<div id="outline-container-orgf715f45" class="outline-4">
+<h4 id="orgf715f45">Flags</h4>
+<div class="outline-text-4" id="text-orgf715f45">
 <div class="org-src-container">
 <pre class="src src-go"><span style="color: #a71d5d;">func</span> <span style="color: #795da3;">main</span>() {
   <span style="color: #a71d5d;">var</span> (
@@ -552,92 +479,92 @@ Having watched the <a href="https://www.youtube.com/watch?v%3DY1-RLAl7iOI">video
 </div>
 </div>
 </div>
-<div id="outline-container-orgf12e781" class="outline-4">
-<h4 id="orgf12e781">Logging</h4>
-<div class="outline-text-4" id="text-orgf12e781">
+<div id="outline-container-org627abfc" class="outline-4">
+<h4 id="org627abfc">Logging</h4>
+<div class="outline-text-4" id="text-org627abfc">
 </div>
 <ul class="org-ul">
-<li><a id="org94cd95c"></a>package log<br /></li>
-<li><a id="orgf7c5db6"></a>Telemetry<br /></li>
-<li><a id="orgfedc3af"></a>Push model (gets expensive over time)<br />
+<li><a id="orgff62a02"></a>package log<br /></li>
+<li><a id="org2b7ce48"></a>Telemetry<br /></li>
+<li><a id="org3fe80aa"></a>Push model (gets expensive over time)<br />
 <ul class="org-ul">
-<li><a id="org40fd1ee"></a>Graphite<br /></li>
-<li><a id="org5640e3a"></a>Statsd<br /></li>
-<li><a id="orgee9341f"></a>AirBrake<br /></li>
+<li><a id="orgad1efc6"></a>Graphite<br /></li>
+<li><a id="org409c9fc"></a>Statsd<br /></li>
+<li><a id="org6381355"></a>AirBrake<br /></li>
 </ul>
 </li>
-<li><a id="org138a253"></a>Pull model (chosen)<br />
+<li><a id="org31c8be1"></a>Pull model (chosen)<br />
 <ul class="org-ul">
-<li><a id="org5fee59f"></a>expvar<br /></li>
-<li><a id="orgce8593b"></a>Prometheus<br /></li>
-</ul>
-</li>
-</ul>
-</div>
-<div id="outline-container-orgabccf41" class="outline-4">
-<h4 id="orgabccf41">Testing</h4>
-<div class="outline-text-4" id="text-orgabccf41">
-</div>
-<ul class="org-ul">
-<li><a id="orgfb91efd"></a>package testing<br />
-<ul class="org-ul">
-<li><a id="org58df608"></a>Unit tests<br /></li>
-<li><a id="org2d8a332"></a>reflect.DeepEqual<br /></li>
-</ul>
-</li>
-<li><a id="org54343b2"></a>Integration<br />
-<ul class="org-ul">
-<li><a id="orga97dd4e"></a>Use flags for starting services<br /></li>
-<li><a id="orgbfa9402"></a>// +build integration<br /></li>
+<li><a id="org292685e"></a>expvar<br /></li>
+<li><a id="org5522b06"></a>Prometheus<br /></li>
 </ul>
 </li>
 </ul>
 </div>
-<div id="outline-container-org36c0734" class="outline-4">
-<h4 id="org36c0734">Code validation</h4>
-<div class="outline-text-4" id="text-org36c0734">
+<div id="outline-container-orgfc49c04" class="outline-4">
+<h4 id="orgfc49c04">Testing</h4>
+<div class="outline-text-4" id="text-orgfc49c04">
 </div>
 <ul class="org-ul">
-<li><a id="org0dcb34f"></a>On Save<br />
+<li><a id="orgc79b42c"></a>package testing<br />
 <ul class="org-ul">
-<li><a id="org6af4a9d"></a>Go fmt<br /></li>
-<li><a id="org5bcb31f"></a>Go import (go fmt++)<br /></li>
+<li><a id="org3f4ff11"></a>Unit tests<br /></li>
+<li><a id="org440f13c"></a>reflect.DeepEqual<br /></li>
 </ul>
 </li>
-<li><a id="org45afc86"></a>On Build<br />
+<li><a id="org6f55b53"></a>Integration<br />
 <ul class="org-ul">
-<li><a id="org2fe7595"></a>Go vet<br /></li>
-<li><a id="org1e483a0"></a>Golint<br /></li>
-<li><a id="org7f378f7"></a>Go test<br /></li>
+<li><a id="org2a8d488"></a>Use flags for starting services<br /></li>
+<li><a id="org2b03dae"></a>// +build integration<br /></li>
 </ul>
 </li>
-<li><a id="orged768dd"></a>On Deploy<br />
-<ul class="org-ul">
-<li><a id="orgdd64d5b"></a>go test -tags=integration<br /></li>
-</ul>
-</li>
-<li><a id="orgb5763e2"></a>GoCov?<br /></li>
 </ul>
 </div>
-<div id="outline-container-org17b2a56" class="outline-4">
-<h4 id="org17b2a56">Dependency management</h4>
-<div class="outline-text-4" id="text-org17b2a56">
+<div id="outline-container-orgf9b1340" class="outline-4">
+<h4 id="orgf9b1340">Code validation</h4>
+<div class="outline-text-4" id="text-orgf9b1340">
 </div>
 <ul class="org-ul">
-<li><a id="org2861064"></a>Unimportant projects<br />
+<li><a id="orgbd70cd6"></a>On Save<br />
 <ul class="org-ul">
-<li><a id="orgbe2ad28"></a>go get -d (and hope)<br /></li>
+<li><a id="org11f3374"></a>Go fmt<br /></li>
+<li><a id="org503ac47"></a>Go import (go fmt++)<br /></li>
 </ul>
 </li>
-<li><a id="orge1ea996"></a>Important<br />
+<li><a id="org5cd2ddb"></a>On Build<br />
 <ul class="org-ul">
-<li><a id="orgab94231"></a>VENDOR (ie. copy into your repo)<br />
+<li><a id="org6a24490"></a>Go vet<br /></li>
+<li><a id="orgf2710a0"></a>Golint<br /></li>
+<li><a id="orgb45ab79"></a>Go test<br /></li>
+</ul>
+</li>
+<li><a id="orgb71c116"></a>On Deploy<br />
 <ul class="org-ul">
-<li><a id="org7fa67dd"></a>Git submodules (no!).<br /></li>
-<li><a id="org0001c79"></a>Git subtrees (seem OK).<br /></li>
-<li><a id="org628b02d"></a>Tool (godep?).<br /></li>
-<li><a id="orgd8900b9"></a>Build<br /></li>
-<li><a id="org867fcee"></a>For binaries (use _vendor subdir)<br /></li>
+<li><a id="orgae3d28d"></a>go test -tags=integration<br /></li>
+</ul>
+</li>
+<li><a id="org429105d"></a>GoCov?<br /></li>
+</ul>
+</div>
+<div id="outline-container-org0eb684b" class="outline-4">
+<h4 id="org0eb684b">Dependency management</h4>
+<div class="outline-text-4" id="text-org0eb684b">
+</div>
+<ul class="org-ul">
+<li><a id="orgca260b6"></a>Unimportant projects<br />
+<ul class="org-ul">
+<li><a id="org0b28a1f"></a>go get -d (and hope)<br /></li>
+</ul>
+</li>
+<li><a id="orgcb444d3"></a>Important<br />
+<ul class="org-ul">
+<li><a id="org56886e2"></a>VENDOR (ie. copy into your repo)<br />
+<ul class="org-ul">
+<li><a id="org5d49114"></a>Git submodules (no!).<br /></li>
+<li><a id="org49c1b4c"></a>Git subtrees (seem OK).<br /></li>
+<li><a id="org7264c53"></a>Tool (godep?).<br /></li>
+<li><a id="org0e545da"></a>Build<br /></li>
+<li><a id="orge90bb61"></a>For binaries (use _vendor subdir)<br /></li>
 </ul>
 </li>
 </ul>

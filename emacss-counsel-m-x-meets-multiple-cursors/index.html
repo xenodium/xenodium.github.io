@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-19 Sat 13:20 -->
+<!-- 2022-11-25 Fri 17:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Emacss counsel-M-x meets multiple cursors</title>
+<title>Emacs's counsel-M-x meets multiple cursors</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -432,11 +432,15 @@ Back in December 2019, I made a note to revisit <a href="https://www.reddit.com/
                    (memq cmd mc/cmds-to-run-for-all)
                    (mc/prompt-for-inclusion-in-whitelist cmd)))
       (mc/execute-command-for-all-fake-cursors cmd))))
+
+(advice-add #'counsel-M-x-action
+            <span style="color: #a71d5d;">:around</span>
+            #'adviced:counsel-M-x-action)
 </pre>
 </div>
 
 
-<div id="org8f773e7" class="figure">
+<div id="org31691f6" class="figure">
 <p><img src="../images/emacss-counsel-m-x-meets-multiple-cursors/counsel-mx-mc.gif" alt="counsel-mx-mc.gif" />
 </p>
 </div>

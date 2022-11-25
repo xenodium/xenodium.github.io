@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-06-18 Fri 09:13 -->
+<!-- 2022-11-25 Fri 17:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out gccemacs on macOS</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,71 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -426,9 +364,22 @@
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-trying-out-gccemacs-on-macos" class="outline-2">
 <h2 id="trying-out-gccemacs-on-macos"><span class="timestamp-wrapper"><span class="timestamp">16 August 2020</span></span> Trying out gccemacs on macOS</h2>
@@ -442,9 +393,9 @@ Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.
 </p>
 </div>
 
-<div id="outline-container-org7338468" class="outline-3">
-<h3 id="org7338468">Install gcc and libgccjit via homebrew</h3>
-<div class="outline-text-3" id="text-org7338468">
+<div id="outline-container-org8d072f9" class="outline-3">
+<h3 id="org8d072f9">Install gcc and libgccjit via homebrew</h3>
+<div class="outline-text-3" id="text-org8d072f9">
 <div class="org-src-container">
 <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -452,9 +403,9 @@ Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.
 </div>
 </div>
 
-<div id="outline-container-orgb60ea55" class="outline-3">
-<h3 id="orgb60ea55">Save configure script</h3>
-<div class="outline-text-3" id="text-orgb60ea55">
+<div id="outline-container-orgd4e966f" class="outline-3">
+<h3 id="orgd4e966f">Save configure script</h3>
+<div class="outline-text-3" id="text-orgd4e966f">
 <p>
 Create configure-gccemacs.sh
 </p>
@@ -468,10 +419,10 @@ Create configure-gccemacs.sh
 <span style="color: #969896;"># </span><span style="color: #969896;">Configures Emacs for building native comp support</span>
 <span style="color: #969896;"># </span><span style="color: #969896;">http://akrl.sdf.org/gccemacs.html</span>
 
-<span style="color: #a71d5d;">readonly</span> <span style="color: #333333;">GCC_DIR</span>=<span style="color: #183691;">"$(</span><span style="color: #183691;">realpath $(brew --prefix libgccjit</span><span style="color: #183691;">))"</span>
+<span style="color: #a71d5d;">readonly</span> <span style="color: #333333;">GCC_DIR</span>=<span style="color: #183691;">"$(realpath $(brew --prefix libgccjit))"</span>
 [[ -d $<span style="color: #333333;">GCC_DIR</span> ]] ||  { <span style="color: #a71d5d;">echo</span> <span style="color: #183691;">"${GCC_DIR} not found"</span>; <span style="color: #a71d5d;">exit</span> 1; }
 
-<span style="color: #a71d5d;">readonly</span> <span style="color: #333333;">SED_DIR</span>=<span style="color: #183691;">"$(</span><span style="color: #183691;">realpath $(brew --prefix gnu-sed</span><span style="color: #183691;">))"</span>
+<span style="color: #a71d5d;">readonly</span> <span style="color: #333333;">SED_DIR</span>=<span style="color: #183691;">"$(realpath $(brew --prefix gnu-sed))"</span>
 [[ -d $<span style="color: #333333;">SED_DIR</span> ]] ||  { <span style="color: #a71d5d;">echo</span> <span style="color: #183691;">"${SED_DIR} not found"</span>; <span style="color: #a71d5d;">exit</span> 1; }
 
 <span style="color: #a71d5d;">readonly</span> <span style="color: #333333;">GCC_INCLUDE_DIR</span>=${<span style="color: #333333;">GCC_DIR</span>}/include
@@ -526,9 +477,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-org0091fb8" class="outline-3">
-<h3 id="org0091fb8">Clone Emacs source</h3>
-<div class="outline-text-3" id="text-org0091fb8">
+<div id="outline-container-org829d233" class="outline-3">
+<h3 id="org829d233">Clone Emacs source</h3>
+<div class="outline-text-3" id="text-org829d233">
 <div class="org-src-container">
 <pre class="src src-shell">git clone <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
@@ -536,9 +487,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-org999fd85" class="outline-3">
-<h3 id="org999fd85">Configure build</h3>
-<div class="outline-text-3" id="text-org999fd85">
+<div id="outline-container-org4b24afe" class="outline-3">
+<h3 id="org4b24afe">Configure build</h3>
+<div class="outline-text-3" id="text-org4b24afe">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #a71d5d;">cd</span> gccemacs
 ../configure-gccemacs.sh
@@ -547,9 +498,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-orgc0a2a2b" class="outline-3">
-<h3 id="orgc0a2a2b">Native lisp compiler found?</h3>
-<div class="outline-text-3" id="text-orgc0a2a2b">
+<div id="outline-container-orgcaebace" class="outline-3">
+<h3 id="orgcaebace">Native lisp compiler found?</h3>
+<div class="outline-text-3" id="text-orgcaebace">
 <p>
 Verify native lisp compiler is found:
 </p>
@@ -561,9 +512,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
-<div id="outline-container-orgb6ff172" class="outline-3">
-<h3 id="orgb6ff172">Build</h3>
-<div class="outline-text-3" id="text-orgb6ff172">
+<div id="outline-container-org98e6426" class="outline-3">
+<h3 id="org98e6426">Build</h3>
+<div class="outline-text-3" id="text-org98e6426">
 <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -600,18 +551,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
-<div id="outline-container-org849def8" class="outline-3">
-<h3 id="org849def8">Remove ~/emacs.d</h3>
-<div class="outline-text-3" id="text-org849def8">
+<div id="outline-container-org3edfb5a" class="outline-3">
+<h3 id="org3edfb5a">Remove ~/emacs.d</h3>
+<div class="outline-text-3" id="text-org3edfb5a">
 <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org250957a" class="outline-3">
-<h3 id="org250957a">init.el config</h3>
-<div class="outline-text-3" id="text-org250957a">
+<div id="outline-container-org7670ef5" class="outline-3">
+<h3 id="org7670ef5">init.el config</h3>
+<div class="outline-text-3" id="text-org7670ef5">
 <p>
 Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set <i>comp-deferred-compilation</i>. I wrapped the snippet in my  <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -642,9 +593,9 @@ Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRAR
 </div>
 </div>
 
-<div id="outline-container-org481ddfc" class="outline-3">
-<h3 id="org481ddfc">Launch Emacs.app</h3>
-<div class="outline-text-3" id="text-org481ddfc">
+<div id="outline-container-orgc48a1ca" class="outline-3">
+<h3 id="orgc48a1ca">Launch Emacs.app</h3>
+<div class="outline-text-3" id="text-orgc48a1ca">
 <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -656,9 +607,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
-<div id="outline-container-orgcd51f8b" class="outline-3">
-<h3 id="orgcd51f8b">Deferred compilation logs</h3>
-<div class="outline-text-3" id="text-orgcd51f8b">
+<div id="outline-container-orge1118c4" class="outline-3">
+<h3 id="orge1118c4">Deferred compilation logs</h3>
+<div class="outline-text-3" id="text-orge1118c4">
 <p>
 After setting <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>

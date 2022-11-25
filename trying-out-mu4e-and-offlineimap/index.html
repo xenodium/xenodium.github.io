@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-20 Thu 07:47 -->
+<!-- 2022-11-25 Fri 17:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out mu4e and offlineimap</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,71 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -426,15 +364,28 @@
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-trying-out-mu4e-and-offlineimap" class="outline-2">
 <h2 id="trying-out-mu4e-and-offlineimap"><span class="timestamp-wrapper"><span class="timestamp">28 May 2018</span></span> Trying out mu4e and offlineimap</h2>
 <div class="outline-text-2" id="text-trying-out-mu4e-and-offlineimap">
 
-<div id="org98e5b34" class="figure">
+<div id="org710693a" class="figure">
 <p><img src="../images/trying-out-mu4e-and-offlineimap/mu4e.png" alt="mu4e.png" width="75%" height="75%" />
 </p>
 </div>
@@ -444,9 +395,9 @@ Managing Email from Emacs. Surely that's crazy-talk, but hey&#x2026; let's give 
 </p>
 </div>
 
-<div id="outline-container-orgd11210c" class="outline-3">
-<h3 id="orgd11210c">Install offlineimap</h3>
-<div class="outline-text-3" id="text-orgd11210c">
+<div id="outline-container-orgae380b2" class="outline-3">
+<h3 id="orgae380b2">Install offlineimap</h3>
+<div class="outline-text-3" id="text-orgae380b2">
 <p>
 Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
 </p>
@@ -462,9 +413,9 @@ Before can configure offlineimap, we'll need to handle a few things first.
 </div>
 </div>
 
-<div id="outline-container-org290d8ef" class="outline-3">
-<h3 id="org290d8ef">Get a cert fingerprint</h3>
-<div class="outline-text-3" id="text-org290d8ef">
+<div id="outline-container-org7804952" class="outline-3">
+<h3 id="org7804952">Get a cert fingerprint</h3>
+<div class="outline-text-3" id="text-org7804952">
 <p>
 Use openssl for getting a certificate fingerprint. From offlineimap's <a href="http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint">FAQ:</a>
 </p>
@@ -486,9 +437,9 @@ SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
 </div>
 </div>
 
-<div id="outline-container-org448c207" class="outline-3">
-<h3 id="org448c207">Encrypt password</h3>
-<div class="outline-text-3" id="text-org448c207">
+<div id="outline-container-orgd4cd83c" class="outline-3">
+<h3 id="orgd4cd83c">Encrypt password</h3>
+<div class="outline-text-3" id="text-orgd4cd83c">
 <p>
 Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
 </p>
@@ -518,9 +469,9 @@ Generate an offlineimap account password file.
 </div>
 </div>
 
-<div id="outline-container-org149d6d3" class="outline-3">
-<h3 id="org149d6d3">Python password  wrapper</h3>
-<div class="outline-text-3" id="text-org149d6d3">
+<div id="outline-container-orgd56260d" class="outline-3">
+<h3 id="orgd56260d">Python password  wrapper</h3>
+<div class="outline-text-3" id="text-orgd56260d">
 <p>
 Based on Fabian's <a href="https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html">Encrypt OfflineIMAP and msmtp password with GnuPG</a>, I created ~/.read_password.py with:
 </p>
@@ -540,9 +491,9 @@ ps. Alternatively, see <a href="http://stevelosh.com/blog/2012/10/the-homely-mut
 </div>
 </div>
 
-<div id="outline-container-org2209c1c" class="outline-3">
-<h3 id="org2209c1c">Configure offlineimap</h3>
-<div class="outline-text-3" id="text-org2209c1c">
+<div id="outline-container-org6c4491d" class="outline-3">
+<h3 id="org6c4491d">Configure offlineimap</h3>
+<div class="outline-text-3" id="text-org6c4491d">
 <p>
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 </p>
@@ -586,9 +537,9 @@ Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to 
 </div>
 </div>
 
-<div id="outline-container-orge7cf120" class="outline-4">
-<h4 id="orge7cf120">Cert file</h4>
-<div class="outline-text-4" id="text-orge7cf120">
+<div id="outline-container-orgc3ffa48" class="outline-4">
+<h4 id="orgc3ffa48">Cert file</h4>
+<div class="outline-text-4" id="text-orgc3ffa48">
 <p>
 You can use macOS's certificates from Keychain Access -&gt; System Roots -&gt; Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
 </p>
@@ -606,9 +557,9 @@ Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate 
 </div>
 </div>
 
-<div id="outline-container-orgfa32455" class="outline-3">
-<h3 id="orgfa32455">Install mu4e</h3>
-<div class="outline-text-3" id="text-orgfa32455">
+<div id="outline-container-org9c7d4f3" class="outline-3">
+<h3 id="org9c7d4f3">Install mu4e</h3>
+<div class="outline-text-3" id="text-org9c7d4f3">
 <p>
 Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
 </p>
@@ -640,9 +591,9 @@ Finally installed mu4e:
 </div>
 </div>
 
-<div id="outline-container-orgf5b1565" class="outline-3">
-<h3 id="orgf5b1565">Configure mu4e</h3>
-<div class="outline-text-3" id="text-orgf5b1565">
+<div id="outline-container-orgecafb21" class="outline-3">
+<h3 id="orgecafb21">Configure mu4e</h3>
+<div class="outline-text-3" id="text-orgecafb21">
 <p>
 Lastly, configure mu4e:
 </p>
@@ -652,7 +603,7 @@ Lastly, configure mu4e:
              (expand-file-name <span style="color: #183691;">"~/homebrew/share/emacs/site-lisp/mu/mu4e"</span>))
 (<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">mu4e</span>
   <span style="color: #a71d5d;">:config</span>
-  <span style="color: #969896;">;; </span><span style="color: #969896;">Update mail using 'U' in main view:</span>
+  <span style="color: #969896;">;; </span><span style="color: #969896;">Update mail using '</span><span style="color: #0086b3;">U</span><span style="color: #969896;">' in main view:</span>
   (<span style="color: #a71d5d;">setq</span> mu4e-get-mail-command <span style="color: #183691;">"offlineimap"</span>)
   (<span style="color: #a71d5d;">setq</span> mu4e-view-show-addresses t)
   (<span style="color: #a71d5d;">setq</span> mu4e-attachment-dir (expand-file-name <span style="color: #183691;">"~/Downloads/"</span>))
@@ -720,9 +671,9 @@ Lastly, configure mu4e:
 </div>
 </div>
 </div>
-<div id="outline-container-orgc354d78" class="outline-3">
-<h3 id="orgc354d78">Authinfo</h3>
-<div class="outline-text-3" id="text-orgc354d78">
+<div id="outline-container-orge284a1f" class="outline-3">
+<h3 id="orge284a1f">Authinfo</h3>
+<div class="outline-text-3" id="text-orge284a1f">
 <p>
 Create an ~/.authinfo file for sendmail authentication with:
 </p>
@@ -738,9 +689,9 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 </div>
 </div>
 
-<div id="outline-container-org0d91262" class="outline-3">
-<h3 id="org0d91262">Mu4e helpful references</h3>
-<div class="outline-text-3" id="text-org0d91262">
+<div id="outline-container-org75898de" class="outline-3">
+<h3 id="org75898de">Mu4e helpful references</h3>
+<div class="outline-text-3" id="text-org75898de">
 <ul class="org-ul">
 <li><a href="http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-">A Complete Guide to Email in Emacs using Mu and Mu4e</a>.</li>
 <li><a href="https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/">A year with Notmuch mail - a super-fast email client available on Emacs</a>.</li>

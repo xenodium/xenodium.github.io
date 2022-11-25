@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-28 Sun 17:47 -->
+<!-- 2022-11-25 Fri 17:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs bends again</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -346,28 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -388,6 +366,9 @@
   </tr>
   <tr>
     <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
@@ -398,7 +379,7 @@
   </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-emacs-bends-again" class="outline-2">
 <h2 id="emacs-bends-again"><span class="timestamp-wrapper"><span class="timestamp">28 November 2021</span></span> Emacs bends again</h2>
@@ -432,7 +413,7 @@ The corresponding snapshot golden can be seen below.
 </p>
 
 
-<div id="org3be58ab" class="figure">
+<div id="org0f706a6" class="figure">
 <p><img src="../images/emacs-bends-again/testTableWithLinks.1.png" alt="testTableWithLinks.1.png" width="50%" />
 </p>
 </div>
@@ -442,7 +423,7 @@ This is all done rather effortlessly thanks to <a href="https://twitter.com/poin
 </p>
 
 <p>
-So what does any of this have to do with Emacs? You see, as I added more snapshot tests and made modifications to Plain Org's rendering logic, I needed a quick way to visually inspect and override all goldens. All the main pieces were already there, I just needed some elisp glue to <i>bend Emacs my way™.</i>
+So what does any of this have to do with Emacs? You see, as I added more snapshot tests and made modifications to the rendering logic, I needed a quick way to visually inspect and override all goldens. All the main pieces were already there, I just needed some elisp glue to <i>bend Emacs my way™.</i>
 </p>
 
 <p>
@@ -450,7 +431,7 @@ First, I needed to run my Xcode builds from the command line. This is already <a
 </p>
 
 <p>
-Beware, the following code snippet is packed with assumptions about my project, it's messy, surely has bugs, can be optimized, etc. But the important point here is that Emacs is such an amazing malleable power tool. Throw some elisp at it and you can bend it to your liking. After all, it's <span class="underline">your</span> editor.
+Beware, the following code snippet is packed with assumptions about my project, it's messy, surely has bugs, can be optimized, etc. But the important point here is that Emacs is such an amazing malleable power tool. Throw some elisp at it and you can to bend it to your liking. After all, it's <span class="underline">your</span> editor.
 </p>
 
 <p>
@@ -462,7 +443,7 @@ Success. <i>Emacs bends again</i>.
 </p>
 
 
-<div id="org7aeee83" class="figure">
+<div id="org472517a" class="figure">
 <p><img src="../images/emacs-bends-again/diff.gif" alt="diff.gif" width="95%" />
 </p>
 </div>

@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-29 Sat 20:54 -->
+<!-- 2022-11-25 Fri 17:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs tips backlog</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Álvaro Ramírez" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -40,22 +41,22 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
+    overflow: auto;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <style type='text/css'>
          /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
@@ -213,7 +213,17 @@
            border-left: 1px solid #ccc;
          }
 
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
          .title {
+           display: none; /* Title already included in header. Hide. */
            color: rgb(51, 51, 51);
            font-size: 1em;
            text-align: right;
@@ -284,8 +294,6 @@
            letter-spacing: -0.02em;
            margin-bottom: 0px;
            text-indent: -3px;
-// Make header clickable.
-//           cursor: pointer;
          }
 
          h3 {
@@ -327,11 +335,6 @@
          .outline-2 {
          }
 
-// Hides subtree for heading by default.
-//         .default-visibility, .outline-text-2, .outline-3, .outline-4, .outline-5, .outline-6, .org-ul {
-//           display: none;
-//         }
-
          .example {
            white-space: pre-wrap;
            background-color: #f8ffe1;
@@ -343,95 +346,6 @@
                async src="//gc.zgo.at/count.js">
        </script>
        <!-- End of Goat Code -->
-
-       <script>
-// Toggles heading subtree on click.
-//         function getClosest(elem, selector) {
-//             for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//         	if ( elem.matches( selector ) ) return elem;
-//             }
-//             return null;
-//         };
-//
-//
-//         function setNodeVisible (node, visible) {
-//             for (var i = 0; i < node.childNodes.length; i++) {
-//                 var child = node.childNodes[i];
-//                 if (node.classList.contains('outline-text-2') ||
-//                     node.classList.contains('outline-3') ||
-//                     node.classList.contains('outline-4') ||
-//                     node.classList.contains('outline-5') ||
-//                     node.classList.contains('outline-6')) {
-//                     node.style.display = visible ? 'inline' : 'none';
-//                 } else if (node.classList.contains('org-ul')) {
-//                     node.style.display = visible ? 'block' : 'none';
-//                  }
-//                 setNodeVisible(child, visible);
-//             }
-//         }
-//
-//         window.onload = function() {
-//             var parts = document.URL.split('#');
-//             if (parts.length > 1) {
-//                 var entry = getClosest(document.getElementById(parts[1]), '.outline-2');
-//                 setNodeVisible(entry, true)
-//             }
-//
-//             document.body.onclick = function(e){
-//                 if (e.target.tagName.toLowerCase() === 'h2') {
-//                     var entry = getClosest(e.target, '.outline-2');
-//                     var elements = entry.getElementsByClassName('outline-text-2');
-//                     setNodeVisible(entry, elements[0].style.display !== 'inline');
-//                 }
-//             };
-//         };
-       </script>
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -450,110 +364,123 @@ for the JavaScript code in this tag.
       <a href='mailto:me@xenodium.com'>email</a>
     </td>
   </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
 </table>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-org40af5f5" class="outline-2">
+<div id="outline-container-emacs-tips-backlog" class="outline-2">
 <h2 id="emacs-tips-backlog"><span class="timestamp-wrapper"><span class="timestamp">03 December 2014</span></span> Emacs tips backlog</h2>
 <div class="outline-text-2" id="text-emacs-tips-backlog">
 <span class="modified-timestamp">  <em>updated: 18 June 2017  </em></span>
 </div>
 <ul class="org-ul">
-<li><a id="org81c4abd"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mrkkrp/typit">Typit: typing game for Emacs</a>.<br /></li>
-<li><a id="org69c6471"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Wilfred/pyimport">pyimports</a>.<br /></li>
-<li><a id="org5eb4944"></a><span class="todo TODO">TODO</span> <a href="http://sriramkswamy.github.io/dotemacs/">Sriram Krishnaswamy's init</a>.<br /></li>
-<li><a id="orgb833533"></a><span class="todo TODO">TODO</span> <a href="http://williambert.online/2014/02/using-a-node-repl-with-emacs/">Using a Node repl in Emacs with nvm and npm</a>.<br /></li>
-<li><a id="orga7253ba"></a><span class="todo TODO">TODO</span> <a href="https://github.com/afainer/arview">arview</a>.<br /></li>
-<li><a id="orgb3dd47f"></a><span class="todo TODO">TODO</span> <a href="https://github.com/PythonNut/company-flx">company-flx: fuzzy matching to company</a>.<br /></li>
-<li><a id="orgf89fc2c"></a><span class="todo TODO">TODO</span> <a href="https://melpa.org/?utm_source=dlvr.it&amp;utm_medium=twitter#/go-guru">Integration of the Go 'guru' analysis tool into Emacs</a>.<br /></li>
-<li><a id="org291e579"></a><span class="todo TODO">TODO</span> <a href="https://github.com/company-mode/company-statistics">company-mode/company-statistics: Sort completion candidates by previous completion choices</a>.<br /></li>
-<li><a id="orgce57dfd"></a><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=mtliRYQd0j4&amp;feature=youtu.be">Rewrite git history with Emacs, magit and git rebase</a>.<br /></li>
-<li><a id="org259a602"></a><span class="todo TODO">TODO</span> <a href="https://github.com/trezona-lecomte/coverage">Code coverage highlighting for Emacs</a>.<br /></li>
-<li><a id="org2447f43"></a><span class="todo TODO">TODO</span> <a href="http://elpa.gnu.org/packages/tramp-theme.html">tramp-theme</a>.<br /></li>
-<li><a id="org6bdbaf8"></a><span class="todo TODO">TODO</span> <a href="https://github.com/alexmurray/cstyle">cstyle</a>.<br /></li>
-<li><a id="org4799242"></a><span class="todo TODO">TODO</span> <a href="https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el">A go Emacs config</a>.<br /></li>
-<li><a id="org34a45b2"></a><span class="todo TODO">TODO</span> <a href="http://clubctrl.com/org/prog/howto.html">Try out ox-twbs</a>.<br /></li>
-<li><a id="org8382fd0"></a><span class="todo TODO">TODO</span> <a href="http://ergoemacs.org/emacs/function-frequency.html">Emacs Lisp function frequency</a>.<br /></li>
-<li><a id="org9313d42"></a><span class="todo TODO">TODO</span> <a href="http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer">How to make yasnippet and company work nicer? (Stack Exchange)</a>.<br /></li>
-<li><a id="org1653762"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nekop/yasnippet-java-mode/blob/master/java-snippets.el">yasnippet-java-mode/java-snippets.el</a>.<br /></li>
-<li><a id="org8acd617"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Lindydancer/font-lock-studio">font-lock-studio</a>.<br /></li>
-<li><a id="org46d1138"></a><span class="todo TODO">TODO</span> <a href="https://github.com/jorgenschaefer/emacs-buttercup">buttercup</a>.<br /></li>
-<li><a id="org214ccde"></a><span class="todo TODO">TODO</span> <a href="https://github.com/niku/markdown-preview-eww">markdown-preview-eww</a>.<br /></li>
-<li><a id="org3b54801"></a><span class="todo TODO">TODO</span> <a href="http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1">ediff-revision and magit-find-file to compare branches</a>.<br /></li>
-<li><a id="org118ac25"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md">Flycheck linter for sh using checkbashisms</a>.<br /></li>
-<li><a id="org45bc654"></a><span class="todo TODO">TODO</span> <a href="http://draketo.de/light/english/free-software/el-kanban-org-table">El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables</a>.<br /></li>
-<li><a id="orga5fcae1"></a><span class="todo TODO">TODO</span> <a href="http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511">Emacs iOS development (qiita)</a>.<br /></li>
-<li><a id="org7b93914"></a><span class="todo TODO">TODO</span> <a href="http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/">Emacs iOS development (fujimisakari)</a>.<br /></li>
-<li><a id="org56d0a98"></a><span class="todo TODO">TODO</span> <a href="http://orgmode.org/worg/org-tutorials/encrypting-files.html">encrypting org files</a>.<br /></li>
-<li><a id="org6c8f144"></a><span class="todo TODO">TODO</span> <a href="https://github.com/flycheck/flycheck-pos-tip">flycheck-pos-tip</a>.<br /></li>
-<li><a id="org3df3567"></a><span class="todo TODO">TODO</span> <a href="http://tiborsimko.org/emacs-epydoc-snippets.html">Writing Python Docstrings with Emacs</a>.<br /></li>
-<li><a id="orga035f31"></a><span class="todo TODO">TODO</span> <a href="https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac">Try Completion for Objective-C (Github diff)</a>.<br /></li>
-<li><a id="orga6c6a98"></a><span class="todo TODO">TODO</span> <a href="https://github.com/steckerhalter/emacs-fasd">Emacs fasd support</a>.<br /></li>
-<li><a id="org206b8a4"></a><span class="todo TODO">TODO</span> <a href="https://github.com/benma/visual-regexp.el">visual-regexp</a>.<br /></li>
-<li><a id="orge0f344d"></a><span class="todo TODO">TODO</span> <a href="http://emacsredux.com/blog/2014/05/16/opening-large-files/">Open large files</a>.<br /></li>
-<li><a id="org25263aa"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nathankot/company-sourcekit">company-sourcekit</a> (Swift completion): <a href="https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24">sample config</a>.<br /></li>
-<li><a id="orgb9e8424"></a><span class="todo TODO">TODO</span> <a href="https://github.com/dakrone/emacs-java-imports">emacs-java-imports</a>.<br /></li>
-<li><a id="orgfcdafd3"></a><span class="todo TODO">TODO</span> append-to-buffer.<br /></li>
-<li><a id="org5eefb55"></a><span class="todo TODO">TODO</span> <a href="https://github.com/wavexx/python-x.el">python-x: extras for interactive evaluation</a>.<br /></li>
-<li><a id="org16ed07e"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsmirror/outlined-elisp-mode">outlined-elisp-mode</a>.<br /></li>
-<li><a id="org7ac49af"></a><span class="todo TODO">TODO</span> <a href="https://github.com/tj64/outline-magic">outlien-magic</a>.<br /></li>
-<li><a id="orgfb460c5"></a><span class="todo TODO">TODO</span> Gutter and linum+ config (see <a href="https://github.com/zvlex/dotfiles">zvlex/dotfiles</a>).<br /></li>
-<li><a id="org5cbe12a"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>: Editing color.<br /></li>
-<li><a id="org28b3a6d"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html">auto-insert-mode</a>.<br /></li>
-<li><a id="org8c66366"></a><span class="todo TODO">TODO</span> Buffer local cursor color: <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.<br /></li>
-<li><a id="org9d83892"></a><span class="todo TODO">TODO</span> clang indexing tool: <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.<br /></li>
-<li><a id="org8a64a94"></a><span class="todo TODO">TODO</span> Create custom theme: Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.<br /></li>
-<li><a id="org42ddb16"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Fuco1/dired-hacks">dired-hacks</a>.<br /></li>
-<li><a id="orgcb6c98f"></a><span class="todo TODO">TODO</span> gtd emacs workflow: Charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.<br /></li>
-<li><a id="orgd4d22e6"></a><span class="done DONE">DONE</span> emacs-index-search (lookup subject in Emacs manual).<br /></li>
-<li><a id="org905293c"></a><span class="done DONE">DONE</span> info-apropos (lookup subject in all manuals).<br /></li>
-<li><a id="org3b2c225"></a><span class="todo TODO">TODO</span> Jumping around tips: <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.<br /></li>
-<li><a id="org3bdd3ea"></a><span class="todo TODO">TODO</span> Mac OS clipboard support (from terminal): <a href="https://github.com/jkp/pbcopy.el">pbcopy</a>.<br /></li>
-<li><a id="orga25ef1a"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>: For Java.<br /></li>
-<li><a id="org6d04088"></a><span class="todo TODO">TODO</span> Melpa recipe format:<a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.<br /></li>
-<li><a id="org9f723e5"></a><span class="done OBSOLETE">OBSOLETE</span> Naturaldocs for javascript: <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.<br /></li>
-<li><a id="org11204f0"></a><span class="todo TODO">TODO</span> Org protocol: see irreal's <a href="http://irreal.org/blog/?p=3594">post</a> and oremacs's <a href="http://oremacs.com/2015/01/07/org-protocol-1/">part 1</a> and <a href="http://oremacs.com/2015/01/08/org-protocol-2/">part 2</a>.<br /></li>
-<li><a id="orgadd16f3"></a><span class="todo TODO">TODO</span> org-multiple-keymap.  More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.<br /></li>
-<li><a id="orgd538acc"></a><span class="todo TODO">TODO</span> <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>: Export org to reveal.js.<br /></li>
-<li><a id="orga67d45b"></a><span class="todo TODO">TODO</span> Practice touch/speed typing: <a href="https://github.com/hagleitn/speed-type">speedtype</a>.<br /></li>
-<li><a id="org7a92a8b"></a><span class="todo TODO">TODO</span> private configuration: <a href="https://github.com/cheunghy/private">private</a>.<br /></li>
-<li><a id="orgb060e9d"></a><span class="todo TODO">TODO</span> project management for C/C++: <a href="https://github.com/lefterisjp/malinka">malinka</a>.<br /></li>
-<li><a id="orgf124267"></a><span class="todo TODO">TODO</span> Project templates: <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.<br /></li>
-<li><a id="orgb30fe18"></a><span class="todo TODO">TODO</span> Rewrite git logs. See <a href="http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/">emacs magit tutorial | rewrite older commit</a>.<br /></li>
-<li><a id="orgdeb14e4"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html">Selective display</a>: Hide lines longer than.<br /></li>
-<li><a id="orgcb16937"></a><span class="todo TODO">TODO</span> shell-command-on-region: Print inline with C-u M-|.<br /></li>
-<li><a id="org3990855"></a><span class="todo TODO">TODO</span> shell-command: Print output inline with C-u M-!.<br /></li>
-<li><a id="org7b24651"></a><span class="todo TODO">TODO</span> Simplify media file transformations: <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.<br /></li>
-<li><a id="org7ba407e"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mineo/yatemplate">yatemplate</a>.<br /></li>
-<li><a id="orgd8c51d3"></a><span class="todo TODO">TODO</span> <a href="https://github.com/fujimisakari/emacs-helm-xcdoc">emacs-helm-xcdoc</a>.<br /></li>
-<li><a id="org3003453"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/facetframer/orgnav">Drill down org files using orgnav (helm-based)</a>.<br /></li>
-<li><a id="orgdb388bb"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/prettier/prettier-emacs">Prettier emacs</a>. (use <a href="https://github.com/purcell/reformatter.el">reformatter.el</a>.)<br /></li>
-<li><a id="orgd6a5f47"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="http://amitp.blogspot.co.uk/search/label/emacs">Spaceline walkthrough</a>.<br /></li>
-<li><a id="org7ecdc68"></a><span class="done OBSOLETE">OBSOLETE</span> Try out emacs Android debug (see this <a href="http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/">post</a>).<br /></li>
-<li><a id="org8c5bf0c"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/syohex/emacs-quickrun">quickrun.el</a>.<br /></li>
-<li><a id="orgac9bc47"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/zakame/emacs-for-javascript">Emacs for JavaScript</a>.<br /></li>
-<li><a id="org0cacc12"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/iced/go-gopath/blob/master/README.md">go-gopath</a>.<br /></li>
-<li><a id="org2db0980"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/alezost/shift-number.el">shift-number.el</a>.<br /></li>
-<li><a id="org4300260"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/xuchunyang/DevDocs.el">https://github.com/xuchunyang/DevDocs.el</a>.<br /></li>
-<li><a id="orgadbb153"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el">select-themes</a>.<br /></li>
-<li><a id="orgc34e93e"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/bmag/helm-purpose">Emacs purpose</a>.<br /></li>
-<li><a id="org97df763"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/">Why are you changing gc-cons-threshold?</a>.<br /></li>
-<li><a id="org7796554"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/nivekuil/corral">Corral</a>.<br /></li>
-<li><a id="org28aaa80"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/nicklanasa/xcode-mode/blob/master/README.md">xcode-mode</a>.<br /></li>
-<li><a id="org22b117a"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/yuutayamada/commenter">commenter</a>.<br /></li>
-<li><a id="org01ce467"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el">Emacs JavaScript helpers</a>.<br /></li>
-<li><a id="orgbe6ba09"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/lujun9972/yahoo-weather-mode">yahoo-weather-mode</a>.<br /></li>
-<li><a id="org558f72f"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el">Peek at peteyy's Javascript config</a>.<br /></li>
-<li><a id="org4940ecb"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/trotzig/import-js">import-js</a>.<br /></li>
-<li><a id="orgb2bf954"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/CodyReichert/es6-snippets">ES6 yasnippets</a>.<br /></li>
-<li><a id="orgf9ae093"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/swank-js/swank-js">swank-js</a>.<br /></li>
-<li><a id="orgca443c6"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/ananthakumaran/tide">TypeScript Interactive Development Environment for Emacs</a>.<br /></li>
-<li><a id="orgea07c7b"></a><span class="done DONE">DONE</span> Try out <a href="https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el">cquery</a>, <a href="https://github.com/emacs-lsp/lsp-mode">emacs-lsp</a>, and <a href="https://github.com/tigersoldier/company-lsp">company-lsp</a>.<br /></li>
-<li><a id="org916dafd"></a><span class="done DONE">DONE</span> (setq projectile-use-git-grep t). <span class="timestamp-wrapper"><span class="timestamp">27 December 2018</span></span><br /></li>
-<li><a id="orgeeeaf47"></a><span class="done DONE">DONE</span> <a href="https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/">Is there any easy way to make .org files password protected? (Reddit)</a>.<br /></li>
-<li><a id="org3f91c7d"></a><span class="done DONE">DONE</span> use-package binding to different maps<br />
-<div class="outline-text-5" id="text-org3f91c7d">
+<li><a id="orgbd5b0a8"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mrkkrp/typit">Typit: typing game for Emacs</a>.<br /></li>
+<li><a id="org0033938"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Wilfred/pyimport">pyimports</a>.<br /></li>
+<li><a id="org67f6d3f"></a><span class="todo TODO">TODO</span> <a href="http://sriramkswamy.github.io/dotemacs/">Sriram Krishnaswamy's init</a>.<br /></li>
+<li><a id="org0da79f8"></a><span class="todo TODO">TODO</span> <a href="http://williambert.online/2014/02/using-a-node-repl-with-emacs/">Using a Node repl in Emacs with nvm and npm</a>.<br /></li>
+<li><a id="org2d58661"></a><span class="todo TODO">TODO</span> <a href="https://github.com/afainer/arview">arview</a>.<br /></li>
+<li><a id="org6b13392"></a><span class="todo TODO">TODO</span> <a href="https://github.com/PythonNut/company-flx">company-flx: fuzzy matching to company</a>.<br /></li>
+<li><a id="orgfe363cc"></a><span class="todo TODO">TODO</span> <a href="https://melpa.org/?utm_source=dlvr.it&amp;utm_medium=twitter#/go-guru">Integration of the Go 'guru' analysis tool into Emacs</a>.<br /></li>
+<li><a id="org7181136"></a><span class="todo TODO">TODO</span> <a href="https://github.com/company-mode/company-statistics">company-mode/company-statistics: Sort completion candidates by previous completion choices</a>.<br /></li>
+<li><a id="org1f217a9"></a><span class="todo TODO">TODO</span> <a href="https://www.youtube.com/watch?v=mtliRYQd0j4&amp;feature=youtu.be">Rewrite git history with Emacs, magit and git rebase</a>.<br /></li>
+<li><a id="orgf5cb096"></a><span class="todo TODO">TODO</span> <a href="https://github.com/trezona-lecomte/coverage">Code coverage highlighting for Emacs</a>.<br /></li>
+<li><a id="orgeb58c17"></a><span class="todo TODO">TODO</span> <a href="http://elpa.gnu.org/packages/tramp-theme.html">tramp-theme</a>.<br /></li>
+<li><a id="orgbcc5cbf"></a><span class="todo TODO">TODO</span> <a href="https://github.com/alexmurray/cstyle">cstyle</a>.<br /></li>
+<li><a id="org6f3a2f1"></a><span class="todo TODO">TODO</span> <a href="https://github.com/sigma/dotemacs/blob/master/lisp/config/go-config.el">A go Emacs config</a>.<br /></li>
+<li><a id="orgcd2a190"></a><span class="todo TODO">TODO</span> <a href="http://clubctrl.com/org/prog/howto.html">Try out ox-twbs</a>.<br /></li>
+<li><a id="orgb91c8a2"></a><span class="todo TODO">TODO</span> <a href="http://ergoemacs.org/emacs/function-frequency.html">Emacs Lisp function frequency</a>.<br /></li>
+<li><a id="org320f125"></a><span class="todo TODO">TODO</span> <a href="http://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer">How to make yasnippet and company work nicer? (Stack Exchange)</a>.<br /></li>
+<li><a id="org5fb3194"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nekop/yasnippet-java-mode/blob/master/java-snippets.el">yasnippet-java-mode/java-snippets.el</a>.<br /></li>
+<li><a id="org8ac5051"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Lindydancer/font-lock-studio">font-lock-studio</a>.<br /></li>
+<li><a id="org19c13cc"></a><span class="todo TODO">TODO</span> <a href="https://github.com/jorgenschaefer/emacs-buttercup">buttercup</a>.<br /></li>
+<li><a id="org072691f"></a><span class="todo TODO">TODO</span> <a href="https://github.com/niku/markdown-preview-eww">markdown-preview-eww</a>.<br /></li>
+<li><a id="org9e8ac27"></a><span class="todo TODO">TODO</span> <a href="http://puntoblogspot.blogspot.co.uk/2016/01/til-ediff-revision.html?m=1">ediff-revision and magit-find-file to compare branches</a>.<br /></li>
+<li><a id="org4481ac0"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Gnouc/flycheck-checkbashisms/blob/master/README.md">Flycheck linter for sh using checkbashisms</a>.<br /></li>
+<li><a id="org612a3f3"></a><span class="todo TODO">TODO</span> <a href="http://draketo.de/light/english/free-software/el-kanban-org-table">El Kanban Org: parse org-mode todo-states to use org-tables as Kanban tables</a>.<br /></li>
+<li><a id="orge946591"></a><span class="todo TODO">TODO</span> <a href="http://qiita.com/fujimisakari/items/a6ff082f0e8eddc09511">Emacs iOS development (qiita)</a>.<br /></li>
+<li><a id="orgadad04c"></a><span class="todo TODO">TODO</span> <a href="http://blog.fujimisakari.com/Emacs%25E3%2581%25A6%25E3%2582%2599iOS%25E9%2596%258B%25E7%2599%25BA-objective-c-%25E3%2581%2599%25E3%2582%258B%25E3%2581%259F%25E3%2582%2581%25E3%2581%25AE%25E7%2592%25B0%25E5%25A2%2583%25E6%25A7%258B%25E7%25AF%2589/">Emacs iOS development (fujimisakari)</a>.<br /></li>
+<li><a id="orgf3a3ab5"></a><span class="todo TODO">TODO</span> <a href="http://orgmode.org/worg/org-tutorials/encrypting-files.html">encrypting org files</a>.<br /></li>
+<li><a id="org53bdbf4"></a><span class="todo TODO">TODO</span> <a href="https://github.com/flycheck/flycheck-pos-tip">flycheck-pos-tip</a>.<br /></li>
+<li><a id="org392febf"></a><span class="todo TODO">TODO</span> <a href="http://tiborsimko.org/emacs-epydoc-snippets.html">Writing Python Docstrings with Emacs</a>.<br /></li>
+<li><a id="orgb866c5f"></a><span class="todo TODO">TODO</span> <a href="https://github.com/To1ne/temacco/commit/6a084365ae137db2cdd035b7533847880d8c6cac">Try Completion for Objective-C (Github diff)</a>.<br /></li>
+<li><a id="orgcedc79e"></a><span class="todo TODO">TODO</span> <a href="https://github.com/steckerhalter/emacs-fasd">Emacs fasd support</a>.<br /></li>
+<li><a id="orgdbc1794"></a><span class="todo TODO">TODO</span> <a href="https://github.com/benma/visual-regexp.el">visual-regexp</a>.<br /></li>
+<li><a id="orgcbaddac"></a><span class="todo TODO">TODO</span> <a href="http://emacsredux.com/blog/2014/05/16/opening-large-files/">Open large files</a>.<br /></li>
+<li><a id="org6ab84b1"></a><span class="todo TODO">TODO</span> <a href="https://github.com/nathankot/company-sourcekit">company-sourcekit</a> (Swift completion): <a href="https://github.com/wiruzx/dotfiles/blob/master/.emacs#L24">sample config</a>.<br /></li>
+<li><a id="org7bb5ffd"></a><span class="todo TODO">TODO</span> <a href="https://github.com/dakrone/emacs-java-imports">emacs-java-imports</a>.<br /></li>
+<li><a id="orgb373faa"></a><span class="todo TODO">TODO</span> append-to-buffer.<br /></li>
+<li><a id="orgee4774f"></a><span class="todo TODO">TODO</span> <a href="https://github.com/wavexx/python-x.el">python-x: extras for interactive evaluation</a>.<br /></li>
+<li><a id="orgbe27ecd"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsmirror/outlined-elisp-mode">outlined-elisp-mode</a>.<br /></li>
+<li><a id="org72da6b4"></a><span class="todo TODO">TODO</span> <a href="https://github.com/tj64/outline-magic">outlien-magic</a>.<br /></li>
+<li><a id="orgfa418bc"></a><span class="todo TODO">TODO</span> Gutter and linum+ config (see <a href="https://github.com/zvlex/dotfiles">zvlex/dotfiles</a>).<br /></li>
+<li><a id="orga3f7eb1"></a><span class="todo TODO">TODO</span> <a href="https://github.com/emacsfodder/kurecolor">kurecolor</a>: Editing color.<br /></li>
+<li><a id="org5c8a7e5"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/autotype/Autoinserting.html">auto-insert-mode</a>.<br /></li>
+<li><a id="orgaa43572"></a><span class="todo TODO">TODO</span> Buffer local cursor color: <a href="https://github.com/skk-dev/ddskk/blob/master/readmes/readme.ccc.org">ccc</a>.<br /></li>
+<li><a id="orgedd1265"></a><span class="todo TODO">TODO</span> clang indexing tool: <a href="http://ffevotte.github.io/clang-tags/">clang-tags</a>.<br /></li>
+<li><a id="orgd7ab83f"></a><span class="todo TODO">TODO</span> Create custom theme: Trường's <a href="http://truongtx.me/2013/03/31/color-theming-in-emacs-24/">post</a>.<br /></li>
+<li><a id="org291e8df"></a><span class="todo TODO">TODO</span> <a href="https://github.com/Fuco1/dired-hacks">dired-hacks</a>.<br /></li>
+<li><a id="org3e171da"></a><span class="todo TODO">TODO</span> gtd emacs workflow: Charles cave's <a href="http://members.optusnet.com.au/~charles57/gtd/gtd_workflow.html">notes</a>.<br /></li>
+<li><a id="orgb96a0b5"></a><span class="done DONE">DONE</span> emacs-index-search (lookup subject in Emacs manual).<br /></li>
+<li><a id="org7c591d2"></a><span class="done DONE">DONE</span> info-apropos (lookup subject in all manuals).<br /></li>
+<li><a id="org1e0f9df"></a><span class="todo TODO">TODO</span> Jumping around tips: <a href="http://zerokspot.com/weblog/2015/01/07/jumping-around-in-emacs/">zerokspot</a>.<br /></li>
+<li><a id="org75ba6fc"></a><span class="todo TODO">TODO</span> Mac OS clipboard support (from terminal): <a href="https://github.com/jkp/pbcopy.el">pbcopy</a>.<br /></li>
+<li><a id="org2e23330"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/m0smith/malabar-mode">Malabar mode</a>: For Java.<br /></li>
+<li><a id="orge632f0d"></a><span class="todo TODO">TODO</span> Melpa recipe format:<a href="https://github.com/milkypostman/melpa#recipe-format">format</a>.<br /></li>
+<li><a id="org5ed8ab7"></a><span class="done OBSOLETE">OBSOLETE</span> Naturaldocs for javascript: <a href="http://naiquevin.github.io/naturaldocs-for-javascript-in-emacs.html">Vineet's post</a>.<br /></li>
+<li><a id="org33575da"></a><span class="todo TODO">TODO</span> Org protocol: see irreal's <a href="http://irreal.org/blog/?p=3594">post</a> and oremacs's <a href="http://oremacs.com/2015/01/07/org-protocol-1/">part 1</a> and <a href="http://oremacs.com/2015/01/08/org-protocol-2/">part 2</a>.<br /></li>
+<li><a id="orge08fb73"></a><span class="todo TODO">TODO</span> org-multiple-keymap.  More at <a href="https://github.com/myuhe/org-multiple-keymap.el">org-multiple-keymap.el</a>.<br /></li>
+<li><a id="org13cd9ae"></a><span class="todo TODO">TODO</span> <a href="https://github.com/yjwen/org-reveal/tree/stable">org-reveal</a>: Export org to reveal.js.<br /></li>
+<li><a id="orga0336ed"></a><span class="todo TODO">TODO</span> Practice touch/speed typing: <a href="https://github.com/hagleitn/speed-type">speedtype</a>.<br /></li>
+<li><a id="org6c04824"></a><span class="todo TODO">TODO</span> private configuration: <a href="https://github.com/cheunghy/private">private</a>.<br /></li>
+<li><a id="org7ee8b72"></a><span class="todo TODO">TODO</span> project management for C/C++: <a href="https://github.com/lefterisjp/malinka">malinka</a>.<br /></li>
+<li><a id="orgb3fddbf"></a><span class="todo TODO">TODO</span> Project templates: <a href="https://github.com/chrisbarrett/skeletor.el">skeletor</a>.<br /></li>
+<li><a id="orge38d557"></a><span class="todo TODO">TODO</span> Rewrite git logs. See <a href="http://shingofukuyama.github.io/emacs-magit-reword-commit-messages/">emacs magit tutorial | rewrite older commit</a>.<br /></li>
+<li><a id="orgac6f55c"></a><span class="todo TODO">TODO</span> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Selective-Display.html">Selective display</a>: Hide lines longer than.<br /></li>
+<li><a id="orgb279bbf"></a><span class="todo TODO">TODO</span> shell-command-on-region: Print inline with C-u M-|.<br /></li>
+<li><a id="org0c59b6f"></a><span class="todo TODO">TODO</span> shell-command: Print output inline with C-u M-!.<br /></li>
+<li><a id="orgcaa5ec4"></a><span class="todo TODO">TODO</span> Simplify media file transformations: <a href="https://github.com/abo-abo/make-it-so">make-it-so</a>.<br /></li>
+<li><a id="org249dfd5"></a><span class="todo TODO">TODO</span> <a href="https://github.com/mineo/yatemplate">yatemplate</a>.<br /></li>
+<li><a id="orgb56af26"></a><span class="todo TODO">TODO</span> <a href="https://github.com/fujimisakari/emacs-helm-xcdoc">emacs-helm-xcdoc</a>.<br /></li>
+<li><a id="orgd189993"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/facetframer/orgnav">Drill down org files using orgnav (helm-based)</a>.<br /></li>
+<li><a id="orgcae15ef"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/prettier/prettier-emacs">Prettier emacs</a>. (use <a href="https://github.com/purcell/reformatter.el">reformatter.el</a>.)<br /></li>
+<li><a id="orge69b47b"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="http://amitp.blogspot.co.uk/search/label/emacs">Spaceline walkthrough</a>.<br /></li>
+<li><a id="orgf70ec9f"></a><span class="done OBSOLETE">OBSOLETE</span> Try out emacs Android debug (see this <a href="http://gregorygrubbs.com/development/tips-on-android-development-using-emacs/">post</a>).<br /></li>
+<li><a id="org6bb24ec"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/syohex/emacs-quickrun">quickrun.el</a>.<br /></li>
+<li><a id="org66d386a"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/zakame/emacs-for-javascript">Emacs for JavaScript</a>.<br /></li>
+<li><a id="org352ecec"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/iced/go-gopath/blob/master/README.md">go-gopath</a>.<br /></li>
+<li><a id="orgd42cdd0"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/alezost/shift-number.el">shift-number.el</a>.<br /></li>
+<li><a id="orga0fb2a5"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/xuchunyang/DevDocs.el">https://github.com/xuchunyang/DevDocs.el</a>.<br /></li>
+<li><a id="org03936b4"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/jasonm23/emacs-select-themes/blob/master/select-themes.el">select-themes</a>.<br /></li>
+<li><a id="org1a3fbe0"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/bmag/helm-purpose">Emacs purpose</a>.<br /></li>
+<li><a id="org7c868a6"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/">Why are you changing gc-cons-threshold?</a>.<br /></li>
+<li><a id="org48dec15"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/nivekuil/corral">Corral</a>.<br /></li>
+<li><a id="org81c75d6"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/nicklanasa/xcode-mode/blob/master/README.md">xcode-mode</a>.<br /></li>
+<li><a id="orge3f4e36"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/yuutayamada/commenter">commenter</a>.<br /></li>
+<li><a id="orgea3108b"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/ustun/emacs-helpers-for-js/blob/master/uojs.el">Emacs JavaScript helpers</a>.<br /></li>
+<li><a id="org1fe0920"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/lujun9972/yahoo-weather-mode">yahoo-weather-mode</a>.<br /></li>
+<li><a id="orgf3c8f17"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/peteyy/.emacs.d/blob/master/settings/language-javascript.el">Peek at peteyy's Javascript config</a>.<br /></li>
+<li><a id="orgde9a026"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/trotzig/import-js">import-js</a>.<br /></li>
+<li><a id="org5146a89"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/CodyReichert/es6-snippets">ES6 yasnippets</a>.<br /></li>
+<li><a id="orgb01e1ba"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/swank-js/swank-js">swank-js</a>.<br /></li>
+<li><a id="orgcd3a340"></a><span class="done OBSOLETE">OBSOLETE</span> <a href="https://github.com/ananthakumaran/tide">TypeScript Interactive Development Environment for Emacs</a>.<br /></li>
+<li><a id="orgb83832c"></a><span class="done DONE">DONE</span> Try out <a href="https://github.com/jacobdufault/cquery/blob/master/emacs/cquery.el">cquery</a>, <a href="https://github.com/emacs-lsp/lsp-mode">emacs-lsp</a>, and <a href="https://github.com/tigersoldier/company-lsp">company-lsp</a>.<br /></li>
+<li><a id="org69be5ea"></a><span class="done DONE">DONE</span> (setq projectile-use-git-grep t). <span class="timestamp-wrapper"><span class="timestamp">27 December 2018</span></span><br /></li>
+<li><a id="org85ca312"></a><span class="done DONE">DONE</span> <a href="https://www.reddit.com/r/emacs/comments/46lv2q/is_there_any_easy_way_to_make_org_files_password/">Is there any easy way to make .org files password protected? (Reddit)</a>.<br /></li>
+<li><a id="org8e640bf"></a><span class="done DONE">DONE</span> use-package binding to different maps<br />
+<div class="outline-text-5" id="text-org8e640bf">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">term</span>
   <span style="color: #a71d5d;">:bind</span>
@@ -569,29 +496,29 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </li>
-<li><a id="org8113e6c"></a><span class="done DONE">DONE</span> <a href="https://github.com/syohex/emacs-qrencode/blob/master/README.md">Emacs qrencode</a>.<br /></li>
-<li><a id="orgec2753f"></a><span class="done DONE">DONE</span> <a href="https://github.com/Fuco1/smartparens">Smartparens</a>.<br /></li>
-<li><a id="org1371719"></a><span class="done DONE">DONE</span> <a href="https://gist.github.com/syohex/626af66ba3650252b0a2">Hash region</a>.<br /></li>
-<li><a id="org135ac33"></a><span class="done DONE">DONE</span> <a href="https://github.com/syohex/emacs-helm-ispell">helm-ispell</a>.<br /></li>
-<li><a id="org7c377ea"></a><span class="done DONE">DONE</span> <a href="https://github.com/HKey/dired-atool">Pack/unpack files with atool on dired</a>.<br /></li>
-<li><a id="org2a0dbc6"></a><span class="done DONE">DONE</span> <a href="https://github.com/Alexander-Miller/company-shell">company-shell</a>.<br /></li>
-<li><a id="orgad3ddfe"></a><span class="done DONE">DONE</span> artbollocks-mode and writegood. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.<br /></li>
-<li><a id="org2a072ea"></a><span class="done DONE">DONE</span> comint-prompt-read-only for making shell prompts read-only.<br /></li>
-<li><a id="orgf9f8011"></a><span class="done DONE">DONE</span> <a href="https://github.com/kelvinh/org-page">org-page</a>: Static blog.<br /></li>
-<li><a id="orga893a58"></a><span class="done DONE">DONE</span> <a href="https://www.reddit.com/r/emacs/comments/43b42y/i_just_realized_emacs_has_a_fast_infix_calculator/">I just realized Emacs has a fast infix calculator that's not calc or quick-calc&#x2026; (Reddit)</a>.<br /></li>
-<li><a id="orgaa8d9d6"></a><span class="done DONE">DONE</span> <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">How to get emacs key bindings in Ubuntu</a>.<br /></li>
-<li><a id="orgaca0fc2"></a><span class="done DONE">DONE</span> <a href="https://github.com/calvinwyoung/org-autolist">org-autolist</a>.<br /></li>
-<li><a id="org109f74c"></a><span class="done DONE">DONE</span> Move up by parens: More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.<br /></li>
-<li><a id="org9698342"></a><span class="done DONE">DONE</span> sunrise-sunset.<br /></li>
-<li><a id="org29e28a7"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/ace-window">ace-window</a>.<br /></li>
-<li><a id="org3d040c2"></a><span class="done DONE">DONE</span> Checkdoc.<br /></li>
-<li><a id="orgcf1875e"></a><span class="done DONE">DONE</span> Choose magit repo c-u c-x g (magit-status).<br /></li>
-<li><a id="org5bd2f1a"></a><span class="done DONE">DONE</span> continue comment blocks: m-j (indent-new-comment-line).<br /></li>
-<li><a id="org7d381bd"></a><span class="done DONE">DONE</span> Debug expanded elisp macros: See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.<br /></li>
-<li><a id="org10e6ea8"></a><span class="done DONE">DONE</span> delete-duplicate-lines<br /></li>
-<li><a id="org32eafeb"></a><span class="done DONE">DONE</span> Describe bindings: C-h b lists all bindings.<br /></li>
-<li><a id="org3fe0049"></a><span class="done DONE">DONE</span> Disable furniture<br />
-<div class="outline-text-5" id="text-org3fe0049">
+<li><a id="orgdca6971"></a><span class="done DONE">DONE</span> <a href="https://github.com/syohex/emacs-qrencode/blob/master/README.md">Emacs qrencode</a>.<br /></li>
+<li><a id="orgd867279"></a><span class="done DONE">DONE</span> <a href="https://github.com/Fuco1/smartparens">Smartparens</a>.<br /></li>
+<li><a id="org1e89b39"></a><span class="done DONE">DONE</span> <a href="https://gist.github.com/syohex/626af66ba3650252b0a2">Hash region</a>.<br /></li>
+<li><a id="org3382d08"></a><span class="done DONE">DONE</span> <a href="https://github.com/syohex/emacs-helm-ispell">helm-ispell</a>.<br /></li>
+<li><a id="orge6dfb5e"></a><span class="done DONE">DONE</span> <a href="https://github.com/HKey/dired-atool">Pack/unpack files with atool on dired</a>.<br /></li>
+<li><a id="orgbcccfc5"></a><span class="done DONE">DONE</span> <a href="https://github.com/Alexander-Miller/company-shell">company-shell</a>.<br /></li>
+<li><a id="orgfdee730"></a><span class="done DONE">DONE</span> artbollocks-mode and writegood. More at Sacha's <a href="http://sachachua.com/blog/2011/12/emacs-artbollocks-mode-el-and-writing-more-clearly/">post</a>.<br /></li>
+<li><a id="org174736d"></a><span class="done DONE">DONE</span> comint-prompt-read-only for making shell prompts read-only.<br /></li>
+<li><a id="org901a025"></a><span class="done DONE">DONE</span> <a href="https://github.com/kelvinh/org-page">org-page</a>: Static blog.<br /></li>
+<li><a id="orge1b1cae"></a><span class="done DONE">DONE</span> <a href="https://www.reddit.com/r/emacs/comments/43b42y/i_just_realized_emacs_has_a_fast_infix_calculator/">I just realized Emacs has a fast infix calculator that's not calc or quick-calc&#x2026; (Reddit)</a>.<br /></li>
+<li><a id="org3c576ce"></a><span class="done DONE">DONE</span> <a href="http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/">How to get emacs key bindings in Ubuntu</a>.<br /></li>
+<li><a id="org7622934"></a><span class="done DONE">DONE</span> <a href="https://github.com/calvinwyoung/org-autolist">org-autolist</a>.<br /></li>
+<li><a id="orgb3ba44a"></a><span class="done DONE">DONE</span> Move up by parens: More at the <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Moving-by-Parens.html">manual</a>.<br /></li>
+<li><a id="org940c3ef"></a><span class="done DONE">DONE</span> sunrise-sunset.<br /></li>
+<li><a id="orgb1e7791"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/ace-window">ace-window</a>.<br /></li>
+<li><a id="org260860b"></a><span class="done DONE">DONE</span> Checkdoc.<br /></li>
+<li><a id="org6819965"></a><span class="done DONE">DONE</span> Choose magit repo c-u c-x g (magit-status).<br /></li>
+<li><a id="orga97908d"></a><span class="done DONE">DONE</span> continue comment blocks: m-j (indent-new-comment-line).<br /></li>
+<li><a id="org9336579"></a><span class="done DONE">DONE</span> Debug expanded elisp macros: See Wisdom and Wonder's <a href="http://www.wisdomandwonder.com/link/9316/how-to-debug-expanded-elisp-macros">post</a>.<br /></li>
+<li><a id="orgeadf67e"></a><span class="done DONE">DONE</span> delete-duplicate-lines<br /></li>
+<li><a id="org807a0ba"></a><span class="done DONE">DONE</span> Describe bindings: C-h b lists all bindings.<br /></li>
+<li><a id="org87dcb8a"></a><span class="done DONE">DONE</span> Disable furniture<br />
+<div class="outline-text-5" id="text-org87dcb8a">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(menu-bar-mode -1)
 (toggle-scroll-bar -1)
@@ -600,9 +527,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </li>
-<li><a id="org1744113"></a><span class="done DONE">DONE</span> <a href="https://github.com/silex/elmacro">elmacro</a> shows keyboard as emacs lisp.<br /></li>
-<li><a id="org06d1af6"></a><span class="done DONE">DONE</span> yasnippet mirrors with transformations more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6">snippet development</a>.<br />
-<div class="outline-text-5" id="text-org06d1af6">
+<li><a id="org29dc497"></a><span class="done DONE">DONE</span> <a href="https://github.com/silex/elmacro">elmacro</a> shows keyboard as emacs lisp.<br /></li>
+<li><a id="orgd427bf9"></a><span class="done DONE">DONE</span> yasnippet mirrors with transformations more at <a href="https://capitaomorte.github.io/yasnippet/snippet-development.html#sec-3-6">snippet development</a>.<br />
+<div class="outline-text-5" id="text-orgd427bf9">
 <p>
 For example:
 </p>
@@ -612,7 +539,7 @@ For example:
     <span style="color: #a71d5d;">return</span> $<span style="color: #333333;">2</span>;
 }
 
-<span style="color: #795da3;">-</span> (void)<span style="color: #a71d5d;">set</span>${<span style="color: #333333;">2</span>:$(<span style="color: #183691;">capitalize yas-text</span>)}:($<span style="color: #333333;">1</span>)avalue
+<span style="color: #795da3;">-</span> (void)<span style="color: #a71d5d;">set</span>${<span style="color: #333333;">2</span>:$(capitalize yas-text)}:($<span style="color: #333333;">1</span>)avalue
 {
     [$<span style="color: #333333;">2</span> autorelease];
     $<span style="color: #333333;">2</span> = [avalue retain];
@@ -622,22 +549,22 @@ $<span style="color: #333333;">0</span>
 </div>
 </div>
 </li>
-<li><a id="orgd3f1cca"></a><span class="done DONE">DONE</span> Emacs regex: <a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs: text pattern matching (regex) tutorial</a>.<br /></li>
-<li><a id="orge90e0e3"></a><span class="done DONE">DONE</span> export ascii art: <a href="http://www.lysator.liu.se/~tab/artist/">artist mode</a> + <a href="http://ditaa.sourceforge.net">ditaa</a> for uml. demo <a href="https://www.youtube.com/watch?v=ciux87xo8fc">video</a>.<br /></li>
-<li><a id="org78b41f8"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/lispy">lispy</a>.<br /></li>
-<li><a id="org41898dc"></a><span class="done DONE">DONE</span> <a href="https://github.com/dandavison/minimal">minimal</a>: minimalist appearance.<br /></li>
-<li><a id="org0eb5328"></a><span class="done DONE">DONE</span> Narrowing regions<br />
-<div class="outline-text-5" id="text-org0eb5328">
+<li><a id="orgcc8b18f"></a><span class="done DONE">DONE</span> Emacs regex: <a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs: text pattern matching (regex) tutorial</a>.<br /></li>
+<li><a id="orge85dd7a"></a><span class="done DONE">DONE</span> export ascii art: <a href="http://www.lysator.liu.se/~tab/artist/">artist mode</a> + <a href="http://ditaa.sourceforge.net">ditaa</a> for uml. demo <a href="https://www.youtube.com/watch?v=ciux87xo8fc">video</a>.<br /></li>
+<li><a id="orgf02283c"></a><span class="done DONE">DONE</span> <a href="https://github.com/abo-abo/lispy">lispy</a>.<br /></li>
+<li><a id="orga60b6af"></a><span class="done DONE">DONE</span> <a href="https://github.com/dandavison/minimal">minimal</a>: minimalist appearance.<br /></li>
+<li><a id="org95b5c8b"></a><span class="done DONE">DONE</span> Narrowing regions<br />
+<div class="outline-text-5" id="text-org95b5c8b">
 <ul class="org-ul">
 <li>c-x n n (narrow-to-region).</li>
 <li>c-x n w (Widen).</li>
 </ul>
 </div>
 </li>
-<li><a id="orga3cb432"></a><span class="done DONE">DONE</span> <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.<br /></li>
-<li><a id="org871de1d"></a><span class="done DONE">DONE</span> <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.<br /></li>
-<li><a id="orgdc7f387"></a><span class="done DONE">DONE</span> Recursive query/replace<br />
-<div class="outline-text-5" id="text-orgdc7f387">
+<li><a id="orgb49a3ce"></a><span class="done DONE">DONE</span> <a href="https://www.gnu.org/software/emacs/manual/nxml-mode.html">nxml-mode</a>.<br /></li>
+<li><a id="org04b291f"></a><span class="done DONE">DONE</span> <a href="https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org">org-beautify-theme</a>: a sub-theme to make org-mode more beautiful.<br /></li>
+<li><a id="orgd0a4985"></a><span class="done DONE">DONE</span> Recursive query/replace<br />
+<div class="outline-text-5" id="text-orgd0a4985">
 <ul class="org-ul">
 <li>M-x find-dired RET.</li>
 <li>Navigate to location, RET.</li>
@@ -650,9 +577,9 @@ $<span style="color: #333333;">0</span>
 </ul>
 </div>
 </li>
-<li><a id="org8362973"></a><span class="done DONE">DONE</span> Repeat last command: C-x z (and just z threreafter).<br /></li>
-<li><a id="org006a8f8"></a><span class="done DONE">DONE</span> Replace char with a newline<br />
-<div class="outline-text-5" id="text-org006a8f8">
+<li><a id="org6da9d7c"></a><span class="done DONE">DONE</span> Repeat last command: C-x z (and just z threreafter).<br /></li>
+<li><a id="orge278038"></a><span class="done DONE">DONE</span> Replace char with a newline<br />
+<div class="outline-text-5" id="text-orge278038">
 <ul class="org-ul">
 <li>M-x replace-string RET ; RET C-q C-j.</li>
 <li>C-q (quoted-insert).</li>
@@ -660,12 +587,12 @@ $<span style="color: #333333;">0</span>
 </ul>
 </div>
 </li>
-<li><a id="org14df184"></a><span class="done DONE">DONE</span> <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a>, <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.<br /></li>
-<li><a id="org57a02e3"></a><span class="done DONE">DONE</span> Toggling key bingings: <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.<br /></li>
-<li><a id="org0a31217"></a><span class="done DONE">DONE</span> <a href="https://github.com/damiencassou/unify-opening">unify-opening</a><br /></li>
-<li><a id="orgdc47a48"></a><span class="done DONE">DONE</span> use-package: <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.<br /></li>
-<li><a id="org03e1edd"></a><span class="done DONE">DONE</span> <a href="https://github.com/aaronbieber/sunshine.el">sunshine.el</a>.<br /></li>
-<li><a id="orgc46747d"></a><span class="done DONE">DONE</span> youtube-dl: <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.<br /></li>
+<li><a id="orgd73e80b"></a><span class="done DONE">DONE</span> <a href="https://github.com/bruce-connor/smart-mode-line">smart-mode-line</a>, <a href="http://pages.sachachua.com/.emacs.d/sacha.html">sacha's sample usage</a>.<br /></li>
+<li><a id="org4c604ac"></a><span class="done DONE">DONE</span> Toggling key bingings: <a href="http://oremacs.com/2014/12/25/ode-to-toggle/">ode to the toggle</a>.<br /></li>
+<li><a id="orgbb8d357"></a><span class="done DONE">DONE</span> <a href="https://github.com/damiencassou/unify-opening">unify-opening</a><br /></li>
+<li><a id="org0955c8d"></a><span class="done DONE">DONE</span> use-package: <a href="http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html">lunaryorn</a>.<br /></li>
+<li><a id="org8dbfb0e"></a><span class="done DONE">DONE</span> <a href="https://github.com/aaronbieber/sunshine.el">sunshine.el</a>.<br /></li>
+<li><a id="org39d1c25"></a><span class="done DONE">DONE</span> youtube-dl: <a href="http://oremacs.com/2015/01/05/youtube-dl/">or emacs</a>.<br /></li>
 </ul>
 </div>
 </div>
