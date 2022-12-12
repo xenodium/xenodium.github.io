@@ -6,13 +6,232 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 13 Nov 2022 09:37:41 +0000</lastBuildDate>
+<lastBuildDate>Mon, 12 Dec 2022 20:38:54 +0000</lastBuildDate>
+<item>
+  <title>Emacs: Context-aware yasnippets</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-generate-a-swift-initializer" class="outline-2">
+ <h2 id="emacs-generate-a-swift-initializer"> <span class="timestamp-wrapper"> <span class="timestamp">12 December 2022</span></span> Emacs: Context-aware yasnippets</h2>
+ <div class="outline-text-2" id="text-emacs-generate-a-swift-initializer">
+ <p>
+Back in 2020, I wrote a semi-automatic  <a href="https://github.com/joaotavora/yasnippet">yasnippet</a> to  <a href="https://xenodium.com/smarter-snippets/">generate Swift initializers</a>. I say semi-automatic because it could have been a little smarter. While it helped generate some of the code, what I really wanted was full context-aware generation. The Swift struct already had a few properties defined, so a smarter yasnippet should have been able to use this info for code generation.
+</p>
+
+
+ <div id="orga50c92b" class="figure">
+ <p> <img src="../images/smarter-snippets/snippet.gif" alt="snippet.gif" width="60%" height="60%"></img></p>
+</div>
+
+ <p>
+With an extra push, we could have written a smarter yasnippet, but it may require a fair bit of parsing logic. Fast forward to today, and bringing context-awareness seems like the right match for  <a href="https://tree-sitter.github.io/tree-sitter/">Tree-sitter</a>. While Tree-sitter can enable faster and more reliable syntax-highlighting in our beloved text editor, it can also power smarter tools. It does so by exposing a semantic snapshot of our source code using a syntax tree.
+</p>
+
+ <p>
+Let's see how we can use Tree-sitter to realise our original yasnippet vision. We'll start with the same struct snippet we used back in 2020. The goal is to generate an initializer using the existing definitions.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">struct</span>  <span style="color: #795da3;">Coordinate</span> {
+   <span style="color: #a71d5d;">public</span>  <span style="color: #a71d5d;">let</span> x:  <span style="color: #a71d5d;">Int</span>
+   <span style="color: #a71d5d;">public</span>  <span style="color: #a71d5d;">let</span> y:  <span style="color: #a71d5d;">Int</span>
+   <span style="color: #a71d5d;">public</span>  <span style="color: #a71d5d;">let</span> z:  <span style="color: #a71d5d;">Int</span>
+}
+</pre>
+</div>
+
+ <p>
+While Emacs will  <a href="https://lists.gnu.org/archive/html/emacs-devel/2022-11/msg01443.html">will soon ship its own Tree-sitter integration</a>, I've opted to try out the  <a href="https://github.com/emacs-tree-sitter/elisp-tree-sitter">emacs-tree-sitter</a> package as Swift support is currently included in  <a href="https://github.com/emacs-tree-sitter/tree-sitter-langs">tree-sitter-langs</a>.
+</p>
+
+ <p>
+I have much to learn much about Tree-sitter syntax trees, but the package ships with a handy tool to dump the tree via  <code>tree-sitter-debug-mode</code>.
+</p>
+
+
+ <div id="org11be79a" class="figure">
+ <p> <img src="../images/emacs-generate-a-swift-initializer/syntax-tree.png" alt="syntax-tree.png" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+With a syntax tree in mind, one can craft a query to semantically extract parts of the code. In our case, we want property names and types.
+I've yet to get acquainted with Tree-sitter's  <a href="https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax">query syntax</a>, but the package also ships with another handy tool that helps view query results via  <code>tree-sitter-query-builder</code>.
+</p>
+
+
+ <div id="orgc14cc52" class="figure">
+ <p> <img src="../images/emacs-generate-a-swift-initializer/query-builder.png" alt="query-builder.png" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+The following query extracts all the  <code>let properties</code> in file. You can see the builder in action above, highlighting our query results.
+</p>
+
+ <pre class="example">
+(struct_declaration (constant_declaration (identifier) @name (type) @value))
+</pre>
+
+ <p>
+If we want to be more thorough, we should likely cater for classes, vars, int/string literals, etc. so the query needs to be extended as follows. I'm sure it can be written differently, but for now, it does the job.
+</p>
+
+ <pre class="example">
+(struct_declaration (variable_declaration (identifier) @name (type) @type))
+(struct_declaration (variable_declaration (identifier) @name (string) @value))
+(struct_declaration (variable_declaration (identifier) @name (number) @value))
+(struct_declaration (constant_declaration (identifier) @name (type) @value))
+(struct_declaration (constant_declaration (identifier) @name (string) @value))
+(struct_declaration (constant_declaration (identifier) @name (number) @value))
+(class_declaration (variable_declaration (identifier) @name (type) @type))
+(class_declaration (variable_declaration (identifier) @name (string) @value))
+(class_declaration (variable_declaration (identifier) @name (number) @value))
+(class_declaration (constant_declaration (identifier) @name (type) @type))
+(class_declaration (constant_declaration (identifier) @name (string) @value))
+(class_declaration (constant_declaration (identifier) @name (number) @value))
+</pre>
+
+ <p>
+Now that we got our Tree-sitter query sorted, let's write a little elisp to extract the info we need from the generated tree. We'll a write  <code>swift-class-or-struct-vars-at-point</code> function extract the struct (or class) at point and subsequently filter property names/types using our query. To simplify the result, we'll return a list of alists.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">swift-class-or-struct-vars-at-point</span> ()
+   <span style="color: #183691;">"Return a list of class or struct vars in the form '(((name . \"foo\") (type . \"Foo\")))."</span>
+  (<span style="color: #333333;">cl-assert</span> (seq-contains local-minor-modes 'tree-sitter-mode)  <span style="color: #183691;">"tree-sitter-mode not enabled"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((node (<span style="color: #a71d5d;">or</span> (tree-sitter-node-at-point 'struct_declaration)
+                   (tree-sitter-node-at-point 'class_declaration)))
+         (vars)
+         (var))
+    (<span style="color: #a71d5d;">unless</span> node
+      (<span style="color: #333333;">error</span>  <span style="color: #183691;">"Neither in class nor struct"</span>))
+    (mapc
+     (<span style="color: #a71d5d;">lambda</span> (item)
+       (<span style="color: #a71d5d;">cond</span> ((eq 'identifier
+                  (tsc-node-type (cdr item)))
+              (<span style="color: #a71d5d;">when</span> var
+                (<span style="color: #a71d5d;">setq</span> vars (append vars (list var))))
+              (<span style="color: #a71d5d;">setq</span> var (list (cons 'name (tsc-node-text
+                                           (cdr item))))))
+             ((eq 'type
+                  (tsc-node-type (cdr item)))
+              (<span style="color: #a71d5d;">setq</span> var (map-insert var 'type (tsc-node-text
+                                               (cdr item)))))
+             ((eq 'string
+                  (tsc-node-type (cdr item)))
+              (<span style="color: #a71d5d;">setq</span> var (map-insert var 'type  <span style="color: #183691;">"String"</span>)))
+             ((eq 'number
+                  (tsc-node-type (cdr item)))
+              (<span style="color: #a71d5d;">setq</span> var (map-insert var 'type  <span style="color: #183691;">"Int"</span>)))
+             (t (message  <span style="color: #183691;">"%s"</span> (tsc-node-type (cdr item))))))
+     (tsc-query-captures
+      (tsc-make-query tree-sitter-language
+                       <span style="color: #183691;">"(struct_declaration (variable_declaration (identifier) @name (type) @type))</span>
+ <span style="color: #183691;">                       (struct_declaration (variable_declaration (identifier) @name (string) @value))</span>
+ <span style="color: #183691;">                       (struct_declaration (variable_declaration (identifier) @name (number) @value))</span>
+ <span style="color: #183691;">                       (struct_declaration (constant_declaration (identifier) @name (type) @value))</span>
+ <span style="color: #183691;">                       (struct_declaration (constant_declaration (identifier) @name (string) @value))</span>
+ <span style="color: #183691;">                       (struct_declaration (constant_declaration (identifier) @name (number) @value))</span>
+ <span style="color: #183691;">                       (class_declaration (variable_declaration (identifier) @name (type) @type))</span>
+ <span style="color: #183691;">                       (class_declaration (variable_declaration (identifier) @name (string) @value))</span>
+ <span style="color: #183691;">                       (class_declaration (variable_declaration (identifier) @name (number) @value))</span>
+ <span style="color: #183691;">                       (class_declaration (constant_declaration (identifier) @name (type) @type))</span>
+ <span style="color: #183691;">                       (class_declaration (constant_declaration (identifier) @name (string) @value))</span>
+ <span style="color: #183691;">                       (class_declaration (constant_declaration (identifier) @name (number) @value))"</span>)
+      node nil))
+    (<span style="color: #a71d5d;">when</span> var
+      (<span style="color: #a71d5d;">setq</span> vars (append vars (list var))))
+    vars))
+</pre>
+</div>
+
+ <pre class="example">
+(((type . "Int") (name . "x"))
+ ((type . "Int") (name . "y"))
+ ((type . "Int") (name . "z")))
+</pre>
+
+
+ <p>
+Finally, we write a function to generate a Swift initializer from our property list.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">swift-class-or-struct-initializer-text</span> (vars)
+   <span style="color: #183691;">"Generate a Swift initializer from property VARS."</span>
+  (<span style="color: #333333;">cl-assert</span> (seq-contains local-minor-modes 'tree-sitter-mode)  <span style="color: #183691;">"tree-sitter-mode not enabled"</span>)
+  (format
+   (string-trim
+     <span style="color: #183691;">"</span>
+ <span style="color: #183691;">init(%s) {</span>
+ <span style="color: #183691;">  %s</span>
+ <span style="color: #183691;">}"</span>)
+   (seq-reduce (<span style="color: #a71d5d;">lambda</span> (reduced var)
+                 (format  <span style="color: #183691;">"%s%s%s: %s"</span>
+                         reduced
+                         (<span style="color: #a71d5d;">if</span> (string-empty-p reduced)
+                              <span style="color: #183691;">""</span>  <span style="color: #183691;">", "</span>)
+                         (map-elt var 'name)
+                         (map-elt var 'type)))
+               vars  <span style="color: #183691;">""</span>)
+   (string-join
+    (mapcar (<span style="color: #a71d5d;">lambda</span> (var)
+              (format  <span style="color: #183691;">"self.%s = %s"</span>
+                      (map-elt var 'name)
+                      (map-elt var 'name)))
+            vars)
+     <span style="color: #183691;">"\n  "</span>)))
+</pre>
+</div>
+ <pre class="example">
+init(x: Int, y: Int, z: Int) {
+  self.x = x
+  self.y = y
+  self.z = z
+}
+</pre>
+
+
+ <p>
+We're so close now. All we need is a simple way invoke our code generator. We can use yasnippet for that, making  <code>init</code> our expandable keyword.
+</p>
+
+ <pre class="example">
+# -*- mode: snippet -*-
+# name: init all
+# key: init
+# --
+`(swift-class-or-struct-initializer-text (swift-class-or-struct-vars-at-point))`
+</pre>
+
+ <p>
+With all that, we've got yasnippet vision accomplished!
+</p>
+
+
+ <div id="orgd449ea8" class="figure">
+ <p> <img src="../images/emacs-generate-a-swift-initializer/init-sitter_x2.webp" alt="init-sitter_x2.webp" width="60%" height="60%"></img></p>
+</div>
+
+ <p>
+Be sure to check out this year's relevant  <a href="https://emacsconf.org/">EmacsConf</a> talk:  <a href="https://emacsconf.org/2022/talks/treesitter/">Tree-sitter beyond syntax highlighting</a>.
+</p>
+
+ <p>
+All code is now pushed to my  <a href="https://github.com/xenodium/dotsies/commit/9a44606935e8d57d7b3bde2d8d051defbf254a9e">config repo</a>. By the way, I'm not super knowledgable of neither yasnippet nor Tree-sitter. Improvements are totally welcome. Please reach out on the  <a href="https://indieweb.social/@xenodium">Fediverse</a> if you have suggestions!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-generate-a-swift-initializer</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-generate-a-swift-initializer</guid>
+  <pubDate>Mon, 12 Dec 2022 20:38:54 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: quickly killing processes</title>
   <description><![CDATA[<div id="content" class="content">
 
  <div id="outline-container-emacs-quick-kill-process" class="outline-2">
- <h2 id="emacs-quick-kill-process"> <span class="timestamp-wrapper"> <span class="timestamp">12 November 2022</span></span> Emacs: quickly killing processes</h2>
+ <h2 id="emacs-quick-kill-process"> <span class="timestamp-wrapper"> <span class="timestamp">13 November 2022</span></span> Emacs: quickly killing processes</h2>
  <div class="outline-text-2" id="text-emacs-quick-kill-process">
  <p>
 Every so often, I need to kill the odd unresponsive process. While I really like  <code>proced</code> (check out Mickey Petersen's  <a href="https://www.masteringemacs.org/article/displaying-interacting-processes-proced">article</a>), I somehow find myself using macOS's  <a href="https://support.apple.com/en-bw/guide/activity-monitor/actmaea30277/mac">Activity Monitor</a> to this purpose. Kinda odd, considering I prefer to do these kinds of things from Emacs.
