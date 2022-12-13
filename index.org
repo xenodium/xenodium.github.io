@@ -59,7 +59,7 @@ If we want to be more thorough, we should likely cater for classes, vars, int/st
   (class_declaration (constant_declaration (identifier) @name (number) @value))
 #+end_src
 
-Now that we got our Tree-sitter query sorted, let's write a little elisp to extract the info we need from the generated tree. We'll a write =swift-class-or-struct-vars-at-point= function extract the struct (or class) at point and subsequently filter property names/types using our query. To simplify the result, we'll return a list of alists.
+Now that we got our Tree-sitter query sorted, let's write a little elisp to extract the info we need from the generated tree. We'll write a =swift-class-or-struct-vars-at-point= function to extract the struct (or class) at point and subsequently filter its property names/types using our query. To simplify the result, we'll return a list of alists.
 
 #+begin_src emacs-lisp :lexical no
   (defun swift-class-or-struct-vars-at-point ()
@@ -160,7 +160,7 @@ We're so close now. All we need is a simple way invoke our code generator. We ca
   `(swift-class-or-struct-initializer-text (swift-class-or-struct-vars-at-point))`
 #+end_src
 
-With all that, we've got yasnippet vision accomplished!
+And with all that, we've got our yasnippet vision accomplished!
 
 #+ATTR_HTML: :width 60% :height 60%
 [[file:images/emacs-generate-a-swift-initializer/init-sitter_x2.webp]]
@@ -168,6 +168,14 @@ With all that, we've got yasnippet vision accomplished!
 Be sure to check out this year's relevant [[https://emacsconf.org/][EmacsConf]] talk: [[https://emacsconf.org/2022/talks/treesitter/][Tree-sitter beyond syntax highlighting]].
 
 All code is now pushed to my [[https://github.com/xenodium/dotsies/commit/9a44606935e8d57d7b3bde2d8d051defbf254a9e][config repo]]. By the way, I'm not super knowledgable of neither yasnippet nor Tree-sitter. Improvements are totally welcome. Please reach out on the [[https://indieweb.social/@xenodium][Fediverse]] if you have suggestions!
+
+** Update
+[[https://gitlab.com/woolsweater][Josh Caswell]] kindly pointed out a couple of interesting items:
+
+  1. tree-sitter-langs's [[https://www.reddit.com/r/emacs/comments/zkb7aq/comment/izzjx3l/][Swift grammar is fairly outdated/incomplete]].
+  2. There are more up-to-date Swift grammar implementations currently available:
+     - [[https://gitlab.com/woolsweater/tree-sitter-swifter][tree-sitter-swifter]] (by Josh Caswell himself)
+     - [[https://github.com/alex-pinkus/tree-sitter-swift][tree-sitter-swift]] (by [[https://twitter.com/alexpinkus][Alex Pinkus]])
 
 * [2022-11-13 Sun] Emacs: quickly killing processes
 :PROPERTIES:
