@@ -1,7 +1,54 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-12-18 Sun] Emacs: ffmpeg and macOS aliasing commands
+:PROPERTIES:
+:CUSTOM_ID: emacs-ffmpeg-and-macos-alias-commands
+:END:
+On a recent mastodon [[https://twit.social/@chris_spackman/109531700714365786][post]], Chris Spackman mentioned he uses Emacs to save [[https://ffmpeg.org/][ffmpeg]] commands he's figured out for later usage. Emacs is great for this kind of thing. I've tried different approaches over time and eventually landed on [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]], a small package I wrote. Like Chris, I also wanted a way to invoke magical incantations of known shell commands without having to remember all the details.
 
+Chris's post reminded me of a few use-cases I'd been meaning to add DWIM shell commands for.
+
+*** ffmpeg
+
+1. Trimming seconds from videos
+   - =dwim-shell-commands-video-trim-beginning= using:
+     #+begin_src sh
+       ffmpeg -i '<<f>>' -y -ss <<Seconds:5>> -c:v copy -c:a copy '<<fne>>_trimmed.<<e>>'
+     #+end_src
+   - =dwim-shell-commands-video-trim-end= using:
+     #+begin_src sh
+       ffmpeg -sseof -<<Seconds:5>> -i '<<f>>' -y -c:v copy -c:a copy '<<fne>>_trimmed.<<e>>'
+     #+end_src
+
+     Side-node: The =<<Seconds:5>>= placeholder is recognized as a query, so Emacs will prompt you for a numeric value.
+2. Extracting audio from videos
+   - =dwim-shell-commands-video-to-mp3= using:
+     #+begin_src sh
+       ffmpeg -i '<<f>>' -vn -ab 128k -ar 44100 -y '<<fne>>.mp3'
+     #+end_src
+
+With these new dwim shell commands added, I can easily apply them one after the other. No need to remember command details.
+
+#+ATTR_HTML: :width 60% :height 60%
+[[file:images/emacs-ffmpeg-and-macos-alias-commands/trim_convert_mp3_x1.4.webp]]
+
+*** macOS aliases
+
+After rebuilding Emacs via the wonderful [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]], I recently broke my existing =/Applications/Emacs.app= alias. No biggie, one can easily add a [[https://support.apple.com/en-gb/guide/mac-help/mchlp1046/mac][new one alias from macOS Finder]], but I've been wanting to do it from Emacs. Turns out there's a bit of AppleScript we can turn into a more memorale command like =dwim-shell-commands-macos-make-finder-alias=:
+
+#+begin_src sh
+  osascript -e 'tell application \"Finder\" to make alias file to POSIX file \"<<f>>\" at POSIX file \"%s\"'
+#+end_src
+
+It's highly unlikely I'll remember the AppleScript snippet (are there better ways?), but I'll easily find and invoke my new command with fuzzy searching:
+
+#+ATTR_HTML: :width 80% :height 80%
+[[file:images/emacs-ffmpeg-and-macos-alias-commands/make-emacs-alias_x1.4.webp]]
+
+*** Included in dwim-shell-command
+
+All of these are now included in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]], which you can optionally load after installing [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] from [[https://melpa.org/#/dwim-shell-command][MELPA]].
 * [2022-12-12 Mon] Emacs: Context-aware yasnippets
 :PROPERTIES:
 :CUSTOM_ID: emacs-generate-a-swift-initializer
@@ -18841,8 +18888,10 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2021-09-30 Thu]
+[2022-12-17 Sat]
 :END:
+**** TODO Take your pill.
+**** TODO Chalk line.
 **** TODO [[https://trace.moe/][Anime Scene Search Engine - trace.moe]].
 **** TODO [[https://poorlydrawnlines.com/][Poorly Drawn Lines]].
 **** TODO [[https://www.rottentomatoes.com/m/vhyes][VHYes (2019) - Rotten Tomatoes]].
