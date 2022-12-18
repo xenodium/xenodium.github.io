@@ -6,7 +6,102 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 12 Dec 2022 20:38:54 +0000</lastBuildDate>
+<lastBuildDate>Sun, 18 Dec 2022 18:56:54 +0000</lastBuildDate>
+<item>
+  <title>Emacs: ffmpeg and macOS aliasing commands</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-ffmpeg-and-macos-alias-commands" class="outline-2">
+ <h2 id="emacs-ffmpeg-and-macos-alias-commands"> <span class="timestamp-wrapper"> <span class="timestamp">18 December 2022</span></span> Emacs: ffmpeg and macOS aliasing commands</h2>
+ <div class="outline-text-2" id="text-emacs-ffmpeg-and-macos-alias-commands">
+ <p>
+On a recent mastodon  <a href="https://twit.social/@chris_spackman/109531700714365786">post</a>, Chris Spackman mentioned he uses Emacs to save  <a href="https://ffmpeg.org/">ffmpeg</a> commands he's figured out for later usage. Emacs is great for this kind of thing. I've tried different approaches over time and eventually landed on  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>, a small package I wrote. Like Chris, I also wanted a way to invoke magical incantations of known shell commands without having to remember all the details.
+</p>
+
+ <p>
+Chris's post reminded me of a few use-cases I'd been meaning to add DWIM shell commands for.
+</p>
+</div>
+
+ <div id="outline-container-org43c44b8" class="outline-4">
+ <h4 id="org43c44b8">ffmpeg</h4>
+ <div class="outline-text-4" id="text-org43c44b8">
+ <ol class="org-ol"> <li>Trimming seconds from videos
+ <ul class="org-ul"> <li> <p>
+ <code>dwim-shell-commands-video-trim-beginning</code> using:
+</p>
+ <div class="org-src-container">
+ <pre class="src src-sh">ffmpeg -i  <span style="color: #183691;">'<<f>>'</span> -y -ss <<Seconds:5>> -c:v copy -c:a copy  <span style="color: #183691;">'<<fne>>_trimmed.<<e>>'</span>
+</pre>
+</div></li>
+ <li> <p>
+ <code>dwim-shell-commands-video-trim-end</code> using:
+</p>
+ <div class="org-src-container">
+ <pre class="src src-sh">ffmpeg -sseof -<<Seconds:5>> -i  <span style="color: #183691;">'<<f>>'</span> -y -c:v copy -c:a copy  <span style="color: #183691;">'<<fne>>_trimmed.<<e>>'</span>
+</pre>
+</div>
+
+ <p>
+Side-node: The  <code><<Seconds:5>></code> placeholder is recognized as a query, so Emacs will prompt you for a numeric value.
+</p></li>
+</ul></li>
+ <li>Extracting audio from videos
+ <ul class="org-ul"> <li> <p>
+ <code>dwim-shell-commands-video-to-mp3</code> using:
+</p>
+ <div class="org-src-container">
+ <pre class="src src-sh">ffmpeg -i  <span style="color: #183691;">'<<f>>'</span> -vn -ab 128k -ar 44100 -y  <span style="color: #183691;">'<<fne>>.mp3'</span>
+</pre>
+</div></li>
+</ul></li>
+</ol> <p>
+With these new dwim shell commands added, I can easily apply them one after the other. No need to remember command details.
+</p>
+
+
+ <div id="org02cb8ae" class="figure">
+ <p> <img src="../images/emacs-ffmpeg-and-macos-alias-commands/trim_convert_mp3_x1.4.webp" alt="trim_convert_mp3_x1.4.webp" width="60%" height="60%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org6a4d970" class="outline-4">
+ <h4 id="org6a4d970">macOS aliases</h4>
+ <div class="outline-text-4" id="text-org6a4d970">
+ <p>
+After rebuilding Emacs via the wonderful  <a href="https://github.com/d12frosted/homebrew-emacs-plus">emacs-plus</a>, I recently broke my existing  <code>/Applications/Emacs.app</code> alias. No biggie, one can easily add a  <a href="https://support.apple.com/en-gb/guide/mac-help/mchlp1046/mac">new one alias from macOS Finder</a>, but I've been wanting to do it from Emacs. Turns out there's a bit of AppleScript we can turn into a more memorale command like  <code>dwim-shell-commands-macos-make-finder-alias</code>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">osascript -e  <span style="color: #183691;">'tell application \"Finder\" to make alias file to POSIX file \"<<f>>\" at POSIX file \"%s\"'</span>
+</pre>
+</div>
+
+ <p>
+It's highly unlikely I'll remember the AppleScript snippet (are there better ways?), but I'll easily find and invoke my new command with fuzzy searching:
+</p>
+
+
+ <div id="org402654b" class="figure">
+ <p> <img src="../images/emacs-ffmpeg-and-macos-alias-commands/make-emacs-alias_x1.4.webp" alt="make-emacs-alias_x1.4.webp" width="80%" height="80%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org3f7be11" class="outline-4">
+ <h4 id="org3f7be11">Included in dwim-shell-command</h4>
+ <div class="outline-text-4" id="text-org3f7be11">
+ <p>
+All of these are now included in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, which you can optionally load after installing  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> from  <a href="https://melpa.org/#/dwim-shell-command">MELPA</a>.</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-ffmpeg-and-macos-alias-commands</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-ffmpeg-and-macos-alias-commands</guid>
+  <pubDate>Sun, 18 Dec 2022 18:56:54 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: Context-aware yasnippets</title>
   <description><![CDATA[<div id="content" class="content">
