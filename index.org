@@ -1,6 +1,74 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2022-12-31 Sat] Emacs: Macro me some SF Symbols
+:PROPERTIES:
+:CUSTOM_ID: emacs-macro-me-some-sf-symbols
+:END:
+For inserting SF Symbols in SwiftUI, I typically rely on Apple's [[https://developer.apple.com/sf-symbols/][SF Symbols app]] to browse the symbols's catalog. Once I find a symbol I'm happy with, I copy its name and paste it into my Swift source. This works fairly well.
+
+With Christian Tietze recently posting [[https://christiantietze.de/posts/2022/12/sf-symbols-emacs-tab-numbers/][how he rendered SF Symbols in Emacs]], I figured there may be a way to shift the above workflow to rely on Emacs completion instead. While I initially went down a rabbit hole to programmatically extract SF symbols (via something like [[https://github.com/SFSafeSymbols/SFSafeSymbols][SFSafeSymbols]]), I took a step back to rethink the strategy.
+
+From the [[https://developer.apple.com/sf-symbols/][SF Symbols app]], one can select multiple symbols and copy/paste either the symbols themselves or their respective names. The catch is you can only copy disjointed data. That is, you can copy the symbols or their names, but not both in one go. Let's take a look at what the disjointed data looks like. I've pasted both under separate sections in an Emacs buffer.
+
+#+ATTR_HTML: :width 60% :height 60%
+[[file:images/emacs-macro-me-some-sf-symbols/disjointed.png]]
+
+
+If I could rejoin these two sets, I would have a lookup table I could easily invoke from Emacs.
+
+There are roughly 4500 symbols, so copying, pasting, along with text manipulation isn't manually feasible. Lucky for us, an Emacs [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html][keyboard macro]] is the perfect hammer for this nail. You can see the macro in action below.
+
+#+ATTR_HTML: :width 60% :height 60%
+[[file:images/emacs-macro-me-some-sf-symbols/mini-macro_x1.6.webp]]
+
+This looks fairly magical (and it is), but when you break it down into its building blocks, it's nothing more than recording your keystrokes and replaying them. Starting with the cursor at the beginning of =square.and.arrow.up=, these are the keystrokes we'd need to record:
+
+- C-s :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html][iseach-forward]] to search for a character and jump to it
+- = :: insert === so we jump to == Symbols ==
+- <return> :: runs [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html][isearch-exit]] since we're done jumping.
+- C-n :: =next-line=.
+- C-a :: =beginning-of-line=.
+- C-SPC :: =set-mark-command= to activate the region.
+- C-f :: =forward-char= to select symbol.
+- C-w :: =kill-ring-save= to cut/kill the symbol.
+- C-u C-<space> :: =set-mark-command= (with prefix) to jump back to where we started before searching.
+- C-y :: =yank= to yank/paste the symbol.
+- C-<space> :: =set-mark-command= to activate the region.
+- C-e :: =end-of-line= to select the entire line.
+- " :: As a [[https://github.com/Fuco1/smartparens][smartparens]] user, inserting quote with region places quotes around selection.
+- C-n :: =next-line=.
+- C-a :: =beginning-of-line=. We are now at a strategic location where we can replay the above commands.
+
+To start/end recording and executing keyboard macros, use:
+
+- C-x ( :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html][kmacro-start-macro]]
+- C-x ) :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html][kmacro-end-macro]]
+- C-x e :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html][kmacro-end-and-call-macro]] runs your macro. Press =e= immediately after to execute again.
+- C-u 0 C-x e :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html][kmacro-end-and-call-macro]] (with zero prefix) repeat until there is an error.
+
+Our previous example ran on a handful of SF symbols. Let's bring out the big guns and run on the entire dataset. This time, we'll run the entire flow, including macro creation and executing until there is an error (i.e. process the whole lot).
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/emacs-macro-me-some-sf-symbols/sf-symbol-no-mouse-short_x1.4.webp]]
+
+Now that we have our data joined, we can feed it to the humble [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]].
+
+#+ATTR_HTML: :width 60% :height 60%
+[[file:images/emacs-macro-me-some-sf-symbols/sf-symbols-insert-name.png]]
+
+It's worth highlighting that to render SF Symbols in Emacs, we must [[https://christiantietze.de/posts/2022/12/sf-symbols-emacs-tab-numbers/][propertize our text with one of the macOS SF fonts]], for example "SF Pro".
+
+With all the pieces in place, let's use our new function to insert SF symbol names in a SwiftUI snippet. Since we're using =completing-read= we can fuzzy search our lookups with our favorite completion frameworks (in my case via [[https://github.com/abo-abo/swiper][ivy]]).
+
+#+ATTR_HTML: :width 90% :height 90%
+[[file:images/emacs-macro-me-some-sf-symbols/sf-search_x1.2.webp]]
+
+While this post is macOS-specific, it gives a taste of how powerful Emacs [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html][keyboard macros]] can be. Be sure to check out [[https://emacsrocks.com/e05.html][Emacs Rocks! Episode 05: Macros in style]] and [[https://www.masteringemacs.org/article/keyboard-macros-are-misunderstood][Keyboard Macros are Misunderstood - Mastering Emacs]]. For those that dabble in elisp, you can appreciate how handy  [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] is with very little code.
+
+The full source to [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el][sf-symbol-insert-name]] is available in my [[https://github.com/xenodium/dotsies/][Emacs config repo]]. The function is fairly bare bones and has had fairly little testing. Patches totally welcome.
+
+
 * [2022-12-18 Sun] Emacs: ffmpeg and macOS aliasing commands
 :PROPERTIES:
 :CUSTOM_ID: emacs-ffmpeg-and-macos-alias-commands
