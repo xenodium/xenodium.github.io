@@ -6,7 +6,117 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 18 Dec 2022 18:56:54 +0000</lastBuildDate>
+<lastBuildDate>Sat, 31 Dec 2022 00:21:11 +0000</lastBuildDate>
+<item>
+  <title>Emacs: Macro me some SF Symbols</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-macro-me-some-sf-symbols" class="outline-2">
+ <h2 id="emacs-macro-me-some-sf-symbols"> <span class="timestamp-wrapper"> <span class="timestamp">31 December 2022</span></span> Emacs: Macro me some SF Symbols</h2>
+ <div class="outline-text-2" id="text-emacs-macro-me-some-sf-symbols">
+ <p>
+For inserting SF Symbols in SwiftUI, I typically rely on Apple's  <a href="https://developer.apple.com/sf-symbols/">SF Symbols app</a> to browse the symbols's catalog. Once I find a symbol I'm happy with, I copy its name and paste it into my Swift source. This works fairly well.
+</p>
+
+ <p>
+With Christian Tietze recently posting  <a href="https://christiantietze.de/posts/2022/12/sf-symbols-emacs-tab-numbers/">how he rendered SF Symbols in Emacs</a>, I figured there may be a way to shift the above workflow to rely on Emacs completion instead. While I initially went down a rabbit hole to programmatically extract SF symbols (via something like  <a href="https://github.com/SFSafeSymbols/SFSafeSymbols">SFSafeSymbols</a>), I took a step back to rethink the strategy.
+</p>
+
+ <p>
+From the  <a href="https://developer.apple.com/sf-symbols/">SF Symbols app</a>, one can select multiple symbols and copy/paste either the symbols themselves or their respective names. The catch is you can only copy disjointed data. That is, you can copy the symbols or their names, but not both in one go. Let's take a look at what the disjointed data looks like. I've pasted both under separate sections in an Emacs buffer.
+</p>
+
+
+ <div id="orgc5cd2d4" class="figure">
+ <p> <img src="../images/emacs-macro-me-some-sf-symbols/disjointed.png" alt="disjointed.png" width="60%" height="60%"></img></p>
+</div>
+
+
+ <p>
+If I could rejoin these two sets, I would have a lookup table I could easily invoke from Emacs.
+</p>
+
+ <p>
+There are roughly 4500 symbols, so copying, pasting, along with text manipulation isn't manually feasible. Lucky for us, an Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">keyboard macro</a> is the perfect hammer for this nail. You can see the macro in action below.
+</p>
+
+
+ <div id="org23d0b87" class="figure">
+ <p> <img src="../images/emacs-macro-me-some-sf-symbols/mini-macro_x1.6.webp" alt="mini-macro_x1.6.webp" width="60%" height="60%"></img></p>
+</div>
+
+ <p>
+This looks fairly magical (and it is), but when you break it down into its building blocks, it's nothing more than recording your keystrokes and replaying them. Starting with the cursor at the beginning of  <code>square.and.arrow.up</code>, these are the keystrokes we'd need to record:
+</p>
+
+ <dl class="org-dl"> <dt>C-s</dt> <dd> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">iseach-forward</a> to search for a character and jump to it</dd>
+ <dt>=</dt> <dd>insert  <code>=</code> so we jump to  <code>= Symbols =</code></dd>
+ <dt><return></dt> <dd>runs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">isearch-exit</a> since we're done jumping.</dd>
+ <dt>C-n</dt> <dd> <code>next-line</code>.</dd>
+ <dt>C-a</dt> <dd> <code>beginning-of-line</code>.</dd>
+ <dt>C-SPC</dt> <dd> <code>set-mark-command</code> to activate the region.</dd>
+ <dt>C-f</dt> <dd> <code>forward-char</code> to select symbol.</dd>
+ <dt>C-w</dt> <dd> <code>kill-ring-save</code> to cut/kill the symbol.</dd>
+ <dt>C-u C-<space></dt> <dd> <code>set-mark-command</code> (with prefix) to jump back to where we started before searching.</dd>
+ <dt>C-y</dt> <dd> <code>yank</code> to yank/paste the symbol.</dd>
+ <dt>C-<space></dt> <dd> <code>set-mark-command</code> to activate the region.</dd>
+ <dt>C-e</dt> <dd> <code>end-of-line</code> to select the entire line.</dd>
+ <dt>"</dt> <dd>As a  <a href="https://github.com/Fuco1/smartparens">smartparens</a> user, inserting quote with region places quotes around selection.</dd>
+ <dt>C-n</dt> <dd> <code>next-line</code>.</dd>
+ <dt>C-a</dt> <dd> <code>beginning-of-line</code>. We are now at a strategic location where we can replay the above commands.</dd>
+</dl> <p>
+To start/end recording and executing keyboard macros, use:
+</p>
+
+ <dl class="org-dl"> <dt>C-x (</dt> <dd> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html">kmacro-start-macro</a></dd>
+ <dt>C-x )</dt> <dd> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html">kmacro-end-macro</a></dd>
+ <dt>C-x e</dt> <dd> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html">kmacro-end-and-call-macro</a> runs your macro. Press  <code>e</code> immediately after to execute again.</dd>
+ <dt>C-u 0 C-x e</dt> <dd> <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Keyboard-Macro.html">kmacro-end-and-call-macro</a> (with zero prefix) repeat until there is an error.</dd>
+</dl> <p>
+Our previous example ran on a handful of SF symbols. Let's bring out the big guns and run on the entire dataset. This time, we'll run the entire flow, including macro creation and executing until there is an error (i.e. process the whole lot).
+</p>
+
+
+ <div id="orgeaed7e1" class="figure">
+ <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-symbol-no-mouse-short_x1.4.webp" alt="sf-symbol-no-mouse-short_x1.4.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+Now that we have our data joined, we can feed it to the humble  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a>.
+</p>
+
+
+ <div id="org0d6408b" class="figure">
+ <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-symbols-insert-name.png" alt="sf-symbols-insert-name.png" width="60%" height="60%"></img></p>
+</div>
+
+ <p>
+It's worth highlighting that to render SF Symbols in Emacs, we must  <a href="https://christiantietze.de/posts/2022/12/sf-symbols-emacs-tab-numbers/">propertize our text with one of the macOS SF fonts</a>, for example "SF Pro".
+</p>
+
+ <p>
+With all the pieces in place, let's use our new function to insert SF symbol names in a SwiftUI snippet. Since we're using  <code>completing-read</code> we can fuzzy search our lookups with our favorite completion frameworks (in my case via  <a href="https://github.com/abo-abo/swiper">ivy</a>).
+</p>
+
+
+ <div id="orgc6191d8" class="figure">
+ <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-search_x1.2.webp" alt="sf-search_x1.2.webp" width="90%" height="90%"></img></p>
+</div>
+
+ <p>
+While this post is macOS-specific, it gives a taste of how powerful Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">keyboard macros</a> can be. Be sure to check out  <a href="https://emacsrocks.com/e05.html">Emacs Rocks! Episode 05: Macros in style</a> and  <a href="https://www.masteringemacs.org/article/keyboard-macros-are-misunderstood">Keyboard Macros are Misunderstood - Mastering Emacs</a>. For those that dabble in elisp, you can appreciate how handy   <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html">completing-read</a> is with very little code.
+</p>
+
+ <p>
+The full source to  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el">sf-symbol-insert-name</a> is available in my  <a href="https://github.com/xenodium/dotsies/">Emacs config repo</a>. The function is fairly bare bones and has had fairly little testing. Patches totally welcome.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-macro-me-some-sf-symbols</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-macro-me-some-sf-symbols</guid>
+  <pubDate>Sat, 31 Dec 2022 00:21:11 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: ffmpeg and macOS aliasing commands</title>
   <description><![CDATA[<div id="content" class="content">
