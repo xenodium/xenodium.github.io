@@ -1,2 +1,148 @@
 #+TITLE: Intro a dwim-shell-command
 #+AUTHOR: Álvaro Ramírez
+#+STARTUP: noinlineimages
+
+* Background
+
+Out of the box, Emacs has great functions to execute shell commands. Let's explore...
+
+** =shell-command= /M-!/
+*** Get image EXIF metadata
+
+Let's open [[file:demo1/burger.png]] and get metadata using =exiftool= shell command.
+
+#+begin_src sh
+  exiftool burger.png
+#+end_src
+
+_Wishlist_
+
+  - No manual =M-n= to insert buffer file name.
+  - When done, display/focus output buffer.
+  - q quits/kills output buffer.
+
+*** Get image EXIF metadata (reuse command history)
+
+Let's open [[file:demo2/wasabi.png]] and reuse command from history.
+
+#+begin_src sh
+  exiftool burger.png
+#+end_src
+
+_Wishlist_
+
+  - Reusable history (no mods needed).
+
+*** Convert to jpg
+
+Let's convert [[file:demo4/chilly.png]] to jpg.
+
+#+begin_src sh
+  convert chilly.png chilly.jpg
+#+end_src
+
+_Wishlist_
+
+  - Automatically show me the created file.
+
+*** Run command with colour output
+
+Let's run a shell command that may output some colours.
+
+#+begin_src sh
+  neofetch
+#+end_src
+
+_Wishlist_
+
+  - Render output colours.
+
+** =async-shell-command= /M-&/
+
+Let's run a command that takes a little time to execute.
+
+#+begin_src sh
+  ping -c 10 gnu.org
+#+end_src
+
+_Wishlist_
+
+  - Show me process is active while in background.
+  - Automatically focus output buffer when done.
+  - Keep output buffer nearby in stack.
+  - q quits/kills output buffer.
+
+_Observations_
+
+  - Needs M-n to insert buffer file name.
+  - Output window not selected by default.
+  - q does not quit/kill output buffer.
+
+Let's open [[file:demo2/wasabi.png]] and reuse command from history.
+
+_Observation_
+
+- History not reusable without mods.
+
+** =dired-do-shell-command= /M-!/
+
+Similar to =shell-command=, but can operate on [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] files.
+
+Btw, =dired= is amazing.
+
+*** Convert to jpg
+
+Let's convert files in [[file:demo5]] to jpg.
+
+#+begin_src sh
+  convert chilly.png chilly.jpg
+#+end_src
+
+_Wishlist_
+
+  - Automatically show me the created file.
+
+* dwim-shell-command
+- Coloured process buffer
+* Credits
+** Images
+[[https://www.openclipart.org/detail/340312/fukubukuro][Fukubukuro]]
+[[https://www.openclipart.org/detail/340307/hamburger-in-a-wraper][Hamburger in a Wraper]]
+[[https://www.openclipart.org/detail/339958/reina-de-corazones-vectorizado][Reina de corazones (Vectorizado)]]
+[[https://www.openclipart.org/detail/339338/a-pair-of-boots][A pair of boots]]
+[[https://www.openclipart.org/detail/340256/wasabi][Wasabi]]
+[[https://www.openclipart.org/detail/337526/one-taco][One Taco]]
+[[https://www.openclipart.org/detail/320454/ramen-8][Ramen (#8)]]
+[[https://www.openclipart.org/detail/281268/hot-sauce][Hot Sauce]]
+
+* Unused
+#+begin_src emacs-lisp :lexical no :results none
+    ;; (director-run
+    ;;  :version 1
+    ;;  :steps '((:call shell-command)
+    ;;           (:type "ls images/burger.png")
+    ;;           (:type [return]))
+    ;;  :typing-style 'human
+    ;;  :delay-between-steps 1)
+
+
+    (director-run
+     :version 1
+     :steps '((:call beginning-of-buffer)
+              (:call isearch-forward)
+              (:type "demo1")
+              (:type [return])
+              (:type [return]))
+     :typing-style 'human
+     :delay-between-steps 1)
+
+
+
+
+                  ;; (:call beginning-of-buffer)
+      ;;            (:call iseach-forward)
+      ;;            (:type "demo1")
+      ;;            (:type [return])
+      ;;            (:type [return])
+    ;;               (:type "exiftool burger.png")
+#+end_src
