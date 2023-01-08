@@ -6,7 +6,54 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 31 Dec 2022 00:21:20 +0000</lastBuildDate>
+<lastBuildDate>Sun, 08 Jan 2023 14:52:39 +0000</lastBuildDate>
+<item>
+  <title>Emacs: insert and render SF symbols</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-insert-and-render-sf-symbols" class="outline-2">
+ <h2 id="emacs-insert-and-render-sf-symbols"> <span class="timestamp-wrapper"> <span class="timestamp">08 January 2023</span></span> Emacs: insert and render SF symbols</h2>
+ <div class="outline-text-2" id="text-emacs-insert-and-render-sf-symbols">
+ <p>
+About a week ago, I added an Emacs  <a href="https://xenodium.com/emacs-macro-me-some-sf-symbols/">function to insert SF symbol names</a>. This is specially useful for SwiftUI. I didn't bother too much with inserting symbols themselves since I hadn't figured out a way to render them for all buffers. That's now changed.
+</p>
+
+ <p>
+Christian Tietze and Alan Third both have a useful posts in this space:
+</p>
+
+ <ul class="org-ul"> <li> <a href="http://idiocy.org/emacs-fonts-and-fontsets.html">Emacs, fonts and fontsets</a></li>
+ <li> <a href="https://christiantietze.de/posts/2023/01/use-sf-pro-for-sf-symbols-everywhere-in-emacs/">Use San Francisco Font for SF Symbols Everywhere in Emacs</a></li>
+</ul> <p>
+I'm currently using the following to render SF symbols in all buffers (macOS only):
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;; </span> <span style="color: #969896;">Enable rendering SF symbols on macOS.</span>
+(<span style="color: #a71d5d;">when</span> (memq system-type '(darwin))
+  (set-fontset-font t nil  <span style="color: #183691;">"SF Pro Display"</span> nil 'append))
+</pre>
+</div>
+
+ <p>
+Now that I can render SF symbols everywhere, I  <i>may</i> be more included to use them to spif things up.
+</p>
+
+ <p>
+I've added  <code>sf-symbol-insert</code> to  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el">sf.el</a>, let's see if usage sticks.
+</p>
+
+
+ <div id="org6ac09a3" class="figure">
+ <p> <img src="../images/emacs-insert-and-render-sf-symbols/sf-insert-trimmed_x1.8.webp" alt="sf-insert-trimmed_x1.8.webp" width="80%" height="80%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-insert-and-render-sf-symbols</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-insert-and-render-sf-symbols</guid>
+  <pubDate>Sun, 08 Jan 2023 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: Macro me some SF Symbols</title>
   <description><![CDATA[<div id="content" class="content">
@@ -27,7 +74,7 @@ From the  <a href="https://developer.apple.com/sf-symbols/">SF Symbols app</a>, 
 </p>
 
 
- <div id="orgc5cd2d4" class="figure">
+ <div id="org06c4a8e" class="figure">
  <p> <img src="../images/emacs-macro-me-some-sf-symbols/disjointed.png" alt="disjointed.png" width="60%" height="60%"></img></p>
 </div>
 
@@ -41,7 +88,7 @@ There are roughly 4500 symbols, so copying, pasting, along with text manipulatio
 </p>
 
 
- <div id="org23d0b87" class="figure">
+ <div id="orgcde0226" class="figure">
  <p> <img src="../images/emacs-macro-me-some-sf-symbols/mini-macro_x1.6.webp" alt="mini-macro_x1.6.webp" width="60%" height="60%"></img></p>
 </div>
 
@@ -77,7 +124,7 @@ Our previous example ran on a handful of SF symbols. Let's bring out the big gun
 </p>
 
 
- <div id="orgeaed7e1" class="figure">
+ <div id="org46cf902" class="figure">
  <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-symbol-no-mouse-short_x1.4.webp" alt="sf-symbol-no-mouse-short_x1.4.webp" width="90%" height="90%"></img></p>
 </div>
 
@@ -86,7 +133,7 @@ Now that we have our data joined, we can feed it to the humble  <a href="https:/
 </p>
 
 
- <div id="org0d6408b" class="figure">
+ <div id="orgb973566" class="figure">
  <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-symbols-insert-name.png" alt="sf-symbols-insert-name.png" width="60%" height="60%"></img></p>
 </div>
 
@@ -99,7 +146,7 @@ With all the pieces in place, let's use our new function to insert SF symbol nam
 </p>
 
 
- <div id="orgc6191d8" class="figure">
+ <div id="org13b07de" class="figure">
  <p> <img src="../images/emacs-macro-me-some-sf-symbols/sf-search_x1.2.webp" alt="sf-search_x1.2.webp" width="90%" height="90%"></img></p>
 </div>
 
@@ -110,6 +157,15 @@ While this post is macOS-specific, it gives a taste of how powerful Emacs  <a hr
  <p>
 The full source to  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el">sf-symbol-insert-name</a> is available in my  <a href="https://github.com/xenodium/dotsies/">Emacs config repo</a>. The function is fairly bare bones and has had fairly little testing. Patches totally welcome.
 </p>
+</div>
+
+ <div id="outline-container-org65a835a" class="outline-3">
+ <h3 id="org65a835a">Update</h3>
+ <div class="outline-text-3" id="text-org65a835a">
+ <p>
+There is some redundancy in the snippet I had forgotten to remove. Either way, latest version at  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el">sf.el</a>.
+</p>
+</div>
 </div>
 </div>
 </div>]]></description>
