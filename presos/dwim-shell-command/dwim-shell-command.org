@@ -2,108 +2,168 @@
 #+AUTHOR: Álvaro Ramírez
 #+STARTUP: noinlineimages
 
-* Background
+* Executing shell commands
 
-Out of the box, Emacs has great functions to execute shell commands. Let's explore...
+Emacs has plenty of wonderful ways of executing shell commands.
 
-** =shell-command= /M-!/
-*** Get image EXIF metadata
+I'm a fan of =shell-command=, =async-shell-command=, and =dired-do-shell-command=.
 
+I wanted to ~combine~ some of the ~strengths in each function~.
+
+*** add to wish list
+
+- Combine favourite strengths from:
+   =shell-command=
+   =async-shell-command=
+   =dired-do-shell-command=
+
+* /M-!/ =shell-command=
+
+** Get image EXIF metadata
 Let's open [[file:demo1/burger.png]] and get metadata using =exiftool= shell command.
-
 #+begin_src sh
-  exiftool burger.png
+exiftool burger.png
 #+end_src
+*** My wish list
 
-_Wishlist_
+- No manual =M-n= to insert buffer file name.
+- When done, display/focus output buffer.
+- q quits/kills output buffer.
 
-  - No manual =M-n= to insert buffer file name.
-  - When done, display/focus output buffer.
-  - q quits/kills output buffer.
 
-*** Get image EXIF metadata (reuse command history)
+** Get image EXIF metadata (reuse command history)
 
 Let's open [[file:demo2/wasabi.png]] and reuse command from history.
 
 #+begin_src sh
-  exiftool burger.png
+exiftool burger.png
 #+end_src
+*** My wish list
 
-_Wishlist_
+- Reusable history (no mods needed).
 
-  - Reusable history (no mods needed).
 
-*** Convert to jpg
+** Convert to jpg
 
 Let's convert [[file:demo4/chilly.png]] to jpg.
 
 #+begin_src sh
   convert chilly.png chilly.jpg
 #+end_src
+*** My wish list
 
-_Wishlist_
+- Automatically show me the created file.
 
-  - Automatically show me the created file.
 
-*** Run command with colour output
+** Run command with colour output
 
 Let's run a shell command that may output some colours.
 
 #+begin_src sh
   neofetch
 #+end_src
+*** My wish list
 
-_Wishlist_
+- Render output colours.
 
-  - Render output colours.
+* /M-&/ =async-shell-command=
 
-** =async-shell-command= /M-&/
+** Long-lived commands
 
 Let's run a command that takes a little time to execute.
 
 #+begin_src sh
   ping -c 10 gnu.org
 #+end_src
+*** add to wish list
 
-_Wishlist_
+- Show me process is active while in background.
+- Automatically focus output buffer when done.
+- Keep output buffer nearby in stack.
+- q quits/kills output buffer.
 
-  - Show me process is active while in background.
-  - Automatically focus output buffer when done.
-  - Keep output buffer nearby in stack.
-  - q quits/kills output buffer.
 
-_Observations_
+** Multiple long-lived commands
 
-  - Needs M-n to insert buffer file name.
-  - Output window not selected by default.
-  - q does not quit/kill output buffer.
+Let's run simultaneous shell commands
 
-Let's open [[file:demo2/wasabi.png]] and reuse command from history.
+#+begin_src sh
+  ping gnu.org
+#+end_src
 
-_Observation_
+*** add to wish list
 
-- History not reusable without mods.
+- Don't ask to start a new buffer (just do it).
+- Don't ask to kill the buffer process (just do it).
 
-** =dired-do-shell-command= /M-!/
+* /M-!/ =dired-do-shell-command=
 
 Similar to =shell-command=, but can operate on [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] files.
 
-Btw, =dired= is amazing.
+** Convert a file to jpg
 
-*** Convert to jpg
-
-Let's convert files in [[file:demo5]] to jpg.
+Let's convert a file in [[file:demo5]] to jpg.
 
 #+begin_src sh
-  convert chilly.png chilly.jpg
+  convert `?` `?`.jpg
 #+end_src
 
-_Wishlist_
+*** add to wish list
 
-  - Automatically show me the created file.
+- Change file extension completely (don't append).
+
+
+** Convert marked files to jpg
+
+Let's convert marked files in [[file:demo6]] to jpg.
+
+#+begin_src sh
+  convert `?` `?`.jpg
+#+end_src
+
+*** add to wish list
+
+- Change file extension completely (not append).
+
+
+** Convert region files to jpg
+
+Let's convert multiple files in [[file:demo6]] to jpg.
+
+#+begin_src sh
+  convert `?` `?`.jpg
+#+end_src
+
+*** add to wish list
+
+- Allow region also.
 
 * dwim-shell-command
-- Coloured process buffer
+
+What is [[https://en.wikipedia.org/wiki/DWIM][DWIM]]?
+
+  It stands for _do what I mean_.
+
+I want a shell command function that does what ✨I✨ mean.
+
+*** add to wish list
+
+- Combine favourite strengths from:
+   =shell-command=
+   =async-shell-command=
+   =dired-do-shell-command=
+- No manual =M-n= to insert buffer file name.
+- When done, display/focus output buffer.
+- q quits/kills output buffer.
+- Reusable history (no mods needed).
+- Automatically show me the created file.
+- Render output colours.
+- Show me process is active while in background.
+- Automatically focus output buffer when done.
+- Keep output buffer nearby in stack.
+- Don't ask to start a new buffer (just do it).
+- Don't ask to kill the buffer process (just do it).
+
 * Credits
 ** Images
 [[https://www.openclipart.org/detail/340312/fukubukuro][Fukubukuro]]
