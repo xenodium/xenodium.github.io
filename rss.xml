@@ -6,7 +6,228 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 08 Jan 2023 14:52:39 +0000</lastBuildDate>
+<lastBuildDate>Tue, 10 Jan 2023 22:35:10 +0000</lastBuildDate>
+<item>
+  <title>Emacs: org-present in style</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-org-present-in-style" class="outline-2">
+ <h2 id="emacs-org-present-in-style"> <span class="timestamp-wrapper"> <span class="timestamp">10 January 2023</span></span> Emacs: org-present in style</h2>
+ <div class="outline-text-2" id="text-emacs-org-present-in-style">
+ <p>
+I had been meaning to check out David Wilson's  <a href="https://systemcrafters.cc">System Crafters</a> post detailing  <a href="https://systemcrafters.net/emacs-tips/presentations-with-org-present/">his presentations style</a> achieved with the help of  <a href="https://github.com/rlister/org-present">org-present</a> and his own customizations. If you're looking for ways to present from Emacs itself, David's post is well worth a look.
+</p>
+
+ <p>
+org-present's spartan but effective approach resonated with me. David's touches bring the wonderfully stylish icing to the cake. I personally liked his practice of collapsing slide subheadings by default. This lead me to think about slide navigation in general…
+</p>
+
+ <p>
+There were two things I wanted to achieve:
+</p>
+
+ <ol class="org-ol"> <li>Easily jump between areas of interest. Subheadings, links, and code blocks would be a good start.</li>
+ <li>Collapse all but the current top-level heading within the slide, as navigation focus changes.</li>
+</ol> <p>
+A quick search for existing functions led me to  <code>org-next-visible-heading</code>,  <code>org-next-link</code>, and  <code>org-next-block</code>. While these make it easy to jump through jump between headings, links, org block on their own, I wanted to jump to whichever one of these is next (similar a web browser's tab behaviour). In a way,  <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a> style.
+</p>
+
+ <p>
+I cloned the existing functions and made the smallest changes I could to enable returning positions. This gave me  <code>ar/rg-next-visible-heading-pos</code>,  <code>ar/rg-next-link-pos</code>, and  <code>ar/rg-next-block-pos</code> respectively. Now that I can find out the next location of either of these items, I can subsequently glue the navigation logic in a function like  <code>ar/org-present-next-item</code>. To restore balance to the galaxy, I also added  <code>ar/org-present-previous-item</code>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-present-next-item</span> (<span style="color: #0086b3;">&optional</span> backward)
+   <span style="color: #183691;">"Present and reveal next item."</span>
+  (<span style="color: #a71d5d;">interactive</span>  <span style="color: #183691;">"P"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((heading-pos (ar/org-next-visible-heading-pos (<span style="color: #a71d5d;">if</span> backward -1 1)))
+         (link-pos (ar/org-next-link-pos backward))
+         (block-pos (ar/org-next-block-pos backward))
+         (closest-pos (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">or</span> heading-pos link-pos block-pos)
+                        (apply (<span style="color: #a71d5d;">if</span> backward #'max #'min)
+                               (seq-filter #'identity
+                                           (list heading-pos
+                                                 link-pos
+                                                 block-pos))))))
+    (<span style="color: #a71d5d;">cond</span> ((<span style="color: #a71d5d;">and</span> closest-pos (eq heading-pos closest-pos))
+           (goto-char heading-pos))
+          ((<span style="color: #a71d5d;">and</span> closest-pos (eq link-pos closest-pos))
+           (goto-char link-pos))
+          ((<span style="color: #a71d5d;">and</span> closest-pos (eq block-pos closest-pos))
+           (goto-char block-pos)))
+    (<span style="color: #a71d5d;">if</span> closest-pos
+        (<span style="color: #a71d5d;">cond</span> ((> (org-current-level) 1)
+               (ar/org-present-reveal-level2))
+              ((eq (org-current-level) 1)
+                <span style="color: #969896;">;; </span> <span style="color: #969896;">At level 1. Collapse children.</span>
+               (org-overview)
+               (org-show-entry)
+               (org-show-children)
+               (run-hook-with-args 'org-cycle-hook 'children)))
+       <span style="color: #969896;">;; </span> <span style="color: #969896;">Collapse everything if end is reached.</span>
+      (goto-char (point-min))
+      (org-overview)
+      (org-show-entry)
+      (org-show-children)
+      (run-hook-with-args 'org-cycle-hook 'children)
+      (goto-char (point-max))
+      (org-beginning-of-line))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-present-previous-item</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (ar/org-present-next-item t))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-next-link-pos</span> (<span style="color: #0086b3;">&optional</span> backward)
+   <span style="color: #183691;">"Similar to `</span> <span style="color: #0086b3;">org-next-link</span> <span style="color: #183691;">' but for returning position.</span>
+
+ <span style="color: #183691;">Set BACKWARDS to search backwards."</span>
+  (<span style="color: #a71d5d;">when</span> (eq (org-element-type (org-element-context)) 'link)
+    (<span style="color: #a71d5d;">if</span> backward
+        (<span style="color: #a71d5d;">progn</span>
+          (goto-char (org-element-property  <span style="color: #a71d5d;">:begin</span> (org-element-context)))
+          (backward-char))
+      (goto-char (org-element-property  <span style="color: #a71d5d;">:end</span> (org-element-context)))))
+  (<span style="color: #a71d5d;">let</span> ((pos (point))
+        (search-fun (<span style="color: #a71d5d;">if</span> backward
+                        #'re-search-backward
+                      #'re-search-forward))
+        (link-pos))
+    (<span style="color: #a71d5d;">save-excursion</span>
+      (<span style="color: #a71d5d;">save-restriction</span>
+        (<span style="color: #a71d5d;">catch</span>  <span style="color: #0086b3;">:found</span>
+          (<span style="color: #a71d5d;">while</span> (funcall search-fun org-link-any-re nil t)
+            (<span style="color: #a71d5d;">let</span> ((context (<span style="color: #a71d5d;">save-excursion</span>
+                             (<span style="color: #a71d5d;">unless</span> backward (forward-char -1))
+                             (org-element-context))))
+              (<span style="color: #a71d5d;">pcase</span> (org-element-lineage context '(link) t)
+                (`nil nil)
+                (link
+                 (<span style="color: #a71d5d;">setq</span> link-pos (org-element-property  <span style="color: #a71d5d;">:begin</span> link))
+                 (<span style="color: #a71d5d;">throw</span>  <span style="color: #0086b3;">:found</span> t)))))
+          (goto-char pos))
+        ))
+    link-pos))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-present-reveal-level2</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((loc (point))
+        (level (org-current-level))
+        (heading))
+    (<span style="color: #a71d5d;">ignore-errors</span> (org-back-to-heading t))
+    (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">or</span> (not level) (> level 2))
+      (<span style="color: #a71d5d;">setq</span> level (org-up-heading-safe)))
+    (<span style="color: #a71d5d;">setq</span> heading (point))
+    (goto-char (point-min))
+    (org-overview)
+    (org-show-entry)
+    (org-show-children)
+    (run-hook-with-args 'org-cycle-hook 'children)
+    (goto-char heading)
+    (org-show-subtree)
+    (goto-char loc)))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-next-visible-heading-pos</span> (count)
+   <span style="color: #183691;">"Similar to `</span> <span style="color: #0086b3;">org-next-visible-heading</span> <span style="color: #183691;">' but for returning position.</span>
+
+ <span style="color: #183691;">Set COUNT to repeat. Negative goes backwards."</span>
+  (<span style="color: #a71d5d;">save-excursion</span>
+    (<span style="color: #a71d5d;">let</span> ((regexp (concat  <span style="color: #183691;">"^"</span> (org-get-limited-outline-regexp)))
+          (heading-found))
+      (<span style="color: #a71d5d;">if</span> (< count 0)
+          (beginning-of-line)
+        (end-of-line))
+      (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (< count 0) (re-search-backward regexp nil  <span style="color: #a71d5d;">:move</span>))
+        (<span style="color: #a71d5d;">setq</span> heading-found t)
+        (<span style="color: #a71d5d;">unless</span> (bobp)
+          (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">pcase</span> (get-char-property-and-overlay (point) 'invisible)
+                   (`(outline . ,o)
+                    (goto-char (overlay-start o))
+                    (re-search-backward regexp nil  <span style="color: #a71d5d;">:move</span>))
+                   (_
+                    nil))))
+        (<span style="color: #a71d5d;">cl-incf</span> count))
+      (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (> count 0) (re-search-forward regexp nil t))
+        (<span style="color: #a71d5d;">setq</span> heading-found t)
+        (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">pcase</span> (get-char-property-and-overlay (point) 'invisible)
+                 (`(outline . ,o)
+                  (goto-char (overlay-end o))
+                  (re-search-forward regexp nil  <span style="color: #a71d5d;">:move</span>))
+                 (_
+                  (end-of-line)
+                  nil)))                         <span style="color: #969896;">;</span> <span style="color: #969896;">leave the loop</span>
+        (<span style="color: #a71d5d;">cl-decf</span> count))
+      (<span style="color: #a71d5d;">when</span> heading-found
+        (<span style="color: #a71d5d;">if</span> (> count 0)
+            (goto-char (point-max))
+          (beginning-of-line))
+        (point)))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/org-next-block-pos</span> (<span style="color: #0086b3;">&optional</span> backward)
+   <span style="color: #183691;">"Similar to `</span> <span style="color: #0086b3;">org-next-block</span> <span style="color: #183691;">' but for returning position.</span>
+
+ <span style="color: #183691;">Set BACKWARDS to search backwards."</span>
+  (<span style="color: #a71d5d;">save-excursion</span>
+    (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> backward
+               (eq 'src-block (org-element-type
+                               (org-element-lineage (org-element-context)
+                                                    '(src-block)
+                                                    t))))
+      (org-babel-goto-src-block-head))
+    (<span style="color: #a71d5d;">let</span> ((re  <span style="color: #183691;">"^[ \t]*#\\+BEGIN"</span>)
+          (case-fold-search t)
+          (search-fn (<span style="color: #a71d5d;">if</span> backward #'re-search-backward #'re-search-forward))
+          (count 1)
+          (origin (point))
+          (block-found)
+          last-element)
+      (<span style="color: #a71d5d;">if</span> backward (beginning-of-line) (end-of-line))
+      (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (> count 0) (funcall search-fn re nil t))
+        (<span style="color: #a71d5d;">setq</span> block-found t)
+        (<span style="color: #a71d5d;">let</span> ((element (<span style="color: #a71d5d;">save-excursion</span>
+                         (goto-char (match-beginning 0))
+                         (<span style="color: #a71d5d;">save-match-data</span> (org-element-at-point)))))
+          (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (memq (org-element-type element)
+                           '(center-block comment-block dynamic-block
+                                          example-block export-block quote-block
+                                          special-block src-block verse-block))
+                     (<= (match-beginning 0)
+                         (org-element-property  <span style="color: #a71d5d;">:post-affiliated</span> element)))
+            (<span style="color: #a71d5d;">setq</span> last-element element)
+            (<span style="color: #a71d5d;">cl-decf</span> count))))
+      (<span style="color: #a71d5d;">if</span> (= count 0)
+          (<span style="color: #a71d5d;">progn</span>
+            (goto-char (org-element-property  <span style="color: #a71d5d;">:post-affiliated</span> last-element))
+            (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (org-element-property  <span style="color: #a71d5d;">:value</span> last-element)
+                       (not (string-empty-p (string-trim (org-element-property  <span style="color: #a71d5d;">:value</span> last-element)))))
+              (goto-char (line-beginning-position 2))))
+        (goto-char origin)
+        nil))))
+</pre>
+</div>
+
+ <p>
+Beware, this was a minimal effort (with redundant code, duplication, etc) and should likely be considered a proof of concept of sorts, but the results look promising. You can see a demo in action.
+</p>
+
+
+ <div id="org904ad33" class="figure">
+ <p> <img src="../images/emacs-org-present-in-style/org-navigate_x1.6.webp" alt="org-navigate_x1.6.webp" width="80%" height="80%"></img></p>
+</div>
+
+ <p>
+While this was a fun exercise, I can't help but think there must be a cleaner way of doing it or there are existing packages that already do this for you. If you do know, I'd love to know.
+</p>
+
+ <p>
+Future versions of this code will likely be updated in  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-org.el">my Emacs org config</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-org-present-in-style</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-org-present-in-style</guid>
+  <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>Emacs: insert and render SF symbols</title>
   <description><![CDATA[<div id="content" class="content">
