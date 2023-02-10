@@ -1,6 +1,9 @@
 #+TITLE: Intro a dwim-shell-command
 #+AUTHOR: Álvaro Ramírez
 #+STARTUP: noinlineimages
+https://xenodium.com
+
+iOS Software Development
 
 * Executing shell commands
 
@@ -27,7 +30,7 @@ Let's open [[file:demo1/burger.png][burger.png]] and get metadata using =exiftoo
 
 =M-n= inserts buffer file name (neat!)
 #+begin_src sh
-  $ exiftool burger.png
+  exiftool burger.png
 #+end_src
 
 ***  👉 wish list
@@ -41,7 +44,7 @@ Let's open [[file:demo1/burger.png][burger.png]] and get metadata using =exiftoo
 
 Let's open [[file:demo2/wasabi.png][wasabi.png]] and reuse command from history.
 #+begin_src sh
-  $ exiftool burger.png
+  exiftool burger.png
 #+end_src
 *** 👉 wish list
 
@@ -52,11 +55,13 @@ Let's open [[file:demo2/wasabi.png][wasabi.png]] and reuse command from history.
 
 Let's convert [[file:demo4/chilly.png][chilly.png]] to jpg.
 #+begin_src sh
-  $ convert chilly.png chilly.jpg
+  convert chilly.png chilly.jpg
 #+end_src
 
 *** 👉 wish list
 
+- Automatically show me the created file.
+- Refresh buffer/dired by default.
 - Automatically show me the created file.
 
 
@@ -64,13 +69,11 @@ Let's convert [[file:demo4/chilly.png][chilly.png]] to jpg.
 
 Let's run a shell command that may output some colours.
 #+begin_src sh
-  $ neofetch
+  neofetch
 #+end_src
 *** 👉 wish list
 
 - Render output colours.
-
-
 * Async shell command
 
 Via /M-x/ =async-shell-command= or /M-&/
@@ -80,7 +83,7 @@ Via /M-x/ =async-shell-command= or /M-&/
 Let's run a command that takes a little time to execute.
 
 #+begin_src sh
-  $ ping -c 10 gnu.org
+  ping -c 10 gnu.org
 #+end_src
 *** 👉 wish list
 
@@ -95,7 +98,7 @@ Let's run a command that takes a little time to execute.
 Let's run simultaneous shell commands
 
 #+begin_src sh
-  $ ping gnu.org
+  ping gnu.org
 #+end_src
 
 *** 👉 wish list
@@ -105,7 +108,7 @@ Let's run simultaneous shell commands
 
 * Dired shell command
 
-Via /M-x/ =dired-do-shell-command= or /M-!/
+Invoked via /M-x/ =dired-do-shell-command= or /M-!/
 
 Similar to =shell-command=, but can operate on [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] files.
 
@@ -113,12 +116,13 @@ Similar to =shell-command=, but can operate on [[https://www.gnu.org/software/em
 
 Let's convert marked files in [[file:demo6][directory]] to jpg.
 #+begin_src sh
-  $ convert `?` `?`.jpg
+  convert `?` `?`.jpg
 #+end_src
 
 *** 👉 wish list
 
 - Refresh by default.
+- Move point to generated file.
 - Change file extension completely (not append).
 
 
@@ -126,32 +130,30 @@ Let's convert marked files in [[file:demo6][directory]] to jpg.
 
 Let's convert multiple files in [[file:demo6][directory]] to jpg.
 #+begin_src sh
-  $ convert `?` `?`.jpg
+  convert `?` `?`.jpg
 #+end_src
 
 *** 👉 wish list
 
-- Allow region also.
-
+- Operate on region files also.
 * DWIM shell command
 
-What is [[https://en.wikipedia.org/wiki/DWIM][DWIM]]?
-
-  It stands for _do what I mean_.
+What is [[https://en.wikipedia.org/wiki/DWIM][DWIM]]? It stands for _do what I mean_.
 
 I wanted a shell command function that does what ✨I✨ mean.
 
-** I have a 👉 wish list
+** My wish list -> =dwim-shell-command=
 
 - Combine favourite strengths from:
    =shell-command=
    =async-shell-command=
    =dired-do-shell-command=
 - No manual =M-n= to insert buffer file name.
-- When done, display/focus output buffer.
+- Always async and in background.
+- When done, display/focus output buffer in foreground.
 - q quits/kills output buffer.
 - Reusable history (no mods needed).
-- Refresh by default.
+- Refresh buffer/dired by default.
 - Automatically show me the created file.
 - Render output colours.
 - Show me process is active while in background.
@@ -161,47 +163,144 @@ I wanted a shell command function that does what ✨I✨ mean.
 - Don't ask to kill the buffer process (just do it).
 - There's more...
 
-* Credits
-** org-present config
-Based on [[https://systemcrafters.net/emacs-tips/presentations-with-org-present/][The Secrets of My Emacs Presentation Style - System Crafters]]
-** Images
-[[https://www.openclipart.org/detail/340312/fukubukuro][Fukubukuro]]
-[[https://www.openclipart.org/detail/340307/hamburger-in-a-wraper][Hamburger in a Wraper]]
-[[https://www.openclipart.org/detail/339958/reina-de-corazones-vectorizado][Reina de corazones (Vectorizado)]]
-[[https://www.openclipart.org/detail/339338/a-pair-of-boots][A pair of boots]]
-[[https://www.openclipart.org/detail/340256/wasabi][Wasabi]]
-[[https://www.openclipart.org/detail/337526/one-taco][One Taco]]
-[[https://www.openclipart.org/detail/320454/ramen-8][Ramen (#8)]]
-[[https://www.openclipart.org/detail/281268/hot-sauce][Hot Sauce]]
 
-* Unused
-#+begin_src emacs-lisp :lexical no :results none
-    ;; (director-run
-    ;;  :version 1
-    ;;  :steps '((:call shell-command)
-    ;;           (:type "ls images/burger.png")
-    ;;           (:type [return]))
-    ;;  :typing-style 'human
-    ;;  :delay-between-steps 1)
+** Get image EXIF metadata
 
-
-    (director-run
-     :version 1
-     :steps '((:call beginning-of-buffer)
-              (:call isearch-forward)
-              (:type "demo1")
-              (:type [return])
-              (:type [return]))
-     :typing-style 'human
-     :delay-between-steps 1)
-
-
-
-
-                  ;; (:call beginning-of-buffer)
-      ;;            (:call iseach-forward)
-      ;;            (:type "demo1")
-      ;;            (:type [return])
-      ;;            (:type [return])
-    ;;               (:type "exiftool burger.png")
+Let's open [[file:demo1/burger.png][burger.png]] and get metadata using /exiftool/ =dwim-shell-command=.
+#+begin_src sh
+  exiftool '<<f>>'
 #+end_src
++ Adds ='<<f>>'= by default (file placeholder).
++ Async and background by default.
++ When done, comes back to foreground.
++ q quits/kills output buffer.
+
+
+** Get image EXIF metadata (reuse command history)
+
+Let's open [[file:demo2/wasabi.png][wasabi.png]] and reuse command from history.
+#+begin_src sh
+  exiftool '<<f>>'
+#+end_src
++ Same command from history. No need to tweak.
+
+
+** Convert to jpg
+
+Let's convert [[file:demo4/chilly.png][chilly.png]] to jpg.
+#+begin_src sh
+  convert '<<f>>' '<<fne>>.jpg'
+#+end_src
++ Automatically show me the created file.
++ Command also reusable from history. No need to tweak.
+
+
+** Run command with colour output
+
+Let's run a shell command that may output some colours.
+#+begin_src sh
+  neofetch
+#+end_src
+
++ Always renders output colours.
+
+
+** Long-lived commands
+
+Let's run a command that takes a little time to execute.
+
+#+begin_src sh
+  ping -c 10 gnu.org
+#+end_src
++ Shows activity while in background.
++ Bring to foreground when done.
++ Keep output buffer nearby in stack.
+
+
+** Multiple long-lived commands
+
+Let's run simultaneous shell commands
+
+#+begin_src sh
+  ping gnu.org
+#+end_src
+
++ Don't ask to start a new buffer (just do it).
++ Don't ask to kill the buffer process ('q' does it).
+
+
+** Multi-language support
+
+You can use other languages (kinda).
+
+Let's add some Swift code. Show me file size in Swift.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-command-tell-file-size-from-swift ()
+    "Tell me the file size (via Swift)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Tell me the file size (via Swift)."
+     "import Foundation
+      let url = URL(fileURLWithPath:\"<<f>>\")
+      let attr = try FileManager.default.attributesOfItem(atPath:url.path)
+      let size = attr[FileAttributeKey.size] as! UInt64
+      print(\"This file size is \\(size) bytes\")"
+     :shell-pipe "swift -"))
+#+end_src
+
+
+** Emacs interactive commands for shell commands
+
+Lots of one-liners or complex commands to remember.
+
+Just wrap into Emacs interactive command:
+
+#+begin_src elisp :lexical no
+  (defun dwim-shell-commands-video-to-webp ()
+    "Convert all marked videos to webp(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert to webp"
+     "ffmpeg -i '<<f>>' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '<<fne>>'.webp"
+     :utils "ffmpeg"))
+#+end_src
+
+Let's convert [[file:demo8/welcome.mov][welcome.mov]] to webp in [[file:demo8][dir]].
+
+
+
+** Collection of own commands
+
+Check out ~dwim-shell-commands.el~
+
+=dwim-shell-commands-audio-to-mp3=
+=dwim-shell-commands-clipboard-to-qr=
+=dwim-shell-commands-docx-to-pdf=
+=dwim-shell-commands-drop-video-audio=
+=dwim-shell-commands-epub-to-org=
+=dwim-shell-commands-git-clone-clipboard-url=
+=dwim-shell-commands-image-exif-metadata=
+=dwim-shell-commands-resize-image=
+=dwim-shell-commands-svg-to-png=
+=dwim-shell-commands-unzip=
+=dwim-shell-commands-url-browse=
+=dwim-shell-commands-video-to-gif=
+=dwim-shell-commands-video-to-mp3=
+=dwim-shell-commands-video-to-webp=
+...
+
+* Credits
+
+[[https://github.com/rlister/org-present][org-present]] config based on [[https://systemcrafters.net][System Crafters]]'s [[https://systemcrafters.net/emacs-tips/presentations-with-org-present/][post]].
+
+Images from:
+
+  - [[https://www.openclipart.org/detail/340312/fukubukuro][Fukubukuro]]
+  - [[https://www.openclipart.org/detail/340307/hamburger-in-a-wraper][Hamburger in a Wraper]]
+  - [[https://www.openclipart.org/detail/339958/reina-de-corazones-vectorizado][Reina de corazones (Vectorizado)]]
+  - [[https://www.openclipart.org/detail/339338/a-pair-of-boots][A pair of boots]]
+  - [[https://www.openclipart.org/detail/340256/wasabi][Wasabi]]
+  - [[https://www.openclipart.org/detail/337526/one-taco][One Taco]]
+  - [[https://www.openclipart.org/detail/320454/ramen-8][Ramen (#8)]]
+  - [[https://www.openclipart.org/detail/281268/hot-sauce][Hot Sauce]]
