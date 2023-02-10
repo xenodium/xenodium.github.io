@@ -30,7 +30,7 @@ Let's open [[file:demo1/burger.png][burger.png]] and get metadata using =exiftoo
 
 =M-n= inserts buffer file name (neat!)
 #+begin_src sh
-  exiftool burger.png
+  exiftool
 #+end_src
 
 ***  👉 wish list
@@ -44,7 +44,7 @@ Let's open [[file:demo1/burger.png][burger.png]] and get metadata using =exiftoo
 
 Let's open [[file:demo2/wasabi.png][wasabi.png]] and reuse command from history.
 #+begin_src sh
-  exiftool burger.png
+  exiftool
 #+end_src
 *** 👉 wish list
 
@@ -228,6 +228,23 @@ Let's run simultaneous shell commands
 + Don't ask to start a new buffer (just do it).
 + Don't ask to kill the buffer process ('q' does it).
 
+** Emacs interactive commands for shell commands
+
+Lots of one-liners or complex commands to remember.
+
+Just wrap into Emacs interactive command:
+
+#+begin_src elisp :lexical no
+  (defun dwim-shell-commands-video-to-webp ()
+    "Convert all marked videos to webp(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Convert to webp"
+     "ffmpeg -i '<<f>>' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '<<fne>>'.webp"
+     :utils "ffmpeg"))
+#+end_src
+
+Let's convert [[file:demo8/welcome.mov][welcome.mov]] to webp in [[file:demo8][dir]].
 
 ** Multi-language support
 
@@ -250,26 +267,6 @@ Let's add some Swift code. Show me file size in Swift.
 #+end_src
 
 
-** Emacs interactive commands for shell commands
-
-Lots of one-liners or complex commands to remember.
-
-Just wrap into Emacs interactive command:
-
-#+begin_src elisp :lexical no
-  (defun dwim-shell-commands-video-to-webp ()
-    "Convert all marked videos to webp(s)."
-    (interactive)
-    (dwim-shell-command-on-marked-files
-     "Convert to webp"
-     "ffmpeg -i '<<f>>' -vcodec libwebp -filter:v fps=fps=10 -compression_level 3 -lossless 1 -loop 0 -preset default -an -vsync 0 '<<fne>>'.webp"
-     :utils "ffmpeg"))
-#+end_src
-
-Let's convert [[file:demo8/welcome.mov][welcome.mov]] to webp in [[file:demo8][dir]].
-
-
-
 ** Collection of own commands
 
 Check out ~dwim-shell-commands.el~
@@ -290,6 +287,21 @@ Check out ~dwim-shell-commands.el~
 =dwim-shell-commands-video-to-webp=
 ...
 
+* Learn more about it
+
+[[https://xenodium.com/emacs-dwim-shell-command/][Emacs DWIM shell-command]]
+[[https://xenodium.com/emacs-password-protect-current-pdf-revisited/][Emacs: Password-protect current pdf (revisited)]]
+[[https://xenodium.com/png-to-icns-emacs-dwim-style/][png to icns (Emacs DWIM style)]]
+[[https://xenodium.com/emacs-dwim-shell-command-multi-language/][Emacs: DWIM shell command (multi-language)]]
+[[https://xenodium.com/dwim-shell-command-on-melpa/][dwim-shell-command on Melpa]]
+[[https://xenodium.com/dwim-shell-command-improvements/][dwim-shell-command improvements]]
+[[https://xenodium.com/dwim-shell-command-video-streams/][dwim-shell-command video streams]]
+[[https://xenodium.com/dwim-shell-command-with-template-prompts/][dwim-shell-command with template prompts]]
+[[https://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/][dwim-shell-command usages: pdftotext and scp]]
+[[https://xenodium.com/emacs-reveal-in-finder-dwim-style/][Emacs: Reveal in macOS Finder (DWIM style)]]
+[[https://xenodium.com/emacs-macos-share-from-dired-dwim-style/][Emacs: macOS sharing (DWIM style)]]
+
+
 * Credits
 
 [[https://github.com/rlister/org-present][org-present]] config based on [[https://systemcrafters.net][System Crafters]]'s [[https://systemcrafters.net/emacs-tips/presentations-with-org-present/][post]].
@@ -304,3 +316,5 @@ Images from:
   - [[https://www.openclipart.org/detail/337526/one-taco][One Taco]]
   - [[https://www.openclipart.org/detail/320454/ramen-8][Ramen (#8)]]
   - [[https://www.openclipart.org/detail/281268/hot-sauce][Hot Sauce]]
+
+https://github.com/xenodium/dotsies
