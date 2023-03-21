@@ -1,6 +1,35 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-03-21 Tue] A ChatGPT Emacs shell
+:PROPERTIES:
+:CUSTOM_ID: a-chatgpt-emacs-shell
+:END:
+I had been meaning to give [[https://openai.com/blog/chatgpt][ChatGPT]] a go. Preferably from Emacs. As an [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]] fan, ChatGPT just seemed like the perfect fit for a shell interface sorts. With that in mind, I set out to wire ChatGPT out with Emacs's general command interpreter ([[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html][comint]]).
+
+I had no previous experience building anything comint-related, so I figured I could just take a peak at an existing comint-derived mode to achieve a similar purpose. =inferior-emacs-lisp-mode= ([[https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Interaction.html][ielm]]) seemed to fit the bill just fine, so I borrowed quite a bit to assemble a basic shell experience.
+
+From then on, it was mostly about sending each request over to the ChatGPT API to get a response. For now, I'm relying on [[https://curl.se/docs/manpage.html][curl]] to make each request. The invocation is fairly straightforward:
+
+#+begin_src sh
+  curl "https://api.openai.com/v1/chat/completions" \
+       -H "Authorization: Bearer YOUR_OPENAI_KEY" \
+       -H "Content-Type: application/json" \
+       -d "{
+       \"model\": \"gpt-3.5-turbo\",
+       \"messages\": [{\"role\": \"user\", \"content\": \"YOUR PROMPT\"}]
+       }"
+#+end_src
+
+There are two bits of information needed in each request. The API key, which you must get from [[https://openai.com/][OpenAI]], and the prompt text itself (i.e. whatever you want ChatGPT to help you with). The results are not too shabby.
+
+#+ATTR_HTML: :width 80%
+[[file:images/a-chatgpt-emacs-shell/chatgpt.webp]]
+
+I've uploaded the code to github as a tiny [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] package. It's a little experimental and rough still, but hey it does the job for now. Head over to [[https://github.com/xenodium/chatgpt-shell][github]] to take a look. The latest iteration handles multiline prompts and basic code highlighting.
+
+Let's see where it all goes. Pull requests for improvements totally welcome ;-)
+
 * [2023-03-04 Sat] =*scratch*= a new minimal org mode scratch area for iOS
 :PROPERTIES:
 :CUSTOM_ID: scratch-a-minimal-scratch-area

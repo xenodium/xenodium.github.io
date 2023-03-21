@@ -6,7 +6,60 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 04 Mar 2023 15:29:41 +0000</lastBuildDate>
+<lastBuildDate>Tue, 21 Mar 2023 23:07:04 +0000</lastBuildDate>
+<item>
+  <title>A ChatGPT Emacs shell</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-chatgpt-emacs-shell" class="outline-2">
+ <h2 id="a-chatgpt-emacs-shell"> <span class="timestamp-wrapper"> <span class="timestamp">21 March 2023</span></span> A ChatGPT Emacs shell</h2>
+ <div class="outline-text-2" id="text-a-chatgpt-emacs-shell">
+ <p>
+I had been meaning to give  <a href="https://openai.com/blog/chatgpt">ChatGPT</a> a go. Preferably from Emacs. As an  <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a> fan, ChatGPT just seemed like the perfect fit for a shell interface sorts. With that in mind, I set out to wire ChatGPT out with Emacs's general command interpreter ( <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a>).
+</p>
+
+ <p>
+I had no previous experience building anything comint-related, so I figured I could just take a peak at an existing comint-derived mode to achieve a similar purpose.  <code>inferior-emacs-lisp-mode</code> ( <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Interaction.html">ielm</a>) seemed to fit the bill just fine, so I borrowed quite a bit to assemble a basic shell experience.
+</p>
+
+ <p>
+From then on, it was mostly about sending each request over to the ChatGPT API to get a response. For now, I'm relying on  <a href="https://curl.se/docs/manpage.html">curl</a> to make each request. The invocation is fairly straightforward:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">curl  <span style="color: #183691;">"https://api.openai.com/v1/chat/completions"</span>  <span style="color: #183691;">\</span>
+     -H  <span style="color: #183691;">"Authorization: Bearer YOUR_OPENAI_KEY"</span>  <span style="color: #183691;">\</span>
+     -H  <span style="color: #183691;">"Content-Type: application/json"</span>  <span style="color: #183691;">\</span>
+     -d  <span style="color: #183691;">"{</span>
+ <span style="color: #183691;">     \"model\": \"gpt-3.5-turbo\",</span>
+ <span style="color: #183691;">     \"messages\": [{\"role\": \"user\", \"content\": \"YOUR PROMPT\"}]</span>
+ <span style="color: #183691;">     }"</span>
+</pre>
+</div>
+
+ <p>
+There are two bits of information needed in each request. The API key, which you must get from  <a href="https://openai.com/">OpenAI</a>, and the prompt text itself (i.e. whatever you want ChatGPT to help you with). The results are not too shabby.
+</p>
+
+
+ <div id="org459ba89" class="figure">
+ <p> <img src="../images/a-chatgpt-emacs-shell/chatgpt.webp" alt="chatgpt.webp" width="80%"></img></p>
+</div>
+
+ <p>
+I've uploaded the code to github as a tiny  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> package. It's a little experimental and rough still, but hey it does the job for now. Head over to  <a href="https://github.com/xenodium/chatgpt-shell">github</a> to take a look. The latest iteration handles multiline prompts and basic code highlighting.
+</p>
+
+ <p>
+Let's see where it all goes. Pull requests for improvements totally welcome ;-)
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-chatgpt-emacs-shell</link>
+  <guid isPermaLink="false">http://xenodium.com/a-chatgpt-emacs-shell</guid>
+  <pubDate>Tue, 21 Mar 2023 23:07:04 +0000</pubDate>
+</item>
 <item>
   <title>=*scratch*= a new minimal org mode scratch area for iOS</title>
   <description><![CDATA[<div id="content" class="content">
