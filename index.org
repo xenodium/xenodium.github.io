@@ -1,6 +1,59 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-04-08 Sat] shell-maker, a maker of Emacs shells
+:PROPERTIES:
+:CUSTOM_ID: a-shell-maker
+:END:
+A few weeks ago, I wrote about an experiment to bring [[https://xenodium.com/a-chatgpt-emacs-shell/][ChatGPT to Emacs as a shell]]. I was fairly new to both [[https://openai.com/blog/chatgpt][ChatGPT]] and building anything on top of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html][comint]]. It was a fun exercise, which also generated some interest.
+
+As mentioned in the previous post, I took inspiration in other Emacs packages (primarily [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Interaction.html][ielm]]) to figure out what I needed from comint. Soon, I got ChatGPT working.
+
+#+ATTR_HTML: :width 80%
+[[file:images/a-shell-maker/streamer.gif]]
+
+As I was looking at [[https://openai.com][OpenAI]] API docs, I learned about DALL-E: "an AI system that can create realistic images and art from a description in natural language."
+
+Like ChatGPT, they also offered an API to DALL-E, so I figured I may as well try to write a shell for that too... and I did.
+
+#+ATTR_HTML: :width 60%
+[[file:images/a-shell-maker/dalle.gif]]
+
+There was quite a bit of code duplication between the two Emacs shells I had just written. At the same time, I started hearing from folks about integrating other tools, some cloud-based, some local, proprietary, open source.. There's [[https://about.sourcegraph.com/cody][Cody]], [[https://github.com/invoke-ai/InvokeAI][invoke-ai]],  [[https://github.com/ggerganov/llama.cpp][llama.cpp]], [[https://github.com/antimatter15/alpaca.cpp][alpaca.cpp]], and the list continues to grow.
+
+With that in mind, I set out to reduce the code duplication and consolidate into a reusable package. And so =shell-maker= was born, a maker of Emacs shells.
+
+=shell-maker='s internals aren't too different from the code I had before. It's still powered by comint, but instead offers a reusable convenience wrapper.
+
+It takes little code to implement a shell, like the sophisticated new =greeter-shell= ;)
+
+#+ATTR_HTML: :width 60%
+[[file:images/a-shell-maker/maria.gif]]
+
+#+begin_src emacs-lisp
+  (require 'shell-maker)
+
+  (defvar greeter-shell--config
+    (make-shell-maker-config
+     :name "Greeter"
+     :execute-command
+     (lambda (command _history callback error-callback)
+       (funcall callback
+                (format "Hello \"%s\"" command)
+                nil))))
+
+  (defun greeter-shell ()
+    "Start a Greeter shell."
+    (interactive)
+    (shell-maker-start greeter-shell--config))
+#+end_src
+
+[[https://github.com/xenodium/chatgpt-shell#shell-maker][shell-maker]] is available on GitHub and currently bundled with [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]]. If there's enough interest and usage, I may just break it out into its own package. For now, it's convenient to keep with =chatgpt-shell= and =dall-e-shell=.
+
+If you plug =shell-maker= into other tools, I'd love to hear about it.
+
+Happy shell making!
+
 * [2023-04-06 Thu] Flat Habits 1.1.4 released
 :PROPERTIES:
 :CUSTOM_ID: flat-habits-114-released

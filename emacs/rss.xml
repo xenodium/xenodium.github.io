@@ -6,7 +6,98 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 06 Apr 2023 07:53:59 +0100</lastBuildDate>
+<lastBuildDate>Sat, 08 Apr 2023 23:47:50 +0100</lastBuildDate>
+<item>
+  <title>shell-maker, a maker of Emacs shells</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-shell-maker" class="outline-2">
+ <h2 id="a-shell-maker"> <span class="timestamp-wrapper"> <span class="timestamp">08 April 2023</span></span> shell-maker, a maker of Emacs shells</h2>
+ <div class="outline-text-2" id="text-a-shell-maker">
+ <p>
+A few weeks ago, I wrote about an experiment to bring  <a href="https://xenodium.com/a-chatgpt-emacs-shell/">ChatGPT to Emacs as a shell</a>. I was fairly new to both  <a href="https://openai.com/blog/chatgpt">ChatGPT</a> and building anything on top of  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a>. It was a fun exercise, which also generated some interest.
+</p>
+
+ <p>
+As mentioned in the previous post, I took inspiration in other Emacs packages (primarily  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Interaction.html">ielm</a>) to figure out what I needed from comint. Soon, I got ChatGPT working.
+</p>
+
+
+ <div id="org7983998" class="figure">
+ <p> <img src="../images/a-shell-maker/streamer.gif" alt="streamer.gif" width="80%"></img></p>
+</div>
+
+ <p>
+As I was looking at  <a href="https://openai.com">OpenAI</a> API docs, I learned about DALL-E: "an AI system that can create realistic images and art from a description in natural language."
+</p>
+
+ <p>
+Like ChatGPT, they also offered an API to DALL-E, so I figured I may as well try to write a shell for that too… and I did.
+</p>
+
+
+ <div id="org084091b" class="figure">
+ <p> <img src="../images/a-shell-maker/dalle.gif" alt="dalle.gif" width="60%"></img></p>
+</div>
+
+ <p>
+There was quite a bit of code duplication between the two Emacs shells I had just written. At the same time, I started hearing from folks about integrating other tools, some cloud-based, some local, proprietary, open source.. There's  <a href="https://about.sourcegraph.com/cody">Cody</a>,  <a href="https://github.com/invoke-ai/InvokeAI">invoke-ai</a>,   <a href="https://github.com/ggerganov/llama.cpp">llama.cpp</a>,  <a href="https://github.com/antimatter15/alpaca.cpp">alpaca.cpp</a>, and the list continues to grow.
+</p>
+
+ <p>
+With that in mind, I set out to reduce the code duplication and consolidate into a reusable package. And so  <code>shell-maker</code> was born, a maker of Emacs shells.
+</p>
+
+ <p>
+ <code>shell-maker</code>'s internals aren't too different from the code I had before. It's still powered by comint, but instead offers a reusable convenience wrapper.
+</p>
+
+ <p>
+It takes little code to implement a shell, like the sophisticated new  <code>greeter-shell</code> ;)
+</p>
+
+
+ <div id="orgdd3a95e" class="figure">
+ <p> <img src="../images/a-shell-maker/maria.gif" alt="maria.gif" width="60%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">shell-maker</span>)
+
+(<span style="color: #a71d5d;">defvar</span>  <span style="color: #333333;">greeter-shell--config</span>
+  (make-shell-maker-config
+    <span style="color: #a71d5d;">:name</span>  <span style="color: #183691;">"Greeter"</span>
+    <span style="color: #a71d5d;">:execute-command</span>
+   (<span style="color: #a71d5d;">lambda</span> (command _history callback error-callback)
+     (funcall callback
+              (format  <span style="color: #183691;">"Hello \"%s\""</span> command)
+              nil))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">greeter-shell</span> ()
+   <span style="color: #183691;">"Start a Greeter shell."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (shell-maker-start greeter-shell--config))
+</pre>
+</div>
+
+ <p>
+ <a href="https://github.com/xenodium/chatgpt-shell#shell-maker">shell-maker</a> is available on GitHub and currently bundled with  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>. If there's enough interest and usage, I may just break it out into its own package. For now, it's convenient to keep with  <code>chatgpt-shell</code> and  <code>dall-e-shell</code>.
+</p>
+
+ <p>
+If you plug  <code>shell-maker</code> into other tools, I'd love to hear about it.
+</p>
+
+ <p>
+Happy shell making!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-shell-maker</link>
+  <guid isPermaLink="false">http://xenodium.com/a-shell-maker</guid>
+  <pubDate>Sat, 08 Apr 2023 23:47:50 +0100</pubDate>
+</item>
 <item>
   <title>Flat Habits 1.1.4 released</title>
   <description><![CDATA[<div id="content" class="content">
