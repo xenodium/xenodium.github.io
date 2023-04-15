@@ -1,6 +1,102 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-04-15 Sat] My Emacs eye candy
+:PROPERTIES:
+:CUSTOM_ID: my-emacs-eye-candy
+:END:
+I get the occasional question about my Emacs theme, font, and other eye candy. I'm always tickled and happy to share.
+#+ATTR_HTML: :width 80%
+[[file:images/my-emacs-eye-candy/Emacs.png]]
+
+It's been a while since I've made visually significant changes to my Emacs config. May as well briefly document for posterity...
+
+** Nyan Mode
+First things first. The adorable and colorful little fella in my mode line is a [[https://en.wikipedia.org/wiki/Nyan_Cat][Nyan Cat]] (if you dare, check the [[https://www.youtube.com/watch?v=QH2-TGUlwu4][meme video]]). Yes, I know it's sooo 2011, but it's 2023 and I still love the little guy hanging out in my Emacs mode line. I still get asked about it.
+
+#+ATTR_HTML: :height 30px
+[[file:images/my-emacs-eye-candy/Nyan.png]]
+
+This fabulous feature comes to us via the great [[https://github.com/TeMPOraL/nyan-mode/][Nyan Mode]] package. If looks haven't convinced you, Nyan also packs scrolling functionality. Click anywhere in it.
+
+Oh, and if you can't get enough of Nyan, there's also [[https://depp.brause.cc/zone-nyan/][zone-nyan]] for Emacs.
+
+** Emacs Plus (macOS)
+I should mention I'm running Emacs 28 on macOS via the excellent [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs Plus]] [[https://brew.sh/][homebrew]] recipe. These are all the options I enable.
+
+#+begin_src sh
+  brew install  emacs-plus@28 --with-imagemagick --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-icon
+#+end_src
+
+*** Icon
+Since we're talking eye candy, let's chat about =--with-savchenkovaleriy-big-sur-icon=. This Emacs Plus option enables Valeriy Savchenko's [[https://github.com/SavchenkoValeriy/emacs-icons][wonderful icon]].
+
+#+ATTR_HTML: :width 50%
+[[file:images/my-emacs-eye-candy/swap.png]]
+
+*** Titlebar
+I've enabled both transparent title bar as well as dark appearance, giving a minimal window decoration.
+
+#+ATTR_HTML: :width 60%
+[[file:images/my-emacs-eye-candy/decoration.jpg]]
+
+#+begin_src emacs-lisp :lexical no
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+#+end_src
+
+Note: both of these variables are prefixed =ns-= (macOS-only settings).
+
+** Font (JetBrains Mono)
+
+I've been on [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] font for quite some time now. In the past, I've also been a fan of [[https://madmalik.github.io/mononoki/][Mononoki]] and [[https://en.wikipedia.org/wiki/Menlo_(typeface)][Menlo]] (on macOS) or [[https://github.com/andreberg/Meslo-Font][Meslo]] (similar elsewhere).
+
+** Theme (Material)
+
+I'm using the great [[https://github.com/cpaulik/emacs-material-theme][Material Theme for Emacs]], with a [[https://github.com/xenodium/dotsies/blob/790465b1824481b81bf5c6e08949128c13d76f95/emacs/features/fe-ui.el#L42][bunch of tweaks of my own]].
+
+** Modeline tabs/ribbons (Moody)
+
+The [[https://github.com/tarsius/moody][moody]] package adds a nice touch displaying mode line elements as tabs and ribbons.
+
+** Modeline menus (Minions)
+
+The [[https://github.com/tarsius/minions][minions]] package removes lots of minor mode clutter from the mode line and stashes it away in menus.
+
+** Hiding modeline (hide mode line mode)
+
+Hiding the mode line isn't something I use in most major modes. However, I found it complements my shell (eshell) quite well. While I was sceptical at first, once I turned it off in my shell I never looked back. I just didn't miss it. I also love the uncluttered clean vibe.
+
+#+ATTR_HTML: :width 50%
+[[file:images/my-emacs-eye-candy/eshell.gif]]
+
+** Welcome screen
+
+Back in October 2022, I experimented with [[https://xenodium.com/emacs-a-welcoming-experiment/][adding a minimal welcome screen]]. I was originally hesitant, as I was already a fan of the welcome scratch buffer. In any case, I figured I'd eventually get tired of it and remove it. Well, it's still enabled in my config ;) My initial attachment to a landing scratch quickly faded. I'm only a =C-x b= binding away from invoking ivy-switch-buffer to get me anywhere.
+
+#+ATTR_HTML: :width 80%
+[[file:images/my-emacs-eye-candy/welcome.png]]
+
+** Zones
+
+I've been meaning to re-enable [[https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el][zones]] in my config. They always gave me a good tickle. I've already mentioned [[https://depp.brause.cc/zone-nyan/][zone-nyan]], but if you're new to zones, they kick off after a period of inactivity (similar to a screensaver).
+
+Here's =zone-pgm-rotate= in all its glory. Oh and it's built-in!
+
+#+ATTR_HTML: :width 80%
+[[file:images/my-emacs-eye-candy/rotate.webp]]
+
+Coincidentally, I had a go at writing [[https://xenodium.com/emacs-zones-to-lift-you-up/][a basic zone a little while ago]].
+
+#+ATTR_HTML: :width 80%
+[[file:images/my-emacs-eye-candy/zone.gif]]
+
+** Config
+
+Most of the items mentioned I pulled from my [[https://github.com/xenodium/dotsies][Emacs config]]'s [[https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-ui.el][fe-ui.el]]. There's more there if you're interested.
+
+What is some of your favorite Emacs eye candy?
+
 * [2023-04-08 Sat] shell-maker, a maker of Emacs shells
 :PROPERTIES:
 :CUSTOM_ID: a-shell-maker

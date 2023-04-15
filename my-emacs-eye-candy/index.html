@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-04-15 Sat 17:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Emacs eye candy</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-my-emacs-eye-candy" class="outline-2">
+<h2 id="my-emacs-eye-candy"><span class="timestamp-wrapper"><span class="timestamp">15 April 2023</span></span> My Emacs eye candy</h2>
+<div class="outline-text-2" id="text-my-emacs-eye-candy">
+<p>
+I get the occasional question about my Emacs theme, font, and other eye candy. I'm always tickled and happy to share.
+</p>
+
+<div id="org380d203" class="figure">
+<p><img src="../images/my-emacs-eye-candy/Emacs.png" alt="Emacs.png" width="80%" />
+</p>
+</div>
+
+<p>
+It's been a while since I've made visually significant changes to my Emacs config. May as well briefly document for posterity&#x2026;
+</p>
+</div>
+
+<div id="outline-container-org64c4e46" class="outline-3">
+<h3 id="org64c4e46">Nyan Mode</h3>
+<div class="outline-text-3" id="text-org64c4e46">
+<p>
+First things first. The adorable and colorful little fella in my mode line is a <a href="https://en.wikipedia.org/wiki/Nyan_Cat">Nyan Cat</a> (if you dare, check the <a href="https://www.youtube.com/watch?v=QH2-TGUlwu4">meme video</a>). Yes, I know it's sooo 2011, but it's 2023 and I still love the little guy hanging out in my Emacs mode line. I still get asked about it.
+</p>
+
+
+<div id="org1dff4cc" class="figure">
+<p><img src="../images/my-emacs-eye-candy/Nyan.png" alt="Nyan.png" height="30px" />
+</p>
+</div>
+
+<p>
+This fabulous feature comes to us via the great <a href="https://github.com/TeMPOraL/nyan-mode/">Nyan Mode</a> package. If looks haven't convinced you, Nyan also packs scrolling functionality. Click anywhere in it.
+</p>
+
+<p>
+Oh, and if you can't get enough of Nyan, there's also <a href="https://depp.brause.cc/zone-nyan/">zone-nyan</a> for Emacs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org36fd7e6" class="outline-3">
+<h3 id="org36fd7e6">Emacs Plus (macOS)</h3>
+<div class="outline-text-3" id="text-org36fd7e6">
+<p>
+I should mention I'm running Emacs 28 on macOS via the excellent <a href="https://github.com/d12frosted/homebrew-emacs-plus">Emacs Plus</a> <a href="https://brew.sh/">homebrew</a> recipe. These are all the options I enable.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install  emacs-plus@28 --with-imagemagick --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-icon
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org14c13d6" class="outline-4">
+<h4 id="org14c13d6">Icon</h4>
+<div class="outline-text-4" id="text-org14c13d6">
+<p>
+Since we're talking eye candy, let's chat about <code>--with-savchenkovaleriy-big-sur-icon</code>. This Emacs Plus option enables Valeriy Savchenko's <a href="https://github.com/SavchenkoValeriy/emacs-icons">wonderful icon</a>.
+</p>
+
+
+<div id="orgb1c6a8b" class="figure">
+<p><img src="../images/my-emacs-eye-candy/swap.png" alt="swap.png" width="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd5708c8" class="outline-4">
+<h4 id="orgd5708c8">Titlebar</h4>
+<div class="outline-text-4" id="text-orgd5708c8">
+<p>
+I've enabled both transparent title bar as well as dark appearance, giving a minimal window decoration.
+</p>
+
+
+<div id="org1248435" class="figure">
+<p><img src="../images/my-emacs-eye-candy/decoration.jpg" alt="decoration.jpg" width="60%" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+</pre>
+</div>
+
+<p>
+Note: both of these variables are prefixed <code>ns-</code> (macOS-only settings).
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8c923c6" class="outline-3">
+<h3 id="org8c923c6">Font (JetBrains Mono)</h3>
+<div class="outline-text-3" id="text-org8c923c6">
+<p>
+I've been on <a href="https://www.jetbrains.com/lp/mono/">JetBrains Mono</a> font for quite some time now. In the past, I've also been a fan of <a href="https://madmalik.github.io/mononoki/">Mononoki</a> and <a href="https://en.wikipedia.org/wiki/Menlo_(typeface)">Menlo</a> (on macOS) or <a href="https://github.com/andreberg/Meslo-Font">Meslo</a> (similar elsewhere).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga0a9a8b" class="outline-3">
+<h3 id="orga0a9a8b">Theme (Material)</h3>
+<div class="outline-text-3" id="text-orga0a9a8b">
+<p>
+I'm using the great <a href="https://github.com/cpaulik/emacs-material-theme">Material Theme for Emacs</a>, with a <a href="https://github.com/xenodium/dotsies/blob/790465b1824481b81bf5c6e08949128c13d76f95/emacs/features/fe-ui.el#L42">bunch of tweaks of my own</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3b08284" class="outline-3">
+<h3 id="org3b08284">Modeline tabs/ribbons (Moody)</h3>
+<div class="outline-text-3" id="text-org3b08284">
+<p>
+The <a href="https://github.com/tarsius/moody">moody</a> package adds a nice touch displaying mode line elements as tabs and ribbons.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org00b466b" class="outline-3">
+<h3 id="org00b466b">Modeline menus (Minions)</h3>
+<div class="outline-text-3" id="text-org00b466b">
+<p>
+The <a href="https://github.com/tarsius/minions">minions</a> package removes lots of minor mode clutter from the mode line and stashes it away in menus.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3baef30" class="outline-3">
+<h3 id="org3baef30">Hiding modeline (hide mode line mode)</h3>
+<div class="outline-text-3" id="text-org3baef30">
+<p>
+Hiding the mode line isn't something I use in most major modes. However, I found it complements my shell (eshell) quite well. While I was sceptical at first, once I turned it off in my shell I never looked back. I just didn't miss it. I also love the uncluttered clean vibe.
+</p>
+
+
+<div id="org888056d" class="figure">
+<p><img src="../images/my-emacs-eye-candy/eshell.gif" alt="eshell.gif" width="50%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2889e35" class="outline-3">
+<h3 id="org2889e35">Welcome screen</h3>
+<div class="outline-text-3" id="text-org2889e35">
+<p>
+Back in October 2022, I experimented with <a href="https://xenodium.com/emacs-a-welcoming-experiment/">adding a minimal welcome screen</a>. I was originally hesitant, as I was already a fan of the welcome scratch buffer. In any case, I figured I'd eventually get tired of it and remove it. Well, it's still enabled in my config ;) My initial attachment to a landing scratch quickly faded. I'm only a <code>C-x b</code> binding away from invoking ivy-switch-buffer to get me anywhere.
+</p>
+
+
+<div id="org0cf5735" class="figure">
+<p><img src="../images/my-emacs-eye-candy/welcome.png" alt="welcome.png" width="80%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge70008e" class="outline-3">
+<h3 id="orge70008e">Zones</h3>
+<div class="outline-text-3" id="text-orge70008e">
+<p>
+I've been meaning to re-enable <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el">zones</a> in my config. They always gave me a good tickle. I've already mentioned <a href="https://depp.brause.cc/zone-nyan/">zone-nyan</a>, but if you're new to zones, they kick off after a period of inactivity (similar to a screensaver).
+</p>
+
+<p>
+Here's <code>zone-pgm-rotate</code> in all its glory. Oh and it's built-in!
+</p>
+
+
+<div id="org210b0fc" class="figure">
+<p><img src="../images/my-emacs-eye-candy/rotate.webp" alt="rotate.webp" width="80%" />
+</p>
+</div>
+
+<p>
+Coincidentally, I had a go at writing <a href="https://xenodium.com/emacs-zones-to-lift-you-up/">a basic zone a little while ago</a>.
+</p>
+
+
+<div id="org26ac0b3" class="figure">
+<p><img src="../images/my-emacs-eye-candy/zone.gif" alt="zone.gif" width="80%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org92a06ce" class="outline-3">
+<h3 id="org92a06ce">Config</h3>
+<div class="outline-text-3" id="text-org92a06ce">
+<p>
+Most of the items mentioned I pulled from my <a href="https://github.com/xenodium/dotsies">Emacs config</a>'s <a href="https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-ui.el">fe-ui.el</a>. There's more there if you're interested.
+</p>
+
+<p>
+What is some of your favorite Emacs eye candy?
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
