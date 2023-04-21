@@ -6,7 +6,244 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 20 Apr 2023 19:48:19 +0100</lastBuildDate>
+<lastBuildDate>Sat, 22 Apr 2023 00:37:32 +0100</lastBuildDate>
+<item>
+  <title>Recording and screenshotting windows: the lazy way</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-recordscreenshot-windows-the-lazy-way" class="outline-2">
+ <h2 id="recordscreenshot-windows-the-lazy-way"> <span class="timestamp-wrapper"> <span class="timestamp">22 April 2023</span></span> Recording and screenshotting windows: the lazy way</h2>
+ <div class="outline-text-2" id="text-recordscreenshot-windows-the-lazy-way">
+ <p>
+While there's no substitution for great written documentation, a quick demo can go a long way in conveying what a tool if capable of doing or what a tip/trick can achieve.
+</p>
+
+ <p>
+If you've read a handful of my posts, you would have come across either a screenshot or a short clip with some demo. Historically, I've used the macOS's built-in utility invoked via  <code>⌘ + Shift + 5</code>. It does a fine job for screenshots. For video captures, it's got a couple of small quirks.
+</p>
+</div>
+
+ <div id="outline-container-org1f6ee66" class="outline-3">
+ <h3 id="org1f6ee66">Record window</h3>
+ <div class="outline-text-3" id="text-org1f6ee66">
+ <p>
+Unlike screenshots, macOS video capture cannot record a specific window. While you can select a region, it's easy to inadvertently include a portion of your wallpaper in the recording. Not a big deal, but I felt posted screencasts could look as clean as their screenshot counterparts if we could record the window alone.
+</p>
+
+ <p>
+Let's compare grabbing a region vs window alone. I know the clean look may be subjective, but see what I mean?
+</p>
+
+
+ <div id="org0da0ac1" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/record-bg.gif" alt="record-bg.gif" width="50%"></img></p>
+ <p> <span class="figure-number">Figure 1: </span>Capture region (includes wallpaper/background)</p>
+</div>
+
+
+ <div id="org9bcccfc" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/record.gif" alt="record.gif" width="50%"></img></p>
+ <p> <span class="figure-number">Figure 2: </span>Capture window only (ahhh, so clean)</p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc98e733" class="outline-3">
+ <h3 id="orgc98e733">Cancel recording</h3>
+ <div class="outline-text-3" id="text-orgc98e733">
+ <p>
+macOS has a handy shortcut ( <code>⌘ + Ctrl + Esc</code>) to stop recording. If you got your demo right, you're done. If not, you have one more step remaining (right click to delete the blooper).
+</p>
+
+
+ <div id="org115afa0" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/delete.png" alt="delete.png" width="40%"></img></p>
+</div>
+
+ <p>
+Also not a huge deal, but I was hoping for a single shortcut to stop recording  <span class="underline">and</span> also automatically discard. I haven't found one, but would love to hear if otherwise.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgee01cc0" class="outline-3">
+ <h3 id="orgee01cc0">macosrec enters the chat</h3>
+ <div class="outline-text-3" id="text-orgee01cc0">
+ <p>
+I wanted more flexibility to build my own recording/screenshotting flows. A command line utility could be quite versatile at that, so I built  <a href="https://github.com/xenodium/macosrec">macosrec</a>.
+</p>
+
+ <p>
+ <code>macosrec</code> enables taking a screenshot or recording a window video entirely from the command line.
+</p>
+
+
+ <div id="orga1cea3d" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/macosrec.gif" alt="macosrec.gif" width="60%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc8718ef" class="outline-3">
+ <h3 id="orgc8718ef">elisp glues the world</h3>
+ <div class="outline-text-3" id="text-orgc8718ef">
+ <p>
+Command line utilities can be invoked in all sorts of ways, but I'm an Emacs nutter so you can see where this is going… I want Emacs key bindings to control the lot.
+</p>
+
+ <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"> <colgroup> <col class="org-left"></col> <col class="org-left"></col></colgroup> <tbody> <tr> <td class="org-left">C-c _</td>
+ <td class="org-left">Take screenshot of a window</td>
+</tr> <tr> <td class="org-left">C-c (</td>
+ <td class="org-left">Start recording window</td>
+</tr> <tr> <td class="org-left">C-c )</td>
+ <td class="org-left">Stop recording window</td>
+</tr> <tr> <td class="org-left">C-c 8</td>
+ <td class="org-left">Abort recording</td>
+</tr></tbody></table> <p>
+Integrating command line utilities into Emacs and making them quickly accessible seems to have become a full-time hobby of mine. I kid, but it's become a pretty painless process for me. I built  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> for that. If you've never heard of  <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a>, it stands for "Do what I mean". To give you an idea of the kinds of things I'm using DWIM commands for, check the following out:
+</p>
+
+ <ul class="org-ul"> <li>dwim-shell-commands-audio-to-mp3</li>
+ <li>dwim-shell-commands-bin-plist-to-xml</li>
+ <li>dwim-shell-commands-clipboard-to-qr</li>
+ <li>dwim-shell-commands-drop-video-audio</li>
+ <li>dwim-shell-commands-files-combined-size</li>
+ <li>dwim-shell-commands-git-clone-clipboard-url</li>
+ <li>dwim-shell-commands-git-clone-clipboard-url-to-downloads</li>
+ <li>dwim-shell-commands-image-to-grayscale</li>
+ <li>dwim-shell-commands-image-to-icns</li>
+ <li>dwim-shell-commands-image-to-jpg</li>
+ <li>dwim-shell-commands-image-to-png</li>
+ <li>dwim-shell-commands-pdf-password-protect</li>
+ <li>dwim-shell-commands-reorient-image</li>
+ <li>dwim-shell-commands-resize-gif</li>
+ <li>dwim-shell-commands-resize-image</li>
+ <li>dwim-shell-commands-resize-video</li>
+ <li>dwim-shell-commands-speed-up-gif</li>
+ <li>dwim-shell-commands-speed-up-video</li>
+ <li>dwim-shell-commands-unzip</li>
+ <li>dwim-shell-commands-video-to-gif</li>
+ <li>dwim-shell-commands-video-to-optimized-gif</li>
+ <li>dwim-shell-commands-video-to-webp</li>
+</ul> <p>
+If it ever took you a little while to find the right command incantation to get things right, only to forget all about it next time you need it ( <a href="https://xenodium.com/emacs-ffmpeg-and-macos-alias-commands">I'm looking at you ffmpeg</a>),  <code>dwim-shell-command</code> can help you easily save things for posterity and make them easily accessible in the future.
+</p>
+
+ <p>
+Since we're talking ffmpeg, here's all it takes to have gif convertion handy:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-video-to-gif</span> ()
+   <span style="color: #183691;">"Convert all marked videos to gif(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Convert to gif"</span>
+    <span style="color: #183691;">"ffmpeg -loglevel quiet -stats -y -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span> <span style="color: #0086b3;"><<fne>>.gif</span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"ffmpeg"</span>))
+</pre>
+</div>
+
+ <p>
+There's no way I'll remember the ffmpeg command, but I can always fuzzy search my trusty commands with something like  <code>"to gif"</code> and apply to either the current buffer file or any selected  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> files.
+</p>
+
+
+ <div id="org4da2cce" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/to-gif.png" alt="to-gif.png" width="60%"></img></p>
+</div>
+
+ <p>
+So where am I going with this? I wrote DWIM shell commands for the bindings I previously described:
+</p>
+
+ <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"> <colgroup> <col class="org-left"></col> <col class="org-left"></col></colgroup> <tbody> <tr> <td class="org-left">C-c _</td>
+ <td class="org-left"> <code>dwim-shell-commands-macos-screenshot-window</code></td>
+</tr> <tr> <td class="org-left">C-c (</td>
+ <td class="org-left"> <code>dwim-shell-commands-macos-start-recording-window</code></td>
+</tr> <tr> <td class="org-left">C-c )</td>
+ <td class="org-left"> <code>dwim-shell-commands-macos-end-recording-window</code></td>
+</tr> <tr> <td class="org-left">C-c 8</td>
+ <td class="org-left"> <code>dwim-shell-commands-macos-abort-recording-window</code></td>
+</tr></tbody></table> <p>
+Out of all of commands,  <code>dwim-shell-commands-macos-start-recording-window</code> is likely the most interesting one.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-start-recording-window</span> ()
+   <span style="color: #183691;">"Select and start recording a macOS window."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((window (dwim-shell-commands--macos-select-window))
+         (path (dwim-shell-commands--generate-path  <span style="color: #183691;">"~/Desktop"</span> (car window)  <span style="color: #183691;">".mov"</span>))
+         (buffer-file-name path)  <span style="color: #969896;">;; </span> <span style="color: #969896;">override so <<f>> picks it up</span>
+         (inhibit-message t))
+    (dwim-shell-command-on-marked-files
+        <span style="color: #183691;">"Start recording a macOS window."</span>
+       (format
+         <span style="color: #183691;">"# record .mov</span>
+ <span style="color: #183691;">         macosrec --record '</span> <span style="color: #0086b3;">%s</span> <span style="color: #183691;">' --mov --output '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">         # speed .mov up x1.5</span>
+ <span style="color: #183691;">         ffmpeg -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -an -filter:v '</span> <span style="color: #0086b3;">setpts=1.5*PTS</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_x1.5.<<e>></span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">         # convert to gif x1.5</span>
+ <span style="color: #183691;">         ffmpeg -loglevel quiet -stats -y -i '</span> <span style="color: #0086b3;"><<fne>>_x1.5.<<e>></span> <span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span> <span style="color: #0086b3;"><<fne>>_x1.5.gif</span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">         # speed .mov up x2</span>
+ <span style="color: #183691;">         ffmpeg -i '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' -an -filter:v '</span> <span style="color: #0086b3;">setpts=2*PTS</span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_x2.<<e>></span> <span style="color: #183691;">'</span>
+ <span style="color: #183691;">         # convert to gif x2</span>
+ <span style="color: #183691;">         ffmpeg -loglevel quiet -stats -y -i '</span> <span style="color: #0086b3;"><<fne>>_x2.<<e>></span> <span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span> <span style="color: #0086b3;"><<fne>>_x2.gif</span> <span style="color: #183691;">'"</span>
+        (cdr window))
+        <span style="color: #a71d5d;">:silent-success</span> t
+        <span style="color: #a71d5d;">:monitor-directory</span>  <span style="color: #183691;">"~/Desktop"</span>
+        <span style="color: #a71d5d;">:no-progress</span> t
+        <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"ffmpeg"</span>  <span style="color: #183691;">"macosrec"</span>))))
+</pre>
+</div>
+
+ <p>
+As you likely expect, this command invokes  <code>macosrec</code> to start recording a window. The nifty part is that when it's done recording (and saving the .mov file), it automatically creates multiple variants. For starters, it creates x1.5 and x2 .mov videos, but it also generates their .gif counterparts.
+</p>
+
+
+ <div id="org8c17444" class="figure">
+ <p> <img src="../images/recordscreenshot-windows-the-lazy-way/bunch.png" alt="bunch.png" width="60%"></img></p>
+</div>
+
+ <p>
+Let's recap here for a sec. You start recording a window video with  <code>C-c (</code>, end with C-c )=, and automagically have all these generated files waiting for you.
+</p>
+
+ <p>
+You can subsequently inspect any of the video candidates and pick the most appropriate variant. Discard whatever else you don't need.
+</p>
+
+ <p>
+The output bundle is tailored to my needs. Maybe you want to invoke  <a href="https://www.lcdf.org/gifsicle/">gifsycle</a> for more optimized versions? Or maybe you want automatic webp generation via  <code>ffmpeg</code>? DWIM does that I mean, so you likely have other plans…
+</p>
+
+ <p>
+ <code>dwim-shell-commands-macos-start-recording-window</code> and all other DWIM commands are now included in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, which ships optionally as part of  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.
+</p>
+
+ <p>
+ <a href="https://github.com/xenodium/macosrec">macosrec</a> is also on GitHub. If you want to get straight to the point, you can install via:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew tap xenodium/macosrec
+brew install macosrec
+</pre>
+</div>
+
+ <p>
+This is my way to record and screenshot windows the lazy way. How would you tweak to make it yours?
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/recordscreenshot-windows-the-lazy-way</link>
+  <guid isPermaLink="false">http://xenodium.com/recordscreenshot-windows-the-lazy-way</guid>
+  <pubDate>Sat, 22 Apr 2023 00:37:32 +0100</pubDate>
+</item>
 <item>
   <title>ob-swiftui updates</title>
   <description><![CDATA[<div id="content" class="content">

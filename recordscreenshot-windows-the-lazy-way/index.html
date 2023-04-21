@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-04-22 Sat 00:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Recording and screenshotting windows: the lazy way</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-recordscreenshot-windows-the-lazy-way" class="outline-2">
+<h2 id="recordscreenshot-windows-the-lazy-way"><span class="timestamp-wrapper"><span class="timestamp">22 April 2023</span></span> Recording and screenshotting windows: the lazy way</h2>
+<div class="outline-text-2" id="text-recordscreenshot-windows-the-lazy-way">
+<p>
+While there's no substitution for great written documentation, a quick demo can go a long way in conveying what a tool if capable of doing or what a tip/trick can achieve.
+</p>
+
+<p>
+If you've read a handful of my posts, you would have come across either a screenshot or a short clip with some demo. Historically, I've used the macOS's built-in utility invoked via <code>⌘ + Shift + 5</code>. It does a fine job for screenshots. For video captures, it's got a couple of small quirks.
+</p>
+</div>
+
+<div id="outline-container-org1f6ee66" class="outline-3">
+<h3 id="org1f6ee66">Record window</h3>
+<div class="outline-text-3" id="text-org1f6ee66">
+<p>
+Unlike screenshots, macOS video capture cannot record a specific window. While you can select a region, it's easy to inadvertently include a portion of your wallpaper in the recording. Not a big deal, but I felt posted screencasts could look as clean as their screenshot counterparts if we could record the window alone.
+</p>
+
+<p>
+Let's compare grabbing a region vs window alone. I know the clean look may be subjective, but see what I mean?
+</p>
+
+
+<div id="org0da0ac1" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/record-bg.gif" alt="record-bg.gif" width="50%" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Capture region (includes wallpaper/background)</p>
+</div>
+
+
+<div id="org9bcccfc" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/record.gif" alt="record.gif" width="50%" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Capture window only (ahhh, so clean)</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc98e733" class="outline-3">
+<h3 id="orgc98e733">Cancel recording</h3>
+<div class="outline-text-3" id="text-orgc98e733">
+<p>
+macOS has a handy shortcut (<code>⌘ + Ctrl + Esc</code>) to stop recording. If you got your demo right, you're done. If not, you have one more step remaining (right click to delete the blooper).
+</p>
+
+
+<div id="org115afa0" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/delete.png" alt="delete.png" width="40%" />
+</p>
+</div>
+
+<p>
+Also not a huge deal, but I was hoping for a single shortcut to stop recording <span class="underline">and</span> also automatically discard. I haven't found one, but would love to hear if otherwise.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgee01cc0" class="outline-3">
+<h3 id="orgee01cc0">macosrec enters the chat</h3>
+<div class="outline-text-3" id="text-orgee01cc0">
+<p>
+I wanted more flexibility to build my own recording/screenshotting flows. A command line utility could be quite versatile at that, so I built <a href="https://github.com/xenodium/macosrec">macosrec</a>.
+</p>
+
+<p>
+<code>macosrec</code> enables taking a screenshot or recording a window video entirely from the command line.
+</p>
+
+
+<div id="orga1cea3d" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/macosrec.gif" alt="macosrec.gif" width="60%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc8718ef" class="outline-3">
+<h3 id="orgc8718ef">elisp glues the world</h3>
+<div class="outline-text-3" id="text-orgc8718ef">
+<p>
+Command line utilities can be invoked in all sorts of ways, but I'm an Emacs nutter so you can see where this is going&#x2026; I want Emacs key bindings to control the lot.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">C-c _</td>
+<td class="org-left">Take screenshot of a window</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c (</td>
+<td class="org-left">Start recording window</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c )</td>
+<td class="org-left">Stop recording window</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c 8</td>
+<td class="org-left">Abort recording</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Integrating command line utilities into Emacs and making them quickly accessible seems to have become a full-time hobby of mine. I kid, but it's become a pretty painless process for me. I built <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> for that. If you've never heard of <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a>, it stands for "Do what I mean". To give you an idea of the kinds of things I'm using DWIM commands for, check the following out:
+</p>
+
+<ul class="org-ul">
+<li>dwim-shell-commands-audio-to-mp3</li>
+<li>dwim-shell-commands-bin-plist-to-xml</li>
+<li>dwim-shell-commands-clipboard-to-qr</li>
+<li>dwim-shell-commands-drop-video-audio</li>
+<li>dwim-shell-commands-files-combined-size</li>
+<li>dwim-shell-commands-git-clone-clipboard-url</li>
+<li>dwim-shell-commands-git-clone-clipboard-url-to-downloads</li>
+<li>dwim-shell-commands-image-to-grayscale</li>
+<li>dwim-shell-commands-image-to-icns</li>
+<li>dwim-shell-commands-image-to-jpg</li>
+<li>dwim-shell-commands-image-to-png</li>
+<li>dwim-shell-commands-pdf-password-protect</li>
+<li>dwim-shell-commands-reorient-image</li>
+<li>dwim-shell-commands-resize-gif</li>
+<li>dwim-shell-commands-resize-image</li>
+<li>dwim-shell-commands-resize-video</li>
+<li>dwim-shell-commands-speed-up-gif</li>
+<li>dwim-shell-commands-speed-up-video</li>
+<li>dwim-shell-commands-unzip</li>
+<li>dwim-shell-commands-video-to-gif</li>
+<li>dwim-shell-commands-video-to-optimized-gif</li>
+<li>dwim-shell-commands-video-to-webp</li>
+</ul>
+
+<p>
+If it ever took you a little while to find the right command incantation to get things right, only to forget all about it next time you need it (<a href="https://xenodium.com/emacs-ffmpeg-and-macos-alias-commands">I'm looking at you ffmpeg</a>), <code>dwim-shell-command</code> can help you easily save things for posterity and make them easily accessible in the future.
+</p>
+
+<p>
+Since we're talking ffmpeg, here's all it takes to have gif convertion handy:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-video-to-gif</span> ()
+  <span style="color: #183691;">"Convert all marked videos to gif(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+   <span style="color: #183691;">"Convert to gif"</span>
+   <span style="color: #183691;">"ffmpeg -loglevel quiet -stats -y -i '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;.gif</span><span style="color: #183691;">'"</span>
+   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"ffmpeg"</span>))
+</pre>
+</div>
+
+<p>
+There's no way I'll remember the ffmpeg command, but I can always fuzzy search my trusty commands with something like <code>"to gif"</code> and apply to either the current buffer file or any selected <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> files.
+</p>
+
+
+<div id="org4da2cce" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/to-gif.png" alt="to-gif.png" width="60%" />
+</p>
+</div>
+
+<p>
+So where am I going with this? I wrote DWIM shell commands for the bindings I previously described:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">C-c _</td>
+<td class="org-left"><code>dwim-shell-commands-macos-screenshot-window</code></td>
+</tr>
+
+<tr>
+<td class="org-left">C-c (</td>
+<td class="org-left"><code>dwim-shell-commands-macos-start-recording-window</code></td>
+</tr>
+
+<tr>
+<td class="org-left">C-c )</td>
+<td class="org-left"><code>dwim-shell-commands-macos-end-recording-window</code></td>
+</tr>
+
+<tr>
+<td class="org-left">C-c 8</td>
+<td class="org-left"><code>dwim-shell-commands-macos-abort-recording-window</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Out of all of commands, <code>dwim-shell-commands-macos-start-recording-window</code> is likely the most interesting one.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-macos-start-recording-window</span> ()
+  <span style="color: #183691;">"Select and start recording a macOS window."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((window (dwim-shell-commands--macos-select-window))
+         (path (dwim-shell-commands--generate-path <span style="color: #183691;">"~/Desktop"</span> (car window) <span style="color: #183691;">".mov"</span>))
+         (buffer-file-name path) <span style="color: #969896;">;; </span><span style="color: #969896;">override so &lt;&lt;f&gt;&gt; picks it up</span>
+         (inhibit-message t))
+    (dwim-shell-command-on-marked-files
+       <span style="color: #183691;">"Start recording a macOS window."</span>
+       (format
+        <span style="color: #183691;">"# record .mov</span>
+<span style="color: #183691;">         macosrec --record '</span><span style="color: #0086b3;">%s</span><span style="color: #183691;">' --mov --output '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">'</span>
+<span style="color: #183691;">         # speed .mov up x1.5</span>
+<span style="color: #183691;">         ffmpeg -i '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' -an -filter:v '</span><span style="color: #0086b3;">setpts=1.5*PTS</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x1.5.&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">'</span>
+<span style="color: #183691;">         # convert to gif x1.5</span>
+<span style="color: #183691;">         ffmpeg -loglevel quiet -stats -y -i '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x1.5.&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x1.5.gif</span><span style="color: #183691;">'</span>
+<span style="color: #183691;">         # speed .mov up x2</span>
+<span style="color: #183691;">         ffmpeg -i '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' -an -filter:v '</span><span style="color: #0086b3;">setpts=2*PTS</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x2.&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">'</span>
+<span style="color: #183691;">         # convert to gif x2</span>
+<span style="color: #183691;">         ffmpeg -loglevel quiet -stats -y -i '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x2.&lt;&lt;e&gt;&gt;</span><span style="color: #183691;">' -pix_fmt rgb24 -r 15 '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;_x2.gif</span><span style="color: #183691;">'"</span>
+        (cdr window))
+       <span style="color: #a71d5d;">:silent-success</span> t
+       <span style="color: #a71d5d;">:monitor-directory</span> <span style="color: #183691;">"~/Desktop"</span>
+       <span style="color: #a71d5d;">:no-progress</span> t
+       <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"ffmpeg"</span> <span style="color: #183691;">"macosrec"</span>))))
+</pre>
+</div>
+
+<p>
+As you likely expect, this command invokes <code>macosrec</code> to start recording a window. The nifty part is that when it's done recording (and saving the .mov file), it automatically creates multiple variants. For starters, it creates x1.5 and x2 .mov videos, but it also generates their .gif counterparts.
+</p>
+
+
+<div id="org8c17444" class="figure">
+<p><img src="../images/recordscreenshot-windows-the-lazy-way/bunch.png" alt="bunch.png" width="60%" />
+</p>
+</div>
+
+<p>
+Let's recap here for a sec. You start recording a window video with <code>C-c (</code>, end with C-c )=, and automagically have all these generated files waiting for you.
+</p>
+
+<p>
+You can subsequently inspect any of the video candidates and pick the most appropriate variant. Discard whatever else you don't need.
+</p>
+
+<p>
+The output bundle is tailored to my needs. Maybe you want to invoke <a href="https://www.lcdf.org/gifsicle/">gifsycle</a> for more optimized versions? Or maybe you want automatic webp generation via <code>ffmpeg</code>? DWIM does that I mean, so you likely have other plans&#x2026;
+</p>
+
+<p>
+<code>dwim-shell-commands-macos-start-recording-window</code> and all other DWIM commands are now included in <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, which ships optionally as part of <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.
+</p>
+
+<p>
+<a href="https://github.com/xenodium/macosrec">macosrec</a> is also on GitHub. If you want to get straight to the point, you can install via:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew tap xenodium/macosrec
+brew install macosrec
+</pre>
+</div>
+
+<p>
+This is my way to record and screenshot windows the lazy way. How would you tweak to make it yours?
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
