@@ -18,7 +18,36 @@ The results ain't too shabby.
 #+ATTR_HTML: :width 80%
 [[file:images/ob-swiftui-updates/file-render.gif]]
 
+Another tiny improvement is that if you'd like to compose a more complex layout made of multiple custom views, =ob-swiftui= now looks for a =ContentView= as that root view by default. Specifying another root view was already possible but it had to be explicitly requested via =:view= param.
+
+You can now omit the =:view= param if you name the root view =ContentView=:
+
+#+begin_src org
+  ,#+begin_src swiftui
+    struct ContentView: View {
+      var body: some View {
+          TopView()
+          BottomView()
+      }
+    }
+
+    struct TopView: View {
+      var body: some View {
+        Text("Top text")
+      }
+    }
+
+    struct BottomView: View {
+      var body: some View {
+        Text("Bottom text")
+      }
+    }
+  ,#+end_src
+#+end_src
+
 The improvements have been pushed to [[https://github.com/xenodium/ob-swiftui][ob-swiftui]] and will soon be picked up on [[https://melpa.org/#/ob-swiftui][melpa]].
+
+Edit: Added ContentView details.
 
 * [2023-04-15 Sat] My Emacs eye candy
 :PROPERTIES:

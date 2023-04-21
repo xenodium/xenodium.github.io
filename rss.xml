@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 20 Apr 2023 19:48:36 +0100</lastBuildDate>
+<lastBuildDate>Fri, 21 Apr 2023 16:31:14 +0100</lastBuildDate>
 <item>
   <title>ob-swiftui updates</title>
   <description><![CDATA[<div id="content" class="content">
@@ -35,12 +35,48 @@ The results ain't too shabby.
 </p>
 
 
- <div id="orgbffd783" class="figure">
+ <div id="org8da2a79" class="figure">
  <p> <img src="../images/ob-swiftui-updates/file-render.gif" alt="file-render.gif" width="80%"></img></p>
 </div>
 
  <p>
+Another tiny improvement is that if you'd like to compose a more complex layout made of multiple custom views,  <code>ob-swiftui</code> now looks for a  <code>ContentView</code> as that root view by default. Specifying another root view was already possible but it had to be explicitly requested via  <code>:view</code> param.
+</p>
+
+ <p>
+You can now omit the param if you name the view  <code>ContentView</code>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+begin_src swiftui
+  struct ContentView: View {
+    var body: some View {
+        TopView()
+        BottomView()
+    }
+  }
+
+  struct TopView: View {
+    var body: some View {
+      Text("Top text")
+    }
+  }
+
+  struct BottomView: View {
+    var body: some View {
+      Text("Bottom text")
+    }
+  }
+#+end_src
+</pre>
+</div>
+
+ <p>
 The improvements have been pushed to  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> and will soon be picked up on  <a href="https://melpa.org/#/ob-swiftui">melpa</a>.
+</p>
+
+ <p>
+Edit: Added ContentView details.
 </p>
 </div>
 </div>
