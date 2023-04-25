@@ -1,6 +1,94 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-04-25 Tue] chatgpt-shell available on MELPA
+:PROPERTIES:
+:CUSTOM_ID: chatgpt-shell-available-on-melpa
+:END:
+About a month ago, I posted about an experiment to build [[https://xenodium.com/a-chatgpt-emacs-shell/][a ChatGPT Emacs shell]] using [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html][comint mode]]. Since then, it's turned into a package of sorts, evolving with [[https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+][user feedback]] and [[https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed][pull requests]].
+
+While [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] is a young package still, it seems useful enough to share more widely. As of today, =chatgpt-shell= is [[https://melpa.org/#/chatgpt-shell][available on MELPA]]. Many thanks to [[https://github.com/riscy][Chris Rayner]] for his MELPA guidance to get the package added.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/cyberpunk.gif]]
+
+I'll cover some of the goodies included in the latest =chatgpt-shell=.
+
+** Delegating to Org Babel
+
+=chatgpt-shell= now evaluates Markdown source blocks by delegating to org babel. I've had success with a handful of languages. In some instances, some babel headers may need overriding in =chatgpt-shell-babel-headers=.
+
+Here's a Swift execution via babel, showing standard output.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/swift.gif]]
+
+In addition to standard output, =chatgpt-shell= can now render blocks generating images. Here's a rendered SwiftUI layout via [[https://github.com/xenodium/ob-swiftui][ob-swiftui]].
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/swiftui.gif]]
+
+Can also do diagrams. Here's a [[https://ditaa.sourceforge.net/][ditaa]] action.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/ditaa.gif]]
+
+** Renaming blocks
+
+At times, ChatGPT may forget to label source blocks or maybe you just want to name it something else anyway... You can now rename blocks at point.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/rename.gif]]
+
+** Send prompt/region
+
+There are a handful of commands to send prompts from other buffers, including the region. For example =chatgpt-shell-explain-code=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/explain-region.gif]]
+
+- chatgpt-shell-send-region
+- chatgpt-shell-generate-unit-test
+- chatgpt-shell-refactor-code
+- chatgpt-shell-proofread-doc
+- chatgpt-shell-eshell-summarize-last-command-output
+- chatgpt-shell-eshell-whats-wrong-with-last-command
+
+** Saving/restoring transcript
+
+You can save your current session to a transcript and restore later.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/restore.gif]]
+
+** History improvements
+
+[[https://www.n16f.net/][Nicolas Martyanoff]] has a great post on [[https://www.n16f.net/blog/making-ielm-more-comfortable/][making IELM More Comfortable]]. A couple of improvements that stood out for me were:
+
+
+- Making the command history persistent.
+- Searching history with =shell-maker-search-history= / =M-r= via =completing-read=.
+
+=shell-maker-search-history=, coupled with your completion framework of choice, can be pretty handy. I happen to use Oleh Krehel's [[https://github.com/abo-abo/swiper][ivy]].
+
+** shell-maker to make your own shells
+
+While ChatGPT is a popular service now, there are many others sprouting. Some tools are cloud-based, others local, proprietary, open source... In any case, it'd be great be able to hook on to them without much overhead. =shell-maker= should help with that. The second  =shell-maker= client, after =chatgpt-shell=, is =dall-e-shell=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/dalle.png]]
+
+While I've built =dall-e-shell=, it'd be great to see what others can do with =shell-maker=. If you wire it up to anything, please get in touch ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+
+
+** [[https://indieweb.social/@xenodium/110087011082546281][dall-e-shell]], [[https://indieweb.social/@xenodium/110130580337078002][ob-chatgpt-shell]], and [[https://indieweb.social/@xenodium/110142796865197004][ob-dall-e-shell]] (not yet on MELPA)
+
+While dall-e-shell, ob-chatgpt-shell, and ob-dall-e-shell share the =chatgpt-shell= [[https://github.com/xenodium/chatgpt-shell][repo]], they aren't yet available on MELPA. I hadn't worked out how to split and publish the lot (and keep the same repo). That is, until Chris Rayner helped me establish [[https://xenodium.com/a-shell-maker/][shell-maker]] as a chatgpt-shell dependency. I'll send a MELPA PR for the other packages soon.
+
+** How are you using =chatgpt-shell=?
+
+Whether you are an existing =chatgpt-shell= user, or would like to give things a try, [[https://melpa.org/#/chatgpt-shell][installing from MELPA]] should generally make things easier for ya. As I mentioned, =chatgpt-shell= is a young package still. There are unexplored Emacs integrations out there. I'd love to hear about whatever you come up with ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+
 * [2023-04-22 Sat] Recording and screenshotting windows: the lazy way
 :PROPERTIES:
 :CUSTOM_ID: recordscreenshot-windows-the-lazy-way

@@ -6,7 +6,175 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 22 Apr 2023 00:37:32 +0100</lastBuildDate>
+<lastBuildDate>Tue, 25 Apr 2023 09:40:25 +0100</lastBuildDate>
+<item>
+  <title>chatgpt-shell available on MELPA</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-chatgpt-shell-available-on-melpa" class="outline-2">
+ <h2 id="chatgpt-shell-available-on-melpa"> <span class="timestamp-wrapper"> <span class="timestamp">25 April 2023</span></span> chatgpt-shell available on MELPA</h2>
+ <div class="outline-text-2" id="text-chatgpt-shell-available-on-melpa">
+ <p>
+About a month ago, I posted about an experiment to build  <a href="https://xenodium.com/a-chatgpt-emacs-shell/">a ChatGPT Emacs shell</a> using  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint mode</a>. Since then, it's turned into a package of sorts, evolving with  <a href="https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+">user feedback</a> and  <a href="https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed">pull requests</a>.
+</p>
+
+ <p>
+While  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> is a young package still, it seems useful enough to share more widely. As of today,  <code>chatgpt-shell</code> is  <a href="https://melpa.org/#/chatgpt-shell">available on MELPA</a>. Many thanks to  <a href="https://github.com/riscy">Chris Rayner</a> for his MELPA guidance to get the package added.
+</p>
+
+
+ <div id="org9e37f27" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/cyberpunk.gif" alt="cyberpunk.gif" width="70%"></img></p>
+</div>
+
+ <p>
+I'll cover some of the goodies included in the latest  <code>chatgpt-shell</code>.
+</p>
+</div>
+
+ <div id="outline-container-org122d1ed" class="outline-3">
+ <h3 id="org122d1ed">Delegating to Org Babel</h3>
+ <div class="outline-text-3" id="text-org122d1ed">
+ <p>
+ <code>chatgpt-shell</code> now evaluates Markdown source blocks by delegating to org babel. I've had success with a handful of languages. In some instances, some babel headers may need overriding in  <code>chatgpt-shell-babel-headers</code>.
+</p>
+
+ <p>
+Here's a Swift execution via babel, showing standard output.
+</p>
+
+
+ <div id="orge2c57c8" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/swift.gif" alt="swift.gif" width="70%"></img></p>
+</div>
+
+ <p>
+In addition to standard output,  <code>chatgpt-shell</code> can now render blocks generating images. Here's a rendered SwiftUI layout via  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a>.
+</p>
+
+
+ <div id="orgb9e5495" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/swiftui.gif" alt="swiftui.gif" width="70%"></img></p>
+</div>
+
+ <p>
+Can also do diagrams. Here's a  <a href="https://ditaa.sourceforge.net/">ditaa</a> action.
+</p>
+
+
+ <div id="orgb00e2fe" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/ditaa.gif" alt="ditaa.gif" width="70%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org325b403" class="outline-3">
+ <h3 id="org325b403">Renaming blocks</h3>
+ <div class="outline-text-3" id="text-org325b403">
+ <p>
+At times, ChatGPT may forget to label source blocks or maybe you just want to name it something else anyway… You can now rename blocks at point.
+</p>
+
+
+ <div id="orga26e716" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/rename.gif" alt="rename.gif" width="70%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org3e06bcd" class="outline-3">
+ <h3 id="org3e06bcd">Send prompt/region</h3>
+ <div class="outline-text-3" id="text-org3e06bcd">
+ <p>
+There are a handful of commands to send prompts from other buffers, including the region. For example  <code>chatgpt-shell-explain-code</code>.
+</p>
+
+
+ <div id="orgaa066df" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/explain-region.gif" alt="explain-region.gif" width="70%"></img></p>
+</div>
+
+ <ul class="org-ul"> <li>chatgpt-shell-send-region</li>
+ <li>chatgpt-shell-generate-unit-test</li>
+ <li>chatgpt-shell-refactor-code</li>
+ <li>chatgpt-shell-proofread-doc</li>
+ <li>chatgpt-shell-eshell-summarize-last-command-output</li>
+ <li>chatgpt-shell-eshell-whats-wrong-with-last-command</li>
+</ul></div>
+</div>
+
+ <div id="outline-container-orge111f48" class="outline-3">
+ <h3 id="orge111f48">Saving/restoring transcript</h3>
+ <div class="outline-text-3" id="text-orge111f48">
+ <p>
+You can save your current session to a transcript and restore later.
+</p>
+
+
+ <div id="org82e5783" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/restore.gif" alt="restore.gif" width="70%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc0b3e68" class="outline-3">
+ <h3 id="orgc0b3e68">History improvements</h3>
+ <div class="outline-text-3" id="text-orgc0b3e68">
+ <p>
+ <a href="https://www.n16f.net/">Nicolas Martyanoff</a> has a great post on  <a href="https://www.n16f.net/blog/making-ielm-more-comfortable/">making IELM More Comfortable</a>. A couple of improvements that stood out for me were:
+</p>
+
+
+ <ul class="org-ul"> <li>Making the command history persistent.</li>
+ <li>Searching history with  <code>shell-maker-search-history</code> /  <code>M-r</code> via  <code>completing-read</code>.</li>
+</ul> <p>
+ <code>shell-maker-search-history</code>, coupled with your completion framework of choice, can be pretty handy. I happen to use Oleh Krehel's  <a href="https://github.com/abo-abo/swiper">ivy</a>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgae8cd47" class="outline-3">
+ <h3 id="orgae8cd47">shell-maker to make your own shells</h3>
+ <div class="outline-text-3" id="text-orgae8cd47">
+ <p>
+While ChatGPT is a popular service now, there are many others sprouting. Some tools are cloud-based, others local, proprietary, open source… In any case, it'd be great be able to hook on to them without much overhead.  <code>shell-maker</code> should help with that. The second   <code>shell-maker</code> client, after  <code>chatgpt-shell</code>, is  <code>dall-e-shell</code>.
+</p>
+
+
+ <div id="org9f140a1" class="figure">
+ <p> <img src="../images/chatgpt-shell-available-on-melpa/dalle.png" alt="dalle.png" width="70%"></img></p>
+</div>
+
+ <p>
+While I've built  <code>dall-e-shell</code>, it'd be great to see what others can do with  <code>shell-maker</code>. If you wire it up to anything, please get in touch ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+
+
+ <div id="outline-container-orgb8bf2e0" class="outline-3">
+ <h3 id="orgb8bf2e0"> <a href="https://indieweb.social/@xenodium/110087011082546281">dall-e-shell</a>,  <a href="https://indieweb.social/@xenodium/110130580337078002">ob-chatgpt-shell</a>, and  <a href="https://indieweb.social/@xenodium/110142796865197004">ob-dall-e-shell</a> (not yet on MELPA)</h3>
+ <div class="outline-text-3" id="text-orgb8bf2e0">
+ <p>
+While dall-e-shell, ob-chatgpt-shell, and ob-dall-e-shell share the  <code>chatgpt-shell</code>  <a href="https://github.com/xenodium/chatgpt-shell">repo</a>, they aren't yet available on MELPA. I hadn't worked out how to split and publish the lot (and keep the same repo). That is, until Chris Rayner helped me establish  <a href="https://xenodium.com/a-shell-maker/">shell-maker</a> as a chatgpt-shell dependency. I'll send a MELPA PR for the other packages soon.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org8aafbbc" class="outline-3">
+ <h3 id="org8aafbbc">How are you using  <code>chatgpt-shell</code>?</h3>
+ <div class="outline-text-3" id="text-org8aafbbc">
+ <p>
+Whether you are an existing  <code>chatgpt-shell</code> user, or would like to give things a try,  <a href="https://melpa.org/#/chatgpt-shell">installing from MELPA</a> should generally make things easier for ya. As I mentioned,  <code>chatgpt-shell</code> is a young package still. There are unexplored Emacs integrations out there. I'd love to hear about whatever you come up with ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/chatgpt-shell-available-on-melpa</link>
+  <guid isPermaLink="false">http://xenodium.com/chatgpt-shell-available-on-melpa</guid>
+  <pubDate>Tue, 25 Apr 2023 09:40:25 +0100</pubDate>
+</item>
 <item>
   <title>Recording and screenshotting windows: the lazy way</title>
   <description><![CDATA[<div id="content" class="content">

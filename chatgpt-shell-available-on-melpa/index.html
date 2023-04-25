@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-04-25 Tue 09:40 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>chatgpt-shell available on MELPA</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-chatgpt-shell-available-on-melpa" class="outline-2">
+<h2 id="chatgpt-shell-available-on-melpa"><span class="timestamp-wrapper"><span class="timestamp">25 April 2023</span></span> chatgpt-shell available on MELPA</h2>
+<div class="outline-text-2" id="text-chatgpt-shell-available-on-melpa">
+<p>
+About a month ago, I posted about an experiment to build <a href="https://xenodium.com/a-chatgpt-emacs-shell/">a ChatGPT Emacs shell</a> using <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint mode</a>. Since then, it's turned into a package of sorts, evolving with <a href="https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+">user feedback</a> and <a href="https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed">pull requests</a>.
+</p>
+
+<p>
+While <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> is a young package still, it seems useful enough to share more widely. As of today, <code>chatgpt-shell</code> is <a href="https://melpa.org/#/chatgpt-shell">available on MELPA</a>. Many thanks to <a href="https://github.com/riscy">Chris Rayner</a> for his MELPA guidance to get the package added.
+</p>
+
+
+<div id="org9e37f27" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/cyberpunk.gif" alt="cyberpunk.gif" width="70%" />
+</p>
+</div>
+
+<p>
+I'll cover some of the goodies included in the latest <code>chatgpt-shell</code>.
+</p>
+</div>
+
+<div id="outline-container-org122d1ed" class="outline-3">
+<h3 id="org122d1ed">Delegating to Org Babel</h3>
+<div class="outline-text-3" id="text-org122d1ed">
+<p>
+<code>chatgpt-shell</code> now evaluates Markdown source blocks by delegating to org babel. I've had success with a handful of languages. In some instances, some babel headers may need overriding in <code>chatgpt-shell-babel-headers</code>.
+</p>
+
+<p>
+Here's a Swift execution via babel, showing standard output.
+</p>
+
+
+<div id="orge2c57c8" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/swift.gif" alt="swift.gif" width="70%" />
+</p>
+</div>
+
+<p>
+In addition to standard output, <code>chatgpt-shell</code> can now render blocks generating images. Here's a rendered SwiftUI layout via <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a>.
+</p>
+
+
+<div id="orgb9e5495" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/swiftui.gif" alt="swiftui.gif" width="70%" />
+</p>
+</div>
+
+<p>
+Can also do diagrams. Here's a <a href="https://ditaa.sourceforge.net/">ditaa</a> action.
+</p>
+
+
+<div id="orgb00e2fe" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/ditaa.gif" alt="ditaa.gif" width="70%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org325b403" class="outline-3">
+<h3 id="org325b403">Renaming blocks</h3>
+<div class="outline-text-3" id="text-org325b403">
+<p>
+At times, ChatGPT may forget to label source blocks or maybe you just want to name it something else anyway&#x2026; You can now rename blocks at point.
+</p>
+
+
+<div id="orga26e716" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/rename.gif" alt="rename.gif" width="70%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3e06bcd" class="outline-3">
+<h3 id="org3e06bcd">Send prompt/region</h3>
+<div class="outline-text-3" id="text-org3e06bcd">
+<p>
+There are a handful of commands to send prompts from other buffers, including the region. For example <code>chatgpt-shell-explain-code</code>.
+</p>
+
+
+<div id="orgaa066df" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/explain-region.gif" alt="explain-region.gif" width="70%" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>chatgpt-shell-send-region</li>
+<li>chatgpt-shell-generate-unit-test</li>
+<li>chatgpt-shell-refactor-code</li>
+<li>chatgpt-shell-proofread-doc</li>
+<li>chatgpt-shell-eshell-summarize-last-command-output</li>
+<li>chatgpt-shell-eshell-whats-wrong-with-last-command</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge111f48" class="outline-3">
+<h3 id="orge111f48">Saving/restoring transcript</h3>
+<div class="outline-text-3" id="text-orge111f48">
+<p>
+You can save your current session to a transcript and restore later.
+</p>
+
+
+<div id="org82e5783" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/restore.gif" alt="restore.gif" width="70%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc0b3e68" class="outline-3">
+<h3 id="orgc0b3e68">History improvements</h3>
+<div class="outline-text-3" id="text-orgc0b3e68">
+<p>
+<a href="https://www.n16f.net/">Nicolas Martyanoff</a> has a great post on <a href="https://www.n16f.net/blog/making-ielm-more-comfortable/">making IELM More Comfortable</a>. A couple of improvements that stood out for me were:
+</p>
+
+
+<ul class="org-ul">
+<li>Making the command history persistent.</li>
+<li>Searching history with <code>shell-maker-search-history</code> / <code>M-r</code> via <code>completing-read</code>.</li>
+</ul>
+
+<p>
+<code>shell-maker-search-history</code>, coupled with your completion framework of choice, can be pretty handy. I happen to use Oleh Krehel's <a href="https://github.com/abo-abo/swiper">ivy</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgae8cd47" class="outline-3">
+<h3 id="orgae8cd47">shell-maker to make your own shells</h3>
+<div class="outline-text-3" id="text-orgae8cd47">
+<p>
+While ChatGPT is a popular service now, there are many others sprouting. Some tools are cloud-based, others local, proprietary, open source&#x2026; In any case, it'd be great be able to hook on to them without much overhead. <code>shell-maker</code> should help with that. The second  <code>shell-maker</code> client, after <code>chatgpt-shell</code>, is <code>dall-e-shell</code>.
+</p>
+
+
+<div id="org9f140a1" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/dalle.png" alt="dalle.png" width="70%" />
+</p>
+</div>
+
+<p>
+While I've built <code>dall-e-shell</code>, it'd be great to see what others can do with <code>shell-maker</code>. If you wire it up to anything, please get in touch (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgb8bf2e0" class="outline-3">
+<h3 id="orgb8bf2e0"><a href="https://indieweb.social/@xenodium/110087011082546281">dall-e-shell</a>, <a href="https://indieweb.social/@xenodium/110130580337078002">ob-chatgpt-shell</a>, and <a href="https://indieweb.social/@xenodium/110142796865197004">ob-dall-e-shell</a> (not yet on MELPA)</h3>
+<div class="outline-text-3" id="text-orgb8bf2e0">
+<p>
+While dall-e-shell, ob-chatgpt-shell, and ob-dall-e-shell share the <code>chatgpt-shell</code> <a href="https://github.com/xenodium/chatgpt-shell">repo</a>, they aren't yet available on MELPA. I hadn't worked out how to split and publish the lot (and keep the same repo). That is, until Chris Rayner helped me establish <a href="https://xenodium.com/a-shell-maker/">shell-maker</a> as a chatgpt-shell dependency. I'll send a MELPA PR for the other packages soon.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8aafbbc" class="outline-3">
+<h3 id="org8aafbbc">How are you using <code>chatgpt-shell</code>?</h3>
+<div class="outline-text-3" id="text-org8aafbbc">
+<p>
+Whether you are an existing <code>chatgpt-shell</code> user, or would like to give things a try, <a href="https://melpa.org/#/chatgpt-shell">installing from MELPA</a> should generally make things easier for ya. As I mentioned, <code>chatgpt-shell</code> is a young package still. There are unexplored Emacs integrations out there. I'd love to hear about whatever you come up with (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
