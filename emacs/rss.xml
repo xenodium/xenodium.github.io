@@ -6,7 +6,119 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 25 Apr 2023 09:55:40 +0100</lastBuildDate>
+<lastBuildDate>Fri, 28 Apr 2023 23:00:26 +0100</lastBuildDate>
+<item>
+  <title>Generating elisp org docs</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-generating-elisp-org-docs" class="outline-2">
+ <h2 id="generating-elisp-org-docs"> <span class="timestamp-wrapper"> <span class="timestamp">28 April 2023</span></span> Generating elisp org docs</h2>
+ <div class="outline-text-2" id="text-generating-elisp-org-docs">
+ <p>
+ <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>'s README includes few org tables documenting the package's  <a href="https://github.com/xenodium/chatgpt-shell#chatgpt-shell-customizations">customizable variables</a> as well as  <a href="https://github.com/xenodium/chatgpt-shell#chatgpt-shell-commands">available commands</a>. Don't worry, this isn't really another ChatGPT post.
+</p>
+
+ <p>
+Here's an extract of the docs table:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">| Custom variable                       | Description                                                 |
+|---------------------------------------+-------------------------------------------------------------|
+| chatgpt-shell-display-function        | Function to display the shell.                              |
+| chatgpt-shell-curl-additional-options | Additional options for `curl' command.                      |
+| chatgpt-shell-system-prompt           | The system message helps set the behavior of the assistant. |
+</pre>
+</div>
+
+ <p>
+While the table docs didn't take long to build manually, they quickly became out of sync with their elisp counterparts. Not ideal, as it'll require a little more careful maintenance in the future.
+</p>
+
+ <p>
+Emacs being the self-documenting editor that it is, I figured I should be able to extract customizable variables, commands, along with their respective docs, and generate these very same org tables.
+</p>
+
+ <p>
+I had no idea how to go about this, but  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html">apropos-variable</a> and  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html">apropos-command</a> surely knew where to fetch the details from. A peak into  <code>apropos.el</code> quickly got me on my way. Turns out  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Symbols.html#Definition-of-mapatoms">mapatoms</a> is just what I needed. It iterates over  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Symbols.html">obarray</a>, Emacs's symbol table. We can use it to extract the symbols we're after.
+</p>
+
+ <p>
+Since we're filtering symbols from  <code>chatgpt-shell</code>, we can start by including only those whose  <code>symbol-name</code> match "^chatgpt-shell". Out of all matching, we should only keep custom variables. We can use  <code>custom-variable-p</code> to check for that. This gives us all relevant variables. We can subsequently get each variable's corresponding docs using  <code>(get symbol 'variable-documentation)</code> and put it into a list.
+</p>
+
+ <p>
+Now, if we pull our org babel rabbit out of our Emacs magic hat, we can use  <code>:results table</code> to print the list as an org table. The source block powering this magic trick looks as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+begin_src emacs-lisp :results table :colnames '("Custom variable" "Description")
+  (let ((rows))
+    (mapatoms
+     (lambda (symbol)
+       (when (and (string-match "^chatgpt-shell"
+                                (symbol-name symbol))
+                  (custom-variable-p symbol))
+         (push `(,symbol
+                 ,(car
+                   (split-string
+                    (or (get (indirect-variable symbol)
+                             'variable-documentation)
+                        (get symbol 'variable-documentation)
+                        "")
+                    "\n")))
+               rows))))
+    rows)
+#+end_src
+</pre>
+</div>
+
+ <p>
+And just like that… we effortlessly get our elisp docs in an org table, straight from Emacs's symbol table.
+</p>
+
+
+ <div id="org589e525" class="figure">
+ <p> <img src="../images/generating-elisp-org-docs/docs.gif" alt="docs.gif" width="100%"></img></p>
+</div>
+
+ <p>
+It's worth noting that our snippet used  <code>indirect-variable</code> to resolve aliases but also limited descriptions to the first line in each docstring.
+</p>
+
+ <p>
+To build a similar table for interactive commands, we can use the following block.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+BEGIN_SRC emacs-lisp :results table :colnames '("Command" "Description")
+  (let ((rows))
+    (mapatoms
+     (lambda (symbol)
+       (when (and (string-match "^chatgpt-shell"
+                                (symbol-name symbol))
+                  (commandp symbol))
+         (push `(,symbol
+                 ,(car
+                   (split-string
+                    (or (documentation symbol t) "")
+                    "\n")))
+               rows))))
+    rows)
+#+END_SRC
+</pre>
+</div>
+
+ <p>
+You see? This post wasn't really about ChatGPT. Aren't you glad you stuck around? 😀
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/generating-elisp-org-docs</link>
+  <guid isPermaLink="false">http://xenodium.com/generating-elisp-org-docs</guid>
+  <pubDate>Fri, 28 Apr 2023 23:00:26 +0100</pubDate>
+</item>
 <item>
   <title>chatgpt-shell updates</title>
   <description><![CDATA[<div id="content" class="content">
@@ -861,6 +973,10 @@ Is Flat Habits helping you keep up with your habits? Please  <a href="https://ap
  <h2 id="a-chatgpt-emacs-shell"> <span class="timestamp-wrapper"> <span class="timestamp">21 March 2023</span></span> A ChatGPT Emacs shell</h2>
  <div class="outline-text-2" id="text-a-chatgpt-emacs-shell">
  <p>
+UPDATE:  <code>chatgpt-shell</code>  <a href="https://xenodium.com/chatgpt-shell-available-on-melpa/">has evolved a bit</a> and is now  <a href="https://melpa.org/#/chatgpt-shell">on MELPA</a>.
+</p>
+
+ <p>
 I had been meaning to give  <a href="https://openai.com/blog/chatgpt">ChatGPT</a> a good try, preferably from Emacs. As an  <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a> fan, ChatGPT seemed like the perfect fit for a shell interface of sorts. With that in mind, I set out to wire ChatGPT with Emacs's general command interpreter ( <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a>).
 </p>
 
@@ -888,7 +1004,7 @@ There are two bits of information needed in each request. The API key, which you
 </p>
 
 
- <div id="org164aa3e" class="figure">
+ <div id="org8a053bd" class="figure">
  <p> <img src="../images/a-chatgpt-emacs-shell/chatgpt.gif" alt="chatgpt.gif" width="80%"></img></p>
 </div>
 
