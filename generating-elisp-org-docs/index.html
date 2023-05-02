@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-04-28 Fri 22:59 -->
+<!-- 2023-05-02 Tue 08:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Generating elisp org docs</title>
@@ -452,7 +452,7 @@ And just like that&#x2026; we effortlessly get our elisp docs in an org table, s
 </p>
 
 
-<div id="org589e525" class="figure">
+<div id="org7b4e148" class="figure">
 <p><img src="../images/generating-elisp-org-docs/docs.gif" alt="docs.gif" width="100%" />
 </p>
 </div>
@@ -462,18 +462,22 @@ It's worth noting that our snippet used <code>indirect-variable</code> to resolv
 </p>
 
 <p>
-To build a similar table for interactive commands, we can use the following block.
+To build a similar table for interactive commands, we can use the following block (also including bindings).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-org">#+BEGIN_SRC emacs-lisp :results table :colnames '("Command" "Description")
+<pre class="src src-org">#+BEGIN_SRC emacs-lisp :results table :colnames '("Binding" "Command" "Description")
   (let ((rows))
     (mapatoms
      (lambda (symbol)
        (when (and (string-match "^chatgpt-shell"
                                 (symbol-name symbol))
                   (commandp symbol))
-         (push `(,symbol
+         (push `(,(mapconcat
+                   #'help--key-description-fontified
+                   (where-is-internal
+                    symbol shell-maker-mode-map nil nil (command-remapping symbol)) ", ")
+                 ,symbol
                  ,(car
                    (split-string
                     (or (documentation symbol t) "")
@@ -482,6 +486,12 @@ To build a similar table for interactive commands, we can use the following bloc
     rows)
 #+END_SRC
 </pre>
+</div>
+
+
+<div id="org8256a05" class="figure">
+<p><img src="../images/generating-elisp-org-docs/commands.gif" alt="commands.gif" width="100%" />
+</p>
 </div>
 
 <p>

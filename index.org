@@ -76,17 +76,21 @@ And just like that... we effortlessly get our elisp docs in an org table, straig
 
 It's worth noting that our snippet used =indirect-variable= to resolve aliases but also limited descriptions to the first line in each docstring.
 
-To build a similar table for interactive commands, we can use the following block.
+To build a similar table for interactive commands, we can use the following block (also including bindings).
 
 #+begin_src org
-  ,#+BEGIN_SRC emacs-lisp :results table :colnames '("Command" "Description")
+  ,#+BEGIN_SRC emacs-lisp :results table :colnames '("Binding" "Command" "Description")
     (let ((rows))
       (mapatoms
        (lambda (symbol)
          (when (and (string-match "^chatgpt-shell"
                                   (symbol-name symbol))
                     (commandp symbol))
-           (push `(,symbol
+           (push `(,(mapconcat
+                     #'help--key-description-fontified
+                     (where-is-internal
+                      symbol shell-maker-mode-map nil nil (command-remapping symbol)) ", ")
+                   ,symbol
                    ,(car
                      (split-string
                       (or (documentation symbol t) "")
@@ -95,6 +99,9 @@ To build a similar table for interactive commands, we can use the following bloc
       rows)
   ,#+END_SRC
 #+end_src
+
+#+ATTR_HTML: :width 100%
+[[file:images/generating-elisp-org-docs/commands.gif]]
 
 You see? This post wasn't really about ChatGPT. Aren't you glad you stuck around? 😀
 
