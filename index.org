@@ -1,6 +1,79 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-05-18 Thu] Sprinkle me logs
+:PROPERTIES:
+:CUSTOM_ID: sprinkle-me-logs
+:END:
+At times, basic prints/logs are just about the right debugging strategy. Sure, we have debuggers and [[https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop][REPLs]] which are super useful, but sometimes you just know that sprinkling your code with a handful of temporary prints/logs will get you enough info to fix an issue.
+
+I must confess, my temporary print statements are fairly uninspiring. Sometimes I log the name of the method/function, but I also resort to less creative options like =print("Yay")= or =print("Got here")=.
+
+My laziness and lack of creativity knows no boundaries, so if I need multiple unique entries, I often copy, paste, and append numbers to my entries: =print("Yay 2")=, =print("Yay 3")=, =print("Yay 4")=... I know, are you judging yet?
+
+So rather than develop the creative muscle, I've decided to lean on laziness and old habits, so let's make old habit more efficient :) I no longer want to copy, paste, and increment my uncreative log statements. Instead, I'll let Emacs do it for me!
+
+#+ATTR_HTML: :width 70%
+[[file:images/sprinkle-me-logs/log-elisp.gif]]
+
+There isn't a whole lot to the implementation. It searches the current buffer for other instances of the same logging string and captures the largest counter found. It subsequently prints the same string with the counter incremented. This can be done in a few lines of elisp, but I figure I wanted some additional features like auto indenting and changing the logging string when invoked with a prefix.
+
+#+begin_src emacs-lisp :lexical no
+  (defvar ar/unique-log-word "Yay")
+
+  (defun ar/insert-unique-log-word (prefix)
+    "Inserts `ar/unique-log-word' incrementing counter.
+
+  With PREFIX, change `ar/unique-log-word'."
+    (interactive "P")
+    (let* ((word (cond (prefix
+                        (setq ar/unique-log-word
+                              (read-string "Log word: ")))
+                       ((region-active-p)
+                        (setq ar/unique-log-word
+                             (buffer-substring (region-beginning)
+                                               (region-end))))
+                       (t
+                        ar/unique-log-word)))
+           (config
+            (cond
+             ((equal major-mode 'emacs-lisp-mode)
+              (cons (format "(message \"%s: \\([0-9]+\\)\")" word)
+                    (format "(message \"%s: %%d\")" word)))
+             ((equal major-mode 'swift-mode)
+              (cons (format "print(\"%s: \\([0-9]+\\)\")" word)
+                    (format "print(\"%s: %%d\")" word)))
+             (t
+              (error "%s not supported" major-mode))))
+           (match-regexp (car config))
+           (format-string (cdr config))
+           (max-num 0)
+           (case-fold-search nil))
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward match-regexp nil t)
+          (when (> (string-to-number (match-string 1)) max-num)
+            (setq max-num (string-to-number (match-string 1))))))
+      (unless (looking-at-p "^ *$")
+        (end-of-line))
+      (insert (if (looking-at-p "^ *$")
+                  (format format-string (1+ max-num))
+                (concat "\n" (format format-string (1+ max-num)))))
+      (call-interactively 'indent-for-tab-command)))
+#+end_src
+
+I want to be lazy in other languages, so the function can now be extended to support other languages. Here's the Swift counterpart.
+
+#+ATTR_HTML: :width 70%
+[[file:images/sprinkle-me-logs/log-swift.gif]]
+
+Since I sometimes log function names, I figured making it region-aware would help with that.
+
+#+ATTR_HTML: :width 80%
+[[file:images/sprinkle-me-logs/log-selection.gif]]
+
+I'm sure there's a package out there that does something similar, but I figure this would be a fun little elisp hack.
+
 * [2023-05-11 Thu] dwim-shell-command on Windows + upload to 0x0.st
 :PROPERTIES:
 :CUSTOM_ID: dwim-shell-command-now-on-windows
