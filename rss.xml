@@ -6,7 +6,116 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 11 May 2023 09:59:08 +0100</lastBuildDate>
+<lastBuildDate>Thu, 18 May 2023 20:02:11 +0100</lastBuildDate>
+<item>
+  <title>Sprinkle me logs</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-sprinkle-me-logs" class="outline-2">
+ <h2 id="sprinkle-me-logs"> <span class="timestamp-wrapper"> <span class="timestamp">18 May 2023</span></span> Sprinkle me logs</h2>
+ <div class="outline-text-2" id="text-sprinkle-me-logs">
+ <p>
+At times, basic prints/logs are just about the right debugging strategy. Sure, we have debuggers and  <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPLs</a> which are super useful, but sometimes you just know that sprinkling your code with a handful of temporary prints/logs will get you enough info to fix an issue.
+</p>
+
+ <p>
+I must confess, my temporary print statements are fairly uninspiring. Sometimes I log the name of the method/function, but I also resort to less creative options like  <code>print("Yay")</code> or  <code>print("Got here")</code>.
+</p>
+
+ <p>
+My laziness and lack of creativity knows no boundaries, so if I need multiple unique entries, I often copy, paste, and append numbers to my entries:  <code>print("Yay 2")</code>,  <code>print("Yay 3")</code>,  <code>print("Yay 4")</code>… I know, are you judging yet?
+</p>
+
+ <p>
+So rather than develop the creative muscle, I've decided to lean on laziness and old habits, so let's make old habit more efficient :) I no longer want to copy, paste, and increment my uncreative log statements. Instead, I'll let Emacs do it for me!
+</p>
+
+
+ <div id="orgb9d57bf" class="figure">
+ <p> <img src="../images/sprinkle-me-logs/log-elisp.gif" alt="log-elisp.gif" width="70%"></img></p>
+</div>
+
+ <p>
+There isn't a whole lot to the implementation. It searches the current buffer for other instances of the same logging string and captures the largest counter found. It subsequently prints the same string with the counter incremented. This can be done in a few lines of elisp, but I figure I wanted some additional features like auto indenting and changing the logging string when using a prefix.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defvar</span>  <span style="color: #333333;">ar/unique-log-word</span>  <span style="color: #183691;">"Yay"</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/insert-unique-log-word</span> (prefix)
+   <span style="color: #183691;">"Inserts `</span> <span style="color: #0086b3;">ar/unique-log-word</span> <span style="color: #183691;">' incrementing counter.</span>
+
+ <span style="color: #183691;">With PREFIX, change `</span> <span style="color: #0086b3;">ar/unique-log-word</span> <span style="color: #183691;">'."</span>
+  (<span style="color: #a71d5d;">interactive</span>  <span style="color: #183691;">"P"</span>)
+  (<span style="color: #a71d5d;">let*</span> ((word (<span style="color: #a71d5d;">cond</span> (prefix
+                      (<span style="color: #a71d5d;">setq</span> ar/unique-log-word
+                            (read-string  <span style="color: #183691;">"Log word: "</span>)))
+                     ((region-active-p)
+                      (<span style="color: #a71d5d;">setq</span> ar/unique-log-word
+                           (buffer-substring (region-beginning)
+                                             (region-end))))
+                     (t
+                      ar/unique-log-word)))
+         (config
+          (<span style="color: #a71d5d;">cond</span>
+           ((equal major-mode 'emacs-lisp-mode)
+            (cons (format  <span style="color: #183691;">"(message \"%s: </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[0-9]+</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">\")"</span> word)
+                  (format  <span style="color: #183691;">"(message \"%s: %%d\")"</span> word)))
+           ((equal major-mode 'swift-mode)
+            (cons (format  <span style="color: #183691;">"print(\"%s: </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[0-9]+</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">\")"</span> word)
+                  (format  <span style="color: #183691;">"print(\"%s: %%d\")"</span> word)))
+           (t
+            (<span style="color: #333333;">error</span>  <span style="color: #183691;">"%s not supported"</span> major-mode))))
+         (match-regexp (car config))
+         (format-string (cdr config))
+         (max-num 0)
+         (case-fold-search nil))
+    (<span style="color: #a71d5d;">save-excursion</span>
+      (goto-char (point-min))
+      (<span style="color: #a71d5d;">while</span> (re-search-forward match-regexp nil t)
+        (<span style="color: #a71d5d;">when</span> (> (string-to-number (match-string 1)) max-num)
+          (<span style="color: #a71d5d;">setq</span> max-num (string-to-number (match-string 1))))))
+    (<span style="color: #a71d5d;">unless</span> (looking-at-p  <span style="color: #183691;">"^ *$"</span>)
+      (end-of-line))
+    (insert (<span style="color: #a71d5d;">if</span> (looking-at-p  <span style="color: #183691;">"^ *$"</span>)
+                (format format-string (1+ max-num))
+              (concat  <span style="color: #183691;">"\n"</span> (format format-string (1+ max-num)))))
+    (call-interactively 'indent-for-tab-command)))
+</pre>
+</div>
+
+ <p>
+I want to be lazy in other languages, so the function can now be extended to support other languages. Here's the Swift counterpart.
+</p>
+
+
+ <div id="org686440f" class="figure">
+ <p> <img src="../images/sprinkle-me-logs/log-swift.gif" alt="log-swift.gif" width="70%"></img></p>
+</div>
+
+ <p>
+Since I sometimes log function names, I figured making it region-aware would help with that.
+</p>
+
+
+ <div id="org364e989" class="figure">
+ <p> <img src="../images/sprinkle-me-logs/log-selection.gif" alt="log-selection.gif" width="80%"></img></p>
+</div>
+
+ <p>
+I'm sure there's a package out there that does something similar, but I figure this would be a fun little elisp hack.
+</p>
+
+ <p>
+Happy logging!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/sprinkle-me-logs</link>
+  <guid isPermaLink="false">http://xenodium.com/sprinkle-me-logs</guid>
+  <pubDate>Thu, 18 May 2023 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>dwim-shell-command on Windows + upload to 0x0.st</title>
   <description><![CDATA[<div id="content" class="content">
