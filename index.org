@@ -31,10 +31,14 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
                               (read-string "Log word: ")))
                        ((region-active-p)
                         (setq ar/unique-log-word
-                             (buffer-substring (region-beginning)
-                                               (region-end))))
+                              (buffer-substring (region-beginning)
+                                                (region-end))))
+                       (ar/unique-log-word
+                        ar/unique-log-word)
                        (t
-                        ar/unique-log-word)))
+                        (string-trim
+                         (shell-command-to-string
+                          "grep -E '^[a-z]{5}$' /usr/share/dict/words | shuf -n 1")))))
            (config
             (cond
              ((equal major-mode 'emacs-lisp-mode)
@@ -75,6 +79,13 @@ Since I sometimes log function names, I figured making it region-aware would hel
 I'm sure there's a package out there that does something similar, but I figure this would be a fun little elisp hack.
 
 Happy logging!
+
+** Update
+
+Set =ar/unique-log-word= to nil and let it generate a random word. Maybe I get to learn new words as I debug ;)
+
+#+ATTR_HTML: :width 80%
+[[file:images/sprinkle-me-logs/word.gif]]
 
 * [2023-05-11 Thu] dwim-shell-command on Windows + upload to 0x0.st
 :PROPERTIES:

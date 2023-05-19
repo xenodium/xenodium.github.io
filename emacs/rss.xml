@@ -31,7 +31,7 @@ So rather than develop the creative muscle, I've decided to lean on laziness and
 </p>
 
 
- <div id="orgb9d57bf" class="figure">
+ <div id="orga1ab1e8" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-elisp.gif" alt="log-elisp.gif" width="70%"></img></p>
 </div>
 
@@ -52,10 +52,14 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
                             (read-string  <span style="color: #183691;">"Log word: "</span>)))
                      ((region-active-p)
                       (<span style="color: #a71d5d;">setq</span> ar/unique-log-word
-                           (buffer-substring (region-beginning)
-                                             (region-end))))
+                            (buffer-substring (region-beginning)
+                                              (region-end))))
+                     (ar/unique-log-word
+                      ar/unique-log-word)
                      (t
-                      ar/unique-log-word)))
+                      (string-trim
+                       (shell-command-to-string
+                         <span style="color: #183691;">"grep -E '^[a-z]{5}$' /usr/share/dict/words | shuf -n 1"</span>)))))
          (config
           (<span style="color: #a71d5d;">cond</span>
            ((equal major-mode 'emacs-lisp-mode)
@@ -89,7 +93,7 @@ I want to be lazy in other languages, so the function can now be extended to sup
 </p>
 
 
- <div id="org686440f" class="figure">
+ <div id="org7d723b5" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-swift.gif" alt="log-swift.gif" width="70%"></img></p>
 </div>
 
@@ -98,7 +102,7 @@ Since I sometimes log function names, I figured making it region-aware would hel
 </p>
 
 
- <div id="org364e989" class="figure">
+ <div id="org9b97688" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-selection.gif" alt="log-selection.gif" width="80%"></img></p>
 </div>
 
@@ -110,11 +114,25 @@ I'm sure there's a package out there that does something similar, but I figure t
 Happy logging!
 </p>
 </div>
+
+ <div id="outline-container-org2a80cf8" class="outline-3">
+ <h3 id="org2a80cf8">Update</h3>
+ <div class="outline-text-3" id="text-org2a80cf8">
+ <p>
+Set  <code>ar/unique-log-word</code> to nil and let it generate a random word. Maybe I get to learn new words as I debug ;)
+</p>
+
+
+ <div id="orgdb9666c" class="figure">
+ <p> <img src="../images/sprinkle-me-logs/word.gif" alt="word.gif" width="80%"></img></p>
+</div>
+</div>
+</div>
 </div>
 </div>]]></description>
   <link>http://xenodium.com/sprinkle-me-logs</link>
   <guid isPermaLink="false">http://xenodium.com/sprinkle-me-logs</guid>
-  <pubDate>Thu, 18 May 2023 20:00:03 +0100</pubDate>
+  <pubDate>Thu, 18 May 2023 00:00:00 +0100</pubDate>
 </item>
 <item>
   <title>dwim-shell-command on Windows + upload to 0x0.st</title>
