@@ -1,6 +1,91 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-05-25 Thu] Deleting from Emacs sequence vars
+:PROPERTIES:
+:CUSTOM_ID: deleting-from-emacs-sequence-vars
+:END:
+Adding hooks and setting variables is core to customizing Emacs. Take a major mode like
+=emacs-lisp-mode= as an example. To customize its behaviour, one may add a hook function to =emacs-lisp-mode-hook= or if your a little lazy while experimenting, you may add a lambda.
+
+#+begin_src emacs-lisp :lexical no
+  (add-hook 'emacs-lisp-mode-hook
+            #'my/emacs-lisp-mode-config)
+
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (message "I woz ere")))
+#+end_src
+
+=emacs-lisp-mode-hook='s content would subsequently look as follows:
+
+#+begin_src emacs-lisp :lexical no
+  '(my/emacs-lisp-mode-config
+    (lambda nil
+      (message "I woz ere"))
+    ert--activate-font-lock-keywords
+    easy-escape-minor-mode
+    lisp-extra-font-lock-global-mode)
+#+end_src
+
+Maybe =my/emacs-lisp-mode-config= didn't work out for us and we'd like to remove it. We can use =remove-hook= for that and evaluate something like:
+
+#+begin_src emacs-lisp :lexical no
+  (remove-hook 'emacs-lisp-mode-hook #'my/emacs-lisp-mode-config)
+#+end_src
+
+The lambda can be removed too, but you ought to be careful in using the same lambda body.
+
+#+begin_src emacs-lisp :lexical no
+  (remove-hook 'emacs-lisp-mode-hook
+               (lambda ()
+                 (message "I woz tere")))
+#+end_src
+
+There are other ways to remove the lambdas, but we're digressing here... We typically have to write these throwaway snippets to undo our experiments. What if we just had a handy helper always available to remove items from sequences? After all, hooks are just lists (sequences).
+
+#+ATTR_HTML: :width 70%
+[[file:images/deleting-from-emacs-sequence-vars/removed-lambda.gif]]
+
+While the interactive command can likely be simplified further, I tried to optimize for ergonomic usage. For example, =completing-read= gives us a way narrow down whichever variable we'd like to modify as well as the item we'd like to remove. =seqp= is also handy, as we filter out noise by automatically removing any variable that's not a sequence.
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/remove-from-list-variable ()
+    (interactive)
+    (let* ((var (intern
+                 (completing-read "From variable: "
+                                  (let (symbols)
+                                    (mapatoms
+                                     (lambda (sym)
+                                       (when (and (boundp sym)
+                                                  (seqp (symbol-value sym)))
+                                         (push sym symbols))))
+                                    symbols) nil t)))
+           (values (mapcar (lambda (item)
+                             (setq item (prin1-to-string item))
+                             (concat (truncate-string-to-width
+                                      (nth 0 (split-string item "\n"))
+                                      (window-body-width))
+                                     (propertize item 'invisible t)))
+                           (symbol-value var)))
+           (index (progn
+                    (when (seq-empty-p values) (error "Already empty"))
+                    (seq-position values (completing-read "Delete: " values nil t)))))
+      (unless index (error "Eeek. Something's up."))
+      (set var (append (seq-take (symbol-value var) index)
+                       (seq-drop (symbol-value var) (1+ index))))
+      (message "Deleted: %s" (truncate-string-to-width
+                              (seq-elt values index)
+                              (- (window-body-width) 9)))))
+#+end_src
+
+Hooks are just an example of lists we can delete from. I recently used the same command on =display-buffer-alist=.
+
+#+ATTR_HTML: :width 80%
+[[file:images/deleting-from-emacs-sequence-vars/alist.gif]]
+
+While this has been a fun excecise, I can't help but think that I'm likely re-inventing the wheel here. Is there something already built-in that I'm missing?
+
 * [2023-05-18 Thu] Sprinkle me logs
 :PROPERTIES:
 :CUSTOM_ID: sprinkle-me-logs
