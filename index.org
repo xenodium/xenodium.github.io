@@ -86,6 +86,49 @@ Hooks are just an example of lists we can delete from. I recently used the same 
 
 While this has been a fun excecise, I can't help but think that I'm likely re-inventing the wheel here. Is there something already built-in that I'm missing?
 
+** Update
+
+[[https://www.reddit.com/user/github-alphapapa/][alphapapa]] suggested some generalizations that would provide [[https://www.reddit.com/r/emacs/comments/13rvehx/comment/jlni3fc/?utm_source=share&utm_medium=web2x&context=3][an editing buffer of sorts]]. This is a neat idea, using familiar key bindigs =C-c C-c= to save and =C-c C-k= to bail.
+
+#+ATTR_HTML: :width 70%
+[[file:images/deleting-from-emacs-sequence-vars/edit.gif]]
+
+Beware, I haven't tested the code with a diverse set of list items, so there's a chance of corrupting the variable content. Improvements to the code are totally welcome.
+
+#+begin_src emacs-lisp :lexical no
+  ;;; -*- lexical-binding: t; -*-
+
+  (defun ar/edit-list-variable ()
+    (interactive)
+    (let* ((var (intern
+                 (completing-read "From variable: "
+                                  (let (symbols)
+                                    (mapatoms
+                                     (lambda (sym)
+                                       (when (and (boundp sym)
+                                                  (seqp (symbol-value sym)))
+                                         (push sym symbols))))
+                                    symbols) nil t)))
+           (values (string-join
+                    (mapcar #'prin1-to-string (symbol-value var))
+                    "\n")))
+      (with-current-buffer (get-buffer-create "*eval elisp*")
+        (emacs-lisp-mode)
+        (local-set-key (kbd "C-c C-c")
+                       (lambda ()
+                         (interactive)
+                         (eval-buffer)
+                         (kill-this-buffer)
+                         (message "Saved: %s" var)))
+        (local-set-key (kbd "C-c C-k") 'kill-this-buffer)
+        (erase-buffer)
+        (insert (format "(setq %s\n `(%s))" var values))
+        (mark-whole-buffer)
+        (indent-region (point-min) (point-max))
+        (deactivate-mark)
+        (switch-to-buffer (current-buffer)))))
+#+end_src
+
 * [2023-05-18 Thu] Sprinkle me logs
 :PROPERTIES:
 :CUSTOM_ID: sprinkle-me-logs

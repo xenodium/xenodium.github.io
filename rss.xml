@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 25 May 2023 23:23:40 +0100</lastBuildDate>
+<lastBuildDate>Fri, 26 May 2023 09:28:01 +0100</lastBuildDate>
 <item>
   <title>Deleting from Emacs sequence vars</title>
   <description><![CDATA[<div id="content" class="content">
@@ -68,7 +68,7 @@ There are other ways to remove the lambdas, but we're digressing here… We typi
 </p>
 
 
- <div id="orgee68493" class="figure">
+ <div id="orgdd6a33c" class="figure">
  <p> <img src="../images/deleting-from-emacs-sequence-vars/removed-lambda.gif" alt="removed-lambda.gif" width="70%"></img></p>
 </div>
 
@@ -112,13 +112,66 @@ Hooks are just an example of lists we can delete from. I recently used the same 
 </p>
 
 
- <div id="orgea858b9" class="figure">
+ <div id="org60d68b0" class="figure">
  <p> <img src="../images/deleting-from-emacs-sequence-vars/alist.gif" alt="alist.gif" width="80%"></img></p>
 </div>
 
  <p>
 While this has been a fun excecise, I can't help but think that I'm likely re-inventing the wheel here. Is there something already built-in that I'm missing?
 </p>
+</div>
+
+ <div id="outline-container-org0d4c8d2" class="outline-3">
+ <h3 id="org0d4c8d2">Update</h3>
+ <div class="outline-text-3" id="text-org0d4c8d2">
+ <p>
+ <a href="https://www.reddit.com/user/github-alphapapa/">alphapapa</a> suggested some generalizations that would provide  <a href="https://www.reddit.com/r/emacs/comments/13rvehx/comment/jlni3fc/?utm_source=share&utm_medium=web2x&context=3">an editing buffer of sorts</a>. This is a neat idea, using familiar key bindigs  <code>C-c C-c</code> to save and  <code>C-c C-k</code> to bail.
+</p>
+
+
+ <div id="orgffee535" class="figure">
+ <p> <img src="../images/deleting-from-emacs-sequence-vars/edit.gif" alt="edit.gif" width="70%"></img></p>
+</div>
+
+ <p>
+Beware, I haven't tested the code with a diverse set of list items, so there's a chance of corrupting the variable content. Improvements to the code are totally welcome.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #969896;">;;; </span> <span style="color: #969896;">-*- lexical-binding: t; -*-</span>
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/edit-list-variable</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((var (intern
+               (completing-read  <span style="color: #183691;">"From variable: "</span>
+                                (<span style="color: #a71d5d;">let</span> (symbols)
+                                  (mapatoms
+                                   (<span style="color: #a71d5d;">lambda</span> (sym)
+                                     (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (boundp sym)
+                                                (seqp (symbol-value sym)))
+                                       (<span style="color: #a71d5d;">push</span> sym symbols))))
+                                  symbols)  <span style="color: #333333;">nil t)))</span>
+         (values (string-join
+                  (mapcar #'prin1-to-string (symbol-value var))
+                   <span style="color: #183691;">"\n"</span>)))
+    (<span style="color: #a71d5d;">with-current-buffer</span> (get-buffer-create  <span style="color: #183691;">"*eval elisp*"</span>)
+      (emacs-lisp-mode)
+      (local-set-key (kbd  <span style="color: #183691;">"C-c C-c"</span>)
+                     (<span style="color: #a71d5d;">lambda</span> ()
+                       (<span style="color: #a71d5d;">interactive</span>)
+                       (eval-buffer)
+                       (kill-this-buffer)
+                       (message  <span style="color: #183691;">"Saved: %s"</span> var)))
+      (local-set-key (kbd  <span style="color: #183691;">"C-c C-k"</span>) 'kill-this-buffer)
+      (erase-buffer)
+      (insert (format  <span style="color: #183691;">"(setq %s\n `(%s))"</span> var values))
+      (mark-whole-buffer)
+      (indent-region (point-min) (point-max))
+      (deactivate-mark)
+      (switch-to-buffer (current-buffer)))))
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>]]></description>
