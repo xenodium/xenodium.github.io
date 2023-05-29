@@ -190,6 +190,12 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
              ((equal major-mode 'swift-mode)
               (cons (format "print(\"%s: \\([0-9]+\\)\")" word)
                     (format "print(\"%s: %%s\")" word)))
+             ((equal major-mode 'ada-mode)
+              (cons (format "Ada.Text_Io.Put_Line (\"%s: \\([0-9]+\\)\");" word)
+                    (format "Ada.Text_Io.Put_Line (\"%s: %%s\");" word)))
+             ((equal major-mode 'c++-mode)
+              (cons (format "std::cout << \"%s: \\([0-9]+\\)\" << std::endl;" word)
+                    (format "std::cout << \"%s: %%s\" << std::endl;" word)))
              (t
               (error "%s not supported" major-mode))))
            (match-regexp (car config))
@@ -216,6 +222,8 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
       (call-interactively 'indent-for-tab-command)))
 #+end_src
 
+Note: This snippet may evolve independently of this post. For the latest, chech my [[https://github.com/xenodium/dotsies][Emacs config]]'s [[https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-prog.el][fe-prog.el]].
+
 I want to be lazy in other languages, so the function can now be extended to support other languages. Here's the Swift counterpart.
 
 #+ATTR_HTML: :width 70%
@@ -230,13 +238,15 @@ I'm sure there's a package out there that does something similar, but I figure t
 
 Happy logging!
 
-** Update
+** Update 1
 
 Set =ar/unique-log-word= to nil and let it generate a random word. Maybe I get to learn new words as I debug ;)
 
 #+ATTR_HTML: :width 80%
 [[file:images/sprinkle-me-logs/word.gif]]
 
+** Update 2
+Added Ada and C++ support, thanks to [[https://www.emacs.dyerdwelling.family/emacs/20230523204523-emacs--insert-unique-log-message/][James Dyer's post]].
 * [2023-05-11 Thu] dwim-shell-command on Windows + upload to 0x0.st
 :PROPERTIES:
 :CUSTOM_ID: dwim-shell-command-now-on-windows

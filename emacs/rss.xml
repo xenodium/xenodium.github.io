@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 26 May 2023 09:27:53 +0100</lastBuildDate>
+<lastBuildDate>Mon, 29 May 2023 13:38:55 +0100</lastBuildDate>
 <item>
   <title>Deleting from Emacs sequence vars</title>
   <description><![CDATA[<div id="content" class="content">
@@ -68,7 +68,7 @@ There are other ways to remove the lambdas, but we're digressing here… We typi
 </p>
 
 
- <div id="orgee68493" class="figure">
+ <div id="org06e2330" class="figure">
  <p> <img src="../images/deleting-from-emacs-sequence-vars/removed-lambda.gif" alt="removed-lambda.gif" width="70%"></img></p>
 </div>
 
@@ -112,7 +112,7 @@ Hooks are just an example of lists we can delete from. I recently used the same 
 </p>
 
 
- <div id="orgea858b9" class="figure">
+ <div id="org8c6c197" class="figure">
  <p> <img src="../images/deleting-from-emacs-sequence-vars/alist.gif" alt="alist.gif" width="80%"></img></p>
 </div>
 
@@ -232,7 +232,7 @@ So rather than develop the creative muscle, I've decided to lean on laziness and
 </p>
 
 
- <div id="org46062e9" class="figure">
+ <div id="org483bc51" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-elisp.gif" alt="log-elisp.gif" width="70%"></img></p>
 </div>
 
@@ -267,6 +267,12 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
            ((equal major-mode 'swift-mode)
             (cons (format  <span style="color: #183691;">"print(\"%s: </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[0-9]+</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">\")"</span> word)
                   (format  <span style="color: #183691;">"print(\"%s: %%s\")"</span> word)))
+           ((equal major-mode 'ada-mode)
+            (cons (format  <span style="color: #183691;">"Ada.Text_Io.Put_Line (\"%s: </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[0-9]+</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">\");"</span> word)
+                  (format  <span style="color: #183691;">"Ada.Text_Io.Put_Line (\"%s: %%s\");"</span> word)))
+           ((equal major-mode 'c++-mode)
+            (cons (format  <span style="color: #183691;">"std::cout << \"%s: </span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">(</span> <span style="color: #183691;">[0-9]+</span> <span style="color: #969896;">\\</span> <span style="color: #a71d5d;">)</span> <span style="color: #183691;">\" << std::endl;"</span> word)
+                  (format  <span style="color: #183691;">"std::cout << \"%s: %%s\" << std::endl;"</span> word)))
            (t
             (<span style="color: #333333;">error</span>  <span style="color: #183691;">"%s not supported"</span> major-mode))))
          (match-regexp (car config))
@@ -295,11 +301,15 @@ There isn't a whole lot to the implementation. It searches the current buffer fo
 </div>
 
  <p>
+Note: This snippet may evolve independently of this post. For the latest, chech my  <a href="https://github.com/xenodium/dotsies">Emacs config</a>'s  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-prog.el">fe-prog.el</a>.
+</p>
+
+ <p>
 I want to be lazy in other languages, so the function can now be extended to support other languages. Here's the Swift counterpart.
 </p>
 
 
- <div id="org7d723b5" class="figure">
+ <div id="org02f8e0d" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-swift.gif" alt="log-swift.gif" width="70%"></img></p>
 </div>
 
@@ -308,7 +318,7 @@ Since I sometimes log function names, I figured making it region-aware would hel
 </p>
 
 
- <div id="org9b97688" class="figure">
+ <div id="orgf65c4bc" class="figure">
  <p> <img src="../images/sprinkle-me-logs/log-selection.gif" alt="log-selection.gif" width="80%"></img></p>
 </div>
 
@@ -321,17 +331,25 @@ Happy logging!
 </p>
 </div>
 
- <div id="outline-container-org13e2fc2" class="outline-3">
- <h3 id="org13e2fc2">Update</h3>
- <div class="outline-text-3" id="text-org13e2fc2">
+ <div id="outline-container-orga4a4ae9" class="outline-3">
+ <h3 id="orga4a4ae9">Update 1</h3>
+ <div class="outline-text-3" id="text-orga4a4ae9">
  <p>
 Set  <code>ar/unique-log-word</code> to nil and let it generate a random word. Maybe I get to learn new words as I debug ;)
 </p>
 
 
- <div id="orgb8b560e" class="figure">
+ <div id="org029dfc8" class="figure">
  <p> <img src="../images/sprinkle-me-logs/word.gif" alt="word.gif" width="80%"></img></p>
 </div>
+</div>
+</div>
+
+ <div id="outline-container-org8478b92" class="outline-3">
+ <h3 id="org8478b92">Update 2</h3>
+ <div class="outline-text-3" id="text-org8478b92">
+ <p>
+Added Ada and C++ support, thanks to  <a href="https://www.emacs.dyerdwelling.family/emacs/20230523204523-emacs--insert-unique-log-message/">James Dyer's post</a>.</p>
 </div>
 </div>
 </div>
