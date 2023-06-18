@@ -6,7 +6,180 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 29 May 2023 13:38:55 +0100</lastBuildDate>
+<lastBuildDate>Sun, 18 Jun 2023 18:23:00 +0100</lastBuildDate>
+<item>
+  <title>noweb: the lesser known org babel glue</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-noweb-more-glue-for-your-org-toolbox" class="outline-2">
+ <h2 id="noweb-more-glue-for-your-org-toolbox"> <span class="timestamp-wrapper"> <span class="timestamp">18 June 2023</span></span> noweb: the lesser known org babel glue</h2>
+ <div class="outline-text-2" id="text-noweb-more-glue-for-your-org-toolbox">
+ <p>
+While  <a href="https://orgmode.org/">Org</a> babel's  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> isn't something I've frequently used for literate programming, its simplicity makes it rather versatile to glue all sorts of babel things I hadn't previously considered.
+</p>
+
+ <p>
+The idea is simple. Add a placeholder like  <code><<other-block>></code> to an  <a href="https://orgmode.org/manual/Working-with-Source-Code.html">org babel</a> source block, and it will be automatically replaced (verbatim) with the content (or result) of referred block before execution. You'll also need the  <code>:noweb yes</code> header argument.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+NAME: other-block
+#+begin_src swift
+  print("Hello 0")
+#+end_src
+
+#+RESULTS: other-block
+: Hello 0
+
+#+BEGIN_SRC swift :noweb yes
+  <<other-block>>
+  print("Hello 1")
+#+END_SRC
+
+#+RESULTS:
+: Hello 0
+: Hello 1
+</pre>
+</div>
+
+ <p>
+Since  <code><<other-block>></code> is replaced with the content of said block, at execution time, the block is effectively equivalent to executing:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">print</span>(<span style="color: #183691;">"Hello 0"</span>)
+ <span style="color: #a71d5d;">print</span>(<span style="color: #183691;">"Hello 1"</span>)
+</pre>
+</div>
+
+ <pre class="example">
+Hello 0
+Hello 1
+</pre>
+
+
+ <p>
+Why is this so versatile? Org babel can include/execute all sorts of languages, so you can mix and match the result from one language and massage it to appear as the body of another block using the same (or different) language.
+</p>
+
+ <p>
+I was recently asked  <a href="https://github.com/xenodium/chatgpt-shell/issues/102">how to include the result from one babel block in another</a> using  <a href="https://github.com/xenodium/chatgpt-shell/#chatgpt-org-babel">ob-chatgpt-shell</a>. While the initial question was looking for a solution involving variables, we can use noweb to achieve a similar goal.
+</p>
+
+ <p>
+Note that in this case, I'll be using  <code><<hello()>></code>, with  <code>()</code>, to refer to  <code>#+RESULTS:</code> rather than the source block itself.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+NAME: hello
+#+BEGIN_SRC chatgpt-shell
+Say hello in spanish
+#+END_SRC
+
+#+RESULTS: hello
+Hola
+
+#+BEGIN_SRC chatgpt-shell :noweb yes
+<<hello()>>
+What does the previous line say verbatim?
+#+END_SRC
+</pre>
+</div>
+
+ <p>
+Executing the block
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-chatgpt-shell"><<hello()>>
+What does the previous line say verbatim?
+</pre>
+</div>
+
+ <p>
+Gives us
+</p>
+
+ <pre class="example">
+The previous line says "Hola".
+</pre>
+
+
+ <p>
+On a similar note, I was asked if the results from a previous source block could be  <a href="https://indieweb.social/@kickingvegas@sfba.social/110562099134297469">fed to a Swift Chart block</a> using  <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a>.
+</p>
+
+ <p>
+While I'm new to  <a href="https://developer.apple.com/documentation/Charts">Swift Charts</a>, I do love glueing things via Emacs lisp. I figured I could write a little elisp to generate random data and feed it to a SwiftUI block via  <code><<data()>></code>. The result is pretty neat, based on Apple's  <a href="https://developer.apple.com/documentation/charts/linemark">LineMark example</a>.
+</p>
+
+
+ <div id="org71f1814" class="figure">
+ <p> <img src="../images/noweb-more-glue-for-your-org-toolbox/data-chart.gif" alt="data-chart.gif" width="95%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-org">#+NAME: data
+#+begin_src emacs-lisp :lexical no
+  (concat (mapconcat (lambda (n)
+                       (format "MonthlyHoursOfSunshine(city: \"Seattle\", month: %d, hoursOfSunshine: %d),"
+                               n (random 100)))
+                     (number-sequence 1 20) "\n")
+          "\n"
+          (mapconcat (lambda (n)
+                       (format "MonthlyHoursOfSunshine(city: \"Cupertino\", month: %d, hoursOfSunshine: %d),"
+                               n (random 100)))
+                     (number-sequence 1 20) "\n"))
+#+end_src
+
+#+begin_src swiftui :results file :noweb yes
+  import Charts
+
+  struct MonthlyHoursOfSunshine: Identifiable {
+    var city: String
+    var date: Date
+    var hoursOfSunshine: Double
+    var id = UUID()
+
+    init(city: String, month: Int, hoursOfSunshine: Double) {
+      let calendar = Calendar.autoupdatingCurrent
+      self.city = city
+      self.date = calendar.date(from: DateComponents(year: 2020, month: month))!
+      self.hoursOfSunshine = hoursOfSunshine
+    }
+  }
+
+  struct ContentView: View {
+    var data: [MonthlyHoursOfSunshine] = [
+<<data()>>
+    ]
+    var body: some View {
+      Chart(data) {
+        LineMark(
+          x: .value("Month", $0.date),
+          y: .value("Hours of Sunshine", $0.hoursOfSunshine)
+        )
+        .foregroundStyle(by: .value("City", $0.city))
+      }
+      .frame(minWidth: 800, minHeight: 300)
+      .padding()
+      .colorScheme(.dark)
+    }
+  }
+#+end_src
+</pre>
+</div>
+
+ <p>
+While I've shown fairly basic usages of noweb, we can accomplish some nifty integrations. Check out the  <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb reference syntax</a> for more examples and additional header arguments like  <code>tangle</code>,  <code>strip-tangle</code>, and others.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/noweb-more-glue-for-your-org-toolbox</link>
+  <guid isPermaLink="false">http://xenodium.com/noweb-more-glue-for-your-org-toolbox</guid>
+  <pubDate>Sun, 18 Jun 2023 18:23:00 +0100</pubDate>
+</item>
 <item>
   <title>Deleting from Emacs sequence vars</title>
   <description><![CDATA[<div id="content" class="content">
