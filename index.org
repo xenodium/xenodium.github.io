@@ -5,9 +5,9 @@
 :PROPERTIES:
 :CUSTOM_ID: noweb-more-glue-for-your-org-toolbox
 :END:
-While [[https://orgmode.org/][Org]] babel's [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] isn't something I've frequently used for literate programming, it's simplicity make it rather versatile to glue all sorts of babel things I hadn't previously considered.
+While [[https://orgmode.org/][Org]] babel's [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] isn't something I've frequently used for literate programming, its simplicity makes it rather versatile to glue all sorts of babel things I hadn't previously considered.
 
-The idea is simple. Add a placeholder like =<<other-block>>= to an [[https://orgmode.org/manual/Working-with-Source-Code.html][org babel]] source block, and it will be automatically replaced (verbatim) with the content (or result) of =other-block= before execution. You'll also need the =:noweb yes= header argument.
+The idea is simple. Add a placeholder like =<<other-block>>= to an [[https://orgmode.org/manual/Working-with-Source-Code.html][org babel]] source block, and it will be automatically replaced (verbatim) with the content (or result) of referred block before execution. You'll also need the =:noweb yes= header argument.
 
 #+begin_src org
   ,#+NAME: other-block
@@ -43,7 +43,7 @@ Why is this so versatile? Org babel can include/execute all sorts of languages, 
 
 I was recently asked [[https://github.com/xenodium/chatgpt-shell/issues/102][how to include the result from one babel block in another]] using [[https://github.com/xenodium/chatgpt-shell/#chatgpt-org-babel][ob-chatgpt-shell]]. While the initial question was looking for a solution involving variables, we can use noweb to achieve a similar goal.
 
-Note that in this case, I'll be using =<<hello()>>= (with =()=) to refer to =#+RESULTS:= rather than the source block itself.
+Note that in this case, I'll be using =<<hello()>>=, with =()=, to refer to =#+RESULTS:= rather than the source block itself.
 
 #+begin_src org
   ,#+NAME: hello
@@ -72,9 +72,9 @@ Gives us
 #+RESULTS:
 : The previous line says "Hola".
 
-On a similar note, I was asked if the results from a previous src block could be [[https://indieweb.social/@kickingvegas@sfba.social/110562099134297469][fed to a Swift Chart block]] using [[https://github.com/xenodium/ob-swiftui][ob-swiftui]].
+On a similar note, I was asked if the results from a previous source block could be [[https://indieweb.social/@kickingvegas@sfba.social/110562099134297469][fed to a Swift Chart block]] using [[https://github.com/xenodium/ob-swiftui][ob-swiftui]].
 
-While I'm new to [[https://developer.apple.com/documentation/Charts][Swift Charts]], I love glueing things via Emacs lisp. I figured I could a little elisp to generate random data, and feed it to a SwiftUI block via =<<data()>>= using noweb. The result is pretty neat. It's based on Apple's [[https://developer.apple.com/documentation/charts/linemark][LineMark example]].
+While I'm new to [[https://developer.apple.com/documentation/Charts][Swift Charts]], I do love glueing things via Emacs lisp. I figured I could write a little elisp to generate random data and feed it to a SwiftUI block via =<<data()>>=. The result is pretty neat, based on Apple's [[https://developer.apple.com/documentation/charts/linemark][LineMark example]].
 
 #+ATTR_HTML: :width 95%
 [[file:images/noweb-more-glue-for-your-org-toolbox/data-chart.gif]]
