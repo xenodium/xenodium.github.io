@@ -1,6 +1,94 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-06-29 Thu] Stitching images from the comfort of dired
+:PROPERTIES:
+:CUSTOM_ID: joining-images-from-the-comfort-of-dired
+:END:
+I recently wanted a few images stitched together. A perfect job for [[https://imagemagick.org/][ImageMagick]]. A quick search yielded the magical incantation:
+
+#+begin_src sh
+  convert image1.jpg image2.jpg image3.jpg +append joined.jpg
+#+end_src
+
+Great, now I know, but I'll rarely use it and will soon forget it. I may as well add it to my [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][repository]] of [[https://en.wikipedia.org/wiki/DWIM][DWIM]] command line utilities, wrapped in a convenient Emacs function, applicable from different contexts... [[https://xenodium.com/emacs-dwim-do-what-i-mean/][know what I mean]]? 🙃
+
+I built [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] for this purpose. You can take the above command and easily turn it into an interactive Emacs command with something like the following:
+
+#+begin_src emacs-lisp :lexical no
+  (require 'dwim-shell-command)
+
+  (defun dwim-shell-commands-join-images-horizontally ()
+    "Join all marked images horizontally as a single image."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Join images horizontally"
+     "convert -verbose '<<*>>' +append 'joined.jpg'"
+     :utils "convert"))
+#+end_src
+
+You can select as many images as you'd like from the comfort of your dired and /make the ImageMagick happen/.
+
+#+ATTR_HTML: :width 95%
+[[file:images/joining-images-from-the-comfort-of-dired/burgers.gif]]
+
+The snippet does the job just fine, but we can make it smarter. For starters, let's not hardcode the output filename. We'll ask the user instead. While we're asking, let's offer a default filename, but let's not assume the output extension is =.jpg=. Let's guess based on the image selection. While we're at it, let's not override the output file if already exists. Uniquify it.
+
+Most of the above can be achieved by either using [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] helpers or its templating language. For example, =<<joined.png(u)>>= ensures that if =joined.png= already exists, it automatically generates =joined(1).png= instead.
+
+#+begin_src emacs-lisp :lexical no
+  (require 'dwim-shell-command)
+
+  (defun dwim-shell-commands-join-images-horizontally ()
+    "Join all marked images horizontally as a single image."
+    (interactive)
+    (let ((filename (format "joined.%s"
+                            (or (seq-first (dwim-shell-command--file-extensions)) "png"))))
+      (dwim-shell-command-on-marked-files
+       "Join images horizontally"
+       (format "convert -verbose '<<*>>' +append '<<%s(u)>>'"
+               (dwim-shell-command-read-file-name
+                (format "Join as image named (default \"%s\"): " filename)
+                :default filename))
+       :utils "convert")))
+#+end_src
+
+Here's the new horizontal command in action...
+
+#+ATTR_HTML: :width 95%
+[[file:images/joining-images-from-the-comfort-of-dired/burger_row_x1.5_optimized.gif]]
+
+Notice how this time we didn't mark the images using =dired-mark=, typically bound to =m=. Instead, we made our selection using the region. Also, if you haven't gotten your junk food fix yet, here's the fries equivalent ;)
+
+#+ATTR_HTML: :width 95%
+[[file:images/joining-images-from-the-comfort-of-dired/fries_row_x1.5_optimized.gif]]
+
+We'll rinse all and repeat to get the vertical command equivalent. I know, I know, there's fair amount of duplication but c'est la vie.
+
+#+begin_src emacs-lisp :lexical no
+  (require 'dwim-shell-command)
+
+  (defun dwim-shell-commands-join-images-vertically ()
+    "Join all marked images vertically as a single image."
+    (interactive)
+    (let ((filename (format "joined.%s"
+                            (or (seq-first (dwim-shell-command--file-extensions)) "png"))))
+      (dwim-shell-command-on-marked-files
+       "Join images vertically"
+       (format "convert -verbose '<<*>>' -append '<<%s(u)>>'"
+               (dwim-shell-command-read-file-name
+                (format "Join as image named (default \"%s\"): " filename)
+                :default filename))
+       :utils "convert")))
+#+end_src
+
+...and for our grand finale, we'll vertically join our burgers and fries. Behold!
+
+#+ATTR_HTML: :width 95%
+[[file:images/joining-images-from-the-comfort-of-dired/finale_x1.5_optimized.gif]]
+
+These commands are now part of [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. To get them, load the optional commands via =(require 'dwim-shell-commands)=.
+
 * [2023-06-18 Sun] noweb: the lesser known org babel glue
 :PROPERTIES:
 :CUSTOM_ID: noweb-more-glue-for-your-org-toolbox
