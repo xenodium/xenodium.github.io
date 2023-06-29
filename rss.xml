@@ -6,7 +6,138 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 18 Jun 2023 18:23:07 +0100</lastBuildDate>
+<lastBuildDate>Thu, 29 Jun 2023 22:04:34 +0100</lastBuildDate>
+<item>
+  <title>Stitching images from the comfort of dired</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-joining-images-from-the-comfort-of-dired" class="outline-2">
+ <h2 id="joining-images-from-the-comfort-of-dired"> <span class="timestamp-wrapper"> <span class="timestamp">29 June 2023</span></span> Stitching images from the comfort of dired</h2>
+ <div class="outline-text-2" id="text-joining-images-from-the-comfort-of-dired">
+ <p>
+I recently wanted a few images stitched together. A perfect job for  <a href="https://imagemagick.org/">ImageMagick</a>. A quick search yielded the magical incantation:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">convert image1.jpg image2.jpg image3.jpg +append joined.jpg
+</pre>
+</div>
+
+ <p>
+Great, now I know, but I'll rarely use it and will soon forget it. I may as well add it to my  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">repository</a> of  <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a> command line utilities, wrapped in a convenient Emacs function, applicable from different contexts…  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">know what I mean</a>? 🙃
+</p>
+
+ <p>
+I built  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> for this purpose. You can take the above command and easily turn it into an interactive Emacs command with something like the following:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-command</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-join-images-horizontally</span> ()
+   <span style="color: #183691;">"Join all marked images horizontally as a single image."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Join images horizontally"</span>
+    <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">' +append '</span> <span style="color: #0086b3;">joined.jpg</span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+
+ <p>
+You can select as many images as you'd like from the comfort of your dired and  <i>make the ImageMagick happen</i>.
+</p>
+
+
+ <div id="org7e0ef50" class="figure">
+ <p> <img src="../images/joining-images-from-the-comfort-of-dired/burgers.gif" alt="burgers.gif" width="95%"></img></p>
+</div>
+
+ <p>
+The snippet does the job just fine, but we can make it smarter. For starters, let's not hardcode the output filename. We'll ask the user instead. While we're asking, let's offer a default filename, but let's not assume the output extension is  <code>.jpg</code>. Let's guess based on the image selection. While we're at it, let's not override the output file if already exists. Uniquify it.
+</p>
+
+ <p>
+Most of the above can be achieved by either using  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> helpers or its templating language. For example,  <code><<joined.png(u)>></code> ensures that if  <code>joined.png</code> already exists, it automatically generates  <code>joined(1).png</code> instead.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-command</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-join-images-horizontally</span> ()
+   <span style="color: #183691;">"Join all marked images horizontally as a single image."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((filename (format  <span style="color: #183691;">"joined.%s"</span>
+                          (<span style="color: #a71d5d;">or</span> (seq-first (dwim-shell-command--file-extensions))  <span style="color: #183691;">"png"</span>))))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Join images horizontally"</span>
+     (format  <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">' +append '<<%s(u)>>'"</span>
+             (dwim-shell-command-read-file-name
+              (format  <span style="color: #183691;">"Join as image named (default \"%s\"): "</span> filename)
+               <span style="color: #a71d5d;">:default</span> filename))
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>)))
+</pre>
+</div>
+
+ <p>
+Here's the new horizontal command in action…
+</p>
+
+
+ <div id="orga168a86" class="figure">
+ <p> <img src="../images/joining-images-from-the-comfort-of-dired/burger_row_x1.5_optimized.gif" alt="burger_row_x1.5_optimized.gif" width="95%"></img></p>
+</div>
+
+ <p>
+Notice how this time we didn't mark the images using  <code>dired-mark</code>, typically bound to  <code>m</code>. Instead, we made our selection using the region. Also, if you haven't gotten your junk food fix yet, here's the fries equivalent ;)
+</p>
+
+
+ <div id="orgf7342a0" class="figure">
+ <p> <img src="../images/joining-images-from-the-comfort-of-dired/fries_row_x1.5_optimized.gif" alt="fries_row_x1.5_optimized.gif" width="95%"></img></p>
+</div>
+
+ <p>
+We'll rinse all and repeat to get the vertical command equivalent. I know, I know, there's fair amount of duplication but c'est la vie.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-command</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-join-images-vertically</span> ()
+   <span style="color: #183691;">"Join all marked images vertically as a single image."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((filename (format  <span style="color: #183691;">"joined.%s"</span>
+                          (<span style="color: #a71d5d;">or</span> (seq-first (dwim-shell-command--file-extensions))  <span style="color: #183691;">"png"</span>))))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Join images vertically"</span>
+     (format  <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<*>></span> <span style="color: #183691;">' -append '<<%s(u)>>'"</span>
+             (dwim-shell-command-read-file-name
+              (format  <span style="color: #183691;">"Join as image named (default \"%s\"): "</span> filename)
+               <span style="color: #a71d5d;">:default</span> filename))
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>)))
+</pre>
+</div>
+
+ <p>
+…and for our grand finale, we'll vertically join our burgers and fries. Behold!
+</p>
+
+
+ <div id="org0de8026" class="figure">
+ <p> <img src="../images/joining-images-from-the-comfort-of-dired/finale_x1.5_optimized.gif" alt="finale_x1.5_optimized.gif" width="95%"></img></p>
+</div>
+
+ <p>
+These commands are now part of  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>. To get them, load the optional commands via  <code>(require 'dwim-shell-commands)</code>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/joining-images-from-the-comfort-of-dired</link>
+  <guid isPermaLink="false">http://xenodium.com/joining-images-from-the-comfort-of-dired</guid>
+  <pubDate>Thu, 29 Jun 2023 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>noweb: the lesser known org babel glue</title>
   <description><![CDATA[<div id="content" class="content">
