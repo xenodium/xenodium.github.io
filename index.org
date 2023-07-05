@@ -1,6 +1,98 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-07-05 Wed] Duplicate this!
+:PROPERTIES:
+:CUSTOM_ID: duplicate-this
+:END:
+[[http://www.dyerdwelling.family/][James Dyer]] has a nice [[https://www.emacs.dyerdwelling.family/emacs/20230606213531-emacs--dired-duplicate-here-revisited/][post]] sharing his frequent [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] need to duplicate files. He offers a solution using a custom interactive command. His use-case resonated with me.
+
+Similarly, James' recommendation to bind his file-duplicating command to =C-c d= [1] sent a signal to my brain triggering [[https://twitter.com/bbatsov][Bozhidar Batsov]]'s =crux-duplicate-current-line-or-region=.
+
+=crux-duplicate-current-line-or-region= is part of a "collection of Ridiculously useful extensions for Emacs" (yeah that's [[https://github.com/bbatsov/crux][crux]]). The command itself does what it says on the tin.
+
+Let's duplicate the current line.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-line.gif]]
+
+Now let's duplicate the current region.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-region.gif]]
+
+Since I already have a well-internalized key-binding duplicating lines/regions in every buffer, I could extend dired to also support this feature with almost zero adoption effort.
+
+In case you haven't noticed, I've made it a [[https://youtu.be/urcL86UpqZc?t=177][part-time job]] to make command line utilities easily accessible from Emacs ([[https://xenodium.com/joining-images-from-the-comfort-of-dired/][1]] [[https://xenodium.com/emacs-dwim-shell-command/][2]] [[https://xenodium.com/emacs-password-protect-current-pdf-revisited/][3]] [[https://xenodium.com/dwim-shell-command-now-on-windows/][4]] [[https://xenodium.com/recordscreenshot-windows-the-lazy-way/][5]] [[https://xenodium.com/emacs-ffmpeg-and-macos-alias-commands/][6]] [[https://xenodium.com/emacs-quick-kill-process/][7]] [[https://xenodium.com/hey-emacs-change-the-default-macos-app-for/][8]] [[https://xenodium.com/hey-emacs-where-did-i-take-that-photo/][9]] [[https://xenodium.com/emacs-open-with-macos-app/][10]] [[https://xenodium.com/emacs-macos-sharing-dwim-style-improved/][11]] [[https://xenodium.com/emacs-macos-share-from-dired-dwim-style/][12]] [[https://xenodium.com/emacs-reveal-in-finder-dwim-style/][13]] [[https://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/][14]] [[https://xenodium.com/dwim-shell-command-with-template-prompts/][15]] [[https://xenodium.com/seamless-command-line-utils/][16]] [[https://xenodium.com/dwim-shell-command-video-streams/][17]] [[https://xenodium.com/dwim-shell-command-improvements/][18]] [[https://xenodium.com/dwim-shell-command-on-melpa/][19]] [[https://xenodium.com/emacs-dwim-shell-command-multi-language/][20]] [[https://xenodium.com/png-to-icns-emacs-dwim-style/][21]]) via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]. Partly because it's fairly quick and partly 'cause it's fun.
+
+Jame's post gave me yet another opportunity to exercise my errrm part-time job. This time, duplicating files. All I need is the [[https://www.man7.org/linux/man-pages/man1/cp.1.html][cp]] utility and a template:
+
+#+begin_src sh
+  cp -R '<<f>>' '<<f(u)>>'
+#+end_src
+
+I seldom type these template's myself when I want to execute a command (via =M-x dwim-shell-command=). I typically wrap these templates in interactive commands, making them easily accessible via =M-x= and your favorite completion framework. I happen to use [[https://github.com/abo-abo/swiper][ivy]].
+
+#+begin_src emacs-lisp :lexical no
+  (require 'dwim-shell-command)
+
+  (defun dwim-shell-commands-duplicate ()
+    "Duplicate file(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Duplicate file(s)."
+     "cp -R '<<f>>' '<<f(u)>>'"
+     :utils "cp"))
+#+end_src
+
+There's nothing much to the command. Most logic is handled by the template, replacing =<<f>>= with the current file and =<<f(u)>>= with a uniquified version of it. Having said this, there's a bunch of free [[https://xenodium.com/emacs-dwim-do-what-i-mean/][DWIM]] love that kicks in, courtesy of the =dwim-shell-command= package by yours truly. Let's give our new =dwim-shell-commands-duplicate= command a spin.
+
+Like =crux-duplicate-current-line-or-region= duplicates the current line, our new command duplicates the current dired file.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-file.gif]]
+
+Got multiple files to duplicate? Like =crux-duplicate-current-line-or-region=, we can use the region for a similar purpose.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-files.gif]]
+
+While we have been using the region to duplicate adjacent files, we can also mark specific files.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-marked.gif]]
+
+Our =cp -R '<<f>>' '<<f(u)>>'= template uses the =-R= (recursive) flag, so we get another freebie. In addition to files, we can also duplicate directories.
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-dirs.gif]]
+
+Lastly, because we're on a DWIM train, if your current buffer happens to be visiting a file, you can =M-x dwim-shell-commands-duplicate= the current file to duplicate it. You're automatically dropped to a dired buffer, with point on the new file (à la [[https://emacsredux.com/blog/2013/09/24/dired-jump/][dired-jump]]).
+
+#+ATTR_HTML: :width 95%
+[[file:images/duplicate-this/duplicate-buffer.gif]]
+
+While duplicating files using a template was a mere =cp -R '<<f>>' '<<f(u)>>'= away, we get a bunch of free DWIM magic applied to a handful of use-cases and contexts. What made the file-duplicating use-case extra special is that it maps almost exactly to an equivalent text command. Keep the same key bindings and we almost get a "[[https://endlessparentheses.com/hungry-delete-mode.html][free feature]]".
+
+#+begin_src emacs-lisp :lexical no
+  (use-package crux
+    :ensure t
+    :commands crux-open-with
+    :bind
+    (("C-c d" . crux-duplicate-current-line-or-region)))
+
+  (use-package dwim-shell-command
+    :ensure t
+    :bind (:map dired-mode-map
+                ("C-c d" . dwim-shell-commands-duplicate)))
+#+end_src
+
+You can find my ever-growing list of similar commands over at [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]] (the optional part of the package). Got some nifty usages? Would love to check 'em out. [[https://indieweb.social/@xenodium][Get in touch]].
+
+Like this or [[https://xenodium.com/][other content]]? [[https://github.com/sponsors/xenodium][✨Sponsor✨ via GitHub Sponsors]].
+
+[1]: I actually use =C-x C-d= for =crux-duplicate-current-line-or-region= but same same...
+
 * [2023-06-29 Thu] Stitching images from the comfort of dired
 :PROPERTIES:
 :CUSTOM_ID: joining-images-from-the-comfort-of-dired
