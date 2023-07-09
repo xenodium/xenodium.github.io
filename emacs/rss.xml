@@ -6,7 +6,212 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 07 Jul 2023 17:56:09 +0100</lastBuildDate>
+<lastBuildDate>Sun, 09 Jul 2023 14:21:28 +0100</lastBuildDate>
+<item>
+  <title>chatgpt-shell v0.60.1 updates</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-chatgpt-shell-v0601-updates" class="outline-2">
+ <h2 id="chatgpt-shell-v0601-updates"> <span class="timestamp-wrapper"> <span class="timestamp">09 July 2023</span></span> chatgpt-shell v0.60.1 updates</h2>
+ <div class="outline-text-2" id="text-chatgpt-shell-v0601-updates">
+ <p>
+Back in April, I shared  <a href="https://xenodium.com/chatgpt-shell-available-on-melpa/">chatgpt-shell updates</a>, showcasing  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> features. It's been a little while, so here's an update with the latest additions.
+</p>
+</div>
+
+ <div id="outline-container-org9329d35" class="outline-3">
+ <h3 id="org9329d35">Multi-session support</h3>
+ <div class="outline-text-3" id="text-org9329d35">
+ <p>
+You can run multiple shell instances independently configured to use different versions or system prompts.
+</p>
+
+ <p>
+This was biggest recent change. Please report issues.
+</p>
+
+
+ <div id="orgdfe9415" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/cat-turtle.gif" alt="cat-turtle.gif" width="95%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgdd9302c" class="outline-3">
+ <h3 id="orgdd9302c">Display system prompt and version</h3>
+ <div class="outline-text-3" id="text-orgdd9302c">
+ <p>
+The current shell's version and system prompt are now displayed more prominently in both the shell prompt and buffer name.
+</p>
+
+
+ <div id="org47e7590" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/display.png" alt="display.png" width="90%"></img></p>
+</div>
+
+ <p>
+With multi-session support, displaying shell details in the buffer name becomes more important as it makes it easier shells across your buffer list.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org408d9f6" class="outline-3">
+ <h3 id="org408d9f6">Rename shell buffers</h3>
+ <div class="outline-text-3" id="text-org408d9f6">
+ <p>
+While buffer names are now automatically derived, one can also use  <code>chatgpt-shell-rename-buffer</code> to use custom buffer names.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orge1cc23e" class="outline-3">
+ <h3 id="orge1cc23e">ob-chatgpt-shell improvements</h3>
+ <div class="outline-text-3" id="text-orge1cc23e">
+ <p>
+Use  <code>:temperature</code> to specify the  <a href="https://platform.openai.com/docs/api-reference/completions%5C%20/create#completions/create-temperature">temperature</a>.
+</p>
+
+ <p>
+Use  <code>:context CONTEXT-NAME</code> to pick and choose which source blocks to aggregate as context. Thank you  <a href="https://github.com/jtmoulia">Thomas Moulia</a>.
+</p>
+
+ <p>
+Use  <code>:preflight t</code> to debug  <code>ob-chatgpt-shell</code> execution.
+</p>
+
+
+ <div id="org4aabdca" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/preflight.png" alt="preflight.png" width="60%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org1c28eb3" class="outline-3">
+ <h3 id="org1c28eb3">chatgpt-shell-write-git-commit</h3>
+ <div class="outline-text-3" id="text-org1c28eb3">
+ <p>
+Adds  <code>chatgpt-shell-write-git-commit</code>, so you can generate commit messages using the current region. Thank you  <a href="https://github.com/bigsky77">Simon Judd</a>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgc16cfe9" class="outline-3">
+ <h3 id="orgc16cfe9">Approximate context length</h3>
+ <div class="outline-text-3" id="text-orgc16cfe9">
+ <p>
+ <code>chatgpt-shell</code> now uses  <code>chatgpt-shell--approximate-context-length</code> to approximate the context size and discard history if necessary. This is pretty experimental but seems to work well enough. It's enabled by default to get some feedback. Please file bugs if needed or send PRs to improve.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgeae3869" class="outline-3">
+ <h3 id="orgeae3869"> <code>S-<return></code> for multiline input</h3>
+ <div class="outline-text-3" id="text-orgeae3869">
+ <p>
+In addition to  <code>C-J</code> to insert multi-line input,  <code>S-<return></code> is also supported. Thank you  <a href="https://github.com/shouya">shouya</a> for the submission.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgf344589" class="outline-3">
+ <h3 id="orgf344589">Welcome message</h3>
+ <div class="outline-text-3" id="text-orgf344589">
+ <p>
+A welcome message now makes the help much more discoverable for new or sporadic users. Thank you  <a href="https://github.com/shouya">shouya</a> for the suggestion.
+</p>
+
+
+ <div id="orgc86994b" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/welcome.png" alt="welcome.png" width="75%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orged0396f" class="outline-3">
+ <h3 id="orged0396f">Help me</h3>
+ <div class="outline-text-3" id="text-orged0396f">
+ <p>
+While the  <a href="https://github.com/xenodium/chatgpt-shell">README</a> documents the shells and Emacs is  <a href="https://www.emacswiki.org/emacs/SelfDocumentation">self-documenting</a>, we now have a  <code>help</code> command to make things a little more discoverable.
+</p>
+
+
+ <div id="orgb6bbfb8" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/help.png" alt="help.png" width="99%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orge68fdf3" class="outline-3">
+ <h3 id="orge68fdf3">Hello chatgpt-shell-mode and dall-e-shell-mode</h3>
+ <div class="outline-text-3" id="text-orge68fdf3">
+ <p>
+Both  <code>chatgpt-shell</code> and  <code>dall-e-shell</code> are both based on  <code>shell-maker</code> and until recently both shared  <code>shell-maker-mode</code> as their major mode. This didn't play well with yasnippet. Both shells now enable independent major modes:  <code>chatgpt-shell-mode</code> and  <code>dall-e-shell-mode</code>. Thank you  <a href="https://github.com/djliden">Daniel Liden</a> for the proposal.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org9bc3d04" class="outline-3">
+ <h3 id="org9bc3d04">Saving transcript customizations</h3>
+ <div class="outline-text-3" id="text-org9bc3d04">
+ <p>
+Make transcript saving more customizable via  <code>shell-maker-transcript-default-path</code> and  <code>shell-maker-transcript-default-filename</code>. Thank you  <a href="https://github.com/gnusupport">gnusupport</a>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org107f0ea" class="outline-3">
+ <h3 id="org107f0ea">New ChatGPT model versions</h3>
+ <div class="outline-text-3" id="text-org107f0ea">
+ <p>
+New OpenAI model versions were recently released and added to chatgpt-shell:  <code>gpt-3.5-turbo-0613</code> and  <code>gpt-4-0613</code>. Thanks you  <a href="https://github.com/suzuki">Norio Suzuki</a>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgfddbf69" class="outline-3">
+ <h3 id="orgfddbf69">Load awesome prompts</h3>
+ <div class="outline-text-3" id="text-orgfddbf69">
+ <p>
+ <code>M-x chatgpt-shell-load-awesome-prompts</code> to download and import curated prompts from  <a href="https://github.com/f/awesome-chatgpt-prompts">awesome-chatgpt-prompts</a>. Thank you  <a href="https://github.com/dangom">Daniel Gomez</a>.
+</p>
+
+
+ <div id="org41fe168" class="figure">
+ <p> <img src="../images/chatgpt-shell-v0601-updates/awesome.png" alt="awesome.png" width="75%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org1521597" class="outline-3">
+ <h3 id="org1521597">ob-async</h3>
+ <div class="outline-text-3" id="text-org1521597">
+ <p>
+We had reports that ob-chatgpt-shell didn't play nice with  <a href="https://github.com/astahlman/ob-async">ob-async</a>. Thank you  <a href="https://github.com/wmedrano">William Medrano</a> for the solution.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-orgd62abbc" class="outline-3">
+ <h3 id="orgd62abbc">Configurable prompts</h3>
+ <div class="outline-text-3" id="text-orgd62abbc">
+ <p>
+Functions like  <code>chatgpt-shell-describe-code</code> ask ChatGPT to describe the code in region. These functions used to be hardcoded English prompts. These are now configurable, so users can tweak or translate if preferred. Thank you  <a href="https://github.com/suzuki">Norio Suzuki</a>.
+</p>
+
+ <ul class="org-ul"> <li> <code>chatgpt-shell-prompt-header-describe-code</code></li>
+ <li> <code>chatgpt-shell-prompt-header-refactor-code</code></li>
+ <li> <code>chatgpt-shell-prompt-header-generate-unit-test</code></li>
+ <li> <code>chatgpt-shell-prompt-header-proofread-region</code></li>
+ <li> <code>chatgpt-shell-prompt-header-whats-wrong-with-last-command</code></li>
+ <li> <code>chatgpt-shell-prompt-header-eshell-summarize-last-command-output</code></li>
+</ul></div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/chatgpt-shell-v0601-updates</link>
+  <guid isPermaLink="false">http://xenodium.com/chatgpt-shell-v0601-updates</guid>
+  <pubDate>Sun, 09 Jul 2023 14:21:28 +0100</pubDate>
+</item>
 <item>
   <title>Duplicate this!</title>
   <description><![CDATA[<div id="content" class="content">
@@ -66,11 +271,11 @@ I seldom type these template's myself when I want to execute a command (via  <co
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-command</span>)
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-command</span>)
 
-( <span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-duplicate</span> ()
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-duplicate</span> ()
    <span style="color: #183691;">"Duplicate file(s)."</span>
-  ( <span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">interactive</span>)
   (dwim-shell-command-on-marked-files
     <span style="color: #183691;">"Duplicate file(s)."</span>
     <span style="color: #183691;">"cp -R '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '<<f(u)>>'"</span>
@@ -132,20 +337,20 @@ While duplicating files using a template was a mere  <code>cp -R '<<f>>' '<<f(u)
 </p>
 
  <div class="org-src-container">
- <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">crux</span>
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">crux</span>
    <span style="color: #a71d5d;">:ensure</span> t
    <span style="color: #a71d5d;">:commands</span> crux-open-with
    <span style="color: #a71d5d;">:bind</span>
-  (( <span style="color: #183691;">"C-c d"</span> . crux-duplicate-current-line-or-region)))
+  ((<span style="color: #183691;">"C-c d"</span> . crux-duplicate-current-line-or-region)))
 
-( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">dwim-shell-command</span>
+(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">dwim-shell-command</span>
    <span style="color: #a71d5d;">:ensure</span> t
-   <span style="color: #a71d5d;">:bind</span> ( <span style="color: #a71d5d;">:map</span> dired-mode-map
-              ( <span style="color: #183691;">"C-c d"</span> . dwim-shell-commands-duplicate))
+   <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> dired-mode-map
+              (<span style="color: #183691;">"C-c d"</span> . dwim-shell-commands-duplicate))
    <span style="color: #a71d5d;">:config</span>
    <span style="color: #969896;">;; </span> <span style="color: #969896;">Loads all my own dwim shell commands</span>
    <span style="color: #969896;">;; </span> <span style="color: #969896;">(including `</span> <span style="color: #0086b3;">dwim-shell-commands-duplicate</span> <span style="color: #969896;">')</span>
-  ( <span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-commands</span>))
+  (<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">dwim-shell-commands</span>))
 </pre>
 </div>
 

@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-07-09 Sun 14:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>chatgpt-shell v0.60.1 updates</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-chatgpt-shell-v0601-updates" class="outline-2">
+<h2 id="chatgpt-shell-v0601-updates"><span class="timestamp-wrapper"><span class="timestamp">09 July 2023</span></span> chatgpt-shell v0.60.1 updates</h2>
+<div class="outline-text-2" id="text-chatgpt-shell-v0601-updates">
+<p>
+Back in April, I shared <a href="https://xenodium.com/chatgpt-shell-available-on-melpa/">chatgpt-shell updates</a>, showcasing <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> features. It's been a little while, so here's an update with the latest additions.
+</p>
+</div>
+
+<div id="outline-container-org9329d35" class="outline-3">
+<h3 id="org9329d35">Multi-session support</h3>
+<div class="outline-text-3" id="text-org9329d35">
+<p>
+You can run multiple shell instances independently configured to use different versions or system prompts.
+</p>
+
+<p>
+This was biggest recent change. Please report issues.
+</p>
+
+
+<div id="orgdfe9415" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/cat-turtle.gif" alt="cat-turtle.gif" width="95%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdd9302c" class="outline-3">
+<h3 id="orgdd9302c">Display system prompt and version</h3>
+<div class="outline-text-3" id="text-orgdd9302c">
+<p>
+The current shell's version and system prompt are now displayed more prominently in both the shell prompt and buffer name.
+</p>
+
+
+<div id="org47e7590" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/display.png" alt="display.png" width="90%" />
+</p>
+</div>
+
+<p>
+With multi-session support, displaying shell details in the buffer name becomes more important as it makes it easier shells across your buffer list.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org408d9f6" class="outline-3">
+<h3 id="org408d9f6">Rename shell buffers</h3>
+<div class="outline-text-3" id="text-org408d9f6">
+<p>
+While buffer names are now automatically derived, one can also use <code>chatgpt-shell-rename-buffer</code> to use custom buffer names.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge1cc23e" class="outline-3">
+<h3 id="orge1cc23e">ob-chatgpt-shell improvements</h3>
+<div class="outline-text-3" id="text-orge1cc23e">
+<p>
+Use <code>:temperature</code> to specify the <a href="https://platform.openai.com/docs/api-reference/completions%5C%20/create#completions/create-temperature">temperature</a>.
+</p>
+
+<p>
+Use <code>:context CONTEXT-NAME</code> to pick and choose which source blocks to aggregate as context. Thank you <a href="https://github.com/jtmoulia">Thomas Moulia</a>.
+</p>
+
+<p>
+Use <code>:preflight t</code> to debug <code>ob-chatgpt-shell</code> execution.
+</p>
+
+
+<div id="org4aabdca" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/preflight.png" alt="preflight.png" width="60%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1c28eb3" class="outline-3">
+<h3 id="org1c28eb3">chatgpt-shell-write-git-commit</h3>
+<div class="outline-text-3" id="text-org1c28eb3">
+<p>
+Adds <code>chatgpt-shell-write-git-commit</code>, so you can generate commit messages using the current region. Thank you <a href="https://github.com/bigsky77">Simon Judd</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc16cfe9" class="outline-3">
+<h3 id="orgc16cfe9">Approximate context length</h3>
+<div class="outline-text-3" id="text-orgc16cfe9">
+<p>
+<code>chatgpt-shell</code> now uses <code>chatgpt-shell--approximate-context-length</code> to approximate the context size and discard history if necessary. This is pretty experimental but seems to work well enough. It's enabled by default to get some feedback. Please file bugs if needed or send PRs to improve.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeae3869" class="outline-3">
+<h3 id="orgeae3869"><code>S-&lt;return&gt;</code> for multiline input</h3>
+<div class="outline-text-3" id="text-orgeae3869">
+<p>
+In addition to <code>C-J</code> to insert multi-line input, <code>S-&lt;return&gt;</code> is also supported. Thank you <a href="https://github.com/shouya">shouya</a> for the submission.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf344589" class="outline-3">
+<h3 id="orgf344589">Welcome message</h3>
+<div class="outline-text-3" id="text-orgf344589">
+<p>
+A welcome message now makes the help much more discoverable for new or sporadic users. Thank you <a href="https://github.com/shouya">shouya</a> for the suggestion.
+</p>
+
+
+<div id="orgc86994b" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/welcome.png" alt="welcome.png" width="75%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orged0396f" class="outline-3">
+<h3 id="orged0396f">Help me</h3>
+<div class="outline-text-3" id="text-orged0396f">
+<p>
+While the <a href="https://github.com/xenodium/chatgpt-shell">README</a> documents the shells and Emacs is <a href="https://www.emacswiki.org/emacs/SelfDocumentation">self-documenting</a>, we now have a <code>help</code> command to make things a little more discoverable.
+</p>
+
+
+<div id="orgb6bbfb8" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/help.png" alt="help.png" width="99%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge68fdf3" class="outline-3">
+<h3 id="orge68fdf3">Hello chatgpt-shell-mode and dall-e-shell-mode</h3>
+<div class="outline-text-3" id="text-orge68fdf3">
+<p>
+Both <code>chatgpt-shell</code> and <code>dall-e-shell</code> are both based on <code>shell-maker</code> and until recently both shared <code>shell-maker-mode</code> as their major mode. This didn't play well with yasnippet. Both shells now enable independent major modes: <code>chatgpt-shell-mode</code> and <code>dall-e-shell-mode</code>. Thank you <a href="https://github.com/djliden">Daniel Liden</a> for the proposal.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9bc3d04" class="outline-3">
+<h3 id="org9bc3d04">Saving transcript customizations</h3>
+<div class="outline-text-3" id="text-org9bc3d04">
+<p>
+Make transcript saving more customizable via <code>shell-maker-transcript-default-path</code> and <code>shell-maker-transcript-default-filename</code>. Thank you <a href="https://github.com/gnusupport">gnusupport</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org107f0ea" class="outline-3">
+<h3 id="org107f0ea">New ChatGPT model versions</h3>
+<div class="outline-text-3" id="text-org107f0ea">
+<p>
+New OpenAI model versions were recently released and added to chatgpt-shell: <code>gpt-3.5-turbo-0613</code> and <code>gpt-4-0613</code>. Thanks you <a href="https://github.com/suzuki">Norio Suzuki</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfddbf69" class="outline-3">
+<h3 id="orgfddbf69">Load awesome prompts</h3>
+<div class="outline-text-3" id="text-orgfddbf69">
+<p>
+<code>M-x chatgpt-shell-load-awesome-prompts</code> to download and import curated prompts from <a href="https://github.com/f/awesome-chatgpt-prompts">awesome-chatgpt-prompts</a>. Thank you <a href="https://github.com/dangom">Daniel Gomez</a>.
+</p>
+
+
+<div id="org41fe168" class="figure">
+<p><img src="../images/chatgpt-shell-v0601-updates/awesome.png" alt="awesome.png" width="75%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1521597" class="outline-3">
+<h3 id="org1521597">ob-async</h3>
+<div class="outline-text-3" id="text-org1521597">
+<p>
+We had reports that ob-chatgpt-shell didn't play nice with <a href="https://github.com/astahlman/ob-async">ob-async</a>. Thank you <a href="https://github.com/wmedrano">William Medrano</a> for the solution.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd62abbc" class="outline-3">
+<h3 id="orgd62abbc">Configurable prompts</h3>
+<div class="outline-text-3" id="text-orgd62abbc">
+<p>
+Functions like <code>chatgpt-shell-describe-code</code> ask ChatGPT to describe the code in region. These functions used to be hardcoded English prompts. These are now configurable, so users can tweak or translate if preferred. Thank you <a href="https://github.com/suzuki">Norio Suzuki</a>.
+</p>
+
+<ul class="org-ul">
+<li><code>chatgpt-shell-prompt-header-describe-code</code></li>
+<li><code>chatgpt-shell-prompt-header-refactor-code</code></li>
+<li><code>chatgpt-shell-prompt-header-generate-unit-test</code></li>
+<li><code>chatgpt-shell-prompt-header-proofread-region</code></li>
+<li><code>chatgpt-shell-prompt-header-whats-wrong-with-last-command</code></li>
+<li><code>chatgpt-shell-prompt-header-eshell-summarize-last-command-output</code></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

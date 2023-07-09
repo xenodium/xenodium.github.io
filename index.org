@@ -1,6 +1,106 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-07-09 Sun] chatgpt-shell v0.60.1 updates
+:PROPERTIES:
+:CUSTOM_ID: chatgpt-shell-v0601-updates
+:END:
+
+Back in April, I shared [[https://xenodium.com/chatgpt-shell-available-on-melpa/][chatgpt-shell updates]], showcasing [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] features. It's been a little while, so here's an update with the latest additions.
+
+** Multi-session support
+You can run multiple shell instances independently configured to use different versions or system prompts.
+
+This was biggest recent change. Please report issues.
+
+#+ATTR_HTML: :width 95%
+[[file:images/chatgpt-shell-v0601-updates/cat-turtle.gif]]
+
+** Display system prompt and version
+
+The current shell's version and system prompt are now displayed more prominently in both the shell prompt and buffer name.
+
+#+ATTR_HTML: :width 90%
+[[file:images/chatgpt-shell-v0601-updates/display.png]]
+
+With multi-session support, displaying shell details in the buffer name becomes more important as it makes it easier shells across your buffer list.
+
+** Rename shell buffers
+
+While buffer names are now automatically derived, one can also use =chatgpt-shell-rename-buffer= to use custom buffer names.
+
+** ob-chatgpt-shell improvements
+
+Use =:temperature= to specify the [[https://platform.openai.com/docs/api-reference/completions\
+/create#completions/create-temperature][temperature]].
+
+Use =:context CONTEXT-NAME= to pick and choose which source blocks to aggregate as context. Thank you [[https://github.com/jtmoulia][Thomas Moulia]].
+
+Use =:preflight t= to debug =ob-chatgpt-shell= execution.
+
+#+ATTR_HTML: :width 60%
+[[file:images/chatgpt-shell-v0601-updates/preflight.png]]
+
+** chatgpt-shell-write-git-commit
+
+Adds =chatgpt-shell-write-git-commit=, so you can generate commit messages using the current region. Thank you [[https://github.com/bigsky77][Simon Judd]].
+
+** Approximate context length
+
+=chatgpt-shell= now uses =chatgpt-shell--approximate-context-length= to approximate the context size and discard history if necessary. This is pretty experimental but seems to work well enough. It's enabled by default to get some feedback. Please file bugs if needed or send PRs to improve.
+
+**  =S-<return>= for multiline input
+
+In addition to =C-J= to insert multi-line input, =S-<return>= is also supported. Thank you [[https://github.com/shouya][shouya]] for the submission.
+
+** Welcome message
+
+A welcome message now makes the help much more discoverable for new or sporadic users. Thank you [[https://github.com/shouya][shouya]] for the suggestion.
+
+#+ATTR_HTML: :width 75%
+[[file:images/chatgpt-shell-v0601-updates/welcome.png]]
+
+** Help me
+
+While the [[https://github.com/xenodium/chatgpt-shell][README]] documents the shells and Emacs is [[https://www.emacswiki.org/emacs/SelfDocumentation][self-documenting]], we now have a =help= command to make things a little more discoverable.
+
+#+ATTR_HTML: :width 99%
+[[file:images/chatgpt-shell-v0601-updates/help.png]]
+
+** Hello chatgpt-shell-mode and dall-e-shell-mode
+
+Both =chatgpt-shell= and =dall-e-shell= are both based on =shell-maker= and until recently both shared =shell-maker-mode= as their major mode. This didn't play well with yasnippet. Both shells now enable independent major modes: =chatgpt-shell-mode= and =dall-e-shell-mode=. Thank you [[https://github.com/djliden][Daniel Liden]] for the proposal.
+
+** Saving transcript customizations
+
+Make transcript saving more customizable via =shell-maker-transcript-default-path= and =shell-maker-transcript-default-filename=. Thank you [[https://github.com/gnusupport][gnusupport]].
+
+** New ChatGPT model versions
+
+New OpenAI model versions were recently released and added to chatgpt-shell: =gpt-3.5-turbo-0613= and =gpt-4-0613=. Thanks you [[https://github.com/suzuki][Norio Suzuki]].
+
+** Load awesome prompts
+
+=M-x chatgpt-shell-load-awesome-prompts= to download and import curated prompts from [[https://github.com/f/awesome-chatgpt-prompts][awesome-chatgpt-prompts]]. Thank you [[https://github.com/dangom][Daniel Gomez]].
+
+#+ATTR_HTML: :width 75%
+[[file:images/chatgpt-shell-v0601-updates/awesome.png]]
+
+** ob-async
+
+We had reports that ob-chatgpt-shell didn't play nice with [[https://github.com/astahlman/ob-async][ob-async]]. Thank you [[https://github.com/wmedrano][William Medrano]] for the solution.
+
+** Configurable prompts
+
+Functions like =chatgpt-shell-describe-code= ask ChatGPT to describe the code in region. These functions used to be hardcoded English prompts. These are now configurable, so users can tweak or translate if preferred. Thank you [[https://github.com/suzuki][Norio Suzuki]].
+
+- =chatgpt-shell-prompt-header-describe-code=
+- =chatgpt-shell-prompt-header-refactor-code=
+- =chatgpt-shell-prompt-header-generate-unit-test=
+- =chatgpt-shell-prompt-header-proofread-region=
+- =chatgpt-shell-prompt-header-whats-wrong-with-last-command=
+- =chatgpt-shell-prompt-header-eshell-summarize-last-command-output=
+
 * [2023-07-05 Wed] Duplicate this!
 :PROPERTIES:
 :CUSTOM_ID: duplicate-this
