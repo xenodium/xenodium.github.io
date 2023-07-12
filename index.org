@@ -1,6 +1,185 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-07-11 Tue] ChatGPT visits the Emacs doctor
+:PROPERTIES:
+:CUSTOM_ID: chatgpt-visits-the-emacs-doctor
+:END:
+Emacs is a [[https://youtu.be/urcL86UpqZc?t=177][part-time job]]. A [[https://www.gnu.org/software/emacs/manual/html_mono/ede.html][development environment]]. A [[https://www.emacswiki.org/emacs/LispMachine][lisp machine]]. An [[https://www.djcbsoftware.nl/code/mu/mu4e.html][email client]]. A [[https://www.gnu.org/software/emacs/manual/html_node/emacs/EWW.html][web browser]]. A [[https://youtu.be/AyhPmypHDEw][zettelkasten]]. A [[https://www.emacswiki.org/emacs/SpreadSheet][spreadsheet]]. A [[https://www.masteringemacs.org/article/complete-guide-mastering-eshell][shell]]. A [[https://github.com/ledger/ledger-mode][ledger]]. A [[https://github.com/alphapapa/org-super-agenda][super agenda]]. An [[https://twitter.com/nixcraft/status/1435140596520218628][operating system]]. Some say it sends [[https://xkcd.com/378/][ripples into the atmosphere]] or [[https://github.com/skeeto/autotetris-mode][plays tetris for you]]. It may even [[https://github.com/johanvts/emacs-fireplace][warm your place up]] during the winter. An ultra-malleable editor with endless possibilities, powered by your life-long customizations. Oh man, no wonder we may need to chat to someone every now and then. You know what I mean? /"[[https://knowyourmeme.com/editorials/guides/what-does-sir-this-is-a-wendys-mean][Sir, this is a Wendy's]]"/.
+
+Luckily, we also have a built-in Emacs psychotherapist we can talk to, courtesy of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Amusements.html][M-x doctor]]. It's all powered by [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]] and is basically all up for grabs. Elisp implements many of these features, but also glues the lot for you. Once you learn a little elisp, you can build new Emacs features but also glue others for that compound effect.
+
+#+ATTR_HTML: :width 85%
+[[file:images/chatgpt-visits-the-emacs-doctor/got-a-problem.gif]]
+
+A little while ago, I wanted to give [[https://openai.com/blog/chatgpt][ChatGPT]] a try, preferably from Emacs (of course). I figured a shell interface would be a great fit for the interaction. Emacs already shipped with a general command interpreter ([[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html][comint]]), so I cobbled together a [[https://xenodium.com/a-chatgpt-emacs-shell/][ChatGPT Emacs shell]].
+
+#+ATTR_HTML: :width 75%
+[[file:images/chatgpt-visits-the-emacs-doctor/cyberpunk.gif]]
+
+So where am I going with all this? [[https://www.reddit.com/user/emaphis/][r/emaphis]], [[https://news.ycombinator.com/user?id=salgernon][salgernon]]. You both planted a seed:
+
+- /"[[https://www.reddit.com/r/emacs/comments/11wdub9/comment/jczrlt7][Now for extra-credit, add the ability for Alt-X doctor to psychoanalyze Chat-GPT]]"/.
+- /"[[https://news.ycombinator.com/item?id=35259022][So how about a quick M-x psychoanalyze-chatgpt?]]"/
+
+I haven't forgotten about you. Let's take [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]], /M-x doctor/, our versatile elisp glue, and let's make them talk:
+
+#+CAPTION: courtesy of [[https://www.reddit.com/r/emacs/comments/122nm9r/comment/jdv9f1i][thriveth]] and [[https://dr.dk.com][dr.dk]].
+[[https:/asset.dr.dk/imagescaler01/downol.dr.dk/download/bonanza/thumbs/000026814.jpg]]
+
+There isn't too much to the code, but beware:
+
+1. If you want to run it, you'll need chatgpt-shell [[https://github.com/xenodium/chatgpt-shell#install][installed and set up]].
+2. This was a quick fun hack. No judging ;)
+
+
+Now, on to the code... =chatgpt-shell-visit-doctor= sets things up. For starters, it creates both the =*chatgpt*= and =*doctor*= buffers and arranges the windows next to each other.
+
+We also set a ChatGPT system prompt to guide things a little:
+
+#+begin_quote
+  "Pretend to be an overwhelmed Emacs user who is obsessed with configuring their init.el file. You are in session talking to a psychotherapist. Limit your output to no more than 20 words. In the course of 5 exchanges between you and the therapist, show improvements. On the 8th exchange after therapist speaks, declare you are cured and only output 'Thank you doc, I think I'm cured!'"
+#+end_quote
+
+ChatGPT and Emacs doctor can go on and on, so we limit ChatGPT responses to 20 words per response and 8 exchanges. We don't want the session to abruptly end without resolution, so we'll use /Thank you doc, I think I'm cured!/ as our key phrase to exit out.
+
+We register =chatgpt-shell--on-chatgpt-patient-response= as a hook to receive ChatGPT output, which we feed to the =*doctor*= buffer to get a doctor response that's fed back to ChatGPT via =chatgpt-shell--insert-doc-response=.
+
+We add some additional freebies like binding =Ctrl-c Ctrl-c= to =chatgpt-shell-leave-doctor=, so we can bail out of the exchange from the =*chatgpt*= buffer.
+
+We also introduced =chatgpt-shell--insert-delayed-text= as a replacement for [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Insertion.html][insert]] to slow things down a little. For visual effects, really.
+
+#+begin_src emacs-lisp :lexical no
+  (require 'chatgpt-shell)
+
+  (defun chatgpt-shell-visit-doctor ()
+    (interactive)
+    (setq chatgpt-shell--doctor-in-session t)
+    (when (get-buffer "*doctor*")
+      (kill-buffer "*doctor*"))
+    (delete-other-windows)
+    (split-window-horizontally)
+    (other-window 1)
+    (doctor)
+    (visual-line-mode 1)
+    (when (fboundp 'accent-menu-mode)
+      (accent-menu-mode -1))
+    (mapc
+     (lambda (shell-buffer)
+       (kill-buffer shell-buffer))
+     (chatgpt-shell--shell-buffers))
+    (other-window 1)
+    (setq chatgpt-shell-system-prompts
+          '(("Doc" . "Pretend to be an overwhelmed Emacs user who is obsessed with configuring their init.el file. You are in session talking to a psychotherapist. Limit your output to no more than 20 words. In the course of 5 exchanges between you and the therapist, show improvements. On the 8th exchange after therapist speaks, declare you are cured and only output \"Thank you doc, I think I'm cured!\".")))
+    (setq chatgpt-shell-system-prompt 0)
+    (with-current-buffer (chatgpt-shell)
+      (define-key chatgpt-shell-mode-map (kbd "C-c C-c")
+        'chatgpt-shell-leave-doctor)
+      (shell-maker-set-buffer-name (current-buffer)
+                                   "*chatgpt*"))
+    (chatgpt-shell--insert-doc-response))
+
+  (defun chatgpt-shell--doc-conversation ()
+    (let ((convo (with-current-buffer "*doctor*"
+                   (split-string (buffer-string) "\n\n"))))
+      (seq-remove
+       (lambda (item)
+         (string-empty-p (string-trim item)))
+       (append
+        (list "I am the psychotherapist.  Please, describe your problems.")
+        (mapcar
+         (lambda (item)
+           (replace-regexp-in-string "\n" " " item))
+         (cdr convo))))))
+
+  (defun chatgpt-shell--doc-response ()
+    (let* ((conversation (chatgpt-shell--doc-conversation))
+           (length (seq-length conversation))
+           (doc-response (nth (1- length) conversation)))
+      doc-response))
+
+  (defun chatgpt-shell--insert-doc-response ()
+    (with-current-buffer "*chatgpt*"
+      (goto-char (point-max))
+      (chatgpt-shell--insert-delayed-text (chatgpt-shell--doc-response))
+      (call-interactively 'shell-maker-submit)))
+
+  (defun chatgpt-shell--insert-delayed-text (text)
+    "Insert TEXT into the current buffer, with a delay between each character."
+    (dolist (char (string-to-list text))
+      (insert char)
+      (sit-for 0.009)))
+
+  (defun chatgpt-shell--on-chatgpt-patient-response (command output)
+    (if (and chatgpt-shell--doctor-in-session
+             (not (string-match-p (regexp-quote "I'm cured") output)))
+        (with-selected-window (get-buffer-window "*doctor*")
+          (goto-char (point-max))
+          (chatgpt-shell--insert-delayed-text output)
+          (call-interactively 'doctor-ret-or-read)
+          (chatgpt-shell--insert-doc-response))
+      (message "Bye Bye")))
+
+  (defun chatgpt-shell-leave-doctor ()
+    (interactive)
+    (setq chatgpt-shell--doctor-in-session nil)
+    (call-interactively 'chatgpt-shell-ctrl-c-ctrl-c))
+
+  (add-hook 'chatgpt-shell-after-command-functions
+            #'chatgpt-shell--on-chatgpt-patient-response)
+
+  (global-set-key (kbd "M-q") #'chatgpt-shell-visit-doctor)
+#+end_src
+
+Ok, enough already. Let's see it in action.
+
+#+CAPTION: Damn, that's too small. I know, click the image.
+#+ATTR_HTML: :width 100%
+[[file:images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif][file:images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif]]
+
+You can also inspect the official transcript to this important and fruitful session:
+
+#+begin_quote
+I am the psychotherapist.  Please, describe your problems.  Each time you are finished talking, type RET twice.
+
+
+My init.el file is a mess, I can't find anything, and I spend all my time configuring it.
+
+
+Why do you say that?
+
+
+I'm overwhelmed by the endless possibilities, constantly tweaking my init.el without making any real progress.
+
+
+I don't understand.
+
+
+My obsession with configuring my init.el consumes me, leaving little room for actual productivity or enjoyment.
+
+
+Maybe your life has something to do with this.
+
+
+I realize now that my excessive focus on my init.el is a way to avoid dealing with other aspects of my life.
+
+
+Is it because your excessive focus on your init el is a way to avoid dealing with other aspects of your life that you came to me?
+
+
+Yes, I came to you seeking help to find a balance and prioritize other aspects of my life.
+
+
+Perhaps your plans have something to do with this.
+
+
+You're right. Instead of obsessing over my init.el, I will make flexible plans and embrace spontaneity. Thank you, doc. I think I'm cured!
+#+end_quote
+
+While we can work exclusively with the =*doctor*= buffer making requests directly to the ChatGPT API, where's the fun in that? Getting the buffers to talk to each other enables us to marvel at both the beauty and absurdity of being able to glue anything together in our lovely Emacs world.
+
+Happy Emacsing!
+
 * [2023-07-09 Sun] chatgpt-shell v0.60.1 updates
 :PROPERTIES:
 :CUSTOM_ID: chatgpt-shell-v0601-updates
