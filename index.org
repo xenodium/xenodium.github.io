@@ -113,11 +113,14 @@ We also introduced =chatgpt-shell--insert-delayed-text= as a replacement for [[h
   (defun chatgpt-shell--on-chatgpt-patient-response (command output)
     (if (and chatgpt-shell--doctor-in-session
              (not (string-match-p (regexp-quote "I'm cured") output)))
-        (with-selected-window (get-buffer-window "*doctor*")
-          (goto-char (point-max))
-          (chatgpt-shell--insert-delayed-text output)
-          (call-interactively 'doctor-ret-or-read)
-          (chatgpt-shell--insert-doc-response))
+        (progn
+          (with-current-buffer "*chatgpt*"
+            (goto-char (point-max)))
+          (with-selected-window (get-buffer-window "*doctor*")
+            (goto-char (point-max))
+            (chatgpt-shell--insert-delayed-text output)
+            (call-interactively 'doctor-ret-or-read)
+            (chatgpt-shell--insert-doc-response)))
       (message "Bye Bye")))
 
   (defun chatgpt-shell-leave-doctor ()
