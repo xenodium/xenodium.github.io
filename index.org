@@ -1,6 +1,48 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-07-30 Sun] Emacs: scan this QR/bar code
+:PROPERTIES:
+:CUSTOM_ID: emacs-scan-this-qrcode
+:END:
+Another day, another tool brought to my Emacs fingertips. A while ago, I wrote about easily [[https://xenodium.com/copy-from-desktop-to-mobile-via-qr-code/][copying text from desktop to mobile via QR codes]]. Later on, I brought it under [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] as [[https://github.com/xenodium/dwim-shell-command/blob/67da65f97d7f5477e19407d25887c23fab31517d/dwim-shell-commands.el#L593][dwim-shell-commands-clipboard-to-qr]].
+
+This time around, I needed the opposite: to scan a code from an image file. This is where [[https://github.com/mchehab/zbar][zbar]]'s =zbarimg= comes in. These days, I'm mostly on macOS, so I installed via [[https://brew.sh/][Homebrew]]:
+
+#+begin_src sh
+  $ brew install zbar
+#+end_src
+
+There's really nothing to the command. You feed it an image, and it outputs the scanned details. Perfect.
+
+#+begin_src sh
+  $ zbarimg path/to/code-128.png
+  CODE-128:hello world
+  scanned 1 barcode symbols from 1 images in 0.02 seconds
+#+end_src
+
+The only challenge is my brain. I probably won't remember the name of this wonderful tool next time I need it, so I'll just add it to my [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el arsenal]] with a memorable name:
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-image-scan-code ()
+    "Scan any code from image(s)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Scan code"
+     "zbarimg '<<f>>'"
+     :utils "zbarimg"))
+#+end_src
+
+In the future, rather than reaching out to =zbarimg= directly, I'll use my trusty fuzzy search and... voilà!
+
+#+ATTR_HTML: :width 85%
+[[file:images/emacs-scan-this-qrcode/fuzzy.png]]
+
+#+ATTR_HTML: :width 85%
+[[file:images/emacs-scan-this-qrcode/output.png]]
+
+=dwim-shell-commands-image-scan-code= is now pushed to [[https://github.com/xenodium/dwim-shell-command/commit/85ebcb0a466ddfe48e543d585e16aff7aee8da5e][pushed to dwim-shell-commands.el]], the optional package in [[https://github.com/xenodium/dwim-shell-command/][dwim-shell-command]].
+
 * [2023-07-25 Tue] A cure for JavaScript fatigue?
 :PROPERTIES:
 :CUSTOM_ID: a-cure-for-javascript-fatigue

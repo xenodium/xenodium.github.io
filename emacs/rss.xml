@@ -6,7 +6,77 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 25 Jul 2023 22:14:52 +0100</lastBuildDate>
+<lastBuildDate>Sun, 30 Jul 2023 12:35:53 +0100</lastBuildDate>
+<item>
+  <title>Emacs: scan this QR/bar code</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-scan-this-qrcode" class="outline-2">
+ <h2 id="emacs-scan-this-qrcode"> <span class="timestamp-wrapper"> <span class="timestamp">30 July 2023</span></span> Emacs: scan this QR/bar code</h2>
+ <div class="outline-text-2" id="text-emacs-scan-this-qrcode">
+ <p>
+Another day, another tool brought to my Emacs fingertips. A while ago, I wrote about easily  <a href="https://xenodium.com/copy-from-desktop-to-mobile-via-qr-code/">copying text from desktop to mobile via QR codes</a>. Later on, I brought it under  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> as  <a href="https://github.com/xenodium/dwim-shell-command/blob/67da65f97d7f5477e19407d25887c23fab31517d/dwim-shell-commands.el#L593">dwim-shell-commands-clipboard-to-qr</a>.
+</p>
+
+ <p>
+This time around, I needed the opposite: to scan a code from an image file. This is where  <a href="https://github.com/mchehab/zbar">zbar</a>'s  <code>zbarimg</code> comes in. These days, I'm mostly on macOS, so I installed via  <a href="https://brew.sh/">Homebrew</a>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">$ brew install zbar
+</pre>
+</div>
+
+ <p>
+There's really nothing to the command. You feed it an image, and it outputs the scanned details. Perfect.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">$ zbarimg path/to/code-128.png
+CODE-128:hello world
+scanned 1 barcode symbols from 1 images <span style="color: #a71d5d;"> in</span> 0.02 seconds
+</pre>
+</div>
+
+ <p>
+The only challenge is my brain. I probably won't remember the name of this wonderful tool next time I need it, so I'll just add it to my  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el arsenal</a> with a memorable name:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-image-scan-code</span> ()
+   <span style="color: #183691;">"Scan any code from image(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Scan code"</span>
+    <span style="color: #183691;">"zbarimg '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"zbarimg"</span>))
+</pre>
+</div>
+
+ <p>
+In the future, rather than reaching out to  <code>zbarimg</code> directly, I'll use my trusty fuzzy search and… voilà!
+</p>
+
+
+ <div id="orgaeb2dca" class="figure">
+ <p> <img src="../images/emacs-scan-this-qrcode/fuzzy.png" alt="fuzzy.png" width="85%"></img></p>
+</div>
+
+
+ <div id="org0d5dbfa" class="figure">
+ <p> <img src="../images/emacs-scan-this-qrcode/output.png" alt="output.png" width="85%"></img></p>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-image-scan-code</code> is now pushed to  <a href="https://github.com/xenodium/dwim-shell-command/commit/85ebcb0a466ddfe48e543d585e16aff7aee8da5e">pushed to dwim-shell-commands.el</a>, the optional package in  <a href="https://github.com/xenodium/dwim-shell-command/">dwim-shell-command</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-scan-this-qrcode</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-scan-this-qrcode</guid>
+  <pubDate>Sun, 30 Jul 2023 12:35:53 +0100</pubDate>
+</item>
 <item>
   <title>A cure for JavaScript fatigue?</title>
   <description><![CDATA[<div id="content" class="content">
