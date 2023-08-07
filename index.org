@@ -1,6 +1,67 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-08-07 Mon] sqlite-mode goodies
+:PROPERTIES:
+:CUSTOM_ID: sqlite-mode-goodies
+:END:
+I recently [[https://xenodium.com/emacs-29s-sqlite-mode/][wrote about Emacs 29's new sqlite-mode]], which enables you to browse sqlite databases from your beloved editor.
+
+Out of the box, it supports the following browsing features:
+
+- =sqlite-mode-list-data=: List the data from the table under point.
+- =sqlite-mode-list-column=: List the columns of the table under point.
+- =sqlite-mode-list-tables=: Re-list the tables from the currently selected database.
+
+On the editing side of things it supports row deletion:
+
+- =sqlite-mode-delete=: Delete the row under point.
+
+While fairly spartan, it lays foundations for additional tools and features.
+
+Two features I would like to have:
+
+1. TAB navigation across table rows and columns.
+2. Updating the row's field at point.
+
+This would give me the familiar behaviour I'm used to in my org tables as well as other common spreadsheet tools.
+
+Luckily, this is Emacs, so we can bend it our way... and I sure did!
+
+Here's tab navigating forward:
+
+#+ATTR_HTML: :width 75%
+[[file:images/sqlite-mode-goodies/sqlite-forward.gif]]
+
+Here's tab navigating backward:
+
+#+ATTR_HTML: :width 75%
+[[file:images/sqlite-mode-goodies/sqlite-previous.gif]]
+
+And updating row fields:
+
+#+ATTR_HTML: :width 75%
+[[file:images/sqlite-mode-goodies/sqlite-edits.gif]]
+
+Most of the navigation is achieved by querying the current buffer to figure out column positions. Editing was in some ways easier, as I looked at =sqlite-mode-delete= to figure out how it handled the query.
+
+To get the more familiar navigation behaviour I've adjusted my key bindings as follows:
+
+#+begin_src emacs-lisp :lexical no
+  (use-package sqlite-mode-extras
+    :bind (:map
+           sqlite-mode-map
+           ("n" . next-line)
+           ("p" . previous-line)
+           ("<backtab>" . sqlite-mode-extras-backtab-dwim)
+           ("<tab>" . sqlite-mode-extras-tab-dwim)
+           ("RET" . sqlite-mode-extras-ret-dwim)))
+#+end_src
+
+The code for =sqlite-mode-extras-tab-dwim=, =sqlite-mode-extras-backtab-dwim=, and =sqlite-mode-extras-ret-dwim= is little rough still (hacky even), but hey still fun.
+
+For now, the code lives in [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el][sqlite-mode-extras.el]] under my [[https://github.com/xenodium/dotsies/tree/main][Emacs config repo]]. Improvements/fixes totally welcome!
+
 * [2023-08-06 Sun] Emacs 29's sqlite-mode
 :PROPERTIES:
 :CUSTOM_ID: emacs-29s-sqlite-mode

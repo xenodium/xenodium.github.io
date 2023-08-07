@@ -6,7 +6,109 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 06 Aug 2023 22:35:56 +0100</lastBuildDate>
+<lastBuildDate>Mon, 07 Aug 2023 22:08:44 +0100</lastBuildDate>
+<item>
+  <title>sqlite-mode goodies</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-sqlite-mode-goodies" class="outline-2">
+ <h2 id="sqlite-mode-goodies"> <span class="timestamp-wrapper"> <span class="timestamp">07 August 2023</span></span> sqlite-mode goodies</h2>
+ <div class="outline-text-2" id="text-sqlite-mode-goodies">
+ <p>
+I recently  <a href="https://xenodium.com/emacs-29s-sqlite-mode/">wrote about Emacs 29's new sqlite-mode</a>, which enables you to browse sqlite databases from your beloved editor.
+</p>
+
+ <p>
+Out of the box, it supports the following browsing features:
+</p>
+
+ <ul class="org-ul"> <li> <code>sqlite-mode-list-data</code>: List the data from the table under point.</li>
+ <li> <code>sqlite-mode-list-column</code>: List the columns of the table under point.</li>
+ <li> <code>sqlite-mode-list-tables</code>: Re-list the tables from the currently selected database.</li>
+</ul> <p>
+On the editing side of things it supports row deletion:
+</p>
+
+ <ul class="org-ul"> <li> <code>sqlite-mode-delete</code>: Delete the row under point.</li>
+</ul> <p>
+While fairly spartan, it lays foundations for additional tools and features.
+</p>
+
+ <p>
+Two features I would like to have:
+</p>
+
+ <ol class="org-ol"> <li>TAB navigation across table rows and columns.</li>
+ <li>Updating the row's field at point.</li>
+</ol> <p>
+This would give me the familiar behaviour I'm used to in my org tables as well as other common spreadsheet tools.
+</p>
+
+ <p>
+Luckily, this is Emacs, so we can bend it our way… and I sure did!
+</p>
+
+ <p>
+Here's tab navigating forward:
+</p>
+
+
+ <div id="org6942014" class="figure">
+ <p> <img src="../images/sqlite-mode-goodies/sqlite-forward.gif" alt="sqlite-forward.gif" width="75%"></img></p>
+</div>
+
+ <p>
+Here's tab navigating backward:
+</p>
+
+
+ <div id="org8077a42" class="figure">
+ <p> <img src="../images/sqlite-mode-goodies/sqlite-previous.gif" alt="sqlite-previous.gif" width="75%"></img></p>
+</div>
+
+ <p>
+And updating row fields:
+</p>
+
+
+ <div id="orga9a70d1" class="figure">
+ <p> <img src="../images/sqlite-mode-goodies/sqlite-edits.gif" alt="sqlite-edits.gif" width="75%"></img></p>
+</div>
+
+ <p>
+Most of the navigation is achieved by querying the current buffer to figure out column positions. Editing was in some ways easier, as I looked at  <code>sqlite-mode-delete</code> to figure out how it handled the query.
+</p>
+
+ <p>
+To get the more familiar navigation behaviour I've adjusted my key bindings as follows:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">( <span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">sqlite-mode-extras</span>
+   <span style="color: #a71d5d;">:bind</span> ( <span style="color: #a71d5d;">:map</span>
+         sqlite-mode-map
+         ( <span style="color: #183691;">"n"</span> . next-line)
+         ( <span style="color: #183691;">"p"</span> . previous-line)
+         ( <span style="color: #183691;">"<backtab>"</span> . sqlite-mode-extras-backtab-dwim)
+         ( <span style="color: #183691;">"<tab>"</span> . sqlite-mode-extras-tab-dwim)
+         ( <span style="color: #183691;">"RET"</span> . sqlite-mode-extras-ret-dwim)))
+</pre>
+</div>
+
+ <p>
+The code for  <code>sqlite-mode-extras-tab-dwim</code>,  <code>sqlite-mode-extras-backtab-dwim</code>, and  <code>sqlite-mode-extras-ret-dwim</code> is little rough still (hacky even), but hey still fun.
+</p>
+
+ <p>
+For now, the code lives in  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el">sqlite-mode-extras.el</a> under my  <a href="https://github.com/xenodium/dotsies/tree/main">Emacs config repo</a>. Improvements/fixes totally welcome!
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/sqlite-mode-goodies/index.html</link>
+  <guid isPermaLink="false">http://xenodium.com/sqlite-mode-goodies/index.html</guid>
+  <pubDate>Mon, 07 Aug 2023 22:08:44 +0100</pubDate>
+</item>
 <item>
   <title>Emacs 29s sqlite-mode</title>
   <description><![CDATA[<div id="content" class="content">
