@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-08-11 Fri 00:38 -->
+<!-- 2023-08-22 Tue 08:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Extending sqlite-mode (cell navigation + edits)</title>
+<title>My custom Tesco Clubcard pkpass</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -387,109 +387,172 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-sqlite-mode-goodies" class="outline-2">
-<h2 id="sqlite-mode-goodies"><span class="timestamp-wrapper"><span class="timestamp">07 August 2023</span></span> Extending sqlite-mode (cell navigation + edits)</h2>
-<div class="outline-text-2" id="text-sqlite-mode-goodies">
+<div id="outline-container-my-custom-tesco-clubcard-pkpass" class="outline-2">
+<h2 id="my-custom-tesco-clubcard-pkpass"><span class="timestamp-wrapper"><span class="timestamp">22 August 2023</span></span> My custom Tesco Clubcard pkpass</h2>
+<div class="outline-text-2" id="text-my-custom-tesco-clubcard-pkpass">
 <p>
-I recently <a href="https://xenodium.com/emacs-29s-sqlite-mode/">wrote about Emacs 29's new sqlite-mode</a>, which enables you to browse sqlite databases from your beloved editor.
-</p>
-
-<p>
-Out of the box, it supports the following browsing features:
-</p>
-
-<ul class="org-ul">
-<li><code>sqlite-mode-list-data</code>: List the data from the table under point.</li>
-<li><code>sqlite-mode-list-column</code>: List the columns of the table under point.</li>
-<li><code>sqlite-mode-list-tables</code>: Re-list the tables from the currently selected database.</li>
-</ul>
-
-<p>
-On the editing side of things it supports row deletion:
-</p>
-
-<ul class="org-ul">
-<li><code>sqlite-mode-delete</code>: Delete the row under point.</li>
-</ul>
-
-<p>
-While fairly spartan, it lays foundations for additional tools and features.
+My significant other and I had two plastic Tesco Clubcards. I lost mine, so I took a picture of hers. I was fairly certain a barcode photo would scan just as well at self-checkout, and it did.
 </p>
 
 <p>
-Two features I would like to have:
-</p>
-
-<ol class="org-ol">
-<li>TAB navigation across table rows and columns.</li>
-<li>Updating the row's field at point.</li>
-</ol>
-
-<p>
-This would give me the familiar behaviour I'm used to in my org tables as well as other common spreadsheet tools.
+This got me thinking about Apple's Wallet <a href="https://en.wikipedia.org/wiki/PKPASS">pkpasses</a>. I don't really know much about them. Could I potentially create my own <code>.pkpass</code>? If I could just include the same barcode as in the photo, it should do the job just fine.
 </p>
 
 <p>
-Luckily, this is Emacs, so we can bend it our way&#x2026; and I sure did!
+Now I should mention, <a href="https://apps.apple.com/gb/app/tesco-grocery-clubcard/id389581236">Tesco does have an app on the App Store</a>. If you just want the official Wallet pass on your iPhone, use that. But I was curious about whether or not I could create my own pass.
 </p>
 
 <p>
-Here's tab navigating forward:
-</p>
-
-
-<div id="org706dc3d" class="figure">
-<p><img src="../images/sqlite-mode-goodies/sqlite-forward.gif" alt="sqlite-forward.gif" width="75%" />
-</p>
-</div>
-
-<p>
-Here's tab navigating backward:
-</p>
-
-
-<div id="org83ae4a4" class="figure">
-<p><img src="../images/sqlite-mode-goodies/sqlite-previous.gif" alt="sqlite-previous.gif" width="75%" />
-</p>
-</div>
-
-<p>
-And updating row fields:
-</p>
-
-
-<div id="orga683405" class="figure">
-<p><img src="../images/sqlite-mode-goodies/sqlite-edits.gif" alt="sqlite-edits.gif" width="90%" />
-</p>
-</div>
-
-<p>
-Most of the navigation is achieved by querying the current buffer to figure out column positions. Editing was in some ways easier, as I looked at <code>sqlite-mode-delete</code> to figure out how it handled the query.
+Turns out I <i>can</i>. I followed Apple's <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/YourFirst.html">building your first pass</a> which runs you through <a href="https://developer.apple.com/help/account/configure-app-capabilities/create-wallet-identifiers-and-certificates">creating Wallet identifiers/certificates</a>, editing <code>pass.json</code>, and downloading/building <a href="https://developer.apple.com/services-account/download?path=/iOS/Wallet_Support_Materials/WalletCompanionFiles.zip">signpass</a> (the utility used to sign <code>.pass</code> bundles).
 </p>
 
 <p>
-To get the more familiar navigation behaviour, I've adjusted my key bindings as follows:
+The <code>signpass</code> utility is included in WalletCompanionFiles.zip, which comes with a handful of sample passes.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">sqlite-mode-extras</span>
-  <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span>
-         sqlite-mode-map
-         (<span style="color: #183691;">"n"</span> . next-line)
-         (<span style="color: #183691;">"p"</span> . previous-line)
-         (<span style="color: #183691;">"&lt;backtab&gt;"</span> . sqlite-mode-extras-backtab-dwim)
-         (<span style="color: #183691;">"&lt;tab&gt;"</span> . sqlite-mode-extras-tab-dwim)
-         (<span style="color: #183691;">"RET"</span> . sqlite-mode-extras-ret-dwim)))
+<pre class="src src-emacs-lisp">WalletCompanionFiles
+&#9474;
+&#9500;&#9472;&#9472; SamplePasses
+&#9474;   &#9474;
+&#9474;   &#9500;&#9472;&#9472; BoardingPass.pass
+&#9474;   &#9500;&#9472;&#9472; Coupon.pass
+&#9474;   &#9500;&#9472;&#9472; Event.pass
+&#9474;   &#9500;&#9472;&#9472; Event.pkpass
+&#9474;   &#9500;&#9472;&#9472; Generic.pass
+&#9474;   &#9492;&#9472;&#9472; StoreCard.pass
+&#9474;       &#9474;
+&#9474;       &#9500;&#9472;&#9472; pass.json
+&#9474;       &#9492;&#9472;&#9472; ...
+&#9492;&#9472;&#9472; signpass
 </pre>
 </div>
 
 <p>
-The code for <code>sqlite-mode-extras-tab-dwim</code>, <code>sqlite-mode-extras-backtab-dwim</code>, and <code>sqlite-mode-extras-ret-dwim</code> is little rough still (hacky even), but hey still fun.
+Being a rewards card, I opted to look into <code>StoreCard.pass</code>, but like all other passes, the <code>barcode</code> itself is what makes each pass scannable. The barcode details are specified in the bundles's <code>pass.json</code> file. I needed to figure out the relevant values describing the Tesco barcode.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json"><span style="color: #a71d5d;">"barcode"</span>: {
+  <span style="color: #a71d5d;">"format"</span>: <span style="color: #183691;">"???"</span>,
+  <span style="color: #a71d5d;">"message"</span>: <span style="color: #183691;">"???"</span>,
+  <span style="color: #a71d5d;">"messageEncoding"</span>: <span style="color: #183691;">"???"</span>
+}
+</pre>
+</div>
+
+<p>
+I had no clue what values I should use for a Tesco Clubcard. I did, however, have a photo of the barcode I needed. This is in fact what prompted looking into <a href="https://xenodium.com/emacs-scan-this-qrcode">scanning barcodes from Emacs</a>, which worked just great. It gave me all the crucial bits for the Clubcard.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json"><span style="color: #a71d5d;">"barcode"</span>: {
+  <span style="color: #a71d5d;">"format"</span>: <span style="color: #183691;">"PKBarcodeFormatCode128"</span>,
+  <span style="color: #a71d5d;">"message"</span>: <span style="color: #183691;">"1234567890123456"</span>,  // not my actual Clubcard number of course.
+  <span style="color: #a71d5d;">"messageEncoding"</span>: <span style="color: #183691;">"iso-8859-1"</span>
+}
+</pre>
+</div>
+
+<p>
+That's all that's needed for the barcode section, the most useful part of the pass. We're not done though. We also need our registered Wallet identifiers, so the <code>signpass</code> utility can sign.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json"><span style="color: #a71d5d;">"passTypeIdentifier"</span>: <span style="color: #183691;">"my.com.identifier.passmaker"</span>, // also not my actual one.
+<span style="color: #a71d5d;">"teamIdentifier"</span>: <span style="color: #183691;">"AAABBBCCCD"</span>, // nor this one.
+</pre>
+</div>
+
+<p>
+We should be able to sign the pass with the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">signpass -p StoreCard.pass
+</pre>
+</div>
+
+<p>
+We're technically done. We now have a working card, but it looks just like the sample store card included in WalletCompanionFiles.
+</p>
+
+
+<div id="org0a3a487" class="figure">
+<p><img src="../images/my-custom-tesco-clubcard-pkpass/lemons.png" alt="lemons.png" width="50%" />
+</p>
+</div>
+
+<p>
+What's the fun in that? Now that I can make my own Clubcard, let's customize it!
 </p>
 
 <p>
-For now, the code lives in <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el">sqlite-mode-extras.el</a> under my <a href="https://github.com/xenodium/dotsies/tree/main">Emacs config repo</a>. Improvements/fixes totally welcome!
+For imagery, I replaced a couple of images in the .pass bundle:
 </p>
+
+<div class="org-src-container">
+<pre class="src src-c">StoreCard.pass
+&#9474;
+&#9500;&#9472;&#9472; pass.json
+&#9500;&#9472;&#9472; icon.png
+&#9500;&#9472;&#9472; logo.png <span style="color: #969896;">// </span><span style="color: #969896;">replaced</span>
+&#9492;&#9472;&#9472; strip.png <span style="color: #969896;">// </span><span style="color: #969896;">replaced</span>
+</pre>
+</div>
+
+<p>
+I replaced <code>logo.png</code> using a <a href="https://en.wikipedia.org/wiki/File:Tesco_Logo.svg">Tesco logo I found on Wikipedia</a>. I had initially removed <code>strip.png</code>, but that made the card feel a little empty. I was thinking of using a Tesco carrier bag to bulk the space up. While I didn't find a suitable bag image, I did land on "<a href="https://banksyexplained.com/very-little-helps-2008/">Very Little Helps, 2008</a>". Using my limited <a href="https://www.gimp.org/">GIMP</a> skills, I cropped one of the images and also replaced <code>strip.png</code>.
+</p>
+
+<p>
+The remaining customizations took place in <code>pass.json</code> and should be fairly self-explanatory. There's the text shown in all labels as well as three customizable colours (background, label, and foreground).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json">{
+  <span style="color: #a71d5d;">"formatVersion"</span>: <span style="color: #0086b3;">1</span>,
+  <span style="color: #a71d5d;">"passTypeIdentifier"</span>: <span style="color: #183691;">"my.com.identifier.passmaker"</span>, // also not my actual one.
+  <span style="color: #a71d5d;">"teamIdentifier"</span>: <span style="color: #183691;">"AAABBBCCCD"</span>, // nor this one.
+  <span style="color: #a71d5d;">"serialNumber"</span>: <span style="color: #183691;">"AnySerialNumberYouWant"</span>,
+  <span style="color: #a71d5d;">"barcode"</span>: {
+    <span style="color: #a71d5d;">"format"</span>: <span style="color: #183691;">"PKBarcodeFormatCode128"</span>,
+    <span style="color: #a71d5d;">"message"</span>: <span style="color: #183691;">"1234567890123456"</span>,
+    <span style="color: #a71d5d;">"messageEncoding"</span>: <span style="color: #183691;">"iso-8859-1"</span>
+  },
+  <span style="color: #a71d5d;">"organizationName"</span>: <span style="color: #183691;">"Not Tesco of course"</span>,
+  <span style="color: #a71d5d;">"description"</span>: <span style="color: #183691;">"Not a Tesco reqards card"</span>,
+  <span style="color: #a71d5d;">"logoText"</span>: <span style="color: #183691;">"Clubcard"</span>,
+  <span style="color: #a71d5d;">"foregroundColor"</span>: <span style="color: #183691;">"rgb(255, 255, 255)"</span>,
+  <span style="color: #a71d5d;">"labelColor"</span>: <span style="color: #183691;">"rgb(255, 255, 255)"</span>,
+  <span style="color: #a71d5d;">"backgroundColor"</span>: <span style="color: #183691;">"rgb(2, 81, 158)"</span>, // Blue for that Tesco look
+  <span style="color: #a71d5d;">"storeCard"</span>: {
+    <span style="color: #a71d5d;">"auxiliaryFields"</span>: [
+      {
+        <span style="color: #a71d5d;">"key"</span>: <span style="color: #183691;">"membership"</span>,
+        <span style="color: #a71d5d;">"label"</span>: <span style="color: #183691;">"Member since 2023"</span>,
+        <span style="color: #a71d5d;">"value"</span>: <span style="color: #183691;">""</span>
+      },
+      {
+        <span style="color: #a71d5d;">"key"</span>: <span style="color: #183691;">"membership2"</span>,
+        <span style="color: #a71d5d;">"label"</span>: <span style="color: #183691;">"Expires sometime"</span>,
+        <span style="color: #a71d5d;">"value"</span>: <span style="color: #183691;">""</span>
+      }
+    ]
+  }
+}
+</pre>
+</div>
+
+<p>
+&#x2026;and with all that, here's what my very own custom Tesco Clubcard pkpass looks like. As you can appreciate, my image-editing skills aren't all that great, but hey this will do for now.
+</p>
+
+
+<div id="org1e23e3b" class="figure">
+<p><img src="../images/my-custom-tesco-clubcard-pkpass/bsy.png" alt="bsy.png" width="50%" />
+</p>
+</div>
 </div>
 </div>
 </div>
