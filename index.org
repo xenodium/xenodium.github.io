@@ -1,6 +1,54 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-08-27 Sun] Further sqlite-mode extensions
+:PROPERTIES:
+:CUSTOM_ID: further-sqlite-mode-extensions
+:END:
+I've continued poking at Emacs 29's sqlite-mode. Since [[https://xenodium.com/sqlite-mode-goodies/][my last post on extensions]], I've experimented a little with adding a handful of interactive functions:
+
+- =sqlite-mode-extras-compose-and-execute=: Compose and execute a query.
+#+ATTR_HTML: :width 90%
+[[file:images/further-sqlite-mode-extensions/compose-execute.gif]]
+- =sqlite-mode-extras-execute=: Execute a query.
+#+ATTR_HTML: :width 90%
+[[file:images/further-sqlite-mode-extensions/execute.gif]]
+- =sqlite-mode-extras-add-row=: Add row to table at point.
+#+ATTR_HTML: :width 90%
+[[file:images/further-sqlite-mode-extensions/add-row.gif]]
+- =sqlite-mode-extras-delete-row-dwim=: Similar to =sqlite-mode-delete= but also enables deleting range in region.
+#+ATTR_HTML: :width 90%
+[[file:images/further-sqlite-mode-extensions/delete-rows.gif]]
+- =sqlite-mode-extras-refresh=: Refreshes the buffer re-querying the database.
+- =sqlite-mode-extras-ret-dwim=: If on table, toggle expansion. If on row, edit it.
+- =sqlite-mode-extras-execute-and-display-select-query=: Executes a query and displays results.
+#+ATTR_HTML: :width 90%
+[[file:images/further-sqlite-mode-extensions/select-earth.gif]]
+
+I've been playing with the following key bindings:
+
+#+begin_src emacs-lisp :lexical no
+  (use-package sqlite-mode-extras
+    :bind (:map
+           sqlite-mode-map
+           ("n" . next-line)
+           ("p" . previous-line)
+           ("b" . sqlite-mode-extras-backtab-dwim)
+           ("f" . sqlite-mode-extras-tab-dwim)
+           ("+" . sqlite-mode-extras-add-row)
+           ("D" . sqlite-mode-extras-delete-row-dwim)
+           ("C" . sqlite-mode-extras-compose-and-execute)
+           ("E" . sqlite-mode-extras-execute)
+           ("S" . sqlite-mode-extras-execute-and-display-select-query)
+           ("DEL" . sqlite-mode-extras-delete-row-dwim)
+           ("g" . sqlite-mode-extras-refresh)
+           ("<backtab>" . sqlite-mode-extras-backtab-dwim)
+           ("<tab>" . sqlite-mode-extras-tab-dwim)
+           ("RET" . sqlite-mode-extras-ret-dwim)))
+#+end_src
+
+The code lives in [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el][sqlite-mode-extras.el]] under my [[https://github.com/xenodium/dotsies/tree/main][Emacs config repo]]. Beware, it's fairly experimental and hasn't been tested thoroughly.
+
 * [2023-08-22 Tue] My custom Tesco Clubcard pkpass
 :PROPERTIES:
 :CUSTOM_ID: my-custom-tesco-clubcard-pkpass

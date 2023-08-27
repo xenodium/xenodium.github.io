@@ -6,7 +6,76 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 22 Aug 2023 08:08:48 +0100</lastBuildDate>
+<lastBuildDate>Sun, 27 Aug 2023 22:41:02 +0100</lastBuildDate>
+<item>
+  <title>Further sqlite-mode extensions</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-further-sqlite-mode-extensions" class="outline-2">
+ <h2 id="further-sqlite-mode-extensions"> <span class="timestamp-wrapper"> <span class="timestamp">27 August 2023</span></span> Further sqlite-mode extensions</h2>
+ <div class="outline-text-2" id="text-further-sqlite-mode-extensions">
+ <p>
+I've continued poking at Emacs 29's sqlite-mode. Since  <a href="https://xenodium.com/sqlite-mode-goodies/">my last post on extensions</a>, I've experimented a little with adding a handful of interactive functions:
+</p>
+
+ <ul class="org-ul"> <li> <code>sqlite-mode-extras-compose-and-execute</code>: Compose and execute a query.</li>
+</ul> <div id="org4fcf808" class="figure">
+ <p> <img src="../images/further-sqlite-mode-extensions/compose-execute.gif" alt="compose-execute.gif" width="90%"></img></p>
+</div>
+ <ul class="org-ul"> <li> <code>sqlite-mode-extras-execute</code>: Execute a query.</li>
+</ul> <div id="org6609ae8" class="figure">
+ <p> <img src="../images/further-sqlite-mode-extensions/execute.gif" alt="execute.gif" width="90%"></img></p>
+</div>
+ <ul class="org-ul"> <li> <code>sqlite-mode-extras-add-row</code>: Add row to table at point.</li>
+</ul> <div id="org9a452c6" class="figure">
+ <p> <img src="../images/further-sqlite-mode-extensions/add-row.gif" alt="add-row.gif" width="90%"></img></p>
+</div>
+ <ul class="org-ul"> <li> <code>sqlite-mode-extras-delete-row-dwim</code>: Similar to  <code>sqlite-mode-delete</code> but also enables deleting range in region.</li>
+</ul> <div id="org70cae5a" class="figure">
+ <p> <img src="../images/further-sqlite-mode-extensions/delete-rows.gif" alt="delete-rows.gif" width="90%"></img></p>
+</div>
+ <ul class="org-ul"> <li> <code>sqlite-mode-extras-refresh</code>: Refreshes the buffer re-querying the database.</li>
+ <li> <code>sqlite-mode-extras-ret-dwim</code>: If on table, toggle expansion. If on row, edit it.</li>
+ <li> <code>sqlite-mode-extras-execute-and-display-select-query</code>: Executes a query and displays results.</li>
+</ul> <div id="org4004268" class="figure">
+ <p> <img src="../images/further-sqlite-mode-extensions/select-earth.gif" alt="select-earth.gif" width="90%"></img></p>
+</div>
+
+ <p>
+I've been playing with the following key bindings:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">sqlite-mode-extras</span>
+   <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span>
+         sqlite-mode-map
+         (<span style="color: #183691;">"n"</span> . next-line)
+         (<span style="color: #183691;">"p"</span> . previous-line)
+         (<span style="color: #183691;">"b"</span> . sqlite-mode-extras-backtab-dwim)
+         (<span style="color: #183691;">"f"</span> . sqlite-mode-extras-tab-dwim)
+         (<span style="color: #183691;">"+"</span> . sqlite-mode-extras-add-row)
+         (<span style="color: #183691;">"D"</span> . sqlite-mode-extras-delete-row-dwim)
+         (<span style="color: #183691;">"C"</span> . sqlite-mode-extras-compose-and-execute)
+         (<span style="color: #183691;">"E"</span> . sqlite-mode-extras-execute)
+         (<span style="color: #183691;">"S"</span> . sqlite-mode-extras-execute-and-display-select-query)
+         (<span style="color: #183691;">"DEL"</span> . sqlite-mode-extras-delete-row-dwim)
+         (<span style="color: #183691;">"g"</span> . sqlite-mode-extras-refresh)
+         (<span style="color: #183691;">"<backtab>"</span> . sqlite-mode-extras-backtab-dwim)
+         (<span style="color: #183691;">"<tab>"</span> . sqlite-mode-extras-tab-dwim)
+         (<span style="color: #183691;">"RET"</span> . sqlite-mode-extras-ret-dwim)))
+</pre>
+</div>
+
+ <p>
+The code lives in  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el">sqlite-mode-extras.el</a> under my  <a href="https://github.com/xenodium/dotsies/tree/main">Emacs config repo</a>. Beware, it's fairly experimental and hasn't been tested thoroughly.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/further-sqlite-mode-extensions</link>
+  <guid isPermaLink="false">http://xenodium.com/further-sqlite-mode-extensions</guid>
+  <pubDate>Sun, 27 Aug 2023 22:41:02 +0100</pubDate>
+</item>
 <item>
   <title>My custom Tesco Clubcard pkpass</title>
   <description><![CDATA[<div id="content" class="content">
@@ -172,8 +241,29 @@ The remaining customizations took place in  <code>pass.json</code> and should be
 </p>
 
 
- <div id="org1e23e3b" class="figure">
+ <div id="org5709b1c" class="figure">
  <p> <img src="../images/my-custom-tesco-clubcard-pkpass/bsy.png" alt="bsy.png" width="50%"></img></p>
+</div>
+</div>
+
+ <div id="outline-container-org419bde8" class="outline-3">
+ <h3 id="org419bde8">Update</h3>
+ <div class="outline-text-3" id="text-org419bde8">
+ <p>
+Redditor u/stupergenius  <a href="https://www.reddit.com/r/programming/comments/15y4c65/comment/jxa1obg/?utm_source=share&utm_medium=web2x&context=3">suggested using the image's original background color</a>. Nice suggestion. Tweaked via pass.json:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-json"> <span style="color: #a71d5d;">"foregroundColor"</span>:  <span style="color: #183691;">"rgb(2, 81, 158)"</span>,
+ <span style="color: #a71d5d;">"labelColor"</span>:  <span style="color: #183691;">"rgb(15, 58, 105)"</span>,
+ <span style="color: #a71d5d;">"backgroundColor"</span>:  <span style="color: #183691;">"rgb(166, 202, 214)"</span>,
+</pre>
+</div>
+
+
+ <div id="org5e800a0" class="figure">
+ <p> <img src="../images/my-custom-tesco-clubcard-pkpass/bsy-light.png" alt="bsy-light.png" width="50%"></img></p>
+</div>
 </div>
 </div>
 </div>
@@ -280,9 +370,9 @@ For now, the code lives in  <a href="https://github.com/xenodium/dotsies/blob/ma
 </div>
 </div>
 </div>]]></description>
-  <link>http://xenodium.com/sqlite-mode-goodies/index.html</link>
-  <guid isPermaLink="false">http://xenodium.com/sqlite-mode-goodies/index.html</guid>
-  <pubDate>Mon, 07 Aug 2023 22:08:44 +0100</pubDate>
+  <link>http://xenodium.com/sqlite-mode-goodies</link>
+  <guid isPermaLink="false">http://xenodium.com/sqlite-mode-goodies</guid>
+  <pubDate>Mon, 07 Aug 2023 00:00:00 +0100</pubDate>
 </item>
 <item>
   <title>Emacs 29s sqlite-mode</title>
