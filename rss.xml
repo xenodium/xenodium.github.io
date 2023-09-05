@@ -6,7 +6,110 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 27 Aug 2023 22:41:10 +0100</lastBuildDate>
+<lastBuildDate>Tue, 05 Sep 2023 09:56:30 +0100</lastBuildDate>
+<item>
+  <title>Inline previous result and why you should edebug</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-inline-previous-result-and-why-you-should-edebug" class="outline-2">
+ <h2 id="inline-previous-result-and-why-you-should-edebug"> <span class="timestamp-wrapper"> <span class="timestamp">05 September 2023</span></span> Inline previous result and why you should edebug</h2>
+ <div class="outline-text-2" id="text-inline-previous-result-and-why-you-should-edebug">
+ <p>
+Artur Malabarba's  <a href="https://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html">Debugging Elisp Part 1: Earn your independence</a> is nearly a decade old, yet it rings just as true today.
+</p>
+
+ <p>
+Learning to Edebug really  <i>"is the right decision for anyone who doesn't know how to Edebug."</i> Why, you may ask? He best puts it as  <i>"running into errors is not only a consequence of tinkering with your editor, it is the only road to graduating in Emacs."</i>
+</p>
+
+ <p>
+For me personally, it  <i>earned me that independence</i> to bend Emacs my way. Don't like how something works? Pull up the debugger to help me understand how a package or function works. I've done this countless of times to bend things my way.
+</p>
+
+ <p>
+Speaking of edebug, I had been meaning to tweak edebug's result display behaviour for quite some time. As you step through code, edbug prints the result of previous expressions to the minibuffer. This works well, but I couldn't help but feel like my eyes were constantly jumping between the code and the minibuffer at the bottom of the window.
+</p>
+
+
+ <div id="orgbc804ac" class="figure">
+ <p> <img src="../images/inline-previous-result-and-why-you-should-edebug/edebug-minibuffer.gif" alt="edebug-minibuffer.gif" width="70%"></img></p>
+</div>
+
+ <p>
+I wanted to minimize the eye jumping experience, so I figured I could likely bend things my way and print the result at point. How did I go about it? The same way I often do. Figure out what function is called for a given key binding via  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Help.html">describe-key</a> or my favourite replacement helpful-key from  <a href="https://github.com/Wilfred/helpful">helpful.el</a>. This led me to  <code>edebug-next-mode</code> in  <code>edebug.el</code>. At that point, I could have set a breakpoint in  <code>edebug-next-mode</code> and eventually step into the relevant code, but hey we had a better clue. We knew that all output started with "Result:", so we could just search for that string in  <code>edebug.el</code> instead. Jackpot!  <code>edebug-compute-previous-result</code> and its adjacent  <code>edebug-previous-result</code> are just the right functions:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">edebug-compute-previous-result</span> (previous-value)
+  (<span style="color: #a71d5d;">if</span> edebug-unwrap-results
+      (<span style="color: #a71d5d;">setq</span> previous-value
+            (edebug-unwrap* previous-value)))
+  (<span style="color: #a71d5d;">setq</span> edebug-previous-result
+        (concat  <span style="color: #183691;">"Result: "</span>
+                (edebug-safe-prin1-to-string previous-value)
+                (eval-expression-print-format previous-value))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">edebug-previous-result</span> ()
+   <span style="color: #183691;">"Print the previous result."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (message  <span style="color: #183691;">"%s"</span> edebug-previous-result))
+</pre>
+</div>
+
+ <p>
+We can see that  <code>edebug-previous-result</code> invokes  <code>message</code> which is responsible for displaying the debugged expression's result in the minibuffer. Modifying this functions behaviour would be enough to achieve inline display, but I also want to remove "Result:" from the displayed message. Neither of these functions offer configurability, so we'll resort to advising both functions. That is,  <a href="https://en.wikipedia.org/wiki/Monkey_patch">monkey patch</a> them (errm I know… lovely).
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">adviced:edebug-compute-previous-result</span> (_  <span style="color: #0086b3;">&rest</span> r)
+   <span style="color: #183691;">"Adviced `</span> <span style="color: #0086b3;">edebug-compute-previous-result</span> <span style="color: #183691;">'."</span>
+  (<span style="color: #a71d5d;">let</span> ((previous-value (nth 0 r)))
+    (<span style="color: #a71d5d;">if</span> edebug-unwrap-results
+        (<span style="color: #a71d5d;">setq</span> previous-value
+              (edebug-unwrap* previous-value)))
+    (<span style="color: #a71d5d;">setq</span> edebug-previous-result
+          (edebug-safe-prin1-to-string previous-value))))
+
+(advice-add #'edebug-compute-previous-result
+             <span style="color: #a71d5d;">:around</span>
+            #'adviced:edebug-compute-previous-result)
+</pre>
+</div>
+
+ <p>
+ <code>adviced:edebug-compute-previous-result</code> removes "Result:" in addition to dropping  <code>(eval-expression-print-format previous-value)</code>, which I don't typically rely on.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">eros</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">adviced:edebug-previous-result</span> (_  <span style="color: #0086b3;">&rest</span> r)
+   <span style="color: #183691;">"Adviced `</span> <span style="color: #0086b3;">edebug-previous-result</span> <span style="color: #183691;">'."</span>
+  (eros--make-result-overlay edebug-previous-result
+     <span style="color: #a71d5d;">:where</span> (point)
+     <span style="color: #a71d5d;">:duration</span> eros-eval-result-duration))
+
+(advice-add #'edebug-previous-result
+             <span style="color: #a71d5d;">:around</span>
+            #'adviced:edebug-previous-result)
+</pre>
+</div>
+
+ <p>
+ <code>adviced:edebug-previous-result</code> is in charge of display via  <code>message</code>, so all we need is some replacement. I initially played with  <a href="https://github.com/auto-complete/popup-el">popup-tip</a> and that  <a href="https://indieweb.social/@xenodium/111008598580447299">did the job just fine</a>, but  <a href="https://emacs.ch/@fosskers">Colin</a> led me to a better path while  <a href="https://emacs.ch/@fosskers/111009811997698187">pointing to Clojure and Common Lisp</a>. This reminded me of  <a href="https://github.com/xiongtx/eros">eros: Evaluation Result OverlayS for Emacs Lisp</a>, which I already used. Swapping  <code>message</code> for  <code>eros--make-result-overlay</code> did the trick. Yes, this is a private function, but I can live with that. This code is only an  <code>advice-remove</code> away from disabling, but hey look at those  <i>inline results</i>!
+</p>
+
+
+ <div id="org26ee13e" class="figure">
+ <p> <img src="../images/inline-previous-result-and-why-you-should-edebug/edebug-inline.gif" alt="edebug-inline.gif" width="90%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/inline-previous-result-and-why-you-should-edebug</link>
+  <guid isPermaLink="false">http://xenodium.com/inline-previous-result-and-why-you-should-edebug</guid>
+  <pubDate>Tue, 05 Sep 2023 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Further sqlite-mode extensions</title>
   <description><![CDATA[<div id="content" class="content">

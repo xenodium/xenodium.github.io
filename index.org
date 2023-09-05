@@ -1,6 +1,77 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-09-05 Tue] Inline previous result and why you should edebug
+:PROPERTIES:
+:CUSTOM_ID: inline-previous-result-and-why-you-should-edebug
+:END:
+Artur Malabarba's [[https://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html][Debugging Elisp Part 1: Earn your independence]] is nearly a decade old, yet it rings just as true today.
+
+Learning to Edebug really /"is the right decision for anyone who doesn't know how to Edebug."/ Why, you may ask? He best puts it as /"running into errors is not only a consequence of tinkering with your editor, it is the only road to graduating in Emacs."/
+
+For me personally, it /earned me that independence/ to bend Emacs my way. Don't like how something works? Pull up the debugger to help me understand how a package or function works. I've done this countless of times to bend things my way.
+
+Speaking of edebug, I had been meaning to tweak edebug's result display behaviour for quite some time. As you step through code, edbug prints the result of previous expressions to the minibuffer. This works well, but I couldn't help but feel like my eyes were constantly jumping between the code and the minibuffer at the bottom of the window.
+
+#+ATTR_HTML: :width 70%
+[[file:images/inline-previous-result-and-why-you-should-edebug/edebug-minibuffer.gif]]
+
+I wanted to minimize the eye jumping experience, so I figured I could likely bend things my way and print the result at point. How did I go about it? The same way I often do. Figure out what function is called for a given key binding via [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Help.html][describe-key]] or my favourite replacement helpful-key from [[https://github.com/Wilfred/helpful][helpful.el]]. This led me to =edebug-next-mode= in =edebug.el=. At that point, I could have set a breakpoint in =edebug-next-mode= and eventually step into the relevant code, but hey we had a better clue. We knew that all output started with "Result:", so we could just search for that string in =edebug.el= instead. Jackpot! =edebug-compute-previous-result= and its adjacent =edebug-previous-result= are just the right functions:
+
+#+begin_src emacs-lisp :lexical no
+  (defun edebug-compute-previous-result (previous-value)
+    (if edebug-unwrap-results
+        (setq previous-value
+              (edebug-unwrap* previous-value)))
+    (setq edebug-previous-result
+          (concat "Result: "
+                  (edebug-safe-prin1-to-string previous-value)
+                  (eval-expression-print-format previous-value))))
+
+  (defun edebug-previous-result ()
+    "Print the previous result."
+    (interactive)
+    (message "%s" edebug-previous-result))
+#+end_src
+
+We can see that =edebug-previous-result= invokes =message= which is responsible for displaying the debugged expression's result in the minibuffer. Modifying this functions behaviour would be enough to achieve inline display, but I also want to remove "Result:" from the displayed message. Neither of these functions offer configurability, so we'll resort to advising both functions. That is, [[https://en.wikipedia.org/wiki/Monkey_patch][monkey patch]] them (errm I know... lovely).
+
+#+begin_src emacs-lisp :lexical no
+  (defun adviced:edebug-compute-previous-result (_ &rest r)
+    "Adviced `edebug-compute-previous-result'."
+    (let ((previous-value (nth 0 r)))
+      (if edebug-unwrap-results
+          (setq previous-value
+                (edebug-unwrap* previous-value)))
+      (setq edebug-previous-result
+            (edebug-safe-prin1-to-string previous-value))))
+
+  (advice-add #'edebug-compute-previous-result
+              :around
+              #'adviced:edebug-compute-previous-result)
+#+end_src
+
+=adviced:edebug-compute-previous-result= removes "Result:" in addition to dropping =(eval-expression-print-format previous-value)=, which I don't typically rely on.
+
+#+begin_src emacs-lisp :lexical no
+  (require 'eros)
+
+  (defun adviced:edebug-previous-result (_ &rest r)
+    "Adviced `edebug-previous-result'."
+    (eros--make-result-overlay edebug-previous-result
+      :where (point)
+      :duration eros-eval-result-duration))
+
+  (advice-add #'edebug-previous-result
+              :around
+              #'adviced:edebug-previous-result)
+#+end_src
+
+=adviced:edebug-previous-result= is in charge of display via =message=, so all we need is some replacement. I initially played with [[https://github.com/auto-complete/popup-el][popup-tip]] and that [[https://indieweb.social/@xenodium/111008598580447299][did the job just fine]], but [[https://emacs.ch/@fosskers][Colin]] led me to a better path while [[https://emacs.ch/@fosskers/111009811997698187][pointing to Clojure and Common Lisp]]. This reminded me of [[https://github.com/xiongtx/eros][eros: Evaluation Result OverlayS for Emacs Lisp]], which I already used. Swapping =message= for =eros--make-result-overlay= did the trick. Yes, this is a private function, but I can live with that. This code is only an =advice-remove= away from disabling, but hey look at those /inline results/!
+
+#+ATTR_HTML: :width 90%
+[[file:images/inline-previous-result-and-why-you-should-edebug/edebug-inline.gif]]
+
 * [2023-08-27 Sun] Further sqlite-mode extensions
 :PROPERTIES:
 :CUSTOM_ID: further-sqlite-mode-extensions
