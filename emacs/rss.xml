@@ -6,7 +6,108 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 05 Sep 2023 08:00:23 +0100</lastBuildDate>
+<lastBuildDate>Sun, 10 Sep 2023 17:15:21 +0100</lastBuildDate>
+<item>
+  <title>SHA-256 hash from URL, the easy way</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-sha-256-hash-from-url-the-easy-way" class="outline-2">
+ <h2 id="sha-256-hash-from-url-the-easy-way"> <span class="timestamp-wrapper"> <span class="timestamp">10 September 2023</span></span> SHA-256 hash from URL, the easy way</h2>
+ <div class="outline-text-2" id="text-sha-256-hash-from-url-the-easy-way">
+ <p>
+From time to time, I need to generate a SHA-256 hash from a file hosted on some server. For me, this flow typically goes something along the lines of:
+</p>
+
+ <ul class="org-ul"> <li>Copy the file URL from browser.</li>
+ <li>Drop to Emacs eshell.</li>
+ <li>Change current directory.</li>
+ <li>Type "curl -o file"</li>
+ <li>Paste the file URL.</li>
+ <li>Run curl command.</li>
+ <li>Type "shasum -a 256 file".</li>
+ <li>Run  <a href="https://linux.die.net/man/1/shasum">shasum</a> command.</li>
+ <li>Copy the generated hash.</li>
+ <li>Maybe delete the downloaded file?</li>
+</ul> <p>
+We can maybe shave some steps off by downloading directly from the browser, though that may also bring additional clicks and navigating to a download location.
+</p>
+
+ <p>
+Amongst the steps,  <a href="https://linux.die.net/man/1/shasum">shasum</a> is the star player, and its output can be seen below.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">shasum -a 256 path/to/downloaded/file
+</pre>
+</div>
+
+ <pre class="example">
+3da351027e5b1495c7c7fe4abbf8d7ac9625da3604be5a35c9a9cbb92f6f955a  path/to/downloaded/file
+</pre>
+
+
+ <p>
+Not a huge deal. One can copy the hash from the output, but why go through multiple small manual steps when I know I can get Emacs to simplify the lot? I've expedited a similar flow in the past when  <a href="https://xenodium.com/emacs-clone-git-repo-from-clipboard/">cloning git repos</a>. Let's simplify again so hashing a hosted file boils down to:
+</p>
+
+ <ul class="org-ul"> <li>Copy the file URL from browser.</li>
+ <li>Run an Emacs interactive command.</li>
+</ul> <p>
+This is where I pull out  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> (a little package I wrote) and glue the lot to get an expedited experience.
+</p>
+
+
+ <div id="orgaf5b7eb" class="figure">
+ <p> <img src="../images/sha-256-hash-from-url-the-easy-way/hash.gif" alt="hash.gif" width="100%"></img></p>
+</div>
+
+ <p>
+There isn't much to the function other than glueing a little elisp and a shell script via  <code>dwim-shell-command</code> for some buffer/error handling.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-sha-256-hash-file-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Download file at clipboard URL and generate SHA-256 hash."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((url (current-kill 0)))
+    (<span style="color: #a71d5d;">unless</span> (string-match-p  <span style="color: #183691;">"^http[s]?://"</span> url)
+      (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"No URL in clipboard"</span>))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Generate SHA-256 hash from clipboard URL."</span>
+     (format
+       <span style="color: #183691;">"temp_file=$(mktemp)</span>
+ <span style="color: #183691;">       function cleanup {</span>
+ <span style="color: #183691;">         rm -f $temp_file</span>
+ <span style="color: #183691;">       }</span>
+ <span style="color: #183691;">       trap cleanup EXIT</span>
+ <span style="color: #183691;">       curl --no-progress-meter --location --fail --output $temp_file %s || exit 1</span>
+ <span style="color: #183691;">       shasum -a 256 $temp_file | awk '{print $1}'"</span>
+      (shell-quote-argument url))
+      <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"curl"</span>  <span style="color: #183691;">"shasum"</span>)
+      <span style="color: #a71d5d;">:on-completion</span>
+     (<span style="color: #a71d5d;">lambda</span> (buffer process)
+       (<span style="color: #a71d5d;">if-let</span> ((success (= (process-exit-status process) 0))
+                (hash (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+                        (string-trim (buffer-string)))))
+           (<span style="color: #a71d5d;">progn</span>
+             (kill-buffer buffer)
+             (kill-new hash)
+             (message  <span style="color: #183691;">"Copied %s to clipboard"</span>
+                      (propertize hash 'face 'font-lock-string-face)))
+         (switch-to-buffer buffer))))))
+</pre>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-sha-256-hash-file-at-clipboard-url</code> is now in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, the optional counterpart in  <a href="https://github.com/xenodium/dwim-shell-command/">dwim-shell-command</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/sha-256-hash-from-url-the-easy-way</link>
+  <guid isPermaLink="false">http://xenodium.com/sha-256-hash-from-url-the-easy-way</guid>
+  <pubDate>Sun, 10 Sep 2023 17:15:21 +0100</pubDate>
+</item>
 <item>
   <title>Inline previous result and why you should edebug</title>
   <description><![CDATA[<div id="content" class="content">

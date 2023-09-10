@@ -1,6 +1,80 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-09-10 Sun] SHA-256 hash from URL, the easy way
+:PROPERTIES:
+:CUSTOM_ID: sha-256-hash-from-url-the-easy-way
+:END:
+From time to time, I need to generate a SHA-256 hash from a file hosted on some server. For me, this flow typically goes something along the lines of:
+
+- Copy the file URL from browser.
+- Drop to Emacs eshell.
+- Change current directory.
+- Type "curl -o file"
+- Paste the file URL.
+- Run curl command.
+- Type "shasum -a 256 file".
+- Run [[https://linux.die.net/man/1/shasum][shasum]] command.
+- Copy the generated hash.
+- Maybe delete the downloaded file?
+
+We can maybe shave some steps off by downloading directly from the browser, though that may also bring additional clicks and navigating to a download location.
+
+Amongst the steps, [[https://linux.die.net/man/1/shasum][shasum]] is the star player, and its output can be seen below.
+
+#+begin_src bash
+  shasum -a 256 path/to/downloaded/file
+#+end_src
+
+#+RESULTS:
+: 3da351027e5b1495c7c7fe4abbf8d7ac9625da3604be5a35c9a9cbb92f6f955a  path/to/downloaded/file
+
+Not a huge deal. One can copy the hash from the output, but why go through multiple small manual steps when I know I can get Emacs to simplify the lot? I've expedited a similar flow in the past when [[https://xenodium.com/emacs-clone-git-repo-from-clipboard/][cloning git repos]]. Let's simplify again so hashing a hosted file boils down to:
+
+- Copy the file URL from browser.
+- Run an Emacs interactive command.
+
+This is where I pull out [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] (a little package I wrote) and glue the lot to get an expedited experience.
+
+#+ATTR_HTML: :width 100%
+[[file:images/sha-256-hash-from-url-the-easy-way/hash.gif]]
+
+There isn't much to the function other than glueing a little elisp and a shell script via =dwim-shell-command= for some buffer/error handling.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-sha-256-hash-file-at-clipboard-url ()
+    "Download file at clipboard URL and generate SHA-256 hash."
+    (interactive)
+    (let ((url (current-kill 0)))
+      (unless (string-match-p "^http[s]?://" url)
+        (user-error "No URL in clipboard"))
+      (dwim-shell-command-on-marked-files
+       "Generate SHA-256 hash from clipboard URL."
+       (format
+        "temp_file=$(mktemp)
+         function cleanup {
+           rm -f $temp_file
+         }
+         trap cleanup EXIT
+         curl --no-progress-meter --location --fail --output $temp_file %s || exit 1
+         shasum -a 256 $temp_file | awk '{print $1}'"
+        (shell-quote-argument url))
+       :utils '("curl" "shasum")
+       :on-completion
+       (lambda (buffer process)
+         (if-let ((success (= (process-exit-status process) 0))
+                  (hash (with-current-buffer buffer
+                          (string-trim (buffer-string)))))
+             (progn
+               (kill-buffer buffer)
+               (kill-new hash)
+               (message "Copied %s to clipboard"
+                        (propertize hash 'face 'font-lock-string-face)))
+           (switch-to-buffer buffer))))))
+#+end_src
+
+=dwim-shell-commands-sha-256-hash-file-at-clipboard-url= is now in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]], the optional counterpart in [[https://github.com/xenodium/dwim-shell-command/][dwim-shell-command]].
+
 * [2023-09-05 Tue] Inline previous result and why you should edebug
 :PROPERTIES:
 :CUSTOM_ID: inline-previous-result-and-why-you-should-edebug

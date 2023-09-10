@@ -6,7 +6,108 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 05 Sep 2023 09:56:30 +0100</lastBuildDate>
+<lastBuildDate>Sun, 10 Sep 2023 17:15:29 +0100</lastBuildDate>
+<item>
+  <title>SHA-256 hash from URL, the easy way</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-sha-256-hash-from-url-the-easy-way" class="outline-2">
+ <h2 id="sha-256-hash-from-url-the-easy-way"> <span class="timestamp-wrapper"> <span class="timestamp">10 September 2023</span></span> SHA-256 hash from URL, the easy way</h2>
+ <div class="outline-text-2" id="text-sha-256-hash-from-url-the-easy-way">
+ <p>
+From time to time, I need to generate a SHA-256 hash from a file hosted on some server. For me, this flow typically goes something along the lines of:
+</p>
+
+ <ul class="org-ul"> <li>Copy the file URL from browser.</li>
+ <li>Drop to Emacs eshell.</li>
+ <li>Change current directory.</li>
+ <li>Type "curl -o file"</li>
+ <li>Paste the file URL.</li>
+ <li>Run curl command.</li>
+ <li>Type "shasum -a 256 file".</li>
+ <li>Run  <a href="https://linux.die.net/man/1/shasum">shasum</a> command.</li>
+ <li>Copy the generated hash.</li>
+ <li>Maybe delete the downloaded file?</li>
+</ul> <p>
+We can maybe shave some steps off by downloading directly from the browser, though that may also bring additional clicks and navigating to a download location.
+</p>
+
+ <p>
+Amongst the steps,  <a href="https://linux.die.net/man/1/shasum">shasum</a> is the star player, and its output can be seen below.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">shasum -a 256 path/to/downloaded/file
+</pre>
+</div>
+
+ <pre class="example">
+3da351027e5b1495c7c7fe4abbf8d7ac9625da3604be5a35c9a9cbb92f6f955a  path/to/downloaded/file
+</pre>
+
+
+ <p>
+Not a huge deal. One can copy the hash from the output, but why go through multiple small manual steps when I know I can get Emacs to simplify the lot? I've expedited a similar flow in the past when  <a href="https://xenodium.com/emacs-clone-git-repo-from-clipboard/">cloning git repos</a>. Let's simplify again so hashing a hosted file boils down to:
+</p>
+
+ <ul class="org-ul"> <li>Copy the file URL from browser.</li>
+ <li>Run an Emacs interactive command.</li>
+</ul> <p>
+This is where I pull out  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> (a little package I wrote) and glue the lot to get an expedited experience.
+</p>
+
+
+ <div id="orgaf5b7eb" class="figure">
+ <p> <img src="../images/sha-256-hash-from-url-the-easy-way/hash.gif" alt="hash.gif" width="100%"></img></p>
+</div>
+
+ <p>
+There isn't much to the function other than glueing a little elisp and a shell script via  <code>dwim-shell-command</code> for some buffer/error handling.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-sha-256-hash-file-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Download file at clipboard URL and generate SHA-256 hash."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((url (current-kill 0)))
+    (<span style="color: #a71d5d;">unless</span> (string-match-p  <span style="color: #183691;">"^http[s]?://"</span> url)
+      (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"No URL in clipboard"</span>))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Generate SHA-256 hash from clipboard URL."</span>
+     (format
+       <span style="color: #183691;">"temp_file=$(mktemp)</span>
+ <span style="color: #183691;">       function cleanup {</span>
+ <span style="color: #183691;">         rm -f $temp_file</span>
+ <span style="color: #183691;">       }</span>
+ <span style="color: #183691;">       trap cleanup EXIT</span>
+ <span style="color: #183691;">       curl --no-progress-meter --location --fail --output $temp_file %s || exit 1</span>
+ <span style="color: #183691;">       shasum -a 256 $temp_file | awk '{print $1}'"</span>
+      (shell-quote-argument url))
+      <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"curl"</span>  <span style="color: #183691;">"shasum"</span>)
+      <span style="color: #a71d5d;">:on-completion</span>
+     (<span style="color: #a71d5d;">lambda</span> (buffer process)
+       (<span style="color: #a71d5d;">if-let</span> ((success (= (process-exit-status process) 0))
+                (hash (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+                        (string-trim (buffer-string)))))
+           (<span style="color: #a71d5d;">progn</span>
+             (kill-buffer buffer)
+             (kill-new hash)
+             (message  <span style="color: #183691;">"Copied %s to clipboard"</span>
+                      (propertize hash 'face 'font-lock-string-face)))
+         (switch-to-buffer buffer))))))
+</pre>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-sha-256-hash-file-at-clipboard-url</code> is now in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, the optional counterpart in  <a href="https://github.com/xenodium/dwim-shell-command/">dwim-shell-command</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/sha-256-hash-from-url-the-easy-way</link>
+  <guid isPermaLink="false">http://xenodium.com/sha-256-hash-from-url-the-easy-way</guid>
+  <pubDate>Sun, 10 Sep 2023 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Inline previous result and why you should edebug</title>
   <description><![CDATA[<div id="content" class="content">
@@ -31,7 +132,7 @@ Speaking of edebug, I had been meaning to tweak edebug's result display behaviou
 </p>
 
 
- <div id="orgbc804ac" class="figure">
+ <div id="orga9252e5" class="figure">
  <p> <img src="../images/inline-previous-result-and-why-you-should-edebug/edebug-minibuffer.gif" alt="edebug-minibuffer.gif" width="70%"></img></p>
 </div>
 
@@ -100,7 +201,7 @@ We can see that  <code>edebug-previous-result</code> invokes  <code>message</cod
 </p>
 
 
- <div id="org26ee13e" class="figure">
+ <div id="org835214d" class="figure">
  <p> <img src="../images/inline-previous-result-and-why-you-should-edebug/edebug-inline.gif" alt="edebug-inline.gif" width="90%"></img></p>
 </div>
 </div>
@@ -122,25 +223,25 @@ I've continued poking at Emacs 29's sqlite-mode. Since  <a href="https://xenodiu
 </p>
 
  <ul class="org-ul"> <li> <code>sqlite-mode-extras-compose-and-execute</code>: Compose and execute a query.</li>
-</ul> <div id="org4fcf808" class="figure">
+</ul> <div id="orgcd76d1d" class="figure">
  <p> <img src="../images/further-sqlite-mode-extensions/compose-execute.gif" alt="compose-execute.gif" width="90%"></img></p>
 </div>
  <ul class="org-ul"> <li> <code>sqlite-mode-extras-execute</code>: Execute a query.</li>
-</ul> <div id="org6609ae8" class="figure">
+</ul> <div id="org99827a7" class="figure">
  <p> <img src="../images/further-sqlite-mode-extensions/execute.gif" alt="execute.gif" width="90%"></img></p>
 </div>
  <ul class="org-ul"> <li> <code>sqlite-mode-extras-add-row</code>: Add row to table at point.</li>
-</ul> <div id="org9a452c6" class="figure">
+</ul> <div id="org9774f72" class="figure">
  <p> <img src="../images/further-sqlite-mode-extensions/add-row.gif" alt="add-row.gif" width="90%"></img></p>
 </div>
  <ul class="org-ul"> <li> <code>sqlite-mode-extras-delete-row-dwim</code>: Similar to  <code>sqlite-mode-delete</code> but also enables deleting range in region.</li>
-</ul> <div id="org70cae5a" class="figure">
+</ul> <div id="org1f8b7a9" class="figure">
  <p> <img src="../images/further-sqlite-mode-extensions/delete-rows.gif" alt="delete-rows.gif" width="90%"></img></p>
 </div>
  <ul class="org-ul"> <li> <code>sqlite-mode-extras-refresh</code>: Refreshes the buffer re-querying the database.</li>
  <li> <code>sqlite-mode-extras-ret-dwim</code>: If on table, toggle expansion. If on row, edit it.</li>
  <li> <code>sqlite-mode-extras-execute-and-display-select-query</code>: Executes a query and displays results.</li>
-</ul> <div id="org4004268" class="figure">
+</ul> <div id="orgdf2f001" class="figure">
  <p> <img src="../images/further-sqlite-mode-extensions/select-earth.gif" alt="select-earth.gif" width="90%"></img></p>
 </div>
 
@@ -274,7 +375,7 @@ We're technically done. We now have a working card, but it looks just like the s
 </p>
 
 
- <div id="orgfd2dc0b" class="figure">
+ <div id="org79facad" class="figure">
  <p> <img src="../images/my-custom-tesco-clubcard-pkpass/lemons.png" alt="lemons.png" width="50%"></img></p>
 </div>
 
@@ -344,14 +445,14 @@ The remaining customizations took place in  <code>pass.json</code> and should be
 </p>
 
 
- <div id="org5709b1c" class="figure">
+ <div id="org442846f" class="figure">
  <p> <img src="../images/my-custom-tesco-clubcard-pkpass/bsy.png" alt="bsy.png" width="50%"></img></p>
 </div>
 </div>
 
- <div id="outline-container-org419bde8" class="outline-3">
- <h3 id="org419bde8">Update</h3>
- <div class="outline-text-3" id="text-org419bde8">
+ <div id="outline-container-orgde51849" class="outline-3">
+ <h3 id="orgde51849">Update</h3>
+ <div class="outline-text-3" id="text-orgde51849">
  <p>
 Redditor u/stupergenius  <a href="https://www.reddit.com/r/programming/comments/15y4c65/comment/jxa1obg/?utm_source=share&utm_medium=web2x&context=3">suggested using the image's original background color</a>. Nice suggestion. Tweaked via pass.json:
 </p>
@@ -364,7 +465,7 @@ Redditor u/stupergenius  <a href="https://www.reddit.com/r/programming/comments/
 </div>
 
 
- <div id="org5e800a0" class="figure">
+ <div id="orgcc936af" class="figure">
  <p> <img src="../images/my-custom-tesco-clubcard-pkpass/bsy-light.png" alt="bsy-light.png" width="50%"></img></p>
 </div>
 </div>
@@ -421,7 +522,7 @@ Here's tab navigating forward:
 </p>
 
 
- <div id="org706dc3d" class="figure">
+ <div id="orgf44034d" class="figure">
  <p> <img src="../images/sqlite-mode-goodies/sqlite-forward.gif" alt="sqlite-forward.gif" width="75%"></img></p>
 </div>
 
@@ -430,7 +531,7 @@ Here's tab navigating backward:
 </p>
 
 
- <div id="org83ae4a4" class="figure">
+ <div id="org7f48849" class="figure">
  <p> <img src="../images/sqlite-mode-goodies/sqlite-previous.gif" alt="sqlite-previous.gif" width="75%"></img></p>
 </div>
 
@@ -439,7 +540,7 @@ And updating row fields:
 </p>
 
 
- <div id="orga683405" class="figure">
+ <div id="orgb2203b3" class="figure">
  <p> <img src="../images/sqlite-mode-goodies/sqlite-edits.gif" alt="sqlite-edits.gif" width="90%"></img></p>
 </div>
 
