@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 15 Sep 2023 12:02:02 +0100</lastBuildDate>
+<lastBuildDate>Fri, 15 Sep 2023 19:01:26 +0100</lastBuildDate>
 <item>
   <title>Send note to Kindle</title>
   <description><![CDATA[<div id="content" class="content">
@@ -142,6 +142,70 @@ By the way, and I only just learned this today… To take a screenshot on a Kind
 </div>]]></description>
   <link>http://xenodium.com/emacs-send-to-kindle</link>
   <guid isPermaLink="false">http://xenodium.com/emacs-send-to-kindle</guid>
+  <pubDate>Fri, 15 Sep 2023 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Redact that buffer</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-redact-that-buffer" class="outline-2">
+ <h2 id="redact-that-buffer"> <span class="timestamp-wrapper"> <span class="timestamp">15 September 2023</span></span> Redact that buffer</h2>
+ <div class="outline-text-2" id="text-redact-that-buffer">
+ <p>
+As I was getting ready to take an Emacs screenshot in the  <a href="https://xenodium.com/emacs-send-to-kindle/">previous post</a>, I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found  <a href="https://github.com/bkaestner/redacted.el">redacted.el</a>, built-in  <code>toggle-rot13-mode</code>, and  <a href="https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words">unpackaged/lorem-ipsum-overlay</a>. All great options, though I was hoping for a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
+</p>
+
+
+
+ <div id="org32866c4" class="figure">
+ <p> <img src="../images/redact-that-buffer/redact-regexp.gif" alt="redact-regexp.gif" width="98%"></img></p>
+</div>
+
+
+ <p>
+I also wanted the ability to redact the entire buffer content, so feeding a space to the regexp query also translates to  <code>[[:graph:]]</code>, effectively redacting all visible characters.
+</p>
+
+
+ <div id="org157aa77" class="figure">
+ <p> <img src="../images/redact-that-buffer/redact-all.gif" alt="redact-all.gif" width="98%"></img></p>
+</div>
+
+ <p>
+The solution is overlay-based, ensuring the buffer content remains unchanged. The function may have its own rough edges, yet it certainly scratched the itch for the current need. I'll leave ya with the snippet.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/toggle-redact-buffer</span> ()
+   <span style="color: #183691;">"Redact buffer content matching regexp. A space redacts all."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((redacted)
+         (regexp (string-trim (read-regexp  <span style="color: #183691;">"Redact regexp"</span> 'regexp-history-last)))
+         (matches (<span style="color: #a71d5d;">let</span> ((results '()))
+                    (<span style="color: #a71d5d;">when</span> (string-empty-p regexp)
+                      (<span style="color: #a71d5d;">setq</span> regexp  <span style="color: #183691;">"[[:graph:]]"</span>)
+                      (<span style="color: #a71d5d;">setq</span> regexp-history-last regexp)
+                      (add-to-history 'regexp-history regexp))
+                    (<span style="color: #a71d5d;">save-excursion</span>
+                      (goto-char (point-min))
+                      (<span style="color: #a71d5d;">while</span> (re-search-forward regexp nil t)
+                        (<span style="color: #a71d5d;">push</span> (cons (match-beginning 0) (match-end 0)) results)))
+                    (nreverse results))))
+    (mapc (<span style="color: #a71d5d;">lambda</span> (match)
+            (<span style="color: #a71d5d;">dolist</span> (overlay (overlays-in (car match) (cdr match)))
+              (<span style="color: #a71d5d;">setq</span> redacted t)
+              (delete-overlay overlay))
+            (<span style="color: #a71d5d;">unless</span> redacted
+              (overlay-put (make-overlay (car match) (cdr match))
+                           'display (make-string (- (cdr match) (car match)) ?x))))
+          matches)))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/redact-that-buffer</link>
+  <guid isPermaLink="false">http://xenodium.com/redact-that-buffer</guid>
   <pubDate>Fri, 15 Sep 2023 00:00:00 +0100</pubDate>
 </item>
 <item>
