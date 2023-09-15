@@ -1,6 +1,103 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-09-15 Fri] Send note to Kindle
+:PROPERTIES:
+:CUSTOM_ID: emacs-send-to-kindle
+:END:
+While on Mastodon, I spotted [[https://indieweb.social/@summeremacs@fashionsocial.host][@summeremacs]] looking into [[https://indieweb.social/@summeremacs@fashionsocial.host/111058226788825431][sending Emacs text selections to a Kindle via email]]. This sparked my interest as I previously looked into [[https://xenodium.com/emailing-pdfs-to-kindle-from-mu4e/][sending pdfs to my Kindle]] via [[https://github.com/djcb/mu][mu4e]].
+
+Kindle offers a neat service where you can email a file to your =@kindle.com= address and it automatically shows up in your Kindle library.
+
+I already do email from my beloved editor, and like most Emacs things, it's powered by [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]]. In other words, it's basically up for grabs if you'd like to glue it to anything else, so I did...
+
+I can now select a region and invoke =M-x send-to-kindle-as-txt= to send it over to my Kindle.
+
+#+ATTR_HTML: :width 80%
+[[file:images/emacs-send-to-kindle/send-to-my-kindle.gif]]
+
+Soon enough, the note shows up on my Kindle.
+
+#+ATTR_HTML: :width 70%
+[[file:images/emacs-send-to-kindle/listed.png]]
+
+Opening the note reveals the same content we had previously selected and sent from our malleable editor.
+
+#+ATTR_HTML: :width 70%
+[[file:images/emacs-send-to-kindle/repeated.png]]
+
+While it looks kinda magical, it's fairly simple under the hood. It takes the region content, writes it to a txt file, creates an email message buffer attaching the file, and finally sends via =message-send-and-exit=.
+
+If =M-x send-to-kindle-as-txt= is invoked with a =C-u= prefix, you get to inspect the message buffer right before sending via =C-c C-c=.
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-send-to-kindle/email.png]]
+
+Here's the full snippet.
+
+#+begin_src emacs-lisp :lexical no
+  (defcustom send-to-kindle-from-email
+    nil
+    "Your own email address to send from via mu4e."
+    :type 'string
+    :group 'send-to-kindle)
+
+  (defcustom send-to-kindle-to-email
+    nil
+    "Your Kindle email address to send pdf to."
+    :type 'string
+    :group 'send-to-kindle)
+
+  (defun send-to-kindle-as-txt (review)
+    (interactive "P")
+    (unless send-to-kindle-from-email
+      (setq send-to-kindle-from-email
+            (read-string "From email address: ")))
+    (unless send-to-kindle-to-email
+      (setq send-to-kindle-to-email
+            (read-string "To email address: ")))
+    (let* ((content (string-trim (if (region-active-p)
+                                     (buffer-substring (region-beginning) (region-end))
+                                   (buffer-string))))
+           (note-name (let ((name (string-trim (read-string "Note name: "))))
+                        (if (string-empty-p name)
+                            (nth
+                             0 (string-split
+                                (substring content 0 (min 40 (length content))) "\n"))
+                          name)))
+           (path (concat (temporary-file-directory) note-name))
+           (txt (concat path ".txt"))
+           (buffer (get-buffer-create (generate-new-buffer-name "*Email txt*"))))
+      (with-temp-buffer
+        (insert content)
+        (write-file txt))
+      (with-current-buffer buffer
+        (erase-buffer)
+        (message-mode)
+        (insert
+         (format
+          "From: %s
+  To: %s
+  Subject: %s
+  --text follows this line--
+  <#multipart type=mixed>
+  <#part type=\"text/plain\" filename=\"%s\" disposition=attachment>
+  <#/part>
+  <#/multipart>"
+          send-to-kindle-from-email
+          send-to-kindle-to-email
+          note-name txt))
+        (unless review
+          (message-send-and-exit)))
+      (when review
+        (switch-to-buffer buffer))))
+#+end_src
+
+By the way, and I only just learned this today... To take a screenshot on a Kindle Paperwhite, tap on these opposite corners.
+
+#+ATTR_HTML: :width 70%
+[[file:images/emacs-send-to-kindle/tap-screenshot.png]]
+
 * [2023-09-10 Sun] SHA-256 hash from URL, the easy way
 :PROPERTIES:
 :CUSTOM_ID: sha-256-hash-from-url-the-easy-way

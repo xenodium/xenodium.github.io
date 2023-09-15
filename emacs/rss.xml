@@ -6,7 +6,144 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 10 Sep 2023 17:15:21 +0100</lastBuildDate>
+<lastBuildDate>Fri, 15 Sep 2023 12:02:07 +0100</lastBuildDate>
+<item>
+  <title>Send note to Kindle</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-send-to-kindle" class="outline-2">
+ <h2 id="emacs-send-to-kindle"> <span class="timestamp-wrapper"> <span class="timestamp">15 September 2023</span></span> Send note to Kindle</h2>
+ <div class="outline-text-2" id="text-emacs-send-to-kindle">
+ <p>
+While on Mastodon, I spotted  <a href="https://indieweb.social/@summeremacs@fashionsocial.host">@summeremacs</a> looking into  <a href="https://indieweb.social/@summeremacs@fashionsocial.host/111058226788825431">sending Emacs text selections to a Kindle via email</a>. This sparked my interest as I previously looked into  <a href="https://xenodium.com/emailing-pdfs-to-kindle-from-mu4e/">sending pdfs to my Kindle</a> via  <a href="https://github.com/djcb/mu">mu4e</a>.
+</p>
+
+ <p>
+Kindle offers a neat service where you can email a file to your  <code>@kindle.com</code> address and it automatically shows up in your Kindle library.
+</p>
+
+ <p>
+I already do email from my beloved editor, and like most Emacs things, it's powered by  <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a>. In other words, it's basically up for grabs if you'd like to glue it to anything else, so I did…
+</p>
+
+ <p>
+I can now select a region and invoke  <code>M-x send-to-kindle-as-txt</code> to send it over to my Kindle.
+</p>
+
+
+ <div id="org2cab0d4" class="figure">
+ <p> <img src="../images/emacs-send-to-kindle/send-to-my-kindle.gif" alt="send-to-my-kindle.gif" width="80%"></img></p>
+</div>
+
+ <p>
+Soon enough, the note shows up on my Kindle.
+</p>
+
+
+ <div id="orgda402b9" class="figure">
+ <p> <img src="../images/emacs-send-to-kindle/listed.png" alt="listed.png" width="70%"></img></p>
+</div>
+
+ <p>
+Opening the note reveals the same content we had previously selected and sent from our malleable editor.
+</p>
+
+
+ <div id="org0b76b44" class="figure">
+ <p> <img src="../images/emacs-send-to-kindle/repeated.png" alt="repeated.png" width="70%"></img></p>
+</div>
+
+ <p>
+While it looks kinda magical, it's fairly simple under the hood. It takes the region content, writes it to a txt file, creates an email message buffer attaching the file, and finally sends via  <code>message-send-and-exit</code>.
+</p>
+
+ <p>
+If  <code>M-x send-to-kindle-as-txt</code> is invoked with a  <code>C-u</code> prefix, you get to inspect the message buffer right before sending via  <code>C-c C-c</code>.
+</p>
+
+
+ <div id="org466f88c" class="figure">
+ <p> <img src="../images/emacs-send-to-kindle/email.png" alt="email.png" width="95%"></img></p>
+</div>
+
+ <p>
+Here's the full snippet.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defcustom</span>  <span style="color: #333333;">send-to-kindle-from-email</span>
+  nil
+   <span style="color: #183691;">"Your own email address to send from via mu4e."</span>
+   <span style="color: #a71d5d;">:type</span> 'string
+   <span style="color: #a71d5d;">:group</span> 'send-to-kindle)
+
+(<span style="color: #a71d5d;">defcustom</span>  <span style="color: #333333;">send-to-kindle-to-email</span>
+  nil
+   <span style="color: #183691;">"Your Kindle email address to send pdf to."</span>
+   <span style="color: #a71d5d;">:type</span> 'string
+   <span style="color: #a71d5d;">:group</span> 'send-to-kindle)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">send-to-kindle-as-txt</span> (review)
+  (<span style="color: #a71d5d;">interactive</span>  <span style="color: #183691;">"P"</span>)
+  (<span style="color: #a71d5d;">unless</span> send-to-kindle-from-email
+    (<span style="color: #a71d5d;">setq</span> send-to-kindle-from-email
+          (read-string  <span style="color: #183691;">"From email address: "</span>)))
+  (<span style="color: #a71d5d;">unless</span> send-to-kindle-to-email
+    (<span style="color: #a71d5d;">setq</span> send-to-kindle-to-email
+          (read-string  <span style="color: #183691;">"To email address: "</span>)))
+  (<span style="color: #a71d5d;">let*</span> ((content (string-trim (<span style="color: #a71d5d;">if</span> (region-active-p)
+                                   (buffer-substring (region-beginning) (region-end))
+                                 (buffer-string))))
+         (note-name (<span style="color: #a71d5d;">let</span> ((name (string-trim (read-string  <span style="color: #183691;">"Note name: "</span>))))
+                      (<span style="color: #a71d5d;">if</span> (string-empty-p name)
+                          (nth
+                           0 (string-split
+                              (substring content 0 (min 40 (length content)))  <span style="color: #183691;">"\n"</span>))
+                        name)))
+         (path (concat (temporary-file-directory) note-name))
+         (txt (concat path  <span style="color: #183691;">".txt"</span>))
+         (buffer (get-buffer-create (generate-new-buffer-name  <span style="color: #183691;">"*Email txt*"</span>))))
+    (<span style="color: #a71d5d;">with-temp-buffer</span>
+      (insert content)
+      (write-file txt))
+    (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+      (erase-buffer)
+      (message-mode)
+      (insert
+       (format
+         <span style="color: #183691;">"From: %s</span>
+ <span style="color: #183691;">To: %s</span>
+ <span style="color: #183691;">Subject: %s</span>
+ <span style="color: #183691;">--text follows this line--</span>
+ <span style="color: #183691;"><#multipart type=mixed></span>
+ <span style="color: #183691;"><#part type=\"text/plain\" filename=\"%s\" disposition=attachment></span>
+ <span style="color: #183691;"><#/part></span>
+ <span style="color: #183691;"><#/multipart>"</span>
+        send-to-kindle-from-email
+        send-to-kindle-to-email
+        note-name txt))
+      (<span style="color: #a71d5d;">unless</span> review
+        (message-send-and-exit)))
+    (<span style="color: #a71d5d;">when</span> review
+      (switch-to-buffer buffer))))
+</pre>
+</div>
+
+ <p>
+By the way, and I only just learned this today… To take a screenshot on a Kindle Paperwhite, tap on these opposite corners.
+</p>
+
+
+ <div id="org3d51667" class="figure">
+ <p> <img src="../images/emacs-send-to-kindle/tap-screenshot.png" alt="tap-screenshot.png" width="70%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-send-to-kindle</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-send-to-kindle</guid>
+  <pubDate>Fri, 15 Sep 2023 12:02:07 +0100</pubDate>
+</item>
 <item>
   <title>SHA-256 hash from URL, the easy way</title>
   <description><![CDATA[<div id="content" class="content">
