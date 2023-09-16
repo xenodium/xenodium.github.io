@@ -117,7 +117,9 @@ Here's the full snippet.
         (write-file txt))
       (with-current-buffer buffer
         (erase-buffer)
-        (message-mode)
+        ;; Disable hooks
+        (let ((message-mode-hook nil))
+          (message-mode))
         (insert
          (format
           "From: %s
