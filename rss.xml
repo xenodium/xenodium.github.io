@@ -6,7 +6,34 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 15 Sep 2023 19:01:26 +0100</lastBuildDate>
+<lastBuildDate>Sat, 16 Sep 2023 15:03:44 +0100</lastBuildDate>
+<item>
+  <title>Emacs hangs saving .authinfo.gpg (workaround)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-hangs-saving-authinfogpg-workaround" class="outline-2">
+ <h2 id="emacs-hangs-saving-authinfogpg-workaround"> <span class="timestamp-wrapper"> <span class="timestamp">16 September 2023</span></span> Emacs hangs saving .authinfo.gpg (workaround)</h2>
+ <div class="outline-text-2" id="text-emacs-hangs-saving-authinfogpg-workaround">
+ <p>
+My Emacs (v29.1) was hanging when saving changes to .authinfo.gpg. Turns out, I ran into a  <a href="http://git.savannah.gnu.org/cgit/emacs.git/commit/etc/PROBLEMS?id=1b9812af80b6ceec8418636dbf84c0fbcd3ab694">known issue</a> with a workaround. Downgrading gnupgp to a version older than 2.4.1 sorts things out.
+</p>
+
+ <p>
+I'm on macOS. Downgraded by downloading the 2.4.0 Homebrew formula at  <a href="https://raw.githubusercontent.com/Homebrew/homebrew-core/59edfe598541186430d49cc34f42671e849e2fc9/Formula/gnupg.rb">https://raw.githubusercontent.com/Homebrew/homebrew-core/59edfe598541186430d49cc34f42671e849e2fc9/Formula/gnupg.rb</a> and installing with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew unlink gnupg
+brew install ~/Downloads/gnupg.rb
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-hangs-saving-authinfogpg-workaround</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-hangs-saving-authinfogpg-workaround</guid>
+  <pubDate>Sat, 16 Sep 2023 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Send note to Kindle</title>
   <description><![CDATA[<div id="content" class="content">
@@ -31,7 +58,7 @@ I can now select a region and invoke  <code>M-x send-to-kindle-as-txt</code> to 
 </p>
 
 
- <div id="org2cab0d4" class="figure">
+ <div id="org2c08110" class="figure">
  <p> <img src="../images/emacs-send-to-kindle/send-to-my-kindle.gif" alt="send-to-my-kindle.gif" width="80%"></img></p>
 </div>
 
@@ -40,7 +67,7 @@ Soon enough, the note shows up on my Kindle.
 </p>
 
 
- <div id="orgda402b9" class="figure">
+ <div id="org9fbaa24" class="figure">
  <p> <img src="../images/emacs-send-to-kindle/listed.png" alt="listed.png" width="70%"></img></p>
 </div>
 
@@ -49,7 +76,7 @@ Opening the note reveals the same content we had previously selected and sent fr
 </p>
 
 
- <div id="org0b76b44" class="figure">
+ <div id="org1fd9384" class="figure">
  <p> <img src="../images/emacs-send-to-kindle/repeated.png" alt="repeated.png" width="70%"></img></p>
 </div>
 
@@ -62,7 +89,7 @@ If  <code>M-x send-to-kindle-as-txt</code> is invoked with a  <code>C-u</code> p
 </p>
 
 
- <div id="org466f88c" class="figure">
+ <div id="orgdcd3281" class="figure">
  <p> <img src="../images/emacs-send-to-kindle/email.png" alt="email.png" width="95%"></img></p>
 </div>
 
@@ -108,7 +135,9 @@ Here's the full snippet.
       (write-file txt))
     (<span style="color: #a71d5d;">with-current-buffer</span> buffer
       (erase-buffer)
-      (message-mode)
+       <span style="color: #969896;">;; </span> <span style="color: #969896;">Disable hooks</span>
+      (<span style="color: #a71d5d;">let</span> ((message-mode-hook nil))
+        (message-mode))
       (insert
        (format
          <span style="color: #183691;">"From: %s</span>
@@ -134,7 +163,7 @@ By the way, and I only just learned this today… To take a screenshot on a Kind
 </p>
 
 
- <div id="org3d51667" class="figure">
+ <div id="org824b0f2" class="figure">
  <p> <img src="../images/emacs-send-to-kindle/tap-screenshot.png" alt="tap-screenshot.png" width="70%"></img></p>
 </div>
 </div>
@@ -152,12 +181,12 @@ By the way, and I only just learned this today… To take a screenshot on a Kind
  <h2 id="redact-that-buffer"> <span class="timestamp-wrapper"> <span class="timestamp">15 September 2023</span></span> Redact that buffer</h2>
  <div class="outline-text-2" id="text-redact-that-buffer">
  <p>
-As I was getting ready to take an Emacs screenshot in the  <a href="https://xenodium.com/emacs-send-to-kindle/">previous post</a>, I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found  <a href="https://github.com/bkaestner/redacted.el">redacted.el</a>, built-in  <code>toggle-rot13-mode</code>, and  <a href="https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words">unpackaged/lorem-ipsum-overlay</a>. All great options, though I was hoping for a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
+As I was getting ready to take an Emacs screenshot in the  <a href="https://xenodium.com/emacs-send-to-kindle/">previous post</a>, I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found  <a href="https://github.com/bkaestner/redacted.el">redacted.el</a>, built-in  <code>toggle-rot13-mode</code>, and  <a href="https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words">unpackaged/lorem-ipsum-overlay</a>. All great options. I wanted a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
 </p>
 
 
 
- <div id="org32866c4" class="figure">
+ <div id="org92249fa" class="figure">
  <p> <img src="../images/redact-that-buffer/redact-regexp.gif" alt="redact-regexp.gif" width="98%"></img></p>
 </div>
 
@@ -167,7 +196,7 @@ I also wanted the ability to redact the entire buffer content, so feeding a spac
 </p>
 
 
- <div id="org157aa77" class="figure">
+ <div id="org89d3d45" class="figure">
  <p> <img src="../images/redact-that-buffer/redact-all.gif" alt="redact-all.gif" width="98%"></img></p>
 </div>
 

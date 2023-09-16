@@ -1,6 +1,18 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-09-16 Sat] Emacs hangs saving .authinfo.gpg (workaround)
+:PROPERTIES:
+:CUSTOM_ID: emacs-hangs-saving-authinfogpg-workaround
+:END:
+My Emacs (v29.1) was hanging when saving changes to .authinfo.gpg. Turns out, I ran into a [[http://git.savannah.gnu.org/cgit/emacs.git/commit/etc/PROBLEMS?id=1b9812af80b6ceec8418636dbf84c0fbcd3ab694][known issue]] with a workaround. Downgrading gnupgp to a version older than 2.4.1 sorts things out.
+
+I'm on macOS. Downgraded by downloading the 2.4.0 Homebrew formula at https://raw.githubusercontent.com/Homebrew/homebrew-core/59edfe598541186430d49cc34f42671e849e2fc9/Formula/gnupg.rb and installing with:
+
+#+begin_src sh
+  brew unlink gnupg
+  brew install ~/Downloads/gnupg.rb
+#+end_src
 * [2023-09-15 Fri] Redact that buffer
 :PROPERTIES:
 :CUSTOM_ID: redact-that-buffer
