@@ -1,6 +1,51 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-10-06 Fri] Displaying image details in mode line
+:PROPERTIES:
+:CUSTOM_ID: displaying-image-details-in-mode-line
+:END:
+A benefit of running Emacs as a GUI app, is that you can view images from your beloved editor. This is super handy to take a quick peek at any image.
+
+Sometimes, I'd like a little more than just viewing the image. I'd like to see basic image details like type, dimensions, and file size. The [[https://imagemagick.org/][imagemagick]] =identify= utility is pretty handy for that.
+
+#+begin_src bash
+  identify -format "%m %wx%h %b" path/to/image.png
+#+end_src
+
+#+RESULTS:
+: PNG 2387x1055 2.28454MB
+
+I could easily invoke =shell-command= for this or even create a [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] function (maybe I will), but if this info was proactively displayed in the mode line, I wouldn't have to fetch it myself.
+
+Since I know I can use the =identify= command for this, I may as well see if I can plug it into the mode line.
+
+Turns out this wasn't too bad by setting =setting mode-line-format=. I added a little logic to only include image details while in =image-mode= and rely on =process-lines= to fetch the details. This function returns a list, which is a happy coincidence since =mode-line-format= also expects a list.
+
+#+begin_src emacs-lisp :lexical no
+  (setq-default mode-line-format
+                '(" "
+                  mode-line-front-space
+                  mode-line-client
+                  mode-line-frame-identification
+                  mode-line-buffer-identification
+                  (:eval
+                   (when (eq major-mode 'image-mode)
+                     ;; Needs imagemagick installed.
+                     (process-lines "identify" "-format" "[%m %wx%h %b]" (buffer-file-name))))
+                  " "
+                  mode-line-position
+                  (vc-mode vc-mode)
+                  (multiple-cursors-mode mc/mode-line)
+                  " " mode-line-modes
+                  mode-line-end-spaces))
+#+end_src
+
+#+ATTR_HTML: :width 70%
+[[file:images/displaying-image-details-in-mode-line/buddies.png]]
+
+I'd love to hear if there's a pure elisp alternative ([[https://indieweb.social/@xenodium][mastodon]]/[[https://twitter.com/xenodium][twitter]]). I gave =(image-size (image-get-display-property) :pixels)= a try, but that seemed to return the display size in buffer rather than actual file size.
+
 * [2023-10-06 Fri] Creating an iCloud account (via tart VM)
 :PROPERTIES:
 :CUSTOM_ID: creating-icloud-test-accounts

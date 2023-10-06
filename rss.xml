@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 06 Oct 2023 10:50:46 +0100</lastBuildDate>
+<lastBuildDate>Fri, 06 Oct 2023 11:48:35 +0100</lastBuildDate>
 <item>
   <title>Creating an iCloud account (via tart VM)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -92,6 +92,78 @@ While there may be simpler options out there to create an @icloud.com account (p
   <pubDate>Fri, 06 Oct 2023 00:00:00 +0100</pubDate>
 </item>
 <item>
+  <title>Displaying image details in mode line</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-displaying-image-details-in-mode-line" class="outline-2">
+ <h2 id="displaying-image-details-in-mode-line"> <span class="timestamp-wrapper"> <span class="timestamp">06 October 2023</span></span> Displaying image details in mode line</h2>
+ <div class="outline-text-2" id="text-displaying-image-details-in-mode-line">
+ <p>
+A benefit of running Emacs as a GUI app, is that you can view images from your beloved editor. This is super handy to take a quick peek at any image.
+</p>
+
+ <p>
+Sometimes, I'd like a little more than just viewing the image. I'd like to see basic image details like type, dimensions, and file size. The  <a href="https://imagemagick.org/">imagemagick</a>  <code>identify</code> utility is pretty handy for that.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">identify -format "%m %wx%h %b" path/to/image.png
+</pre>
+</div>
+
+ <pre class="example">
+PNG 2387x1055 2.28454MB
+</pre>
+
+
+ <p>
+I could easily invoke  <code>shell-command</code> for this or even create a dwim-shell-command function (maybe I will), but if this info was proactively displayed in the mode line, I wouldn't have to fetch it myself.
+</p>
+
+ <p>
+Since I know I can use the  <code>identify</code> command for this, I may as well see if I can plug it into the mode line.
+</p>
+
+ <p>
+Turns out this wasn't too bad by setting  <code>setting mode-line-format</code>. I added a little logic to only include image details while in  <code>image-mode</code> and rely on  <code>process-lines</code> to fetch the details. This function returns a list, which is a happy coincidence since  <code>mode-line-format</code> also expects a list.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq-default</span> mode-line-format
+              '(<span style="color: #183691;">" "</span>
+                mode-line-front-space
+                mode-line-client
+                mode-line-frame-identification
+                mode-line-buffer-identification
+                (<span style="color: #a71d5d;">:eval</span>
+                 (<span style="color: #a71d5d;">when</span> (eq major-mode 'image-mode)
+                    <span style="color: #969896;">;; </span> <span style="color: #969896;">Needs imagemagick installed.</span>
+                   (process-lines  <span style="color: #183691;">"identify"</span>  <span style="color: #183691;">"-format"</span>  <span style="color: #183691;">"[%m %wx%h %b]"</span> (buffer-file-name))))
+                 <span style="color: #183691;">" "</span>
+                mode-line-position
+                (vc-mode vc-mode)
+                (multiple-cursors-mode mc/mode-line)
+                 <span style="color: #183691;">" "</span> mode-line-modes
+                mode-line-end-spaces))
+</pre>
+</div>
+
+
+ <div id="org42ef086" class="figure">
+ <p> <img src="../images/displaying-image-details-in-mode-line/buddies.png" alt="buddies.png" width="70%"></img></p>
+</div>
+
+ <p>
+I'd love to hear if there's a pure elisp alternative ( <a href="https://indieweb.social/@xenodium">mastodon</a>/ <a href="https://twitter.com/xenodium">twitter</a>). I gave  <code>(image-size (image-get-display-property) :pixels)</code> a try, but that seemed to return the display size in buffer rather than actual file size.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/displaying-image-details-in-mode-line</link>
+  <guid isPermaLink="false">http://xenodium.com/displaying-image-details-in-mode-line</guid>
+  <pubDate>Fri, 06 Oct 2023 00:00:00 +0100</pubDate>
+</item>
+<item>
   <title>Virtual machine (VM) bookmarks</title>
   <description><![CDATA[<div id="content" class="content">
 
@@ -114,88 +186,6 @@ While there may be simpler options out there to create an @icloud.com account (p
   <link>http://xenodium.com/virtual-machine-vm-bookmarks</link>
   <guid isPermaLink="false">http://xenodium.com/virtual-machine-vm-bookmarks</guid>
   <pubDate>Wed, 04 Oct 2023 00:00:00 +0100</pubDate>
-</item>
-<item>
-  <title>My org mode iOS apps</title>
-  <description><![CDATA[<div id="content" class="content">
-
- <div id="outline-container-my-org-mode-ios-apps" class="outline-2">
- <h2 id="my-org-mode-ios-apps"> <span class="timestamp-wrapper"> <span class="timestamp">19 September 2023</span></span> My org mode iOS apps</h2>
- <div class="outline-text-2" id="text-my-org-mode-ios-apps">
- <p>
-When on my laptop, I get access to Emacs and its full-blown org workflows. But when on the go, I often need a very targetted fraction of these workflows. For these instances, I've built a few iOS apps.
-</p>
-</div>
-
- <div id="outline-container-orgf722970" class="outline-3">
- <h3 id="orgf722970"> <a href="https://flathabits.com">Flat Habits</a></h3>
- <div class="outline-text-3" id="text-orgf722970">
- <p>
-Inspired by James Clear's  <a href="https://www.goodreads.com/book/show/40121378-atomic-habits">Atomic Habits</a> book, I built a privacy-oriented habit tracker for iOS. It's got no sign-ups, no accounts, no social, no analytics, no lock-in, and no ads. Habit data remains on your device.
-</p>
-
- <p>
-Flat Habits interface should be fairly frictionless, getting out of your way, so you can focus on the habits themselves.
-</p>
-
- <p>
-Flat Habits saves all habit data to an org file.
-</p>
-
- <div style="max-width: 60%; font-size: small; font-family:monospace; margin:auto;">
-  * TODO 🧘 Meditate
-   <br></br>
-  SCHEDULED:
-     <br></br>
-    :PROPERTIES:
-     <br></br>
-    :STYLE: habit
-     <br></br>
-    :LAST_REPEAT: [2021-05-09 Sun 11:38]
-     <br></br>
-    :END:
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-09 Sun 8:59]
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-08 Sat 8:40]
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-07 Fri 8:34]
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-06 Thu 8:25]
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-05 Wed 9:00]
-     <br></br>
-    - State "DONE"        from "TODO"       [2021-05-04 Tue 8:50]
-</div>
- <br></br> <div style="text-align: center;">
-   <a href="https://apps.apple.com/app/id1558358855">
-     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
-</div>
-</div>
-</div>
- <div id="outline-container-orgfdd5e17" class="outline-3">
- <h3 id="orgfdd5e17"> <a href="https://plainorg.com">Plain Org</a></h3>
- <div class="outline-text-3" id="text-orgfdd5e17">
- <div style="text-align: center;">
-   <a href="https://apps.apple.com/app/id1578965002">
-     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
-</div>
-</div>
-</div>
- <div id="outline-container-orge7db974" class="outline-3">
- <h3 id="orge7db974"> <a href="https://apps.apple.com/app/id1671420139">✶scratch✶</a></h3>
- <div class="outline-text-3" id="text-orge7db974">
- <div style="text-align: center;">
-   <a href="https://apps.apple.com/app/id1671420139">
-     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
-</div>
-</div>
-</div>
-</div>
-</div>]]></description>
-  <link>http://xenodium.com/my-org-mode-ios-apps</link>
-  <guid isPermaLink="false">http://xenodium.com/my-org-mode-ios-apps</guid>
-  <pubDate>Tue, 19 Sep 2023 00:00:00 +0100</pubDate>
 </item>
 <item>
   <title>Emacs hangs saving .authinfo.gpg (workaround)</title>
