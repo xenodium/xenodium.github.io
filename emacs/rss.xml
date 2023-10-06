@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 06 Oct 2023 11:48:27 +0100</lastBuildDate>
+<lastBuildDate>Fri, 06 Oct 2023 15:35:53 +0100</lastBuildDate>
 <item>
   <title>Creating an iCloud account (via tart VM)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -164,6 +164,61 @@ I'd love to hear if there's a pure elisp alternative ( <a href="https://indieweb
   <pubDate>Fri, 06 Oct 2023 11:48:27 +0100</pubDate>
 </item>
 <item>
+  <title>Trimming video screenshots</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-trimming-video-screenshots" class="outline-2">
+ <h2 id="trimming-video-screenshots"> <span class="timestamp-wrapper"> <span class="timestamp">06 October 2023</span></span> Trimming video screenshots</h2>
+ <div class="outline-text-2" id="text-trimming-video-screenshots">
+ <p>
+Just a quickie… I recently wanted to trim the black borders around a video screenshot. While I could use an image editor to manually select and trim, I wondered if there was an  <a href="https://imagemagick.org/">imagemagick</a> trick somewhere out there for such a thing… and of course there was:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage path/to/input.png path/to/output.png
+</pre>
+</div>
+
+ <p>
+Pretty neat. It does the job, but I won't remember it next time. May as well make another  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> function out of it and conveniently invoke from Emacs via a memorable name plus fuzzy search.
+</p>
+
+
+ <div id="org95e6689" class="figure">
+ <p> <img src="../images/trimming-video-screenshots/trim.gif" alt="trim.gif" width="80%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-image-trim-borders</span> ()
+   <span style="color: #183691;">"Trim image(s) border (useful for video screenshots)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Trim image border"</span>
+    <span style="color: #183691;">"magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_trimmed.<<e>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"magick"</span>))
+</pre>
+</div>
+
+ <p>
+While the screenshot I've just used was a little blurry, it's from the movie  <a href="https://www.imdb.com/title/tt1104001/">Tron Legacy</a>, and it features Emacs eshell. This is old news, though  <a href="https://irreal.org/blog/?p=9573">well covered</a>.
+</p>
+
+
+ <div id="org8976643" class="figure">
+ <p> <img src="../images/trimming-video-screenshots/eshell_trimmed.png" alt="eshell_trimmed.png" width="95%"></img></p>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-image-trim-borders</code> is now  <a href="https://github.com/xenodium/dwim-shell-command/commit/5bed2f6b40761db4913c8d8f58bb147c71a9ceb7">added to dwim-shell-commands.el</a>
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/trimming-video-screenshots</link>
+  <guid isPermaLink="false">http://xenodium.com/trimming-video-screenshots</guid>
+  <pubDate>Fri, 06 Oct 2023 15:35:53 +0100</pubDate>
+</item>
+<item>
   <title>Emacs hangs saving .authinfo.gpg (workaround)</title>
   <description><![CDATA[<div id="content" class="content">
 
@@ -291,7 +346,9 @@ Here's the full snippet.
       (write-file txt))
     (<span style="color: #a71d5d;">with-current-buffer</span> buffer
       (erase-buffer)
-      (message-mode)
+       <span style="color: #969896;">;; </span> <span style="color: #969896;">Disable hooks</span>
+      (<span style="color: #a71d5d;">let</span> ((message-mode-hook nil))
+        (message-mode))
       (insert
        (format
          <span style="color: #183691;">"From: %s</span>
@@ -335,7 +392,7 @@ By the way, and I only just learned this today… To take a screenshot on a Kind
  <h2 id="redact-that-buffer"> <span class="timestamp-wrapper"> <span class="timestamp">15 September 2023</span></span> Redact that buffer</h2>
  <div class="outline-text-2" id="text-redact-that-buffer">
  <p>
-As I was getting ready to take an Emacs screenshot in the  <a href="https://xenodium.com/emacs-send-to-kindle/">previous post</a>, I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found  <a href="https://github.com/bkaestner/redacted.el">redacted.el</a>, built-in  <code>toggle-rot13-mode</code>, and  <a href="https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words">unpackaged/lorem-ipsum-overlay</a>. All great options, though I was hoping for a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
+As I was getting ready to take an Emacs screenshot in the  <a href="https://xenodium.com/emacs-send-to-kindle/">previous post</a>, I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found  <a href="https://github.com/bkaestner/redacted.el">redacted.el</a>, built-in  <code>toggle-rot13-mode</code>, and  <a href="https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words">unpackaged/lorem-ipsum-overlay</a>. All great options. I wanted a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
 </p>
 
 

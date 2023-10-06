@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 06 Oct 2023 11:48:35 +0100</lastBuildDate>
+<lastBuildDate>Fri, 06 Oct 2023 15:36:02 +0100</lastBuildDate>
 <item>
   <title>Creating an iCloud account (via tart VM)</title>
   <description><![CDATA[<div id="content" class="content">
@@ -161,6 +161,61 @@ I'd love to hear if there's a pure elisp alternative ( <a href="https://indieweb
 </div>]]></description>
   <link>http://xenodium.com/displaying-image-details-in-mode-line</link>
   <guid isPermaLink="false">http://xenodium.com/displaying-image-details-in-mode-line</guid>
+  <pubDate>Fri, 06 Oct 2023 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Trimming video screenshots</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-trimming-video-screenshots" class="outline-2">
+ <h2 id="trimming-video-screenshots"> <span class="timestamp-wrapper"> <span class="timestamp">06 October 2023</span></span> Trimming video screenshots</h2>
+ <div class="outline-text-2" id="text-trimming-video-screenshots">
+ <p>
+Just a quickie… I recently wanted to trim the black borders around a video screenshot. While I could use an image editor to manually select and trim, I wondered if there was an  <a href="https://imagemagick.org/">imagemagick</a> trick somewhere out there for such a thing… and of course there was:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage path/to/input.png path/to/output.png
+</pre>
+</div>
+
+ <p>
+Pretty neat. It does the job, but I won't remember it next time. May as well make another  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> function out of it and conveniently invoke from Emacs via a memorable name plus fuzzy search.
+</p>
+
+
+ <div id="org95e6689" class="figure">
+ <p> <img src="../images/trimming-video-screenshots/trim.gif" alt="trim.gif" width="80%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-image-trim-borders</span> ()
+   <span style="color: #183691;">"Trim image(s) border (useful for video screenshots)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Trim image border"</span>
+    <span style="color: #183691;">"magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>_trimmed.<<e>></span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"magick"</span>))
+</pre>
+</div>
+
+ <p>
+While the screenshot I've just used was a little blurry, it's from the movie  <a href="https://www.imdb.com/title/tt1104001/">Tron Legacy</a>, and it features Emacs eshell. This is old news, though  <a href="https://irreal.org/blog/?p=9573">well covered</a>.
+</p>
+
+
+ <div id="org8976643" class="figure">
+ <p> <img src="../images/trimming-video-screenshots/eshell_trimmed.png" alt="eshell_trimmed.png" width="95%"></img></p>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-image-trim-borders</code> is now  <a href="https://github.com/xenodium/dwim-shell-command/commit/5bed2f6b40761db4913c8d8f58bb147c71a9ceb7">added to dwim-shell-commands.el</a>
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/trimming-video-screenshots</link>
+  <guid isPermaLink="false">http://xenodium.com/trimming-video-screenshots</guid>
   <pubDate>Fri, 06 Oct 2023 00:00:00 +0100</pubDate>
 </item>
 <item>

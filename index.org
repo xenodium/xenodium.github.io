@@ -1,6 +1,38 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-10-06 Fri] Trimming video screenshots
+:PROPERTIES:
+:CUSTOM_ID: trimming-video-screenshots
+:END:
+Just a quickie... I recently wanted to trim the black borders around a video screenshot. While I could use an image editor to manually select and trim, I wondered if there was an [[https://imagemagick.org/][imagemagick]] trick somewhere out there for such a thing... and of course there was:
+
+#+begin_src sh
+  magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage path/to/input.png path/to/output.png
+#+end_src
+
+Pretty neat. It does the job, but I won't remember it next time. May as well make another [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] function out of it and conveniently invoke from Emacs via a memorable name plus fuzzy search.
+
+#+ATTR_HTML: :width 80%
+[[file:images/trimming-video-screenshots/trim.gif]]
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-image-trim-borders ()
+    "Trim image(s) border (useful for video screenshots)."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Trim image border"
+     "magick convert -fuzz 3% -define trim:percent-background=0% -trim +repage '<<f>>' '<<fne>>_trimmed.<<e>>'"
+     :utils "magick"))
+#+end_src
+
+While the screenshot I've just used was a little blurry, it's from the movie [[https://www.imdb.com/title/tt1104001/][Tron Legacy]], and it features Emacs eshell. This is old news, though [[https://irreal.org/blog/?p=9573][well covered]].
+
+#+ATTR_HTML: :width 95%
+[[file:images/trimming-video-screenshots/eshell_trimmed.png]]
+
+=dwim-shell-commands-image-trim-borders= is now [[https://github.com/xenodium/dwim-shell-command/commit/5bed2f6b40761db4913c8d8f58bb147c71a9ceb7][added to dwim-shell-commands.el]]
+
 * [2023-10-06 Fri] Displaying image details in mode line
 :PROPERTIES:
 :CUSTOM_ID: displaying-image-details-in-mode-line
