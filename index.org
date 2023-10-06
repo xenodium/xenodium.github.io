@@ -1,6 +1,134 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-10-06 Fri] Creating an iCloud account (via tart VM)
+:PROPERTIES:
+:CUSTOM_ID: creating-icloud-test-accounts
+:END:
+I wanted an additional @icloud.com account for myself. My first thought was to head over to https://developer.apple.com and create a new account, but that requires an existing email address. I wanted an actual @icloud.com email address.
+
+#+ATTR_HTML: :width 80%
+[[file:images/creating-icloud-test-accounts/web.png]]
+
+My next thought was to create a new account using the iOS simulator, but that complained about creating too many accounts already. Strange, as I hadn't created any.
+
+#+ATTR_HTML: :width 60%
+[[file:images/creating-icloud-test-accounts/iphone.png]]
+
+I could create an account from macOS settings itself, though that would require logging out my current account (and the syncing implications). To get around that, I could maybe create a temporary macOS user. Instead, I somewhat revisited the simulator route and looked for a VM option to run macOS. This gave me an excuse to play with VM options on macOS.
+
+I had been meaning to check out [[https://github.com/lima-vm/lima][lima]] as per Hacker News's [[https://news.ycombinator.com/item?id=36668964][Lima: A nice way to run Linux VMs on Mac]]. The Hacker News's [[https://news.ycombinator.com/item?id=36668964][thread]] has a handful of great recommendations. Amongst them, [[https://github.com/cirruslabs/tart/][tart]] (macOS and Linux VMs on Apple Silicon) stood out, as it also gave me the Mac on Mac option.
+
+Installing =tart= via [[https://brew.sh/][Homebrew]] followed the typical =brew= command... a breeze via my trusty Emacs [[https://www.masteringemacs.org/article/complete-guide-mastering-eshell][eshell]]:
+
+#+begin_src sh
+  brew install cirruslabs/cli/tart
+#+end_src
+
+Cloning a VM image, while straightforward, it did take a little while for the chunky download:
+
+#+begin_src sh
+  tart clone ghcr.io/cirruslabs/macos-sonoma-base:latest sonoma-base
+#+end_src
+
+Running the macOS Sonoma VM was a breeze:
+
+#+begin_src sh
+  tart run sonoma-base
+#+end_src
+
+...and with that, I got a full (and disposable) macOS VM I can use to create another @icloud.com account:
+
+#+ATTR_HTML: :width 95%
+[[file:images/creating-icloud-test-accounts/sonoma1.png]]
+
+#+ATTR_HTML: :width 95%
+[[file:images/creating-icloud-test-accounts/sonoma2.png]]
+
+While there may be simpler options out there to create an @icloud.com account (please do let me know [[https://indieweb.social/@xenodium][mastodon]]/[[https://twitter.com/xenodium][twitter]]), the VM did the job. I'd been meaning to find a low friction mechanism to run VMs for a different reason, but that's a post for another time.
+
+* [2023-10-04 Wed] Virtual machine (VM) bookmarks
+:PROPERTIES:
+:CUSTOM_ID: virtual-machine-vm-bookmarks
+:END:
+:MODIFIED:
+[2023-10-04 Wed]
+:END:
+- [[https://github.com/abiosoft/colima][colima: Container runtimes on macOS (and Linux) with minima...]].
+- [[https://github.com/runfinch/finch][finch: The Finch CLI an open source client for container development]].
+- [[https://earthly.dev/blog/lima/][lima VM - Linux Virtual Machines On macOS - Earthly Blog]].
+- [[https://news.ycombinator.com/item?id=36668964][lima: A nice way to run Linux VMs on Mac | Hacker News]].
+- [[https://github.com/lima-vm/lima][lima: Linux virtual machines]].
+- [[https://github.com/beringresearch/macpine][macpine: Lightweight Linux VMs on MacOS]].
+- [[https://orbstack.dev/][OrbStack · Fast, light, simple Docker & Linux on macOS]].
+- [[https://github.com/cirruslabs/tart/][tart: macOS and Linux VMs on Apple Silicon to use in CI a...]].
+- [[https://eclecticlight.co/virtualisation-on-apple-silicon/][Virtualisation on Apple silicon – The Eclectic Light Company]].
+* [2023-09-19 Tue] My org mode iOS apps
+:PROPERTIES:
+:CUSTOM_ID: my-org-mode-ios-apps
+:END:
+When on my laptop, I get access to Emacs and its full-blown org workflows. But when on the go, I often need a very targetted fraction of these workflows. For these instances, I've built a few iOS apps.
+
+** [[https://flathabits.com][Flat Habits]]
+
+Inspired by James Clear's [[https://www.goodreads.com/book/show/40121378-atomic-habits][Atomic Habits]] book, I built a privacy-oriented habit tracker for iOS. It's got no sign-ups, no accounts, no social, no analytics, no lock-in, and no ads. Habit data remains on your device.
+
+Flat Habits interface should be fairly frictionless, getting out of the way, so one can focus on the habits themselves.
+
+Flat Habits saves all habit data to an org file.
+
+#+BEGIN_EXPORT html
+    <div style="max-width: 60%; font-size: small; font-family:monospace; margin:auto;">
+      * TODO 🧘 Meditate
+      <br/>
+      SCHEDULED: <2021-05-10 Mon 08:30 ++1d>
+        <br/>
+        :PROPERTIES:
+        <br/>
+        :STYLE: habit
+        <br/>
+        :LAST_REPEAT: [2021-05-09 Sun 11:38]
+        <br/>
+        :END:
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-09 Sun 8:59]
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-08 Sat 8:40]
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-07 Fri 8:34]
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-06 Thu 8:25]
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-05 Wed 9:00]
+        <br/>
+        - State "DONE"        from "TODO"       [2021-05-04 Tue 8:50]
+    </div>
+    <br/>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<div style="text-align: center;">
+  <a href="https://apps.apple.com/app/id1558358855">
+    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+  </a>
+</div>
+#+END_EXPORT
+** [[https://plainorg.com][Plain Org]]
+#+BEGIN_EXPORT html
+<div style="text-align: center;">
+  <a href="https://apps.apple.com/app/id1578965002">
+    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+  </a>
+</div>
+#+END_EXPORT
+** [[https://apps.apple.com/app/id1671420139][✶scratch✶]]
+#+BEGIN_EXPORT html
+<div style="text-align: center;">
+  <a href="https://apps.apple.com/app/id1671420139">
+    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+  </a>
+</div>
+#+END_EXPORT
 * [2023-09-16 Sat] Emacs hangs saving .authinfo.gpg (workaround)
 :PROPERTIES:
 :CUSTOM_ID: emacs-hangs-saving-authinfogpg-workaround
@@ -16444,7 +16572,7 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 - [[https://news.ycombinator.com/item?id%3D10890233][Docker for Beginners (Hacker News)]].
 - [[http://prakhar.me/docker-curriculum/][Docker for Beginners]].
 - [[https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes][How To Remove Docker Images, Containers, and Volumes | DigitalOcean]].
-- [[https://news.ycombinator.com/item?id%3D10969052][Simplifying Dowcker on OS X (Hacker News)]].
+- [[https://news.ycombinator.com/item?id%3D10969052][Simplifying Docker on OS X (Hacker News)]].
 - [[https://twitter.com/b0rk/status/1237528379097616388][What problems have you run into in practice when using containers?]].
 * [2015-11-21 Sat] Angular bookmarks
 :PROPERTIES:

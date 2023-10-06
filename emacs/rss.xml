@@ -6,7 +6,173 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 16 Sep 2023 14:59:49 +0100</lastBuildDate>
+<lastBuildDate>Fri, 06 Oct 2023 10:50:38 +0100</lastBuildDate>
+<item>
+  <title>Creating an iCloud account (via tart VM)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-creating-icloud-test-accounts" class="outline-2">
+ <h2 id="creating-icloud-test-accounts"> <span class="timestamp-wrapper"> <span class="timestamp">06 October 2023</span></span> Creating an iCloud account (via tart VM)</h2>
+ <div class="outline-text-2" id="text-creating-icloud-test-accounts">
+ <p>
+I wanted an additional @icloud.com account for myself. My first thought was to head over to  <a href="https://developer.apple.com">https://developer.apple.com</a> and create a new account, but that requires an existing email address. I wanted an actual @icloud.com email address.
+</p>
+
+
+ <div id="orgf027f0b" class="figure">
+ <p> <img src="../images/creating-icloud-test-accounts/web.png" alt="web.png" width="80%"></img></p>
+</div>
+
+ <p>
+My next thought was to create a new account using the iOS simulator, but that complained about creating too many accounts already. Strange, as I hadn't created any.
+</p>
+
+
+ <div id="orgac4cfcd" class="figure">
+ <p> <img src="../images/creating-icloud-test-accounts/iphone.png" alt="iphone.png" width="60%"></img></p>
+</div>
+
+ <p>
+I could create an account from macOS settings itself, though that would require logging out my current account (and the syncing implications). To get around that, I could maybe create a temporary macOS user. Instead, I somewhat revisited the simulator route and looked for a VM option to run macOS. This gave me an excuse to play with VM options on macOS.
+</p>
+
+ <p>
+I had been meaning to check out  <a href="https://github.com/lima-vm/lima">lima</a> as per Hacker News's  <a href="https://news.ycombinator.com/item?id=36668964">Lima: A nice way to run Linux VMs on Mac</a>. The Hacker News's  <a href="https://news.ycombinator.com/item?id=36668964">thread</a> has a handful of great recommendations. Amongst them,  <a href="https://github.com/cirruslabs/tart/">tart</a> (macOS and Linux VMs on Apple Silicon) stood out, as it also gave me the Mac on Mac option.
+</p>
+
+ <p>
+Installing  <code>tart</code> via  <a href="https://brew.sh/">Homebrew</a> followed the typical  <code>brew</code> command… a breeze via my trusty Emacs  <a href="https://www.masteringemacs.org/article/complete-guide-mastering-eshell">eshell</a>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install cirruslabs/cli/tart
+</pre>
+</div>
+
+ <p>
+Cloning a VM image, while straightforward, it did take a little while for the chunky download:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">tart clone ghcr.io/cirruslabs/macos-sonoma-base:latest sonoma-base
+</pre>
+</div>
+
+ <p>
+Running the macOS Sonoma VM was a breeze:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">tart run sonoma-base
+</pre>
+</div>
+
+ <p>
+…and with that, I got a full (and disposable) macOS VM I can use to create another @icloud.com account:
+</p>
+
+
+ <div id="org6b944ec" class="figure">
+ <p> <img src="../images/creating-icloud-test-accounts/sonoma1.png" alt="sonoma1.png" width="95%"></img></p>
+</div>
+
+
+ <div id="org8ab869b" class="figure">
+ <p> <img src="../images/creating-icloud-test-accounts/sonoma2.png" alt="sonoma2.png" width="95%"></img></p>
+</div>
+
+ <p>
+While there may be simpler options out there to create an @icloud.com account (please do let me know  <a href="https://indieweb.social/@xenodium">mastodon</a>/ <a href="https://twitter.com/xenodium">twitter</a>), the VM did the job. I'd been meaning to find a low friction mechanism to run VMs for a different reason, but that's a post for another time.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/creating-icloud-test-accounts</link>
+  <guid isPermaLink="false">http://xenodium.com/creating-icloud-test-accounts</guid>
+  <pubDate>Fri, 06 Oct 2023 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>My org mode iOS apps</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-my-org-mode-ios-apps" class="outline-2">
+ <h2 id="my-org-mode-ios-apps"> <span class="timestamp-wrapper"> <span class="timestamp">19 September 2023</span></span> My org mode iOS apps</h2>
+ <div class="outline-text-2" id="text-my-org-mode-ios-apps">
+ <p>
+When on my laptop, I get access to Emacs and its full-blown org workflows. But when on the go, I often need a very targetted fraction of these workflows. For these instances, I've built a few iOS apps.
+</p>
+</div>
+
+ <div id="outline-container-orgf722970" class="outline-3">
+ <h3 id="orgf722970"> <a href="https://flathabits.com">Flat Habits</a></h3>
+ <div class="outline-text-3" id="text-orgf722970">
+ <p>
+Inspired by James Clear's  <a href="https://www.goodreads.com/book/show/40121378-atomic-habits">Atomic Habits</a> book, I built a privacy-oriented habit tracker for iOS. It's got no sign-ups, no accounts, no social, no analytics, no lock-in, and no ads. Habit data remains on your device.
+</p>
+
+ <p>
+Flat Habits interface should be fairly frictionless, getting out of your way, so you can focus on the habits themselves.
+</p>
+
+ <p>
+Flat Habits saves all habit data to an org file.
+</p>
+
+ <div style="max-width: 60%; font-size: small; font-family:monospace; margin:auto;">
+  * TODO 🧘 Meditate
+   <br></br>
+  SCHEDULED:
+     <br></br>
+    :PROPERTIES:
+     <br></br>
+    :STYLE: habit
+     <br></br>
+    :LAST_REPEAT: [2021-05-09 Sun 11:38]
+     <br></br>
+    :END:
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-09 Sun 8:59]
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-08 Sat 8:40]
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-07 Fri 8:34]
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-06 Thu 8:25]
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-05 Wed 9:00]
+     <br></br>
+    - State "DONE"        from "TODO"       [2021-05-04 Tue 8:50]
+</div>
+ <br></br> <div style="text-align: center;">
+   <a href="https://apps.apple.com/app/id1558358855">
+     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgfdd5e17" class="outline-3">
+ <h3 id="orgfdd5e17"> <a href="https://plainorg.com">Plain Org</a></h3>
+ <div class="outline-text-3" id="text-orgfdd5e17">
+ <div style="text-align: center;">
+   <a href="https://apps.apple.com/app/id1578965002">
+     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
+</div>
+</div>
+</div>
+ <div id="outline-container-orge7db974" class="outline-3">
+ <h3 id="orge7db974"> <a href="https://apps.apple.com/app/id1671420139">✶scratch✶</a></h3>
+ <div class="outline-text-3" id="text-orge7db974">
+ <div style="text-align: center;">
+   <a href="https://apps.apple.com/app/id1671420139">
+     <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px"></img></a>
+</div>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/my-org-mode-ios-apps</link>
+  <guid isPermaLink="false">http://xenodium.com/my-org-mode-ios-apps</guid>
+  <pubDate>Tue, 19 Sep 2023 10:50:38 +0100</pubDate>
+</item>
 <item>
   <title>Emacs hangs saving .authinfo.gpg (workaround)</title>
   <description><![CDATA[<div id="content" class="content">
