@@ -6,7 +6,83 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 06 Oct 2023 15:35:53 +0100</lastBuildDate>
+<lastBuildDate>Tue, 24 Oct 2023 15:02:17 +0100</lastBuildDate>
+<item>
+  <title>Open in Xcode at line number</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-open-in-xcode-at-line-number" class="outline-2">
+ <h2 id="open-in-xcode-at-line-number"> <span class="timestamp-wrapper"> <span class="timestamp">24 October 2023</span></span> Open in Xcode at line number</h2>
+ <div class="outline-text-2" id="text-open-in-xcode-at-line-number">
+ <p>
+I live mostly in Emacs. I say mostly 'cause well, I'm fairly pragmatic about it. If there's a workflow elsewhere that's more appropriate for my needs, I'll happily use that instead. While I'd love to do my web browsing from my beloved editor, Firefox ticks the right boxes for me.
+</p>
+
+ <p>
+I do most of my iOS coding in Emacs. It's a hybrid of sorts between Emacs and Xcode. If I need to use the debugger, Xcode is a clear winner for me. If I happen to be visiting a Swift file in an Emacs buffer, I typically used the handy  <code>crux-open-with</code> from  <a href="https://github.com/bbatsov/crux">crux</a> to open in Xcode, and continue from there. This worked OK, but I always wished opening in Xcode would also jump to the same line number as the Emacs point (cursor) location. This is particularly useful if I had just spotted where I'd like to set a breakpoint in an Emacs buffer and need to transition over to Xcode.
+</p>
+
+ <p>
+It turns out, there's a nifty command line utility for that.  <a href="https://www.unix.com/man-page/osx/1/xed/">xed</a>, the Xcode text editor invocation tool. It enables telling Xcode what file to open and at what line number:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">xed -line 141 path/to/some/file.swift
+</pre>
+</div>
+
+ <p>
+With that in mind, I've added my own version of  <code>crux-open-with</code>, using  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.
+</p>
+
+ <p>
+When running on macOS, the function checks whether or not I'm visiting a buffer for a programming language, and opens the file in Xcode at the same line number.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-open-externally</span> ()
+   <span style="color: #183691;">"Open file(s) externally."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Open externally"</span>
+   (<span style="color: #a71d5d;">if</span> (eq system-type 'darwin)
+       (<span style="color: #a71d5d;">if</span> (derived-mode-p 'prog-mode)
+           (format  <span style="color: #183691;">"xed --line %d '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>
+                   (line-number-at-pos (point)))
+          <span style="color: #183691;">"open '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>)
+      <span style="color: #183691;">"xdg-open '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">'"</span>)
+    <span style="color: #a71d5d;">:shell-args</span> '(<span style="color: #183691;">"-x"</span>  <span style="color: #183691;">"-c"</span>)
+    <span style="color: #a71d5d;">:silent-success</span> t
+    <span style="color: #a71d5d;">:utils</span> (<span style="color: #a71d5d;">if</span> (eq system-type 'darwin)
+               <span style="color: #183691;">"open"</span>
+             <span style="color: #183691;">"xdg-open"</span>)))
+</pre>
+</div>
+
+
+ <div id="org2dd672e" class="figure">
+ <p> <img src="../images/open-in-xcode-at-line-number/xed_x0.8_x2.webp" alt="xed_x0.8_x2.webp" width="80%"></img></p>
+</div>
+
+ <p>
+ <code>dwim-shell-commands-open-externally</code> is now  <a href="https://github.com/xenodium/dwim-shell-command/commit/19be1c2f3792c95f04fd369cb931a52f7df9cfd5">added to dwim-shell-commands.el</a>.
+</p>
+
+ <p>
+ps. If you find opening the same file in a different context handy, you may also like the package  <a href="https://github.com/rmuslimov/browse-at-remote">browse-at-remote</a> that opens the visited file at its corresponding remote location (for example, GitHub). I can never remember the name of the function ( <a href="https://github.com/rmuslimov/browse-at-remote">browse-at-remote</a>), so I aliased it to something I'd remember and moved on…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defalias</span> ' <span style="color: #795da3;">ar/open-at-github</span> #'browse-at-remote))
+</pre>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/open-in-xcode-at-line-number</link>
+  <guid isPermaLink="false">http://xenodium.com/open-in-xcode-at-line-number</guid>
+  <pubDate>Tue, 24 Oct 2023 15:02:17 +0100</pubDate>
+</item>
 <item>
   <title>Creating an iCloud account (via tart VM)</title>
   <description><![CDATA[<div id="content" class="content">

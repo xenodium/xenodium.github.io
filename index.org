@@ -1,6 +1,54 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-10-24 Tue] Open in Xcode at line number
+:PROPERTIES:
+:CUSTOM_ID: open-in-xcode-at-line-number
+:END:
+I live mostly in Emacs. I say mostly 'cause well, I'm fairly pragmatic about it. If there's a workflow elsewhere that's more appropriate for my needs, I'll happily use that instead. While I'd love to do my web browsing from my beloved editor, Firefox ticks the right boxes for me.
+
+I do most of my iOS coding in Emacs. It's a hybrid of sorts between Emacs and Xcode. If I need to use the debugger, Xcode is a clear winner for me. If I happen to be visiting a Swift file in an Emacs buffer, I typically used the handy =crux-open-with= from [[https://github.com/bbatsov/crux][crux]] to open in Xcode, and continue from there. This worked OK, but I always wished opening in Xcode would also jump to the same line number as the Emacs point (cursor) location. This is particularly useful if I had just spotted where I'd like to set a breakpoint in an Emacs buffer and need to transition over to Xcode.
+
+It turns out, there's a nifty command line utility for that. [[https://www.unix.com/man-page/osx/1/xed/][xed]], the Xcode text editor invocation tool. It enables telling Xcode what file to open and at what line number:
+
+#+begin_src sh
+  xed -line 141 path/to/some/file.swift
+#+end_src
+
+With that in mind, I've added my own version of =crux-open-with=, using [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]].
+
+When running on macOS, the function checks whether or not I'm visiting a buffer for a programming language, and opens the file in Xcode at the same line number.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-open-externally ()
+    "Open file(s) externally."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Open externally"
+     (if (eq system-type 'darwin)
+         (if (derived-mode-p 'prog-mode)
+             (format "xed --line %d '<<f>>'"
+                     (line-number-at-pos (point)))
+           "open '<<f>>'")
+       "xdg-open '<<f>>'")
+     :shell-args '("-x" "-c")
+     :silent-success t
+     :utils (if (eq system-type 'darwin)
+                "open"
+              "xdg-open")))
+#+end_src
+
+#+ATTR_HTML: :width 80%
+[[file:images/open-in-xcode-at-line-number/xed_x0.8_x2.webp]]
+
+=dwim-shell-commands-open-externally= is now [[https://github.com/xenodium/dwim-shell-command/commit/19be1c2f3792c95f04fd369cb931a52f7df9cfd5][added to dwim-shell-commands.el]].
+
+ps. If you find opening the same file in a different context handy, you may also like the package [[https://github.com/rmuslimov/browse-at-remote][browse-at-remote]] that opens the visited file at its corresponding remote location (for example, GitHub). I can never remember the name of the function ([[https://github.com/rmuslimov/browse-at-remote][browse-at-remote]]), so I aliased it to something I'd remember and moved on...
+
+#+begin_src emacs-lisp :lexical no
+  (defalias 'ar/open-at-github #'browse-at-remote))
+#+end_src
+
 * [2023-10-06 Fri] Trimming video screenshots
 :PROPERTIES:
 :CUSTOM_ID: trimming-video-screenshots
