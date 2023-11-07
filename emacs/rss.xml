@@ -619,6 +619,44 @@ There isn't much to the function other than glueing a little elisp and a shell s
  <code>dwim-shell-commands-sha-256-hash-file-at-clipboard-url</code> is now in  <a href="https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el">dwim-shell-commands.el</a>, the optional counterpart in  <a href="https://github.com/xenodium/dwim-shell-command/">dwim-shell-command</a>.
 </p>
 </div>
+
+ <div id="outline-container-orgae535e0" class="outline-3">
+ <h3 id="orgae535e0">UPDATE</h3>
+ <div class="outline-text-3" id="text-orgae535e0">
+ <p>
+There's better way. Thanks to  <a href="https://emacs.ch/@pkal">Philip Kaludercic</a> for  <a href="https://emacs.ch/@pkal/111041928308815477">suggesting</a>  <code>curl -s example.com | sha256sum - | cut -d " " -f1</code>
+and  <a href="https://emacs.ch/@sachac">Sacha Chua</a> who pinged me about it.
+</p>
+
+ <p>
+Also note I'm now relying on the  <code><<cb>></code> template, since dwim-shell-command replaces it with the clipboard/kill ring.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-sha-256-hash-file-at-clipboard-url</span> ()
+   <span style="color: #183691;">"Download file at clipboard URL and generate SHA-256 hash."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">unless</span> (string-match-p  <span style="color: #183691;">"^http[s]?://"</span> (current-kill 0))
+    (<span style="color: #333333;">user-error</span>  <span style="color: #183691;">"No URL in clipboard"</span>))
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Generate SHA-256 hash from clipboard URL."</span>
+    <span style="color: #183691;">"curl -s '</span> <span style="color: #0086b3;"><<cb>></span> <span style="color: #183691;">' | sha256sum - | cut -d ' ' -f1"</span>
+    <span style="color: #a71d5d;">:utils</span> '(<span style="color: #183691;">"curl"</span>  <span style="color: #183691;">"sha256sum"</span>)
+    <span style="color: #a71d5d;">:on-completion</span>
+   (<span style="color: #a71d5d;">lambda</span> (buffer process)
+     (<span style="color: #a71d5d;">if-let</span> ((success (= (process-exit-status process) 0))
+              (hash (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+                      (string-trim (buffer-string)))))
+         (<span style="color: #a71d5d;">progn</span>
+           (kill-buffer buffer)
+           (kill-new hash)
+           (message  <span style="color: #183691;">"Copied %s to clipboard"</span>
+                    (propertize hash 'face 'font-lock-string-face)))
+       (switch-to-buffer buffer)))))
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>]]></description>
   <link>http://xenodium.com/sha-256-hash-from-url-the-easy-way</link>

@@ -603,6 +603,36 @@ There isn't much to the function other than glueing a little elisp and a shell s
 
 =dwim-shell-commands-sha-256-hash-file-at-clipboard-url= is now in [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el][dwim-shell-commands.el]], the optional counterpart in [[https://github.com/xenodium/dwim-shell-command/][dwim-shell-command]].
 
+** UPDATE
+
+There's better way. Thanks to [[https://emacs.ch/@pkal][Philip Kaludercic]] for [[https://emacs.ch/@pkal/111041928308815477][suggesting]] =curl -s example.com | sha256sum - | cut -d " " -f1=
+and [[https://emacs.ch/@sachac][Sacha Chua]] who pinged me about it.
+
+Also note I'm now relying on the =<<cb>>= template, since dwim-shell-command replaces it with the clipboard/kill ring.
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-sha-256-hash-file-at-clipboard-url ()
+    "Download file at clipboard URL and generate SHA-256 hash."
+    (interactive)
+    (unless (string-match-p "^http[s]?://" (current-kill 0))
+      (user-error "No URL in clipboard"))
+    (dwim-shell-command-on-marked-files
+     "Generate SHA-256 hash from clipboard URL."
+     "curl -s '<<cb>>' | sha256sum - | cut -d ' ' -f1"
+     :utils '("curl" "sha256sum")
+     :on-completion
+     (lambda (buffer process)
+       (if-let ((success (= (process-exit-status process) 0))
+                (hash (with-current-buffer buffer
+                        (string-trim (buffer-string)))))
+           (progn
+             (kill-buffer buffer)
+             (kill-new hash)
+             (message "Copied %s to clipboard"
+                      (propertize hash 'face 'font-lock-string-face)))
+         (switch-to-buffer buffer)))))
+#+end_src
+
 * [2023-09-05 Tue] Inline previous result and why you should edebug
 :PROPERTIES:
 :CUSTOM_ID: inline-previous-result-and-why-you-should-edebug
