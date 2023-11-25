@@ -6,7 +6,175 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 07 Nov 2023 08:21:49 +0000</lastBuildDate>
+<lastBuildDate>Sat, 25 Nov 2023 19:30:30 +0000</lastBuildDate>
+<item>
+  <title>Native Emacs/macOS UX integrations via Swift modules</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-native-emacsmacos-ux-integrations-via-swift-modules" class="outline-2">
+ <h2 id="native-emacsmacos-ux-integrations-via-swift-modules"> <span class="timestamp-wrapper"> <span class="timestamp">25 November 2023</span></span> Native Emacs/macOS UX integrations via Swift modules</h2>
+ <div class="outline-text-2" id="text-native-emacsmacos-ux-integrations-via-swift-modules">
+ <p>
+Once you learn a little  <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a>,  <a href="https://www.gnu.org/software/emacs/">Emacs</a> becomes this hyper malleable editor/platform. A live playground of sorts, where almost everything is up for grabs at runtime. Throw some elisp at it, and you can customize or extend almost anything to your heart's content. I say almost, as there's a comparatively small native core, that would typically require recompiling if you wanted to make further (native) mods. But that isn't entirely true.  <a href="https://www.masteringemacs.org/article/whats-new-in-emacs-25-1">Emacs 25</a> enabled us to further extend things by loading native  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html">dynamic modules</a>, back in 2016.
+</p>
+
+ <p>
+Most of my Emacs-bending adventures have been powered by elisp, primarily on macOS. I also happen to have an iOS dev background, so when  <a href="https://github.com/SavchenkoValeriy">Valeriy Savchenko</a>  <a href="https://www.reddit.com/r/emacs/comments/wemj1z/writing_emacs_dynamic_modules_in_swift/">announced</a> his project bringing  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">Emacs dynamic modules powered by Swift</a>, I added it to my never-ending list of things to try out.
+</p>
+
+ <p>
+Fast-forward to a year later, and  <a href="https://github.com/roife">Roife</a>'s  <a href="https://www.reddit.com/r/emacs/comments/17vrmrk/emt_emacs_macos_tokenizer_for_enhanced_cjk_word/">introduction</a> to  <a href="https://github.com/roife/emt">emt</a> finally gave me that much-needed nudge to give  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> a try. While I wish I had done it earlier, I also wish  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> had gotten more visibility. Native extensions written in Swift can open up some some neat integrations using native macOS UX/APIs.
+</p>
+
+ <p>
+While I'm new to Savchenko's  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a>, the project has  <a href="https://savchenkovaleriy.github.io/emacs-swift-module/documentation/emacsswiftmodule/">wonderful documentation</a>. It quickly got me on my way to build an experimental dynamic module introducing a native context menu for sharing files from my beloved editor.
+</p>
+
+
+ <div id="orgff67e90" class="figure">
+ <p> <img src="../images/native-emacsmacos-ux-integrations-via-swift-modules/emacs-share.webp" alt="emacs-share.webp" width="90%"></img></p>
+</div>
+
+ <p>
+Most of the elisp/native bridging magic happens with fairly little Swift code:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">try</span> env. <span style="color: #795da3;">defun</span>(
+   <span style="color: #183691;">"macos-module--share"</span>,
+  with:  <span style="color: #183691;">"""</span>
+ <span style="color: #183691;">    Share files in ARG1.</span>
+
+ <span style="color: #183691;">    ARG1 must be a vector (not a list) of file paths.</span>
+ <span style="color: #183691;">    """</span>
+) { (env: Environment, files: [ <span style="color: #a71d5d;">String</span>])  <span style="color: #a71d5d;">in</span>
+   <span style="color: #a71d5d;">let</span> urls = files. <span style="color: #a71d5d;">map</span> {  <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) }
+
+   <span style="color: #a71d5d;">let</span> picker =  <span style="color: #795da3;">NSSharingServicePicker</span>(items: urls)
+   <span style="color: #a71d5d;">guard</span>  <span style="color: #a71d5d;">let</span> view = NSApp. <span style="color: #333333;">mainWindow</span>?. <span style="color: #333333;">contentView</span>  <span style="color: #a71d5d;">else</span> {
+     <span style="color: #a71d5d;">return</span>
+  }
+
+   <span style="color: #a71d5d;">let</span> x =  <span style="color: #a71d5d;">try</span> env. <span style="color: #795da3;">funcall</span>(<span style="color: #183691;">"macos--emacs-point-x"</span>)  <span style="color: #a71d5d;">as</span>  <span style="color: #a71d5d;">Int</span>
+   <span style="color: #a71d5d;">let</span> y =  <span style="color: #a71d5d;">try</span> env. <span style="color: #795da3;">funcall</span>(<span style="color: #183691;">"macos--emacs-point-y"</span>)  <span style="color: #a71d5d;">as</span>  <span style="color: #a71d5d;">Int</span>
+
+   <span style="color: #a71d5d;">let</span> rect =  <span style="color: #a71d5d;">NSRect</span>(
+    x: x + 15, y:  <span style="color: #a71d5d;">Int</span>(view. <span style="color: #333333;">bounds</span>. <span style="color: #333333;">height</span>) - y + 15, width: 1, height: 1
+  )
+  picker. <span style="color: #795da3;">show</span>(relativeTo: rect, of: view, preferredEdge: . <span style="color: #333333;">maxY</span>)
+}
+</pre>
+</div>
+
+ <p>
+This produced an elisp  <code>macos-module--share</code> function I could easily access from elisp like so:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">macos-share</span> ()
+   <span style="color: #183691;">"Share file(s) with other macOS apps.</span>
+
+ <span style="color: #183691;">If visiting a buffer with associated file, share it.</span>
+
+ <span style="color: #183691;">While in `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">', any selected files, share those.  If region is</span>
+ <span style="color: #183691;">active, share files in region.  Otherwise share file at point."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (macos-module--share (vconcat (macos--files-dwim))))
+</pre>
+</div>
+
+ <p>
+On a side note,  <code>(macos--files-dwim)</code> chooses files depending on context. That is,  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">do what I mean (DWIM) style</a>. If there's a file associated with current buffer, share it. When in  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> (the directory editor, aka file manager), look at region, selected files, or default to file at point.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">macos--files-dwim</span> ()
+   <span style="color: #183691;">"Return buffer file (if available) or marked/region files for a `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">' buffer."</span>
+  (<span style="color: #a71d5d;">if</span> (buffer-file-name)
+      (list (buffer-file-name))
+    (<span style="color: #a71d5d;">or</span>
+     (macos--dired-paths-in-region)
+     (dired-get-marked-files))))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">macos--dired-paths-in-region</span> ()
+   <span style="color: #183691;">"If `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">' buffer, return region files.  nil otherwise."</span>
+  (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (equal major-mode 'dired-mode)
+             (use-region-p))
+    (<span style="color: #a71d5d;">let</span> ((start (region-beginning))
+          (end (region-end))
+          (paths))
+      (<span style="color: #a71d5d;">save-excursion</span>
+        (<span style="color: #a71d5d;">save-restriction</span>
+          (goto-char start)
+          (<span style="color: #a71d5d;">while</span> (< (point) end)
+             <span style="color: #969896;">;; </span> <span style="color: #969896;">Skip non-file lines.</span>
+            (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (< (point) end) (dired-between-files))
+              (forward-line 1))
+            (<span style="color: #a71d5d;">when</span> (dired-get-filename nil t)
+              (<span style="color: #a71d5d;">setq</span> paths (append paths (list (dired-get-filename nil t)))))
+            (forward-line 1))))
+      paths)))
+</pre>
+</div>
+
+ <p>
+I got one more example of a native macOS integration I added. Being an even simpler one, and in hindsight, I prolly should have introduced it first. In any case, this one reveals  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> files in macOS's Finder app (including the selection itself).
+</p>
+
+
+ <div id="orgc222c8f" class="figure">
+ <p> <img src="../images/native-emacsmacos-ux-integrations-via-swift-modules/reveal.webp" alt="reveal.webp" width="100%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">try</span> env. <span style="color: #795da3;">defun</span>(
+   <span style="color: #183691;">"macos-module--reveal-in-finder"</span>,
+  with:  <span style="color: #183691;">"""</span>
+ <span style="color: #183691;">    Reveal (and select) files in ARG1 in macOS Finder.</span>
+
+ <span style="color: #183691;">    ARG1 mus be a vector (not a list) of file paths.</span>
+ <span style="color: #183691;">    """</span>
+) { (env: Environment, files: [ <span style="color: #a71d5d;">String</span>])  <span style="color: #a71d5d;">in</span>
+  NSWorkspace. <span style="color: #a71d5d;">shared</span>. <span style="color: #795da3;">activateFileViewerSelecting</span>(files. <span style="color: #a71d5d;">map</span> {  <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) })
+}
+</pre>
+</div>
+
+ <p>
+The corresponding elisp is nearly identical to its  <code>macos-share</code> sibling:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">macos-reveal-in-finder</span> ()
+   <span style="color: #183691;">"Reveal file(s) in macOS Finder.</span>
+
+ <span style="color: #183691;">If visiting a buffer with associated file, reveal it.</span>
+
+ <span style="color: #183691;">While in `</span> <span style="color: #0086b3;">dired</span> <span style="color: #183691;">', any selected files, reveal those.  If region is</span>
+ <span style="color: #183691;">active, reveal files in region.  Otherwise reveal file at point."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (macos-module--reveal-in-finder (vconcat (macos--files-dwim))))
+</pre>
+</div>
+
+ <p>
+My Swift module experiment introduces two native macOS UX integrations, now available via  <code>M-x macos-share</code> and  <code>M-x macos-reveal-in-finder</code>. I've pushed all code to it's own  <a href="https://github.com/xenodium/EmacsMacOSModule">repo</a>.
+</p>
+
+ <p>
+I hope this post brings visibility to the wonderful  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> project and sparks new, native, and innovative integrations for those macOS. Can't wait to see what others can do with it.
+</p>
+
+ <p>
+ <i>Enjoying this content? Find it useful? Consider ✨ <a href="https://github.com/sponsors/xenodium">sponsoring</a>✨.</i>
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/native-emacsmacos-ux-integrations-via-swift-modules</link>
+  <guid isPermaLink="false">http://xenodium.com/native-emacsmacos-ux-integrations-via-swift-modules</guid>
+  <pubDate>Sat, 25 Nov 2023 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>How I smash burgers</title>
   <description><![CDATA[<div id="content" class="content">

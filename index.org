@@ -1,6 +1,150 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-11-25 Sat] Native Emacs/macOS UX integrations via Swift modules
+:PROPERTIES:
+:CUSTOM_ID: native-emacsmacos-ux-integrations-via-swift-modules
+:END:
+Once you learn a little [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]], [[https://www.gnu.org/software/emacs/][Emacs]] becomes this hyper malleable editor/platform. A live playground of sorts, where almost everything is up for grabs at runtime. Throw some elisp at it, and you can customize or extend almost anything to your heart's content. I say almost, as there's a comparatively small native core, that would typically require recompiling if you wanted to make further (native) mods. But that isn't entirely true. [[https://www.masteringemacs.org/article/whats-new-in-emacs-25-1][Emacs 25]] enabled us to further extend things by loading native [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html][dynamic modules]], back in 2016.
+
+Most of my Emacs-bending adventures have been powered by elisp, primarily on macOS. I also happen to have an iOS dev background, so when [[https://github.com/SavchenkoValeriy][Valeriy Savchenko]] [[https://www.reddit.com/r/emacs/comments/wemj1z/writing_emacs_dynamic_modules_in_swift/][announced]] his project bringing [[https://github.com/SavchenkoValeriy/emacs-swift-module][Emacs dynamic modules powered by Swift]], I added it to my never-ending list of things to try out.
+
+Fast-forward to a year later, and [[https://github.com/roife][Roife]]'s [[https://www.reddit.com/r/emacs/comments/17vrmrk/emt_emacs_macos_tokenizer_for_enhanced_cjk_word/][introduction]] to [[https://github.com/roife/emt][emt]] finally gave me that much-needed nudge to give [[https://github.com/SavchenkoValeriy/emacs-swift-module][emacs-swift-module]] a try. While I wish I had done it earlier, I also wish [[https://github.com/SavchenkoValeriy/emacs-swift-module][emacs-swift-module]] had gotten more visibility. Native extensions written in Swift can open up some some neat integrations using native macOS UX/APIs.
+
+While I'm new to Savchenko's [[https://github.com/SavchenkoValeriy/emacs-swift-module][emacs-swift-module]], the project has [[https://savchenkovaleriy.github.io/emacs-swift-module/documentation/emacsswiftmodule/][wonderful documentation]]. It quickly got me on my way to build an experimental dynamic module introducing a native context menu for sharing files from my beloved editor.
+
+#+ATTR_HTML: :width 90%
+[[file:images/native-emacsmacos-ux-integrations-via-swift-modules/emacs-share.webp]]
+
+Most of the elisp/native bridging magic happens with fairly little Swift code:
+
+#+begin_src swift
+  try env.defun(
+    "macos-module--share",
+    with: """
+      Share files in ARG1.
+
+      ARG1 must be a vector (not a list) of file paths.
+      """
+  ) { (env: Environment, files: [String]) in
+    let urls = files.map { URL(fileURLWithPath: $0) }
+
+    let picker = NSSharingServicePicker(items: urls)
+    guard let view = NSApp.mainWindow?.contentView else {
+      return
+    }
+
+    let x = try env.funcall("macos--emacs-point-x") as Int
+    let y = try env.funcall("macos--emacs-point-y") as Int
+
+    let rect = NSRect(
+      x: x + 15, y: Int(view.bounds.height) - y + 15, width: 1, height: 1
+    )
+    picker.show(relativeTo: rect, of: view, preferredEdge: .maxY)
+  }
+#+end_src
+
+This produced an elisp =macos-module--share= function I could easily access from elisp like so:
+
+#+begin_src emacs-lisp :lexical no
+  (defun macos-share ()
+    "Share file(s) with other macOS apps.
+
+  If visiting a buffer with associated file, share it.
+
+  While in `dired', any selected files, share those.  If region is
+  active, share files in region.  Otherwise share file at point."
+    (interactive)
+    (macos-module--share (vconcat (macos--files-dwim))))
+#+end_src
+
+On a side note, =(macos--files-dwim)= chooses files depending on context. That is, [[https://xenodium.com/emacs-dwim-do-what-i-mean/][do what I mean (DWIM) style]]. If there's a file associated with current buffer, share it. When in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] (the directory editor, aka file manager), look at region, selected files, or default to file at point.
+
+#+begin_src emacs-lisp :lexical no
+  (defun macos--files-dwim ()
+    "Return buffer file (if available) or marked/region files for a `dired' buffer."
+    (if (buffer-file-name)
+        (list (buffer-file-name))
+      (or
+       (macos--dired-paths-in-region)
+       (dired-get-marked-files))))
+
+  (defun macos--dired-paths-in-region ()
+    "If `dired' buffer, return region files.  nil otherwise."
+    (when (and (equal major-mode 'dired-mode)
+               (use-region-p))
+      (let ((start (region-beginning))
+            (end (region-end))
+            (paths))
+        (save-excursion
+          (save-restriction
+            (goto-char start)
+            (while (< (point) end)
+              ;; Skip non-file lines.
+              (while (and (< (point) end) (dired-between-files))
+                (forward-line 1))
+              (when (dired-get-filename nil t)
+                (setq paths (append paths (list (dired-get-filename nil t)))))
+              (forward-line 1))))
+        paths)))
+#+end_src
+
+I got one more example of a native macOS integration I added. Being an even simpler one, and in hindsight, I prolly should have introduced it first. In any case, this one reveals [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] files in macOS's Finder app (including the selection itself).
+
+#+ATTR_HTML: :width 100%
+[[file:images/native-emacsmacos-ux-integrations-via-swift-modules/reveal.webp]]
+
+#+begin_src swift
+  try env.defun(
+    "macos-module--reveal-in-finder",
+    with: """
+      Reveal (and select) files in ARG1 in macOS Finder.
+
+      ARG1 mus be a vector (not a list) of file paths.
+      """
+  ) { (env: Environment, files: [String]) in
+    NSWorkspace.shared.activateFileViewerSelecting(files.map { URL(fileURLWithPath: $0) })
+  }
+#+end_src
+
+The corresponding elisp is nearly identical to its =macos-share= sibling:
+
+#+begin_src emacs-lisp :lexical no
+  (defun macos-reveal-in-finder ()
+    "Reveal file(s) in macOS Finder.
+
+  If visiting a buffer with associated file, reveal it.
+
+  While in `dired', any selected files, reveal those.  If region is
+  active, reveal files in region.  Otherwise reveal file at point."
+    (interactive)
+    (macos-module--reveal-in-finder (vconcat (macos--files-dwim))))
+#+end_src
+
+My Swift module experiment introduces two native macOS UX integrations, now available via =M-x macos-share= and =M-x macos-reveal-in-finder=. I've pushed all code to it's own [[https://github.com/xenodium/EmacsMacOSModule][repo]].
+
+I hope this post brings visibility to the wonderful [[https://github.com/SavchenkoValeriy/emacs-swift-module][emacs-swift-module]] project and sparks new, native, and innovative integrations for those macOS. Can't wait to see what others can do with it.
+
+/Enjoying this content? Find it useful? Consider ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨./
+
+* [2023-11-16 Thu] Migrating/re-encrypting pass's password store
+:PROPERTIES:
+:CUSTOM_ID: migratingre-encrypting-passs-password-store
+:END:
+Note to self, I needed to migrate/re-encrypt someone's password store (aka pass). Straightforward:
+
+Get the new key, probably already in gpg key chain. Try listing it:
+
+#+begin_src sh
+  gpg --list-keys
+#+end_src
+
+To re-encrypt, =pass init= with new key is enough. It'll prompt for old pass key.
+
+#+begin_src sh
+  cd path/to/.password-store
+  pass init NEW-GPG-KEY
+#+end_src
 * [2023-10-30 Mon] How I smash burgers
 :PROPERTIES:
 :CUSTOM_ID: how-i-smash-burgers
@@ -22531,10 +22675,11 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2021-11-23 Tue]
+[2023-11-12 Sun]
 :END:
 - [[https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
 - [[https://karthinks.com/software/bridging-islands-in-emacs-1/][Bridging Islands in Emacs: re-builder and query-replace-regexp | Karthinks]].
+- [[https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0][Configuring Emacs and Eglot to work with Astro language server | by Jayaram |...]].
 - [[https://willschenk.com/articles/2020/tramp_tricks/][Emacs Tramp tricks]].
 - [[https://philjackson.github.io//emacs/shell/2021/07/26/export-an-environment-variable-to-emacs/][Export an environment variable to Emacs | Snippets and other bits]].
 - [[https://ruzkuku.com/texts/lesser-known.html#m-x-find-library-mode-local-ret-2004][Lesser known functionalities in core Emacs (see setq-mode-local)]].
