@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-11-25 Sat 20:46 -->
+<!-- 2023-11-29 Wed 22:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Native Emacs/macOS UX integrations via Swift modules</title>
+<title>Building your own bookmark launcher</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -378,172 +378,250 @@
       </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      Sponsor
     </td>
   </tr>
 </table>
 </div>
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
-<div id="outline-container-native-emacsmacos-ux-integrations-via-swift-modules" class="outline-2">
-<h2 id="native-emacsmacos-ux-integrations-via-swift-modules"><span class="timestamp-wrapper"><span class="timestamp">25 November 2023</span></span> Native Emacs/macOS UX integrations via Swift modules</h2>
-<div class="outline-text-2" id="text-native-emacsmacos-ux-integrations-via-swift-modules">
-<p>
-Once you learn a little <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a>, <a href="https://www.gnu.org/software/emacs/">Emacs</a> becomes this hyper malleable editor/platform. A live playground of sorts, where almost everything is up for grabs at runtime. Throw some elisp at it, and you can customize or extend almost anything to your heart's content. I say almost, as there's a comparatively small native core, that would typically require recompiling if you wanted to make further (native) mods. But that isn't entirely true. <a href="https://www.masteringemacs.org/article/whats-new-in-emacs-25-1">Emacs 25</a> enabled us to further extend things by loading native <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html">dynamic modules</a>, back in 2016.
+<div id="outline-container-building-your-own-bookmark-launcher" class="outline-2">
+<h2 id="building-your-own-bookmark-launcher"><span class="timestamp-wrapper"><span class="timestamp">29 November 2023</span></span> Building your own bookmark launcher</h2>
+<div class="outline-text-2" id="text-building-your-own-bookmark-launcher">
+<p style="text-align:right;">
+<i>✨<a href="https://github.com/sponsors/xenodium" style="text-align:right;">sponsor</a>✨ this content</i>
 </p>
 
 <p>
-Most of my Emacs-bending adventures have been powered by elisp, primarily on macOS. I also happen to have an iOS dev background, so when <a href="https://github.com/SavchenkoValeriy">Valeriy Savchenko</a> <a href="https://www.reddit.com/r/emacs/comments/wemj1z/writing_emacs_dynamic_modules_in_swift/">announced</a> his project bringing <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">Emacs dynamic modules powered by Swift</a>, I added it to my never-ending list of things to try out.
+I've been toying with the idea of managing browser bookmarks from <a href="https://www.gnu.org/software/emacs/">you know where</a>. Maybe dump a bunch of links into an org file and use that as a quick and dirty bookmark manager. We'll start with a flat list plus fuzzy searching and see how far that gets us.
 </p>
 
 <p>
-Fast-forward to a year later, and <a href="https://github.com/roife">Roife</a>'s <a href="https://www.reddit.com/r/emacs/comments/17vrmrk/emt_emacs_macos_tokenizer_for_enhanced_cjk_word/">introduction</a> to <a href="https://github.com/roife/emt">emt</a> finally gave me that much-needed nudge to give <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> a try. While I wish I had done it earlier, I also wish <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> had gotten more visibility. Native extensions written in Swift can open up some some neat integrations using native macOS UX/APIs.
-</p>
-
-<p>
-While I'm new to Savchenko's <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a>, the project has <a href="https://savchenkovaleriy.github.io/emacs-swift-module/documentation/emacsswiftmodule/">wonderful documentation</a>. It quickly got me on my way to build an experimental dynamic module introducing a native context menu for sharing files from my beloved editor.
-</p>
-
-
-<div id="orge8d5220" class="figure">
-<p><img src="../images/native-emacsmacos-ux-integrations-via-swift-modules/emacs-share.webp" alt="emacs-share.webp" width="90%" />
-</p>
-</div>
-
-<p>
-Most of the elisp/native bridging magic happens with fairly little Swift code:
+The org file would look a little something like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-swift"><span style="color: #a71d5d;">try</span> env.<span style="color: #795da3;">defun</span>(
-  <span style="color: #183691;">"macos-module--share"</span>,
-  with: <span style="color: #183691;">"""</span>
-<span style="color: #183691;">    Share files in ARG1.</span>
-
-<span style="color: #183691;">    ARG1 must be a vector (not a list) of file paths.</span>
-<span style="color: #183691;">    """</span>
-) { (env: Environment, files: [<span style="color: #a71d5d;">String</span>]) <span style="color: #a71d5d;">in</span>
-  <span style="color: #a71d5d;">let</span> urls = files.<span style="color: #a71d5d;">map</span> { <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) }
-
-  <span style="color: #a71d5d;">let</span> picker = <span style="color: #795da3;">NSSharingServicePicker</span>(items: urls)
-  <span style="color: #a71d5d;">guard</span> <span style="color: #a71d5d;">let</span> view = NSApp.<span style="color: #333333;">mainWindow</span>?.<span style="color: #333333;">contentView</span> <span style="color: #a71d5d;">else</span> {
-    <span style="color: #a71d5d;">return</span>
-  }
-
-  <span style="color: #a71d5d;">let</span> x = <span style="color: #a71d5d;">try</span> env.<span style="color: #795da3;">funcall</span>(<span style="color: #183691;">"macos--emacs-point-x"</span>) <span style="color: #a71d5d;">as</span> <span style="color: #a71d5d;">Int</span>
-  <span style="color: #a71d5d;">let</span> y = <span style="color: #a71d5d;">try</span> env.<span style="color: #795da3;">funcall</span>(<span style="color: #183691;">"macos--emacs-point-y"</span>) <span style="color: #a71d5d;">as</span> <span style="color: #a71d5d;">Int</span>
-
-  <span style="color: #a71d5d;">let</span> rect = <span style="color: #a71d5d;">NSRect</span>(
-    x: x + 15, y: <span style="color: #a71d5d;">Int</span>(view.<span style="color: #333333;">bounds</span>.<span style="color: #333333;">height</span>) - y + 15, width: 1, height: 1
-  )
-  picker.<span style="color: #795da3;">show</span>(relativeTo: rect, of: view, preferredEdge: .<span style="color: #333333;">maxY</span>)
-}
+<label class="org-src-name"><span class="listing-number">Listing 1: </span>bookmarks.org</label><pre class="src src-org">My bookmarks
+- [[https://lobste.rs/t/emacs][Emacs editor (Lobsters)]]
+- [[https://emacs.stackexchange.com][Emacs Stack Exchange]]
+- [[https://www.reddit.com/r/emacs][Emacs subreddit]]
+- [[https://emacs.ch][Emacs.ch (Mastodon)]]
+- [[https://www.emacswiki.org][EmacsWiki]]
+- [[https://planet.emacslife.com/][Planet Emacslife]]
 </pre>
 </div>
 
 <p>
-This produced an elisp <code>macos-module--share</code> function I could easily access from elisp like so:
+Next we need fuzzy searching, but first let's write a little elisp to extract all links from the org file:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">macos-share</span> ()
-  <span style="color: #183691;">"Share file(s) with other macOS apps.</span>
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">org-element</span>)
+(<span style="color: #a71d5d;">require</span> '<span style="color: #0086b3;">seq</span>)
 
-<span style="color: #183691;">If visiting a buffer with associated file, share it.</span>
+(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">browser-bookmarks</span> (org-file)
+  <span style="color: #183691;">"Return all links from ORG-FILE."</span>
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (<span style="color: #a71d5d;">let</span> (links)
+      (insert-file-contents org-file)
+      (org-mode)
+      (org-element-map (org-element-parse-buffer) 'link
+        (<span style="color: #a71d5d;">lambda</span> (link)
+          (<span style="color: #a71d5d;">let*</span> ((raw-link (org-element-property <span style="color: #a71d5d;">:raw-link</span> link))
+                 (content (org-element-contents link))
+                 (title (substring-no-properties (<span style="color: #a71d5d;">or</span> (seq-first content) raw-link))))
+            (<span style="color: #a71d5d;">push</span> (concat title
+                          <span style="color: #183691;">"\n"</span>
+                          (propertize raw-link 'face 'whitespace-space)
+                          <span style="color: #183691;">"\n"</span>)
+                  links)))
+        nil nil 'link)
+      (seq-sort 'string-greaterp links))))
+</pre>
+</div>
 
-<span style="color: #183691;">While in `</span><span style="color: #0086b3;">dired</span><span style="color: #183691;">', any selected files, share those.  If region is</span>
-<span style="color: #183691;">active, share files in region.  Otherwise share file at point."</span>
+<p>
+The snippet uses <code>org-element</code> to iterate over links to collect/return them in a list. We join both the title and url, so searching can match either of these values. We also add a little formatting (new lines/face) to spiff things up.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(browser-bookmarks <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(#(<span style="color: #183691;">"Planet Emacslife\nhttps://planet.emacslife.com/\n"</span> 17 46
+   (face whitespace-space))
+ #(<span style="color: #183691;">"EmacsWiki\nhttps://www.emacswiki.org\n"</span> 10 35
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs.ch (Mastodon)\nhttps://emacs.ch\n"</span> 20 36
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Stack Exchange)\nhttps://emacs.stackexchange.com\n"</span> 23 54
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Reddit)\nhttps://www.reddit.com/r/emacs\n"</span> 15 45
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Lobsters)\nhttps://lobste.rs/t/emacs\n"</span> 17 42
+   (face whitespace-space)))
+</pre>
+</div>
+
+<p>
+We can now feed our list to our preferred narrowing framework (ivy, helm, ido, vertico) and use it to quickly select a bookmark. In the past, I've <a href="https://xenodium.com/emacs-utilities-for-your-os/">used the likes of ivy-read</a> directly, though have since adopted the humble but mighty <code>completing-read</code> which hooks up to any of the above frameworks.
+</p>
+
+<p>
+With that in mind, let's use <code>completing-read</code> to make a selection and split the text to extract the corresponding URL. Feed it to <code>browse-url</code>, and you got your preferred browser opening your bookmark.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">open-bookmark</span> ()
   (<span style="color: #a71d5d;">interactive</span>)
-  (macos-module--share (vconcat (macos--files-dwim))))
+  (browse-url (seq-elt (split-string (completing-read <span style="color: #183691;">"Open: "</span> (browser-bookmarks <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>)) <span style="color: #183691;">"\n"</span>) 1)))
 </pre>
 </div>
 
 <p>
-On a side note, <code>(macos--files-dwim)</code> chooses files depending on context. That is, <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">do what I mean (DWIM) style</a>. If there's a file associated with current buffer, share it. When in <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> (the directory editor, aka file manager), look at region, selected files, or default to file at point.
+I remain a happy ivy user, so we can see its fuzzy searching in action.
+</p>
+
+
+<div id="orgd9183be" class="figure">
+<p><img src="../images/building-your-own-bookmark-launcher/emacs-bookmark.gif" alt="emacs-bookmark.gif" width="100%" />
+</p>
+</div>
+
+<p>
+At this point, we now have our bookmark-launching Emacs utility. It's only an <code>M-x open-bookmark</code> command away, but we want to make it accessible from anywhere in our operating system, in my case macOS.
+</p>
+
+<p>
+Let's enable launching from the command line, though before we do that, let's craft a dedicated frame for this purpose.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">macos--files-dwim</span> ()
-  <span style="color: #183691;">"Return buffer file (if available) or marked/region files for a `</span><span style="color: #0086b3;">dired</span><span style="color: #183691;">' buffer."</span>
-  (<span style="color: #a71d5d;">if</span> (buffer-file-name)
-      (list (buffer-file-name))
-    (<span style="color: #a71d5d;">or</span>
-     (macos--dired-paths-in-region)
-     (dired-get-marked-files))))
-
-(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">macos--dired-paths-in-region</span> ()
-  <span style="color: #183691;">"If `</span><span style="color: #0086b3;">dired</span><span style="color: #183691;">' buffer, return region files.  nil otherwise."</span>
-  (<span style="color: #a71d5d;">when</span> (<span style="color: #a71d5d;">and</span> (equal major-mode 'dired-mode)
-             (use-region-p))
-    (<span style="color: #a71d5d;">let</span> ((start (region-beginning))
-          (end (region-end))
-          (paths))
-      (<span style="color: #a71d5d;">save-excursion</span>
-        (<span style="color: #a71d5d;">save-restriction</span>
-          (goto-char start)
-          (<span style="color: #a71d5d;">while</span> (&lt; (point) end)
-            <span style="color: #969896;">;; </span><span style="color: #969896;">Skip non-file lines.</span>
-            (<span style="color: #a71d5d;">while</span> (<span style="color: #a71d5d;">and</span> (&lt; (point) end) (dired-between-files))
-              (forward-line 1))
-            (<span style="color: #a71d5d;">when</span> (dired-get-filename nil t)
-              (<span style="color: #a71d5d;">setq</span> paths (append paths (list (dired-get-filename nil t)))))
-            (forward-line 1))))
-      paths)))
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defmacro</span> <span style="color: #795da3;">present</span> (<span style="color: #0086b3;">&amp;rest</span> body)
+  <span style="color: #183691;">"Create a buffer with BUFFER-NAME and eval BODY in a basic frame."</span>
+  (<span style="color: #a71d5d;">declare</span> (indent 1) (debug t))
+  `(<span style="color: #a71d5d;">let*</span> ((buffer (get-buffer-create (generate-new-buffer-name <span style="color: #183691;">"*present*"</span>)))
+          (frame (make-frame '((auto-raise . t)
+                               (font . <span style="color: #183691;">"Menlo 15"</span>)
+                               (top . 200)
+                               (height . 20)
+                               (width . 110)
+                               (internal-border-width . 20)
+                               (left . 0.33)
+                               (left-fringe . 0)
+                               (line-spacing . 3)
+                               (menu-bar-lines . 0)
+                               (minibuffer . only)
+                               (right-fringe . 0)
+                               (tool-bar-lines . 0)
+                               (undecorated . t)
+                               (unsplittable . t)
+                               (vertical-scroll-bars . nil)))))
+     (set-face-attribute 'ivy-current-match frame
+                         <span style="color: #a71d5d;">:background</span> <span style="color: #183691;">"#2a2a2a"</span>
+                         <span style="color: #a71d5d;">:foreground</span> 'unspecified)
+     (select-frame frame)
+     (select-frame-set-input-focus frame)
+     (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+       (<span style="color: #a71d5d;">condition-case</span> nil
+           (<span style="color: #a71d5d;">unwind-protect</span>
+               ,@body
+             (delete-frame frame)
+             (kill-buffer buffer))
+         (quit (delete-frame frame)
+               (kill-buffer buffer))))))
 </pre>
 </div>
 
 <p>
-I got one more example of a native macOS integration I added. Being an even simpler one, and in hindsight, I prolly should have introduced it first. In any case, this one reveals <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> files in macOS's Finder app (including the selection itself).
-</p>
-
-
-<div id="org4186ee5" class="figure">
-<p><img src="../images/native-emacsmacos-ux-integrations-via-swift-modules/reveal.webp" alt="reveal.webp" width="100%" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-swift"><span style="color: #a71d5d;">try</span> env.<span style="color: #795da3;">defun</span>(
-  <span style="color: #183691;">"macos-module--reveal-in-finder"</span>,
-  with: <span style="color: #183691;">"""</span>
-<span style="color: #183691;">    Reveal (and select) files in ARG1 in macOS Finder.</span>
-
-<span style="color: #183691;">    ARG1 mus be a vector (not a list) of file paths.</span>
-<span style="color: #183691;">    """</span>
-) { (env: Environment, files: [<span style="color: #a71d5d;">String</span>]) <span style="color: #a71d5d;">in</span>
-  NSWorkspace.<span style="color: #a71d5d;">shared</span>.<span style="color: #795da3;">activateFileViewerSelecting</span>(files.<span style="color: #a71d5d;">map</span> { <span style="color: #a71d5d;">URL</span>(fileURLWithPath: $0) })
-}
-</pre>
-</div>
-
-<p>
-The corresponding elisp is nearly identical to its <code>macos-share</code> sibling:
+Most of the snippet styles our new frame and invokes the body parameter. While I don't typically resort to macros, we get a little syntatic sugar here, so we can invoke like so:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">macos-reveal-in-finder</span> ()
-  <span style="color: #183691;">"Reveal file(s) in macOS Finder.</span>
-
-<span style="color: #183691;">If visiting a buffer with associated file, reveal it.</span>
-
-<span style="color: #183691;">While in `</span><span style="color: #0086b3;">dired</span><span style="color: #183691;">', any selected files, reveal those.  If region is</span>
-<span style="color: #183691;">active, reveal files in region.  Otherwise reveal file at point."</span>
-  (<span style="color: #a71d5d;">interactive</span>)
-  (macos-module--reveal-in-finder (vconcat (macos--files-dwim))))
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">present-open-bookmark-frame</span> ()
+  (present (browse-url (seq-elt (split-string (completing-read <span style="color: #183691;">"Open: "</span> (browser-bookmarks <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>)) <span style="color: #183691;">"\n"</span>) 1))))
 </pre>
 </div>
 
 <p>
-My Swift module experiment introduces two native macOS UX integrations, now available via <code>M-x macos-share</code> and <code>M-x macos-reveal-in-finder</code>. I've pushed all code to it's own <a href="https://github.com/xenodium/EmacsMacOSModule">repo</a>.
+Wrapping our one-liner with the <code>present-open-bookmark-frame</code> function enables us to easily invoke from the command line, with something like
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">emacsclient -ne <span style="color: #183691;">"(present-open-bookmark-frame)"</span>
+</pre>
+</div>
+
+
+<div id="org6a7d88c" class="figure">
+<p><img src="../images/building-your-own-bookmark-launcher/command.gif" alt="command.gif" width="100%" />
+</p>
+</div>
+
+<p>
+Now that we can easily invoke from the command line, we have the flexibility to summon from anywhere. We can even bind to a key shortcut, available anywhere (not just Emacs). I typically do this via <a href="http://www.hammerspoon.org/">Hammerspoon</a>, with some helpers, though there are likely simpler options out there.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lua"><span style="color: #a71d5d;">function</span> <span style="color: #795da3;">emacsExecute</span>(<span style="color: #333333;">activate</span>, <span style="color: #333333;">elisp</span>)
+   <span style="color: #a71d5d;">if</span> activate <span style="color: #a71d5d;">then</span>
+      activateFirstOf({
+            {
+               bundleID=<span style="color: #183691;">"org.gnu.Emacs"</span>,
+               name=<span style="color: #183691;">"Emacs"</span>
+            }
+      })
+   <span style="color: #a71d5d;">end</span>
+
+   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">socket</span>, <span style="color: #333333;">found</span> = emacsSocketPath()
+   <span style="color: #a71d5d;">if</span> <span style="color: #a71d5d;">not</span> found <span style="color: #a71d5d;">then</span>
+      hs.alert.show(<span style="color: #183691;">"Could not get emacs socket path"</span>)
+      <span style="color: #a71d5d;">return</span> <span style="color: #183691;">""</span>, <span style="color: #0086b3;">false</span>
+   <span style="color: #a71d5d;">end</span>
+
+   <span style="color: #a71d5d;">local</span> <span style="color: #333333;">output</span>,<span style="color: #333333;">success</span> = hs.execute(<span style="color: #183691;">"/opt/homebrew/bin/emacsclient -ne \""</span>..elisp..<span style="color: #183691;">"\" -s "</span>..socket)
+   <span style="color: #a71d5d;">if</span> <span style="color: #a71d5d;">not</span> success <span style="color: #a71d5d;">then</span>
+      hs.alert.show(<span style="color: #183691;">"Emacs did not execute: "</span>..elisp)
+      <span style="color: #a71d5d;">return</span> <span style="color: #183691;">""</span>, <span style="color: #0086b3;">false</span>
+   <span style="color: #a71d5d;">end</span>
+
+   <span style="color: #a71d5d;">return</span> output, success
+<span style="color: #a71d5d;">end</span>
+
+<span style="color: #a71d5d;">function</span> <span style="color: #795da3;">openBookmark</span>()
+   appRequestingEmacs = hs.application.frontmostApplication()
+   emacsExecute(<span style="color: #0086b3;">false</span>, <span style="color: #183691;">"(present-open-bookmark-frame)"</span>)
+   activateFirstOf({
+         {
+            bundleID=<span style="color: #183691;">"org.gnu.Emacs"</span>,
+            name=<span style="color: #183691;">"Emacs"</span>
+         }
+   })
+<span style="color: #a71d5d;">end</span>
+
+hs.hotkey.bind({<span style="color: #183691;">"alt"</span>}, <span style="color: #183691;">"W"</span>, openBookmark)
+</pre>
+</div>
+
+<p>
+With that, we have our Emacs-powered bookmark launcher, available from anywhere.
+</p>
+
+
+<div id="orgc6dc941" class="figure">
+<p><img src="../images/building-your-own-bookmark-launcher/launcher.gif" alt="launcher.gif" width="100%" />
+</p>
+</div>
+
+<p>
+While we used our Emacs frame presenter to summon our universal bookmark launcher, we can likely the same mechanism for other purposes. Would love to hear what you apply it to. Get in touch (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
 </p>
 
 <p>
-I hope this post brings visibility to the wonderful <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a> project and sparks new, native, and innovative integrations for those on macOS. Can't wait to see what others can do with it.
-</p>
-
-<p>
-<i>Enjoying this content? Find it useful? Consider ✨<a href="https://github.com/sponsors/xenodium">sponsoring</a>✨.</i>
-</p>
+<i>Enjoying this content? Find it useful? Consider ✨<a href="https://github.com/sponsors/xenodium">sponsoring</a>✨.</i></p>
 </div>
 </div>
 </div>

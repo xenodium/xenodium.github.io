@@ -6,7 +6,251 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 25 Nov 2023 19:30:22 +0000</lastBuildDate>
+<lastBuildDate>Wed, 29 Nov 2023 22:37:12 +0000</lastBuildDate>
+<item>
+  <title>Building your own bookmark launcher</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-building-your-own-bookmark-launcher" class="outline-2">
+ <h2 id="building-your-own-bookmark-launcher"> <span class="timestamp-wrapper"> <span class="timestamp">29 November 2023</span></span> Building your own bookmark launcher</h2>
+ <div class="outline-text-2" id="text-building-your-own-bookmark-launcher">
+ <p style="text-align:right;">
+ <i>✨ <a href="https://github.com/sponsors/xenodium" style="text-align:right;">sponsor</a>✨ this content</i>
+</p>
+
+ <p>
+I've been toying with the idea of managing browser bookmarks from  <a href="https://www.gnu.org/software/emacs/">you know where</a>. Maybe dump a bunch of links into an org file and use that as a quick and dirty bookmark manager. We'll start with a flat list plus fuzzy searching and see how far that gets us.
+</p>
+
+ <p>
+The org file would look a little something like this:
+</p>
+
+ <div class="org-src-container">
+ <label class="org-src-name"> <span class="listing-number">Listing 1: </span>bookmarks.org</label> <pre class="src src-org">My bookmarks
+- [[https://lobste.rs/t/emacs][Emacs editor (Lobsters)]]
+- [[https://emacs.stackexchange.com][Emacs Stack Exchange]]
+- [[https://www.reddit.com/r/emacs][Emacs subreddit]]
+- [[https://emacs.ch][Emacs.ch (Mastodon)]]
+- [[https://www.emacswiki.org][EmacsWiki]]
+- [[https://planet.emacslife.com/][Planet Emacslife]]
+</pre>
+</div>
+
+ <p>
+Next we need fuzzy searching, but first let's write a little elisp to extract all links from the org file:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">org-element</span>)
+(<span style="color: #a71d5d;">require</span> ' <span style="color: #0086b3;">seq</span>)
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">browser-bookmarks</span> (org-file)
+   <span style="color: #183691;">"Return all links from ORG-FILE."</span>
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (<span style="color: #a71d5d;">let</span> (links)
+      (insert-file-contents org-file)
+      (org-mode)
+      (org-element-map (org-element-parse-buffer) 'link
+        (<span style="color: #a71d5d;">lambda</span> (link)
+          (<span style="color: #a71d5d;">let*</span> ((raw-link (org-element-property  <span style="color: #a71d5d;">:raw-link</span> link))
+                 (content (org-element-contents link))
+                 (title (substring-no-properties (<span style="color: #a71d5d;">or</span> (seq-first content) raw-link))))
+            (<span style="color: #a71d5d;">push</span> (concat title
+                           <span style="color: #183691;">"\n"</span>
+                          (propertize raw-link 'face 'whitespace-space)
+                           <span style="color: #183691;">"\n"</span>)
+                  links)))
+        nil nil 'link)
+      (seq-sort 'string-greaterp links))))
+</pre>
+</div>
+
+ <p>
+The snippet uses  <code>org-element</code> to iterate over links to collect/return them in a list. We join both the title and url, so searching can match either of these values. We also add a little formatting (new lines/face) to spiff things up.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(browser-bookmarks  <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>)
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(#(<span style="color: #183691;">"Planet Emacslife\nhttps://planet.emacslife.com/\n"</span> 17 46
+   (face whitespace-space))
+ #(<span style="color: #183691;">"EmacsWiki\nhttps://www.emacswiki.org\n"</span> 10 35
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs.ch (Mastodon)\nhttps://emacs.ch\n"</span> 20 36
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Stack Exchange)\nhttps://emacs.stackexchange.com\n"</span> 23 54
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Reddit)\nhttps://www.reddit.com/r/emacs\n"</span> 15 45
+   (face whitespace-space))
+ #(<span style="color: #183691;">"Emacs (Lobsters)\nhttps://lobste.rs/t/emacs\n"</span> 17 42
+   (face whitespace-space)))
+</pre>
+</div>
+
+ <p>
+We can now feed our list to our preferred narrowing framework (ivy, helm, ido, vertico) and use it to quickly select a bookmark. In the past, I've  <a href="https://xenodium.com/emacs-utilities-for-your-os/">used the likes of ivy-read</a> directly, though have since adopted the humble but mighty  <code>completing-read</code> which hooks up to any of the above frameworks.
+</p>
+
+ <p>
+With that in mind, let's use  <code>completing-read</code> to make a selection and split the text to extract the corresponding URL. Feed it to  <code>browse-url</code>, and you got your preferred browser opening your bookmark.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">open-bookmark</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (browse-url (seq-elt (split-string (completing-read  <span style="color: #183691;">"Open: "</span> (browser-bookmarks  <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>))  <span style="color: #183691;">"\n"</span>) 1)))
+</pre>
+</div>
+
+ <p>
+I remain a happy ivy user, so we can see its fuzzy searching in action.
+</p>
+
+
+ <div id="orgd9183be" class="figure">
+ <p> <img src="../images/building-your-own-bookmark-launcher/emacs-bookmark.gif" alt="emacs-bookmark.gif" width="100%"></img></p>
+</div>
+
+ <p>
+At this point, we now have our bookmark-launching Emacs utility. It's only an  <code>M-x open-bookmark</code> command away, but we want to make it accessible from anywhere in our operating system, in my case macOS.
+</p>
+
+ <p>
+Let's enable launching from the command line, though before we do that, let's craft a dedicated frame for this purpose.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defmacro</span>  <span style="color: #795da3;">present</span> (<span style="color: #0086b3;">&rest</span> body)
+   <span style="color: #183691;">"Create a buffer with BUFFER-NAME and eval BODY in a basic frame."</span>
+  (<span style="color: #a71d5d;">declare</span> (indent 1) (debug t))
+  `(<span style="color: #a71d5d;">let*</span> ((buffer (get-buffer-create (generate-new-buffer-name  <span style="color: #183691;">"*present*"</span>)))
+          (frame (make-frame '((auto-raise . t)
+                               (font .  <span style="color: #183691;">"Menlo 15"</span>)
+                               (top . 200)
+                               (height . 20)
+                               (width . 110)
+                               (internal-border-width . 20)
+                               (left . 0.33)
+                               (left-fringe . 0)
+                               (line-spacing . 3)
+                               (menu-bar-lines . 0)
+                               (minibuffer . only)
+                               (right-fringe . 0)
+                               (tool-bar-lines . 0)
+                               (undecorated . t)
+                               (unsplittable . t)
+                               (vertical-scroll-bars . nil)))))
+     (set-face-attribute 'ivy-current-match frame
+                          <span style="color: #a71d5d;">:background</span>  <span style="color: #183691;">"#2a2a2a"</span>
+                          <span style="color: #a71d5d;">:foreground</span> 'unspecified)
+     (select-frame frame)
+     (select-frame-set-input-focus frame)
+     (<span style="color: #a71d5d;">with-current-buffer</span> buffer
+       (<span style="color: #a71d5d;">condition-case</span> nil
+           (<span style="color: #a71d5d;">unwind-protect</span>
+               ,@body
+             (delete-frame frame)
+             (kill-buffer buffer))
+         (quit (delete-frame frame)
+               (kill-buffer buffer))))))
+</pre>
+</div>
+
+ <p>
+Most of the snippet styles our new frame and invokes the body parameter. While I don't typically resort to macros, we get a little syntatic sugar here, so we can invoke like so:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">present-open-bookmark-frame</span> ()
+  (present (browse-url (seq-elt (split-string (completing-read  <span style="color: #183691;">"Open: "</span> (browser-bookmarks  <span style="color: #183691;">"/private/tmp/bookmarks.org"</span>))  <span style="color: #183691;">"\n"</span>) 1))))
+</pre>
+</div>
+
+ <p>
+Wrapping our one-liner with the  <code>present-open-bookmark-frame</code> function enables us to easily invoke from the command line, with something like
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">emacsclient -ne  <span style="color: #183691;">"(present-open-bookmark-frame)"</span>
+</pre>
+</div>
+
+
+ <div id="org6a7d88c" class="figure">
+ <p> <img src="../images/building-your-own-bookmark-launcher/command.gif" alt="command.gif" width="100%"></img></p>
+</div>
+
+ <p>
+Now that we can easily invoke from the command line, we have the flexibility to summon from anywhere. We can even bind to a key shortcut, available anywhere (not just Emacs). I typically do this via  <a href="http://www.hammerspoon.org/">Hammerspoon</a>, with some helpers, though there are likely simpler options out there.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-lua"> <span style="color: #a71d5d;">function</span>  <span style="color: #795da3;">emacsExecute</span>(<span style="color: #333333;">activate</span>,  <span style="color: #333333;">elisp</span>)
+    <span style="color: #a71d5d;">if</span> activate  <span style="color: #a71d5d;">then</span>
+      activateFirstOf({
+            {
+               bundleID= <span style="color: #183691;">"org.gnu.Emacs"</span>,
+               name= <span style="color: #183691;">"Emacs"</span>
+            }
+      })
+    <span style="color: #a71d5d;">end</span>
+
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">socket</span>,  <span style="color: #333333;">found</span> = emacsSocketPath()
+    <span style="color: #a71d5d;">if</span>  <span style="color: #a71d5d;">not</span> found  <span style="color: #a71d5d;">then</span>
+      hs.alert.show(<span style="color: #183691;">"Could not get emacs socket path"</span>)
+       <span style="color: #a71d5d;">return</span>  <span style="color: #183691;">""</span>,  <span style="color: #0086b3;">false</span>
+    <span style="color: #a71d5d;">end</span>
+
+    <span style="color: #a71d5d;">local</span>  <span style="color: #333333;">output</span>, <span style="color: #333333;">success</span> = hs.execute(<span style="color: #183691;">"/opt/homebrew/bin/emacsclient -ne \""</span>..elisp.. <span style="color: #183691;">"\" -s "</span>..socket)
+    <span style="color: #a71d5d;">if</span>  <span style="color: #a71d5d;">not</span> success  <span style="color: #a71d5d;">then</span>
+      hs.alert.show(<span style="color: #183691;">"Emacs did not execute: "</span>..elisp)
+       <span style="color: #a71d5d;">return</span>  <span style="color: #183691;">""</span>,  <span style="color: #0086b3;">false</span>
+    <span style="color: #a71d5d;">end</span>
+
+    <span style="color: #a71d5d;">return</span> output, success
+ <span style="color: #a71d5d;">end</span>
+
+ <span style="color: #a71d5d;">function</span>  <span style="color: #795da3;">openBookmark</span>()
+   appRequestingEmacs = hs.application.frontmostApplication()
+   emacsExecute(<span style="color: #0086b3;">false</span>,  <span style="color: #183691;">"(present-open-bookmark-frame)"</span>)
+   activateFirstOf({
+         {
+            bundleID= <span style="color: #183691;">"org.gnu.Emacs"</span>,
+            name= <span style="color: #183691;">"Emacs"</span>
+         }
+   })
+ <span style="color: #a71d5d;">end</span>
+
+hs.hotkey.bind({ <span style="color: #183691;">"alt"</span>},  <span style="color: #183691;">"W"</span>, openBookmark)
+</pre>
+</div>
+
+ <p>
+With that, we have our Emacs-powered bookmark launcher, available from anywhere.
+</p>
+
+
+ <div id="orgc6dc941" class="figure">
+ <p> <img src="../images/building-your-own-bookmark-launcher/launcher.gif" alt="launcher.gif" width="100%"></img></p>
+</div>
+
+ <p>
+While we used our Emacs frame presenter to summon our universal bookmark launcher, we can likely the same mechanism for other purposes. Would love to hear what you apply it to. Get in touch ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+ <p>
+ <i>Enjoying this content? Find it useful? Consider ✨ <a href="https://github.com/sponsors/xenodium">sponsoring</a>✨.</i></p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/building-your-own-bookmark-launcher</link>
+  <guid isPermaLink="false">http://xenodium.com/building-your-own-bookmark-launcher</guid>
+  <pubDate>Wed, 29 Nov 2023 22:37:12 +0000</pubDate>
+</item>
 <item>
   <title>Native Emacs/macOS UX integrations via Swift modules</title>
   <description><![CDATA[<div id="content" class="content">
