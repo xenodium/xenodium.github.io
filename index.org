@@ -1,6 +1,74 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2023-12-17 Sun] A quick mullvad macOS setup
+:PROPERTIES:
+:CUSTOM_ID: a-quick-mullvad-macos-setup
+:END:
+Needed a VPN to test an API from a different location. Gave [[https://mullvad.net/en][mullvad]] a try.
+
+Pretty neat, you can generate an account number without providing an email address. You can also pre-pay with a ton of options, including cash, crypto, credit cards, PayPal, wire transfers...
+
+After seeing your account credited, one can download a [[https://mullvad.net/en/account/wireguard-config][generated WireGuard configuration]]. Also a WireGuard noob, so took this opportunity to give it a try.
+
+The macOS has an "Import Tunnel(s) from File..." option where you can import the .conf file downloaded from [[https://mullvad.net/en/account/wireguard-config][mullvad's generated config]]. After that, all I had to do was click the "Activate" button and [[https://en.wikipedia.org/wiki/Bob%27s_your_uncle][Bob's your uncle]].
+
+#+ATTR_HTML: :width 95%
+[[file:images/a-quick-mullvad-macos-setup/wg-redact.png]]
+
+You can test your connection via:
+
+#+begin_src bash
+  curl https://am.i.mullvad.net/connected
+#+end_src
+
+#+RESULTS:
+: You are connected to Mullvad (server xxxxxx). Your IP address is xxx.xxx.xxx.xxx
+
+I had a brief stint at using the command-line alternative via homebrew =brew install wireguard-go wireguard-tools=, but that seems to fail silently:
+
+#+begin_src sh
+  wg-quick up xxxxx
+  [#] wireguard-go utun
+  [+] Interface for xxxxx is utun7
+  [#] wg setconf utun7 /dev/fd/63
+  [#] ifconfig utun7 inet xxx.xxx.xxx.xxx/xx xxx.xxx.xxx.xxx alias
+  [#] ifconfig utun7 inet6 xxxx:xxxx:xxxx:xxxx::x:xxxx/xxx alias
+  [#] ifconfig utun7 up
+  [#] route -q -n add -inet6 ::/1 -interface utun7
+  [#] route -q -n add -inet6 8000::/1 -interface utun7
+  [#] route -q -n add -inet xxx.xxx.xxx.xxx/x -interface utun7
+  [#] route -q -n add -inet xxx.xxx.xxx.xxx/x -interface utun7
+  [#] route -q -n add -inet xxx.xxx.xxx.xxx -gateway xxx.xxx.xxx.xxx
+  [#] networksetup -getdnsservers Wi-Fi
+  [#] networksetup -getsearchdomains Wi-Fi
+  [#] networksetup -getdnsservers iPhone USB
+  [#] networksetup -getsearchdomains iPhone USB
+  [#] networksetup -getdnsservers Thunderbolt Bridge
+  [#] networksetup -getsearchdomains Thunderbolt Bridge
+  [#] networksetup -getdnsservers xxxxx
+  [#] networksetup -getsearchdomains xxxxx
+  [#] networksetup -setdnsservers iPhone USB xxx.xxx.xxx.xxx
+  [#] networksetup -setsearchdomains iPhone USB Empty
+  [#] networksetup -setdnsservers xxxxx xxx.xxx.xxx.xxx
+  [#] networksetup -setsearchdomains xxxxx Empty
+  [#] networksetup -setdnsservers Wi-Fi xxx.xxx.xxx.xxx
+  [#] networksetup -setsearchdomains Wi-Fi Empty
+  [#] networksetup -setdnsservers Thunderbolt Bridge xxx.xxx.xxx.xxx
+  [#] networksetup -setsearchdomains Thunderbolt Bridge Empty
+  [+] Backgrounding route monitor
+#+end_src
+
+#+begin_src bash
+  curl https://am.i.mullvad.net/connected
+#+end_src
+
+#+RESULTS:
+: You are not connected to Mullvad. Your IP address is xxx.xxx.xxx.xxx
+
+I'm on a a Macbook M1 Pro, running macOS Sonoma. If you got =wg-quick= working on Sonoma, I'd love to hear from ya ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+
+
 * [2023-12-06 Wed] An iOS journaling app powered by org plain text
 :PROPERTIES:
 :CUSTOM_ID: an-ios-journaling-app-powered-by-org-plain-text

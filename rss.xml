@@ -6,7 +6,106 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 06 Dec 2023 16:15:35 +0000</lastBuildDate>
+<lastBuildDate>Sun, 17 Dec 2023 22:08:58 +0000</lastBuildDate>
+<item>
+  <title>A quick mullvad macOS setup</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-quick-mullvad-macos-setup" class="outline-2">
+ <h2 id="a-quick-mullvad-macos-setup"> <span class="timestamp-wrapper"> <span class="timestamp">17 December 2023</span></span> A quick mullvad macOS setup</h2>
+ <div class="outline-text-2" id="text-a-quick-mullvad-macos-setup">
+ <p>
+Needed a VPN to test an API from a different location. Gave  <a href="https://mullvad.net/en">mullvad</a> a try.
+</p>
+
+ <p>
+Pretty neat, you can generate an account number without providing an email address. You can also pre-pay with a ton of options, including cash, crypto, credit cards, PayPal, wire transfers…
+</p>
+
+ <p>
+After seeing your account credited, one can download a  <a href="https://mullvad.net/en/account/wireguard-config">generated WireGuard configuration</a>. Also a WireGuard noob, so took this opportunity to give it a try.
+</p>
+
+ <p>
+The macOS has an "Import Tunnel(s) from File…" option where you can import the .conf file downloaded from  <a href="https://mullvad.net/en/account/wireguard-config">mullvad's generated config</a>. After that, all I had to do was click the "Activate" button and  <a href="https://en.wikipedia.org/wiki/Bob%27s_your_uncle">Bob's your uncle</a>.
+</p>
+
+
+ <div id="org09d198d" class="figure">
+ <p> <img src="../images/a-quick-mullvad-macos-setup/wg-redact.png" alt="wg-redact.png" width="95%"></img></p>
+</div>
+
+ <p>
+You can test your connection via:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">curl https://am.i.mullvad.net/connected
+</pre>
+</div>
+
+ <pre class="example">
+You are connected to Mullvad (server xxxxxx). Your IP address is xxx.xxx.xxx.xxx
+</pre>
+
+
+ <p>
+I had a brief stint at using the command-line alternative via homebrew  <code>brew install wireguard-go wireguard-tools</code>, but that seems to fail silently:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">wg-quick up xxxxx
+[#] wireguard-go utun
+[+] Interface for xxxxx is utun7
+[#] wg setconf utun7 /dev/fd/63
+[#] ifconfig utun7 inet xxx.xxx.xxx.xxx/xx xxx.xxx.xxx.xxx alias
+[#] ifconfig utun7 inet6 xxxx:xxxx:xxxx:xxxx::x:xxxx/xxx alias
+[#] ifconfig utun7 up
+[#] route -q -n add -inet6 ::/1 -interface utun7
+[#] route -q -n add -inet6 8000::/1 -interface utun7
+[#] route -q -n add -inet xxx.xxx.xxx.xxx/x -interface utun7
+[#] route -q -n add -inet xxx.xxx.xxx.xxx/x -interface utun7
+[#] route -q -n add -inet xxx.xxx.xxx.xxx -gateway xxx.xxx.xxx.xxx
+[#] networksetup -getdnsservers Wi-Fi
+[#] networksetup -getsearchdomains Wi-Fi
+[#] networksetup -getdnsservers iPhone USB
+[#] networksetup -getsearchdomains iPhone USB
+[#] networksetup -getdnsservers Thunderbolt Bridge
+[#] networksetup -getsearchdomains Thunderbolt Bridge
+[#] networksetup -getdnsservers xxxxx
+[#] networksetup -getsearchdomains xxxxx
+[#] networksetup -setdnsservers iPhone USB xxx.xxx.xxx.xxx
+[#] networksetup -setsearchdomains iPhone USB Empty
+[#] networksetup -setdnsservers xxxxx xxx.xxx.xxx.xxx
+[#] networksetup -setsearchdomains xxxxx Empty
+[#] networksetup -setdnsservers Wi-Fi xxx.xxx.xxx.xxx
+[#] networksetup -setsearchdomains Wi-Fi Empty
+[#] networksetup -setdnsservers Thunderbolt Bridge xxx.xxx.xxx.xxx
+[#] networksetup -setsearchdomains Thunderbolt Bridge Empty
+[+] Backgrounding route monitor
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-bash">curl https://am.i.mullvad.net/connected
+</pre>
+</div>
+
+ <pre class="example">
+You are not connected to Mullvad. Your IP address is xxx.xxx.xxx.xxx
+</pre>
+
+
+ <p>
+I'm on a a Macbook M1 Pro, running macOS Sonoma. If you got  <code>wg-quick</code> working on Sonoma, I'd love to hear from ya ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-quick-mullvad-macos-setup</link>
+  <guid isPermaLink="false">http://xenodium.com/a-quick-mullvad-macos-setup</guid>
+  <pubDate>Sun, 17 Dec 2023 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>An iOS journaling app powered by org plain text</title>
   <description><![CDATA[<div id="content" class="content">
