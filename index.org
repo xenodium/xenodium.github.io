@@ -8824,7 +8824,22 @@ comments on [[https://twitter.com/xenodium/status/1263839324023525376][twitter]]
   :PROPERTIES:
   :CUSTOM_ID: enrich-your-dired-batching-toolbox
   :END:
-Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
+
+** Update
+I now use [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]], which reduces the logic to:
+
+  #+begin_src emacs-lisp :lexical no
+    (defun dwim-shell-commands-image-to-jpg ()
+      "Convert all marked images to jpg(s)."
+      (interactive)
+      (dwim-shell-command-on-marked-files
+       "Convert to jpg"
+       "convert -verbose '<<f>>' '<<fne>>.jpg'"
+       :utils "convert"))
+  #+end_src
+
+** Original post
+  Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
 
 #+begin_src sh
   for f in *.HEIC ; do convert "$f" "${f%.*}.jpg"; done

@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:01 -->
+<!-- 2023-12-21 Thu 09:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Enrich Emacs dired's batching toolbox</title>
+<title>Enrich Emacs direds batching toolbox</title>
 <meta name="author" content="Álvaro Ramírez" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -267,7 +267,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +354,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +369,16 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -384,6 +388,31 @@
 <div id="outline-container-enrich-your-dired-batching-toolbox" class="outline-2">
 <h2 id="enrich-your-dired-batching-toolbox"><span class="timestamp-wrapper"><span class="timestamp">11 May 2020</span></span> Enrich Emacs dired's batching toolbox</h2>
 <div class="outline-text-2" id="text-enrich-your-dired-batching-toolbox">
+</div>
+
+<div id="outline-container-org7bbcfb5" class="outline-3">
+<h3 id="org7bbcfb5">Update</h3>
+<div class="outline-text-3" id="text-org7bbcfb5">
+<p>
+I now use <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>, which reduces the logic to:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span> <span style="color: #795da3;">dwim-shell-commands-image-to-jpg</span> ()
+  <span style="color: #183691;">"Convert all marked images to jpg(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+   <span style="color: #183691;">"Convert to jpg"</span>
+   <span style="color: #183691;">"convert -verbose '</span><span style="color: #0086b3;">&lt;&lt;f&gt;&gt;</span><span style="color: #183691;">' '</span><span style="color: #0086b3;">&lt;&lt;fne&gt;&gt;.jpg</span><span style="color: #183691;">'"</span>
+   <span style="color: #a71d5d;">:utils</span> <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe81f5e" class="outline-3">
+<h3 id="orgbe81f5e">Original post</h3>
+<div class="outline-text-3" id="text-orgbe81f5e">
 <p>
 Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
 </p>
@@ -455,15 +484,16 @@ The snippet can be shorter, but wouldn't be as friendly. We ask users to provide
 </p>
 
 
-<div id="orge93cc05" class="figure">
+<div id="org723cab4" class="figure">
 <p><img src="../images/enrich-your-dired-batching-toolbox/batch-dired.gif" alt="batch-dired.gif" />
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgdf0670e" class="outline-3">
-<h3 id="orgdf0670e">BEWARE</h3>
-<div class="outline-text-3" id="text-orgdf0670e">
+<div id="outline-container-orgef3845c" class="outline-3">
+<h3 id="orgef3845c">BEWARE</h3>
+<div class="outline-text-3" id="text-orgef3845c">
 <p>
 The snippet isn't currently capping the number of processes, but hey we can revise in the future&#x2026;
 </p>
@@ -471,9 +501,9 @@ The snippet isn't currently capping the number of processes, but hey we can revi
 </div>
 
 
-<div id="outline-container-org21d64ef" class="outline-3">
-<h3 id="org21d64ef">Update</h3>
-<div class="outline-text-3" id="text-org21d64ef">
+<div id="outline-container-orga2eb469" class="outline-3">
+<h3 id="orga2eb469">Update</h3>
+<div class="outline-text-3" id="text-orga2eb469">
 <p>
 Thanks to <a href="https://github.com/pbeliveau">Philippe Beliveau</a> for pointing out a bug in snippet (now updated) and changes to make it Windows compatible.
 </p>

@@ -6,7 +6,7 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 18 Dec 2023 20:55:52 +0000</lastBuildDate>
+<lastBuildDate>Thu, 21 Dec 2023 09:26:46 +0000</lastBuildDate>
 <item>
   <title>An basic Mullvad WireGuard setup for macOS</title>
   <description><![CDATA[<div id="content" class="content">
@@ -13661,12 +13661,37 @@ comments on  <a href="https://twitter.com/xenodium/status/1263839324023525376">t
   <pubDate>Fri, 22 May 2020 00:00:00 +0100</pubDate>
 </item>
 <item>
-  <title>Enrich Emacs dired&apos;s batching toolbox</title>
+  <title>Enrich Emacs direds batching toolbox</title>
   <description><![CDATA[<div id="content" class="content">
 
  <div id="outline-container-enrich-your-dired-batching-toolbox" class="outline-2">
  <h2 id="enrich-your-dired-batching-toolbox"> <span class="timestamp-wrapper"> <span class="timestamp">11 May 2020</span></span> Enrich Emacs dired's batching toolbox</h2>
  <div class="outline-text-2" id="text-enrich-your-dired-batching-toolbox">
+</div>
+
+ <div id="outline-container-org7bbcfb5" class="outline-3">
+ <h3 id="org7bbcfb5">Update</h3>
+ <div class="outline-text-3" id="text-org7bbcfb5">
+ <p>
+I now use  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>, which reduces the logic to:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-image-to-jpg</span> ()
+   <span style="color: #183691;">"Convert all marked images to jpg(s)."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Convert to jpg"</span>
+    <span style="color: #183691;">"convert -verbose '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' '</span> <span style="color: #0086b3;"><<fne>>.jpg</span> <span style="color: #183691;">'"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"convert"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgbe81f5e" class="outline-3">
+ <h3 id="orgbe81f5e">Original post</h3>
+ <div class="outline-text-3" id="text-orgbe81f5e">
  <p>
 Shell one-liners are super handy for batch-processing files. Say you'd like to convert a bunch of images from HEIC to jpg, you could use something like:
 </p>
@@ -13738,14 +13763,15 @@ The snippet can be shorter, but wouldn't be as friendly. We ask users to provide
 </p>
 
 
- <div id="orge93cc05" class="figure">
+ <div id="org723cab4" class="figure">
  <p> <img src="../images/enrich-your-dired-batching-toolbox/batch-dired.gif" alt="batch-dired.gif"></img></p>
 </div>
 </div>
+</div>
 
- <div id="outline-container-orgdf0670e" class="outline-3">
- <h3 id="orgdf0670e">BEWARE</h3>
- <div class="outline-text-3" id="text-orgdf0670e">
+ <div id="outline-container-orgef3845c" class="outline-3">
+ <h3 id="orgef3845c">BEWARE</h3>
+ <div class="outline-text-3" id="text-orgef3845c">
  <p>
 The snippet isn't currently capping the number of processes, but hey we can revise in the future…
 </p>
@@ -13753,9 +13779,9 @@ The snippet isn't currently capping the number of processes, but hey we can revi
 </div>
 
 
- <div id="outline-container-org21d64ef" class="outline-3">
- <h3 id="org21d64ef">Update</h3>
- <div class="outline-text-3" id="text-org21d64ef">
+ <div id="outline-container-orga2eb469" class="outline-3">
+ <h3 id="orga2eb469">Update</h3>
+ <div class="outline-text-3" id="text-orga2eb469">
  <p>
 Thanks to  <a href="https://github.com/pbeliveau">Philippe Beliveau</a> for pointing out a bug in snippet (now updated) and changes to make it Windows compatible.
 </p>
