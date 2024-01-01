@@ -6,7 +6,213 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 Dec 2023 11:53:59 +0000</lastBuildDate>
+<lastBuildDate>Mon, 01 Jan 2024 12:30:47 +0000</lastBuildDate>
+<item>
+  <title>A chatgpt-shell compose ux experiment</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-chatgpt-shell-compose-ux-experiment" class="outline-2">
+ <h2 id="a-chatgpt-shell-compose-ux-experiment"> <span class="timestamp-wrapper"> <span class="timestamp">01 January 2024</span></span> A chatgpt-shell compose ux experiment</h2>
+ <div class="outline-text-2" id="text-a-chatgpt-shell-compose-ux-experiment">
+ <p>
+It's been roughly 9 months since I  <a href="https://xenodium.com/a-chatgpt-emacs-shell/">experimented</a> with wiring the  <a href="https://openai.com/blog/chatgpt">ChatGPT</a> API to an Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a> buffer in  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>. ChatGPT's request-response nature maps fairly well to a shell's mode of interaction.
+</p>
+
+ <p>
+In the past, I've also talked about  <a href="https://xenodium.com/yasnippet-in-emacs-eshell/">blurring the lines between shell and editor</a>. That is, using Emacs as your shell ( <a href="https://www.masteringemacs.org/article/complete-guide-mastering-eshell">eshell</a> being my favourite) enables compounding goodies from both shell and editor when both are used from the same app.
+</p>
+
+ <p>
+Keeping interactions within the same app also cuts down on some of that friction that comes with context switching between your text editor and the browser for  <a href="https://en.wikipedia.org/wiki/Large_language_model">llm</a> things.
+</p>
+
+ <p>
+Today, my interactions with llms typically consists of copying and pasting details from other Emacs buffers, crafting a query, and finally submitting by pressing enter (RET) from a shell like  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>.
+</p>
+
+
+ <div id="org67b2b38" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/shell-find-bug.gif" alt="shell-find-bug.gif" width="90%"></img></p>
+</div>
+
+ <p>
+With the entire interaction happening from Emacs, we're already cutting a fair amount of friction… But we can do better, specially when copying, pasting, and crafting those multi-line queries (you don't want to prematurely submit those shell queries by inadvertently pressing RET when you want a newline).
+</p>
+</div>
+
+ <div id="outline-container-org6c3103e" class="outline-3">
+ <h3 id="org6c3103e">chatgpt-shell-prompt-compose</h3>
+ <div class="outline-text-3" id="text-org6c3103e">
+ <p>
+This is where  <code>chatgpt-shell-prompt-compose</code> comes in, an opinionated experiment bringing some of my favourite "compose" features over from the likes of  <a href="https://github.com/magit">magit</a> commit buffers,  <a href="https://www.gnu.org/software/emacs/manual/html_node/org/Using-capture.html">org capture</a>,  <a href="https://www.djcbsoftware.nl/code/mu/mu4e/">mu4e</a> compose, and so on…
+</p>
+
+ <p>
+You can bring a compose buffer up by invoking  <code>M-x chatgpt-shell-prompt-compose</code>. From there, you can both craft and send your queries. If you're a magit fan, the process should feel fairly familiar with crafting a git commit message by editing away and quickly committing (via  <code>C-c C-c</code> binding). Similarly, you can also abort with the familiar  <code>C-c C-k</code> binding.
+</p>
+
+
+ <div id="org3fd73cd" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/10k.gif" alt="10k.gif" width="90%"></img></p>
+</div>
+
+ <p>
+I use this compose utility often enough that I bound it to  <code>C-c C-e</code>, though this may not be your cup of tea (needs overriding other mode maps).
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span>  <span style="color: #0086b3;">chatgpt-shell</span>
+   <span style="color: #a71d5d;">:commands</span>
+  (chatgpt-shell
+   chatgpt-shell-prompt-compose)
+   <span style="color: #a71d5d;">:bind</span> ((<span style="color: #183691;">"C-c C-e"</span> . chatgpt-shell-prompt-compose)
+          <span style="color: #a71d5d;">:map</span> org-mode-map
+         (<span style="color: #183691;">"C-c C-e"</span> . chatgpt-shell-prompt-compose)
+          <span style="color: #a71d5d;">:map</span> eshell-mode-map
+         (<span style="color: #183691;">"C-c C-e"</span> . chatgpt-shell-prompt-compose)
+          <span style="color: #a71d5d;">:map</span> mu4e-compose-mode-map
+         (<span style="color: #183691;">"C-c C-e"</span> . chatgpt-shell-prompt-compose)
+          <span style="color: #a71d5d;">:map</span> emacs-lisp-mode-map
+         (<span style="color: #183691;">"C-c C-e"</span> . chatgpt-shell-prompt-compose)))
+</pre>
+</div>
+
+ <p>
+While the compose buffer displays a single query/response at a time, it also follows on from previous requests. You can press  <code>r</code> to reply and continue the conversation.
+</p>
+
+
+ <div id="org8f362e4" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/marathon.gif" alt="marathon.gif" width="90%"></img></p>
+</div>
+
+ <p>
+The compose buffer is fairly stateless and mostly serves as viewport over the last query in the shell itself. If you invoke  <code>chatgpt-shell-prompt-compose</code> with a prefix (ie. C-u), it wipes the shell history. You can do it from the compose buffer itself, if you forgot to prior to launching.
+</p>
+
+ <p>
+You can also use the  <code>o</code> binding to jump to the "other buffer" (the shell carrying the conversation history).
+</p>
+
+
+ <div id="org58d6ea6" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/other.gif" alt="other.gif" width="90%"></img></p>
+</div>
+
+ <p>
+If using the  <code>r</code> and  <code>o</code> bindings in a compose buffer sounds a little strange, fear not. The compose buffer is writeable while crafting queries, thus you can safely insert any character. Once a query is submitted (via  <code>C-c C-c</code>), the buffer automatically becomes read-only, and thus unlocking single-character bindings.
+</p>
+
+ <p>
+Another magit commit favorite of mine is using the  <code>M-p</code> or  <code>M-n</code> bindings to insert previous messages via  <code>git-commit-prev-message</code> or  <code>git-commit-next-message</code>.
+</p>
+
+ <p>
+With that in mind, I also brought  <code>M-p</code> and  <code>M-n</code> over to the editable compose buffer.
+</p>
+
+
+ <div id="org44bdf75" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/previous-next-history.gif" alt="previous-next-history.gif" width="90%"></img></p>
+</div>
+
+ <p>
+If cycling isn't efficient enough, you can also use the typical  <code>M-r</code> binding to search and insert from history.
+</p>
+
+
+ <div id="orga630e6c" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/search-history.png" alt="search-history.png" width="90%"></img></p>
+</div>
+
+ <p>
+Now, getting back to removing some of that copy-pasting friction… Selecting text in any buffer and invoking  <code>M-x chatgpt-shell-prompt-compose</code> (or  <code>C-c C-e</code> in my case) automatically pastes the region into the compose buffer. You get to tweak your query before submitting (via that familiar  <code>C-c C-c</code>), in a more flexible buffer (compared to a shell).
+</p>
+
+ <p>
+ <i>Note: You can also invoke the compose command with a region as many times as you'd like. Each region is sent to the compose buffer, so you can craft more involved queries before submission.</i>
+</p>
+
+
+ <div id="org069cc98" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/find-and-fix-bug.gif" alt="find-and-fix-bug.gif" width="90%"></img></p>
+</div>
+
+ <p>
+While I typically prefer short query responses (using diffs like the example above), I sometimes want full snippets as follow-ups. I found myself typing  <i>"show entire snippet"</i> often enough, that I now use one of those single-character bindings ( <code>e</code>) for this purpose.
+</p>
+
+
+ <div id="orgd92511e" class="figure">
+ <p> <img src="../images/a-chatgpt-shell-compose-ux-experiment/show-entire-snippet.gif" alt="show-entire-snippet.gif" width="90%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgb3f9ba3" class="outline-3">
+ <h3 id="orgb3f9ba3">Compose bindings</h3>
+ <div class="outline-text-3" id="text-orgb3f9ba3">
+ <p>
+I've showcased most of the compose key bindings, here's the whole lot (so far anyway), which you can also view from  <code>chatgpt-shell-prompt-compose</code>'s documentation.
+</p>
+</div>
+
+ <div id="outline-container-org192bb48" class="outline-4">
+ <h4 id="org192bb48">Editing</h4>
+ <div class="outline-text-4" id="text-org192bb48">
+ <ul class="org-ul"> <li> <code>C-c C-c</code> to send the buffer query.</li>
+ <li> <code>C-c C-k</code> to cancel compose buffer.</li>
+ <li> <code>M-r</code> search through history.</li>
+ <li> <code>M-p</code> cycle through previous item in history.</li>
+ <li> <code>M-n</code> cycle through next item in history.</li>
+</ul></div>
+</div>
+
+ <div id="outline-container-org1cd3215" class="outline-4">
+ <h4 id="org1cd3215">Read-only</h4>
+ <div class="outline-text-4" id="text-org1cd3215">
+ <ul class="org-ul"> <li> <code>C-c C-c</code> After sending offers to abort query in-progress.</li>
+ <li> <code>q</code> Exits the read-only buffer.</li>
+ <li> <code>g</code> Refresh (re-send the query). Useful to retry on disconnects.</li>
+ <li> <code>n</code> Jump to next source block.</li>
+ <li> <code>p</code> Jump to next previous block.</li>
+ <li> <code>r</code> Reply to follow-up with additional questions.</li>
+ <li> <code>e</code> Send "Show entire snippet" query.</li>
+ <li> <code>o</code> Jump to other buffer (ie. the shell itself).</li>
+ <li> <code>C-M-h</code> Mark block at point.</li>
+</ul></div>
+</div>
+</div>
+
+ <div id="outline-container-org33ae3ce" class="outline-3">
+ <h3 id="org33ae3ce">Buyer beware: it's all pretty experimental</h3>
+ <div class="outline-text-3" id="text-org33ae3ce">
+ <p>
+When I started playing with the compose buffer idea, I wasn't too sure whether or not its usage would stick, so I basically hacked  <code>chatgpt-shell-prompt-compose</code> to pieces. A cheap prototype of sorts to validate the idea before fully committing to a more involved solution.
+</p>
+
+ <p>
+I'll eventually rewrite  <code>chatgpt-shell-prompt-compose</code> as either a major or minor mode if there's enough interest.
+</p>
+
+ <p>
+For now, I'll continue using as is to validate its usefulness.
+</p>
+
+ <p>
+If you give  <code>chatgpt-shell-prompt-compose</code> a try, I'd love to hear your feedback ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+ <p>
+ <i>Enjoying this content? Find it useful? Consider  <a href="https://github.com/sponsors/xenodium">sponsoring</a>.</i></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-chatgpt-shell-compose-ux-experiment</link>
+  <guid isPermaLink="false">http://xenodium.com/a-chatgpt-shell-compose-ux-experiment</guid>
+  <pubDate>Mon, 01 Jan 2024 12:30:47 +0000</pubDate>
+</item>
 <item>
   <title>A Murder at the End of the World: Are you Vi or Emacs?</title>
   <description><![CDATA[<div id="content" class="content">
