@@ -6,7 +6,386 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 01 Jan 2024 12:30:47 +0000</lastBuildDate>
+<lastBuildDate>Sat, 13 Jan 2024 18:36:21 +0000</lastBuildDate>
+<item>
+  <title>A Cloudflare Workers primer: hello world</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-cloudflare-workers-primer-hello-world" class="outline-2">
+ <h2 id="a-cloudflare-workers-primer-hello-world"> <span class="timestamp-wrapper"> <span class="timestamp">13 January 2024</span></span> A Cloudflare Workers primer: hello world</h2>
+ <div class="outline-text-2" id="text-a-cloudflare-workers-primer-hello-world">
+ <pre class="example" id="orge458506">
+o______________o
+| Hello world! |
+o--------------o
+        \   ^__^
+         \  (oo)_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+</pre>
+ <p>
+Keen to get started with your  <i>Hello World</i> Cloudflare Worker? Skip to the  <a href="#org3fa14f9">setup</a> section.
+</p>
+</div>
+
+ <div id="outline-container-orgbd95118" class="outline-3">
+ <h3 id="orgbd95118">A little background</h3>
+ <div class="outline-text-3" id="text-orgbd95118">
+ <p>
+The vast majority of my software development experience has been centered around client-side software. The few times I've needed a server-side component for a hobby project, I've historically provisioned a linux  <a href="https://en.wikipedia.org/wiki/Virtual_machine">virtual machine</a> somewhere and ran whatever services I needed. I have to admit though, I don't enjoy the provisioning process, configuration, maintenance, upgrades, database admin, etc. which take time away from the part I enjoy more: building and experimenting with features.
+</p>
+
+ <p>
+While  <a href="https://en.wikipedia.org/wiki/Containerization_(computing)">containers</a> have made things somewhat simpler, much of the maintenance tradeoffs remain.
+</p>
+
+ <p>
+These days, the server-managing overhead has been greatly reduced by " <a href="https://en.wikipedia.org/wiki/Serverless_computing">serverless</a>" solutions. Odd terminology for a server offering, but I digress. It more or less refers to removing most of that additional responsibility that comes with managing your own servers and enabling you to focus on building your business logic. Having said that, I've typically shied away from these services, with the possibly irrational fear of vendor lock-in.
+</p>
+
+ <p>
+The thing is, if most of my potential server-side needs merely require an entry point (where I could route/handle incoming requests) and possibly some persistence (maybe a database), I should be able to abstract these things away and build server-side logic against portable abstractions. With that in place, maybe there's little vendor lock-in to worry about? Who knows, the devil's in the detail. If I keep shying away from these services, I'll never know, so maybe I should try some and see.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org021d103" class="outline-3">
+ <h3 id="org021d103">Let's try Cloudflare Workers</h3>
+ <div class="outline-text-3" id="text-org021d103">
+ <p>
+There are no shortages of serverless options offering  <a href="https://en.wikipedia.org/wiki/Function_as_a_service">functions as a service</a>. Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on…
+</p>
+
+ <p>
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare Workers as they had  <a href="https://blog.cloudflare.com/introducing-d1">announced D1</a>, their database backed by SQLite …and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even  <a href="https://xenodium.com/emacs-29s-sqlite-mode/">Emacs 29 got some SQLite love</a>, which prompted me to add  <a href="https://xenodium.com/sqlite-mode-goodies/">cell navigation/navigation</a> and  <a href="https://xenodium.com/further-sqlite-mode-extensions/">try other experiments</a>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org46aa5ec" class="outline-3">
+ <h3 id="org46aa5ec">D1 / SQLite in beta</h3>
+ <div class="outline-text-3" id="text-org46aa5ec">
+ <p>
+Keep in mind that D1 is in public beta and not yet recommended for large production workloads. From the  <a href="https://developers.cloudflare.com/d1/">Cloudflare site</a>:
+</p>
+
+ <blockquote>
+ <p>
+"While the D1 team expects breaking changes and issues to be minimal, they may still occur. The D1 team generally does not recommend running large production workloads on beta products."
+</p>
+</blockquote>
+</div>
+</div>
+
+ <div id="outline-container-orgf897a15" class="outline-3">
+ <h3 id="orgf897a15">Workers cost</h3>
+ <div class="outline-text-3" id="text-orgf897a15">
+ <p>
+In terms of pricing (as of 2024-01-13), the  <a href="https://developers.cloudflare.com/workers/platform/pricing">free tier</a> enables workers to handle up 100,000 requests per day. Plenty for trying things out.
+</p>
+
+ <p>
+In any case, we're only checking out Cloudflare's offering, so let's move on…
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org3fa14f9" class="outline-3">
+ <h3 id="org3fa14f9">Settings up a new Cloudflare Worker (via web dash)</h3>
+ <div class="outline-text-3" id="text-org3fa14f9">
+ <p>
+Cloudflare has a tiny snippet on their  <a href="https://workers.cloudflare.com/">Workers landing page</a> that sets things up rather quickly, but  <span class="underline">I won't be using it</span>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">~/ $ npm create cloudflare -- my-app
+~/ $ cd my-app
+~/ $ npx wrangler deploy
+Published https://my-app.world.workers.dev
+</pre>
+</div>
+
+ <p>
+⚠️  <i>Note: before you get copying and pasting, read on.</i>
+</p>
+
+
+ <p>
+Cloudflare's snippet is helpful, but it does quite a bit under the hood. I'm somewhat of a node and serverless noob, so I wanted to understand things a little more and figure out the bare minimum needed to start a minimal Cloudflare Worker project.
+</p>
+
+ <p>
+Instead, we'll first click here and there over at  <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a> to spin off our new worker from the web and later continue from the command line.
+</p>
+
+
+ <div id="org093fdd1" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-0.png" alt="cf-new-0.png" width="100%"></img></p>
+</div>
+
+
+ <div id="orgc44e0e4" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-1.png" alt="cf-new-1.png" width="100%"></img></p>
+</div>
+
+ <p>
+Give the worker a name. We'll call it "todos" to give ya a little sneak peak at what the next post is possibly about… But you can call it whatever you'd like. Keep in mind you'll need to use this name to refer to your new worker.
+</p>
+
+
+ <div id="org2c1dc3c" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-2.png" alt="cf-new-2.png" width="100%"></img></p>
+</div>
+
+ <p>
+Congrats, you've now deployed a new worker. You can access it via the URL that looks something like  <a href="https://todos.somewhere.workers.dev">https://todos.somewhere.workers.dev</a>
+</p>
+
+
+ <div id="org2a25961" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/hello-dark.png" alt="hello-dark.png" width="70%"></img></p>
+</div>
+
+ <p>
+This is great and all, but we want to build something with this new worker, so let's set up our local development environment…
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org9e49fcc" class="outline-3">
+ <h3 id="org9e49fcc">Prerequisites</h3>
+ <div class="outline-text-3" id="text-org9e49fcc">
+ <p>
+You'll need  <a href="https://nodejs.org/">node.js</a> installed on your machine.
+</p>
+
+ <p>
+I happen to be on macOS, so I installed node via  <a href="https://brew.sh/">Homebrew</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install node
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org977513e" class="outline-3">
+ <h3 id="org977513e">Create a new node project</h3>
+ <div class="outline-text-3" id="text-org977513e">
+ <p>
+We want to start with a bare bones node project, so let's do just that.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">mkdir HelloCloudflareWorker
+ <span style="color: #a71d5d;">cd</span> HelloCloudflareWorker
+npm init -y
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org7d8b64e" class="outline-3">
+ <h3 id="org7d8b64e">Install TypeScript (compiler)</h3>
+ <div class="outline-text-3" id="text-org7d8b64e">
+ <p>
+I like some guardrails when targetting Javascript, so I'll use the  <a href="https://www.typescriptlang.org">TypeScript</a> compiler in this project. Let's install it.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">npm install --save-dev typescript
+npx tsc --init
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org0025ec0" class="outline-3">
+ <h3 id="org0025ec0">Install Cloudflare Typescript types</h3>
+ <div class="outline-text-3" id="text-org0025ec0">
+ <p>
+To have Cloudflare types information accessible to the TypeScript compiler, we'll need to install that too.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">npm install --save-dev @cloudflare/workers-types
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-orgc4ae5da" class="outline-3">
+ <h3 id="orgc4ae5da">Install Wrangler (Cloudflare tooling)</h3>
+ <div class="outline-text-3" id="text-orgc4ae5da">
+ <p>
+To manage your worker from the command-line, you'll need Cloudflare's  <a href="https://developers.cloudflare.com/workers/wrangler/">wrangler</a> tool. Let's install it.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">npm install --save-dev wrangler
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org7b5ae5a" class="outline-3">
+ <h3 id="org7b5ae5a">Point Wrangler to our worker</h3>
+ <div class="outline-text-3" id="text-org7b5ae5a">
+ <p>
+We're done installing things now. Let's point wrangler to our new worker by creating its config file.
+</p>
+
+ <p>
+ <code>wrangler.toml</code>
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh"> <span style="color: #333333;">name</span> =  <span style="color: #183691;">"todos"</span>
+ <span style="color: #333333;">main</span> =  <span style="color: #183691;">"worker/worker.ts"</span>
+</pre>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org5c5f71c" class="outline-3">
+ <h3 id="org5c5f71c">Worker entry point</h3>
+ <div class="outline-text-3" id="text-org5c5f71c">
+ <p>
+By default, the worker we created using Cloudflare's dash has the following entry point:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-js"> <span style="color: #a71d5d;">export</span>  <span style="color: #a71d5d;">default</span> {
+   <span style="color: #a71d5d;">async</span> fetch(request, env, ctx) {
+     <span style="color: #a71d5d;">return</span>  <span style="color: #a71d5d;">new</span>  <span style="color: #0086b3;">Response</span>(  <span style="color: #183691;">'Hello World!'</span>):
+  }
+}
+</pre>
+</div>
+
+ <p>
+However, this isn't yet included in our development environment. We need to write our first bit of code. You may have noticed our  <code>wrangler.toml</code> is pointing to the main entry point ( <code>worker/worker.ts</code>) and this file doesn't exist yet. Let's create it, though be sure to also create its owning directory:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">mkdir worker
+</pre>
+</div>
+
+ <p>
+Now we can create our very own  <code>worker/worker.ts</code>. Let's make the first change that shapes worker to our liking. Rather than just printing "Hello World", let's style things up using our  <a href="https://en.wikipedia.org/wiki/Cowsay">cow friend</a>. We'll create  <code>worker/worker.ts</code> and include the spiffed up message.
+</p>
+
+ <p>
+ <code>worker/worker.ts</code>
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-js"> <span style="color: #a71d5d;">import</span> { Env, ExecutionContext } from  <span style="color: #183691;">'@cloudflare/workers-types'</span>;
+
+ <span style="color: #a71d5d;">export</span>  <span style="color: #a71d5d;">default</span> {
+   <span style="color: #a71d5d;">async</span> fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+     <span style="color: #a71d5d;">let</span>  <span style="color: #333333;">defaultResponse</span> =  <span style="color: #183691;">`</span>
+ <span style="color: #183691;">   o______________o</span>
+ <span style="color: #183691;">   | Hello World! |</span>
+ <span style="color: #183691;">   o--------------o</span>
+ <span style="color: #183691;">           \\   ^__^</span>
+ <span style="color: #183691;">            \\  (oo)\_______</span>
+ <span style="color: #183691;">               (__)\\       )\\/\\</span>
+ <span style="color: #183691;">                   ||----w |</span>
+ <span style="color: #183691;">                   ||     ||`</span>
+     <span style="color: #a71d5d;">return</span>  <span style="color: #a71d5d;">new</span>  <span style="color: #0086b3;">Response</span>(defaultResponse);
+  }
+};
+</pre>
+</div>
+
+ <p>
+It's worth mentioning the import statement, since it brings Cloudflare's type information for both  <code>Env</code> and  <code>ExecutionContext</code>.
+</p>
+</div>
+</div>
+
+ <div id="outline-container-org0a47e67" class="outline-3">
+ <h3 id="org0a47e67">Running worker locally</h3>
+ <div class="outline-text-3" id="text-org0a47e67">
+ <p>
+Okay, we now have our  <code>worker/worker.ts</code> code ready to go. Let's run it locally. For that we use the wrangler utility.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">npx wrangler dev
+</pre>
+</div>
+
+
+ <div id="org4c83204" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/dev.png" alt="dev.png" width="90%"></img></p>
+</div>
+
+ <p>
+With that, you'll notice the worker is now running locally and waiting to be visited at  <a href="http://localhost:8787">http://localhost:8787</a>.
+</p>
+
+
+ <div id="org70be9ee" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/moo.png" alt="moo.png" width="70%"></img></p>
+</div>
+</div>
+</div>
+
+ <div id="outline-container-org5b63ae5" class="outline-3">
+ <h3 id="org5b63ae5">Deploying worker</h3>
+ <div class="outline-text-3" id="text-org5b63ae5">
+ <p>
+When we first created the worker via  <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a>, it automatically deployed to  <a href="https://todos.somewhere.workers.dev">https://todos.somewhere.workers.dev</a>. But our mods only ran locally. Let's deploy, again with the wrangler utility.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">npx wrangler deploy
+</pre>
+</div>
+
+
+ <div id="orgbb04733" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/deploying.png" alt="deploying.png" width="70%"></img></p>
+</div>
+
+ <p>
+We're good to go. Let's point our browser to the worker's public location.
+</p>
+
+
+ <div id="org6a7fb59" class="figure">
+ <p> <img src="../images/a-cloudflare-workers-primer-hello-world/deployed.png" alt="deployed.png" width="70%"></img></p>
+</div>
+
+ <p>
+…and with that, we have a functional Cloudflare Worker and a local development environment to shape things up however we'd like. What would you use the Worker for?
+</p>
+
+ <p>
+Gave this primer a try? I'd love to hear from ya ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+ <p>
+ <i>Enjoying this content? Find it useful?</i>
+</p>
+
+ <p>
+ <i>Consider ✨ <a href="https://github.com/sponsors/xenodium">sponsoring me</a>✨ or buy ✨ <a href="https://apps.apple.com/us/developer/xenodium-ltd/id304568690">my iOS apps</a>✨.</i>
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/a-cloudflare-workers-primer-hello-world</link>
+  <guid isPermaLink="false">http://xenodium.com/a-cloudflare-workers-primer-hello-world</guid>
+  <pubDate>Sat, 13 Jan 2024 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>A chatgpt-shell compose ux experiment</title>
   <description><![CDATA[<div id="content" class="content">
