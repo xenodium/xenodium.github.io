@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-01-13 Sat 18:18 -->
+<!-- 2024-01-13 Sat 18:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>A Cloudflare Workers primer: hello world</title>
@@ -388,7 +388,7 @@
 <div id="outline-container-a-cloudflare-workers-primer-hello-world" class="outline-2">
 <h2 id="a-cloudflare-workers-primer-hello-world"><span class="timestamp-wrapper"><span class="timestamp">13 January 2024</span></span> A Cloudflare Workers primer: hello world</h2>
 <div class="outline-text-2" id="text-a-cloudflare-workers-primer-hello-world">
-<pre class="example" id="org27a6823">
+<pre class="example" id="orge458506">
 o______________o
 | Hello world! |
 o--------------o
@@ -400,13 +400,13 @@ o--------------o
 
 </pre>
 <p>
-Keen to get started with your <i>Hello World</i> Cloudflare Worker? Skip to the <a href="#org97e7355">setup</a> section.
+Keen to get started with your <i>Hello World</i> Cloudflare Worker? Skip to the <a href="#org3fa14f9">setup</a> section.
 </p>
 </div>
 
-<div id="outline-container-orgce687d6" class="outline-3">
-<h3 id="orgce687d6">A little background</h3>
-<div class="outline-text-3" id="text-orgce687d6">
+<div id="outline-container-orgbd95118" class="outline-3">
+<h3 id="orgbd95118">A little background</h3>
+<div class="outline-text-3" id="text-orgbd95118">
 <p>
 The vast majority of my software development experience has been centered around client-side software. The few times I've needed a server-side component for a hobby project, I've historically provisioned a linux <a href="https://en.wikipedia.org/wiki/Virtual_machine">virtual machine</a> somewhere and ran whatever services I needed. I have to admit though, I don't enjoy the provisioning process, configuration, maintenance, upgrades, database admin, etc. which take time away from the part I enjoy more: building and experimenting with features.
 </p>
@@ -425,17 +425,22 @@ The thing is, if most of my potential server-side needs merely require an entry 
 </div>
 </div>
 
-<div id="outline-container-orgc20e723" class="outline-3">
-<h3 id="orgc20e723">Let's try Cloudflare Workers</h3>
-<div class="outline-text-3" id="text-orgc20e723">
+<div id="outline-container-org021d103" class="outline-3">
+<h3 id="org021d103">Let's try Cloudflare Workers</h3>
+<div class="outline-text-3" id="text-org021d103">
 <p>
 There are no shortages of serverless options offering <a href="https://en.wikipedia.org/wiki/Function_as_a_service">functions as a service</a>. Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on&#x2026;
 </p>
 
 <p>
-While I haven't researched the different offerings, I had made a mental note to check out Cloudflare workers as they had <a href="https://blog.cloudflare.com/introducing-d1">announced D1</a>, their database backed by SQLite &#x2026;and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even <a href="https://xenodium.com/emacs-29s-sqlite-mode/">Emacs 29 got some SQLite love</a>, which prompted me to add <a href="https://xenodium.com/sqlite-mode-goodies/">cell navigation/navigation</a> and <a href="https://xenodium.com/further-sqlite-mode-extensions/">try other experiments</a>.
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare Workers as they had <a href="https://blog.cloudflare.com/introducing-d1">announced D1</a>, their database backed by SQLite &#x2026;and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even <a href="https://xenodium.com/emacs-29s-sqlite-mode/">Emacs 29 got some SQLite love</a>, which prompted me to add <a href="https://xenodium.com/sqlite-mode-goodies/">cell navigation/navigation</a> and <a href="https://xenodium.com/further-sqlite-mode-extensions/">try other experiments</a>.
 </p>
+</div>
+</div>
 
+<div id="outline-container-org46aa5ec" class="outline-3">
+<h3 id="org46aa5ec">D1 / SQLite in beta</h3>
+<div class="outline-text-3" id="text-org46aa5ec">
 <p>
 Keep in mind that D1 is in public beta and not yet recommended for large production workloads. From the <a href="https://developers.cloudflare.com/d1/">Cloudflare site</a>:
 </p>
@@ -445,7 +450,12 @@ Keep in mind that D1 is in public beta and not yet recommended for large product
 "While the D1 team expects breaking changes and issues to be minimal, they may still occur. The D1 team generally does not recommend running large production workloads on beta products."
 </p>
 </blockquote>
+</div>
+</div>
 
+<div id="outline-container-orgf897a15" class="outline-3">
+<h3 id="orgf897a15">Workers cost</h3>
+<div class="outline-text-3" id="text-orgf897a15">
 <p>
 In terms of pricing (as of 2024-01-13), the <a href="https://developers.cloudflare.com/workers/platform/pricing">free tier</a> enables workers to handle up 100,000 requests per day. Plenty for trying things out.
 </p>
@@ -456,11 +466,11 @@ In any case, we're only checking out Cloudflare's offering, so let's move on&#x2
 </div>
 </div>
 
-<div id="outline-container-org97e7355" class="outline-3">
-<h3 id="org97e7355">Settings up a new Cloudflare Worker (via web dash)</h3>
-<div class="outline-text-3" id="text-org97e7355">
+<div id="outline-container-org3fa14f9" class="outline-3">
+<h3 id="org3fa14f9">Settings up a new Cloudflare Worker (via web dash)</h3>
+<div class="outline-text-3" id="text-org3fa14f9">
 <p>
-Cloudflare has a tiny snippet on their <a href="https://workers.cloudflare.com/">Workers landing page</a> that sets things up rather quickly, but <b>I won't be using it</b>.
+Cloudflare has a tiny snippet on their <a href="https://workers.cloudflare.com/">Workers landing page</a> that sets things up rather quickly, but <span class="underline">I won't be using it</span>.
 </p>
 
 <div class="org-src-container">
@@ -485,13 +495,13 @@ Instead, we'll first click here and there over at <a href="https://dash.cloudfla
 </p>
 
 
-<div id="orgf38ef50" class="figure">
+<div id="org093fdd1" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-0.png" alt="cf-new-0.png" width="100%" />
 </p>
 </div>
 
 
-<div id="org354c657" class="figure">
+<div id="orgc44e0e4" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-1.png" alt="cf-new-1.png" width="100%" />
 </p>
 </div>
@@ -501,7 +511,7 @@ Give the worker a name. We'll call it "todos" to give ya a little sneak peak at 
 </p>
 
 
-<div id="org23daad5" class="figure">
+<div id="org2c1dc3c" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-2.png" alt="cf-new-2.png" width="100%" />
 </p>
 </div>
@@ -511,7 +521,7 @@ Congrats, you've now deployed a new worker. You can access it via the URL that l
 </p>
 
 
-<div id="orgb361274" class="figure">
+<div id="org2a25961" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/hello-dark.png" alt="hello-dark.png" width="70%" />
 </p>
 </div>
@@ -522,9 +532,9 @@ This is great and all, but we want to build something with this new worker, so l
 </div>
 </div>
 
-<div id="outline-container-org8dcfecc" class="outline-3">
-<h3 id="org8dcfecc">Prerequisite</h3>
-<div class="outline-text-3" id="text-org8dcfecc">
+<div id="outline-container-org9e49fcc" class="outline-3">
+<h3 id="org9e49fcc">Prerequisites</h3>
+<div class="outline-text-3" id="text-org9e49fcc">
 <p>
 You'll need <a href="https://nodejs.org/">node.js</a> installed on your machine.
 </p>
@@ -540,9 +550,9 @@ I happen to be on macOS, so I installed node via <a href="https://brew.sh/">Home
 </div>
 </div>
 
-<div id="outline-container-orge873cbb" class="outline-3">
-<h3 id="orge873cbb">Create a new node project</h3>
-<div class="outline-text-3" id="text-orge873cbb">
+<div id="outline-container-org977513e" class="outline-3">
+<h3 id="org977513e">Create a new node project</h3>
+<div class="outline-text-3" id="text-org977513e">
 <p>
 We want to start with a bare bones node project, so let's do just that.
 </p>
@@ -556,11 +566,11 @@ npm init -y
 </div>
 </div>
 
-<div id="outline-container-org26dc3d3" class="outline-3">
-<h3 id="org26dc3d3">Install Typescript (compiler)</h3>
-<div class="outline-text-3" id="text-org26dc3d3">
+<div id="outline-container-org7d8b64e" class="outline-3">
+<h3 id="org7d8b64e">Install TypeScript (compiler)</h3>
+<div class="outline-text-3" id="text-org7d8b64e">
 <p>
-I like some guardrails when targetting Javascript, so I'll use the <a href="https://www.typescriptlang.org/">Typescript</a> compiler in this project. Let's install it.
+I like some guardrails when targetting Javascript, so I'll use the <a href="https://www.typescriptlang.org">TypeScript</a> compiler in this project. Let's install it.
 </p>
 
 <div class="org-src-container">
@@ -571,11 +581,11 @@ npx tsc --init
 </div>
 </div>
 
-<div id="outline-container-orgd33fd41" class="outline-3">
-<h3 id="orgd33fd41">Install Cloudflare Typescript types</h3>
-<div class="outline-text-3" id="text-orgd33fd41">
+<div id="outline-container-org0025ec0" class="outline-3">
+<h3 id="org0025ec0">Install Cloudflare Typescript types</h3>
+<div class="outline-text-3" id="text-org0025ec0">
 <p>
-To have Cloudflare types information accessible to the Typescript compiler, we'll need to install that too.
+To have Cloudflare types information accessible to the TypeScript compiler, we'll need to install that too.
 </p>
 
 <div class="org-src-container">
@@ -585,9 +595,9 @@ To have Cloudflare types information accessible to the Typescript compiler, we'l
 </div>
 </div>
 
-<div id="outline-container-orgfa7d5b9" class="outline-3">
-<h3 id="orgfa7d5b9">Install wrangler (Cloudflare tooling)</h3>
-<div class="outline-text-3" id="text-orgfa7d5b9">
+<div id="outline-container-orgc4ae5da" class="outline-3">
+<h3 id="orgc4ae5da">Install Wrangler (Cloudflare tooling)</h3>
+<div class="outline-text-3" id="text-orgc4ae5da">
 <p>
 To manage your worker from the command-line, you'll need Cloudflare's <a href="https://developers.cloudflare.com/workers/wrangler/">wrangler</a> tool. Let's install it.
 </p>
@@ -599,9 +609,9 @@ To manage your worker from the command-line, you'll need Cloudflare's <a href="h
 </div>
 </div>
 
-<div id="outline-container-org7ae834e" class="outline-3">
-<h3 id="org7ae834e">Point wrangler to our worker</h3>
-<div class="outline-text-3" id="text-org7ae834e">
+<div id="outline-container-org7b5ae5a" class="outline-3">
+<h3 id="org7b5ae5a">Point Wrangler to our worker</h3>
+<div class="outline-text-3" id="text-org7b5ae5a">
 <p>
 We're done installing things now. Let's point wrangler to our new worker by creating its config file.
 </p>
@@ -618,9 +628,9 @@ We're done installing things now. Let's point wrangler to our new worker by crea
 </div>
 </div>
 
-<div id="outline-container-orge833691" class="outline-3">
-<h3 id="orge833691">Worker entry point</h3>
-<div class="outline-text-3" id="text-orge833691">
+<div id="outline-container-org5c5f71c" class="outline-3">
+<h3 id="org5c5f71c">Worker entry point</h3>
+<div class="outline-text-3" id="text-org5c5f71c">
 <p>
 By default, the worker we created using Cloudflare's dash has the following entry point:
 </p>
@@ -677,9 +687,9 @@ It's worth mentioning the import statement, since it brings Cloudflare's type in
 </div>
 </div>
 
-<div id="outline-container-orgf3afbe9" class="outline-3">
-<h3 id="orgf3afbe9">Running worker locally</h3>
-<div class="outline-text-3" id="text-orgf3afbe9">
+<div id="outline-container-org0a47e67" class="outline-3">
+<h3 id="org0a47e67">Running worker locally</h3>
+<div class="outline-text-3" id="text-org0a47e67">
 <p>
 Okay, we now have our <code>worker/worker.ts</code> code ready to go. Let's run it locally. For that we use the wrangler utility.
 </p>
@@ -690,7 +700,7 @@ Okay, we now have our <code>worker/worker.ts</code> code ready to go. Let's run 
 </div>
 
 
-<div id="org7ee289e" class="figure">
+<div id="org4c83204" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/dev.png" alt="dev.png" width="90%" />
 </p>
 </div>
@@ -700,16 +710,16 @@ With that, you'll notice the worker is now running locally and waiting to be vis
 </p>
 
 
-<div id="org363f3e7" class="figure">
+<div id="org70be9ee" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/moo.png" alt="moo.png" width="70%" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3bd241e" class="outline-3">
-<h3 id="org3bd241e">Deploying worker</h3>
-<div class="outline-text-3" id="text-org3bd241e">
+<div id="outline-container-org5b63ae5" class="outline-3">
+<h3 id="org5b63ae5">Deploying worker</h3>
+<div class="outline-text-3" id="text-org5b63ae5">
 <p>
 When we first created the worker via <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a>, it automatically deployed to <a href="https://todos.somewhere.workers.dev">https://todos.somewhere.workers.dev</a>. But our mods only ran locally. Let's deploy, again with the wrangler utility.
 </p>
@@ -720,7 +730,7 @@ When we first created the worker via <a href="https://dash.cloudflare.com">https
 </div>
 
 
-<div id="org8dde321" class="figure">
+<div id="orgbb04733" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/deploying.png" alt="deploying.png" width="70%" />
 </p>
 </div>
@@ -730,17 +740,17 @@ We're good to go. Let's point our browser to the worker's public location.
 </p>
 
 
-<div id="orgb975c9e" class="figure">
+<div id="org6a7fb59" class="figure">
 <p><img src="../images/a-cloudflare-workers-primer-hello-world/deployed.png" alt="deployed.png" width="70%" />
 </p>
 </div>
 
 <p>
-&#x2026;and with that, we have a functional Cloudflare worker and a local development environment to shape things however we'd like. What would you use if for?
+&#x2026;and with that, we have a functional Cloudflare Worker and a local development environment to shape things up however we'd like. What would you use the Worker for?
 </p>
 
 <p>
-Gave this prim a try? I'd love to hear from ya (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
+Gave this primer a try? I'd love to hear from ya (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
 </p>
 
 <p>

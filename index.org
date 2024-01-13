@@ -32,13 +32,17 @@ The thing is, if most of my potential server-side needs merely require an entry 
 
 There are no shortages of serverless options offering [[https://en.wikipedia.org/wiki/Function_as_a_service][functions as a service]]. Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on...
 
-While I haven't researched the different offerings, I had made a mental note to check out Cloudflare workers as they had [[https://blog.cloudflare.com/introducing-d1][announced D1]], their database backed by SQLite ...and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even [[https://xenodium.com/emacs-29s-sqlite-mode/][Emacs 29 got some SQLite love]], which prompted me to add [[https://xenodium.com/sqlite-mode-goodies/][cell navigation/navigation]] and [[https://xenodium.com/further-sqlite-mode-extensions/][try other experiments]].
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare Workers as they had [[https://blog.cloudflare.com/introducing-d1][announced D1]], their database backed by SQLite ...and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even [[https://xenodium.com/emacs-29s-sqlite-mode/][Emacs 29 got some SQLite love]], which prompted me to add [[https://xenodium.com/sqlite-mode-goodies/][cell navigation/navigation]] and [[https://xenodium.com/further-sqlite-mode-extensions/][try other experiments]].
+
+** D1 / SQLite in beta
 
 Keep in mind that D1 is in public beta and not yet recommended for large production workloads. From the [[https://developers.cloudflare.com/d1/][Cloudflare site]]:
 
 #+begin_quote
   "While the D1 team expects breaking changes and issues to be minimal, they may still occur. The D1 team generally does not recommend running large production workloads on beta products."
 #+end_quote
+
+** Workers cost
 
 In terms of pricing (as of 2024-01-13), the [[https://developers.cloudflare.com/workers/platform/pricing][free tier]] enables workers to handle up 100,000 requests per day. Plenty for trying things out.
 
@@ -48,7 +52,7 @@ In any case, we're only checking out Cloudflare's offering, so let's move on...
 :PROPERTIES:
 :ID:       cloudflare-worker-hello-world-setup
 :END:
-Cloudflare has a tiny snippet on their [[https://workers.cloudflare.com/][Workers landing page]] that sets things up rather quickly, but *I won't be using it*.
+Cloudflare has a tiny snippet on their [[https://workers.cloudflare.com/][Workers landing page]] that sets things up rather quickly, but _I won't be using it_.
 
 #+begin_src sh
   ~/ $ npm create cloudflare -- my-app
@@ -82,7 +86,7 @@ Congrats, you've now deployed a new worker. You can access it via the URL that l
 
 This is great and all, but we want to build something with this new worker, so let's set up our local development environment...
 
-** Prerequisite
+** Prerequisites
 
 You'll need [[https://nodejs.org/][node.js]] installed on your machine.
 
@@ -102,9 +106,9 @@ We want to start with a bare bones node project, so let's do just that.
   npm init -y
 #+end_src
 
-** Install Typescript (compiler)
+** Install TypeScript (compiler)
 
-I like some guardrails when targetting Javascript, so I'll use the [[https://www.typescriptlang.org/][Typescript]] compiler in this project. Let's install it.
+I like some guardrails when targetting Javascript, so I'll use the [[https://www.typescriptlang.org][TypeScript]] compiler in this project. Let's install it.
 
 #+begin_src sh
   npm install --save-dev typescript
@@ -113,13 +117,13 @@ I like some guardrails when targetting Javascript, so I'll use the [[https://www
 
 ** Install Cloudflare Typescript types
 
-To have Cloudflare types information accessible to the Typescript compiler, we'll need to install that too.
+To have Cloudflare types information accessible to the TypeScript compiler, we'll need to install that too.
 
 #+begin_src sh
   npm install --save-dev @cloudflare/workers-types
 #+end_src
 
-** Install wrangler (Cloudflare tooling)
+** Install Wrangler (Cloudflare tooling)
 
 To manage your worker from the command-line, you'll need Cloudflare's [[https://developers.cloudflare.com/workers/wrangler/][wrangler]] tool. Let's install it.
 
@@ -127,7 +131,7 @@ To manage your worker from the command-line, you'll need Cloudflare's [[https://
   npm install --save-dev wrangler
 #+end_src
 
-** Point wrangler to our worker
+** Point Wrangler to our worker
 
 We're done installing things now. Let's point wrangler to our new worker by creating its config file.
 
@@ -213,9 +217,9 @@ We're good to go. Let's point our browser to the worker's public location.
 #+ATTR_HTML: :width 70%
 [[file:images/a-cloudflare-workers-primer-hello-world/deployed.png]]
 
-...and with that, we have a functional Cloudflare worker and a local development environment to shape things however we'd like. What would you use if for?
+...and with that, we have a functional Cloudflare Worker and a local development environment to shape things up however we'd like. What would you use the Worker for?
 
-Gave this prim a try? I'd love to hear from ya ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+Gave this primer a try? I'd love to hear from ya ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
 
 /Enjoying this content? Find it useful?/
 
