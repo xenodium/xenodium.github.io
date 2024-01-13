@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-01-13 Sat 18:18 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Cloudflare Workers primer: hello world</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-a-cloudflare-workers-primer-hello-world" class="outline-2">
+<h2 id="a-cloudflare-workers-primer-hello-world"><span class="timestamp-wrapper"><span class="timestamp">13 January 2024</span></span> A Cloudflare Workers primer: hello world</h2>
+<div class="outline-text-2" id="text-a-cloudflare-workers-primer-hello-world">
+<pre class="example" id="org27a6823">
+o______________o
+| Hello world! |
+o--------------o
+        \   ^__^
+         \  (oo)_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+</pre>
+<p>
+Keen to get started with your <i>Hello World</i> Cloudflare Worker? Skip to the <a href="#org97e7355">setup</a> section.
+</p>
+</div>
+
+<div id="outline-container-orgce687d6" class="outline-3">
+<h3 id="orgce687d6">A little background</h3>
+<div class="outline-text-3" id="text-orgce687d6">
+<p>
+The vast majority of my software development experience has been centered around client-side software. The few times I've needed a server-side component for a hobby project, I've historically provisioned a linux <a href="https://en.wikipedia.org/wiki/Virtual_machine">virtual machine</a> somewhere and ran whatever services I needed. I have to admit though, I don't enjoy the provisioning process, configuration, maintenance, upgrades, database admin, etc. which take time away from the part I enjoy more: building and experimenting with features.
+</p>
+
+<p>
+While <a href="https://en.wikipedia.org/wiki/Containerization_(computing)">containers</a> have made things somewhat simpler, much of the maintenance tradeoffs remain.
+</p>
+
+<p>
+These days, the server-managing overhead has been greatly reduced by "<a href="https://en.wikipedia.org/wiki/Serverless_computing">serverless</a>" solutions. Odd terminology for a server offering, but I digress. It more or less refers to removing most of that additional responsibility that comes with managing your own servers and enabling you to focus on building your business logic. Having said that, I've typically shied away from these services, with the possibly irrational fear of vendor lock-in.
+</p>
+
+<p>
+The thing is, if most of my potential server-side needs merely require an entry point (where I could route/handle incoming requests) and possibly some persistence (maybe a database), I should be able to abstract these things away and build server-side logic against portable abstractions. With that in place, maybe there's little vendor lock-in to worry about? Who knows, the devil's in the detail. If I keep shying away from these services, I'll never know, so maybe I should try some and see.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc20e723" class="outline-3">
+<h3 id="orgc20e723">Let's try Cloudflare Workers</h3>
+<div class="outline-text-3" id="text-orgc20e723">
+<p>
+There are no shortages of serverless options offering <a href="https://en.wikipedia.org/wiki/Function_as_a_service">functions as a service</a>. Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on&#x2026;
+</p>
+
+<p>
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare workers as they had <a href="https://blog.cloudflare.com/introducing-d1">announced D1</a>, their database backed by SQLite &#x2026;and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even <a href="https://xenodium.com/emacs-29s-sqlite-mode/">Emacs 29 got some SQLite love</a>, which prompted me to add <a href="https://xenodium.com/sqlite-mode-goodies/">cell navigation/navigation</a> and <a href="https://xenodium.com/further-sqlite-mode-extensions/">try other experiments</a>.
+</p>
+
+<p>
+Keep in mind that D1 is in public beta and not yet recommended for large production workloads. From the <a href="https://developers.cloudflare.com/d1/">Cloudflare site</a>:
+</p>
+
+<blockquote>
+<p>
+"While the D1 team expects breaking changes and issues to be minimal, they may still occur. The D1 team generally does not recommend running large production workloads on beta products."
+</p>
+</blockquote>
+
+<p>
+In terms of pricing (as of 2024-01-13), the <a href="https://developers.cloudflare.com/workers/platform/pricing">free tier</a> enables workers to handle up 100,000 requests per day. Plenty for trying things out.
+</p>
+
+<p>
+In any case, we're only checking out Cloudflare's offering, so let's move on&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org97e7355" class="outline-3">
+<h3 id="org97e7355">Settings up a new Cloudflare Worker (via web dash)</h3>
+<div class="outline-text-3" id="text-org97e7355">
+<p>
+Cloudflare has a tiny snippet on their <a href="https://workers.cloudflare.com/">Workers landing page</a> that sets things up rather quickly, but <b>I won't be using it</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">~/ $ npm create cloudflare -- my-app
+~/ $ cd my-app
+~/ $ npx wrangler deploy
+Published https://my-app.world.workers.dev
+</pre>
+</div>
+
+<p>
+⚠️ <i>Note: before you get copying and pasting, read on.</i>
+</p>
+
+
+<p>
+Cloudflare's snippet is helpful, but it does quite a bit under the hood. I'm somewhat of a node and serverless noob, so I wanted to understand things a little more and figure out the bare minimum needed to start a minimal Cloudflare Worker project.
+</p>
+
+<p>
+Instead, we'll first click here and there over at <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a> to spin off our new worker from the web and later continue from the command line.
+</p>
+
+
+<div id="orgf38ef50" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-0.png" alt="cf-new-0.png" width="100%" />
+</p>
+</div>
+
+
+<div id="org354c657" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-1.png" alt="cf-new-1.png" width="100%" />
+</p>
+</div>
+
+<p>
+Give the worker a name. We'll call it "todos" to give ya a little sneak peak at what the next post is possibly about&#x2026; But you can call it whatever you'd like. Keep in mind you'll need to use this name to refer to your new worker.
+</p>
+
+
+<div id="org23daad5" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/cf-new-2.png" alt="cf-new-2.png" width="100%" />
+</p>
+</div>
+
+<p>
+Congrats, you've now deployed a new worker. You can access it via the URL that looks something like <a href="https://todos.somewhere.workers.dev">https://todos.somewhere.workers.dev</a>
+</p>
+
+
+<div id="orgb361274" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/hello-dark.png" alt="hello-dark.png" width="70%" />
+</p>
+</div>
+
+<p>
+This is great and all, but we want to build something with this new worker, so let's set up our local development environment&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8dcfecc" class="outline-3">
+<h3 id="org8dcfecc">Prerequisite</h3>
+<div class="outline-text-3" id="text-org8dcfecc">
+<p>
+You'll need <a href="https://nodejs.org/">node.js</a> installed on your machine.
+</p>
+
+<p>
+I happen to be on macOS, so I installed node via <a href="https://brew.sh/">Homebrew</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install node
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge873cbb" class="outline-3">
+<h3 id="orge873cbb">Create a new node project</h3>
+<div class="outline-text-3" id="text-orge873cbb">
+<p>
+We want to start with a bare bones node project, so let's do just that.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">mkdir HelloCloudflareWorker
+<span style="color: #a71d5d;">cd</span> HelloCloudflareWorker
+npm init -y
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org26dc3d3" class="outline-3">
+<h3 id="org26dc3d3">Install Typescript (compiler)</h3>
+<div class="outline-text-3" id="text-org26dc3d3">
+<p>
+I like some guardrails when targetting Javascript, so I'll use the <a href="https://www.typescriptlang.org/">Typescript</a> compiler in this project. Let's install it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">npm install --save-dev typescript
+npx tsc --init
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd33fd41" class="outline-3">
+<h3 id="orgd33fd41">Install Cloudflare Typescript types</h3>
+<div class="outline-text-3" id="text-orgd33fd41">
+<p>
+To have Cloudflare types information accessible to the Typescript compiler, we'll need to install that too.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">npm install --save-dev @cloudflare/workers-types
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa7d5b9" class="outline-3">
+<h3 id="orgfa7d5b9">Install wrangler (Cloudflare tooling)</h3>
+<div class="outline-text-3" id="text-orgfa7d5b9">
+<p>
+To manage your worker from the command-line, you'll need Cloudflare's <a href="https://developers.cloudflare.com/workers/wrangler/">wrangler</a> tool. Let's install it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">npm install --save-dev wrangler
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7ae834e" class="outline-3">
+<h3 id="org7ae834e">Point wrangler to our worker</h3>
+<div class="outline-text-3" id="text-org7ae834e">
+<p>
+We're done installing things now. Let's point wrangler to our new worker by creating its config file.
+</p>
+
+<p>
+<code>wrangler.toml</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #333333;">name</span> = <span style="color: #183691;">"todos"</span>
+<span style="color: #333333;">main</span> = <span style="color: #183691;">"worker/worker.ts"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge833691" class="outline-3">
+<h3 id="orge833691">Worker entry point</h3>
+<div class="outline-text-3" id="text-orge833691">
+<p>
+By default, the worker we created using Cloudflare's dash has the following entry point:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #a71d5d;">export</span> <span style="color: #a71d5d;">default</span> {
+  <span style="color: #a71d5d;">async</span> fetch(request, env, ctx) {
+    <span style="color: #a71d5d;">return</span> <span style="color: #a71d5d;">new</span> <span style="color: #0086b3;">Response</span>( <span style="color: #183691;">'Hello World!'</span>):
+  }
+}
+</pre>
+</div>
+
+<p>
+However, this isn't yet included in our development environment. We need to write our first bit of code. You may have noticed our <code>wrangler.toml</code> is pointing to the main entry point (<code>worker/worker.ts</code>) and this file doesn't exist yet. Let's create it, though be sure to also create its owning directory:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">mkdir worker
+</pre>
+</div>
+
+<p>
+Now we can create our very own <code>worker/worker.ts</code>. Let's make the first change that shapes worker to our liking. Rather than just printing "Hello World", let's style things up using our <a href="https://en.wikipedia.org/wiki/Cowsay">cow friend</a>. We'll create <code>worker/worker.ts</code> and include the spiffed up message.
+</p>
+
+<p>
+<code>worker/worker.ts</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #a71d5d;">import</span> { Env, ExecutionContext } from <span style="color: #183691;">'@cloudflare/workers-types'</span>;
+
+<span style="color: #a71d5d;">export</span> <span style="color: #a71d5d;">default</span> {
+  <span style="color: #a71d5d;">async</span> fetch(request: Request, env: Env, ctx: ExecutionContext): Promise&lt;Response&gt; {
+    <span style="color: #a71d5d;">let</span> <span style="color: #333333;">defaultResponse</span> = <span style="color: #183691;">`</span>
+<span style="color: #183691;">   o______________o</span>
+<span style="color: #183691;">   | Hello World! |</span>
+<span style="color: #183691;">   o--------------o</span>
+<span style="color: #183691;">           \\   ^__^</span>
+<span style="color: #183691;">            \\  (oo)\_______</span>
+<span style="color: #183691;">               (__)\\       )\\/\\</span>
+<span style="color: #183691;">                   ||----w |</span>
+<span style="color: #183691;">                   ||     ||`</span>
+    <span style="color: #a71d5d;">return</span> <span style="color: #a71d5d;">new</span> <span style="color: #0086b3;">Response</span>(defaultResponse);
+  }
+};
+</pre>
+</div>
+
+<p>
+It's worth mentioning the import statement, since it brings Cloudflare's type information for both <code>Env</code> and <code>ExecutionContext</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf3afbe9" class="outline-3">
+<h3 id="orgf3afbe9">Running worker locally</h3>
+<div class="outline-text-3" id="text-orgf3afbe9">
+<p>
+Okay, we now have our <code>worker/worker.ts</code> code ready to go. Let's run it locally. For that we use the wrangler utility.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">npx wrangler dev
+</pre>
+</div>
+
+
+<div id="org7ee289e" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/dev.png" alt="dev.png" width="90%" />
+</p>
+</div>
+
+<p>
+With that, you'll notice the worker is now running locally and waiting to be visited at <a href="http://localhost:8787">http://localhost:8787</a>.
+</p>
+
+
+<div id="org363f3e7" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/moo.png" alt="moo.png" width="70%" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3bd241e" class="outline-3">
+<h3 id="org3bd241e">Deploying worker</h3>
+<div class="outline-text-3" id="text-org3bd241e">
+<p>
+When we first created the worker via <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a>, it automatically deployed to <a href="https://todos.somewhere.workers.dev">https://todos.somewhere.workers.dev</a>. But our mods only ran locally. Let's deploy, again with the wrangler utility.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">npx wrangler deploy
+</pre>
+</div>
+
+
+<div id="org8dde321" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/deploying.png" alt="deploying.png" width="70%" />
+</p>
+</div>
+
+<p>
+We're good to go. Let's point our browser to the worker's public location.
+</p>
+
+
+<div id="orgb975c9e" class="figure">
+<p><img src="../images/a-cloudflare-workers-primer-hello-world/deployed.png" alt="deployed.png" width="70%" />
+</p>
+</div>
+
+<p>
+&#x2026;and with that, we have a functional Cloudflare worker and a local development environment to shape things however we'd like. What would you use if for?
+</p>
+
+<p>
+Gave this prim a try? I'd love to hear from ya (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+<p>
+<i>Enjoying this content? Find it useful?</i>
+</p>
+
+<p>
+<i>Consider ✨<a href="https://github.com/sponsors/xenodium">sponsoring me</a>✨ or buy ✨<a href="https://apps.apple.com/us/developer/xenodium-ltd/id304568690">my iOS apps</a>✨.</i>
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

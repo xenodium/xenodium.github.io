@@ -1,6 +1,226 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-01-13 Sat] A Cloudflare Workers primer: hello world
+:PROPERTIES:
+:CUSTOM_ID: a-cloudflare-workers-primer-hello-world
+:END:
+#+begin_example
+   o______________o
+   | Hello world! |
+   o--------------o
+           \   ^__^
+            \  (oo)_______
+               (__)\       )\/\
+                   ||----w |
+                   ||     ||
+
+#+end_example
+Keen to get started with your /Hello World/ Cloudflare Worker? Skip to the [[id:cloudflare-worker-hello-world-setup][setup]] section.
+
+** A little background
+
+The vast majority of my software development experience has been centered around client-side software. The few times I've needed a server-side component for a hobby project, I've historically provisioned a linux [[https://en.wikipedia.org/wiki/Virtual_machine][virtual machine]] somewhere and ran whatever services I needed. I have to admit though, I don't enjoy the provisioning process, configuration, maintenance, upgrades, database admin, etc. which take time away from the part I enjoy more: building and experimenting with features.
+
+While [[https://en.wikipedia.org/wiki/Containerization_(computing)][containers]] have made things somewhat simpler, much of the maintenance tradeoffs remain.
+
+These days, the server-managing overhead has been greatly reduced by "[[https://en.wikipedia.org/wiki/Serverless_computing][serverless]]" solutions. Odd terminology for a server offering, but I digress. It more or less refers to removing most of that additional responsibility that comes with managing your own servers and enabling you to focus on building your business logic. Having said that, I've typically shied away from these services, with the possibly irrational fear of vendor lock-in.
+
+The thing is, if most of my potential server-side needs merely require an entry point (where I could route/handle incoming requests) and possibly some persistence (maybe a database), I should be able to abstract these things away and build server-side logic against portable abstractions. With that in place, maybe there's little vendor lock-in to worry about? Who knows, the devil's in the detail. If I keep shying away from these services, I'll never know, so maybe I should try some and see.
+
+** Let's try Cloudflare Workers
+
+There are no shortages of serverless options offering [[https://en.wikipedia.org/wiki/Function_as_a_service][functions as a service]]. Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on...
+
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare workers as they had [[https://blog.cloudflare.com/introducing-d1][announced D1]], their database backed by SQLite ...and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even [[https://xenodium.com/emacs-29s-sqlite-mode/][Emacs 29 got some SQLite love]], which prompted me to add [[https://xenodium.com/sqlite-mode-goodies/][cell navigation/navigation]] and [[https://xenodium.com/further-sqlite-mode-extensions/][try other experiments]].
+
+Keep in mind that D1 is in public beta and not yet recommended for large production workloads. From the [[https://developers.cloudflare.com/d1/][Cloudflare site]]:
+
+#+begin_quote
+  "While the D1 team expects breaking changes and issues to be minimal, they may still occur. The D1 team generally does not recommend running large production workloads on beta products."
+#+end_quote
+
+In terms of pricing (as of 2024-01-13), the [[https://developers.cloudflare.com/workers/platform/pricing][free tier]] enables workers to handle up 100,000 requests per day. Plenty for trying things out.
+
+In any case, we're only checking out Cloudflare's offering, so let's move on...
+
+** Settings up a new Cloudflare Worker (via web dash)
+:PROPERTIES:
+:ID:       cloudflare-worker-hello-world-setup
+:END:
+Cloudflare has a tiny snippet on their [[https://workers.cloudflare.com/][Workers landing page]] that sets things up rather quickly, but *I won't be using it*.
+
+#+begin_src sh
+  ~/ $ npm create cloudflare -- my-app
+  ~/ $ cd my-app
+  ~/ $ npx wrangler deploy
+  Published https://my-app.world.workers.dev
+#+end_src
+
+⚠️ /Note: before you get copying and pasting, read on./
+
+
+Cloudflare's snippet is helpful, but it does quite a bit under the hood. I'm somewhat of a node and serverless noob, so I wanted to understand things a little more and figure out the bare minimum needed to start a minimal Cloudflare Worker project.
+
+Instead, we'll first click here and there over at https://dash.cloudflare.com to spin off our new worker from the web and later continue from the command line.
+
+#+ATTR_HTML: :width 100%
+[[file:images/a-cloudflare-workers-primer-hello-world/cf-new-0.png]]
+
+#+ATTR_HTML: :width 100%
+[[file:images/a-cloudflare-workers-primer-hello-world/cf-new-1.png]]
+
+Give the worker a name. We'll call it "todos" to give ya a little sneak peak at what the next post is possibly about... But you can call it whatever you'd like. Keep in mind you'll need to use this name to refer to your new worker.
+
+#+ATTR_HTML: :width 100%
+[[file:images/a-cloudflare-workers-primer-hello-world/cf-new-2.png]]
+
+Congrats, you've now deployed a new worker. You can access it via the URL that looks something like https://todos.somewhere.workers.dev
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-cloudflare-workers-primer-hello-world/hello-dark.png]]
+
+This is great and all, but we want to build something with this new worker, so let's set up our local development environment...
+
+** Prerequisite
+
+You'll need [[https://nodejs.org/][node.js]] installed on your machine.
+
+I happen to be on macOS, so I installed node via [[https://brew.sh/][Homebrew]].
+
+#+begin_src sh
+  brew install node
+#+end_src
+
+** Create a new node project
+
+We want to start with a bare bones node project, so let's do just that.
+
+#+begin_src sh
+  mkdir HelloCloudflareWorker
+  cd HelloCloudflareWorker
+  npm init -y
+#+end_src
+
+** Install Typescript (compiler)
+
+I like some guardrails when targetting Javascript, so I'll use the [[https://www.typescriptlang.org/][Typescript]] compiler in this project. Let's install it.
+
+#+begin_src sh
+  npm install --save-dev typescript
+  npx tsc --init
+#+end_src
+
+** Install Cloudflare Typescript types
+
+To have Cloudflare types information accessible to the Typescript compiler, we'll need to install that too.
+
+#+begin_src sh
+  npm install --save-dev @cloudflare/workers-types
+#+end_src
+
+** Install wrangler (Cloudflare tooling)
+
+To manage your worker from the command-line, you'll need Cloudflare's [[https://developers.cloudflare.com/workers/wrangler/][wrangler]] tool. Let's install it.
+
+#+begin_src sh
+  npm install --save-dev wrangler
+#+end_src
+
+** Point wrangler to our worker
+
+We're done installing things now. Let's point wrangler to our new worker by creating its config file.
+
+=wrangler.toml=
+
+#+begin_src sh
+  name = "todos"
+  main = "worker/worker.ts"
+#+end_src
+
+** Worker entry point
+
+By default, the worker we created using Cloudflare's dash has the following entry point:
+
+#+begin_src js
+  export default {
+    async fetch(request, env, ctx) {
+      return new Response( 'Hello World!'):
+    }
+  }
+#+end_src
+
+However, this isn't yet included in our development environment. We need to write our first bit of code. You may have noticed our =wrangler.toml= is pointing to the main entry point (=worker/worker.ts=) and this file doesn't exist yet. Let's create it, though be sure to also create its owning directory:
+
+#+begin_src sh
+  mkdir worker
+#+end_src
+
+Now we can create our very own =worker/worker.ts=. Let's make the first change that shapes worker to our liking. Rather than just printing "Hello World", let's style things up using our [[https://en.wikipedia.org/wiki/Cowsay][cow friend]]. We'll create =worker/worker.ts= and include the spiffed up message.
+
+=worker/worker.ts=
+
+#+begin_src js
+  import { Env, ExecutionContext } from '@cloudflare/workers-types';
+
+  export default {
+    async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+      let defaultResponse = `
+     o______________o
+     | Hello World! |
+     o--------------o
+             \\   ^__^
+              \\  (oo)\_______
+                 (__)\\       )\\/\\
+                     ||----w |
+                     ||     ||`
+      return new Response(defaultResponse);
+    }
+  };
+#+end_src
+
+It's worth mentioning the import statement, since it brings Cloudflare's type information for both =Env= and =ExecutionContext=.
+
+** Running worker locally
+
+Okay, we now have our =worker/worker.ts= code ready to go. Let's run it locally. For that we use the wrangler utility.
+
+#+begin_src sh
+  npx wrangler dev
+#+end_src
+
+#+ATTR_HTML: :width 90%
+[[file:images/a-cloudflare-workers-primer-hello-world/dev.png]]
+
+With that, you'll notice the worker is now running locally and waiting to be visited at http://localhost:8787.
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-cloudflare-workers-primer-hello-world/moo.png]]
+
+** Deploying worker
+
+When we first created the worker via https://dash.cloudflare.com, it automatically deployed to https://todos.somewhere.workers.dev. But our mods only ran locally. Let's deploy, again with the wrangler utility.
+
+#+begin_src sh
+  npx wrangler deploy
+#+end_src
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-cloudflare-workers-primer-hello-world/deploying.png]]
+
+We're good to go. Let's point our browser to the worker's public location.
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-cloudflare-workers-primer-hello-world/deployed.png]]
+
+...and with that, we have a functional Cloudflare worker and a local development environment to shape things however we'd like. What would you use if for?
+
+Gave this prim a try? I'd love to hear from ya ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+
+/Enjoying this content? Find it useful?/
+
+/Consider ✨[[https://github.com/sponsors/xenodium][sponsoring me]]✨ or buy ✨[[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][my iOS apps]]✨./
+
 * [2024-01-01 Mon] A chatgpt-shell compose ux experiment
 :PROPERTIES:
 :CUSTOM_ID: a-chatgpt-shell-compose-ux-experiment
