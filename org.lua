@@ -1,7 +1,11 @@
-function Header(el)
-  el.attr = pandoc.Attr("", {}, {})
-  return el
-end
+-- Executed with
+-- pandoc -f org -t markdown-smart --strip-comments --wrap=none --lua-filter=org.lua index.org -o index.md && sed -i '' -e 's/{width="[0-9]*\\(%\\|px\\)"}//g' -e 's/{#\([a-zA-Z0-9_.-]*\)}/\n---\nid: \1\n---/g' index.md
+
+-- function Header(el)
+--   print(el)
+--   el.attr = pandoc.Attr("", {}, {})
+--   return el
+-- end
 
 function CodeBlock(el)
   el.attributes['class'] = nil
