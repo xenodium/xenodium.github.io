@@ -1,4 +1,7 @@
 # \[2024-01-13 Sat\] A Cloudflare Workers primer: hello world
+---
+id: a-cloudflare-workers-primer-hello-world
+---
 
 ``` example
 o______________o
@@ -209,6 +212,9 @@ Gave this primer a try? I'd love to hear from ya ([Mastodon](https://indieweb.so
 *Consider ✨[sponsoring me](https://github.com/sponsors/xenodium)✨ or buy ✨[my iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690)✨.*
 
 # \[2024-01-01 Mon\] A chatgpt-shell compose ux experiment
+---
+id: a-chatgpt-shell-compose-ux-experiment
+---
 
 It's been roughly 9 months since I [experimented](a-chatgpt-emacs-shell/) with wiring the [ChatGPT](https://openai.com/blog/chatgpt) API to an Emacs [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html) buffer in [chatgpt-shell](https://github.com/xenodium/chatgpt-shell). ChatGPT's request-response nature maps fairly well to a shell's mode of interaction.
 
@@ -317,6 +323,9 @@ If you give `chatgpt-shell-prompt-compose` a try, I'd love to hear your feedback
 *Enjoying this content? Find it useful? Consider [sponsoring](https://github.com/sponsors/xenodium).*
 
 # \[2023-12-22 Fri\] A Murder at the End of the World: Are you Vi or Emacs?
+---
+id: are-you-vi-or-emacs
+---
 
 I've enjoyed watching [A Murder at the End of the World](https://www.imdb.com/title/tt15227418/). The show may resonate with folks following the tech world. Won't say much more than that…
 
@@ -329,6 +338,9 @@ In any case, being an Emacs nut, the scene gave me a good tickle. It's a great s
 ![](https://xenodium.com/images/are-you-vi-or-emacs/what-is-emacs.webp)
 
 # \[2023-12-17 Sun\] An basic Mullvad WireGuard setup for macOS
+---
+id: a-quick-mullvad-macos-setup
+---
 
 Needed a VPN to test an API from a different location. Gave [Mullvad](https://mullvad.net/en) a try.
 
@@ -387,6 +399,9 @@ curl https://am.i.mullvad.net/connected
 I'm on a Macbook M1 Pro, running macOS Sonoma. If you got `wg-quick` working on Sonoma, I'd love to hear from ya ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Email](mailto:me__AT__xenodium.com)).
 
 # \[2023-12-06 Wed\] An iOS journaling app powered by org plain text
+---
+id: an-ios-journaling-app-powered-by-org-plain-text
+---
 
 I've been experimenting with building a rich text editing component for iOS, powered by [org](https://orgmode.org/) markup. The idea is to offer a mobile-friendly editing experience, backed by our beloved plain text format.
 
@@ -435,6 +450,9 @@ And like Journelly for iOS, I got other org things available on iOS:
 Just like the stuff I do or [write about](https://xenodium.com)? [Sponsor me](https://github.com/sponsors/xenodium).
 
 # \[2023-11-29 Wed\] Building your own bookmark launcher
+---
+id: building-your-own-bookmark-launcher
+---
 
 ```{=org}
 #+ATTR_HTML: :style text-align:right;
@@ -617,6 +635,9 @@ What would you use it for? Get in touch ([Mastodon](https://indieweb.social/@xen
 *Enjoying this content? Find it useful? Consider ✨[sponsoring](https://github.com/sponsors/xenodium)✨.*
 
 # \[2023-11-25 Sat\] Native Emacs/macOS UX integrations via Swift modules
+---
+id: native-emacsmacos-ux-integrations-via-swift-modules
+---
 
 Once you learn a little [elisp](https://en.wikipedia.org/wiki/Emacs_Lisp), [Emacs](https://www.gnu.org/software/emacs/) becomes this hyper malleable editor/platform. A live playground of sorts, where almost everything is up for grabs at runtime. Throw some elisp at it, and you can customize or extend almost anything to your heart's content. I say almost, as there's a comparatively small native core, that would typically require recompiling if you wanted to make further (native) mods. But that isn't entirely true. [Emacs 25](https://www.masteringemacs.org/article/whats-new-in-emacs-25-1) enabled us to further extend things by loading native [dynamic modules](https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html), back in 2016.
 
@@ -739,6 +760,9 @@ I hope this post brings visibility to the wonderful [emacs-swift-module](https:/
 *Enjoying this content? Find it useful? Consider ✨[sponsoring](https://github.com/sponsors/xenodium)✨.*
 
 # \[2023-11-16 Thu\] Migrating/re-encrypting pass's password store
+---
+id: migratingre-encrypting-passs-password-store
+---
 
 Note to self, I needed to migrate/re-encrypt someone's password store (aka pass). Straightforward:
 
@@ -756,6 +780,9 @@ pass init NEW-GPG-KEY
 ```
 
 # \[2023-10-30 Mon\] How I smash burgers
+---
+id: how-i-smash-burgers
+---
 
 I'm neither a burger expert nor a connoisseur of any kind, yet I sure have a lot of fun smashing burgers at home. Needless to say, I shamelessly enjoy gobbling them too!
 
@@ -924,6 +951,9 @@ I like to assemble in the following order from the bottom bun up.
 If you gave smashing burgers a go, I'd love to hear about it. Also any tips are very much welcome. Get in touch ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Email](mailto:me__AT__xenodium.com)).
 
 # \[2023-10-24 Tue\] Open in Xcode at line number
+---
+id: open-in-xcode-at-line-number
+---
 
 I live mostly in Emacs. I say mostly 'cause well, I'm fairly pragmatic about it. If there's a workflow elsewhere that's more appropriate for my needs, I'll happily use that instead. While I'd love to do my web browsing from my beloved editor, Firefox ticks the right boxes for me.
 
@@ -969,6 +999,9 @@ ps. If you find opening the same file in a different context handy, you may also
 ```
 
 # \[2023-10-06 Fri\] Trimming video screenshots
+---
+id: trimming-video-screenshots
+---
 
 A quick one… I recently wanted to trim the black borders around a video screenshot. While I could use an image editor to manually select and trim, I wondered if there was an [imagemagick](https://imagemagick.org/) trick somewhere out there for such a thing… and of course there was:
 
@@ -997,6 +1030,9 @@ While the screenshot I've just used was a little blurry, it's from the movie [Tr
 `dwim-shell-commands-image-trim-borders` is now [added to dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/commit/5bed2f6b40761db4913c8d8f58bb147c71a9ceb7)
 
 # \[2023-10-06 Fri\] Displaying image details in mode line
+---
+id: displaying-image-details-in-mode-line
+---
 
 A benefit of running Emacs as a GUI app, is that you can view images from your beloved editor. This is super handy to take a quick peek at any image.
 
@@ -1036,6 +1072,9 @@ Turns out this wasn't too bad by setting `setting mode-line-format`. I added a l
 I'd love to hear if there's a pure elisp alternative ([mastodon](https://indieweb.social/@xenodium)/[twitter](https://twitter.com/xenodium)). I gave `(image-size (image-get-display-property) :pixels)` a try, but that seemed to return the display size in buffer rather than actual file size.
 
 # \[2023-10-06 Fri\] Creating an iCloud account (via tart VM)
+---
+id: creating-icloud-test-accounts
+---
 
 *UPDATE: This method no longer works for creating iCloud accounts. I'd love to know if you find an alternative. Please let me know.*
 
@@ -1078,6 +1117,9 @@ tart run sonoma-base
 While there may be simpler options out there to create an \@icloud.com account (please do let me know [mastodon](https://indieweb.social/@xenodium)/[twitter](https://twitter.com/xenodium)), the VM did the job. I'd been meaning to find a low friction mechanism to run VMs for a different reason, but that's a post for another time.
 
 # \[2023-10-04 Wed\] Virtual machine (VM) bookmarks
+---
+id: virtual-machine-vm-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-10-04 Wed\]
@@ -1094,6 +1136,9 @@ While there may be simpler options out there to create an \@icloud.com account (
 -   [Virtualisation on Apple silicon – The Eclectic Light Company](https://eclecticlight.co/virtualisation-on-apple-silicon/).
 
 # \[2023-09-16 Sat\] Emacs hangs saving .authinfo.gpg (workaround)
+---
+id: emacs-hangs-saving-authinfogpg-workaround
+---
 
 My Emacs (v29.1) was hanging when saving changes to .authinfo.gpg. Turns out, I ran into a [known issue](http://git.savannah.gnu.org/cgit/emacs.git/commit/etc/PROBLEMS?id=1b9812af80b6ceec8418636dbf84c0fbcd3ab694) with a workaround. Downgrading gnupgp to a version older than 2.4.1 sorts things out.
 
@@ -1105,6 +1150,9 @@ brew install ~/Downloads/gnupg.rb
 ```
 
 # \[2023-09-15 Fri\] Redact that buffer
+---
+id: redact-that-buffer
+---
 
 As I was getting ready to take an Emacs screenshot in the [previous post](emacs-send-to-kindle/), I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found [redacted.el](https://github.com/bkaestner/redacted.el), built-in `toggle-rot13-mode`, and [unpackaged/lorem-ipsum-overlay](https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words). All great options. I wanted a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
 
@@ -1143,6 +1191,9 @@ The solution is overlay-based, ensuring the buffer content remains unchanged. Th
 ```
 
 # \[2023-09-15 Fri\] Send note to Kindle
+---
+id: emacs-send-to-kindle
+---
 
 While on Mastodon, I spotted [\@summeremacs](https://indieweb.social/@summeremacs@fashionsocial.host) looking into [sending Emacs text selections to a Kindle via email](https://indieweb.social/@summeremacs@fashionsocial.host/111058226788825431). This sparked my interest as I previously looked into [sending pdfs to my Kindle](emailing-pdfs-to-kindle-from-mu4e/) via [mu4e](https://github.com/djcb/mu).
 
@@ -1235,6 +1286,9 @@ By the way, and I only just learned this today… To take a screenshot on a Kind
 ![](https://xenodium.com/images/emacs-send-to-kindle/tap-screenshot.png)
 
 # \[2023-09-10 Sun\] SHA-256 hash from URL, the easy way
+---
+id: sha-256-hash-from-url-the-easy-way
+---
 
 From time to time, I need to generate a SHA-256 hash from a file hosted on some server. For me, this flow typically goes something along the lines of:
 
@@ -1332,6 +1386,9 @@ Also note I'm now relying on the `<<cb>>` template, since dwim-shell-command rep
 ```
 
 # \[2023-09-05 Tue\] Inline previous result and why you should edebug
+---
+id: inline-previous-result-and-why-you-should-edebug
+---
 
 Artur Malabarba's [Debugging Elisp Part 1: Earn your independence](https://endlessparentheses.com/debugging-emacs-lisp-part-1-earn-your-independence.html) is nearly a decade old, yet it rings just as true today.
 
@@ -1399,6 +1456,9 @@ We can see that `edebug-previous-result` invokes `message` which is responsible 
 ![](https://xenodium.com/images/inline-previous-result-and-why-you-should-edebug/edebug-inline.gif)
 
 # \[2023-08-27 Sun\] Further sqlite-mode extensions
+---
+id: further-sqlite-mode-extensions
+---
 
 I've continued poking at Emacs 29's sqlite-mode. Since [my last post on extensions](sqlite-mode-goodies/), I've experimented a little with adding a handful of interactive functions:
 
@@ -1449,6 +1509,9 @@ I've been playing with the following key bindings:
 The code lives in [sqlite-mode-extras.el](https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el) under my [Emacs config repo](https://github.com/xenodium/dotsies/tree/main). Beware, it's fairly experimental and hasn't been tested thoroughly.
 
 # \[2023-08-22 Tue\] My custom Tesco Clubcard pkpass
+---
+id: my-custom-tesco-clubcard-pkpass
+---
 
 My significant other and I had two plastic Tesco Clubcards. I lost mine, so I took a picture of hers. I was fairly certain a barcode photo would scan just as well at self-checkout, and it did.
 
@@ -1582,6 +1645,9 @@ Redditor u/stupergenius [suggested using the image's original background color](
 ![](https://xenodium.com/images/my-custom-tesco-clubcard-pkpass/bsy-light.png)
 
 # \[2023-08-07 Mon\] Extending sqlite-mode (cell navigation + edits)
+---
+id: sqlite-mode-goodies
+---
 
 I recently [wrote about Emacs 29's new sqlite-mode](emacs-29s-sqlite-mode/), which enables you to browse sqlite databases from your beloved editor.
 
@@ -1638,6 +1704,9 @@ The code for `sqlite-mode-extras-tab-dwim`, `sqlite-mode-extras-backtab-dwim`, a
 For now, the code lives in [sqlite-mode-extras.el](https://github.com/xenodium/dotsies/blob/main/emacs/ar/sqlite-mode-extras.el) under my [Emacs config repo](https://github.com/xenodium/dotsies/tree/main). Improvements/fixes totally welcome!
 
 # \[2023-08-06 Sun\] Emacs 29's sqlite-mode
+---
+id: emacs-29s-sqlite-mode
+---
 
 I've jumped on the Emacs 29 bandwagon! Mickey Petersen has a great rundown of [What's New in Emacs 29.1](https://www.masteringemacs.org/article/whats-new-in-emacs-29-1).
 
@@ -1648,6 +1717,9 @@ Pressing `RET` on a table shows its content via `sqlite-mode-list-data`. `DEL` d
 ![](https://xenodium.com/images/emacs-29s-sqlite-mode/sqlite-mode.gif)
 
 # \[2023-07-30 Sun\] Emacs: scan this QR/bar code
+---
+id: emacs-scan-this-qrcode
+---
 
 Another day, another tool brought to my Emacs fingertips. A while ago, I wrote about easily [copying text from desktop to mobile via QR codes](copy-from-desktop-to-mobile-via-qr-code/). Later on, I brought it under [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) as [dwim-shell-commands-clipboard-to-qr](https://github.com/xenodium/dwim-shell-command/blob/67da65f97d7f5477e19407d25887c23fab31517d/dwim-shell-commands.el#L593).
 
@@ -1688,6 +1760,9 @@ Because `dwim-shell-command` operates on either `dired` files or current file, w
 `dwim-shell-commands-image-scan-code` is now [pushed to dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/commit/85ebcb0a466ddfe48e543d585e16aff7aee8da5e), the optional package in [dwim-shell-command](https://github.com/xenodium/dwim-shell-command/).
 
 # \[2023-07-25 Tue\] A cure for JavaScript fatigue?
+---
+id: a-cure-for-javascript-fatigue
+---
 
 It's been roughly a decade since I wrote any significant amount of JavaScript. Back then, I primarily relied on the [Google Closure Compiler](https://developers.google.com/closure/compiler/), now maybe an archaeological artefact? These days, it's hard not to bump into any JavaScript project that doesn't rely on [npm](https://www.npmjs.com/), along with many other tools like the [Typescript](https://www.typescriptlang.org/) compiler, [ESLint](https://eslint.org/), [Prettier](https://prettier.io/)… There are a ton of available frameworks too. I was somewhat put off (or maybe just lazy?) by the initial ramp-up to reenter the JavaScript world. I guess that's what some refer to as [Javascript Fatigue](https://medium.com/@ericclemmons/javascript-fatigue-48d4011b6fc4#.prcj59904).
 
@@ -1710,6 +1785,9 @@ The compose buffer is powered by a background shell (storing history for us). Ty
 `chatgpt-shell-prompt-compose` is available in [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) v0.72.1. I've so far bound it to `C-c C-e`, though I've already found some unfortunate clashes.
 
 # \[2023-07-12 Wed\] ChatGPT visits the Emacs doctor
+---
+id: chatgpt-visits-the-emacs-doctor
+---
 
 Emacs is a [part-time job](https://youtu.be/urcL86UpqZc?t=177). A [multi-language](https://emacs-lsp.github.io/lsp-mode/) development environment. A [lisp machine](https://www.emacswiki.org/emacs/LispMachine). An [email client](https://www.djcbsoftware.nl/code/mu/mu4e.html). A [web browser](https://www.gnu.org/software/emacs/manual/html_node/emacs/EWW.html). A [zettelkasten](https://youtu.be/AyhPmypHDEw). A [spreadsheet](https://www.emacswiki.org/emacs/SpreadSheet). A [mastodon client](https://codeberg.org/martianh/mastodon.el). A [shell](https://www.masteringemacs.org/article/complete-guide-mastering-eshell). A [ledger](https://github.com/ledger/ledger-mode). A [super agenda](https://github.com/alphapapa/org-super-agenda). An [operating system](https://twitter.com/nixcraft/status/1435140596520218628). Some say it sends [ripples into the atmosphere](https://xkcd.com/378/) or [plays tetris for you](https://github.com/skeeto/autotetris-mode). It may even [warm your place up](https://github.com/johanvts/emacs-fireplace) during the winter. Can [meme with you](https://github.com/TeMPOraL/nyan-mode). It's an ultra-malleable editor with endless possibilities, powered by your life-long customizations. Oh man, no wonder we need to chat to someone from time to time. You know what I mean? *"[Sir, this is a Wendy's](https://knowyourmeme.com/editorials/guides/what-does-sir-this-is-a-wendys-mean)"*.
 
@@ -1884,6 +1962,9 @@ While we can work exclusively with the `*doctor*` buffer making requests directl
 Happy Emacsing!
 
 # \[2023-07-09 Sun\] chatgpt-shell v0.60.1 updates
+---
+id: chatgpt-shell-v0601-updates
+---
 
 Back in April, I shared [chatgpt-shell updates](chatgpt-shell-available-on-melpa/), showcasing [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) features. It's been a little while, so here's an update with the latest additions.
 
@@ -1977,6 +2058,9 @@ Functions like `chatgpt-shell-describe-code` ask ChatGPT to describe the code in
 -   `chatgpt-shell-prompt-header-eshell-summarize-last-command-output`
 
 # \[2023-07-05 Wed\] Duplicate this!
+---
+id: duplicate-this
+---
 
 [James Dyer](http://www.dyerdwelling.family/) has a nice [post](https://www.emacs.dyerdwelling.family/emacs/20230606213531-emacs--dired-duplicate-here-revisited/) sharing his frequent [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) need to duplicate files. He offers a solution using a custom interactive command. His use-case resonated with me.
 
@@ -2066,6 +2150,9 @@ Like this or [other content]()? [✨Sponsor✨ via GitHub Sponsors](https://gith
 If you're keen on a regex-based approach, [u/arthurno1](https://www.reddit.com/user/arthurno1/) [offers a great built-in alternative](https://www.reddit.com/r/emacs/comments/14rmvkx/comment/jqtkel8/?utm_source=share&utm_medium=web2x&context=3): dired-do-copy-regexp (bound to `% C`).
 
 # \[2023-06-29 Thu\] Stitching images from the comfort of dired
+---
+id: joining-images-from-the-comfort-of-dired
+---
 
 I recently wanted a few images stitched together. A perfect job for [ImageMagick](https://imagemagick.org/). A quick search yielded the magical incantation:
 
@@ -2148,6 +2235,9 @@ We'll rinse all and repeat to get the vertical command equivalent. I know, I kno
 These commands are now part of [dwim-shell-command](https://github.com/xenodium/dwim-shell-command). To get them, load the optional commands via `(require 'dwim-shell-commands)`.
 
 # \[2023-06-18 Sun\] noweb: the lesser known org babel glue
+---
+id: noweb-more-glue-for-your-org-toolbox
+---
 
 While [Org](https://orgmode.org/) babel's [noweb](https://orgmode.org/manual/Noweb-Reference-Syntax.html) isn't something I've frequently used for literate programming, its simplicity makes it rather versatile to glue all sorts of babel things I hadn't previously considered.
 
@@ -2276,6 +2366,9 @@ While I'm new to [Swift Charts](https://developer.apple.com/documentation/Charts
 While I've shown fairly basic usages of noweb, we can accomplish some nifty integrations. Check out the [noweb reference syntax](https://orgmode.org/manual/Noweb-Reference-Syntax.html) for more examples and additional header arguments like `tangle`, `strip-tangle`, and others.
 
 # \[2023-05-25 Thu\] Deleting from Emacs sequence vars
+---
+id: deleting-from-emacs-sequence-vars
+---
 
 Adding hooks and setting variables is core to customizing Emacs. Take a major mode like `emacs-lisp-mode` as an example. To customize its behaviour, one may add a hook function to `emacs-lisp-mode-hook`, or if you're a little lazy while experimenting, you may even use a lambda.
 
@@ -2410,6 +2503,9 @@ juicecelery was kind enough to point out an improvement in the custom function:
 > "but I see your improvements, for instance that non list items are removed from the selection."
 
 # \[2023-05-18 Thu\] Sprinkle me logs
+---
+id: sprinkle-me-logs
+---
 
 At times, basic prints/logs are just about the right debugging strategy. Sure, we have debuggers and [REPLs](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) which are super useful, but sometimes you just know that sprinkling your code with a handful of temporary prints/logs will get you enough info to fix an issue.
 
@@ -2507,6 +2603,9 @@ Set `ar/unique-log-word` to nil and let it generate a random word. Maybe I get t
 Added Ada and C++ support, thanks to [James Dyer's post](https://www.emacs.dyerdwelling.family/emacs/20230523204523-emacs--insert-unique-log-message/).
 
 # \[2023-05-11 Thu\] dwim-shell-command on Windows + upload to 0x0.st
+---
+id: dwim-shell-command-now-on-windows
+---
 
 You can now use [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) on Windows. Shoutout to Kartik Saranathan, who sent a [pull request](https://github.com/xenodium/dwim-shell-command/pull/9) to get rid of `ls` usage.
 
@@ -2546,6 +2645,9 @@ I've covered many of the use-cases before:
 -   [Emacs: macOS sharing (DWIM style)](emacs-macos-share-from-dired-dwim-style/)
 
 # \[2023-05-01 Mon\] chatgpt-shell siblings now on MELPA also
+---
+id: chatgpt-shell-siblings-now-on-melpa-also
+---
 
 In [chatgpt-shell updates](chatgpt-shell-available-on-melpa/), I highlighted `dall-e-shell` (a DALL-E Emacs shell), `ob-chatgpt-shell` (ChatGPT org babel support), and `ob-dall-e-shell` (DALL-E org babel support) were initially excluded from the [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) MELPA submission while I worked out their split.
 
@@ -2562,6 +2664,9 @@ Here's `dall-e-shell`.
 ![](https://xenodium.com/images/chatgpt-shell-available-on-melpa/dalle.png)
 
 # \[2023-04-28 Fri\] Generating elisp org docs
+---
+id: generating-elisp-org-docs
+---
 
 [chatgpt-shell](https://github.com/xenodium/chatgpt-shell)'s README includes few org tables documenting the package's [customizable variables](https://github.com/xenodium/chatgpt-shell#chatgpt-shell-customizations) as well as [available commands](https://github.com/xenodium/chatgpt-shell#chatgpt-shell-commands). Don't worry, this isn't really another ChatGPT post.
 
@@ -2641,6 +2746,9 @@ To build a similar table for interactive commands, we can use the following bloc
 You see? This post wasn't really about ChatGPT. Aren't you glad you stuck around? 😀
 
 # \[2023-04-25 Tue\] LLM bookmarks
+---
+id: llm-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-09-17 Sun\]
@@ -2659,6 +2767,9 @@ You see? This post wasn't really about ChatGPT. Aren't you glad you stuck around
 -   [The Art of Midjourney AI: A Guide to Creating Images from Text](https://fka.gumroad.com/l/the-art-of-midjourney-ai-guide-to-creating-images-from-text).
 
 # \[2023-04-25 Tue\] chatgpt-shell updates
+---
+id: chatgpt-shell-available-on-melpa
+---
 
 About a month ago, I posted about an experiment to build [a ChatGPT Emacs shell](a-chatgpt-emacs-shell/) using [comint mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). Since then, it's turned into a package of sorts, evolving with [user feedback](https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+) and [pull requests](https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed).
 
@@ -2741,6 +2852,9 @@ You've seen `dall-e-shell` in the previous section. Here's what `ob-chatgpt-shel
 Whether you are an existing `chatgpt-shell` user, or would like to give things a try, [installing from MELPA](https://melpa.org/#/chatgpt-shell) should generally make things easier for ya. As I mentioned, `chatgpt-shell` is a young package still. There are unexplored Emacs integrations out there. I'd love to hear about whatever you come up with ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Email](mailto:me__AT__xenodium.com)).
 
 # \[2023-04-22 Sat\] Recording and screenshotting windows: the lazy way
+---
+id: recordscreenshot-windows-the-lazy-way
+---
 
 While there's no substitution for great written documentation, a quick demo can go a long way in conveying what a tool if capable of doing or what a tip/trick can achieve.
 
@@ -2893,6 +3007,9 @@ brew install macosrec
 This is my way to record and screenshot windows the lazy way. How would you tweak to make it yours?
 
 # \[2023-04-20 Thu\] ob-swiftui updates
+---
+id: ob-swiftui-updates
+---
 
 While [experimenting with delegating Markdown](https://indieweb.social/@xenodium/110227186721704189) blocks to [Org babel](https://orgmode.org/worg/org-contrib/babel/) in Emacs [chatgpt-shell](https://github.com/xenodium/chatgpt-shell), I resurrected [ob-swiftui](https://github.com/xenodium/ob-swiftui). A package I had written to execute and render SwiftUI blocks in org babel.
 
@@ -2938,6 +3055,9 @@ The improvements have been pushed to [ob-swiftui](https://github.com/xenodium/ob
 Edit: Added ContentView details.
 
 # \[2023-04-15 Sat\] My Emacs eye candy
+---
+id: my-emacs-eye-candy
+---
 
 I get the occasional question about my Emacs theme, font, and other eye candy. I'm always tickled and happy to share.
 
@@ -3031,6 +3151,9 @@ Most of the items mentioned I pulled from my [Emacs config](https://github.com/x
 What is some of your favorite Emacs eye candy? [reddit](https://www.reddit.com/r/emacs/comments/12nbb9x/my_emacs_eye_candy/) / [mastodon](https://indieweb.social/@xenodium/110204024063552954) / [twitter](https://twitter.com/xenodium/status/1647293089394900993).
 
 # \[2023-04-08 Sat\] shell-maker, a maker of Emacs shells
+---
+id: a-shell-maker
+---
 
 A few weeks ago, I wrote about an experiment to bring [ChatGPT to Emacs as a shell](a-chatgpt-emacs-shell/). I was fairly new to both [ChatGPT](https://openai.com/blog/chatgpt) and building anything on top of [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). It was a fun exercise, which also generated some interest.
 
@@ -3079,6 +3202,9 @@ If you plug `shell-maker` into other tools, I'd love to hear about it.
 Happy shell making!
 
 # \[2023-04-06 Thu\] Flat Habits 1.1.4 released
+---
+id: flat-habits-114-released
+---
 
 [Flat Habits](https://flathabits.com/) 1.1.4 is now available on the [App Store](https://apps.apple.com/app/id1558358855).
 
@@ -3110,6 +3236,9 @@ If you care about how your data is stored, Flat Habits is powered by [org](https
 Is Flat Habits helping you keep up with your habits? Please [rate/review](https://apps.apple.com/app/id1558358855?action=write-review) 😊
 
 # \[2023-03-21 Tue\] A ChatGPT Emacs shell
+---
+id: a-chatgpt-emacs-shell
+---
 
 UPDATE: `chatgpt-shell` [has evolved a bit](chatgpt-shell-available-on-melpa/) and is now [on MELPA](https://melpa.org/#/chatgpt-shell).
 
@@ -3138,6 +3267,9 @@ I've uploaded the code to GitHub as a tiny [chatgpt-shell](https://github.com/xe
 Let's see where it all goes. Pull requests for improvements totally welcome ;-)
 
 # \[2023-03-04 Sat\] `*scratch*` a new minimal org mode scratch area for iOS
+---
+id: scratch-a-minimal-scratch-area
+---
 
 While we already have lots of note-taking apps on iOS, I wanted a minimal `*scratch*` area (à la Emacs), so I built one.
 
@@ -3170,6 +3302,9 @@ Find it useful? Please help me spread the word. Tell your friends.
 </div>
 ```
 # \[2023-01-29 Sun\] Chicken Karaage recipe
+---
+id: chicken-karaage-recipe
+---
 
 Huge fan of Chicken Karaage, but never really made it at home until recently.
 
@@ -3236,6 +3371,9 @@ This time heat up the oil at roughly 200°C. This is a quick in-and-out action t
 This is totally optional, but I'm a fan of both Kewpie mayo and Sriracha sauce. You can dip your chicken in either or both!
 
 # \[2023-01-10 Tue\] Emacs: org-present in style
+---
+id: emacs-org-present-in-style
+---
 
 I had been meaning to check out David Wilson's [System Crafters](https://systemcrafters.cc) post detailing [his presentations style](https://systemcrafters.net/emacs-tips/presentations-with-org-present/) achieved with the help of [org-present](https://github.com/rlister/org-present) and his own customizations. If you're looking for ways to present from Emacs itself, David's post is well worth a look.
 
@@ -3364,6 +3502,9 @@ Future versions of this code will likely be updated in [my Emacs org config](htt
 Removed a bunch of duplication and now rely primarily on existing `org-next-visible-heading`, `org-next-link`, and `org-next-block`.
 
 # \[2023-01-08 Sun\] Emacs: insert and render SF symbols
+---
+id: emacs-insert-and-render-sf-symbols
+---
 
 About a week ago, I added an Emacs [function to insert SF symbol names](emacs-macro-me-some-sf-symbols/). This is specially useful for SwiftUI. I didn't bother too much with inserting symbols themselves since I hadn't figured out a way to render them for all buffers. That's now changed.
 
@@ -3387,6 +3528,9 @@ I've added `sf-symbol-insert` to [sf.el](https://github.com/xenodium/dotsies/blo
 ![](https://xenodium.com/images/emacs-insert-and-render-sf-symbols/sf-insert-trimmed_x1.8.webp)
 
 # \[2022-12-31 Sat\] Emacs: Macro me some SF Symbols
+---
+id: emacs-macro-me-some-sf-symbols
+---
 
 For inserting SF Symbols in SwiftUI, I typically rely on Apple's [SF Symbols app](https://developer.apple.com/sf-symbols/) to browse the symbols's catalog. Once I find a symbol I'm happy with, I copy its name and paste it into my Swift source. This works fairly well.
 
@@ -3486,6 +3630,9 @@ The full source to [sf-symbol-insert-name](https://github.com/xenodium/dotsies/b
 There is some redundancy in the snippet I had forgotten to remove. Either way, latest version at [sf.el](https://github.com/xenodium/dotsies/blob/main/emacs/ar/sf.el).
 
 # \[2022-12-18 Sun\] Emacs: ffmpeg and macOS aliasing commands
+---
+id: emacs-ffmpeg-and-macos-alias-commands
+---
 
 On a recent mastodon [post](https://twit.social/@chris_spackman/109531700714365786), Chris Spackman mentioned he uses Emacs to save [ffmpeg](https://ffmpeg.org/) commands he's figured out for later usage. Emacs is great for this kind of thing. I've tried different approaches over time and eventually landed on [dwim-shell-command](https://github.com/xenodium/dwim-shell-command), a small package I wrote. Like Chris, I also wanted a way to invoke magical incantations of known shell commands without having to remember all the details.
 
@@ -3535,6 +3682,9 @@ It's highly unlikely I'll remember the AppleScript snippet (are there better way
 All of these are now included in [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el), which you can optionally load after installing [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) from [MELPA](https://melpa.org/#/dwim-shell-command).
 
 # \[2022-12-12 Mon\] Emacs: Context-aware yasnippets
+---
+id: emacs-generate-a-swift-initializer
+---
 
 Back in 2020, I wrote a semi-automatic [yasnippet](https://github.com/joaotavora/yasnippet) to [generate Swift initializers](smarter-snippets/). I say semi-automatic because it could have been a little smarter. While it helped generate some of the code, what I really wanted was full context-aware generation. The Swift struct already had a few properties defined, so a smarter yasnippet should have been able to use this info for code generation.
 
@@ -3687,6 +3837,9 @@ All code is now pushed to my [config repo](https://github.com/xenodium/dotsies/c
     -   [tree-sitter-swift](https://github.com/alex-pinkus/tree-sitter-swift) (by [Alex Pinkus](https://twitter.com/alexpinkus))
 
 # \[2022-11-13 Sun\] Emacs: quickly killing processes
+---
+id: emacs-quick-kill-process
+---
 
 Every so often, I need to kill the odd unresponsive process. While I really like `proced` (check out Mickey Petersen's [article](https://www.masteringemacs.org/article/displaying-interacting-processes-proced)), I somehow find myself using macOS's [Activity Monitor](https://support.apple.com/en-bw/guide/activity-monitor/actmaea30277/mac) to this purpose. Kinda odd, considering I prefer to do these kinds of things from Emacs.
 
@@ -3761,6 +3914,9 @@ I've moved `dwim-shell-commands-kill-process` from my Emacs [config](https://git
 If you prefer the previous version (without a dependency on [dwim-shell-command](https://github.com/xenodium/dwim-shell-command)), have a look at the [initial commit](https://github.com/xenodium/dotsies/commit/eac4f892eab7a80740ee8ce0c727381886442fb6).
 
 # \[2022-11-06 Sun\] Hey Emacs, change the default macOS app for…
+---
+id: hey-emacs-change-the-default-macos-app-for
+---
 
 A few weeks ago, I [added an "open with"](emacs-open-with-macos-app/) command to [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
 
@@ -3810,6 +3966,9 @@ As usual, I've added `dwim-shell-commands-macos-set-default-app` to [dwim-shell-
 Did you find this tiny integration useful? Check out [Hey Emacs, where did I take that photo?](hey-emacs-where-did-i-take-that-photo/)
 
 # \[2022-11-02 Wed\] Hey Emacs, where did I take that photo?
+---
+id: hey-emacs-where-did-i-take-that-photo
+---
 
 I was recently browsing through an old archive of holiday photos (from [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) of course). I wanted to know where the photo was taken, which got me interested in extracting [Exif](https://en.wikipedia.org/wiki/Exif) metadata.
 
@@ -3899,6 +4058,9 @@ Displaying the photo's address in the minibuffer is indeed pretty nifty, but wha
 Got suggestions? Improvements? All three functions are now included in [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el) as part of [dwim-shell-command](https://github.com/xenodium/dwim-shell-command). Pull requests totally welcome ;)
 
 # \[2022-10-24 Mon\] Emacs: A welcoming experiment
+---
+id: emacs-a-welcoming-experiment
+---
 
 The `*scratch*` buffer is the first thing I see when I launch an Emacs session. Coupled with [persistent-scratch](https://github.com/Fanael/persistent-scratch), it's served me well over the years. I gotta say though, my scratch buffer accumulates random bits and often becomes a little messy. It's not the most visually appealing landing buffer when launching Emacs. But who cares, I'm only a `C-x b` binding away from invoking `ivy-switch-buffer` to get me wherever I need to be. It's powered by `ivy-use-virtual-buffers`, which remembers recent files across sessions.
 
@@ -3948,6 +4110,9 @@ I didn't know a whole lot on how to go about it, so I took a peak at [emacs-dash
 This being Emacs, I can bend it as far as needed. In my case, I didn't need much, so I can probably stop here. It was a fun experiment. I'll even [try using it](https://github.com/xenodium/dotsies/commit/90c689def913a9bccdd408ef609c7f99a5cce1fb) for a little while and see if it sticks. I'm sure there's plenty more that could be handled (edge cases, resizes, etc.), but if you want something more established, consider something like [emacs-dashboard](https://github.com/emacs-dashboard/emacs-dashboard) instead. I haven't used it myself, but is [pretty popular](https://melpa.org/#/dashboard).
 
 # \[2022-10-14 Fri\] Emacs: Open with macOS app
+---
+id: emacs-open-with-macos-app
+---
 
 On a recent Reddit [comment](https://www.reddit.com/r/emacs/comments/y2dfma/comment/is4ygl8/?utm_source=share&utm_medium=web2x&context=3), tdstoff7 asked if I had considered writing an "Open with" DWIM shell command for those times one would like to open a file externally using an app other than the default. I hadn't, but nice idea.
 
@@ -3987,6 +4152,9 @@ There's likely a better way of getting a list of available apps (happy to take s
 `dwim-shell-commands-macos-open-with` is now included in [dwim-shell-command](https://github.com/xenodium/dwim-shell-command), available on [melpa](https://melpa.org/#/dwim-shell-command). What other uses can you find for it?
 
 # \[2022-10-12 Wed\] Improving on Emacs macOS sharing
+---
+id: emacs-macos-sharing-dwim-style-improved
+---
 
 A quick follow-up to [Emacs: macOS sharing (DWIM style)](emacs-macos-share-from-dired-dwim-style/)… Though functional, the implementation had a couple of drawbacks.
 
@@ -4075,6 +4243,9 @@ Here's the new snippet, now [pushed to dwim-shell-commands.el](https://github.co
 [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is available on [melpa](https://melpa.org/#/dwim-shell-command). What other uses can you find for it?
 
 # \[2022-10-12 Wed\] Emacs: macOS sharing (DWIM style)
+---
+id: emacs-macos-share-from-dired-dwim-style
+---
 
 UPDATE: See an improved implementation [here](emacs-macos-sharing-dwim-style-improved).
 
@@ -4185,6 +4356,9 @@ I've pushed `dwim-shell-commands-macos-share` to [dwim-shell-commands.el](https:
 [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is available on [melpa](https://melpa.org/#/dwim-shell-command). What other uses can you find for it?
 
 # \[2022-10-09 Sun\] Emacs: Reveal in macOS Finder (DWIM style)
+---
+id: emacs-reveal-in-finder-dwim-style
+---
 
 Just the other day, [Graham Voysey](https://github.com/gvoysey) filed an [escaping bug](https://github.com/xenodium/dwim-shell-command/issues/3) against [dwim-shell-command](https://github.com/xenodium/dwim-shell-command). Once he verified the the fix, he also posted [two uses](https://github.com/xenodium/dwim-shell-command/issues/3#issuecomment-1272413459) of `dwim-shell-command-on-marked-files`. I've made some small tweaks, but here's the gist of it:
 
@@ -4273,6 +4447,9 @@ I should mention the webp animation above was also created using my trusty `dwim
 UPDATE: Most DWIM shell commands I use are available as part of [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). See `dwim-shell-command`'s [install command line utilities](https://github.com/xenodium/dwim-shell-command#install-command-line-utilities).
 
 # \[2022-10-01 Sat\] Plain Org v1.5 released
+---
+id: plain-org-v15-released
+---
 
 If you haven't heard of [Plain Org](https://plainorg.com), it gives you access to [org](https://orgmode.org) files on iOS while away from your beloved [Emacs](https://www.gnu.org/software/emacs/).
 
@@ -4288,6 +4465,9 @@ Hadn't had time to post, but v1.5 has been available on the [App Store](https://
 I love org markup, but we (iPhone + org users) are a fairly niche bunch. If you're finding Plain Org useful, **please help support this effort** by getting the word out. Tell your friends, [tweet](https://twitter.com/intent/tweet?text=Plain%20Org%20https%3A%2F%2Fapps.apple.com%2Fapp%2Fid1578965002%20), or blog about it. Or just support via the [App Store](https://apps.apple.com/app/id1578965002) :)
 
 # \[2022-10-01 Sat\] dwim-shell-command usages: pdftotext and scp
+---
+id: dwim-shell-command-usages-pdftotext-and-scp
+---
 
 [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is a little Emacs package I wrote to enable crafting more reusable shell commands. I intended to use it as an [async-shell-command](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html) alternative (and I do these days). The more surprising win was bringing lots of command-line utilities (sometimes with complicated invocations) and making them quickly accessible. I no longer need to remember their respective parameters, order, flags, etc.
 
@@ -4327,6 +4507,9 @@ Take [u/TiMueller](https://www.reddit.com/user/TiMueller/)'s Reddit comment, [sh
 [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is available on [MELPA](https://melpa.org/#/dwim-shell-command) (531 downloads as of 2022-10-01).
 
 # \[2022-09-17 Sat\] \$ rm Important.txt (uh oh!)
+---
+id: rm-important-txt-oh-sht
+---
 
 Setting Emacs up to use your system trash can potentially save your bacon if you mistakenly delete a file, say from [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html).
 
@@ -4347,6 +4530,9 @@ You can enable macOS system trash in Emacs by setting `trash-directory` along wi
 ```
 
 # \[2022-09-11 Sun\] Cycling through window layouts (revisited)
+---
+id: cycling-through-window-layout-revisited
+---
 
 Last year, I wrote a little script to [cycle through window layouts via Hammerspoon](cycling-window-layouts-via-hammerspoon). The cycling set I chose didn't stick, so here's another go.
 
@@ -4394,6 +4580,9 @@ Looping through layouts is done with a global key-binding of `option f` or, if f
 For those unfamiliar with [Hammerspoon](http://hammerspoon.org/)… If you're a tinkerer and a macOS user, you'd love [Hammerspoon](http://hammerspoon.org/). Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. For example, here's a stint at [writing a narrowing utility for macOS](emacs-utilities-for-your-os/) using [chooser](http://www.hammerspoon.org/docs/hs.chooser.html).
 
 # \[2022-08-18 Thu\] dwim-shell-command with template prompts
+---
+id: dwim-shell-command-with-template-prompts
+---
 
 Somewhat recently, I wanted to quickly create an empty/transparent png file. [ImageMagick](https://imagemagick.org/)'s convert has you covered here. Say you want a transparent 200x400 image, you can get it with:
 
@@ -4441,6 +4630,9 @@ With template queries in mind, `dwim-shell-commands-make-transparent-png` can be
 Note: Any repeated queries (same prompt and default) are treated as equal. That is, ask the user once and replace everywhere. If you'd like to request separate values, change either prompt or the default value.
 
 # \[2022-08-14 Sun\] Seamless command-line utils
+---
+id: seamless-command-line-utils
+---
 
 Just the other day, I received a restaurant menu split into a handful of image files. I wanted to forward the menu to others but figured I should probably send it as a single file.
 
@@ -4549,6 +4741,9 @@ What other use-cases would you consider? `dwim-shell-command` is [available on m
 2022-11-14 dwim-shell-commands.el list updated.
 
 # \[2022-08-03 Wed\] Emacs freebie: macOS emoji picker
+---
+id: emacs-freebie-macos-emoji-picker
+---
 
 I recently ran a little experiment to bring macOS's [long-press-accents-like behavior](an-accentuated-emacs-experiment/) to Emacs. What I forgot to mention is that macOS's character viewer *just works* from our beloved editor.
 
@@ -4564,6 +4759,9 @@ Edits:
 -   The 🌐 key is a feature on newer MacBook hardware and likely needs configuration (thanks [Fabbi-](https://www.reddit.com/r/emacs/comments/wfja3n/comment/iivnwxt/?utm_source=share&utm_medium=web2x&context=3)).
 
 # \[2022-08-01 Mon\] dwim-shell-command video streams
+---
+id: dwim-shell-command-video-streams
+---
 
 I continue hunting for use-cases I can migrate to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command)… After adding [clipboard support](dwim-shell-command-improvements/) (via []{#cb}) I found one more.
 
@@ -4591,6 +4789,9 @@ What's the secret sauce? Very little. Invoke the awesome [mpv](https://mpv.io/) 
 The typical progress bar kinda got in the way, so I added a new option `:no-progress` to `dwim-shell-command-on-marked-files`, so it can be used for cases like this one.
 
 # \[2022-07-30 Sat\] An accentuated Emacs experiment (à la macOS)
+---
+id: an-accentuated-emacs-experiment
+---
 
 macOS has a wonderful input mechanism where you press and hold a key on your keyboard to display the accent menu. It's easy to internalize: *long press "a" if you want to input "á"*.
 
@@ -4716,6 +4917,9 @@ As a bonus, it ocurred to me that I could use the same *press-and-hold* to handl
 ![](https://xenodium.com/images/an-accentuated-emacs-experiment/porque.webp)
 
 # \[2022-07-28 Thu\] dwim-shell-command improvements
+---
+id: dwim-shell-command-improvements
+---
 
 Added a few improvements to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command).
 
@@ -4790,6 +4994,9 @@ By default, `dwim-shell-command` shows all supported placeholders. You can chang
 The changes are pretty fresh. Please use with caution (specially the counter support).
 
 # \[2022-07-24 Sun\] dwim-shell-command on Melpa
+---
+id: dwim-shell-command-on-melpa
+---
 
 <figure width="70%" height="70%">
 <img src="https://xenodium.com/images/dwim-shell-command-on-melpa/clone.webp" />
@@ -4828,6 +5035,9 @@ I've written about `dwim-shell-command` before:
 -   [More Examples of DWIM Shell Commands](https://irreal.org/blog/?p=10660  )
 
 # \[2022-07-16 Sat\] A lifehack for your shell
+---
+id: a-lifehack-for-your-shell
+---
 
 ![](https://xenodium.com/images/a-lifehack-for-your-shell/unzip_x2.gif)
 
@@ -4909,6 +5119,9 @@ If the archive didn't have a root dir, it can [litter your current directory](ht
 Nice to see other options suggested [dtrx](https://github.com/moonpyk/dtrx) ([comment](https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_mutdjl)), [archiver](https://github.com/mholt/archiver) ([comment](https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_nlsk7w)), [unar](https://github.com/ashang/unar) ([comment](https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_90dk1l)), bsdtar from [libarchive](https://github.com/libarchive/libarchive) ([comment](https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_ojy6ah)), [unp](https://packages.debian.org/stable/unp), [patool](https://wummel.github.io/patool/), and the tangentially related [zgrep](https://www.nongnu.org/zutils/zutils.html) ([comment](https://lobste.rs/s/qaimmg/lifehack_for_your_shell#c_vp8fdw)).
 
 # \[2022-07-13 Wed\] Emacs zones to lift you up
+---
+id: emacs-zones-to-lift-you-up
+---
 
 ![](https://xenodium.com/images/emacs-zoneb-tob-lift-you-up/zone.gif)
 
@@ -4921,6 +5134,9 @@ If the built-in zones don't do it for ya, check out the few on melpa ([nyan](htt
 So, my nostalgic bit of elisp dates `Jun 17 2016`: a basic but functional zone ([zone-words](https://github.com/xenodium/dotsies/blob/main/emacs/ar/zone-words.el)), displaying words from [WordNet](http://wordnet.princeton.edu/). Surely the package can use plenty of improvements ([here's one](https://github.com/xenodium/dotsies/commit/00215e215be1413ea9d0085dd2de5123c635b8c0)), but hey this is Emacs and pretty much all existing code will run, no matter how old. In Emacs time, 2016 is practically yesterday!
 
 # \[2022-07-10 Sun\] Emacs: DWIM shell command (multi-language)
+---
+id: emacs-dwim-shell-command-multi-language
+---
 
 UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is now available on [melpa](https://melpa.org/#/dwim-shell-command).
 
@@ -4978,6 +5194,9 @@ Or, maybe you prefer Swift and already had a snippet for the same thing?
 You can surely solve the same problem in elisp, but hey it's nice to have options and flexibility.
 
 # \[2022-07-09 Sat\] png to icns (Emacs DWIM style)
+---
+id: png-to-icns-emacs-dwim-style
+---
 
 UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is now available on [melpa](https://melpa.org/#/dwim-shell-command).
 
@@ -5011,6 +5230,9 @@ Since [writing a DWIM version of the shell-command](emacs-dwim-shell-command/), 
 ```
 
 # \[2022-07-09 Sat\] Emacs: Password-protect current pdf (revisited)
+---
+id: emacs-password-protect-current-pdf-revisited
+---
 
 UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is now available on [melpa](https://melpa.org/#/dwim-shell-command).
 
@@ -5065,6 +5287,9 @@ This really changes things for me. I'll be more inclined to add more of these ti
 What command line utils would you use?
 
 # \[2022-07-07 Thu\] Emacs DWIM shell-command
+---
+id: emacs-dwim-shell-command
+---
 
 UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is now available on [melpa](https://melpa.org/#/dwim-shell-command).
 
@@ -5188,6 +5413,9 @@ UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is 
 The code for [dwim-shell-command.el](https://github.com/xenodium/dotsies/blob/main/emacs/ar/dwim-shell-command.el) is likely a bit rough still, but you can take a peak if interested. Keep in mind this is DWIM, tailored for what ✨I✨ mean. Some of the current behavior may not be your cup of tea, but this is Emacs. You can bend it to do what ✨you✨ mean. Happy Emacsing.
 
 # \[2022-06-02 Thu\] Emacs: Password-protect current pdf
+---
+id: emacs-password-protect-current-pdf
+---
 
 UPDATE: Check out [Password-protect current pdf (revisted)](emacs-password-protect-current-pdf-revisited) for a simpler version.
 
@@ -5225,6 +5453,9 @@ So what does `qpdf` have to do with Emacs? Command-line utilities are easy to in
 ```
 
 # \[2022-04-24 Sun\] Plain Org v1.4 released
+---
+id: plain-org-v14-released
+---
 
 [Plain Org](https://plainorg.com) v1.4 is now available on the [App Store](https://apps.apple.com/app/id1578965002).
 
@@ -5255,6 +5486,9 @@ Note: There's a limitation. Form feed characters at the end of a heading aren't 
 Increased all button tap areas in edit toolbar. This should hopefully improve interaction.
 
 # \[2022-04-15 Fri\] Plain Org v1.3 released
+---
+id: plain-org-v130-released
+---
 
 [Plain Org](https://plainorg.com) v1.3 is now available on the [App Store](https://apps.apple.com/app/id1578965002). The update receives a few features, bug fixes, and improvements.
 
@@ -5305,6 +5539,9 @@ Many roundtripping fidelity improvements included in 1.3. Shoutout to [u/Oerm](h
 -   Fixes org syntax inadvertently parsed within begin_src blocks (leading to data loss).
 
 # \[2022-03-27 Sun\] Plain Org v1.2.1 released
+---
+id: plain-org-v121-released
+---
 
 [Plain Org](https://plainorg.com) v1.2.1 is now available on the [App Store](https://apps.apple.com/app/id1578965002). The update receives minor features, bug fixes, and improvements.
 
@@ -5371,6 +5608,9 @@ After adding new tasks via iOS's share sheet, if the item was added to a file ot
 -   Fix menu tapping for iPad.
 
 # \[2022-03-26 Sat\] Emacs DWIM: swiper vs isearch vs phi-search
+---
+id: emacs-dwim-swiper-vs-isearch-vs-phi-search
+---
 
 ![](https://xenodium.com/images/emacs-dwim-swiper-vs-isearch-vs-phi-search/search-dwim.gif)
 
@@ -5437,6 +5677,9 @@ The above snippet searches forward, but I'm feeling a little off-balance. Let's 
 These may be on the hacky side of things, but hey… they do the job. If there are better/supported ways of accomplishing a similar thing, I'd love to [hear about it](https://twitter.com/xenodium).
 
 # \[2022-03-12 Sat\] Grandma's vanilla pound cake
+---
+id: grandmas-vanilla-pound-cake
+---
 
 ![](https://xenodium.com/images/grandmas-vanilla-pound-cake/pound_cake.jpg)
 
@@ -5487,6 +5730,9 @@ My grandmother Hilda used to bake this for us grandkids. I don't know the origin
 -   Use a cake tester after 60 minutes to decide how much longer to bake for (if needed).
 
 # \[2022-03-05 Sat\] Emacs: viewing webp images
+---
+id: emacs-viewing-webp-images
+---
 
 There's a recent reddit post asking how to [view webp images in Emacs](https://www.reddit.com/r/emacs/comments/t76isx/viewing_webp_images_in_emacs/). I didn't know the answer, but it's something I had wanted for some time. This post was a nice reminder to go and check things out. Was happy to [contribute an answer](https://www.reddit.com/r/emacs/comments/t76isx/comment/hzft7ww/?utm_source=share&utm_medium=web2x&context=3).
 
@@ -5520,6 +5766,9 @@ brew install imagemagick
 ```
 
 # \[2022-02-21 Mon\] Emacs: Fuzzy search Apple's online docs
+---
+id: emacs-fuzzy-search-apples-online-docs
+---
 
 ![](https://xenodium.com/images/emacs-fuzzy-search-apples-online-docs/color_search.gif)
 
@@ -5573,6 +5822,9 @@ Back in June 2020, I wrote a snippet to [fuzzy search hackingwithswift.com](emac
 ```
 
 # \[2022-02-13 Sun\] Plain Org v1.2 released
+---
+id: plain-org-v12-released
+---
 
 Although [Plain Org](https://plainorg.com) v1.2 has been in the [App Store](https://apps.apple.com/app/id1578965002) for a little while, the release write-up was overdue, sorry. The update receives some new features and bugfixes.
 
@@ -5670,6 +5922,9 @@ v1.2 makes the navigation bar feel more at home on your iPhone. It uses a large 
 </div>
 ```
 # \[2022-01-03 Mon\] Happy New Year and forming new habits
+---
+id: happy-new-year-and-forming-new-habits
+---
 
 Hacker News has a [summary of Atomic Habits](https://news.ycombinator.com/item?id=29774859) (the [book](https://jamesclear.com/atomic-habits)). In my case, I really enjoyed reading the entire book. I liked its narrative, mixing [actionable]{.underline} and [concrete]{.underline} advice with personal stories and experiments.
 
@@ -5695,6 +5950,9 @@ There's a surplus of habit-tracking apps on the app stores. I built yet another 
 </div>
 ```
 # \[2021-12-12 Wed\] Plain Org v1.1 released 🎄☃️
+---
+id: plain-org-v11-released
+---
 
 [Plain Org](https://plainorg.com) v1.1 is now available on the [App Store](https://apps.apple.com/app/id1578965002). The update receives new features and bugfixes.
 
@@ -5800,6 +6058,9 @@ Although .org files are plain text files, they aren't always recognized by other
 </div>
 ```
 # \[2021-11-28 Sun\] Emacs bends again
+---
+id: emacs-bends-again
+---
 
 While adding more rendering capabilities to [Plain Org](https://plainorg.com), it soon became apparent some sort of screenshot/snapshot testing was necessary to prevent regressing existing features. That is, we first generate a rendered snapshot from a given org snippet, followed by some visual inspection, right before we go and save the blessed snapshot (often referred to as golden) to our project. Future changes are validated against the golden snapshot to ensure rendering is still behaving as expected.
 
@@ -5984,6 +6245,9 @@ Newly-taken snapshot does not match reference.
 ```
 
 # \[2021-11-10 Wed\] Plain Org has joined the chat (iOS)
+---
+id: plain-org-has-joined-the-chat
+---
 
 The App Store is a crowded space when it come to markdown apps. A quick search yields a wonderful wealth of choice. Kinda overwhelming, but a great problem to have nonetheless.
 
@@ -6053,6 +6317,9 @@ Today Plain Org joins the likes of [Beorg](https://beorg.app/), [MobileOrg](http
 </p>
 ```
 # \[2021-09-19 Sun\] Plain Org for iOS (a month later)
+---
+id: plain-org-for-ios-a-month-later
+---
 
 A month ago, I posted about my desire to [bring org tasks/TODOs to iOS](org-habits-on-ios-check-tasks-youre-next/) and make them quickly available from my iPhone.
 
@@ -6071,6 +6338,9 @@ If, like me, you prefer dark mode. The app's got ya covered:
 You can also check out progress over at the [r/plainorg](https://www.reddit.com/r/plainorg/) subreddit.
 
 # \[2021-08-19 Thu\] Org habits on iOS? Check! Tasks, you're next
+---
+id: org-habits-on-ios-check-tasks-youre-next
+---
 
 I'm an [org mode](https://orgmode.org) fan. This blog is powered by org. It's more of an accidental blog that started as a [single org file](https://github.com/xenodium/xenodium.github.io/blob/master/index.org) keeping notes. I use [org babel](https://orgmode.org/worg/org-contrib/babel/intro.html) too. Oh and [org habits](https://orgmode.org/manual/Tracking-your-habits.html). My never-ending list of TODOs is also powered by org. I manage all of this from Emacs and peek at TODOs using [org agenda](https://orgmode.org/manual/Agenda-Views.html). This all works really well while I'm sitting in front of my laptop running Emacs.
 
@@ -6085,6 +6355,9 @@ Moving on to org tasks/TODOs… I want something fairly frictionless while on th
 I now have an early implementation of sorts, [available on TestFlight](https://www.reddit.com/r/plainorg/comments/p5bnji/ios_more_improvements_alpha_builds_now_on/). If you'd like to give it a try, *send me an email address* to receive the the invite. Ping me on [reddit](https://reddit.com/u/xenodium), [twitter](https://twitter.com/xenodium), or email me at "plainorg" + "@" + "xenodium.com".
 
 # \[2021-07-11 Sun\] Flat Habits 1.1 released
+---
+id: flat-habits-11-released
+---
 
 [Flat Habits](https://flathabits.com/) 1.1 is now available on the [App Store](https://apps.apple.com/app/id1558358855). Flat Habits is a habit tracker that’s mindful of your time, data, and privacy. It's powered by [org](https://orgmode.org) plain text markup, enabling you to use your [favorite editor](frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at your habit data.
 
@@ -6135,6 +6408,9 @@ Hopefully you don't run into issues, but if you do, I hope the app helps ya sort
 -   Undoing habit addition on iPad removes streak/calendar view.
 
 # \[2021-07-11 Sun\] macOS: Show in Finder / Show in Emacs
+---
+id: show-in-finder--show-in-emacs
+---
 
 From Christian Tietze's [Open macOS Finder Window in Emacs Dired](https://christiantietze.de/posts/2021/07/open-finder-window-in-dired/), I learned about [reveal-in-osx-finder](https://github.com/kaz-yos/reveal-in-osx-finder). This is handy for the few times I want to transition from Emacs to Finder for file management. I say few times since Emacs's directory editor, [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html), is just awesome. I've written about dired customizations [here](showhide-emacs-dired-details-in-style/) and [here](showhide-emacs-dired-details-in-style/), but since dired is *just another buffer,* you can apply your Emacs magic like multiple cursors to [batch rename files in an editable dired buffer](batch-renaming-with-counsel-find-dired-and-wdired/).
 
@@ -6170,6 +6446,9 @@ On a side note, Emacs defaults to creating new frames when opening files via "Op
 ```
 
 # \[2021-06-27 Sun\] Emacs: smarter search and replace
+---
+id: emacs-smarter-search-and-replace
+---
 
 ![](https://xenodium.com/images/emacs-smarter-search-and-replace/smarter_replace.gif)
 
@@ -6218,6 +6497,9 @@ It's worth noting that *replace-regexp*'s cousin [query-replace-regexp](https://
 Happy searching and replacing!
 
 # \[2021-06-20 Sun\] Previewing SwiftUI layouts in Emacs (revisited)
+---
+id: previewing-swiftui-layouts-in-emacs-revisited
+---
 
 Back in May 2020, I shared a snippet to extend [ob-swift](https://github.com/zweifisch/ob-swift) to [preview SwiftUI layouts using Emacs org blocks](swiftui-layout-previews-using-emacs-org-blocks/).
 
@@ -6379,6 +6661,7 @@ The two snippets give a general sense of what's needed to enable org babel to ha
 ---
 id: yasnippet-in-emacs-eshell
 ---
+
 ![](https://xenodium.com/images/yasnippet-in-emacs-eshell/yas-eshell.gif)
 
 I recently [tweeted](https://twitter.com/xenodium/status/1404746233860837378) that Vivek Haldar's [10-year old post](https://blog.vivekhaldar.com/post/3996068979/the-levels-of-emacs-proficiency) rings true today just the same. He writes about [the levels of Emacs proficiency](https://blog.vivekhaldar.com/post/3996068979/the-levels-of-emacs-proficiency). All 6 levels are insightful in their own right, but for the sake of this post, let's quote an extract from level *4. Shell inside Emacs*:
@@ -6418,6 +6701,9 @@ for f in ${1:*}; do ${2:echo} $f; done $0
 ps. Looks like [vterm](https://github.com/akermu/emacs-libvterm), [term](https://www.gnu.org/software/emacs/manual/html_node/emacs/Term-Mode.html), or [ansi-term](https://www.emacswiki.org/emacs/AnsiTerm) work too. See Shane Mulligan's post: [Use YASnippets in term and vterm in emacs](https://mullikine.github.io/posts/use-yasnippets-in-term/).
 
 # \[2021-06-16 Wed\] xcodebuild's SPM support (Xcode 11)
+---
+id: xcodebuilds-spm-support-xcode-11
+---
 
 Had been a while since I looked into generating Xcode projects from a Swift package. On my latest use of the *generate-xcodeproj* subcommand, I was greeted by a nice ~~warning~~ surprise…
 
@@ -6483,6 +6769,9 @@ xcodebuild build -quiet -scheme FooBar -destination 'platform=macOS,variant=Mac 
 ```
 
 # \[2021-06-06 Sun\] Emacs org block completion on melpa
+---
+id: emacs-org-block-completion-on-melpa
+---
 
 When enabled, the character "\<" triggers company completion of org blocks.
 
@@ -6493,6 +6782,9 @@ I get the occasional ping to package the [code from this post](emacs-org-block-c
 This was my first time publishing on melpa. The process was very [smooth](https://github.com/melpa/melpa/pull/7593). Big thanks to melpa volunteers!
 
 # \[2021-06-01 Tue\] Emacs DWIM: do what ✨I✨ mean
+---
+id: emacs-dwim-do-what-i-mean
+---
 
 Update: There's a DWIM [follow-up for searching](emacs-dwim-swiper-vs-isearch-vs-phi-search/).
 
@@ -6574,6 +6866,9 @@ I showed how to write your own DWIM command, so you can make Emacs do what ✨yo
 Having said all of this, alphapapa has built a great package with helpers for the org web/link space. It doesn't do what I mean (for now anyway), but it may work for you: [org-web-tools: View, capture, and archive Web pages in Org-mode](https://github.com/alphapapa/org-web-tools)[^2].
 
 # \[2021-05-28 Fri\] Emacs link scraping (2021 edition)
+---
+id: emacs-link-scraping-2021-edition
+---
 
 ![](https://xenodium.com/images/emacs-link-scraping-2021-edition/scrape.png)
 
@@ -6688,10 +6983,16 @@ The 2021 implementation is mostly a tidy-up, removing some cruft, but also uses 
 To power our 2021 link scraper, we've used newer libraries included in more recent versions of Emacs, leveraged an older but solid HTML-parsing package, pulled in org mode (the epicenter of Emacs note-taking), dragged in our favorite completion framework, and tickled our handy browser all by smothering the lot with some elisp glue to make Emacs do exactly what we want. [Emacs does rock](http://emacsrocks.com/).
 
 # \[2021-05-23 Sun\] OCR bookmarks
+---
+id: ocr-bookmarks
+---
 
 -   [schappim/macOCR: Get any text on your screen into your clipboard.](https://github.com/schappim/macOCR).
 
 # \[2021-05-19 Wed\] gpg: decryption failed: No secret key (macOS)
+---
+id: gpg-decryption-failed-no-secret-key-macos
+---
 
     gpg: decryption failed: No secret key
 
@@ -6708,6 +7009,9 @@ gpgconf --kill gpg-agent
 Thank you internet stranger. Balance restored.
 
 # \[2021-05-17 Mon\] Emacs plus –with-native-comp
+---
+id: emacs-plus-with-native-comp
+---
 
 ![](https://xenodium.com/images/emacs-plus-with-native-comp/brew-native-comp.png)
 
@@ -6731,6 +7035,9 @@ Sit tight. Homebrew will build and install some chunky dependencies (including g
 Note: Your init.el needs tweaking to take advantage of native compilation. See my [previous post](trying-out-gccemacs-on-macos/) for how I set mine, or go straight to [my config](https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19).
 
 # \[2021-05-02 Sun\] Cycling window layouts with hammerspoon
+---
+id: cycling-window-layouts-via-hammerspoon
+---
 
 Back in January, Patrik Collison [tweeted](https://twitter.com/patrickc/status/1351650517869465601) about [Rectangle](https://rectangleapp.com/)'s [Todo mode](https://github.com/rxhanson/Rectangle/wiki/Todo-Mode). Rectangle looks great. Although I've not yet adopted it, Todo mode really resonates with me. I've been achieving similar functionality with [hammerspoon](https://www.hammerspoon.org/).
 
@@ -6782,6 +7089,9 @@ hs.hotkey.bind({"alt"}, "F", reframeFocusedWindow)
 ```
 
 # \[2021-04-10 Sat\] Flat Habits meets org agenda
+---
+id: flat-habits-meets-org-agenda
+---
 
 UPDATE: Flat Habits now has its own page at [flathabits.com](https://flathabits.com/).
 
@@ -6799,6 +7109,9 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda ø
 </div>
 ```
 # \[2021-03-23 Tue\] Flat Habits v1.0.1 (org import menu)
+---
+id: flat-habits-v101-org-import-menu
+---
 
 UPDATE: Flat Habits now has its own page at [flathabits.com](https://flathabits.com/).
 
@@ -6821,6 +7134,9 @@ Syncing with your desktop can be achieved by either iCloud or by enabling other 
 Good luck with your habits!
 
 # \[2021-03-17 Wed\] Flat Habits for iOS (powered by org)
+---
+id: flat-habits-for-ios
+---
 
 UPDATE: Flat Habits now has its own page at [flathabits.com](https://flathabits.com/).
 
@@ -6874,6 +7190,9 @@ If you choose to send feedback by email, you have the option to review and attac
 To join TestFlight as a beta tester, you likely gave your email address. If you'd like your email removed, just ask. Note that TestFlight has its own [Terms Of Service](https://www.apple.com/legal/internet-services/itunes/testflight/sren/terms.html).
 
 # \[2021-02-21 Sun\] Frictionless org habits on iOS
+---
+id: frictionless-org-habits-on-ios
+---
 
 UPDATE: Flat Habits now has its own page at [flathabits.com](https://flathabits.com/).
 
@@ -6896,6 +7215,9 @@ If you can sync your org file with your iPhone (ie. Drive/Dropbox/iCloud), and l
 ![](https://xenodium.com/images/frictionless-org-habits-on-ios/filesapp_shorter.gif)
 
 # \[2021-02-20 Sat\] Symbolicating iOS crashes
+---
+id: symbolicating-ios-crashes
+---
 
 ``` {.bash org-language="sh"}
 export DEVELOPER_DIR=$(xcode-select --print-path)
@@ -6903,6 +7225,9 @@ export DEVELOPER_DIR=$(xcode-select --print-path)
 ```
 
 # \[2021-01-23 Sat\] Emacs: mu4e icons
+---
+id: mu4e-icons
+---
 
 Recently spotted [mu4e-marker-icons](https://github.com/stardiviner/mu4e-marker-icons), which adds mu4e icons using [all-the-icons](https://github.com/domtronn/all-the-icons.el).
 
@@ -6925,14 +7250,23 @@ Although I'm not currently using all-the-icons, it did remind me to take a look 
 ```
 
 # \[2021-01-02 Sat\] Luxembourg travel bookmarks
+---
+id: luxembourg-travel-bookmarks
+---
 
 -   [Hiking in Luxembourg - Mullerthal Trail](https://www.mullerthal-trail.lu/en).
 
 # \[2021-01-02 Sat\] South Africa travel bookmarks
+---
+id: south-africa-travel-bookmarks
+---
 
 -   [Blyde River Canyon, South Africa: The Complete Guide](https://www.tripsavvy.com/blyde-river-canyon-south-africa-guide-4157668).
 
 # \[2020-12-29 Tue\] Swift package code coverage (plus Emacs overlay)
+---
+id: swift-package-code-coverage
+---
 
 While playing around with Swift package manager, I had a quick look into code coverage options. Luckily, coverage reporting and exporting are supported out of the box (via [llvm-cov](https://llvm.org/docs/CommandGuide/llvm-cov.html)).
 
@@ -6969,10 +7303,16 @@ After installing coverlay, I enabled the minor mode via *M-x coverlay-minor-mode
 ![](https://xenodium.com/images/swift-package-code-coverage/coverage.png)
 
 # \[2020-12-29 Tue\] Hiking bookmarks
+---
+id: hiking-bookmarks
+---
 
 -   [A growing list of long distance hikes around the world (Hacker News)](https://news.ycombinator.com/item?id=25568856).
 
 # \[2020-12-28 Mon\] Patience
+---
+id: patience
+---
 
 Via [Orange Book](https://twitter.com/orangebook_/status/1291844997097099265?s=12), a reminder to myself:
 
@@ -6985,11 +7325,17 @@ Via [Orange Book](https://twitter.com/orangebook_/status/1291844997097099265?s=1
 I feel like there's an Emacs lesson somewhere in there…
 
 # \[2020-12-26 Sat\] Chess bookmarks
+---
+id: chess-bookmarks
+---
 
 -   [A Beginner's Garden of Chess Openings](https://dwheeler.com/chess-openings/).
 -   [A Beginner's Garden of Chess Openings (2002) (Hacker News)](https://news.ycombinator.com/item?id=25446399).
 
 # \[2020-12-20 Sun\] 40 Coolest neighbourhoods in the world
+---
+id: 40-coolest-neighborhoods-in-the-world
+---
 
 Via TimeOut's [40 Coolest Neighbourhoods in the World Right Now](https://www.timeout.com/coolest-neighbourhoods-in-the-world):
 
@@ -7035,6 +7381,9 @@ Via TimeOut's [40 Coolest Neighbourhoods in the World Right Now](https://www.tim
 40. Banjar Nagi, Ubud
 
 # \[2020-12-05 Sat\] Emacs: Rotate my macOS display
+---
+id: emacs-rotate-my-macos-display
+---
 
 Every so often, I rotate my monitor (vertical vs horizontal) for either work or to watch a movie. macOS enables changing the display rotation via a dropdown menu (under *Preferences \> Displays \> Rotation*) where you can pick between *Standard*, *90°*, *180°*, and *270°*. That's all fine, but what I'd really like is a quick way to toggle between my preferred two choices: *Standard* and *270°*.
 
@@ -7065,6 +7414,9 @@ Turns out, this was pretty simple to accomplish, thanks to Eric Nitardy's [fb-ro
 ```
 
 # \[2020-11-29 Sun\] Emacs: Clone git repo from clipboard
+---
+id: emacs-clone-git-repo-from-clipboard
+---
 
 Cloning git repositories is a pretty common task. For me, it typically goes something like:
 
@@ -7130,6 +7482,9 @@ Comment on [reddit](https://www.reddit.com/r/emacs/comments/k3iter/simplequick_g
 -   Checks clipboard for ssh urls also.
 
 # \[2020-11-23 Mon\] Pulled pork recipe
+---
+id: pulled-pork-recipe
+---
 
 Made pulled pork a couple of times. Freestyled a bit. No expert here, but result was yummie.
 
@@ -7185,6 +7540,9 @@ Use two forks to pull the meat apart.
 ![](https://xenodium.com/images/pulled-pork-recipe/final.jpg)
 
 # \[2020-11-01 Sun\] Zettelkasten bookmarks
+---
+id: zettelkasten-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-25 Fri\]
@@ -7194,6 +7552,9 @@ Use two forks to pull the meat apart.
 -   [Zettelkasten note-taking in 10 minutes · Tomas Vik](https://blog.viktomas.com/posts/slip-box/#fnref:1).
 
 # \[2020-10-28 Wed\] Battlestation bookmarks
+---
+id: battlestation-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-10-28 Wed\]
@@ -7203,6 +7564,9 @@ Use two forks to pull the meat apart.
 -   [/r/battlestations](https://www.reddit.com/r/battlestations/).
 
 # \[2020-10-27 Tue\] Emacs: chaining org babel blocks
+---
+id: emacs-chaining-org-babel-blocks
+---
 
 Recently wanted to chain org babel blocks. That is, aggregate separate source blocks and execute as one combined block.
 
@@ -7262,6 +7626,9 @@ Before I built my own support, I did find that [noweb](https://orgmode.org/manua
 Combining [:noweb](https://orgmode.org/manual/Noweb-Reference-Syntax.html) and [:prologue](https://org-babel.readthedocs.io/en/latest/header-args/#prologue) would have been a great match, if only prologue did expand the noweb reference. I'm sure there's an alternative I'm missing. Either way, it was fun to poke at babel blocks and build my own chaining support.
 
 # \[2020-10-25 Sun\] Emacs: quote wrap all in region
+---
+id: emacs-quote-wrap-all-in-region
+---
 
 As I find myself moving more shell commands into Emacs interactive commands to [create a Swift package/project](http://xenodium.com/emacs-create-a-swift-packageproject/), [enrich dired's featureset](http://xenodium.com/enrich-your-dired-batching-toolbox/), or [search/play Music (macOS)](http://xenodium.com/emacs-searchplay-music-macos/), I often need to take a single space-separated string, make an elisp list of strings, and feed it to functions like *process-lines*. No biggie, but I thought it'd be a fun little function to write: take the region and wrap all items in quotes. As a bonus, made it toggable.
 
@@ -7286,6 +7653,9 @@ As I find myself moving more shell commands into Emacs interactive commands to [
 ```
 
 # \[2020-10-18 Sun\] Emacs: org block complete and edit
+---
+id: emacs-edit-after-org-block-completion
+---
 
 I quickly got used to [Emacs org block company completion](http://xenodium.com/emacs-org-block-company-completion/). I did, however, almost always found myself running *org-edit-special* immediately after inserting completion. I use **C-c '** for that. That's all fine, but it just felt redundant.
 
@@ -7311,6 +7681,9 @@ Or maybe I don't want either in the end? Time will tell, but I now have all thre
 The new option is now in the [company-org-block snippet](https://github.com/xenodium/dotsies/blob/main/emacs/ar/company-org-block.el) with my latest config.
 
 # \[2020-10-11 Sun\] Emacs: create a Swift package/project
+---
+id: emacs-create-a-swift-packageproject
+---
 
 Been playing around with [Swift Package Manager (SPM)](https://swift.org/package-manager/). Creating a new Swift package (ie. project) is pretty simple.
 
@@ -7360,6 +7733,9 @@ Bonus: I won't have to look up SPM options if I ever forget them.
 ```
 
 # \[2020-10-04 Sun\] Improved Ctrl-p/Ctrl-n macOS movement
+---
+id: improved-ctrl-p-ctrl-n-macos-movement
+---
 
 macOS supports many Emacs bindings (out of the box). You can, for example, press C-p and C-n to move the cursor up and down (whether editing text in Emacs or any other macOS app). Jacob Rus's [Customizing the Cocoa Text System](http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html) offers a more in-depth picture and also shows how to customize global macOS keybindings (via DefaultKeyBinding.dict).
 
@@ -7515,6 +7891,9 @@ Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also 
 UPDATE: Ensure bindings are only active when Emacs is [not]{.underline} active.
 
 # \[2020-10-04 Sun\] Basmati rice pudding recipe
+---
+id: basmati-rice-pudding-recipe
+---
 
 ![](https://xenodium.com/images/basmati-rice-pudding-recipe/rice_pudding.jpg)
 
@@ -7551,6 +7930,9 @@ After mixing in the butter, the rice pudding is done. You can serve warm or cold
 Optionally garnish with either pistachios or cinnamon (or both).
 
 # \[2020-09-27 Sun\] Adding images to pdfs (macOS)
+---
+id: adding-images-to-pdfs-macos
+---
 
 The macOS Preview app does a great job inserting signatures to existing pdfs. I was hoping it could overlay images just as easily. Doesn't look like it's possible, without exporting/reimporting to image formats and losing pdf structure. Did I miss something?
 
@@ -7559,6 +7941,9 @@ In any case, I found [formulatepro](https://code.google.com/archive/p/formulatep
 ![](https://xenodium.com/images/adding-images-to-pdfs-macos/formulatepro.png)
 
 # \[2020-09-27 Sun\] DIY bookmarks
+---
+id: diy-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-10-19 Mon\]
@@ -7568,10 +7953,16 @@ In any case, I found [formulatepro](https://code.google.com/archive/p/formulatep
 -   [I’ve spent the last 3 months building the home office of my dreams](https://twitter.com/rosen/status/1317843289530376196).
 
 # \[2020-09-24 Thu\] Skiing bookmarks
+---
+id: skiing-bookmarks
+---
 
 -   [7 far-flung European ski resorts - Lonely Planet](https://www.lonelyplanet.com/articles/remote-ski-resorts-europe).
 
 # \[2020-09-19 Sat\] Emacs: search/play Music (macOS)
+---
+id: emacs-searchplay-music-macos
+---
 
 While trying out macOS's Music app to manage offline media, I wondered if I could easily search and control playback from Emacs. Spoiler alert: yes it can be done and fuzzy searching music is rather gratifying.
 
@@ -7749,6 +8140,9 @@ brew install libmagic
 UPDATE2: Checked in to [dot files](https://github.com/xenodium/dotsies/blob/master/emacs/ar/musica.el).
 
 # \[2020-09-12 Sat\] Cheese cake recipe (no crust)
+---
+id: cheese-cake-recipe-no-crust
+---
 
 ![](https://xenodium.com/images/cheese-cake-recipe-no-crust/berried.jpg)
 
@@ -7831,6 +8225,9 @@ Nom nom. Yum yum.
 I winged this one and it worked out well. Heated up frozen berries with some honey and used it as topping. The whole combo was pretty tasty.
 
 # \[2020-08-28 Fri\] Faster macOS dock auto-hide
+---
+id: faster-macos-dock-auto-hide
+---
 
 ![](https://xenodium.com/images/faster-macos-dock-auto-hide/dock.gif)
 
@@ -7841,6 +8238,9 @@ defaults write com.apple.dock autohide-time-modifier -float 0.2; killall Dock
 ```
 
 # \[2020-08-25 Tue\] Smarter Swift snippets
+---
+id: smarter-snippets
+---
 
 [Jari Safi](https://twitter.com/safijari) published a wonderful Emacs video [demoing python yasnippets in action](https://youtu.be/xmBovJvQ3KU). The constructor snippet, automatically setting ivars, is just magical. I wanted it for Swift!
 
@@ -7888,6 +8288,9 @@ $0
 ```
 
 # \[2020-08-23 Sun\] Swift package manager build for iOS
+---
+id: swift-package-manager-build-for-ios
+---
 
 While playing around with Swift package manager, it wasn't immediately obvious how to build for iOS from the command line. The default behaviour of invoking *swift build* is to build for the host. In my case, macOS. In any case, this was it:
 
@@ -7902,6 +8305,9 @@ xcrun --sdk iphonesimulator --show-sdk-path
 ```
 
 # \[2020-08-23 Sun\] QR code bookmarks
+---
+id: qr-code-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-26 Sat\]
@@ -7912,6 +8318,9 @@ xcrun --sdk iphonesimulator --show-sdk-path
 -   [Show HN: Photo Realistic QR-Codes (Hacker News)](https://news.ycombinator.com/item?id=24158125).
 
 # \[2020-08-16 Sun\] Trying out gccemacs on macOS
+---
+id: trying-out-gccemacs-on-macos
+---
 
 *UPDATE: I'm no longer using these steps. See [Emacs plus –with-native-comp](emacs-plus-with-native-comp/) for an easier alternative.*
 
@@ -8100,6 +8509,9 @@ UPDATE4: Removed homebrew recipe patching. Thanks to Dmitry Shishkin's [instruct
 UPDATE5: Use new flag –with-native-compilation and master branch.
 
 # \[2020-08-02 Sun\] SwiftUI macOS desk clock
+---
+id: swiftui-desk-clock
+---
 
 ![](https://xenodium.com/images/swiftui-desk-clock/everclock.gif)
 
@@ -8209,10 +8621,16 @@ extension NSMenu {
 ```
 
 # \[2020-07-30 Thu\] Mending bookmarks
+---
+id: mending-bookmarks
+---
 
 -   [12 Great Sewing Tips and Tricks ! Best great sewing tips and tricks #7 - YouTube](https://youtu.be/S6UfWgMDlkQ).
 
 # \[2020-06-17 Wed\] ffmpeg bookmarks
+---
+id: ffmpeg-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-05-02 Sun\]
@@ -8224,16 +8642,25 @@ extension NSMenu {
 -   [Stack Videos Horizontally, Vertically, in a Grid With FFmpeg - OTTVerse](https://ottverse.com/stack-videos-horizontally-vertically-grid-with-ffmpeg/).
 
 # \[2020-06-14 Sun\] Black lives matter (BLM) bookmarks
+---
+id: black-lives-matter-blm-bookmarks
+---
 
 -   [Do You Know How Divided White And Black Americans Are On Racism? (FiveThirtyEight)](https://projects.fivethirtyeight.com/racism-polls/).
 -   [It’s Time We Dealt With White Supremacy in Tech](https://marker.medium.com/its-time-we-dealt-with-white-supremacy-in-tech-8f7816fe809).
 -   [The Real Origins of the Religious Right - POLITICO Magazine](https://www.politico.com/magazine/story/2014/05/religious-right-real-origins-107133).
 
 # \[2020-06-14 Sun\] Dogs bookmarks
+---
+id: dogs-bookmarks
+---
 
 -   [All You Need to Know About Romanian Rescue Dogs](https://thedogspov.com/need-know-romanian-rescue-dogs/).
 
 # \[2020-06-06 Sat\] Emacs, search hackingwithswift.com
+---
+id: emacs-search-hackingwithswiftcom
+---
 
 ![](https://xenodium.com/images/emacs-search-hackingwithswiftcom/hws.gif)
 
@@ -8275,6 +8702,9 @@ Turns out, hackingwithswift uses a JSON HTTP request for querying code examples.
 ```
 
 # \[2020-05-23 Sat\] Preview SwiftUI layouts using Emacs org blocks
+---
+id: swiftui-layout-previews-using-emacs-org-blocks
+---
 
 ![](https://xenodium.com/images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif)
 
@@ -8435,6 +8865,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1194224168709083137).
 -   Thanks to Chris Eidhof for PNG support (instead of TIFF). Also TIL Swift's *print* has got a terminator param.
 
 # \[2020-05-22 Fri\] Open Emacs elfeed links in the background
+---
+id: open-emacs-elfeed-links-in-background
+---
 
 ![](https://xenodium.com/images/open-emacs-elfeed-links-in-background/background-browse.gif)
 
@@ -8480,6 +8913,9 @@ ps. I noticed elfeed uses *browse-url-generic* if *elfeed-search-browse-url*'s i
 comments on [twitter](https://twitter.com/xenodium/status/1263839324023525376).
 
 # \[2020-05-11 Mon\] Enrich Emacs dired's batching toolbox
+---
+id: enrich-your-dired-batching-toolbox
+---
 
 ## Update
 
@@ -8565,6 +9001,9 @@ The snippet isn't currently capping the number of processes, but hey we can revi
 Thanks to [Philippe Beliveau](https://github.com/pbeliveau) for pointing out a bug in snippet (now updated) and changes to make it Windows compatible.
 
 # \[2020-05-09 Sat\] Banana oats pancakes recipe
+---
+id: banana-oats-pancakes-recipe
+---
 
 ![](https://xenodium.com/images/banana-oats-pancakes-recipe/banpan.jpg)
 
@@ -8582,6 +9021,9 @@ Really is this easy. Add all ingredients and blend.
 Medium to low heat. Cook for 3 minutes. Flip. Cook for 1 minute. You're done.
 
 # \[2020-05-06 Wed\] Emacs: connect my Bluetooth speaker
+---
+id: emacs-connect-my-bluetooth-speaker
+---
 
 Connecting and disconnecting bluetooth devices on macOS is fairly simple: use the menu bar utility.
 
@@ -8636,6 +9078,9 @@ As a bonus, we can make it remember the last selected device, so you can quickly
 comments on [twitter](https://twitter.com/xenodium/status/1258148035319734273).
 
 # \[2020-05-02 Sat\] Duti: changing default macOS apps
+---
+id: duti-changing-default-macos-apps
+---
 
 Future self example, setting [mpv.io](https://mpv.io/) to open all aiff files on macOS:
 
@@ -8644,6 +9089,9 @@ duti -s io.mpv aiff
 ```
 
 # \[2020-04-26 Sun\] Neapolitan pizza recipe
+---
+id: neapolitan-pizza-recipe
+---
 
 Full disclosure: I'm a complete noob at making pizza. It's my second pizza, but hey, it was tasty and fun to make! Making pizza at home is not as far-fetched as I initially thought.
 
@@ -8775,6 +9223,9 @@ Controversial, but I really like anchovies. Add them post-baking and you're good
 -   [How to Make Perfect Pizza (Gennaro Contaldo - YouTube)](https://www.youtube.com/watch?v=1-SJGQ2HLp8).
 
 # \[2020-04-21 Tue\] Oatmeal cookie recipe
+---
+id: oatmeal-cookie-recipe
+---
 
 ![](https://xenodium.com/images/oatmeal-cookie-recipe/oatcookies.jpg)
 
@@ -8825,6 +9276,9 @@ Wait a little and nom nom nom…
 ps. Full recipe source in [org file](https://github.com/xenodium/xenodium.github.io/blob/master/index.org).
 
 # \[2020-04-21 Tue\] TIL (today I learned) bookmarks
+---
+id: til-today-i-learned-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-04-24 Fri\]
@@ -8838,6 +9292,9 @@ ps. Full recipe source in [org file](https://github.com/xenodium/xenodium.github
 -   [Today I Learned — Sara Soueidan – Freelance-Front-End UI/UX Developer](https://www.sarasoueidan.com/today-i-learned/).
 
 # \[2020-04-19 Sun\] mu/mu4e 1.4 released
+---
+id: mumu4e-14-released
+---
 
 ![](https://xenodium.com/images/mumu4e-14-released/mu14.png)
 
@@ -8868,10 +9325,16 @@ After upgrading. The delay is gone for me ø/
 comments on [twitter](https://twitter.com/xenodium/status/1251852526246379520).
 
 # \[2020-04-14 Tue\] Libya travel bookmarks
+---
+id: libya-travel-bookmarks
+---
 
 -   [The city of Ghadames on the edge of the Saharan desert](https://twitter.com/wrathofgnon/status/1249544131715534849?s=12).
 
 # \[2020-04-07 Tue\] Trimming videos with ffmpeg
+---
+id: trimming-videos-with-ffmpeg
+---
 
 Via Bernd Verst's [Trim Videos Instantly](https://bernd.dev/2020/04/trim-videos-instantly/):
 
@@ -8888,6 +9351,9 @@ ffmpeg -ss hh:mm:ss.msec -i in.mpeg -c copy -map 0 -to hh:mm:ss.msec out.mpeg
 ```
 
 # \[2020-04-06 Mon\] Emacs's counsel-M-x meets multiple cursors
+---
+id: emacss-counsel-m-x-meets-multiple-cursors
+---
 
 I'm a fan of Magnar Sveen's [multiple cursors](https://github.com/magnars/multiple-cursors.el) Emacs implementation. It's just so fun to use and works very well with commands bound to my favorite keys.
 
@@ -8919,10 +9385,16 @@ Back in December 2019, I made a note to revisit [u/snippins1987](https://www.red
 ![](https://xenodium.com/images/emacss-counsel-m-x-meets-multiple-cursors/counsel-mx-mc.gif)
 
 # \[2020-04-05 Sun\] Portland travel bookmarks
+---
+id: portland-travel-bookmarks
+---
 
 -   [Powell’s Books \| The World’s Largest Independent Bookstore](https://www.powells.com/).
 
 # \[2020-03-29 Sun\] String inflection Emacs package
+---
+id: string-inflection-emacs-package
+---
 
 [string-inflection](https://github.com/akicho8/string-inflection) (by [Akira Ikeda](https://github.com/akicho8)) is a nifty package to cycle through string case styles: [camel, snake, kebab…](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles) The package includes a handful of cycling functions for different languages (Ruby, Python and Java), but it's easy to mix and match to roll your own. For now, I'm binding *C-M-j* to *string-inflection-cycle*, which is an alias to *string-inflection-ruby-style-cycle*.
 
@@ -8938,10 +9410,16 @@ Back in December 2019, I made a note to revisit [u/snippins1987](https://www.red
 comments on [twitter](https://twitter.com/xenodium/status/1244355205698912261?s=20)
 
 # \[2020-03-28 Sat\] Turkey travel bookmarks
+---
+id: turkey-travel-bookmarks
+---
 
 -   [Tomb of Amyntas - Wikipedia](https://en.wikipedia.org/wiki/Tomb_of_Amyntas).
 
 # \[2020-03-25 Wed\] Dal Makhani (black lentils) recipe
+---
+id: dal-makhani-black-lentils-recipe
+---
 
 ![](https://xenodium.com/images/dal-makhani-black-lentils-recipe/dal.jpg)
 
@@ -9000,6 +9478,9 @@ You can serve and optionally garnish with some chopped coriander. Recommended.
 Basmati rice, rotis, buttered buns, or even corn tortillas (unorthodox, but hey).
 
 # \[2020-03-21 Sat\] Modern Emacs lisp libraries
+---
+id: modern-elisp-libraries
+---
 
 Quickly finding related built-in elisp functions (without prefixes) can sometimes take a little poking around.
 
@@ -9037,6 +9518,9 @@ UPDATE: Added a handful of newly discovered libraries plus [suggestions by Danie
 comments on [twitter](https://twitter.com/xenodium/status/1241439306511720448)
 
 # \[2020-03-20 Fri\] Emacs smartparens auto-indent
+---
+id: emacs-smartparens-auto-indent
+---
 
 While I do most editing in Emacs, I use Xcode every now and then. I like Xcode's pair matching (of brackets) combined with its auto-indent.
 
@@ -9067,6 +9551,9 @@ With a short snippet, we can autoindent between {}, \[\], and () when pressing r
 comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 
 # \[2020-03-20 Fri\] Solarpunk bookmarks
+---
+id: solarpunk-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-03-20 Fri\]
@@ -9076,6 +9563,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [Solarpunk: Notes toward a manifesto (Project Hieroglyph)](https://hieroglyph.asu.edu/2014/09/solarpunk-notes-toward-a-manifesto/).
 
 # \[2020-03-10 Tue\] sqlite bookmarks
+---
+id: sqlite-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -9089,6 +9579,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [Zumero: Efficient sync by using multiple SQLite files](http://ericsink.com/entries/rss_cat_3.html).
 
 # \[2020-02-26 Wed\] covid-19 bookmarks
+---
+id: covid-19-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-27 Sun\]
@@ -9110,6 +9603,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [WHO: When and how to use masks](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/when-and-how-to-use-masks).
 
 # \[2020-02-15 Sat\] Security bookmarks
+---
+id: security-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-04-26 Sun\]
@@ -9121,6 +9617,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [Stay paranoid and trust no one. Overview of common security vulnerabilities in web applications](https://lchsk.com/stay-paranoid-and-trust-no-one-overview-of-common-security-vulnerabilities-in-web-applications.html).
 
 # \[2020-02-15 Sat\] Nix bookmarks
+---
+id: nix-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-02-15 Sat\]
@@ -9131,6 +9630,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [I was wrong about Nix](https://christine.website/blog/i-was-wrong-about-nix-2020-02-10).
 
 # \[2020-01-10 Fri\] Plants bookmarks
+---
+id: plants-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -9145,6 +9647,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1241104117264781312)
 -   [The Gardening Club® - Crews Hill, Enfield](https://www.thegardeningclub.co.uk/).
 
 # \[2019-12-29 Sun\] Fixing Honeywell CM927's dead screen
+---
+id: fixing-honeywell-cm927-dead-screens
+---
 
 My Honeywell CM927 thermostat's screen had been getting progressively worse over the last year. As of late, the screen was of little use.
 
@@ -9165,6 +9670,9 @@ Thank you Internet strangers! :)
 ![](https://xenodium.com/images/fixing-honeywell-cm927-dead-screens/after.png)
 
 # \[2019-12-29 Sun\] SwiftUI bookmarks
+---
+id: swiftui-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -9316,6 +9824,9 @@ Thank you Internet strangers! :)
 -   [Working with Focus on SwiftUI Views - The SwiftUI Lab](https://swiftui-lab.com/working-with-focus-on-swiftui-views/).
 
 # \[2019-12-17 Tue\] Studying for Life in the UK test
+---
+id: studying-for-life-in-the-uk-test
+---
 
 Today, I passed the [Life in the UK test](https://www.gov.uk/life-in-the-uk-test). Wasn't quite sure how to study for it. During my commutes, I listened to the [Life in the UK 2019 Test audio book](https://www.audible.co.uk/pd/Life-in-the-UK-2019-Test-Contains-the-Official-Course-300-Practice-Questions-Audiobook/B07VD9SR3L).
 
@@ -9394,10 +9905,16 @@ Took some notes along the way (mostly data with years attached) and dumped it in
   1600   \> 4 million
 
 # \[2019-12-01 Sun\] Georgia travel bookmarks
+---
+id: georgia-travel-bookmarks
+---
 
 -   [Abandoned Georgia](https://www.abandonedamerica.us/abandoned-georgia).
 
 # \[2019-11-24 Sun\] Wizard zines comics in Emacs eshell
+---
+id: wizard-zines-comics-eshell-util
+---
 
 Over at [wizardzines.com](http://wizardzines.com), [Julia Evans](https://jvns.ca) authors wonderful zines on topics like git, networking, linux, command-line utilities, and others. Some zines are paid. Some are free. No affiliation here, just a fan.
 
@@ -9460,6 +9977,9 @@ comments on [twitter](https://twitter.com/xenodium/status/1198542659704504321)
 -   Tweaked title.
 
 # \[2019-11-21 Thu\] Emacs counsel default search switches
+---
+id: emacs-counsel-default-search-switches
+---
 
 Following up from [Enhanced Emacs searching with counsel switches](http://xenodium.com/enhanced-emacs-searching-with-counsel-switches), rather than remembering [silver searcher](https://github.com/ggreer/the_silver_searcher) and [ripgrep](https://github.com/BurntSushi/ripgrep) switches, we can use [counsel's](https://github.com/abo-abo/swiper) *ivy-initial-inputs-alist* to set these up as default visible switches.
 
@@ -9475,6 +9995,9 @@ The default switches stay out of the way in typical searches, but can be easily 
 comments on [twitter](https://twitter.com/xenodium/status/1197673205688864768?s=20)
 
 # \[2019-11-10 Sun\] Enhanced Emacs searching with counsel switches
+---
+id: enhanced-emacs-searching-with-counsel-switches
+---
 
 The [counsel](https://github.com/abo-abo/swiper) family of Emacs search commands are great for searching the filesystem. More specifically, *counsel-rg*, *counsel-ag*, and *counsel-pt*, which use the popular [ripgrep](https://github.com/BurntSushi/ripgrep), [silver searcher](https://github.com/ggreer/the_silver_searcher), and [platinum searcher](https://github.com/monochromegane/the_platinum_searcher) utilities.
 
@@ -9489,6 +10012,9 @@ rg: -g Make\* – install
 ![](https://xenodium.com/images/enhanced-emacs-searching-with-counsel-switches/counsel-rg-switch.gif)
 
 # \[2019-11-10 Sun\] Emacs org block company completion
+---
+id: emacs-org-block-company-completion
+---
 
 UPDATE: This is now available [on melpa](https://melpa.org/#/company-org-block).
 
@@ -9594,10 +10120,16 @@ To use, add the backend enable *company-mode* in *org-mode*:
 -   Thanks to [Thomas Kobber](https://twitter.com/tpanum) for [highlighting incompatibility](https://twitter.com/xenodium/status/1194224168709083137) with older org versions.
 
 # \[2019-11-08 Fri\] IRC bookmarks
+---
+id: irc-bookmarks
+---
 
 -   [Awesome IRC](https://github.com/davisonio/awesome-irc).
 
 # \[2019-11-03 Sun\] A more reusable Emacs shell-command history
+---
+id: more-reusable-emacs-shell-command-history
+---
 
 [Cameron Desautel](https://twitter.com/camdez) has a great post on [Working Faster in Emacs by Reading the "Future"](https://engineering.collbox.co/post/working-faster-in-emacs-by-reading-the-future/), highlighting *M-n*'s usefulness for inserting minibuffer default values.
 
@@ -9642,6 +10174,9 @@ On a final note, searching minibuffer history for cache hits is way more useful 
 ```
 
 # \[2019-10-20 Sun\] Taiwan travel bookmarks
+---
+id: taiwan-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-13 Tue\]
@@ -9652,6 +10187,9 @@ On a final note, searching minibuffer history for cache hits is way more useful 
 -   [Why You Should Remote Work in Taiwan](https://blog.calebjay.com/posts/why-taiwan/).
 
 # \[2019-10-10 Thu\] Emacs swiper and multiple cursors
+---
+id: emacs-swiper-and-multiple-cursors
+---
 
 Emacs [swiper](https://github.com/abo-abo/swiper) is awesome. I bound *swiper-isearch* to *C-s*. Also a big fan of [multiple cursors](https://github.com/magnars/multiple-cursors.el). I use it regularly (it's fun).
 
@@ -9666,6 +10204,9 @@ If you happen to choose "y" by mistake, take a look at **\~/.emacs.d/.mc-lists.e
 ![](https://xenodium.com/images/emacs-swiper-and-multiple-cursors/swipermc.gif)
 
 # \[2019-10-08 Tue\] Speeding up gifs with gifsycle
+---
+id: speeding-up-gifs-with-gifsycle
+---
 
 Drop frames and speed gif up with [gifsycle](https://www.lcdf.org/gifsicle/) (via [How to remove every second frame from an animated gif?](https://graphicdesign.stackexchange.com/a/20937)):
 
@@ -9680,6 +10221,9 @@ identify in.gif
 ```
 
 # \[2019-10-08 Tue\] Spam blacklisting with Emacs org babel
+---
+id: spam-blacklisting-with-emacs-org-babel
+---
 
 Some email provider accept regular expressions to blacklist additional spam. My blacklist is long and tedious to update, but hey… Emacs org babel can simplify things here.
 
@@ -9696,6 +10240,9 @@ UPDATE: Tweaked elisp and regex (but not animation) also found John Bokma's post
 ![](https://xenodium.com/images/spam-blacklisting-with-emacs-org-babel/blacklist.png)
 
 # \[2019-10-06 Sun\] Rewriting dates with Emacs multiple cursors
+---
+id: rewriting-dates-with-emacs-multiple-cursors
+---
 
 Needed to rewrite the date format in a couple of csv columns. Emacs multiple cursors helps here, but needed a function to parse and reformat the dates themselves.
 
@@ -9724,6 +10271,9 @@ and voilà!
 ![](https://xenodium.com/images/rewriting-dates-with-emacs-multiple-cursors/ts.gif)
 
 # \[2019-10-05 Sat\] Show/hide Emacs dired details in style
+---
+id: showhide-emacs-dired-details-in-style
+---
 
 Emacs [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) is a powerful directory browser/editor. By default, it shows lots of handy file and directory details.
 
@@ -9760,10 +10310,16 @@ Binding *dired-git-info-mode* to ")" is a nice complement to *dired-hide-details
 ```
 
 # \[2019-09-29 Sun\] Bulk buying bookmarks
+---
+id: bulk-buying-bookmarks
+---
 
 -   [Real foods](https://www.realfoods.co.uk).
 
 # \[2019-09-01 Sun\] Speeding up Emacs tramp via ControlMaster
+---
+id: speeding-up-emacs-tramp-via-controlmaster
+---
 
 Via [Florian Margaine's Eshell config](https://gist.github.com/ralt/a36288cd748ce185b26237e6b85b27bb), I discovered ssh's [ControlMaster](https://man.openbsd.org/ssh_config#ControlMaster). It enables sharing multiple sessions over a single network connection. This has the benefit of speeding up Emacs TRAMP.
 
@@ -9777,6 +10333,9 @@ Host *
 ```
 
 # \[2019-09-01 Sun\] csv bookmarks
+---
+id: csv-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-06-06 Sat\]
@@ -9788,10 +10347,16 @@ Host *
 -   [Why You Don't Want to Use CSV Files (Have a good data)](https://haveagooddata.net/posts/why-you-dont-want-to-use-csv-files/).
 
 # \[2019-08-10 Sat\] Slovakia travel bookmarks
+---
+id: slovakia-travel-bookmarks
+---
 
 -   [High Tatras mountains (wonderful hikes)](https://en.wikipedia.org/wiki/High_Tatras).
 
 # \[2019-07-14 Sun\] Thumbnailing pdf page
+---
+id: thumbnailing-pdf-page
+---
 
 If you ever need to thumbnail a pdf page, imagemagick has got you covered. For example, to thumbnail page 3, you can use:
 
@@ -9811,10 +10376,16 @@ brew install ghostscript
 ```
 
 # \[2019-07-12 Fri\] Outdoor bookmarks
+---
+id: outdoor-bookmarks
+---
 
 -   [The Seven Principles of Leave No Trace](https://lnt.org/why/7-principles/).
 
 # \[2019-07-07 Sun\] gnuplot bookmarks
+---
+id: gnuplot-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-08-22 Sat\]
@@ -9824,6 +10395,9 @@ brew install ghostscript
 -   [Voxel plotting with gnuplot 5.4 {LWN.net}](https://lwn.net/SubscriberLink/828761/6d8c7ddc142a67a0/).
 
 # \[2019-06-04 Tue\] gnu global, ctags, and Emacs setup
+---
+id: gnu-global-ctags-and-emacs-setup
+---
 
 ## Universal ctags (newer)
 
@@ -9944,6 +10518,9 @@ Helpful references
 <https://github.com/osdakira/dotfiles/blob/395640726d669674496a8035458840f0742e54a5/gtags.conf> <https://github.com/NicholasTD07/dotfiles/blob/e66eb05b408fbcb0d47994fc8a0a79bf438b9e03/.globalrc> <https://github.com/NicholasTD07/dotfiles/blob/master/.ctags> <https://github.com/sg2002/gtags.conf-tutorial/blob/master/gtags.conf> <https://aozsky.com/swift/swift_ide>
 
 # \[2019-05-29 Wed\] mu4e as macOS mail composer
+---
+id: mu4e-as-macos-mail-composer
+---
 
 Via [Using Emacs as Default Mailer on macOS](https://www.reddit.com/r/emacs/comments/6lh2pp/using_emacs_as_default_mailer_on_macos), a tiny script to handle mailto: links.
 
@@ -9956,6 +10533,9 @@ From //Script Editor/, save following script as Application (MailOnEmacs.app). F
     end open location
 
 # \[2019-05-26 Sun\] New sudo user snippet
+---
+id: new-sudo-user-snippet
+---
 
 I don't add linux sudoers frequently enough. Always looking it up. Keeping snippet.
 
@@ -9966,6 +10546,9 @@ usermod -aG sudo <username>
 ```
 
 # \[2019-05-24 Fri\] Plotting ledger reports in org
+---
+id: plotting-ledger-reports-in-org
+---
 
 ## My ledger file
 
@@ -9998,6 +10581,9 @@ plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) 
 ```
 
 # \[2019-05-21 Tue\] Changing MAC address in org
+---
+id: changing-mac-address-from-org-mode
+---
 
 Via Minko Gechev's [tweet](https://twitter.com/mgechev/status/1130441471105093632?s=12). Saving in an org block, just because…
 
@@ -10023,12 +10609,18 @@ Your new physical address is aa:36:ee:d2:ee:66
 ps. Also see [Execute org blocks as root](http://xenodium.com/execute-org-blocks-as-root/).
 
 # \[2019-05-17 Fri\] Charting bookmarks
+---
+id: charting-bookmarks
+---
 
 -   [asciichart: Nice-looking lightweight console ASCII line charts ╭┈╯ for NodeJS and browsers with no dependencies](https://github.com/kroitor/asciichart).
 -   [asciigraph: Go package to make lightweight ASCII line graph](https://github.com/guptarohit/asciigraph).
 -   [Termgraph: a python command-line tool which draws basic graphs in the terminal](https://github.com/mkaz/termgraph).
 
 # \[2019-05-11 Sat\] Building swift-format
+---
+id: building-swift-format
+---
 
 Trying out [Google's swift-format](https://github.com/google/swift). Build with:
 
@@ -10062,6 +10654,9 @@ POSITIONAL ARGUMENTS:
 UPDATE: Now uses swift-5.2-branch (for Xcode 11.4), according to [Matching swift-format to Your Swift Version](https://github.com/apple/swift-format#matching-swift-format-to-your-swift-version).
 
 # \[2019-05-06 Mon\] Ledger query snippets
+---
+id: ledger-query-snippets
+---
 
 ## Expenses paid in cash between two dates
 
@@ -10082,6 +10677,9 @@ ledger -f my.ledger reg "^Assets:Bank:Acme" --format="%(payee) %(amount)\n"
 ```
 
 # \[2019-05-04 Sat\] Batch file renaming with counsel, find-dired, and wdired
+---
+id: batch-renaming-with-counsel-find-dired-and-wdired
+---
 
 The first time I saw [wdired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Wdired.html) in action, it blew my mind. wdired makes [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html#Dired) (directory editor) buffers writeable, so you can edit them like any other Emacs buffer. You can subsequently use all your favorite file-editing tricks to rename files (amongst other things). You can see it in action at the end of [Emacs Rocks episode 16](http://emacsrocks.com/e16.html).
 
@@ -10094,16 +10692,25 @@ Completion frontends like [ivy](https://github.com/abo-abo/swiper) and [helm](ht
 The code for *ar/counsel-find* is a little rough but can be found at [here](https://github.com/xenodium/dotsies/blob/master/emacs/ar/ar-counsel-find.el).
 
 # \[2019-04-26 Fri\] VPS bookmarks
+---
+id: vps-bookmarks
+---
 
 -   [Scaleway: Scalable Cloud Platform Designed for Developers](https://www.scaleway.com).
 -   [Vultr](https://www.vultr.com).
 
 # \[2019-04-22 Mon\] Svelte bookmarks
+---
+id: svelte-bookmarks
+---
 
 -   [Svelte 3: Rethinking reactivity](https://svelte.dev/blog/svelte-3-rethinking-reactivity).
 -   [Write less code (metric you're not paying attention to)](https://svelte.dev/blog/write-less-code).
 
 # \[2019-04-16 Tue\] Mark region, indent, restore location
+---
+id: mark-region-indent-restore-location
+---
 
 When I'm not using an automatic code formatter (ie. clang-format, gofmt, etc.), I often find myself using Emacs region marking commands like *mark-defun*, *er/expand-region*, and *mark-whole-buffer* prior to pressing \<tab\>, which is bound to *indent-for-tab-command*.
 
@@ -10228,6 +10835,9 @@ I'm not aware of an existing package that helps with this, so here's a tiny mino
 UPDATE(2019-04-20): Source [on github](https://github.com/xenodium/dotsies/blob/master/emacs/ar/diverted.el).
 
 # \[2019-04-14 Sun\] Wider web bookmarks
+---
+id: wider-web-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-04-14 Sun\]
@@ -10245,6 +10855,9 @@ UPDATE(2019-04-20): Source [on github](https://github.com/xenodium/dotsies/blob/
 -   [WikiArt.org - Visual Art Encyclopedia](https://www.wikiart.org/).
 
 # \[2019-04-14 Sun\] Compound interest calculations
+---
+id: compound-interest-calculations
+---
 
 Saving [Tony Bedford's](https://twitter.com/tonytechwriter) python snippets for [calculating compound interest](https://coffeeandcode.neocities.org/financial-calculations-1.html). Really just an excuse to fire up Emacs and play with org babel.
 
@@ -10303,6 +10916,9 @@ Year 20: 773936.89
 ```
 
 # \[2019-04-11 Thu\] Building mu/mu4e on macOS
+---
+id: building-mumu4e-on-macos
+---
 
 I've now built Emacs's [mu/mu4e](http://www.djcbsoftware.nl/code/mu/) releases a handful of times on macOS. These are the steps, so I don't forget.
 
@@ -10336,6 +10952,9 @@ make install
 UPDATE(2019-04-16): Another approach at Irreal's [Mu/mu4e 1.2 Available](https://irreal.org/blog/?p=7976).
 
 # \[2019-03-30 Sat\] Reading spreadsheets with python/pandas
+---
+id: reading-spreadsheets-with-pythonpandas
+---
 
 Via [Daily python tip](https://twitter.com/python_tip/status/1111349676106833920), a snippet to read xls files in python. This will come in handy. Saving for future.
 
@@ -10359,6 +10978,9 @@ print xlf.sheet_names
 ```
 
 # \[2019-03-17 Sun\] Inserting numbers with Emacs multiple cursors
+---
+id: inserting-numbers-with-emacs-multiple-cursors
+---
 
 TIL that multiple cursor's *mc/insert-numbers* enables you to quickly enter increasing numbers for each cursor. I have *mc/insert-numbers* bound to \# in *region-bindings-mode-map.* By default, sequence starts at 0, but invoking *mc/insert-numbers* with prefix enables you to quickly change that.
 
@@ -10367,14 +10989,23 @@ Came in handy when numbering an org table:
 ![](https://xenodium.com/images/inserting-numbers-with-emacs-multiple-cursors/mc-number.gif)
 
 # \[2019-03-17 Sun\] Brazil travel bookmarks
+---
+id: brazil-travel-bookmarks
+---
 
 -   [UXUA Casa Hotel and Spa in Trancoso, Brazil](http://www.uxua.com/).
 
 # \[2019-03-17 Sun\] Bath travel bookmarks
+---
+id: bath-travel-bookmarks
+---
 
 -   [Beas Vintage Tea Rooms (Yelp)](https://www.yelp.com/biz/beas-vintage-tea-rooms-bath).
 
 # \[2019-03-17 Sun\] Half marathon training
+---
+id: half-marathon-training
+---
 
 From <https://assets.bupa.co.uk/~/media/images/healthmanagement/pdfs/half-marathon-beginner.pdf>
 
@@ -10398,6 +11029,9 @@ Starting from week 4:
   12     Rest       40 mins easy       30 mins tempo       Rest       50 mins easy             Rest       (05/19) Race
 
 # \[2019-03-16 Sat\] No Emacs frame refocus on macOS
+---
+id: no-emacs-frame-refocus-on-macos
+---
 
 This one's been bugging me for a while. On macOS, Emacs automatically focuses (raises) other frames when one is closed.
 
@@ -10421,6 +11055,9 @@ brew install emacs-plus --without-spacemacs-icon --with-no-frame-refocus
 Balance restored.
 
 # \[2019-03-16 Sat\] Checksums on linux/macOS
+---
+id: checksums-on-linuxmacos
+---
 
 ## MD5
 
@@ -10441,6 +11078,9 @@ shasum -a 256 file
 ```
 
 # \[2019-03-12 Tue\] Language server protocol (LSP) bookmarks
+---
+id: language-server-protocol-lsp-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-04-14 Sun\]
@@ -10451,6 +11091,9 @@ shasum -a 256 file
 -   [vscode-html-languageserver extracted from VSCode](https://github.com/vscode-langservers/vscode-html-languageserver-bin).
 
 # \[2019-02-24 Sun\] Copy from desktop to mobile via QR code
+---
+id: copy-from-desktop-to-mobile-via-qr-code
+---
 
 [Marcin Borkowski](https://twitter.com/marcin_mbork) has a nice [tip](http://mbork.pl/2019-02-24_Transferring_strings_to_a_phone_via_QR_codes) to quickly copy text or URLs between desktop and mobile using QR codes.
 
@@ -10486,6 +11129,9 @@ qrencode -o 00wifi.png "WIFI:T:WPA;S:${SSID};P:$(cat 00wifi.txt);;"
 ```
 
 # \[2019-02-19 Tue\] Parsing dates in Go
+---
+id: parsing-dates-in-go
+---
 
 Ensure the reference time ("Mon Jan 2 15:04:05 -0700 MST 2006") is used in layout string.
 
@@ -10525,6 +11171,9 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
 ```
 
 # \[2019-02-13 Wed\] Life in the UK bookmarks
+---
+id: life-in-the-uk-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-02-13 Wed\]
@@ -10534,10 +11183,16 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
 -   [Life In The UK Test, Practice Tests 2017](https://lifeintheuktestweb.co.uk/).
 
 # \[2019-02-10 Sun\] C language bookmarks
+---
+id: c-language-bookmarks
+---
 
 -   [LittlevGL - Open-source Embedded GUI Library](https://littlevgl.com/).
 
 # \[2019-02-10 Sun\] Video editing bookmarks
+---
+id: video-editing-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-31 Thu\]
@@ -10561,6 +11216,9 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
 -   [Trim Videos Instantly - Bernd Verst](https://bernd.dev/2020/04/trim-videos-instantly/).
 
 # \[2019-02-10 Sun\] Icons bookmarks
+---
+id: icons-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-10-04 Fri\]
@@ -10573,14 +11231,23 @@ parsing time "March 10 2019" as "January 2 2009": cannot parse "19" as "009"
 -   [Streamline 3.0 – The World's Largest Icon Library](https://streamlineicons.com/).
 
 # \[2019-01-27 Sun\] Salt beef recipe
+---
+id: salt-beef-recipe
+---
 
 [How to make salt beef](https://www.theguardian.com/lifeandstyle/gallery/2010/nov/03/how-to-make-salt-beef) (use 1.8kg brisket instead) and [brining a brisket](https://www.theguardian.com/lifeandstyle/gallery/2010/nov/03/how-to-brine-a-brisket) (celery and peppercorns) both from The Guardian were recommended by a friend.
 
 # \[2019-01-27 Sun\] Geneva travel bookmarks
+---
+id: geneva-travel-bookmarks
+---
 
 -   [La Buvette des Bains, Restaurants in Pâquis](https://www.timeout.com/switzerland/restaurants-and-cafes/la-buvette-des-bains).
 
 # \[2019-01-13 Sun\] Swapping Emacs ivy collections/sources
+---
+id: swapping-emacs-ivy-collectionssources
+---
 
 [Ivy](https://github.com/abo-abo/swiper) is great. I've been meaning to figure out a way to swap sources while running ivy. This would enable me to cycle through different sources using the existing search parameters.
 
@@ -10672,6 +11339,9 @@ With *'ivy-quit-and-run* in mind, we can write our *'ar/ivy-read* function to ta
 ps. Menu data from [Star of Kings](https://starofkings.co.uk/food-and-drink/), [Wahaca](https://www.wahaca.co.uk/menu/food/), and [Pizzarino](https://pizzarino.us/menu).
 
 # \[2019-01-12 Sat\] Podcast bookmarks
+---
+id: podcast-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-12 Sat\]
@@ -10688,6 +11358,9 @@ ps. Menu data from [Star of Kings](https://starofkings.co.uk/food-and-drink/), [
 -   [Ubuntu Podcast](http://ubuntupodcast.org/).
 
 # \[2019-01-12 Sat\] Emacs on macOS Mojave
+---
+id: emacs-on-macos-mojave
+---
 
 Had issues running Emacs on macOS Mojave (blank unresponsive screen). Bleeding edge emacs-plus did the job:
 
@@ -10807,6 +11480,9 @@ Or, if you don't want/need a background service you can just run:
 ```
 
 # \[2019-01-06 Sun\] Trying out Emacs pdf tools
+---
+id: trying-out-emacs-pdf-tools
+---
 
 Late to the party, giving [pdf-tools](https://github.com/politza/pdf-tools) a try.
 
@@ -10843,14 +11519,23 @@ ps. (pdf-tools-install) may not find libffi on macOS. Try:
 ```
 
 # \[2018-12-27 Thu\] ASCII art generator bookmarks
+---
+id: ascii-art-generator-bookmarks
+---
 
 -   [𝓔𝓻𝓰𝓮𝓻𝓪𝓽𝓸𝓻/Ergerator (ascii generator)](http://antglove.com/erger/).
 
 # \[2018-12-26 Wed\] Osaka travel bookmarks
+---
+id: osaka-travel-bookmarks
+---
 
 -   [Tsutenkaku (Osaka) - 2018 All You Need to Know BEFORE You Go (with Photos) - TripAdvisor](https://www.tripadvisor.com/Attraction_Review-g298566-d1195795-Reviews-Tsutenkaku-Osaka_Osaka_Prefecture_Kinki.html).
 
 # \[2018-12-25 Tue\] Using OCR to create searchable pdfs from images
+---
+id: using-ocr-to-create-searchable-pdfs-from-images
+---
 
 Used my phone to take a handful of photos of an article from a magazine. Wanted to convert the images to a searchable pdf on macOS.
 
@@ -10886,6 +11571,9 @@ ps. [pdfgrep](https://pdfgrep.org) is great for searching pdfs.
 -   [Ryan Baumann's: Command-Line OCR with Tesseract on Mac OS X](https://ryanfb.github.io/etc/2014/11/13/command_line_ocr_on_mac_os_x.html).
 
 # \[2018-12-25 Tue\] Audiobook providers bookmarks
+---
+id: audiobook-providers-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-01-26 Sun\]
@@ -10898,6 +11586,9 @@ ps. [pdfgrep](https://pdfgrep.org) is great for searching pdfs.
 -   [The best free cultural and educational media on the web (Open Culture)](http://www.openculture.com/).
 
 # \[2018-12-25 Tue\] Cookbook bookmarks
+---
+id: cookbook-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-25 Tue\]
@@ -10908,6 +11599,9 @@ ps. [pdfgrep](https://pdfgrep.org) is great for searching pdfs.
 -   [Preserving the Japanese Way (Nancy Singleton Hachisu)](https://www.nancysingletonhachisu.com/the-country-annex/).
 
 # \[2018-12-25 Tue\] Emailing pdfs to kindle from mu4e
+---
+id: emailing-pdfs-to-kindle-from-mu4e
+---
 
 Wanted to send a pdf to my kindle for some holiday reading. You can easily do this by emailing the pdf to your kindle-bound email address.
 
@@ -10927,12 +11621,18 @@ Resulting attachment should look something like:
 I should add a convenience elisp function for this, but that's for another time…
 
 # \[2018-12-21 Fri\] org tip: convert csv to table
+---
+id: org-tip-convert-csv-to-table
+---
 
 Needed to import some csv data to an org table. Turns out org's got you covered out of the box with *M-x org-table-create-or-convert-from-region* bound to *C-c \|*.
 
 ![](https://xenodium.com/images/org-tip-convert-csv-to-table/csv-to-org-table.gif)
 
 # \[2018-12-20 Thu\] Sponsoring platform bookmarks
+---
+id: sponsoring-platform-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-25 Tue\]
@@ -10943,6 +11643,9 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [Tallycoin is a Bitcoin fundraising platform and a Patreon alternative.](https://tallyco.in/).
 
 # \[2018-12-20 Thu\] Artistic/creative bookmarks
+---
+id: artisticcreative-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-09-22 Tue\]
@@ -10954,6 +11657,9 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [Tom Sachs (knolling exhibits)](https://www.tomsachs.org).
 
 # \[2018-12-20 Thu\] Marketing bookmarks
+---
+id: marketing-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-25 Mon\]
@@ -10963,6 +11669,9 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [Startup Website Builder - Launchaco](https://www.launchaco.com/).
 
 # \[2018-12-19 Wed\] Bluetooth low energy (BLE) bookmarks
+---
+id: bluetooth-low-energy-ble-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-09 Sat\]
@@ -10973,14 +11682,23 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [The Practical Guide to Hacking Bluetooth Low Energy](https://blog.attify.com/the-practical-guide-to-hacking-bluetooth-low-energy/).
 
 # \[2018-12-18 Tue\] Fun project bookmarks
+---
+id: fun-project-bookmarks
+---
 
 -   [echo yang programs everyday obsolete machines to create autonomous art (designboom)](https://www.designboom.com/art/echo-yang-programs-everyday-obsolete-machines-to-create-autonomous-art-02-28-2014/?mc_cid=31214c131d&mc_eid=add1859a90).
 
 # \[2018-12-14 Fri\] Snowboarding bookmarks
+---
+id: snowboarding-bookmarks
+---
 
 -   [Snowboarding for Geeks (Hacker News)](https://news.ycombinator.com/item?id=18680617).
 
 # \[2018-12-11 Tue\] Scam bookmarks
+---
+id: scam-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-11 Tue\]
@@ -10991,6 +11709,9 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [The little black book of scams (ACCC)](https://www.accc.gov.au/publications/the-little-black-book-of-scams).
 
 # \[2018-12-11 Tue\] Passive income bookmarks
+---
+id: passive-income-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-10-13 Sun\]
@@ -11003,6 +11724,9 @@ Needed to import some csv data to an org table. Turns out org's got you covered 
 -   [What is Merch By Amazon?](https://thesavingninja.com/what-is-merch-by-amazon/).
 
 # \[2018-12-08 Sat\] DWIM ivy quit
+---
+id: dwim-ivy-quit
+---
 
 "Do-what-I-mean" (DWIM) functions enable us to introduce new Emacs powers to existing workflows without incurring the typical cost of remembering multiple related functions or introducing yet another key binding. DWIM functions invoke other functions, based on current context.
 
@@ -11034,6 +11758,9 @@ Added *\`ar/ivy-keyboard-quit-dwim'* for this purpose. Binding it to C-g in *ivy
 ![](https://xenodium.com/images/dwim-ivy-quit/ivy-keybqoard-quit-dwim.gif)
 
 # \[2018-12-05 Wed\] Diffing directories content size
+---
+id: diffing-directories-content-size
+---
 
 Needed to diff two directories, but only interested in file size changes. diff, find, sort, and stat seem to do the job:
 
@@ -11109,6 +11836,9 @@ I've added Emacs ediff to the mix:
 ![](https://xenodium.com/images/diffing-directories-content-size/ediff-dir-content-size.png)
 
 # \[2018-12-02 Sun\] Swift nil-coalescing operator
+---
+id: swift-nil-coalescing-operator
+---
 
 [Paul Hudson](https://twitter.com/twostraws), over at [Hacking with Swift](https://www.hackingwithswift.com/), has written [The Complete Guide to Optionals in Swift](https://www.hackingwithswift.com/articles/136/the-complete-guide-to-optionals-in-swift). One of the many highlights is the [nil-coalescing operator](https://docs.swift.org/swift-book/LanguageGuide/BasicOperators.html#ID72). If you're a fan of the [C-like syntax in ternary operations](https://en.wikipedia.org/wiki/Ternary_operation), you'd enjoy chaining with Swift's nil-coalescing operator:
 
@@ -11121,6 +11851,9 @@ print("\(String(describing: move))")
 ps. Swift snippet run on Emacs [org babel's](https://orgmode.org/worg/org-contrib/babel/intro.html) [ob-swift](https://github.com/zweifisch/ob-swift). See [Multiline Swift strings](#multiline-swift-strings) for details.
 
 # \[2018-12-01 Sat\] Ocado vs Asda (org table)
+---
+id: ocado-vs-asda-org-table
+---
 
 Someone handed me an [Ocado](https://www.ocado.com) shopping voucher for 30% off. Sounded promising, even for a one-off.
 
@@ -11151,10 +11884,16 @@ Small tables are the perfect use-case for Emacs [org-mode tables](https://orgmod
 Here's the org source for the table above (prior to exporting to HTML):
 
 # \[2018-11-24 Sat\] Execute org blocks as root
+---
+id: execute-org-blocks-as-root
+---
 
 Been saving admin code snippets in my own [org source blocks](https://orgmode.org/manual/Working-with-source-code.html), some requiring root access. Handy for keeping tiny self-documented scripts to easily bootstrap other machines. TIL org source block's *:dir* argument can be used to run block as root by using tramp syntax: /:dir *sudo::*
 
 # \[2018-11-23 Fri\] Inline Swift computed properties
+---
+id: inline-swift-computed-properties
+---
 
 Via [objc.io](https://twitter.com/objcio) and [Max Howell's](https://twitter.com/mxcl) [retweet](https://twitter.com/mxcl/status/1065802821700857856), TIL about Swift's inline computed properties. Another one to try on Org [Babel](https://orgmode.org/worg/org-contrib/babel/intro.html). ‏
 
@@ -11171,6 +11910,9 @@ greetWorld()
 ```
 
 # \[2018-11-23 Fri\] Multiline Swift strings
+---
+id: multiline-swift-strings
+---
 
 [Paul Hudson's](https://twitter.com/twostraws) [tweet](https://twitter.com/twostraws) introduced me to Swift's multiline string indentation control using closing quotes. Neat!
 
@@ -11198,6 +11940,9 @@ Hello World
 ```
 
 # \[2018-11-17 Sat\] Quickly swapping elfeed filters
+---
+id: quickly-swapping-elfeed-filters
+---
 
 I seem to be more efficient in getting through rss feeds by individually browsing through related content. That is, I can get through all Emacs entries a lot faster if I look at Emacs content exclusively, instead of mixing with say BBC news. [Elfeed](https://github.com/skeeto/elfeed) filters are great for filtering related content.
 
@@ -11256,6 +12001,9 @@ We don't actually need two functions, but *ar/elfeed-filter-results-count* enabl
 ![](https://xenodium.com/images/quickly-swapping-elfeed-filters/no-left.png)
 
 # \[2018-11-14 Wed\] Converting docx to pdf on macOS
+---
+id: converting-docx-to-pdf-on-macos
+---
 
 Wanted to convert a docx document to pdf on macOS. Pandoc to the rescue, but first needed pdflatex installed:
 
@@ -11286,6 +12034,9 @@ pandoc -t html5 some.docx -o some.pdf
 ```
 
 # \[2018-11-13 Tue\] Faster elfeed browsing with paging
+---
+id: faster-elfeed-browsing-with-paging
+---
 
 Following up from [faster junk mail deletion with mu4e](http://xenodium.com/#faster-junk-mail-deletion-with-mu4e), elfeed is another candidate for enabling actions on pages. In this case, marking rss entries as read, page by Page.
 
@@ -11312,6 +12063,9 @@ If on [use-package](https://github.com/jwiegley/use-package), the function can d
 ![](https://xenodium.com/images/faster-elfeed-browsing-with-paging/elfeed-read-by-page.gif)
 
 # \[2018-11-10 Sat\] Faster junk mail deletion with mu4e
+---
+id: faster-junk-mail-deletion-with-mu4e
+---
 
 It's been roughly 5 months since [my mu4e email migration](http://xenodium.com/#trying-out-mu4e-and-offlineimap). Happy with my choice. [Mu4e](http://www.djcbsoftware.nl/code/mu/mu4e.html) is awesome.
 
@@ -11349,6 +12103,9 @@ I'm a [use-package](https://github.com/jwiegley/use-package) fan, so I use it to
 ![](https://xenodium.com/images/faster-junk-mail-deletion-with-mu4e/delete-junk.gif)
 
 # \[2018-11-06 Tue\] Working with vultr's ipv6-only instances
+---
+id: working-with-vultrs-ipv6-only-instances
+---
 
 Having recently read [Your Money or Your Life](https://www.amazon.co.uk/Transforming-Relationship-Achieving-Financial-Independence/dp/0143115766/), I've been cutting down on personal expenses wherever possible. Specially recurring expenses which include monthly charges from VPS hosting. Let's reduce those charges…
 
@@ -11400,15 +12157,24 @@ scp -6 file.txt username@\[0000:1111:2222:3333:4444:5555:6666:7777:8888\]:/remot
 † I get \$10 credit if you use this affiliate link. Thank you.
 
 # \[2018-11-04 Sun\] Shaving bookmarks
+---
+id: shaving-bookmarks
+---
 
 -   [8 best safety razors (The Independent)](https://www.independent.co.uk/extras/indybest/fashion-beauty/mens-grooming/best-safety-razors-for-beginners-sensitive-skin-10111508.html).
 
 # \[2018-11-04 Sun\] Buy it for life bookmarks
+---
+id: buy-it-for-life-bookmarks
+---
 
 -   [Fjällräven jackets](https://www.fjallraven.com).
 -   [Gillette slim (Etsy)](https://www.etsy.com/uk/market/gillette_slim).
 
 # \[2018-10-29 Mon\] Rust bookmarks
+---
+id: rust-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -11419,6 +12185,9 @@ scp -6 file.txt username@\[0000:1111:2222:3333:4444:5555:6666:7777:8888\]:/remot
 -   [Rust Language Cheat Sheet (cheats.rs) ](https://news.ycombinator.com/item).
 
 # \[2018-10-28 Sun\] Fonts bookmarks
+---
+id: fonts-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-10-20 Sun\]
@@ -11432,6 +12201,9 @@ scp -6 file.txt username@\[0000:1111:2222:3333:4444:5555:6666:7777:8888\]:/remot
 -   [The package of IBM’s typeface, IBM Plex (font)](https://github.com/IBM/plex).
 
 # \[2018-10-17 Wed\] imenu on Emacs eshell
+---
+id: imenu-on-emacs-eshell
+---
 
 [imenu](https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html) navigation is one of those Emacs gems I didn't discover until much later on. It does what you'd expect in all types of modes. In rare instances, I've found specific modes missing imenu support. Fortunately, this is Emacs and you can fix that.
 
@@ -11451,12 +12223,18 @@ Ah it's the little things…
 ps. If wondering why my imenu experience looks a little different, that's because I'm using Abo Abo's wonderful [counsel](https://github.com/abo-abo/swiper) and *M-x counsel-semantic-or-imenu*.
 
 # \[2018-10-14 Sun\] Encrypted disk image on macOS
+---
+id: encrypted-disk-image-on-macos
+---
 
 ![](https://xenodium.com/images/encrypted-image-on-macos/1.png)
 
 ![](https://xenodium.com/images/encrypted-image-on-macos/2.png)
 
 # \[2018-10-13 Sat\] Sheffield travel bookmarks
+---
+id: sheffield-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-13 Sat\]
@@ -11466,6 +12244,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Sakushi -Sushi, noodle and Japanese food restaurant in Sheffield](http://www.sakushi.co.uk/).
 
 # \[2018-10-13 Sat\] Headsphones bookmarks
+---
+id: headsphones-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-09 Sun\]
@@ -11476,6 +12257,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Sony WH-1000XM3 Review - RTINGS.com](https://www.rtings.com/headphones/reviews/sony/wh-1000xm3).
 
 # \[2018-10-05 Fri\] macOS app bookmarks
+---
+id: macos-app-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-13 Sun\]
@@ -11503,6 +12287,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [‎RESTed - Simple HTTP Requests on the Mac App Store](https://apps.apple.com/us/app/rested-simple-http-requests/id421879749).
 
 # \[2018-09-30 Sun\] Gaming bookmarks
+---
+id: gaming-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -11512,6 +12299,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [The Top 100 Android Video Games](https://twitter.com/SethAbramson/status/1412177674596986881).
 
 # \[2018-09-29 Sat\] Lua bookmarks
+---
+id: lua-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-26 Sat\]
@@ -11523,6 +12313,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Lua tables (Hacker News)](https://news.ycombinator.com/item?id=17969795).
 
 # \[2018-09-29 Sat\] Skin product bookmarks
+---
+id: skin-product-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-09-29 Sat\]
@@ -11534,10 +12327,16 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Skin Deep® Cosmetics Database (EWG)](https://www.ewg.org/skindeep/).
 
 # \[2018-09-29 Sat\] Sustainability bookmarks
+---
+id: sustainability-bookmarks
+---
 
 -   [Source Fabric. Find a Manufacturer. Raise Money to Fund Production. (Factory45)](https://factory45.co/).
 
 # \[2018-09-29 Sat\] Investment platform bookmarks
+---
+id: investment-platform-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -11561,6 +12360,9 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Stocks and cryptocurrency portfolio tracker (wallmine)](https://wallmine.com/stocks-and-cryptocurrency-portfolio-tracker).
 
 # \[2018-09-28 Fri\] Minimalist bookmarks
+---
+id: minimalist-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-05-10 Fri\]
@@ -11570,12 +12372,18 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 -   [Raising Simple \| Streamline your home. Simplify family life (minimalism)](https://www.raisingsimple.com).
 
 # \[2018-09-23 Sun\] Recover from Time Machine's "backup already in use"
+---
+id: recover-from-time-machines-backup-already-in-use
+---
 
 Started seeing "backup already in use" error from my daily Time Machine backups, against my Synology. Disabling and re-enabling AFP did the job (via Synology -\> Control Panel -\> Files Services -\> Enable AFP service).
 
 ![](https://xenodium.com/images/recover-from-time-machines-backup-already-in-use/re-enable_afp_service.png)
 
 # \[2018-09-03 Mon\] CMake bookmarks
+---
+id: cmake-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-09-03 Mon\]
@@ -11586,6 +12394,9 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
 -   [Embracing Modern CMake (Steveire's Blog)](https://steveire.wordpress.com/2017/11/05/embracing-modern-cmake/).
 
 # \[2018-08-28 Tue\] GTD/Get things done bookmarks
+---
+id: gtdget-things-done-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-05-18 Sat\]
@@ -11597,6 +12408,9 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
 -   [Orgmode for GTD/Get things done](https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html).
 
 # \[2018-08-28 Tue\] Pandoc bookmarks
+---
+id: pandoc-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-11-17 Sat\]
@@ -11607,6 +12421,9 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
 -   [Pandoc - Demos](https://pandoc.org/demos.html).
 
 # \[2018-08-27 Mon\] Mauritius travel bookmarks
+---
+id: mauritius-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-03-11 Wed\]
@@ -11626,10 +12443,16 @@ Started seeing "backup already in use" error from my daily Time Machine backups,
 -   [The Essential Guide to Port Louis' Central Market in Mauritius](https://theculturetrip.com/africa/mauritius/articles/the-essential-guide-to-port-louis-central-market-in-mauritius/).
 
 # \[2018-08-27 Mon\] Scala bookmarks
+---
+id: scala-bookmarks
+---
 
 -   [Functional Programming for Mortals (Leanpub)](https://leanpub.com/fpmortals/read).
 
 # \[2018-08-22 Wed\] Actionable URLs in Emacs buffers
+---
+id: actionable-urls-in-emacs-buffers
+---
 
 Should have enabled actionable URLs in my Emacs buffers long ago. Can now click or press return to follow links. It's great on eshell, compilation buffers, async shell commands, code, etc.
 
@@ -11649,6 +12472,9 @@ Should have enabled actionable URLs in my Emacs buffers long ago. Can now click 
 ![](https://xenodium.com/images/actionable-urls-in-emacs-buffers/goto-address.png)
 
 # \[2018-08-22 Wed\] Bazel bookmarks
+---
+id: bazel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-11-15 Sun\]
@@ -11661,10 +12487,16 @@ Should have enabled actionable URLs in my Emacs buffers long ago. Can now click 
 -   [Using Bazel to help fix flaky tests - Jake McCrary](https://jakemccrary.com/blog/2020/06/28/using-bazel-to-help-fix-flaky-tests/).
 
 # \[2018-08-18 Sat\] Palestine travel bookmarks
+---
+id: palestine-travel-bookmarks
+---
 
 -   [Rukab's Ice Cream, Ramallah (Trip advisor)](https://www.tripadvisor.co.uk/Restaurant_Review-g667136-d7360437-Reviews-Rukab_s_Ice_Cream-Ramallah_Binyamin_Region_West_Bank.html).
 
 # \[2018-08-18 Sat\] Enabling Control-Meta(⌘)-D on macOS
+---
+id: enabling-control-meta-d-on-macos
+---
 
 I use command (⌘) as my Emacs Meta key. Recently discovered C-M-d is not available to Emacs for binding keys on macOS. Stack Exchange had the [workaround](https://apple.stackexchange.com/questions/22785/how-do-i-disable-the-command-control-d-word-definition-keyboard-shortcut-in-os-x):
 
@@ -11673,6 +12505,9 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 ```
 
 # \[2018-08-13 Mon\] Recycling bookmarks
+---
+id: recycling-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-08-13 Mon\]
@@ -11681,10 +12516,16 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 -   [My Plastic-free Life](https://myplasticfreelife.com/).
 
 # \[2018-08-12 Sun\] Comoro islands travel bookmarks
+---
+id: comoro-islands-travel-bookmarks
+---
 
 -   [Visiting The Comoros Islands (Quota)](https://www.quora.com/What-are-some-of-the-exotic-tourist-destinations-which-are-not-commonly-known/answer/Patrick-Crosset).
 
 # \[2018-08-12 Sun\] France travel bookmarks
+---
+id: france-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-06-09 Fri\]
@@ -11695,14 +12536,23 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 -   [Hmmm I want to take some August vacation time in a city I can go by train from paris and is nice to visit calm and not too expensive ](https://twitter.com/malk_zameth/status/1278288570021826563).
 
 # \[2018-08-12 Sun\] Corsica travel bookmarks
+---
+id: corsica-travel-bookmarks
+---
 
 -   [National Geographic : Corsica is The Best Place… - The French Touch - Quora](https://thefrenchtouch.quora.com/National-Geographic-Corsica-is-The-Best-Place-in-the-World-to-go-in-2015).
 
 # \[2018-08-12 Sun\] Mozambique travel bookmarks
+---
+id: mozambique-travel-bookmarks
+---
 
 -   [Mozambique's beaches - Africa is Back - Quora](https://africa.quora.com/Mozambiques-beaches).
 
 # \[2018-08-12 Sun\] M-r history search in git-commit-mode
+---
+id: m-r-history-search-in-git-commit-mode
+---
 
 I've grown accustomed to M-r bindings to search Emacs history. Been wanting similar functionality to search commit message history. Turns out *log-edit-comment-ring* has some of my local commit message history. Feeding it to *completing-read* gives me an easily searchable history when using a completing framework like ivy or helm:
 
@@ -11733,6 +12583,9 @@ May also want to persist *log-edit-comment-ring* across Emacs sessions by adding
 ![](https://xenodium.com/images/m-r-history-search-in-git-commit-mode/m-r-commit-history.png)
 
 # \[2018-08-09 Thu\] Morning smoothie
+---
+id: morning-smoothie
+---
 
 Big fan of my morning power smoothie. Best deals I've found so far:
 
@@ -11749,6 +12602,9 @@ Big fan of my morning power smoothie. Best deals I've found so far:
 ps. I have no affiliation to either retailer. Prices may change.
 
 # \[2018-08-08 Wed\] Installing ludget (ledger visualization
+---
+id: installing-ludget-ledger-visualization
+---
 
 Needed python3:
 
@@ -11763,6 +12619,9 @@ pip3 install ludget
 ```
 
 # \[2018-08-08 Wed\] Ledger bookmarks
+---
+id: ledger-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-09-30 Thu\]
@@ -11815,6 +12674,9 @@ pip3 install ludget
 -   [Who's using ledger? · ledger/ledger Wiki](https://github.com/ledger/ledger/wiki/Who's-using-ledger%3F).
 
 # \[2018-08-07 Tue\] Tip: Convert .texi to .info
+---
+id: tip-convert-texi-to-info
+---
 
 Convert with:
 
@@ -11835,6 +12697,9 @@ Open in Emacs and render as info with:
 ```
 
 # \[2018-07-25 Wed\] Marking 20k emails as read
+---
+id: marking-20k-emails-as-read
+---
 
 [Mbsync](http://isync.sourceforge.net/) and [mu4e](https://www.djcbsoftware.nl/code/mu/mu4e.html) are great for syncing and handling IMAP email. I've now migrated 4 email addresses, including an old Yahoo account.
 
@@ -11879,6 +12744,9 @@ mbsync -Va
 …and we're done ;)
 
 # \[2018-07-24 Tue\] Show iOS simulator touches
+---
+id: show-ios-simulator-touches
+---
 
 TIL from [this tweet](https://twitter.com/liamnichols_/status/1018812142693253120?s=12), that you can enable showing touches on iOS simulator. This is handy for making nicer screencasts.
 
@@ -11887,10 +12755,16 @@ defaults write http://com.apple .iphonesimulator ShowSingleTouches 1
 ```
 
 # \[2018-07-15 Sun\] Amsterdam travel bookmarks
+---
+id: amsterdam-travel-bookmarks
+---
 
 -   [Below the Surface: The archaeological finds of the North / Southline in Amsterdam](https://belowthesurface.amsterdam/en/).
 
 # \[2018-07-14 Sat\] Hardware bookmarks
+---
+id: hardware-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-23 Sat\]
@@ -11900,6 +12774,9 @@ defaults write http://com.apple .iphonesimulator ShowSingleTouches 1
 -   [stapelberg uses this: my 2020 desk setup](https://michael.stapelberg.ch/posts/2020-05-23-desk-setup/).
 
 # \[2018-07-11 Wed\] fitbit API, org babel, and gnuplot
+---
+id: fitbit-api-org-babel-and-gnuplot
+---
 
 Retook running recently. Took the dust off my aria scale and used the opportunity to check out fitbit's API.
 
@@ -11987,6 +12864,9 @@ plot data u 1:2 with linespoints title 'Weight in Kg'
 Fetching data and plotting through org babel and gnuplot is pretty sweet. I've barely scratched the surface. There's more at [Org-babel-gnuplot](https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html) and [Plotting tables in Org-Mode using org-plot](https://orgmode.org/worg/org-tutorials/org-plot.html). Either way, this is another Emacs super power to keep in the toolbox.
 
 # \[2018-07-08 Sun\] PIPESTATUS for all return codes
+---
+id: pipestatus-for-all-return-codes
+---
 
 From [\@saruspete](https://twitter.com/saruspete)'s [tweet](https://twitter.com/saruspete/status/1014801074794979335?s=12), \${PIPESTATUS\[@\]} gives ya all piped commands' return codes:
 
@@ -11996,6 +12876,9 @@ echo ${PIPESTATUS[@]}
 ```
 
 # \[2018-07-07 Sat\] Emacs utilities for your OS
+---
+id: emacs-utilities-for-your-os
+---
 
 Narrowing utilities are a wonderful way of increasing productivity. I have a few workflows using Emacs's [Helm](https://github.com/emacs-helm/helm) framework.
 
@@ -12131,6 +13014,9 @@ Here's the resulting utility in action:
 These integrations look promising. They enable me to bring cross-platform Emacs utilities into areas I hadn't considered.
 
 # \[2018-07-01 Sun\] Web serving tools bookmarks
+---
+id: web-serving-tools-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-05 Sat\]
@@ -12151,11 +13037,17 @@ These integrations look promising. They enable me to bring cross-platform Emacs 
 -   [Web Authentication for Actual Humans, Part Two - DEV Community](https://dev.to/ghardin137/web-authentication-for-actual-humans-part-two-ea6).
 
 # \[2018-06-24 Sun\] URL shortener bookmarks
+---
+id: url-shortener-bookmarks
+---
 
 -   [go: Another Google-like Go short link service](https://github.com/kellegous/go).
 -   [zap: Blazing fast web shortcuts](https://github.com/issmirnov/zap).
 
 # \[2018-06-17 Sun\] Trying out mu4e with mbsync
+---
+id: trying-out-mu4e-with-mbsync
+---
 
 The email fun in Emacs continues. After a few weeks since I [started using mu4e and offlineimap](#trying-out-mu4e-and-offlineimap), I'm sold. Both are awesome. [Mbsync](http://isync.sourceforge.net/mbsync.html) is an [offlineimap](http://www.offlineimap.org/) alternative. Despite resyncing all my mail, the transition was fairly smooth. Here's how…
 
@@ -12273,12 +13165,18 @@ I had issues with duplicate IDs after moving and deleting messages from mu4e. [M
 -   [Reading IMAP Mail in Emacs on OSX](http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html).
 
 # \[2018-06-15 Fri\] Sticky function keys on touch bar
+---
+id: sticky-function-keys-on-touch-bar
+---
 
 Visible (and sticky) function keys are not the touch bar default for Emacs. Let's change that:
 
 ![](https://xenodium.com/images/sticky-function-keys-on-touch-bar/touchbar_function_keys.png)
 
 # \[2018-06-13 Wed\] GNU find on macOS
+---
+id: gnu-find-on-macos
+---
 
 At times, you may need GNU versions of command line utilities on macOS. For example, GNU find.
 
@@ -12316,6 +13214,9 @@ brew install wget
 ```
 
 # \[2018-06-13 Wed\] PlantUML bookmarks
+---
+id: plantuml-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-06-27 Sat\]
@@ -12326,12 +13227,18 @@ brew install wget
 -   [Welcome to The Hitchhiker’s Guide to PlantUML!](https://crashedmind.github.io/PlantUMLHitchhikersGuide/).
 
 # \[2018-05-29 Tue\] Adding mu4e maildirs extension
+---
+id: adding-mu4e-maildirs-extension
+---
 
 Continuing the mu4e fun, added mu4e-maildirs-extension to display a mail dirs summary.
 
 ![](https://xenodium.com/images/adding-mu4e-maildirs-extension/mu4e_maildirs_extension.png)
 
 # \[2018-05-28 Mon\] Trying out mu4e and offlineimap
+---
+id: trying-out-mu4e-and-offlineimap
+---
 
 ![](https://xenodium.com/images/trying-out-mu4e-and-offlineimap/mu4e.png)
 
@@ -12592,6 +13499,9 @@ Encrypt \~/.authinfo with M-x epa-encrypt-file. Keep \~/.authinfo.gpg and delete
 -   [Zamansky's video on mu4e](https://www.youtube.com/watch?v=newRHXKm4H4).
 
 # \[2018-05-24 Thu\] Transparent Emacs titlebars on macOS
+---
+id: transparent-emacs-titlebars-on-macos
+---
 
 Happy with [Emacs Plus](https://github.com/d12frosted/homebrew-emacs-plus) builds on Mac. You get some eye-candy bonuses like transparent titlebars.
 
@@ -12613,10 +13523,16 @@ Config:
 ![](https://xenodium.com/images/transparent-emacs-titlebars-on-macos/transparent-emacs-titlebars-macos.png)
 
 # \[2018-05-24 Thu\] Lunette: Like Spectacle but for Hammerspoon
+---
+id: lunette-like-spectacle-but-for-hammerspoon
+---
 
 Came across [Lunette](https://github.com/scottwhudson/Lunette). Gives ya Spectacle Keybindings for Hammerspoon.
 
 # \[2018-05-23 Wed\] Train Emacs to open files externally
+---
+id: train-emacs-to-open-files-externally
+---
 
 TIL about the [openwith](https://bitbucket.org/jpkotta/openwith) package. It enables Emacs to defer to external programs for certain files. You choose which ones. Neat.
 
@@ -12629,6 +13545,9 @@ TIL about the [openwith](https://bitbucket.org/jpkotta/openwith) package. It ena
 ```
 
 # \[2018-05-22 Tue\] Show hidden files in Finder
+---
+id: show-hidden-files-in-finder
+---
 
 ``` {.bash org-language="sh"}
 defaults write com.apple.finder AppleShowAllFiles TRUE
@@ -12636,18 +13555,27 @@ killall Finder
 ```
 
 # \[2018-05-22 Tue\] Ejecting USB drives on Synology
+---
+id: ejecting-usb-drives-on-synology
+---
 
 For posterity:
 
 > Control panel \> External devices \> USB Disk 1 \> Eject
 
 # \[2018-05-21 Mon\] Remounting Synology encrypted share
+---
+id: remounting-synology-encrypted-share
+---
 
 Had been a while since I did this… for posterity:
 
 > Control panel \> Shared Folder \> Encryption \> Mount
 
 # \[2018-05-20 Sun\] Synology user had no home
+---
+id: synology-user-had-no-home
+---
 
 Upon ssh'ing to a Synology box, the user had no home.
 
@@ -12658,6 +13586,9 @@ Fixed via:
 > Control Panel \> User \> Advanced \> User Home \> \[x\] Enable user home service
 
 # \[2018-04-30 Mon\] Pre-commit hooks to save you from yourself
+---
+id: pre-commit-hooks-to-save-you-from-yourself
+---
 
 Wanted to try out some code, but needed to ensure never checked in. Git pre-commit hooks are handy in this space. Add the following script to search for either \@COMMITFAIL or \@NOCOMMIT in the staged files. If found, attempts to commit will fail.
 
@@ -12689,6 +13620,9 @@ ln -s ../../git/commit-fail-pre-hook.sh .git/hooks/pre-commit
 ```
 
 # \[2018-04-19 Thu\] Azores travel bookmarks
+---
+id: azores-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-05-08 Tue\]
@@ -12699,6 +13633,9 @@ ln -s ../../git/commit-fail-pre-hook.sh .git/hooks/pre-commit
 -   [This other Eden: the Azores, Europe's secret islands of adventure](http://www.lonelyplanet.com/travel-tips-and-articles/this-other-eden-the-azores-europes-secret-islands-of-adventure).
 
 # \[2018-04-19 Thu\] Debugging Emacs binary
+---
+id: debugging-emacs-binary
+---
 
 From [How do I debug an emacs crash? (Emacs Stack Exchange)](https://emacs.stackexchange.com/questions/14354/how-do-i-debug-an-emacs-crash), disable optimizations when configuring and build:
 
@@ -12718,6 +13655,9 @@ gdb ../nextstep/Emacs.app/Contents/MacOS/Emacs
 -   [etc/DEBUG: Debugging GNU Emacs](https://git.savannah.gnu.org/cgit/emacs.git/tree/etc/DEBUG).
 
 # \[2018-04-19 Thu\] Paper less bookmarks
+---
+id: paperless-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-05-26 Sat\]
@@ -12735,10 +13675,16 @@ gdb ../nextstep/Emacs.app/Contents/MacOS/Emacs
 -   [Video: Batch OCR With The Mac Fujitsu ScanSnap](http://www.documentsnap.com/batch-ocr-mac-fujitsu-scansnap/).
 
 # \[2018-04-18 Wed\] Bologna travel bookmarks
+---
+id: bologna-travel-bookmarks
+---
 
 -   Il Cannone restaurant.
 
 # \[2018-04-17 Tue\] Grep through pdfs
+---
+id: grep-through-pdfs
+---
 
 Late to the party, but investing in going paperless. Got a scanner with OCR, which generates searchable pdfs. If I could only grep through them…
 
@@ -12749,6 +13695,9 @@ brew install pdfgrep
 Balance restored.
 
 # \[2018-04-14 Sat\] Hammerspoon bookmarks
+---
+id: hammerspoon-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-04-22 Mon\]
@@ -12767,6 +13716,9 @@ Balance restored.
 -   [ZeroBrane completion](https://github.com/asmagill/hammerspoon-config/blob/07ec892ab1351d2a7659d802e4cbfa8e8a0d5702/_scratch/zerobrane.lua) and [here](https://github.com/cmsj/hammerspoon-config/blob/master/init.lua) also.
 
 # \[2018-04-14 Sat\] Options to reduce Go binary size
+---
+id: options-to-reduce-go-binary-size
+---
 
 A Hacker News's thread [Go gets preliminary WebAssembly support](https://news.ycombinator.com/item?id=16834181) has a couple of tips to reduce binaries compiled with Go.
 
@@ -12781,6 +13733,9 @@ upx --ultra-brute
 ```
 
 # \[2018-04-09 Mon\] Trying out tesseract
+---
+id: trying-out-tesseract
+---
 
 As part of going paperless, looking into OCR. Trying out tesseract.
 
@@ -12798,6 +13753,9 @@ $ tesseract receipt.png receipt.png.txt
 ```
 
 # \[2018-04-08 Sun\] Sapporo travel bookmarks
+---
+id: sapporo-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-02 Sat\]
@@ -12807,6 +13765,9 @@ $ tesseract receipt.png receipt.png.txt
 -   [The Hill of the Buddha](https://www.vitra.com/en-gb/magazine/details/the-hill-of-the-buddha).
 
 # \[2018-04-08 Sun\] Gif bookmarks
+---
+id: gif-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-06-17 Wed\]
@@ -12819,6 +13780,9 @@ $ tesseract receipt.png receipt.png.txt
 -   [phw/peek: Simple animated GIF screen recorder for Linux](https://github.com/phw/peek).
 
 # \[2018-04-08 Sun\] Trying out ShellCheck
+---
+id: trying-out-shellcheck
+---
 
 [ShellCheck](https://github.com/koalaman/shellcheck) gives you automatic warnings/suggestions in bash/sh shell scripts.
 
@@ -12829,6 +13793,9 @@ $ brew install shellcheck
 Bonus: If using Emacs's [flycheck](https://github.com/flycheck/flycheck), you get ShellCheck support out of the box.
 
 # \[2018-04-08 Sun\] Image editing bookmarks
+---
+id: image-editing-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-07-11 Sat\]
@@ -12844,6 +13811,9 @@ Bonus: If using Emacs's [flycheck](https://github.com/flycheck/flycheck), you ge
 -   [The Art of PNG Glitch](http://ucnv.github.io/pnglitch/).
 
 # \[2018-04-05 Thu\] Buying matcha powder online
+---
+id: buying-matcha-powder-online
+---
 
 From Reddit's [thread](https://www.reddit.com/r/tea/comments/6qbh4l/matcha/):
 
@@ -12863,6 +13833,9 @@ From Reddit's [thread](https://www.reddit.com/r/tea/comments/6qbh4l/matcha/):
 -   <http://www.myokoen.com/shop/index.html>
 
 # \[2018-04-04 Wed\] Getting macOS app bundle ID
+---
+id: getting-macos-app-bundle-id
+---
 
 From [stack overflow](https://stackoverflow.com/questions/39464668/how-to-get-bundle-id-of-mac-application#39464824):
 
@@ -12879,6 +13852,9 @@ mdls -name kMDItemCFBundleIdentifier -r SomeApp.app
 ```
 
 # \[2018-03-31 Sat\] Trying out chunkwm
+---
+id: trying-out-chunkwm
+---
 
 ![](https://xenodium.com/images/trying-out-chunkwm/chunkwm.png)
 
@@ -12939,6 +13915,9 @@ Some additional Mission Control and keyboard shortcut preferences:
 ![](https://xenodium.com/images/trying-out-chunkwm/keyboard_shortcuts.png)
 
 # \[2018-02-06 Tue\] Building bazel on macOS
+---
+id: building-bazel-on-macos
+---
 
 ## Bootstrap
 
@@ -12965,6 +13944,9 @@ bazel build //src:bazel
 -   <https://github.com/bazelbuild/rules_apple.git> @ e921a9f727e039c8b5087d4f98c5d09f189658cd
 
 # \[2018-01-07 Sun\] Extracting files from pkg
+---
+id: extracting-files-from-pkg
+---
 
 ``` {.bash org-language="sh"}
 mkdir tmp
@@ -12974,6 +13956,9 @@ cat Payload | gunzip -dc |cpio -i
 ```
 
 # \[2018-01-07 Sun\] Installing Inkscape with homebrew
+---
+id: installing-inkscape-with-homebrew
+---
 
 ``` {.bash org-language="sh"}
 brew tap caskroom/cask
@@ -12981,6 +13966,9 @@ brew install caskformula/caskformula/inkscape
 ```
 
 # \[2017-12-16 Sat\] Magit amend commit author
+---
+id: magit-amend-commit-author
+---
 
 Rarely use it, but handy. Use Magit to amend git commit author.
 
@@ -12997,6 +13985,9 @@ git commit --amend --author="name <email>"
 ![](https://xenodium.com/images/amend-git-commit-author-on-magit/amending.gif)
 
 # \[2017-12-13 Wed\] Homebrew install from cache
+---
+id: homebrew-install-from-cache
+---
 
 Came across a 404 while installing graphviz-2.40.1.tar.gz via homebrew. If you can find the package elsewhere, copy over to homebrew's cache directory.
 
@@ -13005,6 +13996,9 @@ brew --cache
 ```
 
 # \[2017-11-16 Thu\] org-babel Objective-C support
+---
+id: org-babel-objective-c-support
+---
 
 Wanted to quickly execute an Objective-C snippet. org-babel didn't support it out of the box, but adding it was straightforward (looked at ob-C.el and ob-java.el):
 
@@ -13057,6 +14051,9 @@ int main() {
 ```
 
 # \[2017-11-12 Sun\] iOS dev command-line goodies
+---
+id: ios-dev-command-line-goodies
+---
 
 ## Install ipa on device
 
@@ -13109,6 +14106,9 @@ xcrun simctl launch booted "${BUNDLE_ID}"
 ```
 
 # \[2017-11-01 Wed\] Eshell pcomplete company completion
+---
+id: eshell-pcomplete-company-completion
+---
 
 Howard Abrams's [Introduction to eshell video](https://www.youtube.com/watch?v=RhYNu6i_uY4) prompted me to poke at eshell some more. This time, I got eshell context aware completion by glueing the excellent [company](https://company-mode.github.io) and [pcomplete](https://masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs) packages.
 
@@ -13158,6 +14158,9 @@ Don't forget to add *company-pcomplete* to *company-backends,* and if you want a
 ```
 
 # \[2017-09-10 Sun\] Basic imenu in helpful-mode
+---
+id: basic-imenu-in-helpful-mode
+---
 
 I'm finding Wilfred Hughes's [helpful-mode](https://github.com/Wilfred/helpful), well… rather helpful. However, I'm missing imenu support. Here's a hacky way to get basic imenu.
 
@@ -13194,6 +14197,9 @@ I'm finding Wilfred Hughes's [helpful-mode](https://github.com/Wilfred/helpful),
 ```
 
 # \[2017-08-19 Sat\] Projectile shell dir company completion
+---
+id: projectile-shell-dir-company-completion
+---
 
 [Projectile](https://github.com/bbatsov/projectile) and [company](https://company-mode.github.io) are just amazing Emacs packages. Projectile gives random access to files, while company completes well… anything. For shells, Emacs has a handful of options.
 
@@ -13269,6 +14275,9 @@ Standing on the shoulders of package giants ([dash](https://github.com/magnars/d
 ```
 
 # \[2017-08-09 Wed\] Creating icns icons
+---
+id: creating-icns-icons
+---
 
 Stack overflow yields [Where can i find Icon Composer on Mac?](https://stackoverflow.com/questions/12437433/where-can-i-find-icon-composer-on-mac) when I did a quick search to convert a png to icns. For future reference:
 
@@ -13308,6 +14317,9 @@ echo Wrote ${BASENAME}.icns
 ```
 
 # \[2017-08-06 Sun\] Forcing aptX on MacOS bluetooth audio
+---
+id: forcing-aptx-on-macos-bluetooth-audio
+---
 
 Bought a pair of QuietComfort 35. Audio quality on MacOS was lagging compared to iOS. Googling led to different posts suggesting the use of Bluetooth Explorer to force aptX usage. Did the trick for me.
 
@@ -13330,10 +14342,16 @@ Check **Force use of aptX**:
 Don't forget to disconnect and reconnect your Bluetooth device.
 
 # \[2017-07-10 Mon\] Hungary travel bookmarks
+---
+id: hungary-travel-bookmarks
+---
 
 -   [My city: Budapest - Lonely Planet](https://www.lonelyplanet.com/hungary/budapest/travel-tips-and-articles/my-city-budapest/40625c8c-8a11-5710-a052-1479d276913c?).
 
 # \[2017-07-08 Sat\] Faster cursor movement on macOS
+---
+id: faster-cursor-movement-on-macos
+---
 
 Faster cursor movement on macOS by increasing your keyboard's initial key repeat subsequent key repeat.
 
@@ -13343,6 +14361,9 @@ defaults write -g InitialKeyRepeat -int 10
 ```
 
 # \[2017-07-07 Fri\] Search/insert one-liners with Emacs helm-ag
+---
+id: search-insert-one-liners-with-emacs-helm-ag
+---
 
 Emacs [helm](https://github.com/emacs-helm/helm) is awesome. [helm-ag](https://github.com/syohex/emacs-helm-ag) is double awesome. Searching for one-liners in your codebase, narrowing down with helm, and easily inserting is triple awesome.
 
@@ -13383,6 +14404,9 @@ Emacs [helm](https://github.com/emacs-helm/helm) is awesome. [helm-ag](https://g
 ```
 
 # \[2017-05-29 Mon\] Sleep bookmarks
+---
+id: sleep-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-03-12 Tue\]
@@ -13393,6 +14417,9 @@ Emacs [helm](https://github.com/emacs-helm/helm) is awesome. [helm-ag](https://g
 -   [Melatonin: Much More Than You Wanted To Know \| Slate Star Codex](https://slatestarcodex.com/2018/07/10/melatonin-much-more-than-you-wanted-to-know).
 
 # \[2017-05-28 Sun\] Tea bookmarks
+---
+id: tea-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-09 Sun\]
@@ -13402,6 +14429,9 @@ Emacs [helm](https://github.com/emacs-helm/helm) is awesome. [helm-ag](https://g
 -   [Nine Green Teas To Try \| Video (Andrew Weil, M.D.)](https://www.drweil.com/videos-features/videos/9-green-teas-to-try/).
 
 # \[2017-04-23 Sun\] Math bookmarks
+---
+id: math-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-09 Tue\]
@@ -13412,6 +14442,9 @@ Emacs [helm](https://github.com/emacs-helm/helm) is awesome. [helm-ag](https://g
 -   [Visually stunning math concepts which are easy to explain](https://math.stackexchange.com/questions/733754/visually-stunning-math-concepts-which-are-easy-to-explain).
 
 # \[2017-04-23 Sun\] GnuPG and macOS
+---
+id: gnupg-and-macos
+---
 
 Had problems installing and using GnuPG on macOS, primarily for Emacs use:
 
@@ -13446,6 +14479,9 @@ gpgconf --kill gpg-agent
 ```
 
 # \[2017-03-13 Mon\] Installing gnuplot on macOS
+---
+id: installing-gnuplot-on-macos
+---
 
 UPDATE(2019-05-19 Sun): Plan A and B use options no longer available since the recent changes to [remove all options from Homebrew/homebrew-core formulae](https://github.com/Homebrew/homebrew-core/issues/31510). See Plan C.
 
@@ -13535,6 +14571,9 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
     Success.
 
 # \[2017-01-22 Sun\] Tel Aviv travel bookmarks
+---
+id: tel-aviv-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -13550,10 +14589,16 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
 -   Tel Aviv museum of art.
 
 # \[2017-01-22 Sun\] Jerusalem travel bookmarks
+---
+id: jerusalem-travel-bookmarks
+---
 
 -   Jerusalem: Rooftop Mamilla restarurant.
 
 # \[2017-01-22 Sun\] Nepal travel bookmarks
+---
+id: nepal-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2022-10-01 Sat\]
@@ -13564,6 +14609,9 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
 -   [The Truth Behind the Mysterious Magnetic Hill of Ladakh - Vargis Khan](https://vargiskhan.com/log/truth-behind-mysterious-magnetic-hill-of-ladakh/).
 
 # \[2016-12-02 Fri\] Singapore notes
+---
+id: singapore-notes
+---
 
 -   Hotel Mono, 18 Mosque street #01-04.
 -   Buddha tooth relic museum.
@@ -13650,6 +14698,9 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
     -   Hi-Thrift (1 Geylang Rd): Second hand treasures? (\*\*).
 
 # \[2016-12-02 Fri\] Email provider bookmarks
+---
+id: email-provider-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-05-29 Tue\]
@@ -13666,6 +14717,9 @@ So far so good, but default gnuplot formula uses Qt and the Cocoa plugin could n
 -   [Soverin - Home - Soverin](https://soverin.net/).
 
 # \[2016-12-01 Thu\] Go snippets
+---
+id: go-snippets
+---
 
 ## Command-line flags
 
@@ -13715,8 +14769,14 @@ go run main.go -flag1 val1 -flag2 val2 arg
 ```
 
 # \[2016-12-01 Thu\] Javascript snippets
+---
+id: javascript-snippets
+---
 
 # \[2016-11-27 Sun\] Sydney travel bookmarks
+---
+id: sydney-travel-bookmarks
+---
 
 -   [17 Stunning Sydney Pools That Will Make You Want To Jump Back In The Water](https://www.buzzfeed.com/mikeynicholson/thats-not-a-pool-this-is-a-pool).
 -   [48 Hours in Sydney](http://apassionandapassport.com/2015/01/48-hours-sydney-australia/).
@@ -13736,10 +14796,16 @@ go run main.go -flag1 val1 -flag2 val2 arg
 -   [Three Blue Ducks](http://www.threeblueducks.com/).
 
 # \[2016-10-16 Sun\] Laos travel bookmark
+---
+id: laos-travel-bookmark
+---
 
 -   [Best Way to Enjoy Luang Prabang](https://www.youtube.com/watch?v=uImN-P4xh1U).
 
 # \[2016-10-08 Sat\] Singapore travel bookmarks
+---
+id: singapore-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -13760,15 +14826,24 @@ go run main.go -flag1 val1 -flag2 val2 arg
 -   [What is the best hawker center in singapore? (Reddit)](https://www.reddit.com/r/singapore/comments/5gf0y5/what_is_the_best_hawker_center_in_singapore/).
 
 # \[2016-10-01 Sat\] Cambodia travel bookmarks
+---
+id: cambodia-travel-bookmarks
+---
 
 -   Pub Street (Siem Reap, Cambodia).
 
 # \[2016-10-01 Sat\] New York travel bookmarks
+---
+id: new-york-travel-bookmarks
+---
 
 -   [Best taco joints in New York City - Lonely Planet](https://www.lonelyplanet.com/usa/new-york-city/travel-tips-and-articles/best-taco-joints-in-new-york-city).
 -   [Nice and/or fancy restaurant to eat at in brooklyn (Erica Joy's tweet)](https://twitter.com/EricaJoy/status/1079505326922174464).
 
 # \[2016-09-18 Sun\] API design bookmarks
+---
+id: api-design-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-09-05 Sat\]
@@ -13803,6 +14878,9 @@ go run main.go -flag1 val1 -flag2 val2 arg
 -   [Write code that is easy to delete, not easy to extend](http://programmingisterrible.com/post/139222674273/write-code-that-is-easy-to-delete-not-easy-to).
 
 # \[2016-09-18 Sun\] Handy pdf utilities
+---
+id: handy-pdf-utilities
+---
 
 Straight out of [How (and why) I made a zine](http://jvns.ca/blog/2016/08/29/how-i-made-a-zine), some handy utilities for generating pdfs…
 
@@ -13857,6 +14935,9 @@ pdfjam --booklet true --landscape --suffix book --letterpaper --signature 12 --b
 ```
 
 # \[2016-09-15 Thu\] Fuzzy search Emacs compile history
+---
+id: fuzzy-search-emacs-compile-history
+---
 
 I wrote about [searching bash history with Emacs Helm](#search-bash-history-with-emacs-helm) some time ago. Since then, I've learned about *completing-read* to generically handle simple Emacs completions (very handy for supporting Helm, Ivy, and Ido completions).
 
@@ -13874,6 +14955,9 @@ Here's a simple way to combine *completing-read* and the *compile* command to en
 ```
 
 # \[2016-09-05 Mon\] Jumping on the Emacs 25 bandwagon
+---
+id: jumping-on-emacs-25-bandwagon
+---
 
 Can't miss out on all the new fun. Emacs 25 RC2 is out and lots of people already using it. Since I'm mostly on MacOS these days, installing via homebrew with –devel, gets you RC2:
 
@@ -13886,6 +14970,9 @@ brew install emacs --devel --with-cocoa --with-gnutls --with-librsvg --with-imag
 The only hiccup so far's been org mode failing to export, which was fixed by re-installing it (follow [this thread](https://lists.gnu.org/archive/html/emacs-orgmode/2015-08/msg00320.html)).
 
 # \[2016-07-31 Sun\] San Francisco's Mission District travel bookmarks
+---
+id: san-franciscos-mission-district-travel-bookmarks
+---
 
 -   Atlas Cafe.
 -   Blue Bottle Coffee.
@@ -13908,6 +14995,9 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 -   Sugar lump coffee lounge.
 
 # \[2016-07-25 Mon\] Moscow travel bookmarks
+---
+id: moscow-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-10-07 Mon\]
@@ -13927,6 +15017,9 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 -   [Tsaritsyno park](http://www.tsaritsyno-museum.ru/index.php?lang=en).
 
 # \[2016-07-24 Sun\] Vietnam travel bookmarks
+---
+id: vietnam-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-11-29 Fri\]
@@ -13950,6 +15043,9 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 -   [Another favorite bookstore - Bookworm Hanoi \| The Saigon boy](https://saigonboy.me/another-favorite-bookstore-bookworm-hanoi)
 
 # \[2016-07-19 Tue\] Pokémon Go bookmarks
+---
+id: pokemon-go-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-07-24 Sun\]
@@ -13961,11 +15057,17 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 -   [Yet another "Tips and Tricks" from a level 20+ (Reddit)](https://www.reddit.com/r/pokemongo/comments/4srsiu/yet_another_tips_and_tricks_from_a_level_20).
 
 # \[2016-07-03 Sun\] Coffee bookmarks
+---
+id: coffee-bookmarks
+---
 
 -   [Changes properties of coffee brew during roasting](http://www.idosi.org/wasj/wasj2(5)/17.pdf).
 -   [Aeropress Iced Coffee](http://www.coffeegeek.com/guides/aeropresscoldbrew).
 
 # \[2016-07-03 Sun\] Machine learning bookmarks
+---
+id: machine-learning-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -13979,6 +15081,9 @@ The only hiccup so far's been org mode failing to export, which was fixed by re-
 -   [What are the best ways to pick up Deep Learning skills as an engineer? (Quora)](https://www.quora.com/What-are-the-best-ways-to-pick-up-Deep-Learning-skills-as-an-engineer/answer/Greg-Brockman?srid=cgo&share=d1ac0da2).
 
 # \[2016-06-17 Fri\] Emacs and emotional vocab
+---
+id: emacs-and-emotional-vocab
+---
 
 Having read [Are You in Despair? That’s Good](http://www.nytimes.com/2016/06/05/opinion/sunday/are-you-in-despair-thats-good.html), I was encouraged to expand my emotional vocabulary. As a [zone.el](https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el) fan (checkout [nyan](https://github.com/wasamasa/zone-nyan), [sl](https://github.com/kawabata/zone-sl), and [rainbow](https://github.com/kawabata/zone-rainbow)), I looked into writing a zone [program](https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el#L52). When *zone-when-idle* is set, zone acts as a screensaver of sorts. We can use this to display random emotional vocab whenever Emacs is idle for a period of time. Let's get to it…
 
@@ -14012,6 +15117,9 @@ Back to improving our emotional vocabulary, we'll need a dictionary for our goal
 UPDATE: Just came across [Animations With Emacs](http://blog.josephwilk.net/art/emacs-animation.html). A post with awesome zone examples.
 
 # \[2016-05-10 Tue\] Emacs: Find number of days between dates
+---
+id: emacs-find-number-of-days-between-dates
+---
 
 Needed to find the number of days between two dates. Emacs calendar must know this…
 
@@ -14026,6 +15134,9 @@ Needed to find the number of days between two dates. Emacs calendar must know th
 *Note: you can use the mouse to jump to another date, or "g d" (calendar-goto-date).*
 
 # \[2016-05-08 Sun\] RoutingHTTPServer snippet
+---
+id: routinghttpserver-snippet
+---
 
 [RoutingHTTPServer](https://github.com/mattstevens/RoutingHTTPServer) snippet:
 
@@ -14046,6 +15157,9 @@ if (![routingHTTPServer start:&error]) {
 ```
 
 # \[2016-05-06 Fri\] Alaska travel bookmarks
+---
+id: alaska-travel-bookmarks
+---
 
 -   Anchorage.
 -   Denali NP.
@@ -14056,6 +15170,9 @@ if (![routingHTTPServer start:&error]) {
 -   Talkeetna fishing.
 
 # \[2016-05-06 Fri\] UIViewController bookmarks
+---
+id: uiviewcontroller-bookmarks
+---
 
 -   [What's your number one tip for avoiding massive view controllers?](https://twitter.com/twostraws/status/1035193619307618304).
 -   [8 Patterns to Help You Destroy Massive View Controller](http://khanlou.com/2014/09/8-patterns-to-help-you-destroy-massive-view-controller/).
@@ -14073,11 +15190,17 @@ if (![routingHTTPServer start:&error]) {
 -   [Reactive Streams](http://www.reactive-streams.org).
 
 # \[2016-05-03 Tue\] When OOO impulse kicks in…
+---
+id: when-ooo-impulse-kicks-in
+---
 
 -   You start moving trivial bits of code into classes, with the anticipation that you might use it one day. Stop.
 -   On naming, semantic clarity trumps brevity. Yup, the verbosity may be worth it.
 
 # \[2016-05-02 Mon\] Pakistan travel bookmarks
+---
+id: pakistan-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-04-20 Thu\]
@@ -14090,6 +15213,9 @@ if (![routingHTTPServer start:&error]) {
 -   Shinwari BBQ.
 
 # \[2016-05-02 Mon\] Money bookmarks
+---
+id: money-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -14254,11 +15380,17 @@ if (![routingHTTPServer start:&error]) {
 -   [X-O.co.uk - Execution Only Share Dealing (broker)](http://www.x-o.co.uk/).
 
 # \[2016-05-02 Mon\] Scotland travel bookmarks
+---
+id: scotland-travel-bookmarks
+---
 
 -   [The Open Book (AirBnB + a bookshop)](https://www.airbnb.co.uk/rooms/7908227).
 -   [Where to eat in Edinburgh? (Twitter)](https://twitter.com/tehbus/status/884464692030308352)
 
 # \[2016-05-02 Mon\] St. Petersburg travel bookmarks
+---
+id: st-petersburg-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-08-05 Wed\]
@@ -14272,6 +15404,9 @@ if (![routingHTTPServer start:&error]) {
 -   [Stolle (pie shop)](http://www.stolle.ru/en/menu/saint-petersburg).
 
 # \[2016-05-02 Mon\] 8 week half-marathon training
+---
+id: 8-week-half-marathon-training
+---
 
 An 8-week training schedule:
 
@@ -14295,6 +15430,9 @@ An 8-week training schedule:
 
 
 # \[2016-05-02 Mon\] Haskell bookmarks
+---
+id: haskell-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-18 Thu\]
@@ -14314,6 +15452,9 @@ An 8-week training schedule:
 -   [Renzo Carbonara (Hackage)](https://hackage.haskell.org/user/RenzoCarbonara).
 
 # \[2016-04-17 Sun\] Haskell notes
+---
+id: haskell-notes
+---
 
 ## Referential transparency
 
@@ -14325,6 +15466,9 @@ An expression consistently evaluating to the same result, regardless of context.
 -   [wiki.haskell.org](https://wiki.haskell.org).
 
 # \[2016-03-28 Mon\] Emacs Objective-C tagging with RTags
+---
+id: emacs-objective-c-tagging-with-rtags
+---
 
 ## Install libclang on Mac
 
@@ -14391,6 +15535,9 @@ M-x rtags-find-symbol
 -   [Emacs as C++ IDE](http://syamajala.github.io/c-ide.html).
 
 # \[2016-03-10 Thu\] Database bookmarks
+---
+id: database-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-12-10 Sat\]
@@ -14400,10 +15547,16 @@ M-x rtags-find-symbol
 -   [Frank's compulsive guide to postal addresses](http://www.columbia.edu/~fdc/postal/).
 
 # \[2016-03-06 Sun\] Python tips backlog
+---
+id: python-tips-backlog
+---
 
 [TODO]{.todo .TODO} [A Better Pip Workflow (Hacker News)](https://news.ycombinator.com/item?id=11210370).
 
 # \[2016-03-05 Sat\] Bruges travel bookmarks
+---
+id: bruges-travel-bookmarks
+---
 
 -   [assietteblanche.be](http://www.assietteblanche.be/).
 -   Beer flavored meals at Den Dyver.
@@ -14422,6 +15575,9 @@ M-x rtags-find-symbol
 -   Walk behind Gruuthuse over the little Saint Bonifaas bridge.
 
 # \[2016-03-02 Wed\] Emacs lisp snippets
+---
+id: emacs-lisp-snippets
+---
 
 ## cl-loop for in
 
@@ -14492,6 +15648,9 @@ M-x rtags-find-symbol
 ```
 
 # \[2016-02-18 Thu\] Some modern Objective-C idioms
+---
+id: some-modern-objective-c-idioms
+---
 
 ## NSNumber literals
 
@@ -14515,10 +15674,16 @@ NSArray *mutableNames = [@[@"John\n", @"Peter\n", @"Jaye\n", @"George\n", @"Max"
 ```
 
 # \[2016-02-16 Tue\] Cross-platform development bookmarks
+---
+id: cross-platform-development-bookmarks
+---
 
 -   [How to Distribute Binaries for OS X Using Homebrew (Hacker News)](https://news.ycombinator.com/item?id=11105027).
 
 # \[2016-02-15 Mon\] Generating a random MAC address
+---
+id: generating-a-random-mac-address
+---
 
 As some point I had to generate a random MAC address. This is the snippet I used:
 
@@ -14541,6 +15706,9 @@ MAC => 00:16:3e:7e:f7:fa
 ```
 
 # \[2016-02-14 Sun\] Defined elisp variables matching regexp
+---
+id: defined-elisp-variables-matching-regexp
+---
 
 You can use "M-x *apropos-variable*" to get documentation for variables matching a pattern. For more flexibility, some elisp can help with getting a list of all variables matching a regexp:
 
@@ -14592,6 +15760,9 @@ tern-command => (tern)
 ```
 
 # \[2016-02-13 Sat\] Proselint via Emacs flycheck
+---
+id: proselint-via-emacs-flycheck
+---
 
 Based on [Linting Prose in Emacs](http://unconj.ca/blog/linting-prose-in-emacs.html)…
 
@@ -14620,6 +15791,9 @@ Also needs a flycheck checker defined:
 ```
 
 # \[2016-02-11 Thu\] Generate go struct definition from json file
+---
+id: generate-go-struct-definition-from-json-file
+---
 
 From [Generate go struct definition from json file](https://github.com/bittersweet/dotfiles/blob/master/notes/go.txt#L3), and before I forget:
 
@@ -14628,6 +15802,9 @@ curl http://url.tld/file.json | gojson -name=Repository
 ```
 
 # \[2016-02-11 Thu\] Doh! undo last commit (Magit edition)
+---
+id: doh-undo-last-commit-magit-edition
+---
 
 I previously noted [how to undo your last git commit (ie. soft reset)](#doh-undo-last-git-commit). Using Magit:
 
@@ -14647,6 +15824,9 @@ Or if you want a single function:
 ```
 
 # \[2016-02-06 Sat\] Redux bookmarks
+---
+id: redux-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-11-24 Sat\]
@@ -14685,6 +15865,9 @@ Or if you want a single function:
 -   [Understanding unidirectional data flow in React – Elizabeth Denhup – Medium](https://medium.com/@lizdenhup/understanding-unidirectional-data-flow-in-react-3e3524c09d8e).
 
 # \[2016-02-06 Sat\] Javascript tips backlog
+---
+id: javascript-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-02-13 Sat\]
@@ -14703,6 +15886,9 @@ Or if you want a single function:
 [TODO]{.todo .TODO} ES6 syntax: import \* as reducers from './reducers'.
 
 # \[2016-02-06 Sat\] Emacs lisp tips backlog
+---
+id: emacs-lisp-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-27 Thu\]
@@ -14741,6 +15927,9 @@ Or if you want a single function:
 [TODO]{.todo .TODO} From [\@\_wilfredh](https://twitter.com/_wilfredh/status/694643167056916480), use (interactive "\*") for commands that edit the buffer, so they show a helpful error if the buffer is read only.
 
 # \[2016-02-04 Thu\] Entering accents in Emacs
+---
+id: entering-accents-in-emacs
+---
 
 Via Irreal's [Entering Accented Characters in Emacs](http://irreal.org/blog/?p=4945), a reminder on how to enter accents using **C-x 8**. For example:
 
@@ -14749,12 +15938,18 @@ C-x 8 ' A -> Á
 ```
 
 # \[2016-02-04 Thu\] Really delete iPhone photos
+---
+id: really-delete-iphone-photos
+---
 
 After deleting photos, go to:
 
 > Albums -\> Recently Deleted -\> Select -\> Delete All
 
 # \[2016-02-03 Wed\] Vancouver travel bookmarks
+---
+id: vancouver-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -14764,6 +15959,9 @@ After deleting photos, go to:
 -   [The 15 most incredible places to visit in Canada](https://www.lonelyplanet.com/amp/articles/best-places-to-visit-in-canada).
 
 # \[2016-02-03 Wed\] Schnitzel recipe
+---
+id: schnitzel-recipe
+---
 
 Since [eating at Fischers's](#fischers-london-yes-but), I've been inclined to make Schnitzel. This is my attempt.
 
@@ -14792,6 +15990,9 @@ Since [eating at Fischers's](#fischers-london-yes-but), I've been inclined to ma
 ![](https://xenodium.com/images/schnitzel-recipe/schnitzel.jpg)
 
 # \[2016-02-03 Wed\] Hot reloading with react and redux
+---
+id: hot-reloading-with-react-and-redux
+---
 
 ## By Robert Knight ([\@robknight\_](http://twitter.com/robknight_)).
 
@@ -14807,6 +16008,9 @@ Since [eating at Fischers's](#fischers-london-yes-but), I've been inclined to ma
 -   <https://github.com/robertknight/hot-reloading-talk>
 
 # \[2016-02-03 Wed\] Converting Unix epoc time to human readable date
+---
+id: converting-unix-epoc-time-to-human-readable-date
+---
 
 Via [climagic](https://twitter.com/climagic)'s [Turn a Unix epoch time back into a human readable date](https://twitter.com/climagic/status/694780560221147136):
 
@@ -14831,6 +16035,9 @@ Tue Feb  3 07:15:00 GMT 1976
 ```
 
 # \[2016-02-03 Wed\] Objective-C bookmarks
+---
+id: objective-c-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-03-06 Sun\]
@@ -14851,6 +16058,9 @@ Tue Feb  3 07:15:00 GMT 1976
 -   [Using Swift String enums in Objective-C](https://medium.com/@oscarcortes/using-swift-string-enums-in-objective-c-f6683da5b92e#.4526yy6s4).
 
 # \[2016-02-02 Tue\] Timesinking bookmarks
+---
+id: timesinking-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-12 Sat\]
@@ -14862,6 +16072,9 @@ Tue Feb  3 07:15:00 GMT 1976
 -   [To knoll me is to love me (Subreddit)](https://www.reddit.com/r/knolling).
 
 # \[2016-02-02 Tue\] Suspend and reattach processes
+---
+id: suspend-and-reattach-processes
+---
 
 Via [climagic](https://twitter.com/climagic)'s [Suspend and reattach a process to screen](https://twitter.com/climagic/status/694242271286431744?refsrc=email&s=11):
 
@@ -14870,16 +16083,25 @@ longcmd ; [Ctrl-Z] ; bg ; disown ; screen ; reptyr $( pidof longcmd )
 ```
 
 # \[2016-02-02 Tue\] Czech Republic travel bookmarks
+---
+id: czech-republic-travel-bookmarks
+---
 
 -   [Strahov Monastery](https://en.wikipedia.org/wiki/Strahov_Monastery).
 
 # \[2016-02-02 Tue\] Meditation tips backlog
+---
+id: meditation-tips-backlog
+---
 
 [TODO]{.todo .TODO} [Real Happiness Audio Files](http://www.workman.com/static/realhappinessebook/).
 
 [DONE]{.done .DONE} [The science of craving](https://www.intelligentlifemagazine.com/content/features/wanting-versus-liking).
 
 # \[2016-02-02 Tue\] Append jpegs in a video sequence
+---
+id: append-jpegs-in-a-video-sequence
+---
 
 Via [climagic](https://twitter.com/climagic)'s [make slideshow from \*.jpg](https://twitter.com/climagic/status/692821765110767616?refsrc=email&s=11):
 
@@ -14890,6 +16112,9 @@ done
 ```
 
 # \[2016-02-02 Tue\] Regular expressions bookmarks
+---
+id: regular-expressions-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-02 Sat\]
@@ -14903,6 +16128,9 @@ done
 -   [Rubular: a Ruby regular expression editor](https://rubular.com/).
 
 # \[2016-02-02 Tue\] Typescript bookmarks
+---
+id: typescript-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -14920,10 +16148,16 @@ done
 -   [Up and Running with React Native and TypeScript](https://medium.com/react-native-training/up-and-running-with-react-native-and-typescript-8d398e910a19).
 
 # \[2016-02-02 Tue\] Hiding HTML elements
+---
+id: hiding-html-elements
+---
 
 Hide with [display:none](https://developer.mozilla.org/en-US/docs/Web/CSS/display) (exclude from layout) and [visibility:hidden](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) (include in layout).
 
 # \[2016-02-01 Mon\] Echo Emacs keybiding from function name
+---
+id: echo-emacs-keybiding-from-function-name
+---
 
 Picked up via Emacs Redux's [Display the Keybinding for a Command With Substitute-command-keys](http://emacsredux.com/blog/2016/02/01/display-the-keybinding-for-a-command-with-substitute-command-keys/), with my own example:
 
@@ -14936,6 +16170,9 @@ Press <f6> to export org file
 ```
 
 # \[2016-02-01 Mon\] Emacs dired for batch byte compilation
+---
+id: emacs-dired-for-batch-byte-compilation
+---
 
 Recently updated org-mode and started seeing an invalid function error:
 
@@ -14944,6 +16181,9 @@ Recently updated org-mode and started seeing an invalid function error:
 Just learned dired enables you to mark files and byte compile via *M-x dired-do-byte-compile*.
 
 # \[2016-01-29 Fri\] Serializing to JSON on iOS
+---
+id: serializing-to-json-on-ios
+---
 
 ``` objc
 NSDictionary *dictionary = @{
@@ -14965,6 +16205,9 @@ NSString *json =
 ```
 
 # \[2016-01-25 Mon\] Fischer's London: yes, but…
+---
+id: fischers-london-yes-but
+---
 
 ## Yes
 
@@ -14979,21 +16222,33 @@ Surprisingly, desserts (Topfenstrudel, Berggasse and coffee) were nothing specta
 ![](https://xenodium.com/images/fischers-london-yes-but/fischers-03.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-04.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-05.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-06.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-07.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-08.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-09.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-10.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-11.JPG) ![](https://xenodium.com/images/fischers-london-yes-but/fischers-12.JPG)
 
 # \[2016-01-25 Mon\] Polar travel bookmarks
+---
+id: polar-travel-bookmarks
+---
 
 -   [Quark expeditions](http://www.quarkexpeditions.com/en).
 
 # \[2016-01-24 Sun\] Sweden travel bookmarks
+---
+id: sweden-travel-bookmarks
+---
 
 -   [Fäviken restaurant (world's most isolated restaurant)](http://www.theworlds50best.com/list/1-50-winners/Faviken).
 -   [Hangouts in Stockholm](https://theculturetrip.com/europe/sweden/articles/the-most-hipster-hangouts-in-stockholm).
 -   Vasa Museum.
 
 # \[2016-01-20 Wed\] Handwriting bookmarks
+---
+id: handwriting-bookmarks
+---
 
 -   [briem.net](http://briem.net).
 -   [Handwriting that works](http://www.handwritingthatworks.com).
 
 # \[2016-01-20 Wed\] Chocolate fondant recipe
+---
+id: chocolate-fondant-recipe
+---
 
 My girlfriend recently made a delicious chocolate fondant. Saving the [The Guardian's recipe](http://www.theguardian.com/lifeandstyle/wordofmouth/2011/feb/10/how-cook-perfect-chocolate-fondants):
 
@@ -15014,6 +16269,9 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [The Guard
 4.  Put on to a hot baking tray and cook for 12 minutes (14 if from cold, 16 if frozen) until the tops are set and coming away from the sides of the moulds. Leave to rest for 30 seconds and then serve in the ramekins or turn out on to plates if you're feeling confident – they're great with clotted cream or plain ice cream.
 
 # \[2016-01-20 Wed\] Parenting bookmarks
+---
+id: parenting-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-03 Sat\]
@@ -15047,6 +16305,9 @@ My girlfriend recently made a delicious chocolate fondant. Saving the [The Guard
 -   [Why It's Okay to Throw Your Children's Art Away - The Atlantic](https://www.theatlantic.com/family/archive/2018/09/throw-your-childrens-art-away/570379/).
 
 # \[2016-01-19 Tue\] Ippudo London: yes, but…
+---
+id: ippudo-london-yes-but
+---
 
 ## Yes
 
@@ -15061,6 +16322,9 @@ The space feels soulless. Think generic, chain, Pizza Express…
 ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_00.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_01.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_02.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_03.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_04.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_05.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_06.JPG) ![](https://xenodium.com/images/ippudo-london-yes-but/ipuddo_07.JPG)
 
 # \[2016-01-19 Tue\] Added Emacs zone-rainbow
+---
+id: added-emacs-zone-rainbow
+---
 
 [kawabata's](http://twitter.com/kawabata) [zone-rainbow](https://github.com/kawabata/zone-rainbow) popped up on melpa today. Added to zone-programs. Just because :)
 
@@ -15074,6 +16338,9 @@ The space feels soulless. Think generic, chain, Pizza Express…
 ![](https://xenodium.com/images/added-emacs-zone-rainbow/zone-rainbow.gif)
 
 # \[2016-01-19 Tue\] Safari's Web Inspector keyboard shortcuts
+---
+id: safaris-web-inspector-keyboard-shortcuts
+---
 
 Via WebKit's blog, [Web Inspector Keyboard Shortcuts](https://webkit.org/blog/4038/web-inspector-keyboard-shortcuts/):
 
@@ -15083,6 +16350,9 @@ Via WebKit's blog, [Web Inspector Keyboard Shortcuts](https://webkit.org/blog/40
 -   F6 or ⌘’ step over.
 
 # \[2016-01-14 Thu\] Copenhagen travel bookmarks
+---
+id: copenhagen-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-09-01 Sun\]
@@ -15098,6 +16368,9 @@ Via WebKit's blog, [Web Inspector Keyboard Shortcuts](https://webkit.org/blog/40
 -   Torvehallerne (food).
 
 # \[2016-01-12 Tue\] Import UIKit for simpler debugging
+---
+id: import-uikit-for-simpler-debugging
+---
 
 I bookmarked [An \@import-ant Change in Xcode](http://furbo.org/2015/05/11/an-import-ant-change-in-xcode/) and immediately forgot about it. The gist is to import UIKit to simplify inspecting objects during an lldb session:
 
@@ -15113,6 +16386,9 @@ command alias foundation expr @import Foundation
 ```
 
 # \[2016-01-12 Tue\] iOS development tips backlog
+---
+id: ios-development-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-01-12 Tue\]
@@ -15129,6 +16405,9 @@ command alias foundation expr @import Foundation
 [DONE]{.done .DONE} [xctool](https://github.com/facebook/xctool).
 
 # \[2016-01-11 Mon\] Basic Emacs keybindings on Linux desktop
+---
+id: basic-emacs-keybindings-on-linux-desktop
+---
 
 Miss C-a, C-e in your browser and other Linux apps? You can enable the GTK Emacs key theme:
 
@@ -15151,6 +16430,9 @@ $ gnome-settings-daemon
 More at [Emacs Keybindings in Chrome Without Gnome](http://www.jefftk.com/p/emacs-keybindings-in-chrome-without-gnome) and [How to get Emacs key bindings in Ubuntu](http://promberger.info/linux/2010/02/16/how-to-get-emacs-key-bindings-in-ubuntu/).
 
 # \[2016-01-08 Fri\] Emacs Objective-C completion with Irony
+---
+id: emacs-objective-c-completion-with-irony
+---
 
 ## Install libclang on Mac
 
@@ -15212,6 +16494,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 > M-x irony-cdb-json-add-compile-commands-path
 
 # \[2016-01-07 Thu\] Finland travel bookmarks
+---
+id: finland-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-13 Sat\]
@@ -15226,6 +16511,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 -   Rovaniemi for reindeer, dog sled, santaland, artic circle photos.
 
 # \[2016-01-07 Thu\] Northern lights travel bookmarks
+---
+id: northern-lights-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-01-07 Thu\]
@@ -15241,6 +16529,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 -   Tromsø whale watching.
 
 # \[2016-01-06 Wed\] Mexico travel bookmarks
+---
+id: mexico-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-05 Mon\]
@@ -15250,6 +16541,9 @@ xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -re
 -   [San Francisco Acatepec](http://www.corazondepuebla.com.mx/acatepec.html).
 
 # \[2016-01-03 Sun\] Emacs highlight-symbol-mode
+---
+id: emacs-highlight-symbol-mode
+---
 
 Been a fan of [highlight-thing-mode](https://github.com/fgeller/highlight-thing.el). It automatically highlights all instances of symbol at point. Today, I gave [highlight-symbol](https://github.com/nschum/highlight-symbol.el) a try. Similar concept, but also adds the ability to jump to next/previous instances of symbol at point.
 
@@ -15268,6 +16562,9 @@ Been a fan of [highlight-thing-mode](https://github.com/fgeller/highlight-thing.
 ![](https://xenodium.com/images/emacs-highlight-symbol-mode/highlight-symbol.gif)
 
 # \[2016-01-03 Sun\] Gandhi's ever-contemporary wisdom
+---
+id: gandhis-ever-contemporary-wisdom
+---
 
 From [Gandhi: Radical Wisdom for a Changing World](http://www.amazon.co.uk/Gandhi-Changing-Mohandas-Karamchand-published/dp/B015GRZTP2):
 
@@ -15316,6 +16613,9 @@ Nishkulanand sings: "Renunciation of objects, without the renunciation of desire
 "The person who has taken the vow of swadeshi will never use articles which conceivably involve violation of truth in their manufature or on the part of their manufacturers."
 
 # \[2016-01-02 Sat\] Functional programming bookmarks
+---
+id: functional-programming-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-12-07 Sat\]
@@ -15329,6 +16629,9 @@ Nishkulanand sings: "Renunciation of objects, without the renunciation of desire
 -   [Why Functional Programming Matters](https://blog.acolyer.org/2016/09/14/why-functional-programming-matters/).
 
 # \[2016-01-02 Sat\] 9 Productivity tips
+---
+id: 9-productivity-tips
+---
 
 From HBR's [9 Productivity Tips from People Who Write About Productivity](https://hbr.org/2015/12/9-productivity-tips-from-people-who-write-about-productivity):
 
@@ -15343,6 +16646,9 @@ From HBR's [9 Productivity Tips from People Who Write About Productivity](https:
 9.  Make time now (automate, simplify, etc.).
 
 # \[2016-01-01 Fri\] First meal of 2016
+---
+id: first-meal-of-2016
+---
 
 ## Pancakes
 
@@ -15359,6 +16665,9 @@ Makes 10/11 pancakes.
 ![](https://xenodium.com/images/first-meal-of-2016/shortstack.jpg)
 
 # \[2016-01-01 Fri\] Last meal of 2015
+---
+id: last-meal-of-2015
+---
 
 For our last meal of 2015, I contributed dal and rotis. This is my first attempt at making either one of these. Both recipes based on Anupy Singla's [Indian for Everyone](http://www.amazon.co.uk/Indian-Everyone-Anupy-Singla/dp/1572841621).
 
@@ -15371,6 +16680,9 @@ For our last meal of 2015, I contributed dal and rotis. This is my first attempt
 ![](https://xenodium.com/images/last-meal-of-2015/roti-grid.png) ![](https://xenodium.com/images/last-meal-of-2015/roti.jpg)
 
 # \[2015-12-30 Wed\] Find in \$PATH with type and which
+---
+id: find-in-path-with-type-and-which
+---
 
 I typically use *which* to figure out the first binary found in \$PATH:
 
@@ -15395,6 +16707,9 @@ emacsclient is /usr/bin/emacsclient
 ```
 
 # \[2015-12-30 Wed\] npm basics
+---
+id: npm-basics
+---
 
 ## Global vs local package installation location
 
@@ -15502,6 +16817,9 @@ npm search linter
 Online documentation is great so far. More at [docs.npmjs.com](https://docs.npmjs.com).
 
 # \[2015-12-25 Fri\] Clojure bookmarks
+---
+id: clojure-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-05-05 Fri\]
@@ -15513,6 +16831,9 @@ Online documentation is great so far. More at [docs.npmjs.com](https://docs.npmj
 -   [GitHub - nrepl/nrepl: A Clojure network REPL that provides a server and client, along with some common APIs of use to IDEs and other tools that may need to evaluate Clojure code in remote environments.](https://github.com/nrepl/nrepl).
 
 # \[2015-12-21 Mon\] Mac OS X tips backlog
+---
+id: mac-os-x-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-03-06 Sun\]
@@ -15532,6 +16853,9 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.kwm.plist
 [DONE]{.done .DONE} [Disk Inventory X](http://www.derlien.com): disk usage utility for Mac.
 
 # \[2015-12-20 Sun\] Search bash history with Emacs helm
+---
+id: search-bash-history-with-emacs-helm
+---
 
 Following up from [changing CWD with helm projectile](#change-emacs-shells-cwd-with-helm-projectile), here's a way to search your bash history with helm:
 
@@ -15574,10 +16898,16 @@ Bonus: Replace existing M-r binding to use ar/helm-shell-search-history.
 ```
 
 # \[2015-12-19 Sat\] Medicine bookmarks
+---
+id: medicine-bookmarks
+---
 
 -   [Science-Based Medicine – Exploring issues and controversies in science and technology](https://sciencebasedmedicine.org/).
 
 # \[2015-12-19 Sat\] View DICOM files from your X-ray
+---
+id: view-dicom-files-from-your-x-ray
+---
 
 Got a CD with my chest X-ray from the hospital. Was expecting a pdf or an image of sorts, but the CD content was rather different. For starters, it was targeted at Windows users (AUTORUN.INF, MediaViewerLauncher.EXE and a bunch of DLLs):
 
@@ -15700,6 +17030,9 @@ $ dcmdata/apps/dcmdump DICOM/PAT_0000/STD_0000/SER_0000/OBJ_0001/IM_0001
 Of interest, David Clunie's [Medical Image Format Site](http://www.dclunie.com/).
 
 # \[2015-12-18 Fri\] Tip: GOOGLETRANSLATE your Spreadsheet
+---
+id: tip-googletranslate-your-spreadsheet
+---
 
 Examples from [reference](https://support.google.com/docs/answer/3093331):
 
@@ -15710,10 +17043,16 @@ Examples from [reference](https://support.google.com/docs/answer/3093331):
 ```
 
 # \[2015-12-18 Fri\] Organize your data with camlistore
+---
+id: organize-your-data-with-camlistore
+---
 
 Checking out [camlistore](https://camlistore.org) to organize all sorts of data. [Scaleway](https://www.scaleway.com/imagehub/camlistore/) enables you to deploy camlistore servers.
 
 # \[2015-12-17 Thu\] Maps dev bookmarks
+---
+id: maps-dev-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -15749,6 +17088,9 @@ Checking out [camlistore](https://camlistore.org) to organize all sorts of data.
 -   [World Borders Dataset (thematicmapping.org)](http://thematicmapping.org/downloads/world_borders.php).
 
 # \[2015-12-17 Thu\] Use ImageMagick to convert image to grayscale
+---
+id: use-imagemagick-to-convert-image-to-grayscale
+---
 
 Another ImageMagick one-liner I'll likely forget.
 
@@ -15757,6 +17099,9 @@ mogrify -type Grayscale image.png
 ```
 
 # \[2015-12-14 Mon\] Drill down Emacs dired with dired-subtree
+---
+id: drill-down-emacs-dired-with-dired-subtree
+---
 
 JCS, from [Irreal](http://irreal.org/blog), recently [highlighted](http://irreal.org/blog/?p%3D4777) fuco's [dired-hacks](https://github.com/Fuco1/dired-hacks). [dired-subtree](https://github.com/Fuco1/dired-hacks/blob/master/dired-subtree.el) is super handy for drilling subdirectories down. Bound \<tab\> and \<backtab\> to toggle and cycle subtrees.
 
@@ -15771,6 +17116,9 @@ JCS, from [Irreal](http://irreal.org/blog), recently [highlighted](http://irreal
 ![](https://xenodium.com/images/drill-down-emacs-dired-with-dired-subtree/dired-subtree.gif)
 
 # \[2015-12-14 Mon\] GPG (GnuPG) examples
+---
+id: gpg-examples
+---
 
 ## Generate key
 
@@ -15827,6 +17175,9 @@ gpg> save
 -   [The GNU Privacy handbook](https://www.gnupg.org/gph/en/manual.html).
 
 # \[2015-12-14 Mon\] CSS bookmarks
+---
+id: css-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-04-05 Sun\]
@@ -15847,6 +17198,9 @@ gpg> save
 -   [Web Design in 4 minutes (minimal css rules)](https://jgthms.com/web-design-in-4-minutes/).
 
 # \[2015-12-12 Sat\] Resume partial downloads with ssh and rsync
+---
+id: resume-partial-downloads-with-ssh-and-rsync
+---
 
 ``` {.bash org-language="sh"}
 rsync --rsync-path=/usr/local/bin/rsync \
@@ -15858,6 +17212,9 @@ rsync --rsync-path=/usr/local/bin/rsync \
 ```
 
 # \[2015-12-12 Sat\] Emacs text faces
+---
+id: emacs-text-faces
+---
 
 -   Text faces = Text styles.
 -   Face attributes: font, height, weight, slant, foreground/background color, and underlining or overlining.
@@ -15867,10 +17224,16 @@ rsync --rsync-path=/usr/local/bin/rsync \
 -   Unspecified attributes are taken from 'default' face.
 
 # \[2015-12-08 Tue\] Preview HTML pages on github
+---
+id: preview-html-pages-on-github
+---
 
 Prepend with <http://htmlpreview.github.io/>?. For example: <http://htmlpreview.github.io/?https://github.com/xenodium/xenodium.github.io/blob/master/index.html>
 
 # \[2015-12-07 Mon\] Flutter setup
+---
+id: flutter-setup
+---
 
 Based on [Getting Started with Flutter](http://flutter.io/getting-started/).
 
@@ -15887,6 +17250,9 @@ $ pub --version
 ```
 
 # \[2015-12-07 Mon\] Playing with Dart's analysis server
+---
+id: playing-with-darts-analysis-server
+---
 
 Dart SDK ships with an [analysis server](https://github.com/dart-lang/sdk/tree/master/pkg/analysis_server). Very handy if you'd like to write a completion plugin for your favorite editor. The API is well [documented](http://htmlpreview.github.io/?https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/doc/api.html). Of interest, there's [LocalDartServer.java](https://github.com/tomsontom/dartedit/blob/master/bundles/at.bestsolution.dart.server.api/src-gen/at/bestsolution/dart/server/api/internal/local/LocalDartServer.java), part of [dartedit](https://github.com/tomsontom/dartedit/blob/master/bundles/at.bestsolution.dart.server.api/src-gen/at/bestsolution/dart/server/api/internal/local/LocalDartServer.java).
 
@@ -15921,6 +17287,9 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 ```
 
 # \[2015-12-07 Mon\] Dart bookmarks
+---
+id: dart-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-12-08 Tue\]
@@ -15931,6 +17300,9 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 -   [Dart tools](https://www.dartlang.org/tools/).
 
 # \[2015-12-06 Sun\] Flutter bookmarks
+---
+id: flutter-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -15942,6 +17314,9 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 -   [Flutter: the good, the bad and the ugly – The ASOS Tech Blog – Medium](https://medium.com/asos-techblog/flutter-vs-react-native-for-ios-android-app-development-c41b4e038db9).
 
 # \[2015-12-06 Sun\] Swift bookmarks
+---
+id: swift-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2022-09-11 Sun\]
@@ -16055,6 +17430,9 @@ NOTE: The server reads requests from standard input. Either escape or execute th
 -   [Writing Your App Swiftly](https://www.slideshare.net/SommerPanage1/writing-your-app-swiftly/SommerPanage1/writing-your-app-swiftly).
 
 # \[2015-11-30 Mon\] Installing Emacs spaceline
+---
+id: installing-emacs-spaceline
+---
 
 Gave [Spaceline](https://github.com/TheBB/spaceline/) a try. [Spacemacs](https://github.com/syl20bnr/spacemacs)'s powerline theme. Setup was super simple (Thanks [Eivind Fonn](https://github.com/TheBB) and [Sylvain Benner](https://github.com/syl20bnr/spacemacs)):
 
@@ -16084,6 +17462,9 @@ Gave [Spaceline](https://github.com/TheBB/spaceline/) a try. [Spacemacs](https:/
 ![](https://xenodium.com/images/installing-emacs-spaceline/spaceline.png)
 
 # \[2015-11-29 Sun\] package.el incomprehensible buffer
+---
+id: package-el-incomprehensible-buffer
+---
 
 Came across "incomprehensible buffer" error in package.el. [Workaround patch](http://osdir.com/ml/general/2015-11/msg22232.html):
 
@@ -16102,6 +17483,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 ```
 
 # \[2015-11-29 Sun\] Leading bookmarks
+---
+id: leading-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-26 Sat\]
@@ -16124,6 +17508,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 -   [The Manager's Path: A Guide for Tech Leaders Navigating Growth and Change](https://www.amazon.com/Managers-Path-Leaders-Navigating-Growth/dp/1491973897).
 
 # \[2015-11-29 Sun\] Online reading backlog
+---
+id: online-reading-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-05-21 Sat\]
@@ -16150,6 +17537,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 [TODO]{.todo .TODO} [Your body language shapes who you are](https://www.ted.com/talks/amy_cuddy_your_body_language_shapes_who_you_are?language%3Den).
 
 # \[2015-11-28 Sat\] Travel lifestyle bookmarks
+---
+id: travel-lifestyle-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -16183,6 +17573,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 -   [Why You Should Remote Work in Taiwan](https://blog.calebjay.com/posts/why-taiwan/).
 
 # \[2015-11-26 Thu\] SQL bookmarks
+---
+id: sql-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-02-12 Tue\]
@@ -16196,6 +17589,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 -   [You Can Do it in SQL, Stop Writing Extra Code for it - DEV Community](https://dev.to/geshan/you-can-do-it-in-sql-stop-writing-extra-code-for-it-lok).
 
 # \[2015-11-26 Thu\] Unix/Linux tools bookmarks
+---
+id: unix-linux-tools-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -16305,6 +17701,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 -   [Your unofficial guide to dotfiles on GitHub](https://dotfiles.github.io/).
 
 # \[2015-11-26 Thu\] Couchbase React Native bookmarks
+---
+id: couchbase-react-native-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2017-04-23 Sun\]
@@ -16317,6 +17716,9 @@ Came across "incomprehensible buffer" error in package.el. [Workaround patch](ht
 -   [Getting Started with React Native Android and Couchbase Lite](http://blog.couchbase.com/2015/november/getting-started-with-react-native-android-and-couchbase-lite).
 
 # \[2015-11-26 Thu\] Installing Emacs 25 devel on Mac OS X
+---
+id: installing-emacs-on-mac-os-x
+---
 
 ## Stable
 
@@ -16342,6 +17744,9 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
 ```
 
 # \[2015-11-25 Wed\] Diagram tools bookmarks
+---
+id: diagram-tools-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-06-13 Sat\]
@@ -16359,12 +17764,18 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
 -   [What do you like using for software architecture diagrams? (twitter)](https://twitter.com/maybekatz/status/1137254612468154370).
 
 # \[2015-11-24 Tue\] Licensing bookmarks
+---
+id: licensing-bookmarks
+---
 
 -   [choosealicense.com](http://choosealicense.com/) (Choosing an open source license doesn’t need to be scary).
 -   [choosealicense.com (github)](https://github.com/github/choosealicense.com).
 -   [tldrlegal.com](https://tldrlegal.com/) (Software Licenses in Plain English).
 
 # \[2015-11-23 Mon\] Synology bookmarks
+---
+id: synology-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-08-03 Mon\]
@@ -16382,6 +17793,9 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
 -   [Reset your Admin password in your Synology – Synoguide](https://synoguide.com/2014/07/30/reset-admin-password-synology/).
 
 # \[2015-11-22 Sun\] Backup bookmarks
+---
+id: backup-bookmarks
+---
 
 -   [HGST Deskstar NAS 3.5-Inch 6TB 7200RPM SATA III 128MB Cache Internal Hard Drive (0S03839)](http://www.amazon.com/gp/product/B00O0M5QK8).
 -   [I found the Holy Grail of backups](https://www.stavros.io/posts/holy-grail-backups/).
@@ -16391,6 +17805,9 @@ $ find ~/.emacs.d/elpa -iname *.elc -exec rm '{}' \;
 -   [Tarsnap: online backups for the truly paranoid](http://www.tarsnap.com/).
 
 # \[2015-11-22 Sun\] Making hummus
+---
+id: making-hummus
+---
 
 Made hummus, based on [Delicious Istanbul's](http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/) [5 Secrets to Perfect Hummus](http://www.deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/) ([wayback machine](https://web.archive.org/web/20160829162734/deliciousistanbul.com/blog/2013/04/28/5-secrets-to-perfect-hummus/)) post.
 
@@ -16417,11 +17834,17 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 ![](https://xenodium.com/images/making-hummus/hummus-01.jpg) ![](https://xenodium.com/images/making-hummus/hummus-02.jpg) ![](https://xenodium.com/images/making-hummus/hummus-03.jpg) ![](https://xenodium.com/images/making-hummus/hummus-04.jpg) ![](https://xenodium.com/images/making-hummus/hummus-05.jpg) ![](https://xenodium.com/images/making-hummus/hummus-06.jpg) ![](https://xenodium.com/images/making-hummus/hummus-07.jpg) ![](https://xenodium.com/images/making-hummus/hummus-08.jpg) ![](https://xenodium.com/images/making-hummus/hummus-09.jpg)
 
 # \[2015-11-22 Sun\] Nara travel bookmarks
+---
+id: nara-travel-bookmarks
+---
 
 -   [Kōfuku-ji](https://en.wikipedia.org/wiki/K%25C5%258Dfuku-ji).
 -   [Nara Buddha temple](https://en.wikipedia.org/wiki/T%C5%8Ddai-ji).
 
 # \[2015-11-21 Sat\] Kubernetes bookmarks
+---
+id: kubernetes-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-10-22 Tue\]
@@ -16437,6 +17860,9 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 -   [The ultimate guide for local development on Kubernetes](https://codefresh.io/howtos/local-k8s-draft-skaffold-garden/).
 
 # \[2015-11-21 Sat\] Docker bookmarks
+---
+id: docker-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-03 Sun\]
@@ -16455,10 +17881,16 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 -   [What problems have you run into in practice when using containers?](https://twitter.com/b0rk/status/1237528379097616388).
 
 # \[2015-11-21 Sat\] Angular bookmarks
+---
+id: angular-bookmarks
+---
 
 -   [Egghead.io's Angular 2 lessons](https://egghead.io/technologies/angular2).
 
 # \[2015-11-21 Sat\] Mac OS bookmarks
+---
+id: mac-os-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-09-30 Sun\]
@@ -16486,12 +17918,18 @@ Keeps in fridge for 3-4 days. Freeze otherwise.
 -   [Which OS X Applications do you find indispensable? (Stack Exchange)](https://apple.stackexchange.com/questions/82/which-os-x-applications-do-you-find-indispensable/).
 
 # \[2015-11-21 Sat\] easy_install-\>pip-\>conda
+---
+id: easy_install-pip-conda
+---
 
 Spotted [Conda](http://conda.pydata.org/docs/index.html) package manager. It handles python installations, in addition to package management. There's also a package index provided by [Binstar](https://binstar.org/). Installed [Miniconda](http://conda.pydata.org/miniconda.html), the bare bones Conda environment.
 
 Can't find a python package in Binstar? Here's a post on [Using PyPi Packages with Conda](http://www.peterbronez.com/Using%2520PyPi%2520Packages%2520with%2520Conda). If that fails, you can try pip from your Conda python environment.
 
 # \[2015-11-16 Mon\] Traditional music bookmarks
+---
+id: traditional-music-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-11-17 Tue\]
@@ -16502,6 +17940,9 @@ Can't find a python package in Binstar? Here's a post on [Using PyPi Packages wi
 -   [Shruti Box comparison](https://www.youtube.com/watch?v%3D4PVGmjYypGU&feature%3Dyoutu.be).
 
 # \[2015-11-04 Wed\] Recover from an unresponsive Emacs
+---
+id: recover-from-an-unresponsive-emacs
+---
 
 [Wilfred Hughes](https://twitter.com/_wilfredh) has a handy [tip](https://twitter.com/_wilfredh/status/659499112677642242?refsrc%3Demail&s%3D11) to bail you out of a hung Emacs instance:
 
@@ -16512,6 +17953,9 @@ pkill -SIGUSR2 emacs
 ps. Not had a chance to try it, but next time it happens…
 
 # \[2015-10-25 Sun\] Training for under 50 min 10k run
+---
+id: training-for-under-50-min-10k-run
+---
 
 Not much training time for an under 50 minute 10k run, but here's an attempt (based on time-to-run's [sub-50](http://www.time-to-run.com/training/10k/sub50.htm)):
 
@@ -16531,6 +17975,9 @@ Not much training time for an under 50 minute 10k run, but here's an attempt (ba
                         (repeat x 3)
 
 # \[2015-10-25 Sun\] Reading a running training plan
+---
+id: reading-a-running-training-plan
+---
 
 A sample from [Kona Part 2's](http://lsanderstri.com/2014/10/15/kona-part-2/) comments:
 
@@ -16545,6 +17992,9 @@ Is read from left to right as:
 ```
 
 # \[2015-10-23 Fri\] Find binary in PATH using python
+---
+id: find-binary-in-path-using-python
+---
 
 ``` {.python results="output" exports="both"}
 import distutils.spawn
@@ -16556,6 +18006,9 @@ print distutils.spawn.find_executable('git')
 ```
 
 # \[2015-10-22 Thu\] Indonesia travel bookmarks
+---
+id: indonesia-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-02 Sat\]
@@ -16566,6 +18019,9 @@ print distutils.spawn.find_executable('git')
 -   [Rumah Gadang](https://en.wikipedia.org/wiki/Rumah_Gadang).
 
 # \[2015-10-22 Thu\] Malaysia travel bookmarks
+---
+id: malaysia-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-05-13 Sun\]
@@ -16575,6 +18031,9 @@ print distutils.spawn.find_executable('git')
 -   [How to Visit Penang's Kek Lok Si Temple (and What to Eat)](https://migrationology.com/kek-lok-si-temple-penang/).
 
 # \[2015-10-22 Thu\] Mongolia travel bookmarks
+---
+id: mongolia-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2017-07-21 Fri\]
@@ -16584,6 +18043,9 @@ print distutils.spawn.find_executable('git')
 -   [Terra cotta warriors at Mount Khan, Inner Mongolia](https://twitter.com/archpics/status/881270695614967808).
 
 # \[2015-10-22 Thu\] Running bookmarks
+---
+id: running-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-28 Fri\]
@@ -16601,6 +18063,9 @@ print distutils.spawn.find_executable('git')
 -   [Training towards a sub 50 minute 10K](http://www.time-to-run.com/training/10k/sub50.htm).
 
 # \[2015-10-22 Thu\] Media player bookmarks
+---
+id: media-player-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-05-01 Wed\]
@@ -16614,6 +18079,9 @@ print distutils.spawn.find_executable('git')
 -   [Soul – A language and IDE for audio coding ](https://news.ycombinator.com/item).
 
 # \[2015-10-17 Sat\] Get Emacs to gather links in posts
+---
+id: get-emacs-to-gather-links-in-posts
+---
 
 Comments in posts can be a great source of recommendations. Here's a way to extract post links using Emacs and [enlive](http://github.com/zweifisch/enlive).
 
@@ -16667,6 +18135,9 @@ Comments in posts can be a great source of recommendations. Here's a way to extr
 UPDATE(2019-04-13): Refreshed post with latest code from my [init](https://github.com/xenodium/dotsies/blob/9cf32157c5fec140218898dfcb11e74f623fec6c/emacs/ar/ar-url.el#L35). Thanks to [Gĳs](https://twitter.com/sjig) for pinging.
 
 # \[2015-10-16 Fri\] UX toolbox bookmarks
+---
+id: ux-toolbox-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-10-25 Sun\]
@@ -16684,6 +18155,9 @@ UPDATE(2019-04-13): Refreshed post with latest code from my [init](https://githu
 -   [WhatTheFont! (find out font names)](http://www.myfonts.com/WhatTheFont/).
 
 # \[2015-10-08 Thu\] Change Emacs shell's CWD with helm projectile
+---
+id: change-emacs-shells-cwd-with-helm-projectile
+---
 
 If using Emacs shell and helm projectile, you can wire these up to quickly change your current working directory.
 
@@ -16718,6 +18192,9 @@ If using Emacs shell and helm projectile, you can wire these up to quickly chang
 ```
 
 # \[2015-10-07 Wed\] Thermostat reset on Bosch WKD28350GB
+---
+id: thermostat-reset-on-bosch-wkd28350gb
+---
 
 My Bosch washer/dryer (WKD28350GB) stopped drying recently. Resetting the dryer's thermostat red breaker did the trick.
 
@@ -16726,6 +18203,9 @@ My Bosch washer/dryer (WKD28350GB) stopped drying recently. Resetting the dryer'
 Edit: Similar post [here](https://www.diynot.com/diy/threads/bosch-wkd28350gb-washer-dryer-no-heat-when-drying.466138/).
 
 # \[2015-10-05 Mon\] Javascript fetch node sample
+---
+id: javascript-fetch-node-sample
+---
 
 Playing with node and fetch:
 
@@ -16750,10 +18230,16 @@ fetch("http://xenodium.com/data/javascript-fetch-node-sample/message.json\n", {
 ```
 
 # \[2015-10-01 Thu\] Extract dominant colors in images
+---
+id: extract-dominant-colors-in-images
+---
 
 There's a handy [HN post](https://news.ycombinator.com/item?id%3D10309441) pointing to Javier López's [Using imagemagick, awk and kmeans to find dominant colors in images](http://javier.io/blog/en/2015/09/30/using-imagemagick-and-kmeans-to-find-dominant-colors-in-images.html). A comment also highlights [color-extract,](https://github.com/andrewgleave/color-extract) written in Go.
 
 # \[2015-09-28 Mon\] Find a word with regex and WordNet
+---
+id: find-a-word-with-regex-and-wordnet
+---
 
 Recently wanted to come up with a random keyword. Querying [WordNet](http://wordnet.princeton.edu/) and a regular expression did the job.
 
@@ -16792,6 +18278,9 @@ wholesome
 ```
 
 # \[2015-09-26 Sat\] Soundcloud's Go best practices (GopherCon 2014)
+---
+id: soundclouds-go-best-practices-gophercon-2014
+---
 
 Having watched the [video](https://www.youtube.com/watch?v%3DY1-RLAl7iOI), some takeaways:
 
@@ -16939,6 +18428,9 @@ func main() {
         5.  For binaries (use \_vendor subdir)
 
 # \[2015-09-23 Wed\] Sync pip with Mac OS updates
+---
+id: sync-pip-with-mac-os-updates
+---
 
 My pip installation recently broke after a Mac OS update.
 
@@ -16963,6 +18455,9 @@ $ sudo easy_install -U pip
 ```
 
 # \[2015-09-20 Sun\] Chinatown treats review
+---
+id: chinatown-treats-review
+---
 
 ## Recommended? yep
 
@@ -17005,6 +18500,9 @@ Was this post useful to you? do [reply](https://twitter.com/xenodium/status/6461
 London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. Very few deliver truly awesome food (even those expensive ones). Got suggestions? I'd love to hear from you [\@xenodium](https://twitter.com/xenodium).
 
 # \[2015-09-18 Fri\] React bookmarks
+---
+id: react-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-07-12 Thu\]
@@ -17117,12 +18615,18 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
 -   [Yasnippets for React](https://github.com/johnmastro/react-snippets.el).
 
 # \[2015-09-16 Wed\] Chinese rice vinegar
+---
+id: chinese-rice-vinegar
+---
 
 Note to self to buy [Gold Plum Chinkiang Vinegar](http://www.amazon.co.uk/dp/B00OG3L7N6/ref%3Dsr_1_1?ie%3DUTF8&qid%3D1442442376&sr%3D8-1&). Awesome with dim sum.
 
 ![](https://xenodium.com/images/chinese-rice-vinegar/chinkiang-vinegar.jpg)
 
 # \[2015-09-13 Sun\] Use ImageMagick to batch-resize images
+---
+id: use-imagemagick-to-batch-resize-images
+---
 
 Using percentage:
 
@@ -17158,6 +18662,9 @@ $ mogrify -resize 1080x1350 -gravity center -extent 1080 *.jpg
 ```
 
 # \[2015-09-08 Tue\] Lucky 7 review
+---
+id: lucky-7-review
+---
 
 ## Recommended? yep
 
@@ -17198,11 +18705,17 @@ Was this post useful to you? do [reply](https://twitter.com/xenodium/status/6431
 London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. Very few deliver truly awesome food (even those expensive ones). Got suggestions? I'd love to hear from you [\@xenodium](https://twitter.com/xenodium).
 
 # \[2015-09-02 Wed\] Sierra Leone travel bookmarks
+---
+id: sierra-leone-travel-bookmarks
+---
 
 -   [Sierra Leone marathon](http://www.sierraleonemarathon.com/).
 -   [Street Child charity](http://www.street-child.co.uk/).
 
 # \[2015-09-02 Wed\] London travel bookmarks
+---
+id: london-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-01-19 Sun\]
@@ -17217,6 +18730,9 @@ London is full of overhyped, gimmicky, and unnecessarily expensive restaurants. 
 -   [The most beautiful restaurants in London for 2020 \| CN Traveller](https://www.cntraveller.com/gallery/the-most-beautiful-restaurants-in-london).
 
 # \[2015-08-23 Sun\] Use ImageMagick to auto-orient images
+---
+id: use-imagemagick-to-auto-orient-images
+---
 
 Recently needed to rotate images based on EXIF metadata. ImageMagick to the rescue:
 
@@ -17225,12 +18741,18 @@ $ for i in *.png; do convert -auto-orient "$i" "$i"; done
 ```
 
 # \[2015-08-23 Sun\] Bengali Macher Jhol
+---
+id: bengali-macher-jhol
+---
 
 My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of India](http://www.nitamehta.com/Cookbook-of-Regional-Cuisines-of-India-%2528Veg-%2B-Non-Veg%2529_431.html). After improvisations and substitutions, here's my attempt at making Bengali Machcher Jhol:
 
 ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-00.png) ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-01.png) ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-02.png) ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-03.png) ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-04.png) ![](https://xenodium.com/images/bengali-machcher-jhol/bengali-machcher-jhol-05.png)
 
 # \[2015-08-22 Sat\] New habits for 2015
+---
+id: new-habits-for-2015
+---
 
 -   20 min morning meditations.
 -   [A better way to tie your shoes](http://www.ted.com/talks/terry_moore_how_to_tie_your_shoes).
@@ -17241,6 +18763,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   Nightly flossing.
 
 # \[2015-08-22 Sat\] Meditation retreats bookmarks
+---
+id: meditation-retreats-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-08-02 Sun\]
@@ -17252,6 +18777,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   [Vipassana Meditation (centers across world)](https://www.dhamma.org/en-US/index).
 
 # \[2018-07-08 Sun\] Human memory bookmarks
+---
+id: human-memory-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-03-11 Wed\]
@@ -17263,6 +18791,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   [Using Anki to remember what you read \| Hacker News](https://news.ycombinator.com/item?id=22492381).
 
 # \[2015-08-22 Sat\] Mindfulness/meditation bookmarks
+---
+id: meditation-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-05-08 Mon\]
@@ -17298,6 +18829,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   [The Energy Project blog](http://theenergyproject.com/blog).
 
 # \[2015-08-22 Sat\] Learning bookmarks
+---
+id: learning-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-12-10 Sat\]
@@ -17314,6 +18848,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   [Scientific Speed Reading: How to Read 300% Faster in 20 Minutes](http://fourhourworkweek.com/2009/07/30/speed-reading-and-accelerated-learning/).
 
 # \[2015-08-22 Sat\] Bundi travel bookmarks
+---
+id: bundi-travel-bookmarks
+---
 
 -   Bundi Haveli (accomodation).
 -   Hadoti Palace (accomodation).
@@ -17322,6 +18859,9 @@ My friend Sakhya brought me the wonderful [Cookbook of Regional Cuisines of Indi
 -   Kasera Paradise (accomodation).
 
 # \[2015-08-14 Fri\] Upgrading PL30 headphones
+---
+id: upgrading-pl30-headphones
+---
 
 I've loved my [Soundmagic PL30 in-ear headphones](http://www.amazon.com/Soundmagic-PL30-In-Ear-Headphones/dp/B001MQ3CCO). They're relatively inexpensive, comfortable, and great for exercising (they stay in). Audio quality and bass have been good enough (I don't need much). Unfortunately, I've had two pairs of PL30's and both stopped working after a year or two. I'm replacing the last pair with [RHA's MA750](http://www.amazon.co.uk/RHA-MA750-Isolating-In-Ear-Headphone-Black/dp/B00ELAM8LE) (an upgrade, me hopes).
 
@@ -17330,6 +18870,9 @@ Other contenders considered: [Etymotic Research HF5](http://www.amazon.co.uk/Ety
 I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't meet the same unfortunate fate. We'll see.
 
 # \[2015-08-13 Thu\] Quotes
+---
+id: quotes
+---
 
 -   ["Being good at something is about being curious enough to explore things to a level where most people give up."](https://twitter.com/stevemagness/status/633778359156125696?refsrc%3Demail&s%3D11)
 -   "The world is a book and those who do not travel read only one page." - Augustine of Hippo.
@@ -17337,10 +18880,16 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 -   ["Choose your words carefully. Words are cheap, but their effect can be expensive."](https://news.ycombinator.com/item?id=27696310)
 
 # \[2015-08-13 Thu\] Bhutan travel bookmarks
+---
+id: bhutan-travel-bookmarks
+---
 
 -   [Taktsang (Tiger’s Nest) Monastery](http://www.tigersnestbhutan.com/).
 
 # \[2015-08-12 Wed\] Cooking bookmarks
+---
+id: cooking-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-23 Wed\]
@@ -17375,6 +18924,9 @@ I'm somewhat nervous to pay more for a pair of headphones. Let's hope they don't
 -   [Why do steaks at high end restaurants taste so different from other steaks? (Quora)](https://www.quora.com/Why-do-steaks-at-high-end-restaurants-taste-so-different-from-other-steaks).
 
 # \[2015-08-11 Tue\] 9 week half-marathon training
+---
+id: 9-week-half-marathon-training
+---
 
 While reading [Zen Habits: Mastering the Art of Change](https://zenhabitsbook.s3.amazonaws.com/Zen%2520Habits%2520book.pdf), I comitted to running half marathon in mid-October. That's roughly two months from now. Here's a 9 week training schedule:
 
@@ -17405,6 +18957,9 @@ My times:
   9      Rest   44:24   Rest    27:12         26:09   Rest    1:58:28
 
 # \[2015-08-11 Tue\] Shanghai travel bookmarks
+---
+id: shanghai-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-11-29 Sun\]
@@ -17420,6 +18975,9 @@ My times:
 -   小样 (Little Yang's) for 生煎包 (sheng jian bao). Fried soup filled dumplings. Think skin crunchy bottom texture.
 
 # \[2015-08-10 Mon\] Singapore job board bookmarks
+---
+id: singapore-job-board-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-08-10 Mon\]
@@ -17431,6 +18989,9 @@ My times:
 -   [Those who relocated to Europe for a tech position: where did you find your job?](https://twitter.com/NataliePis/status/1130811744027316224).
 
 # \[2015-08-08 Sat\] Germany travel bookmarks
+---
+id: germany-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-04-10 Fri\]
@@ -17444,12 +19005,18 @@ My times:
 -   [SUDHAUS — Brauerei & Restaurant (try beef tartar. also pizza?)](https://www.sudhaus.at/).
 
 # \[2015-08-08 Sat\] Menorca travel bookmarks
+---
+id: menorca-travel-bookmarks
+---
 
 -   [Cala Macarella, Menorca](https://www.flickr.com/photos/paul_stephenson/4282369223/).
 -   [Punta Nati](https://en.wikipedia.org/wiki/Punta_Nati_Lighthouse).
 -   [Scooter rental in Menorca](http://www.lonelyplanet.com/spain/balearic-islands/menorca/activities/driving-offroading/scooter-rental-menorca).
 
 # \[2015-08-08 Sat\] Travel tools bookmarks
+---
+id: travel-tools-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-04 Fri\]
@@ -17478,6 +19045,9 @@ My times:
 -   [wwoof.net (Worldwide Opportunities on Organic Farms)](http://www.wwoof.net).
 
 # \[2015-08-08 Sat\] Philippines travel bookmarks
+---
+id: philippines-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-04-14 Sun\]
@@ -17489,6 +19059,9 @@ My times:
 -   [The best beaches of the Philippines](http://www.lonelyplanet.com/philippines/travel-tips-and-articles/77222).
 
 # \[2015-07-23 Thu\] Add site-specific browsers to your workflow
+---
+id: add-site-specific-browsers-to-your-workflow
+---
 
 There are three browser tabs continously used in my workflow: GMail, Google Calendar, and Google Play Music. I normally have many more tabs open, but these three I access periodically. As the number of open tabs increases, and I fail to cleanup, getting back to my usual three gets a little trickier.
 
@@ -17509,6 +19082,9 @@ And choose the default browser to open URLs.
 ![](https://xenodium.com/images/add-site-specific-browsers-to-your-workflow/default.png)
 
 # \[2015-07-20 Mon\] Sardinia travel bookmarks
+---
+id: sardinia-travel-bookmarks
+---
 
 -   Alghero.
 -   Baja Sardinia.
@@ -17526,6 +19102,9 @@ And choose the default browser to open URLs.
 -   Zedda e Piras vinyards (Alghero).
 
 # \[2015-07-17 Fri\] Open closest build file in Emacs
+---
+id: open-closest-build-file-in-emacs
+---
 
 Whether it's Makefile, SConstruct, BUILD, or your favorite build file, chances are you have to tweak it from time to time. `ar/open-build-file` searches your current and parent directories to find a build file.
 
@@ -17569,6 +19148,9 @@ Append `ar/project-file-names' to search for other file names."
 ```
 
 # \[2015-07-15 Wed\] Create iOS static fat libraries
+---
+id: create-ios-static-fat-libraries
+---
 
 Have separate static libraries for different iOS architectures? Stitch 'em up into a single fat library using with lipo:
 
@@ -17577,6 +19159,9 @@ $ lipo -create libOne_i386.a libOne_x86_64.a libOne_armv7.a libOne_arm64.a -outp
 ```
 
 # \[2015-07-15 Wed\] Settling scores with an org table
+---
+id: settling-scores-with-an-org-table
+---
 
 Recently kept track of expenses between a group of us. To settle the scores, I emailed an exported HTML table from an org file. This was simple enough and required no external viewer from recepients. The org table, in all its textful glory, looked as follows…
 
@@ -17617,6 +19202,9 @@ Recently kept track of expenses between a group of us. To settle the scores, I e
 #+TBLFM: @11$3=vsum(@2..@10);£ %.2f
 ```
 # \[2015-07-13 Mon\] Recognize new password prompts in Emacs shell
+---
+id: recognize-new-password-prompts-in-emacs-shell
+---
 
 At some point, you may come across a trusted command-line utility prompting you for a password, and Emacs shell happily displaying each typed character to the nearby-world to see. Luckily, you can train Emacs to recognize new password prompts and hide the typed characters in modes deriving from comint. Append the password prompt REGEXP:
 
@@ -17627,10 +19215,16 @@ At some point, you may come across a trusted command-line utility prompting you 
 ```
 
 # \[2015-07-11 Sat\] Bosnia and Hercegovina travel bookmarks
+---
+id: bosnia-and-hercegovina-travel-bookmarks
+---
 
 -   [Ten reasons to visit Bosnia & Hercegovina](http://www.lonelyplanet.com/bosnia-and-hercegovina/travel-tips-and-articles/ten-reasons-to-visit-bosnia-hercegovina).
 
 # \[2015-07-11 Sat\] Ireland travel bookmarks
+---
+id: ireland-travel-bookmarks
+---
 
 -   [Skellig Michael](https://en.wikipedia.org/wiki/Skellig_Michael).
 -   Fishy Fishy in Kinsale: beautiful town on the water.
@@ -17640,6 +19234,9 @@ At some point, you may come across a trusted command-line utility prompting you 
 -   [Old library chamber, Trinity College, Dublin](https://twitter.com/bilderbergh/status/1066223113774514176?s=12).
 
 # \[2015-07-09 Thu\] Pizza in London
+---
+id: pizza-in-london
+---
 
 Not tried these yet. Taking note:
 
@@ -17651,6 +19248,9 @@ Not tried these yet. Taking note:
 -   Well Kneaded Wagon (Date-dependent location).
 
 # \[2015-07-09 Thu\] mp4 to gif
+---
+id: mp4-to-gif
+---
 
 Converting mp4 to gif is handy for posting short screencasts. You can convert to gif using ffmpeg and optimize with imagemagick. To install:
 
@@ -17684,6 +19284,9 @@ ffmpeg -i in.mov -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3
 ```
 
 # \[2015-07-06 Mon\] Keyboards bookmarks
+---
+id: keyboards-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-12-20 Mon\]
@@ -17704,6 +19307,9 @@ ffmpeg -i in.mov -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3
 -   [Why Learn the Colemak Keyboard Layout?](http://sittingscribe.com/why-learn-the-colemak-keyboard-layout/).
 
 # \[2015-07-05 Sun\] United States travel bookmarks
+---
+id: united-states-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-04-21 Wed\]
@@ -17722,6 +19328,9 @@ ffmpeg -i in.mov -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3
 -   [Where can I afford to live in NYC with a \$100,000 salary and no debt? (Quora)](https://www.quora.com/Where-can-I-afford-to-live-in-NYC-with-a-100-000-salary-and-no-debt).
 
 # \[2015-07-05 Sun\] Lebanon travel bookmarks
+---
+id: lebanon-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-04-20 Thu\]
@@ -17731,10 +19340,16 @@ ffmpeg -i in.mov -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3
 -   [STEAK CRUSH (@steakcrush)](https://www.instagram.com/steakcrush).
 
 # \[2015-07-05 Sun\] Slovenia travel bookmarks
+---
+id: slovenia-travel-bookmarks
+---
 
 -   [Lake Bohinj](http://wildswim.com/lake-bohinj).
 
 # \[2015-07-05 Sun\] Belgium travel bookmarks
+---
+id: belgium-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-02-15 Sat\]
@@ -17744,6 +19359,9 @@ ffmpeg -i in.mov -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3
 -   [Travel arrangements around Brussels - zerokspot.com](https://zerokspot.com/weblog/2020/02/03/travel-arrangements-brussels/).
 
 # \[2015-07-03 Fri\] Fishing with Emacs
+---
+id: fishing-with-emacs
+---
 
 OK not quite, but having recently learned about [C-M-w (append-next-kill)](https://www.gnu.org/software/emacs/manual/html_node/emacs/Appending-Kills.html), I used it in a keyboard macro to fish out matching lines. This is similar to [flush-lines](https://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Repeating-Search.html), except the kill ring is also populated. This is handy, if you need the flushed lines. Here's an example.
 
@@ -17767,10 +19385,16 @@ region if active."
 ```
 
 # \[2015-07-03 Fri\] California travel bookmarks
+---
+id: california-travel-bookmarks
+---
 
 -   [General Sherman Tree at Sequoia National Park](https://en.wikipedia.org/wiki/Sequoia_National_Park).
 
 # \[2015-07-01 Wed\] Rebind caps lock to control key on Mac OS X
+---
+id: rebind-caps-lock-to-control-key-on-mac-os-x
+---
 
 Let's see if this one sticks. I'll give caps lock as control a try. Rebinding the keys on Mac OS X is easy enough:
 
@@ -17779,6 +19403,9 @@ Let's see if this one sticks. I'll give caps lock as control a try. Rebinding th
 > System Preferences -\> Keyboard -\> Keyboard Tab -\> Modifier Keys…
 
 # \[2015-06-30 Tue\] Searchable ebooks in Emacs
+---
+id: searchable-ebooks-in-emacs
+---
 
 If you haven't bought [Mastering Emacs](https://www.masteringemacs.org/book) by [Mickey Petersen](https://twitter.com/mickeynp), you should. It's a wonderful source of Emacs tips. Having just finished the ebook on my Kindle, I was keen to go back and fish out some of that newly found wisdom. My immediate reaction was to figure out a way to make the ebook searchable from Emacs.
 
@@ -17797,6 +19424,9 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 ![](https://xenodium.com/images/searchable-ebooks-in-emacs/mastering-emacs-org-02.png)
 
 # \[2015-06-21 Sun\] Portugal travel bookmarks
+---
+id: portugal-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-07-09 Sun\]
@@ -17847,6 +19477,9 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 -   [World's longest pedestrian suspension bridge](https://edition.cnn.com/travel/article/world-longest-pedestrian-suspension-bridge-portugal-arouca/index.html).
 
 # \[2015-06-21 Sun\] Bulgaria travel bookmarks
+---
+id: bulgaria-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-06-21 Sun\]
@@ -17855,6 +19488,9 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 -   [Devetashka Cave](https://twitter.com/EarthPix/status/612661559018528768/photo/1).
 
 # \[2015-06-21 Sun\] Presenting bookmarks
+---
+id: presenting-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-01-13 Wed\]
@@ -17865,12 +19501,18 @@ After a some tidying (mostly removing BEGIN_HTML/END_HTML blocks and adding TITL
 -   [Speaker style bingo: 10 presentation anti-patterns](http://www.troyhunt.com/2015/06/speaker-style-bingo-10-presentation.html?m%3D1).
 
 # \[2015-06-21 Sun\] Bali travel bookmarks
+---
+id: bali-travel-bookmarks
+---
 
 -   [Gili Islands travel (Nusa Tenggara, Indonesia - Lonely Planet)](https://www.lonelyplanet.com/indonesia/nusa-tenggara/gili-islands).
 -   [Manta snorkeling Nusa Penida – When? Where? How much?](https://snorkelaroundtheworld.com/2018/09/manta-snorkeling-nusa-penida/).
 -   Pura Lempuyang, Bali.
 
 # \[2015-06-17 Wed\] WWDC app for OS X
+---
+id: wwdc-app-for-os-x
+---
 
 [Guilherme Rambo](https://github.com/insidegui) created a great OS X [OS X app for viewing WWDC content](https://github.com/insidegui/WWDC). Just installed it. Super handy. Thanks. Installing as simple as:
 
@@ -17879,6 +19521,9 @@ $ brew cask install wwdc
 ```
 
 # \[2015-06-15 Mon\] Debugging Objective-C reference cycles
+---
+id: debugging-objective-c-reference-cycles
+---
 
 Overriding retain/release/autorelease may be handy while debugging:
 
@@ -17900,6 +19545,9 @@ Overriding retain/release/autorelease may be handy while debugging:
 ```
 
 # \[2015-06-13 Sat\] London grub
+---
+id: london-grub
+---
 
 Beyond the hype, buzz, and pricey gimmicks… Places to eat in London:
 
@@ -17921,6 +19569,9 @@ Beyond the hype, buzz, and pricey gimmicks… Places to eat in London:
 -   Tonkotsu.
 
 # \[2015-06-08 Mon\] My working playlist
+---
+id: my-working-playlist
+---
 
 It's been a while since I spotted [The Ultimate Music Collection for Getting Work Done](http://www.asianefficiency.com/motivation/music-working/). Since then, I've been on the lookout for music to work to. Some favorites:
 
@@ -17957,6 +19608,9 @@ It's been a while since I spotted [The Ultimate Music Collection for Getting Wor
 -   [Youth Lagoon - The Year Of Hibernation](https://play.google.com/store/music/album/Youth_Lagoon_The_Year_Of_Hibernation?id%3DBfw6onp7zxplpmlrheu3rmd3yui).
 
 # \[2015-06-02 Tue\] Xcode bookmarks
+---
+id: xcode-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-23 Sat\]
@@ -17970,11 +19624,17 @@ It's been a while since I spotted [The Ultimate Music Collection for Getting Wor
 -   [Reverse-engineering Xcode with dtrace](http://chen.do/blog/2013/10/22/reverse-engineering-xcode-with-dtrace/).
 
 # \[2015-06-02 Tue\] Costa Rica travel bookmarks
+---
+id: costa-rica-travel-bookmarks
+---
 
 -   [Catarata del Toro](https://twitter.com/planetepics/status/603851463509540864/photo/1).
 -   [What are the best travel hacks when traveling to Costa Rica? (Quora)](https://www.quora.com/What-are-the-best-travel-hacks-when-traveling-to-Costa-Rica).
 
 # \[2015-06-02 Tue\] Australia travel bookmarks
+---
+id: australia-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-12-01 Thu\]
@@ -17989,10 +19649,16 @@ It's been a while since I spotted [The Ultimate Music Collection for Getting Wor
 -   [Tree Top Walk (Walpole, Australia): Top Tips Before You Go - TripAdvisor](https://www.tripadvisor.com/Attraction_Review-g488368-d2415480-Reviews-Tree_Top_Walk-Walpole_Western_Australia.html).
 
 # \[2015-06-02 Tue\] Samoa travel bookmarks
+---
+id: samoa-travel-bookmarks
+---
 
 -   [To Sua ocean trench](http://www.samoa.travel/activity/to-sua-ocean-trench).
 
 # \[2015-06-02 Tue\] Norway travel bookmarks
+---
+id: norway-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-03-28 Sat\]
@@ -18010,6 +19676,9 @@ It's been a while since I spotted [The Ultimate Music Collection for Getting Wor
 -   [The Atlantic Road - Atlanterhavsveien / Atlanterhavsvegen](http://www.theatlanticroad.com/).
 
 # \[2015-06-02 Tue\] Los Angeles travel bookmarks
+---
+id: los-angeles-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-29 Mon\]
@@ -18019,20 +19688,32 @@ It's been a while since I spotted [The Ultimate Music Collection for Getting Wor
 -   [Blue Star Donuts (SF + LA)](http://www.bluestardonuts.com/).
 
 # \[2015-05-28 Thu\] Mastering Emacs is out
+---
+id: mastering-emacs-is-out
+---
 
 Emacs is amazingly alive. New packages are regularly listed on [melpa](http://melpa.org) and a new book just came out: [Mastering Emacs](https://www.masteringemacs.org/book) by [Mickey Petersen](https://twitter.com/mickeynp).
 
 [![](https://xenodium.com/images/mastering-emacs-is-out/cover.png)](https://www.masteringemacs.org/book)
 
 # \[2015-05-25 Mon\] South Carolina travel bookmarks
+---
+id: south-carolina-travel-bookmarks
+---
 
 -   [Angel Oak tree](https://en.wikipedia.org/wiki/Angel_Oak).
 
 # \[2015-05-25 Mon\] Colorado travel bookmarks
+---
+id: colorado-travel-bookmarks
+---
 
 -   [Horseshoe Bend](http://horseshoebend.com/).
 
 # \[2015-05-25 Mon\] Bash bookmarks
+---
+id: bash-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-07-07 Sun\]
@@ -18053,12 +19734,18 @@ Emacs is amazingly alive. New packages are regularly listed on [melpa](http://me
 -   [The Bash Academy](http://bash.academy).
 
 # \[2015-05-25 Mon\] restclient.el
+---
+id: restclient.el
+---
 
 Installed [Pashky's](https://github.com/pashky/restclient.el) [restclient.el](https://github.com/pashky/restclient.el) Emacs package. Super helpful when trying out REST APIs.
 
 ![](https://xenodium.com/images/restclient.el/restclient.png)
 
 # \[2015-05-25 Mon\] Seatle travel bookmarks
+---
+id: seatle-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-04-12 Fri\]
@@ -18069,6 +19756,9 @@ Installed [Pashky's](https://github.com/pashky/restclient.el) [restclient.el](ht
 -   [Le Panier](https://www.lepanier.com/).
 
 # \[2015-05-25 Mon\] Berlin travel bookmarks
+---
+id: berlin-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-01-12 Tue\]
@@ -18080,16 +19770,25 @@ Installed [Pashky's](https://github.com/pashky/restclient.el) [restclient.el](ht
 -   [The best of hidden Berlin](http://www.lonelyplanet.com/germany/berlin/travel-tips-and-articles/75972).
 
 # \[2015-05-25 Mon\] Skeuomorph
+---
+id: skeuomorph
+---
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Skeuomorph), skeuomorph *ˈskjuːəmɔrf* is a derivative object that retains ornamental design cues from structures that were necessary in the original. Examples include pottery embellished with imitation rivets reminiscent of similar pots made of metal and a software calendar that imitates the appearance of binding on a paper desk calendar.
 
 # \[2015-05-25 Mon\] define-word
+---
+id: define-word
+---
 
 Installed [Abo Abo's](https://github.com/abo-abo) [define-word](https://github.com/abo-abo/define-word) Emacs package. A handy package to define words at point.
 
 ![](https://xenodium.com/images/define-word/define-word.png)
 
 # \[2015-05-22 Fri\] Flushing empty lines in Emacs
+---
+id: flushing-empty-lines-in-emacs
+---
 
 Via [masteringemacs.org](https://www.masteringemacs.org), [removing blank lines in a buffer](https://www.masteringemacs.org/article/removing-blank-lines-buffer):
 
@@ -18098,6 +19797,9 @@ M-x flush-lines RET ^$ RET
 ```
 
 # \[2015-05-22 Fri\] Regex bookmarks
+---
+id: regex-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-08-06 Tue\]
@@ -18110,6 +19812,9 @@ M-x flush-lines RET ^$ RET
 -   [RegExr: A website for interactive regex prototyping with syntax highlighting](http://regexr.com/).
 
 # \[2015-05-06 Wed\] Write to temp iOS snippet
+---
+id: write-to-temp-ios-snippet
+---
 
 ``` objc
 NSString *tempDir = NSTemporaryDirectory();
@@ -18119,6 +19824,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 ```
 
 # \[2015-05-04 Mon\] Greece travel bookmarks
+---
+id: greece-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-02 Sat\]
@@ -18135,6 +19843,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [Preveza at DuckDuckGo](https://duckduckgo.com/?q=preveza&t=ffab&iax=images&ia=images).
 
 # \[2015-05-04 Mon\] Sri Lanka travel bookmarks
+---
+id: sri-lanka-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-05-01 Sat\]
@@ -18146,6 +19857,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [The Safari Hotel (great area to go on safari, see leopards)](http://www.agoda.com/the-safari-hotel/hotel/yala-lk.html%20).
 
 # \[2015-05-04 Mon\] Switzerland travel bookmarks
+---
+id: switzerland-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-05-16 Sun\]
@@ -18158,6 +19872,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [Oeschinen Lake](https://en.wikipedia.org/wiki/Oeschinen_Lake).
 
 # \[2015-05-04 Mon\] Thailand travel bookmarks
+---
+id: thailand-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-04-08 Sun\]
@@ -18171,10 +19888,16 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [What makes Bangkok so popular? (Quora)](https://www.quora.com/What-makes-Bangkok-so-popular).
 
 # \[2015-05-04 Mon\] Madagascar travel bookmarks
+---
+id: madagascar-travel-bookmarks
+---
 
 -   [Avenue of the Baobabs](http://en.wikipedia.org/wiki/Avenue_of_the_Baobabs).
 
 # \[2015-05-04 Mon\] Hong Kong travel bookmarks
+---
+id: hong-kong-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-03-17 Sun\]
@@ -18190,6 +19913,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [Tsim Chai Kee](http://danielfooddiary.com/2014/12/13/tsimchaikee/) (recommended over Mak's wonton/soup).
 
 # \[2015-05-04 Mon\] Barcelona travel bookmarks
+---
+id: barcelona-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-08-26 Wed\]
@@ -18200,6 +19926,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   [La Pedrera](https://www.lapedrera.com/en/home).
 
 # \[2015-05-04 Mon\] Iceland travel bookmarks
+---
+id: iceland-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-12-25 Tue\]
@@ -18230,6 +19959,9 @@ NSString *dataFilePath = [tempDir stringByAppendingPathComponent:@"my.file"];
 -   South coast's waterfalls and caves.
 
 # \[2015-04-30 Thu\] Building clang-format
+---
+id: building-clang-format
+---
 
 Based on instructions from [Building clang-format and friends on OSX Mountain Lion](http://blog.hardcodes.de/articles/63/building-clang-format-and-friends-on-osx-mountain-lion).
 
@@ -18281,6 +20013,9 @@ Based on instructions from [Building clang-format and friends on OSX Mountain Li
 Bonus: use [clang-format-configurator](http://zed0.co.uk/clang-format-configurator/).
 
 # \[2015-04-30 Thu\] Programmatic iOS Auto Layout
+---
+id: programmatic-ios-auto-layout
+---
 
 Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AdoptingAutoLayout/AdoptingAutoLayout.html) and [Visual Format language](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage.html) for reference.
 
@@ -18327,6 +20062,9 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [Auto layout best practices for minimum pain](https://medium.com/@NSomar/auto-layout-best-practices-for-minimum-pain-c130b2b1a0f6#.uu0xxmqbr).
 
 # \[2015-04-23 Thu\] Japan travel bookmarks
+---
+id: japan-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -18408,6 +20146,9 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [国指定重要文化財「野村別邸　碧雲荘」](http://hekiunsou.jp/).
 
 # \[2015-10-21 Wed\] Kyoto travel bookmarks
+---
+id: kyoto-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-29 Tue\]
@@ -18437,6 +20178,9 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [WaRaiDo Nighttime tour](http://www.waraido.com/walking/gion.html).
 
 # \[2015-04-19 Sun\] Tokyo travel bookmarks
+---
+id: tokyo-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-12-03 Fri\]
@@ -18544,6 +20288,9 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [酒友](http://r.tabelog.com/tokyo/A1307/A130701/13041724/) (Sake & good Shabushabu), Roppongi.
 
 # \[2015-04-19 Sun\] UK travel bookmarks
+---
+id: uk-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -18564,6 +20311,9 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [X-Pilot (Redsand towers)](http://www.x-pilot.co.uk/).
 
 # \[2015-04-19 Sun\] Development quotes
+---
+id: development-quotes
+---
 
 -   [If your backlog is exploding the problem is not that your developers are slow, but that your business model is not based on reality](https://twitter.com/giorgiosironi/status/587507955521708032).
 -   [If you lose out on object allocation, you still win by avoiding expensive re-renders and re-calculations](http://redux.js.org/docs/introduction/PriorArt.html).
@@ -18572,11 +20322,17 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [Patterns failed, why we should case](https://www.deconstructconf.com/2017/brian-marick-patterns-failed-why-should-we-care).
 
 # \[2015-04-19 Sun\] Development philosophy
+---
+id: development-philosophy
+---
 
 -   Boyscout rule: Leave campground cleaner than found.
 -   [What can clang-format teach us about the human condition?](https://nibblestew.blogspot.com/2019/12/what-can-clang-format-teach-us-about.html?m=1).
 
 # \[2015-04-19 Sun\] Spain travel bookmarks
+---
+id: spain-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-18 Fri\]
@@ -18602,12 +20358,18 @@ Basic iOS auto layout usage. See [Adopting Auto Layout](https://developer.apple.
 -   [triciclo - grupotriciclo](https://eltriciclo.es/triciclo/).
 
 # \[2015-04-19 Sun\] Meet up bookmarks
+---
+id: meet-up-bookmarks
+---
 
 -   [Couchsurfing.org](https://www.couchsurfing.com).
 -   [Meetup](http://www.meetup.com/).
 -   [Tea with strangers](http://teawithstrangers.com).
 
 # \[2015-04-17 Fri\] Plantuml example
+---
+id: plantuml-example
+---
 
 Played with [Plantuml](http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf). Convenient for generating UML diagrams from text. Here's the [Language Reference Guide](http://plantuml.sourceforge.net/PlantUML_Language_Reference_Guide.pdf). Here's an example:
 
@@ -18652,6 +20414,9 @@ ps. Installation and verification [gist](https://gist.github.com/NLKNguyen/c3959
 ps2. More handy UML examples in this [fork](https://github.com/xenodium/uml).
 
 # \[2015-04-14 Tue\] Helm-describe-helm-attribute
+---
+id: helm-describe-helm-attribute
+---
 
 [Writing A Spotify Client in 16 Minutes](https://www.youtube.com/watch?v%3DXjKtkEMUYGc) is fantastic for picking up helm and Emacs lisp tips. Of interest helm-describe-helm-attribute, second to the awesomeness of helm-spotify integration.
 
@@ -18665,6 +20430,9 @@ ps2. More handy UML examples in this [fork](https://github.com/xenodium/uml).
 ```
 
 # \[2015-04-12 Sun\] Youtube videos in your org html export
+---
+id: youtube-videos-in-your-org-html-export
+---
 
 [Sacha Chua](https://twitter.com/sachachua) and [John Wiegley](https://twitter.com/jwiegley) posted a wonderful video on [Emacs lisp development tips](http://sachachua.com/blog/2015/04/2015-04-08-emacs-lisp-development-tips-with-john-wiegley). Embedding the following raw HTML using #+BEGIN_HTML/#+END_HTML:
 
@@ -18689,6 +20457,9 @@ results in an embedded video when exporting your org file:
 ```
 
 # \[2015-04-12 Sun\] .net bookmarks
+---
+id: dot-net-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -18697,11 +20468,17 @@ results in an embedded video when exporting your org file:
 -   [Open Source .Net libraries that make your life easier](http://thomasvm.github.io/blog/2015/03/17/open-source-net-libraries-that-make-your-life-easier/).
 
 # \[2015-04-10 Fri\] UK property bookmarks
+---
+id: uk-property-bookmarks
+---
 
 -   [Commute from](http://commutefrom.com/) (find property based on potential commute).
 -   [Mapumental Property](http://property.mapumental.com) (find property by travel time).
 
 # \[2015-04-09 Thu\] Git commit message style
+---
+id: git-commit-message-style
+---
 
 Adopted Tim Pope's Git commit message [style](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html). Also enabled Emacs's git-commit-training-wheels-mode:
 
@@ -18718,6 +20495,9 @@ Adopted Tim Pope's Git commit message [style](http://tbaggery.com/2008/04/19/a-n
 Another great [post](http://chris.beams.io/posts/git-commit/) by Chris Beams.
 
 # \[2015-04-06 Mon\] fci-mode and org-html-export-to-html bug
+---
+id: fci-mode-and-org-html-export-to-html-bug
+---
 
 Having enabled fci-mode in most programing modes, org-html-export-to-html now exports an additional unicode character in source blocks. This [thread](http://lists.gnu.org/archive/html/emacs-orgmode/2014-09/msg00777.html) has a workaround:
 
@@ -18734,6 +20514,9 @@ Having enabled fci-mode in most programing modes, org-html-export-to-html now ex
 ```
 
 # \[2015-04-03 Fri\] Try cocoapods out
+---
+id: try-cocoapods-out
+---
 
 [Cocapods try](https://github.com/CocoaPods/cocoapods-try):
 
@@ -18742,10 +20525,16 @@ $ pod try POD_NAME
 ```
 
 # \[2015-04-03 Fri\] Cornwall travel bookmarks
+---
+id: cornwall-travel-bookmarks
+---
 
 -   [Food along the way](http://barefootcornwall.com/on-the-road/).
 
 # \[2015-04-03 Fri\] Austria travel bookmarks
+---
+id: austria-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-06-02 Tue\]
@@ -18755,10 +20544,16 @@ $ pod try POD_NAME
 -   [Melk Abbey library](https://duckduckgo.com/?q%3Dmelk%2Baustria%2Blibrary&iax%3D1&ia%3Dimages).
 
 # \[2015-04-02 Thu\] Cinnamon desktop run dialog
+---
+id: cinnamon-desktop-run-dialog
+---
 
 Note to self. Open with Alt-f2.
 
 # \[2015-03-29 Sun\] Books for 2015
+---
+id: books-for-2015
+---
 
 -   [Catch 22](http://www.amazon.co.uk/Catch-22-Vintage-Classics-Joseph-Heller/dp/0099470462).
 -   [The Circle](http://www.amazon.co.uk/Circle-Dave-Eggers/dp/0804172293).
@@ -18766,6 +20561,9 @@ Note to self. Open with Alt-f2.
 -   [Thinking, Fast and Slow](http://www.amazon.co.uk/Thinking-Fast-Slow-Daniel-Kahneman/dp/0141033576).
 
 # \[2015-03-29 Sun\] Ayahuasca bookmarks
+---
+id: ayahuasca-bookmarks
+---
 
 -   [Ayaadvisor](http://ayaadvisor.org/listings/onanya-joni-shipibo-europe/).
 -   [Ayahuasca fatalities](https://www.erowid.org/chemicals/ayahuasca/ayahuasca_death.shtml).
@@ -18774,6 +20572,9 @@ Note to self. Open with Alt-f2.
 -   [The hacker who drank Ayahuasca](https://medium.com/@Grayfox/the-hacker-who-drank-ayahuasca-517148aa1ed4).
 
 # \[2015-03-28 Sat\] Emacs init.el bookmarks
+---
+id: emacs-init.el-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-12 Sat\]
@@ -18818,6 +20619,9 @@ Note to self. Open with Alt-f2.
 -   [Étienne Deparis's Emacs Main Initialization File](https://etienne.depar.is/emacs.d/init.html).
 
 # \[2015-03-28 Sat\] CSS vertical align using flex
+---
+id: css-vertical-align-using-flex
+---
 
 Codepen [snippet](http://codepen.io/oisinlavery/pen/Jmjtz):
 
@@ -18836,6 +20640,9 @@ p{
 ```
 
 # \[2015-03-26 Thu\] London diving schools
+---
+id: london-diving-schools
+---
 
 -   [London Diving School](http://londonschoolofdiving.co.uk). Not heard good comments.
 -   [Dive Wimbledon](http://www.divewimbledon.com). Heard ok comments.
@@ -18846,6 +20653,9 @@ p{
 -   Many suggest to get certified elsewhere. Perhaps Egypt via [Poseidon Divers](http://www.poseidondivers.com/).
 
 # \[2015-03-26 Thu\] Helm buffer URLs
+---
+id: helm-buffer-urls
+---
 
 Venturing into Emacs lisp and [Helm](https://github.com/emacs-helm/helm). Here's a go at listing all URLs in current buffer.
 
@@ -18878,18 +20688,27 @@ Venturing into Emacs lisp and [Helm](https://github.com/emacs-helm/helm). Here's
 ```
 
 # \[2015-03-23 Mon\] Doh! undo last git commit
+---
+id: doh-undo-last-git-commit
+---
 
 ``` {.bash org-language="sh"}
 $ git reset --soft HEAD~1
 ```
 
 # \[2015-03-22 Sun\] Resetting variables using defvar
+---
+id: resetting-variables-using-defvar
+---
 
 Want to re-evaluate defvars and modify variables? eval-defun (bound to C-M-x) can help. From the manual:
 
 > If the current defun is actually a call to \`defvar', then reset the variable using its initial value expression even if the variable already has some other value. (Normally \`defvar' does not change the variable's value if it already has a value.) Treat \`defcustom' similarly.
 
 # \[2015-03-22 Sun\] Broken Xcode plugins?
+---
+id: broken-xcode-plugins
+---
 
 Some Xcode plugins stopped loading after updating Xcode. Ensure the latest DVTPlugInCompatibilityUUIDs is added to the plugin's Info.plist. Get from:
 
@@ -18901,6 +20720,9 @@ $ defaults read \
 Additional suggestions as [Stack Overflow](http://stackoverflow.com/questions/30361228/why-are-my-xcode-plugins-such-as-clang-format-installed-with-alcatraz-no-longe).
 
 # \[2015-03-22 Sun\] Born to Run references
+---
+id: born-to-run-references
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-03-23 Mon\]
@@ -18927,6 +20749,9 @@ Recipe by [Megan Mignot](http://www.bellaonline.com/articles/art51802.asp), base
 -   2 teaspoons baking powder
 
 # \[2015-03-19 Thu\] Org tips from 2015-03-18 Emacs hangout
+---
+id: org-tips-from-2015-03-18-emacs-hangout
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-03-22 Sun\]
@@ -18950,6 +20775,9 @@ My super duper secret text I don't want to export.
 -   (helm-org-in-buffer-headings).
 
 # \[2015-03-19 Thu\] Food bookmarks
+---
+id: food-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-10-29 Thu\]
@@ -18961,10 +20789,16 @@ My super duper secret text I don't want to export.
 -   [Tarladalal recipes](http://www.tarladalal.com/).
 
 # \[2015-03-19 Thu\] Ethiopia travel bookmarks
+---
+id: ethiopia-travel-bookmarks
+---
 
 -   [Bet Giyorgis Church](https://en.wikipedia.org/wiki/Church_of_Saint_George,_Lalibela).
 
 # \[2015-03-19 Thu\] China travel bookmarks
+---
+id: china-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -18996,6 +20830,9 @@ My super duper secret text I don't want to export.
 -   [China's most epic high-speed rail journeys](https://www.lonelyplanet.com/china/travel-tips-and-articles/chinas-most-epic-high-speed-rail-journeys/40625c8c-8a11-5710-a052-1479d2768596).
 
 # \[2015-03-18 Wed\] South Korea travel bookmarks
+---
+id: south-korea-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-02 Sat\]
@@ -19006,6 +20843,9 @@ My super duper secret text I don't want to export.
 -   [Koi fish mural at Naksan Park, Seoul](http://www.humarakausar.com/tag/koi-fish-mural).
 
 # \[2015-03-18 Wed\] Sharing on iOS
+---
+id: sharing-on-ios
+---
 
 -   [UIActivityViewController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIActivityViewController_Class/).
     -   Use completionWithItemsHandler on iOS 8.
@@ -19043,6 +20883,9 @@ UIActivityViewController *controller =
 -   Want to a share URL to App Store? See [Technical Q&A 1633](https://developer.apple.com/library/ios/qa/qa1633/_index.html).
 
 # \[2015-03-18 Wed\] San Francisco travel bookmarks
+---
+id: san-francisco-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-29 Mon\]
@@ -19054,6 +20897,9 @@ UIActivityViewController *controller =
 -   [Tiled steps at 16th Moraga Street in San Francisco](http://www.tiledsteps.org/).
 
 # \[2015-03-18 Wed\] Istanbul travel bookmarks
+---
+id: istanbul-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-06-21 Sun\]
@@ -19068,12 +20914,18 @@ UIActivityViewController *controller =
 -   [Uskudar Fish Market](http://www.timwilmot.com/2012/04/fish-market-uskudar-istanbul.html).
 
 # \[2015-03-18 Wed\] Rome travel bookmarks
+---
+id: rome-travel-bookmarks
+---
 
 -   [Bike rental in Rome](http://www.topbikerental.com/nuovosito/eng/tour-rome/city-center.php).
 -   [Darkrome tours](http://www.darkrome.com/).
 -   [First time Rome: a beginner’s guide to the Eternal City](http://www.lonelyplanet.com/italy/travel-tips-and-articles/first-time-rome-a-beginners-guide-to-the-eternal-city#ixzz3lhwtbgg0).
 
 # \[2015-03-17 Tue\] Italy travel bookmarks
+---
+id: italy-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-09-20 Sun\]
@@ -19118,6 +20970,9 @@ UIActivityViewController *controller =
 -   [Volterra, Tuscany](https://en.wikipedia.org/wiki/Volterra).
 
 # \[2015-03-17 Tue\] Emacs lisp debug on entry
+---
+id: emacs-lisp-debug-on-entry
+---
 
 Wanted to track down which package was enabling ido-mode on my behalf. debug-on-entry to the rescue. Pass the method name in question and you're good to go.
 
@@ -19132,6 +20987,9 @@ When done, use cancel.
 ```
 
 # \[2015-03-17 Tue\] Burma travel bookmarks
+---
+id: burma-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-27 Sun\]
@@ -19147,11 +21005,17 @@ When done, use cancel.
 -   [zyklusdiewelt's Myanmar's photos](http://imgur.com/a/D1EQJ).
 
 # \[2015-03-16 Mon\] OS X Screencasts to animated GIF
+---
+id: os-x-screencasts-to-animated-gif
+---
 
 -   [Alex Dergachev](https://gist.github.com/dergachev/4627207) has a great [howto](https://gist.github.com/dergachev/4627207) for generating animated GIF out of OS X Screencasts.
 -   Of interest [GIF Brewery](http://gifbrewery.com/).
 
 # \[2015-03-15 Sun\] Writing Xcode plugins
+---
+id: writing-xcode-plugins
+---
 
 -   [Xcode-Plugin-Template](https://github.com/kattrali/Xcode-Plugin-Template) from [Delisa Mason](http://www.delisa.me/)/[kattrali](https://github.com/kattrali/Xcode-Plugin-Template).
     -   Ensure DVTPlugInCompatibilityUUIDs is in Info.plist.
@@ -19172,6 +21036,9 @@ defaults read \
 -   [Debugging your Xcode plugin](http://www.blackdogfoundry.com/blog/debugging-your-xcode-plugin/).
 
 # \[2015-03-15 Sun\] Uninstalling Alcatraz from Xcode
+---
+id: uninstalling-alcatraz-from-xcode
+---
 
 ``` {.bash org-language="sh"}
 $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin
@@ -19185,6 +21052,9 @@ $ rm -rf ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins/*
 ```
 
 # \[2015-03-14 Sat\] Prefill Emacs swiper with current region
+---
+id: prefill-emacs-swiper-with-current-region
+---
 
 The new [swiper](https://github.com/abo-abo/swiper) Emacs package is proving to be a great alternative to [helm-swoop](https://github.com/ShingoFukuyama/helm-swoop). Here's how to prefill with current region:
 
@@ -19203,6 +21073,9 @@ The new [swiper](https://github.com/abo-abo/swiper) Emacs package is proving to 
 ```
 
 # \[2015-03-14 Sat\] Change macOS app icon
+---
+id: change-mac-os-app-icon
+---
 
 -   Open the new icon (.icns) in Preview.
 -   Click on large image
@@ -19219,6 +21092,9 @@ The new [swiper](https://github.com/abo-abo/swiper) Emacs package is proving to 
 ![](https://xenodium.com/images/change-mac-os-app-icon/after.png)
 
 # \[2015-03-11 Wed\] Hack on Emacs London meetup bookmarks
+---
+id: hack-on-emacs-meetup
+---
 
 -   [European Lisp Symposium](http://www.european-lisp-symposium.org).
 -   [guide-key](https://github.com/kai2nenobu/guide-key) displays available key bindings.
@@ -19226,6 +21102,9 @@ The new [swiper](https://github.com/abo-abo/swiper) Emacs package is proving to 
 -   [swankr](https://github.com/csrhodes/swankr) REPL (swank protocol for R).
 
 # \[2015-03-09 Mon\] Working with OS X and Emacs tips
+---
+id: working-with-os-x-and-emacs-tips
+---
 
 From [M-x all-things-emacs](http://emacsblog.org), Ryan McGeary's OS X/Emacs [workflow](http://emacsblog.org/2011/01/04/how-i-work-working-with-os-x-and-emacs/).
 
@@ -19245,8 +21124,14 @@ From [M-x all-things-emacs](http://emacsblog.org), Ryan McGeary's OS X/Emacs [wo
 -   [Github](https://github.com/rmm5t/dotfiles).
 
 # \[2015-03-09 Mon\] Building ycmd
+---
+id: building-ycmd
+---
 
 ## Build
+---
+id: build-3
+---
 
 ``` {.bash org-language="sh"}
 $ git clone https://github.com/Valloric/ycmd.git
@@ -19268,12 +21153,18 @@ $ python ycmd
 -   [ycmd README](https://github.com/Valloric/ycmd/blob/master/README.md).
 
 # \[2015-03-08 Sun\] Regular bookmarks
+---
+id: regular-bookmarks
+---
 
 -   [Roads & Kingdoms (food)](http://roadsandkingdoms.com/category/food/).
 -   [Roads & Kingdoms (music)](http://roadsandkingdoms.com/category/music).
 -   [Roads & Kingdoms (travel)](http://roadsandkingdoms.com/category/travel/).
 
 # \[2015-03-08 Sun\] Photography bookmarks
+---
+id: photography-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-12 Sat\]
@@ -19289,6 +21180,9 @@ $ python ycmd
 -   [Photo Critique (Subreddit)](https://www.reddit.com/r/photocritique).
 
 # \[2015-03-08 Sun\] Paris travel bookmarks
+---
+id: paris-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-07-13 Wed\]
@@ -19323,6 +21217,9 @@ $ python ycmd
 -   [Where are the best flea markets in Paris? (Quora)](https://www.quora.com/Where-are-the-best-flea-markets-in-Paris).
 
 # \[2015-03-08 Sun\] Org mode bookmarks
+---
+id: org-mode-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -19438,12 +21335,18 @@ $ python ycmd
 -   [Zero to Emacs and Org-roam: a step-by-step guide](https://github.com/nobiot/Zero-to-Emacs-and-Org-roam).
 
 # \[2018-09-11 Tue\] London bar backlog
+---
+id: london-bar-backlog
+---
 
 ## Soho
 
 -   [68 and Boston (cocktails and wine bar)](http://www.68andboston.com).
 
 # \[2015-03-08 Sun\] London food backlog
+---
+id: london-food-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-05-25 Sat\]
@@ -19524,6 +21427,9 @@ $ python ycmd
 ## Bethnal Green
 
 ### [DONE]{.done .DONE} [Lahpet](https://lahpet.co.uk/) (Burmese) \<2018-12-02 Sun\> \<2018-12-27 Thu\>
+---
+id: lahpet-burmese-2018-12-02-sun-2018-12-27-thu
+---
 
 ## Brixton
 
@@ -19862,6 +21768,9 @@ $ python ycmd
 ## Southhall
 
 ### [DONE]{.done .DONE} [Brilliant restaurant](http://brilliantrestaurant.com) (healthier Indian). \<2018-12-27 Thu\>
+---
+id: brilliant-restaurant-healthier-indian.-2018-12-27-thu
+---
 
 ## Southbank
 
@@ -19942,6 +21851,9 @@ $ python ycmd
 [TODO]{.todo .TODO} Dalchini (Indian), try spicy cocunut fish curry.
 
 # \[2015-03-07 Sat\] UX bookmarks
+---
+id: ux-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-04 Fri\]
@@ -19994,6 +21906,9 @@ $ python ycmd
 -   [Why Showing Your Process is So Important!](https://blog.prototypr.io/why-showing-your-process-is-so-important-1e4129a5f5d2#.7o5bfjwd7).
 
 # \[2015-03-07 Sat\] Recipes
+---
+id: recipes
+---
 
 ## Jeera rice (cumin rice)
 
@@ -20087,6 +22002,9 @@ $ python ycmd
 -   Lettuces (for wrapping).
 
 # \[2015-03-07 Sat\] Music backlog
+---
+id: music-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -20123,6 +22041,9 @@ $ python ycmd
 [TODO]{.todo .TODO} [Zia Mohiuddin](https://www.youtube.com/watch?v=dPSr3swtLDk).
 
 # \[2015-03-06 Fri\] UX scrapbook bookmarks
+---
+id: ux-scrapbook-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-09 Sat\]
@@ -20155,6 +22076,9 @@ $ python ycmd
 -   [whereis-whoishiring-hiring.me (minimalistic categorization)](http://whereis-whoishiring-hiring.me/).
 
 # \[2015-10-09 Fri\] Travel blog bookmarks
+---
+id: travel-blog-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-07-04 Mon\]
@@ -20165,6 +22089,9 @@ $ python ycmd
 -   [Tigrest Travel Blog](http://tigrest.com).
 
 # \[2015-03-06 Fri\] Travel bookmarks
+---
+id: travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-08-05 Wed\]
@@ -20226,6 +22153,9 @@ $ python ycmd
 -   [ytravel](http://www.ytravelblog.com/).
 
 # \[2015-03-06 Fri\] Startup bookmarks
+---
+id: startup-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-07-09 Sun\]
@@ -20467,6 +22397,9 @@ $ python ycmd
 -   [You Need More than REST for API Success](https://spin.atomicobject.com/2019/11/14/more-than-rest-for-api-success/).
 
 # \[2015-03-06 Fri\] Romania travel bookmarks
+---
+id: romania-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-12-01 Sun\]
@@ -20476,6 +22409,9 @@ $ python ycmd
 -   [Bran Castle](http://bran-castle.com/).
 
 # \[2015-03-06 Fri\] Productivity tips backlog
+---
+id: productivity-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2016-01-11 Mon\]
@@ -20486,6 +22422,9 @@ $ python ycmd
 [TODO]{.todo .TODO} [mercury (fuzzy tab search)](https://github.com/benvan/mercury).
 
 # \[2015-03-06 Fri\] Productivity bookmarks
+---
+id: productivity-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-03-10 Tue\]
@@ -20509,6 +22448,9 @@ $ python ycmd
 -   [Zotero](https://www.zotero.org).
 
 # \[2015-03-06 Fri\] Privacy bookmarks
+---
+id: privacy-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-09-30 Thu\]
@@ -20588,6 +22530,9 @@ $ python ycmd
 -   [Why Privacy Matters \| Privacy is important. Here are some simple reasons why.](https://whyprivacymatters.org/).
 
 # \[2015-03-06 Fri\] Lifestyle/wellbeing/health bookmarks
+---
+id: lifestyle-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-27 Sun\]
@@ -20641,6 +22586,9 @@ $ python ycmd
 -   [Zero Waste Home](http://www.zerowastehome.com/).
 
 # \[2015-03-06 Fri\] Graphics bookmarks
+---
+id: graphics-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-23 Tue\]
@@ -20654,12 +22602,18 @@ $ python ycmd
 -   [Svg within svg](http://stackoverflow.com/questions/14804950/include-one-svg-inside-another): Potentially useful for some ideas in mind.
 
 # \[2015-03-06 Fri\] Nexus Q bookmarks
+---
+id: nexus-q-bookmarks
+---
 
 -   [How to Install CyanogenMod on the Google Nexus Q ("steelhead")](http://wiki.cyanogenmod.org/w/Install_CM_for_steelhead).
 -   [Nexus Q troubleshooting](http://nexusq.wikidot.com/troubleshooting).
 -   [Unlocking-\>insecure boot-\>root-\>flash cm10 with amplifier support your Q without apk](http://forum.xda-developers.com/showthread.php?t%3D2408799).
 
 # \[2015-03-06 Fri\] Golang bookmarks
+---
+id: golang-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-04-15 Wed\]
@@ -20806,6 +22760,9 @@ $ python ycmd
 -   [Writing Unit Tests for your net/http Handlers](https://www.youtube.com/watch?v=YmbbmyxSlcg).
 
 # \[2015-03-06 Fri\] GitHub bookmarks
+---
+id: github-bookmarks
+---
 
 -   [Adding a CNAME file to your repository](https://help.github.com/articles/adding-a-cname-file-to-your-repository/).
 -   [Tips for configuring a CNAME record with your DNS provider](https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/).
@@ -20813,6 +22770,9 @@ $ python ycmd
 -   [SO DNS response](http://stackoverflow.com/questions/23375422/how-to-setup-github-pages-to-redirect-dns-requests-from-subdomain-e-g-www-to).
 
 # \[2015-03-06 Fri\] Courses bookmarks
+---
+id: courses-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-05 Sat\]
@@ -20829,10 +22789,16 @@ $ python ycmd
 -   [Tuts+ courses](http://tutsplus.com/).
 
 # \[2015-03-05 Thu\] Reload inputrc
+---
+id: reload-inputrc
+---
 
 Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gnu.org/software/bash/manual/bashref.html#Miscellaneous-Commands).
 
 # \[2015-03-05 Thu\] Learning Emacs lisp
+---
+id: learning-emacs-lisp
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-04-13 Mon\]
@@ -21066,10 +23032,16 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   Font lock = syntax highlighting.
 
 # \[2015-03-06 Fri\] Apple Watch bookmarks
+---
+id: apple-watch-bookmarks
+---
 
 -   [Swift, Apple Watch, and Dynamic Graphs](http://lionet.livejournal.com/137350.html).
 
 # \[2015-03-05 Thu\] iOS bookmarks
+---
+id: ios-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-07 Wed\]
@@ -21251,6 +23223,9 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   [ZHPopupView](https://github.com/zhhlmr/ZHPopupView).
 
 # \[2015-03-05 Thu\] Kerala travel bookmarks
+---
+id: kerala-travel-bookmarks
+---
 
 -   Bagel Shop, 30 Pali Mala Road, off Carter Road, Bandra (W) (+91 22 2605-0178). Daily 9.00AM-10.00PM. Meal for two R500-R800.
 -   Hotel Natraj, 22-24 City Station Road, Udaipur (near Bapu Bazaar), +91-294-2487488, +91-94147-57893,
@@ -21263,6 +23238,9 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   Yoga House, 53 Chimbai Road, behind St Andrew's Church, off Hill Road, Bandra (W)(+91 22 6554- 5001). Daily 7.00AM-10.30PM.
 
 # \[2015-03-05 Thu\] India travel bookmarks
+---
+id: india-travel-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-01-02 Sat\]
@@ -21351,6 +23329,9 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   [Western Ghats](https://en.wikipedia.org/wiki/Western_Ghats).
 
 # \[2015-03-05 Thu\] Git bookmarks
+---
+id: git-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-23 Wed\]
@@ -21389,6 +23370,9 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   [Using Askgit (sql interface to your git repository)](https://willschenk.com/articles/2020/using_askgit/).
 
 # \[2015-03-04 Wed\] Language learning bookmarks
+---
+id: language-learning-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-10-30 Tue\]
@@ -21402,10 +23386,16 @@ Reload .iputrc from bash prompt: C-x C-r. [More at bashref manual](http://www.gn
 -   [Welcome - Woody Piano Shack](https://woodypianoshack.com/).
 
 # \[2015-02-18 Wed\] Git conflict resolution déjà vu?
+---
+id: git-conflict-resolution-deja-vu
+---
 
 use git [rerere](http://git-scm.com/blog/2010/03/08/rerere.html). here's a [post](https://medium.com/@porteneuve/fix-conflicts-only-once-with-git-rerere-7d116b2cec67).
 
 # \[2015-01-17 Sat\] Graphics design tools bookmarks
+---
+id: graphics-design-tools-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-11 Sun\]
@@ -21431,6 +23421,9 @@ use git [rerere](http://git-scm.com/blog/2010/03/08/rerere.html). here's a [post
 -   [TVPaint](http://www.tvpaint.com).
 
 # \[2015-04-23 Thu\] Emacs key bindings and maps
+---
+id: emacs-key-bindings-and-maps
+---
 
 ## based on [masteringemacs.org](http://www.masteringemacs.org/article/mastering-key-bindings-emacs).
 
@@ -21494,6 +23487,9 @@ maps key to action.
 -   for key-chord-define, use current-local-map.
 
 # \[2014-12-30 Tue\] Video backlog
+---
+id: online-video-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-01-12 Sat\]
@@ -21580,6 +23576,9 @@ maps key to action.
 [DONE]{.done .DONE} [This is water](https://www.youtube.com/watch?v=dkyjvv7huzw).
 
 # \[2014-09-12 Wed\] Flight-booking bookmarks
+---
+id: flight-booking-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-09-12 Wed\]
@@ -21591,6 +23590,9 @@ maps key to action.
 -   [Travelzoo: Travel & entertainment deals: hotels, holidays, cruises, restaurants, shows](https://www.travelzoo.com/uk/).
 
 # \[2014-09-18 Thu\] Frugal bookmarks
+---
+id: frugal-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-12-21 Mon\]
@@ -21625,10 +23627,16 @@ maps key to action.
 -   [What should you not say when buying a car? - Quora](https://www.quora.com/What-should-you-not-say-when-buying-a-car).
 
 # \[2014-09-18 Thu\] Charities bookmarks
+---
+id: charities-bookmarks
+---
 
 -   [Toilet paper that builds toilets (Who Gives A Crap UK)](https://uk.whogivesacrap.org).
 
 # \[2014-09-18 Thu\] Origami bookmarks
+---
+id: origami-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-03-30 Sat\]
@@ -21638,6 +23646,9 @@ maps key to action.
 -   [Origami That's Fun And Easy](https://www.origami-fun.com/).
 
 # \[2014-12-30 Tue\] Movie backlog
+---
+id: movie-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2022-12-17 Sat\]
@@ -22096,6 +24107,9 @@ OBSOLETE Narcos (Netflix)
 [DONE]{.done .DONE} [Wet Hot American Summer](http://www.imdb.com/title/tt0243655/).
 
 # \[2014-12-29 Mon\] Microservices bookmarks
+---
+id: microservices-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2018-09-03 Mon\]
@@ -22106,6 +24120,9 @@ OBSOLETE Narcos (Netflix)
 -   [HTTPie – command line HTTP client](https://httpie.org/).
 
 # \[2014-12-30 Tue\] Books backlog
+---
+id: books-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-02-06 Sat\]
@@ -22366,6 +24383,9 @@ OBSOLETE Narcos (Netflix)
 [DONE]{.done .DONE} [Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel](http://www.amazon.com/gp/product/0812992180?ie%3DUTF8&tag%3Doffsitoftimfe-20&linkCode%3Das2&camp%3D1789&creative%3D390957&creativeASIN%3D0812992180).
 
 # \[2014-12-29 Mon\] Gardening bookmarks
+---
+id: gardening-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-04 Mon\]
@@ -22375,6 +24395,9 @@ OBSOLETE Narcos (Netflix)
 -   [We're the self-taught development team behind the #1 gardening app.](https://www.reddit.com/r/IAmA/comments/gc9agk/were_the_selftaught_development_team_behind_the_1/).
 
 # \[2014-12-03 Wed\] Emacs tips backlog
+---
+id: emacs-tips-backlog
+---
 
 ::: {.MODIFIED .drawer}
 \[2017-06-18 Sun\]
@@ -22698,12 +24721,18 @@ $0
 [DONE]{.done .DONE} youtube-dl: [or emacs](http://oremacs.com/2015/01/05/youtube-dl/).
 
 # \[2014-07-09 Wed\] Installing Emacs 24.4 on Linux
+---
+id: installing-emacs--on-linux
+---
 
 ``` {.bash org-language="sh"}
 sudo apt-get install texinfo build-essential xorg-dev libgtk-3-dev libjpeg-dev libncurses5-dev libgif-dev libtiff-dev libm17n-dev libpng12-dev librsvg2-dev libotf-dev
 ```
 
 # \[2014-07-09 Wed\] Installing Emacs 24.4 on Mac OS X
+---
+id: installing-emacs-24-4-on-mac-os-x
+---
 
 See Yamamoto's Mac OS X [port](https://github.com/railwaycat/emacs-mac-port). To install:
 
@@ -22713,6 +24742,9 @@ $ brew install emacs-mac
 ```
 
 # \[2014-11-02 Sun\] Xcode6 tips
+---
+id: xcode6-tips
+---
 
 From Ray Wenderlich's [tech talk](http://www.raywenderlich.com/85999/xcode-6-tips-tricks-tech-talk-video) And [supercharging Your Xcode Efficiency (by Jack Wu)](http://www.raywenderlich.com/72021/supercharging-xcode-efficiency).
 
@@ -22745,6 +24777,9 @@ From Ray Wenderlich's [tech talk](http://www.raywenderlich.com/85999/xcode-6-tip
 -   Org and order (for properties).
 
 # \[2015-12-12 Sat\] Simple ssh tunnel
+---
+id: simple-ssh-tunnel
+---
 
 Via [\@climagic](https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D11), connections to tcp localhost:9909 will be made to 192.168.1.1:80 via SSH tunnel to home.
 
@@ -22753,6 +24788,9 @@ ssh -L 9909:192.168.1.1:80 home
 ```
 
 # \[2014-09-20 Sat\] gpg/pgp bookmarks
+---
+id: gpgpgp-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-05-06 Mon\]
@@ -22768,6 +24806,9 @@ ssh -L 9909:192.168.1.1:80 home
 -   [The GNU Privacy handbook](https://www.gnupg.org/gph/en/manual.html).
 
 # \[2014-09-20 Sat\] Emacs lisp bookmarks
+---
+id: emacs-lisp-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-11-28 Sun\]
@@ -22853,6 +24894,9 @@ ssh -L 9909:192.168.1.1:80 home
 -   [Xu Chunyang's Elisp demos/examples/snippets ](https://github.com/xuchunyang/elisp-demos/blob/master/elisp-demos.org).
 
 # \[2014-09-19 Fri\] Emacs bookmarks
+---
+id: emacs-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-11-12 Sun\]
@@ -23193,6 +25237,9 @@ ssh -L 9909:192.168.1.1:80 home
 -   [‎The Emacs Garbage Collection Magic Hack](http://akrl.sdf.org/).
 
 # \[2014-09-11 Thu\] Resetting gnome-terminal preferences
+---
+id: resetting-gnome-terminal-preferences
+---
 
 ## Resetting preferences
 
@@ -23219,6 +25266,9 @@ From gnome-terminal window:
 Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized-theme-to-work-in-emacs) to get solarized on gnome-terminal.
 
 # \[2014-10-09 Thu\] C++ bookmarks
+---
+id: cpp-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2023-05-05 Fri\]
@@ -23240,6 +25290,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [The ways to avoid complexity in modern C++](http://vitiy.info/Slides/MeetingCPP2015/MeetingCPP2015Complexity.pdf).
 
 # \[2014-07-14 Mon\] Java bookmarks
+---
+id: java-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2015-11-16 Mon\]
@@ -23253,6 +25306,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Modern Java - A Guide to Java 8](https://github.com/winterbe/java8-tutorial).
 
 # \[2014-07-14 Mon\] Browser bookmarks
+---
+id: browser-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2020-05-28 Thu\]
@@ -23264,10 +25320,16 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [SingleFile \| Save a page as a single HTML file](https://addons.mozilla.org/en-US/firefox/addon/single-file/).
 
 # \[2014-07-14 Mon\] Node bookmarks
+---
+id: node-bookmarks
+---
 
 -   [How to use npm as a Build Tool](http://blog.keithcirkel.co.uk/how-to-use-npm-as-a-build-tool/).
 
 # \[2014-07-14 Mon\] JavaScript bookmarks
+---
+id: javascript-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-12-02 Mon\]
@@ -23333,6 +25395,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Xah Lee's JavaScript in Depth](http://xahlee.info/js/js.html).
 
 # \[2014-07-14 Mon\] HTML5 bookmarks
+---
+id: html5-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-06-27 Sun\]
@@ -23365,6 +25430,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Write HTML Like It's 1999](https://bradleytaunt.com/2019/06/08/html-like-1999).
 
 # \[2014-07-14 Mon\] Networking bookmarks
+---
+id: networking-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-07-03 Sat\]
@@ -23375,6 +25443,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Stanford CS 144: Introduction to Computer Networking \| Hacker News](https://news.ycombinator.com/item?id=21794270).
 
 # \[2014-07-13 Sun\] Python bookmarks
+---
+id: python-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2019-08-12 Mon\]
@@ -23411,6 +25482,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Watchdog](https://github.com/gorakhargosh/watchdog) (monitor filesystem in python).
 
 # \[2014-07-13 Sun\] Development bookmarks
+---
+id: development-bookmarks
+---
 
 ::: {.MODIFIED .drawer}
 \[2021-09-30 Thu\]
@@ -23511,6 +25585,9 @@ Bonus: See [post](http://codefork.com/blog/index.php/2011/11/27/getting-the-sola
 -   [Your calendrical fallacy is thinking…](https://yourcalendricalfallacyis.com/).
 
 # \[2014-07-13 Sun\] Paswordless ssh with authorized keys
+---
+id: passwordless-ssh-with-authorized-keys
+---
 
 ## On local host
 
@@ -23529,6 +25606,9 @@ chmod 600 ~/.ssh/authorized_keys
 UPDATE: [Add "AddKeysToAgent yes" to .ssh/config and enter password only once](https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-automatic-ssh-add).
 
 # \[2013-11-04 Mon\] Some python idioms
+---
+id: some-python-idioms
+---
 
 -   Prefer double quotes if escaping single quotes.
 -   Prefer string interpolation over join. Eg. "'%s'" % member_default.
