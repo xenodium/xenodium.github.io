@@ -410,9 +410,7 @@ I've been experimenting with building a rich text editing component for iOS, pow
 To make things a little more interesting, I'm introducing a new org-based app to help anyone with regular journaling.
 
 ```{=html}
-<p style="text-align: center;">
-👉 Meet ✨Journelly✨
-</p>
+<center>👉 Meet ✨Journelly✨</center>
 ```
 ![](https://xenodium.com/images/an-ios-journaling-app-powered-by-org-plain-text/journelly.jpg)
 
@@ -431,17 +429,20 @@ The topic of org being fairly Emacs-oriented, though a strength for someone far 
 And like Journelly for iOS, I got other org things available on iOS:
 
 ```{=html}
-<p style="text-align: center;">
-      <a href='https://plainorg.com'>
-        <img style='padding-top: 5px; width: 4ch;' src='https://plainorg.com/favicon.ico'/>
-      </a>
-      <a href='https://apps.apple.com/app/id1671420139'>
-        <img style='padding-top: 5px; width: 4ch;' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
-      </a>
-      <a href='https://flathabits.com'>
-        <img style='padding-top: 5px; width: 4ch;' src='https://flathabits.com/favicon.ico'/>
-      </a>
-</p>
+<table>
+  <tr>
+    <td><a href='https://plainorg.com'><img width='40' src='https://plainorg.com/favicon.ico'/></a></td>
+    <td>As an <a href="https://orgmode.org/">Org mode</a> fan, so I wrote <a href="https://plainorg.com/">Plain Org</a> for iOS. It's on the <a href="https://apps.apple.com/app/id1578965002">App Store</a>.</td>
+  </tr>
+  <tr>
+    <td><a href='https://apps.apple.com/app/id1671420139'><img width='40' src='https://raw.githubusercontent.com/xenodium/xenodium.github.io/master/images/scratch-a-minimal-scratch-area/scratch_icon.png'/></a></td>
+    <td>Inspired by <a href="https://jamesclear.com/atomic-habits">Atomic Habits</a>, I wrote <a href="https://flathabits.com/">Flat Habits</a> for iOS. Also on the <a href="https://apps.apple.com/app/id1558358855">App Store</a>.</td>
+  </tr>
+  <tr>
+    <td><a href='https://flathabits.com'><img width='40' src='https://flathabits.com/favicon.ico'/></a></td>
+    <td>I needed an Emacs-inspired <a href="scratch-a-minimal-scratch-area"><strong>scratch</strong></a> buffer on iOS (who doesn't?), so I <a href="scratch-a-minimal-scratch-area/">built one</a>.</td>
+  </tr>
+</table>
 ```
 -   As an [Org mode](https://orgmode.org/) fan, so I wrote [Plain Org](https://plainorg.com/) for iOS. It's on the [App Store](https://apps.apple.com/app/id1578965002).
 -   Inspired by [Atomic Habits](https://jamesclear.com/atomic-habits), I wrote [Flat Habits](https://flathabits.com/) for iOS. Also on the [App Store](https://apps.apple.com/app/id1558358855).
@@ -1925,7 +1926,7 @@ Ok, enough already. Let's see it in action.
 ```{=org}
 #+ATTR_HTML: :width 100%
 ```
-[![](https://xenodium.com/images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif)](../images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif)
+[![](https://xenodium.com/images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif)](images/chatgpt-visits-the-emacs-doctor/chatgpt-doc_optimized.gif)
 
 If you'd like to take a closer look for analysis, here's the official transcript of this fruitful session:
 
@@ -3211,14 +3212,14 @@ id: flat-habits-114-released
 Flat Habits is a habit tracker that’s mindful of your time, data, and privacy. It's a simple but effective iOS app.
 
 ```{=html}
-<div style="text-align: center;">
+<center>
   <img src="https://flathabits.com/intro_thumbnail.jpg" alt="today_no_filter.png" width="90%">
   <br/>
   <br/>
   <a href="https://apps.apple.com/app/id1558358855">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px">
   </a>
-</div>
+</center>
 ```
 If you care about how your data is stored, Flat Habits is powered by [org](https://orgmode.org) plain text markup without any cloud component. You can use your [favorite editor](frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at habit data, if that's your cup of tea.
 
@@ -3275,11 +3276,11 @@ While we already have lots of note-taking apps on iOS, I wanted a minimal `*scra
 
 ```{=html}
 <br/>
-<div style="text-align: center;">
+<center>
   <a href="https://apps.apple.com/app/id1671420139">
-    <img src="../images/scratch-a-minimal-scratch-area/icon.png" alt="*scratch* icon" width="150px">
+    <img src="https://xenodium.com/images/scratch-a-minimal-scratch-area/icon.png" alt="*scratch* icon" width="150px">
   </a>
-</div>
+</center>
 ```
 What's the use-case? You're on the go. Someone's telling you directions, or a phone number, name of a restaurant, anything really… you just need to write it down *right now, quickly*!
 
@@ -3295,11 +3296,12 @@ Find it useful? Please help me spread the word. Tell your friends.
 
 ```{=html}
 <br/>
-<div style="text-align: center;">
+<br/>
+<center>
   <a href="https://apps.apple.com/app/id1671420139">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px">
   </a>
-</div>
+</center>
 ```
 # \[2023-01-29 Sun\] Chicken Karaage recipe
 ---
@@ -5915,11 +5917,11 @@ v1.2 makes the navigation bar feel more at home on your iPhone. It uses a large 
 
 ```{=html}
 <br/>
-<div style="text-align: center;">
+<center>
   <a href="https://apps.apple.com/app/id1578965002">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px">
   </a>
-</div>
+</center>
 ```
 # \[2022-01-03 Mon\] Happy New Year and forming new habits
 ---
@@ -5941,13 +5943,13 @@ It's a new year. If you're looking at forming new habits, you may want some insp
 There's a surplus of habit-tracking apps on the app stores. I built yet another one for iOS, modeled after my needs.
 
 ```{=html}
-<div style="text-align: center;">
-  <img src="../images/flat-habits-for-ios/today_no_filter.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
-  <img src="../images/flat-habits-for-ios/meditate.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
+<center>
+  <img src="https://xenodium.com/images/flat-habits-for-ios/today_no_filter.png" alt="today_no_filter.png" width="300px">
+  <img src="https://xenodium.com/images/flat-habits-for-ios/meditate.png" alt="today_no_filter.png" width="300px">
   <a href="https://apps.apple.com/app/id1558358855">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" width="40px">
   </a>
-</div>
+</center>
 ```
 # \[2021-12-12 Wed\] Plain Org v1.1 released 🎄☃️
 ---
@@ -6051,11 +6053,11 @@ Although .org files are plain text files, they aren't always recognized by other
 
 ```{=html}
 <br/>
-<div style="text-align: center;">
+<center>
   <a href="https://apps.apple.com/app/id1578965002">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px">
   </a>
-</div>
+</center>
 ```
 # \[2021-11-28 Sun\] Emacs bends again
 ---
@@ -6305,16 +6307,16 @@ Today Plain Org joins the likes of [Beorg](https://beorg.app/), [MobileOrg](http
 
 ```{=html}
 <br/>
-<div style="text-align: center;">
+<center>
   <a href="https://apps.apple.com/app/id1578965002">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px">
   </a>
-</div>
+</center>
 ```
 ```{=html}
-<p style="text-align: center;">
+<center>
   This post was written in   <a href="https://orgmode.org">org mode</a>.
-</p>
+</center>
 ```
 # \[2021-09-19 Sun\] Plain Org for iOS (a month later)
 ---
@@ -7102,11 +7104,11 @@ Flat Habits runs on org, making it a great complement to Emacs and org agenda ø
 ![](https://xenodium.com/images/flat-habits-meets-org-agenda/flat_agenda.gif)
 
 ```{=html}
-<div style="text-align: center;">
+<center>
   <a href="https://apps.apple.com/app/id1558358855">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" width="40px">
   </a>
-</div>
+</center>
 ```
 # \[2021-03-23 Tue\] Flat Habits v1.0.1 (org import menu)
 ---
@@ -7122,10 +7124,10 @@ Flat Habits v1.0.1 is now released and [available](https://apps.apple.com/app/id
 We can now import org files from the menu. Importing gives ya the option to either import (copy into the app) or open in-place. The latter enables users to sync org files with other iOS apps or just open/edit from Emacs for the full org-mode/agenda experience.
 
 ```{=html}
-<div style="text-align: center;">
-  <img src="../images/flat-habits-v101-org-import-menu/menu.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
-  <img src="../images/flat-habits-v101-org-import-menu/filebrowse.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
-</div>
+<center>
+  <img src="https://xenodium.com/images/flat-habits-v101-org-import-menu/menu.png" alt="today_no_filter.png" width="300px">
+  <img src="https://xenodium.com/images/flat-habits-v101-org-import-menu/filebrowse.png" alt="today_no_filter.png" width="300px">
+</center>
 ```
 Syncing with your desktop can be achieved by either iCloud or by enabling other providers in the Files app (after installing the likes of Google Drive, Dropbox, etc).
 
@@ -7147,13 +7149,13 @@ UPDATE: Flat Habits now has its own page at [flathabits.com](https://flathabits.
 An iOS app to help you form and track lasting habits.
 
 ```{=html}
-<div style="text-align: center;">
-  <img src="../images/flat-habits-for-ios/today_no_filter.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
-  <img src="../images/flat-habits-for-ios/meditate.png" alt="today_no_filter.png" width="300px" style="padding: 10px;">
+<center>
+  <img src="https://xenodium.com/images/flat-habits-for-ios/today_no_filter.png" alt="today_no_filter.png" width="300px">
+  <img src="https://xenodium.com/images/flat-habits-for-ios/meditate.png" alt="today_no_filter.png" width="300px">
   <a href="https://apps.apple.com/app/id1558358855">
-    <img src="../images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" height="40px">
+    <img src="https://xenodium.com/images/flat-habits-for-ios/download-on-app-store.png" alt="today_no_filter.png" width="40px">
   </a>
-</div>
+</center>
 ```
 ## Why an app?
 
