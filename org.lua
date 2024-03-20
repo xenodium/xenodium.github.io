@@ -1,5 +1,5 @@
 -- Executed with
--- pandoc -f org -t markdown-smart --strip-comments --wrap=none --lua-filter=org.lua index.org -o index.md && sed -i '' -e 's/{width="[0-9]*\\(%\\|px\\)"}//g' -e 's/{#\([a-zA-Z0-9_.-]*\)}/\n---\nid: \1\n---/g' index.md
+-- pandoc -f org -t markdown-smart --strip-comments --wrap=none --lua-filter=org.lua index.org -o index.md && sed -i '' -e 's/{width="[0-9]*\\(%\\|px\\)"}//g' -e 's/{#\([a-zA-Z0-9_.-]*\)}/\n---\nid: \1\n---/g' -e 's/\(\.\.\/images\)/https:\/\/xenodium.com\/images/g' index.md
 
 -- function Header(el)
 --   print(el)
@@ -30,7 +30,9 @@ function Link(el)
 end
 
 function Image(el)
-  if el.src:find("^images/") then
+  if el.src:find("^%.%./images/") then
+    el.src = "https://xenodium.com/" .. el.src:sub(4)
+  elseif el.src:find("^images/") then
     el.src = "https://xenodium.com/" .. el.src
   end
   if el.attr.attributes.width then
@@ -50,4 +52,12 @@ function Span(el)
     end
   end
   return el
+end
+
+function RawBlock(el)
+  if el.format == "html" then
+    return pandoc.RawBlock("markdown", el.text)
+  else
+    return el
+  end
 end
