@@ -6,7 +6,58 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 Mar 2024 20:50:43 +0000</lastBuildDate>
+<lastBuildDate>Sun, 24 Mar 2024 10:02:14 +0000</lastBuildDate>
+<item>
+  <title>Emacs: Toggling the continuation indicator</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-toggling-emacs-continuation-fringe-indicator" class="outline-2">
+ <h2 id="toggling-emacs-continuation-fringe-indicator"> <span class="timestamp-wrapper"> <span class="timestamp">23 March 2024</span></span> Emacs: Toggling the continuation indicator</h2>
+ <div class="outline-text-2" id="text-toggling-emacs-continuation-fringe-indicator">
+ <p>
+By default, Emacs typically displays curly arrows when wrapping lines. While likely a handy feature to some, I didn't really find much use for it. At the same time, I never looked into their removal until now.
+</p>
+
+ <p>
+Turns out, there's a  <code>continuation</code> entry in  <code>fringe-indicator-alist</code> variable that handles this. Removing this entry also removes the curly arrows.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq-default</span> fringe-indicator-alist
+              (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist))
+</pre>
+</div>
+
+ <p>
+Alternatively, one could write a simple function to toggle displaying the continuation indicator.
+</p>
+
+
+ <div id="org0f84c4c" class="figure">
+ <p> <img src="../images/toggling-emacs-continuation-fringe-indicator/curly.gif" alt="curly.gif" width="70%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">toggle-continuation-fringe-indicator</span> ()
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">setq-default</span>
+   fringe-indicator-alist
+   (<span style="color: #a71d5d;">if</span> (assq 'continuation fringe-indicator-alist)
+       (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist)
+     (cons '(continuation right-curly-arrow left-curly-arrow) fringe-indicator-alist))))
+</pre>
+</div>
+
+ <p>
+That's it for this post. A tiny tip. Perhaps there's a better way to handle it. If you know, I'd love to know too ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/toggling-emacs-continuation-fringe-indicator</link>
+  <guid isPermaLink="false">http://xenodium.com/toggling-emacs-continuation-fringe-indicator</guid>
+  <pubDate>Sat, 23 Mar 2024 10:02:14 +0000</pubDate>
+</item>
 <item>
   <title>The Org bundle</title>
   <description><![CDATA[<div id="content" class="content">

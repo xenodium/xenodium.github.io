@@ -1,6 +1,37 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-03-23 Sat] Emacs: Toggling the continuation indicator
+:PROPERTIES:
+:CUSTOM_ID: toggling-emacs-continuation-fringe-indicator
+:END:
+
+By default, Emacs typically displays curly arrows when wrapping lines. While likely a handy feature to some, I didn't really find much use for it. At the same time, I never looked into their removal until now.
+
+Turns out, there's a =continuation= entry in =fringe-indicator-alist= variable that handles this. Removing this entry also removes the curly arrows.
+
+#+begin_src emacs-lisp :lexical no
+  (setq-default fringe-indicator-alist
+                (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist))
+#+end_src
+
+Alternatively, one could write a simple function to toggle displaying the continuation indicator.
+
+#+ATTR_HTML: :width 70%
+[[file:images/toggling-emacs-continuation-fringe-indicator/curly.gif]]
+
+#+begin_src emacs-lisp :lexical no
+  (defun toggle-continuation-fringe-indicator ()
+    (interactive)
+    (setq-default
+     fringe-indicator-alist
+     (if (assq 'continuation fringe-indicator-alist)
+         (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist)
+       (cons '(continuation right-curly-arrow left-curly-arrow) fringe-indicator-alist))))
+#+end_src
+
+That's it for this post. A tiny tip. Perhaps there's a better way to handle it. If you know, I'd love to know too ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[mailto:me__AT__xenodium.com][Email]]).
+
 * [2024-03-22 Fri] The Org bundle
 :PROPERTIES:
 :CUSTOM_ID: the-org-bundle
