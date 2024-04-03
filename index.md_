@@ -1,3 +1,115 @@
+# \[2024-04-03 Wed\] Fresh Eyes: 20-20-20 for macOS
+---
+id: fresh-eyes-20-20-20-for-macos
+---
+
+I've been lucky to have enjoyed healthy vision throughout my life. That is, until recently. Nothing major, I'll need glasses for some activities. I also learned from the optometrist I should follow the [20-20-20 rule](https://www.sbs.nhs.uk/information/home-working-looking-after-eyes) to reduce eye strain.
+
+The **20-20-20 rule** is simple:
+
+Take a break from looking at your computer screen every **20 minutes** and look away at something roughly **20 feet away** (6 metres) for **20 seconds**.
+
+While there are no shortages of macOS timer apps available, I figured it'd be fun to build a 20-20-20 one anyway.
+
+Meet **Fresh Eyes**. I've been using it in the last few days. If you'd like to give it a try, send me an email at me@xenodium.com and I'll reply with a TestFlight invite.
+
+![](https://xenodium.com/images/fresh-eyes-20-20-20-for-macos/fresh-eyes.gif)
+
+If looking for alternatives, [Samuel W. Flint](https://samuelwflint.com/) [offers a couple of great options](https://emacs.ch/@swflint/112197147526251145):
+
+-   On Emacs: [hammy.el](https://github.com/alphapapa/hammy.el/tree/master) by [Adam Porter (alphapapa)](https://github.com/alphapapa).
+-   On Linux/Windows (GTK-based): [Workrave](https://workrave.org/) by Raymond Penners & Rob Caeler.
+
+# \[2024-03-25 Mon\] Emacs 29.3 emergency release
+---
+id: emacs-293-emergency-release
+---
+
+It was only last week when I upgraded to Emacs 29.2. Yup, I was late to the party. This week, we have a new release.
+
+Emacs 29.3 is an [emergency bugfix release](https://lists.gnu.org/archive/html/emacs-devel/2024-03/msg00611.html), so this time I've upgraded promptly. I'm on macOS using the great [Emacs Plus](https://github.com/d12frosted/homebrew-emacs-plus) so upgraded via [Homebrew](https://brew.sh/) using:
+
+``` {.bash org-language="sh"}
+brew reinstall emacs-plus@29 --with-imagemagick --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-3d-icon --with-poll
+```
+
+![](https://xenodium.com/images/emacs-293-emergency-release/29.3.png)
+
+ps. Like this splash screen? Check out the [Emacs eye candy post](my-emacs-eye-candy/).
+
+# \[2024-03-24 Sun\] Emacs: Toggling the continuation indicator
+---
+id: toggling-emacs-continuation-fringe-indicator
+---
+
+By default, Emacs typically displays curly arrows when wrapping lines. While likely a handy feature to some, I didn't really find much use for it. At the same time, I never looked into their removal until now.
+
+Turns out, there's a `continuation` entry in `fringe-indicator-alist` variable that handles this. Removing this entry also removes the curly arrows.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq-default fringe-indicator-alist
+              (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist))
+```
+
+Alternatively, one could write a simple function to toggle displaying the continuation indicator.
+
+![](https://xenodium.com/images/toggling-emacs-continuation-fringe-indicator/curly.gif)
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defun toggle-continuation-fringe-indicator ()
+  (interactive)
+  (setq-default
+   fringe-indicator-alist
+   (if (assq 'continuation fringe-indicator-alist)
+       (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist)
+     (cons '(continuation right-curly-arrow left-curly-arrow) fringe-indicator-alist))))
+```
+
+That's it for this post. A tiny tip. Perhaps there's a better way to handle it. If you know, I'd love to know too ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Email](mailto:me__AT__xenodium.com)).
+
+# \[2024-03-22 Fri\] The Org bundle
+---
+id: the-org-bundle
+---
+
+I have [three apps on the App Store](https://apps.apple.com/us/developer/xenodium-ltd/id304568690): [Plain Org](https://plainorg.com), [Flat Habits](https://flathabits.com/), and [scratch](https://apps.apple.com/us/app/scratch/id1671420139).
+
+## Plain Org / [plainorg.com](https://plainorg.com)
+
+My more generic solution to access org files on the go and away from Emacs.
+
+![](https://xenodium.com/images/the-org-bundle/plainorg-600x0w.png)
+
+## Flat Habits / [flathabits.com](https://flathabits.com/)
+
+My take on frictionless habit tracking truly respecting user privacy and their time (absolutely no distractions).
+
+![](https://xenodium.com/images/the-org-bundle/flathabits-600x0w.png)
+
+## `*scratch*` / [App Store](https://apps.apple.com/us/app/scratch/id1671420139)
+
+Sure, we have tons of note-taking apps but most require more steps than desirable to write something down ASAP. Launch the app and you're good to write. No new note creation, bring keyboard up, etc.
+
+![](https://xenodium.com/images/the-org-bundle/scratch-600x0w.webp)
+
+## Common denominator
+
+In addition to being offline-first, no cloud, no login, no ads, no tracking, no social… each app targets a specific purpose, sharing an important common denominator: they all use [org markup](https://orgmode.org/) as the underlying storage.
+
+## The Org bundle / [App Store](https://apps.apple.com/us/app-bundle/the-org-bundle/id1717663541)
+
+While you can still get each of my apps individually, you now have the option to get them all as a single bundle: [The Org bundle](https://apps.apple.com/us/app-bundle/the-org-bundle/id1717663541).
+
+![](https://xenodium.com/images/the-org-bundle/bundle.png)
+
+## Journelly joining the bundle soon…
+
+Continuing on the org storage theme, I got another app in the works. Also joining [The Org bundle](https://apps.apple.com/us/app-bundle/the-org-bundle/id1717663541), maintaining its privacy-first approach: offline, no cloud, no login, no ads, no tracking, no social… this time in the journaling space.
+
+Journelly is currently [in beta, want to join](an-ios-journaling-app-powered-by-org-plain-text)?
+
+![](https://xenodium.com/images/the-org-bundle/journelly-demo.gif)
+
 # \[2024-03-19 Tue\] sqlite-mode-extras on MELPA
 ---
 id: sqlite-mode-extras-on-melpa
