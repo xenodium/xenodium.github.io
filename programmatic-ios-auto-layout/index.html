@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:05 -->
+<!-- 2024-04-05 Fri 04:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Programmatic iOS Auto Layout</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -394,11 +405,11 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
     <span style="color: #969896;">// </span><span style="color: #969896;">Disable autoresizing mask translation for parent.</span>
     <span style="color: #a71d5d;">self</span>.translatesAutoresizingMaskIntoConstraints = <span style="color: #0086b3;">NO</span>;
 
-    _subview1 = [[<span style="color: #0086b3;">UIView</span> alloc] init];
+    _subview1 = [[UIView alloc] init];
     <span style="color: #969896;">// </span><span style="color: #969896;">Disable autoresizing mask translation for subview.</span>
     _subview1.translatesAutoresizingMaskIntoConstraints = <span style="color: #0086b3;">NO</span>;
 
-    _subview1.backgroundColor = [<span style="color: #0086b3;">UIColor</span> redColor];
+    _subview1.backgroundColor = [UIColor redColor];
     [<span style="color: #a71d5d;">self</span> addSubview:_subview1];
 
     <span style="color: #969896;">// </span><span style="color: #969896;">Creates a dictionary of bindings to be used in visual format.</span>
@@ -407,11 +418,11 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
     <span style="color: #969896;">// </span><span style="color: #969896;">H: horizontal layout</span>
     <span style="color: #969896;">// </span><span style="color: #969896;">|-50- spacing in relation to superview</span>
     <span style="color: #969896;">// </span><span style="color: #969896;">[_subview1(==50)] subview1's width</span>
-    [<span style="color: #a71d5d;">self</span> addConstraints:[<span style="color: #0086b3;">NSLayoutConstraint</span> constraintsWithVisualFormat:@<span style="color: #183691;">"H:|-50-[_subview1(==50)]"</span>
+    [<span style="color: #a71d5d;">self</span> addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@<span style="color: #183691;">"H:|-50-[_subview1(==50)]"</span>
                                                                  options:0
                                                                  metrics:<span style="color: #0086b3;">nil</span>
                                                                    views:viewBindings]];
-    [<span style="color: #a71d5d;">self</span> addConstraints:[<span style="color: #0086b3;">NSLayoutConstraint</span> constraintsWithVisualFormat:@<span style="color: #183691;">"V:[_subview1(==50)]"</span>
+    [<span style="color: #a71d5d;">self</span> addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@<span style="color: #183691;">"V:[_subview1(==50)]"</span>
                                                                  options:0
                                                                  metrics:<span style="color: #0086b3;">nil</span>
                                                                    views:viewBindings]];
@@ -422,9 +433,9 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 
-<div id="outline-container-org3db8182" class="outline-3">
-<h3 id="org3db8182">Also consider:</h3>
-<div class="outline-text-3" id="text-org3db8182">
+<div id="outline-container-orgd84cf2e" class="outline-3">
+<h3 id="orgd84cf2e">Also consider:</h3>
+<div class="outline-text-3" id="text-orgd84cf2e">
 <ul class="org-ul">
 <li>A UIView Subclass should implement intrinsicContentSize.</li>
 <li>A UIView Subclass should never add constraints on neither itself (ie. self) nor superview.</li>
@@ -432,9 +443,9 @@ Basic iOS auto layout usage. See <a href="https://developer.apple.com/library/io
 </div>
 </div>
 
-<div id="outline-container-org462451c" class="outline-3">
-<h3 id="org462451c">References</h3>
-<div class="outline-text-3" id="text-org462451c">
+<div id="outline-container-org7da3593" class="outline-3">
+<h3 id="org7da3593">References</h3>
+<div class="outline-text-3" id="text-org7da3593">
 <ul class="org-ul">
 <li><a href="https://medium.com/@NSomar/auto-layout-best-practices-for-minimum-pain-c130b2b1a0f6#.uu0xxmqbr">Auto layout best practices for minimum pain</a>.</li>
 </ul>

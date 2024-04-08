@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:05 -->
+<!-- 2024-04-05 Fri 04:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs key bindings and maps</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,31 +396,31 @@
 <h2 id="emacs-key-bindings-and-maps"><span class="timestamp-wrapper"><span class="timestamp">23 April 2015</span></span> Emacs key bindings and maps</h2>
 <div class="outline-text-2" id="text-emacs-key-bindings-and-maps">
 </div>
-<div id="outline-container-org0ccfada" class="outline-3">
-<h3 id="org0ccfada">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
+<div id="outline-container-org20000b5" class="outline-3">
+<h3 id="org20000b5">based on <a href="http://www.masteringemacs.org/article/mastering-key-bindings-emacs">masteringemacs.org</a>.</h3>
 </div>
-<div id="outline-container-org349808c" class="outline-3">
-<h3 id="org349808c">bonus tip</h3>
-<div class="outline-text-3" id="text-org349808c">
+<div id="outline-container-orgf522b20" class="outline-3">
+<h3 id="orgf522b20">bonus tip</h3>
+<div class="outline-text-3" id="text-orgf522b20">
 <p>
 prefix key, followed by c-h, lists keys in prefix.
 </p>
 </div>
 </div>
-<div id="outline-container-org18a35a2" class="outline-3">
-<h3 id="org18a35a2">keymap</h3>
-<div class="outline-text-3" id="text-org18a35a2">
+<div id="outline-container-org5d0402e" class="outline-3">
+<h3 id="org5d0402e">keymap</h3>
+<div class="outline-text-3" id="text-org5d0402e">
 <p>
 maps key to action.
 </p>
 </div>
 </div>
-<div id="outline-container-org68b12a3" class="outline-3">
-<h3 id="org68b12a3">keymap found in buffer and most major modes.</h3>
+<div id="outline-container-org9cb37d9" class="outline-3">
+<h3 id="org9cb37d9">keymap found in buffer and most major modes.</h3>
 </div>
-<div id="outline-container-orge034bc4" class="outline-3">
-<h3 id="orge034bc4">keys</h3>
-<div class="outline-text-3" id="text-orge034bc4">
+<div id="outline-container-org5fcf260" class="outline-3">
+<h3 id="org5fcf260">keys</h3>
+<div class="outline-text-3" id="text-org5fcf260">
 <ul class="org-ul">
 <li>undefined: self explanatory.</li>
 <li>prefix key: ie. c-x (part of complete key).</li>
@@ -417,9 +428,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org0516fae" class="outline-3">
-<h3 id="org0516fae">mapping</h3>
-<div class="outline-text-3" id="text-org0516fae">
+<div id="outline-container-orgac77310" class="outline-3">
+<h3 id="orgac77310">mapping</h3>
+<div class="outline-text-3" id="text-orgac77310">
 <ul class="org-ul">
 <li>(define-key keymap key def): add to current buffer map.</li>
 <li>(local-set-key key command): add to active buffer (no map option).</li>
@@ -429,9 +440,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org0c6958d" class="outline-3">
-<h3 id="org0c6958d">key codes</h3>
-<div class="outline-text-3" id="text-org0c6958d">
+<div id="outline-container-org5244d57" class="outline-3">
+<h3 id="org5244d57">key codes</h3>
+<div class="outline-text-3" id="text-org5244d57">
 <ul class="org-ul">
 <li>kbd: macro transaltes human-readable key to emacs readable.</li>
 <li>function and navigation keys must be surrounded by &lt;&gt;.</li>
@@ -439,18 +450,18 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbce2e5d" class="outline-3">
-<h3 id="orgbce2e5d">remapping</h3>
-<div class="outline-text-3" id="text-orgbce2e5d">
+<div id="outline-container-org429b402" class="outline-3">
+<h3 id="org429b402">remapping</h3>
+<div class="outline-text-3" id="text-org429b402">
 <ul class="org-ul">
 <li>use remap to replace mapping (ie. kill-line with my/kill-line).</li>
 <li>(define-key keymap [remap original-function] 'my-own-function).</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org7e140bb" class="outline-3">
-<h3 id="org7e140bb">reserved keys</h3>
-<div class="outline-text-3" id="text-org7e140bb">
+<div id="outline-container-org27bcf1f" class="outline-3">
+<h3 id="org27bcf1f">reserved keys</h3>
+<div class="outline-text-3" id="text-org27bcf1f">
 <ul class="org-ul">
 <li>"c-c ?" generally reserved for you, but third party packages use it.</li>
 <li>function keys (ie. f1-f12).</li>
@@ -458,9 +469,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org49adf5a" class="outline-3">
-<h3 id="org49adf5a">lookup order</h3>
-<div class="outline-text-3" id="text-org49adf5a">
+<div id="outline-container-org1f144ad" class="outline-3">
+<h3 id="org1f144ad">lookup order</h3>
+<div class="outline-text-3" id="text-org1f144ad">
 <ul class="org-ul">
 <li>in a nutshell: minor mode keys, local keys, global keys.</li>
 <li>full order:
@@ -477,9 +488,9 @@ maps key to action.
 </ul>
 </div>
 </div>
-<div id="outline-container-org544d155" class="outline-3">
-<h3 id="org544d155">mode hooks</h3>
-<div class="outline-text-3" id="text-org544d155">
+<div id="outline-container-orga14f018" class="outline-3">
+<h3 id="orga14f018">mode hooks</h3>
+<div class="outline-text-3" id="text-orga14f018">
 <ul class="org-ul">
 <li>(local-set-key (kbd "c-c q") 'my-awesome-method)) in hook-method.</li>
 <li>for key-chord-define, use current-local-map.</li>

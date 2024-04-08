@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:03 -->
+<!-- 2024-04-05 Fri 04:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>npm basics</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,9 +396,9 @@
 <h2 id="npm-basics"><span class="timestamp-wrapper"><span class="timestamp">30 December 2015</span></span> npm basics</h2>
 <div class="outline-text-2" id="text-npm-basics">
 </div>
-<div id="outline-container-org6df6887" class="outline-3">
-<h3 id="org6df6887">Global vs local package installation location</h3>
-<div class="outline-text-3" id="text-org6df6887">
+<div id="outline-container-org645fe93" class="outline-3">
+<h3 id="org645fe93">Global vs local package installation location</h3>
+<div class="outline-text-3" id="text-org645fe93">
 <blockquote>
 <p>
 {prefix}/lib/node_modules
@@ -403,9 +414,9 @@ path/to/project/node_modules
 </blockquote>
 </div>
 </div>
-<div id="outline-container-orgcebb31b" class="outline-3">
-<h3 id="orgcebb31b">View npm config</h3>
-<div class="outline-text-3" id="text-orgcebb31b">
+<div id="outline-container-orgd69772d" class="outline-3">
+<h3 id="orgd69772d">View npm config</h3>
+<div class="outline-text-3" id="text-orgd69772d">
 <div class="org-src-container">
 <pre class="src src-sh">npm config list
 </pre>
@@ -424,9 +435,9 @@ user-agent = "npm/2.14.2 node/v4.0.0 darwin x64"
 </div>
 </div>
 
-<div id="outline-container-orga26eb62" class="outline-3">
-<h3 id="orga26eb62">Get config value</h3>
-<div class="outline-text-3" id="text-orga26eb62">
+<div id="outline-container-org6c34a76" class="outline-3">
+<h3 id="org6c34a76">Get config value</h3>
+<div class="outline-text-3" id="text-org6c34a76">
 <div class="org-src-container">
 <pre class="src src-sh">npm config get prefix
 </pre>
@@ -438,9 +449,9 @@ user-agent = "npm/2.14.2 node/v4.0.0 darwin x64"
 </div>
 </div>
 
-<div id="outline-container-orgec1df7c" class="outline-3">
-<h3 id="orgec1df7c">Set config value</h3>
-<div class="outline-text-3" id="text-orgec1df7c">
+<div id="outline-container-org9b5878b" class="outline-3">
+<h3 id="org9b5878b">Set config value</h3>
+<div class="outline-text-3" id="text-org9b5878b">
 <div class="org-src-container">
 <pre class="src src-sh">npm config set <span style="color: #333333;">prefix</span>=$<span style="color: #333333;">HOME</span>/some/location
 </pre>
@@ -448,9 +459,9 @@ user-agent = "npm/2.14.2 node/v4.0.0 darwin x64"
 </div>
 </div>
 
-<div id="outline-container-org4996a1a" class="outline-3">
-<h3 id="org4996a1a">Install package globally</h3>
-<div class="outline-text-3" id="text-org4996a1a">
+<div id="outline-container-orgdb66ad0" class="outline-3">
+<h3 id="orgdb66ad0">Install package globally</h3>
+<div class="outline-text-3" id="text-orgdb66ad0">
 <div class="org-src-container">
 <pre class="src src-sh">node install --global &lt;package-name&gt;
 </pre>
@@ -464,9 +475,9 @@ or
 </div>
 </div>
 </div>
-<div id="outline-container-org2385549" class="outline-3">
-<h3 id="org2385549">List global packages</h3>
-<div class="outline-text-3" id="text-org2385549">
+<div id="outline-container-orgcda503b" class="outline-3">
+<h3 id="orgcda503b">List global packages</h3>
+<div class="outline-text-3" id="text-orgcda503b">
 <div class="org-src-container">
 <pre class="src src-sh">npm list --global
 </pre>
@@ -474,7 +485,7 @@ or
 <p>
 You can also use &#x2013;depth=0 to make less verbose.
 </p>
-<pre class="example" id="orgc1ae273">
+<pre class="example" id="org80a0403">
 /Users/user/.nvm/versions/node/v4.0.0/lib
 ├─┬ babel-eslint@4.1.3
 │ ├── acorn-to-esprima@1.0.4
@@ -486,9 +497,9 @@ You can also use &#x2013;depth=0 to make less verbose.
 </div>
 </div>
 
-<div id="outline-container-org724919e" class="outline-3">
-<h3 id="org724919e">Install local package</h3>
-<div class="outline-text-3" id="text-org724919e">
+<div id="outline-container-orgf06e92d" class="outline-3">
+<h3 id="orgf06e92d">Install local package</h3>
+<div class="outline-text-3" id="text-orgf06e92d">
 <div class="org-src-container">
 <pre class="src src-sh">npm install &lt;package-name&gt; --save
 </pre>
@@ -498,17 +509,17 @@ You can also use &#x2013;depth=0 to make less verbose.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf3ea1b4" class="outline-3">
-<h3 id="orgf3ea1b4">package.json</h3>
-<div class="outline-text-3" id="text-orgf3ea1b4">
+<div id="outline-container-org2dfff97" class="outline-3">
+<h3 id="org2dfff97">package.json</h3>
+<div class="outline-text-3" id="text-org2dfff97">
 <p>
 See <a href="https://docs.npmjs.com/getting-started/using-a-package.json">using a package.json</a>.
 </p>
 </div>
 </div>
-<div id="outline-container-org64785df" class="outline-3">
-<h3 id="org64785df">Uninstall package</h3>
-<div class="outline-text-3" id="text-org64785df">
+<div id="outline-container-orga18bbe8" class="outline-3">
+<h3 id="orga18bbe8">Uninstall package</h3>
+<div class="outline-text-3" id="text-orga18bbe8">
 <div class="org-src-container">
 <pre class="src src-sh">npm uninstall &lt;package-name&gt;
 </pre>
@@ -516,9 +527,9 @@ See <a href="https://docs.npmjs.com/getting-started/using-a-package.json">using 
 </div>
 </div>
 
-<div id="outline-container-org8e00e8f" class="outline-3">
-<h3 id="org8e00e8f">Install package at version</h3>
-<div class="outline-text-3" id="text-org8e00e8f">
+<div id="outline-container-orgdc7213f" class="outline-3">
+<h3 id="orgdc7213f">Install package at version</h3>
+<div class="outline-text-3" id="text-orgdc7213f">
 <div class="org-src-container">
 <pre class="src src-sh">npm install &lt;package-name&gt;@1.7.0
 </pre>
@@ -526,18 +537,18 @@ See <a href="https://docs.npmjs.com/getting-started/using-a-package.json">using 
 </div>
 </div>
 
-<div id="outline-container-org1b8023f" class="outline-3">
-<h3 id="org1b8023f">Search packages</h3>
-<div class="outline-text-3" id="text-org1b8023f">
+<div id="outline-container-orge23187f" class="outline-3">
+<h3 id="orge23187f">Search packages</h3>
+<div class="outline-text-3" id="text-orge23187f">
 <div class="org-src-container">
 <pre class="src src-sh">npm search linter
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgcb4e2c5" class="outline-3">
-<h3 id="orgcb4e2c5">Online documentation</h3>
-<div class="outline-text-3" id="text-orgcb4e2c5">
+<div id="outline-container-org22e69d4" class="outline-3">
+<h3 id="org22e69d4">Online documentation</h3>
+<div class="outline-text-3" id="text-org22e69d4">
 <p>
 Online documentation is great so far. More at <a href="https://docs.npmjs.com">docs.npmjs.com</a>.
 </p>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:00 -->
+<!-- 2024-04-05 Fri 04:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>xcodebuild's SPM support (Xcode 11)</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -412,9 +423,9 @@ In any case, on to xcodebuild&#x2026; but let's first create a brand new Swift p
 </p>
 </div>
 
-<div id="outline-container-org7960006" class="outline-3">
-<h3 id="org7960006">Creating a Swift package library</h3>
-<div class="outline-text-3" id="text-org7960006">
+<div id="outline-container-org8e3770f" class="outline-3">
+<h3 id="org8e3770f">Creating a Swift package library</h3>
+<div class="outline-text-3" id="text-org8e3770f">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir FooBar &amp;&amp; cd FooBar
 swift package init --type library
@@ -435,9 +446,9 @@ Creating Tests/FooBarTests/FooBarTests.swift
 </div>
 </div>
 
-<div id="outline-container-org18ac046" class="outline-3">
-<h3 id="org18ac046">List package schemes</h3>
-<div class="outline-text-3" id="text-org18ac046">
+<div id="outline-container-orgbdcdcc5" class="outline-3">
+<h3 id="orgbdcdcc5">List package schemes</h3>
+<div class="outline-text-3" id="text-orgbdcdcc5">
 <p>
 We can use xcodebuild to list the available schemes.
 </p>
@@ -447,7 +458,7 @@ We can use xcodebuild to list the available schemes.
 </pre>
 </div>
 
-<pre class="example" id="org27821bf">
+<pre class="example" id="org888102e">
 Command line invocation:
     /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -list
 
@@ -467,9 +478,9 @@ Information about workspace "FooBar":
 </div>
 </div>
 
-<div id="outline-container-orge251a49" class="outline-3">
-<h3 id="orge251a49">Show supported platform, architecture, etc</h3>
-<div class="outline-text-3" id="text-orge251a49">
+<div id="outline-container-orgd86ed3f" class="outline-3">
+<h3 id="orgd86ed3f">Show supported platform, architecture, etc</h3>
+<div class="outline-text-3" id="text-orgd86ed3f">
 <p>
 Similarly, we can list destinations supported for the schemes.
 </p>
@@ -479,7 +490,7 @@ Similarly, we can list destinations supported for the schemes.
 </pre>
 </div>
 
-<pre class="example" id="org6febcc0">
+<pre class="example" id="org987d61c">
 Command line invocation:
     /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -showdestinations -scheme FooBar
 
@@ -505,9 +516,9 @@ Resolved source packages:
 </div>
 </div>
 
-<div id="outline-container-org9f7a206" class="outline-3">
-<h3 id="org9f7a206">macOS builds</h3>
-<div class="outline-text-3" id="text-org9f7a206">
+<div id="outline-container-org6a1a8ba" class="outline-3">
+<h3 id="org6a1a8ba">macOS builds</h3>
+<div class="outline-text-3" id="text-org6a1a8ba">
 <p>
 Let's build for macOS, though let's first import UIKit into FooBar.swift. This ensures we get an expected failure when building for macOS.
 </p>
@@ -530,7 +541,7 @@ Now let's attempt to build it&#x2026;
 </pre>
 </div>
 
-<pre class="example" id="org0b3a266">
+<pre class="example" id="orga8e5dd7">
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:macOS, arch:x86_64, id:3D097357-EB7D-565D-9058-CE7C3135927B }
 { platform:macOS, arch:x86_64, variant:Mac Catalyst, id:3D097357-EB7D-565D-9058-CE7C3135927B }
@@ -553,9 +564,9 @@ The failure expected as UIKit isn't available on your typical macOS builds.
 </div>
 </div>
 
-<div id="outline-container-org5a3c83d" class="outline-3">
-<h3 id="org5a3c83d">macOS Catalyst builds</h3>
-<div class="outline-text-3" id="text-org5a3c83d">
+<div id="outline-container-org13cf538" class="outline-3">
+<h3 id="org13cf538">macOS Catalyst builds</h3>
+<div class="outline-text-3" id="text-org13cf538">
 <p>
 We do, however, have Catalyst available, so we can use its variant to build for macOS with UIKit support, and.. voilà!
 </p>

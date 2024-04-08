@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:02 -->
+<!-- 2024-04-05 Fri 04:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out mu4e and offlineimap</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,7 +396,7 @@
 <h2 id="trying-out-mu4e-and-offlineimap"><span class="timestamp-wrapper"><span class="timestamp">28 May 2018</span></span> Trying out mu4e and offlineimap</h2>
 <div class="outline-text-2" id="text-trying-out-mu4e-and-offlineimap">
 
-<div id="org710693a" class="figure">
+<div id="orgc090522" class="figure">
 <p><img src="../images/trying-out-mu4e-and-offlineimap/mu4e.png" alt="mu4e.png" width="75%" height="75%" />
 </p>
 </div>
@@ -395,9 +406,9 @@ Managing Email from Emacs. Surely that's crazy-talk, but hey&#x2026; let's give 
 </p>
 </div>
 
-<div id="outline-container-orgae380b2" class="outline-3">
-<h3 id="orgae380b2">Install offlineimap</h3>
-<div class="outline-text-3" id="text-orgae380b2">
+<div id="outline-container-orgb28d19e" class="outline-3">
+<h3 id="orgb28d19e">Install offlineimap</h3>
+<div class="outline-text-3" id="text-orgb28d19e">
 <p>
 Need to sync via imap. Use offlineimap. I'm on macOS, so homebrew is king for installing:
 </p>
@@ -413,9 +424,9 @@ Before can configure offlineimap, we'll need to handle a few things first.
 </div>
 </div>
 
-<div id="outline-container-org7804952" class="outline-3">
-<h3 id="org7804952">Get a cert fingerprint</h3>
-<div class="outline-text-3" id="text-org7804952">
+<div id="outline-container-org03ea7af" class="outline-3">
+<h3 id="org03ea7af">Get a cert fingerprint</h3>
+<div class="outline-text-3" id="text-org03ea7af">
 <p>
 Use openssl for getting a certificate fingerprint. From offlineimap's <a href="http://www.offlineimap.org/doc/FAQ.html#view-the-fingerprint">FAQ:</a>
 </p>
@@ -437,9 +448,9 @@ SHA1 Fingerprint=AA:BB:CC:DD:EE:DD:FF:AA:00:AA:2A:AA:AA:AA:A8:20:80:AA:A2:AA
 </div>
 </div>
 
-<div id="outline-container-orgd4cd83c" class="outline-3">
-<h3 id="orgd4cd83c">Encrypt password</h3>
-<div class="outline-text-3" id="text-orgd4cd83c">
+<div id="outline-container-org6f9a439" class="outline-3">
+<h3 id="org6f9a439">Encrypt password</h3>
+<div class="outline-text-3" id="text-org6f9a439">
 <p>
 Offlineimap can read passwords in plain text in its .offlineimaprc config file, but that's yuckie. Let's encrypt the password and use gnupg for that. Install it:
 </p>
@@ -469,9 +480,9 @@ Generate an offlineimap account password file.
 </div>
 </div>
 
-<div id="outline-container-orgd56260d" class="outline-3">
-<h3 id="orgd56260d">Python password  wrapper</h3>
-<div class="outline-text-3" id="text-orgd56260d">
+<div id="outline-container-orga46d067" class="outline-3">
+<h3 id="orga46d067">Python password  wrapper</h3>
+<div class="outline-text-3" id="text-orga46d067">
 <p>
 Based on Fabian's <a href="https://f-koehler.github.io/posts/2015-03-17-offlineimap-msmtp-gnupg.html">Encrypt OfflineIMAP and msmtp password with GnuPG</a>, I created ~/.read_password.py with:
 </p>
@@ -481,7 +492,7 @@ Based on Fabian's <a href="https://f-koehler.github.io/posts/2015-03-17-offlinei
 <span style="color: #a71d5d;">import</span> subprocess
 
 <span style="color: #a71d5d;">def</span> <span style="color: #795da3;">read_password</span>(path):
-  <span style="color: #a71d5d;">return</span> subprocess.check_output([<span style="color: #183691;">"gpg\n"</span>, <span style="color: #183691;">"--quiet\n"</span>, <span style="color: #183691;">"--batch\n"</span>, <span style="color: #183691;">"-d\n"</span>, os.path.expanduser(path)]).strip()
+  <span style="color: #a71d5d;">return</span> subprocess.check_output([<span style="color: #183691;">"gpg</span><span style="color: #0086b3;">\n</span><span style="color: #183691;">"</span>, <span style="color: #183691;">"--quiet</span><span style="color: #0086b3;">\n</span><span style="color: #183691;">"</span>, <span style="color: #183691;">"--batch</span><span style="color: #0086b3;">\n</span><span style="color: #183691;">"</span>, <span style="color: #183691;">"-d</span><span style="color: #0086b3;">\n</span><span style="color: #183691;">"</span>, os.path.expanduser(path)]).strip()
 </pre>
 </div>
 
@@ -491,9 +502,9 @@ ps. Alternatively, see <a href="http://stevelosh.com/blog/2012/10/the-homely-mut
 </div>
 </div>
 
-<div id="outline-container-org6c4491d" class="outline-3">
-<h3 id="org6c4491d">Configure offlineimap</h3>
-<div class="outline-text-3" id="text-org6c4491d">
+<div id="outline-container-orgf2d9808" class="outline-3">
+<h3 id="orgf2d9808">Configure offlineimap</h3>
+<div class="outline-text-3" id="text-orgf2d9808">
 <p>
 Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to put the configuration together:
 </p>
@@ -537,9 +548,9 @@ Offlineimap uses ~/.offlineimaprc for configuration. We now have all we need to 
 </div>
 </div>
 
-<div id="outline-container-orgc3ffa48" class="outline-4">
-<h4 id="orgc3ffa48">Cert file</h4>
-<div class="outline-text-4" id="text-orgc3ffa48">
+<div id="outline-container-org0787f0f" class="outline-4">
+<h4 id="org0787f0f">Cert file</h4>
+<div class="outline-text-4" id="text-org0787f0f">
 <p>
 You can use macOS's certificates from Keychain Access -&gt; System Roots -&gt; Certificates, select all, and ⌘-⇧-e (for export items). Save to ~/certs.pem and use offlineimap configutation:
 </p>
@@ -557,9 +568,9 @@ Another option is executing lib/mk-ca-bundle.pl from curl's tarball to generate 
 </div>
 </div>
 
-<div id="outline-container-org9c7d4f3" class="outline-3">
-<h3 id="org9c7d4f3">Install mu4e</h3>
-<div class="outline-text-3" id="text-org9c7d4f3">
+<div id="outline-container-orgcdc93fb" class="outline-3">
+<h3 id="orgcdc93fb">Install mu4e</h3>
+<div class="outline-text-3" id="text-orgcdc93fb">
 <p>
 Manually modified mu4e recipe to pick up my Emacs binary. TIL about homebrew's edit command:
 </p>
@@ -591,9 +602,9 @@ Finally installed mu4e:
 </div>
 </div>
 
-<div id="outline-container-orgecafb21" class="outline-3">
-<h3 id="orgecafb21">Configure mu4e</h3>
-<div class="outline-text-3" id="text-orgecafb21">
+<div id="outline-container-org51bb468" class="outline-3">
+<h3 id="org51bb468">Configure mu4e</h3>
+<div class="outline-text-3" id="text-org51bb468">
 <p>
 Lastly, configure mu4e:
 </p>
@@ -671,9 +682,9 @@ Lastly, configure mu4e:
 </div>
 </div>
 </div>
-<div id="outline-container-orge284a1f" class="outline-3">
-<h3 id="orge284a1f">Authinfo</h3>
-<div class="outline-text-3" id="text-orge284a1f">
+<div id="outline-container-org51233c0" class="outline-3">
+<h3 id="org51233c0">Authinfo</h3>
+<div class="outline-text-3" id="text-org51233c0">
 <p>
 Create an ~/.authinfo file for sendmail authentication with:
 </p>
@@ -689,9 +700,9 @@ Encrypt ~/.authinfo with M-x epa-encrypt-file. Keep ~/.authinfo.gpg and delete ~
 </div>
 </div>
 
-<div id="outline-container-org75898de" class="outline-3">
-<h3 id="org75898de">Mu4e helpful references</h3>
-<div class="outline-text-3" id="text-org75898de">
+<div id="outline-container-org3876e71" class="outline-3">
+<h3 id="org3876e71">Mu4e helpful references</h3>
+<div class="outline-text-3" id="text-org3876e71">
 <ul class="org-ul">
 <li><a href="http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-">A Complete Guide to Email in Emacs using Mu and Mu4e</a>.</li>
 <li><a href="https://www.reddit.com/r/emacs/comments/5fkq7r/a_year_with_notmuch_mail_a_superfast_email_client/">A year with Notmuch mail - a super-fast email client available on Emacs</a>.</li>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:03 -->
+<!-- 2024-04-05 Fri 04:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs lisp snippets</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,16 +396,16 @@
 <h2 id="emacs-lisp-snippets"><span class="timestamp-wrapper"><span class="timestamp">02 March 2016</span></span> Emacs lisp snippets</h2>
 <div class="outline-text-2" id="text-emacs-lisp-snippets">
 </div>
-<div id="outline-container-org6a8527f" class="outline-3">
-<h3 id="org6a8527f">cl-loop for in</h3>
-<div class="outline-text-3" id="text-org6a8527f">
+<div id="outline-container-org49dd4ec" class="outline-3">
+<h3 id="org49dd4ec">cl-loop for in</h3>
+<div class="outline-text-3" id="text-org49dd4ec">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for day in '(<span style="color: #183691;">"mon"</span> <span style="color: #183691;">"tue"</span> <span style="color: #183691;">"wed"</span> <span style="color: #183691;">"thu"</span> <span style="color: #183691;">"fri"</span> <span style="color: #183691;">"sat"</span> <span style="color: #183691;">"sun"</span>)
          do (print day))
 </pre>
 </div>
 
-<pre class="example" id="orgc25e957">
+<pre class="example" id="org016e488">
 
 "mon"
 
@@ -413,16 +424,16 @@
 </div>
 </div>
 
-<div id="outline-container-org4445ece" class="outline-3">
-<h3 id="org4445ece">cl-loop for from to</h3>
-<div class="outline-text-3" id="text-org4445ece">
+<div id="outline-container-orgbfb3dd3" class="outline-3">
+<h3 id="orgbfb3dd3">cl-loop for from to</h3>
+<div class="outline-text-3" id="text-orgbfb3dd3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">cl-loop</span> for x from 1 to 5
          do (print x))
 </pre>
 </div>
 
-<pre class="example" id="orgc23f428">
+<pre class="example" id="orgcbe1f34">
 
 1
 
@@ -437,9 +448,9 @@
 </div>
 </div>
 
-<div id="outline-container-orga42546c" class="outline-3">
-<h3 id="orga42546c">pcase literal matching</h3>
-<div class="outline-text-3" id="text-orga42546c">
+<div id="outline-container-org7040aa3" class="outline-3">
+<h3 id="org7040aa3">pcase literal matching</h3>
+<div class="outline-text-3" id="text-org7040aa3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">pcase</span> <span style="color: #183691;">"word"</span>
   ('word (message <span style="color: #183691;">"Matched 'word symbol"</span>))
@@ -453,9 +464,9 @@ Matched "word" string
 </div>
 </div>
 
-<div id="outline-container-orgd6207d5" class="outline-3">
-<h3 id="orgd6207d5">Avoid nesting with the help of thread-first and thread-last.</h3>
-<div class="outline-text-3" id="text-orgd6207d5">
+<div id="outline-container-org3b2cdef" class="outline-3">
+<h3 id="org3b2cdef">Avoid nesting with the help of thread-first and thread-last.</h3>
+<div class="outline-text-3" id="text-org3b2cdef">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">thread-last</span> <span style="color: #183691;">"12.....34"</span>
   (string-remove-prefix <span style="color: #183691;">"1"</span>)
@@ -469,45 +480,45 @@ Matched "word" string
 </div>
 </div>
 
-<div id="outline-container-orgc2b70a5" class="outline-3">
-<h3 id="orgc2b70a5">Find file upwards, up parents, up hierarchy</h3>
-<div class="outline-text-3" id="text-orgc2b70a5">
+<div id="outline-container-org7e44446" class="outline-3">
+<h3 id="org7e44446">Find file upwards, up parents, up hierarchy</h3>
+<div class="outline-text-3" id="text-org7e44446">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(locate-dominating-file FILE NAME)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org951a572" class="outline-3">
-<h3 id="org951a572">Find executable in PATH</h3>
-<div class="outline-text-3" id="text-org951a572">
+<div id="outline-container-org736c2ac" class="outline-3">
+<h3 id="org736c2ac">Find executable in PATH</h3>
+<div class="outline-text-3" id="text-org736c2ac">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(executable-find COMMAND)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd3c9e8a" class="outline-3">
-<h3 id="orgd3c9e8a">Read string with completion (helm/ido/ivy friendly)</h3>
-<div class="outline-text-3" id="text-orgd3c9e8a">
+<div id="outline-container-orga87f837" class="outline-3">
+<h3 id="orga87f837">Read string with completion (helm/ido/ivy friendly)</h3>
+<div class="outline-text-3" id="text-orga87f837">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(completing-read PROMPT COLLECTION <span style="color: #0086b3;">&amp;optional</span> PREDICATE REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd5cf06f" class="outline-3">
-<h3 id="orgd5cf06f">Execute command/process and return list (similar to shell-command-to-string)</h3>
-<div class="outline-text-3" id="text-orgd5cf06f">
+<div id="outline-container-org5907436" class="outline-3">
+<h3 id="org5907436">Execute command/process and return list (similar to shell-command-to-string)</h3>
+<div class="outline-text-3" id="text-org5907436">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(process-lines PROGRAM <span style="color: #0086b3;">&amp;rest</span> ARGS)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org1f9bd3a" class="outline-3">
-<h3 id="org1f9bd3a">Iterating org buffer</h3>
-<div class="outline-text-3" id="text-org1f9bd3a">
+<div id="outline-container-org42b3a3b" class="outline-3">
+<h3 id="org42b3a3b">Iterating org buffer</h3>
+<div class="outline-text-3" id="text-org42b3a3b">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(org-element-map (org-element-parse-buffer) '(headline link)
   (<span style="color: #a71d5d;">lambda</span> (element)

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:01 -->
+<!-- 2024-04-05 Fri 04:17 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ledger query snippets</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,27 +396,27 @@
 <h2 id="ledger-query-snippets"><span class="timestamp-wrapper"><span class="timestamp">06 May 2019</span></span> Ledger query snippets</h2>
 <div class="outline-text-2" id="text-ledger-query-snippets">
 </div>
-<div id="outline-container-org1f70354" class="outline-3">
-<h3 id="org1f70354">Expenses paid in cash between two dates</h3>
-<div class="outline-text-3" id="text-org1f70354">
+<div id="outline-container-orga2a3c7e" class="outline-3">
+<h3 id="orga2a3c7e">Expenses paid in cash between two dates</h3>
+<div class="outline-text-3" id="text-orga2a3c7e">
 <div class="org-src-container">
 <pre class="src src-sh">ledger -f my.ledger reg <span style="color: #183691;">"^Expenses"</span> and expr <span style="color: #183691;">'any(account=~/Assets:Cash:Wallet/)'</span> -b 02/19 -e 04/09
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7d2abed" class="outline-3">
-<h3 id="org7d2abed">Bank account income between two dates</h3>
-<div class="outline-text-3" id="text-org7d2abed">
+<div id="outline-container-orgc3282ab" class="outline-3">
+<h3 id="orgc3282ab">Bank account income between two dates</h3>
+<div class="outline-text-3" id="text-orgc3282ab">
 <div class="org-src-container">
 <pre class="src src-sh">ledger -f my.ledger reg <span style="color: #183691;">"^Assets:Bank:Acme"</span> and expr <span style="color: #183691;">"amount &gt; 0"</span> -b 02/19 -e 04/09
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb3f51a2" class="outline-3">
-<h3 id="orgb3f51a2">Formatting reg output</h3>
-<div class="outline-text-3" id="text-orgb3f51a2">
+<div id="outline-container-orga55c34d" class="outline-3">
+<h3 id="orga55c34d">Formatting reg output</h3>
+<div class="outline-text-3" id="text-orga55c34d">
 <div class="org-src-container">
 <pre class="src src-sh">ledger -f my.ledger reg <span style="color: #183691;">"^Assets:Bank:Acme"</span> --format=<span style="color: #183691;">"%(payee) %(amount)\n"</span>
 </pre>

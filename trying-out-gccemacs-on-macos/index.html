@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:01 -->
+<!-- 2024-04-05 Fri 04:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trying out gccemacs on macOS</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -393,9 +404,9 @@ Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.
 </p>
 </div>
 
-<div id="outline-container-org8d072f9" class="outline-3">
-<h3 id="org8d072f9">Install gcc and libgccjit via homebrew</h3>
-<div class="outline-text-3" id="text-org8d072f9">
+<div id="outline-container-orgcb81eb0" class="outline-3">
+<h3 id="orgcb81eb0">Install gcc and libgccjit via homebrew</h3>
+<div class="outline-text-3" id="text-orgcb81eb0">
 <div class="org-src-container">
 <pre class="src src-sh">brew install gcc libgccjit
 </pre>
@@ -403,9 +414,9 @@ Below are the instructions I use to build Andrea Corallo's <a href="http://akrl.
 </div>
 </div>
 
-<div id="outline-container-orgd4e966f" class="outline-3">
-<h3 id="orgd4e966f">Save configure script</h3>
-<div class="outline-text-3" id="text-orgd4e966f">
+<div id="outline-container-org8546857" class="outline-3">
+<h3 id="org8546857">Save configure script</h3>
+<div class="outline-text-3" id="text-org8546857">
 <p>
 Create configure-gccemacs.sh
 </p>
@@ -471,25 +482,25 @@ Make it executable
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell">chmod <span style="color: #969896;">+x</span> configure-gccemacs.sh
+<pre class="src src-shell">chmod +x configure-gccemacs.sh
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org829d233" class="outline-3">
-<h3 id="org829d233">Clone Emacs source</h3>
-<div class="outline-text-3" id="text-org829d233">
+<div id="outline-container-org8300b29" class="outline-3">
+<h3 id="org8300b29">Clone Emacs source</h3>
+<div class="outline-text-3" id="text-org8300b29">
 <div class="org-src-container">
-<pre class="src src-shell">git clone <span style="color: #969896;">--branch</span> master https://github.com/emacs-mirror/emacs gccemacs
+<pre class="src src-shell">git clone --branch master https://github.com/emacs-mirror/emacs gccemacs
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4b24afe" class="outline-3">
-<h3 id="org4b24afe">Configure build</h3>
-<div class="outline-text-3" id="text-org4b24afe">
+<div id="outline-container-orgdd91f70" class="outline-3">
+<h3 id="orgdd91f70">Configure build</h3>
+<div class="outline-text-3" id="text-orgdd91f70">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #a71d5d;">cd</span> gccemacs
 ../configure-gccemacs.sh
@@ -498,9 +509,9 @@ Make it executable
 </div>
 </div>
 
-<div id="outline-container-orgcaebace" class="outline-3">
-<h3 id="orgcaebace">Native lisp compiler found?</h3>
-<div class="outline-text-3" id="text-orgcaebace">
+<div id="outline-container-org49db107" class="outline-3">
+<h3 id="org49db107">Native lisp compiler found?</h3>
+<div class="outline-text-3" id="text-org49db107">
 <p>
 Verify native lisp compiler is found:
 </p>
@@ -512,9 +523,9 @@ Verify native lisp compiler is found:
 </div>
 </div>
 
-<div id="outline-container-org98e6426" class="outline-3">
-<h3 id="org98e6426">Build</h3>
-<div class="outline-text-3" id="text-org98e6426">
+<div id="outline-container-orgeb10ac5" class="outline-3">
+<h3 id="orgeb10ac5">Build</h3>
+<div class="outline-text-3" id="text-orgeb10ac5">
 <p>
 Put those cores to use. Find out how many you got with:
 </p>
@@ -551,18 +562,18 @@ The macOS app build (under nextstep/Emacs.app) is ready, but read on before laun
 </div>
 </div>
 
-<div id="outline-container-org3edfb5a" class="outline-3">
-<h3 id="org3edfb5a">Remove ~/emacs.d</h3>
-<div class="outline-text-3" id="text-org3edfb5a">
+<div id="outline-container-org862f2c8" class="outline-3">
+<h3 id="org862f2c8">Remove ~/emacs.d</h3>
+<div class="outline-text-3" id="text-org862f2c8">
 <p>
 You likely want to start with a clean install, byte-compiling all packages with the latest Emacs version. In any case, rename ~/emacs.d (for backup?) or remove ~/emacs.d.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7670ef5" class="outline-3">
-<h3 id="org7670ef5">init.el config</h3>
-<div class="outline-text-3" id="text-org7670ef5">
+<div id="outline-container-orgb6e29f3" class="outline-3">
+<h3 id="orgb6e29f3">init.el config</h3>
+<div class="outline-text-3" id="text-orgb6e29f3">
 <p>
 Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRARY_PATH</i> points to gcc's lib dir, and finally set <i>comp-deferred-compilation</i>. I wrapped the snippet in my  <i>exec-path-from-shell</i> config, but setting early in init.el should be enough.
 </p>
@@ -593,9 +604,9 @@ Ensure <i>exec-path</i> includes the script's "&#x2013;prefix=" value, <i>LIBRAR
 </div>
 </div>
 
-<div id="outline-container-orgc48a1ca" class="outline-3">
-<h3 id="orgc48a1ca">Launch Emacs.app</h3>
-<div class="outline-text-3" id="text-orgc48a1ca">
+<div id="outline-container-orgcb378fe" class="outline-3">
+<h3 id="orgcb378fe">Launch Emacs.app</h3>
+<div class="outline-text-3" id="text-orgcb378fe">
 <p>
 You're good to go. Open Emacs.app via finder or shell:
 </p>
@@ -607,9 +618,9 @@ You're good to go. Open Emacs.app via finder or shell:
 </div>
 </div>
 
-<div id="outline-container-orge1118c4" class="outline-3">
-<h3 id="orge1118c4">Deferred compilation logs</h3>
-<div class="outline-text-3" id="text-orge1118c4">
+<div id="outline-container-org2798169" class="outline-3">
+<h3 id="org2798169">Deferred compilation logs</h3>
+<div class="outline-text-3" id="text-org2798169">
 <p>
 After setting <i>comp-deferred-compilation</i> (in init.el config section), .elc files should be asyncronously compiled. Function definition should be updated to native compiled equivalent.
 </p>

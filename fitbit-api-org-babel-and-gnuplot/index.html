@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:02 -->
+<!-- 2024-04-05 Fri 04:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>fitbit API, org babel, and gnuplot</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -393,7 +404,7 @@ First register your app at <a href="https://dev.fitbit.com/apps/new">dev.fitbit.
 </p>
 
 
-<div id="orgcea3cff" class="figure">
+<div id="org9fa47f9" class="figure">
 <p><img src="../images/fitbit-api-org-babel-and-gnuplot/fitbitapp.png" alt="fitbitapp.png" width="75%" height="75%" />
 </p>
 </div>
@@ -403,7 +414,7 @@ You'll also need your USER_ID, from your Fitbitx user profile.
 </p>
 
 
-<div id="orgb593e67" class="figure">
+<div id="orgef50916" class="figure">
 <p><img src="../images/fitbit-api-org-babel-and-gnuplot/fitbituser.png" alt="fitbituser.png" width="75%" height="75%" />
 </p>
 </div>
@@ -440,7 +451,7 @@ We use curl to fetch data from fitbit's API and pipe through <a href="https://st
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org17df564">curl -s -H <span style="color: #183691;">"Authorization: Bearer TOKEN"</span> https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq <span style="color: #183691;">'.[][] | "\(.dateTime) \(.value)"'</span> | sed <span style="color: #183691;">'s/"//g'</span>
+<pre class="src src-sh" id="orgcf3ee44">curl -s -H <span style="color: #183691;">"Authorization: Bearer TOKEN"</span> https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq <span style="color: #183691;">'.[][] | "\(.dateTime) \(.value)"'</span> | sed <span style="color: #183691;">'s/"//g'</span>
 </pre>
 </div>
 
@@ -637,7 +648,7 @@ Now feed the two column data to gnuplot.
 </div>
 
 
-<div id="org8508740" class="figure">
+<div id="orgd3f127d" class="figure">
 <p><img src="../images/fitbit-api-org-babel-and-gnuplot/weight.png" alt="weight.png" width="75%" height="75%" />
 </p>
 </div>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:04 -->
+<!-- 2024-04-05 Fri 04:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Soundcloud's Go best practices (GopherCon 2014)</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -388,84 +399,84 @@
 Having watched the <a href="https://www.youtube.com/watch?v%3DY1-RLAl7iOI">video</a>, some takeaways:
 </p>
 </div>
-<div id="outline-container-orga628901" class="outline-3">
-<h3 id="orga628901">Single GOPATH</h3>
-<div class="outline-text-3" id="text-orga628901">
+<div id="outline-container-org391f8ed" class="outline-3">
+<h3 id="org391f8ed">Single GOPATH</h3>
+<div class="outline-text-3" id="text-org391f8ed">
 </div>
-<div id="outline-container-orga584a56" class="outline-4">
-<h4 id="orga584a56">$GOPATH/src/github.com/soundcloud/foo</h4>
+<div id="outline-container-orgdff4bbb" class="outline-4">
+<h4 id="orgdff4bbb">$GOPATH/src/github.com/soundcloud/foo</h4>
 </div>
 </div>
-<div id="outline-container-orgc239f72" class="outline-3">
-<h3 id="orgc239f72">Repo structure</h3>
-<div class="outline-text-3" id="text-orgc239f72">
+<div id="outline-container-org7ba046b" class="outline-3">
+<h3 id="org7ba046b">Repo structure</h3>
+<div class="outline-text-3" id="text-org7ba046b">
 </div>
-<div id="outline-container-orgbd34a1d" class="outline-4">
-<h4 id="orgbd34a1d">github.com/soundcloud/whatever</h4>
-<div class="outline-text-4" id="text-orgbd34a1d">
+<div id="outline-container-orge288f5c" class="outline-4">
+<h4 id="orge288f5c">github.com/soundcloud/whatever</h4>
+<div class="outline-text-4" id="text-orge288f5c">
 </div>
 <ul class="org-ul">
-<li><a id="org28af539"></a>README.md<br /></li>
-<li><a id="org594e958"></a>Makefile<br /></li>
-<li><a id="orgadf60be"></a>main.go<br /></li>
-<li><a id="org13c3aa9"></a>support.go<br /></li>
-<li><a id="org42d2dc6"></a>foo<br />
+<li><a id="org8f19cee"></a>README.md<br /></li>
+<li><a id="org6e02b7e"></a>Makefile<br /></li>
+<li><a id="org19cca01"></a>main.go<br /></li>
+<li><a id="org0e8fdbc"></a>support.go<br /></li>
+<li><a id="orgad3241f"></a>foo<br />
 <ul class="org-ul">
-<li><a id="org2994536"></a>foo.go<br /></li>
-<li><a id="org7270a3a"></a>bar.go<br /></li>
+<li><a id="org2ef5658"></a>foo.go<br /></li>
+<li><a id="org51368eb"></a>bar.go<br /></li>
 </ul>
 </li>
-<li><a id="org7cd205d"></a>whatever-server<br />
+<li><a id="org3d12472"></a>whatever-server<br />
 <ul class="org-ul">
-<li><a id="org2bd7846"></a>main.go<br /></li>
+<li><a id="org62f651e"></a>main.go<br /></li>
 </ul>
 </li>
-<li><a id="orgfc37fb2"></a>wharever-worker<br />
+<li><a id="orge10c2ef"></a>wharever-worker<br />
 <ul class="org-ul">
-<li><a id="org751162b"></a>main.go<br /></li>
+<li><a id="org50a890f"></a>main.go<br /></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge5c8ca4" class="outline-3">
-<h3 id="orge5c8ca4">Formatting and style</h3>
-<div class="outline-text-3" id="text-orge5c8ca4">
+<div id="outline-container-org9675a91" class="outline-3">
+<h3 id="org9675a91">Formatting and style</h3>
+<div class="outline-text-3" id="text-org9675a91">
 </div>
-<div id="outline-container-orgb7c1106" class="outline-4">
-<h4 id="orgb7c1106">Use gofmt.</h4>
+<div id="outline-container-orgdc6efb4" class="outline-4">
+<h4 id="orgdc6efb4">Use gofmt.</h4>
 </div>
-<div id="outline-container-orgdfb2d53" class="outline-4">
-<h4 id="orgdfb2d53">Google's codereview <a href="https://github.com/golang/go/wiki/CodeReviewComments">guidelines</a>.</h4>
+<div id="outline-container-org4fb5f2f" class="outline-4">
+<h4 id="org4fb5f2f">Google's codereview <a href="https://github.com/golang/go/wiki/CodeReviewComments">guidelines</a>.</h4>
 </div>
-<div id="outline-container-orga9a247d" class="outline-4">
-<h4 id="orga9a247d">Avoid named return parameters.</h4>
+<div id="outline-container-org327732c" class="outline-4">
+<h4 id="org327732c">Avoid named return parameters.</h4>
 </div>
-<div id="outline-container-org6326a4c" class="outline-4">
-<h4 id="org6326a4c">Avoid make and new (unless you know sizes).</h4>
+<div id="outline-container-org9cbe0db" class="outline-4">
+<h4 id="org9cbe0db">Avoid make and new (unless you know sizes).</h4>
 </div>
-<div id="outline-container-org069fd0e" class="outline-4">
-<h4 id="org069fd0e">Use struct{} for sentinel values: sets, signal chans.</h4>
-<div class="outline-text-4" id="text-org069fd0e">
-</div>
-<ul class="org-ul">
-<li><a id="org84ef8f3"></a>Conveys no information in it this part.<br /></li>
-<li><a id="org91d584a"></a>Instead of empty interface.<br /></li>
-<li><a id="org4ee9b2a"></a>instead of boolean.<br /></li>
-</ul>
-</div>
-<div id="outline-container-org020efb0" class="outline-4">
-<h4 id="org020efb0">Break long lines at parameters</h4>
-<div class="outline-text-4" id="text-org020efb0">
+<div id="outline-container-orgcc24ff9" class="outline-4">
+<h4 id="orgcc24ff9">Use struct{} for sentinel values: sets, signal chans.</h4>
+<div class="outline-text-4" id="text-orgcc24ff9">
 </div>
 <ul class="org-ul">
-<li><a id="orgc07f14b"></a>No need to compact.<br /></li>
-<li><a id="org8970523"></a>Keep trailing coma in last argument.<br /></li>
+<li><a id="org19f5e52"></a>Conveys no information in it this part.<br /></li>
+<li><a id="org13b8649"></a>Instead of empty interface.<br /></li>
+<li><a id="org3d12b95"></a>instead of boolean.<br /></li>
 </ul>
 </div>
-<div id="outline-container-orgf715f45" class="outline-4">
-<h4 id="orgf715f45">Flags</h4>
-<div class="outline-text-4" id="text-orgf715f45">
+<div id="outline-container-org4c19ea1" class="outline-4">
+<h4 id="org4c19ea1">Break long lines at parameters</h4>
+<div class="outline-text-4" id="text-org4c19ea1">
+</div>
+<ul class="org-ul">
+<li><a id="org3aec109"></a>No need to compact.<br /></li>
+<li><a id="org66b5a96"></a>Keep trailing coma in last argument.<br /></li>
+</ul>
+</div>
+<div id="outline-container-orgec31ed5" class="outline-4">
+<h4 id="orgec31ed5">Flags</h4>
+<div class="outline-text-4" id="text-orgec31ed5">
 <div class="org-src-container">
 <pre class="src src-go"><span style="color: #a71d5d;">func</span> <span style="color: #795da3;">main</span>() {
   <span style="color: #a71d5d;">var</span> (
@@ -479,92 +490,92 @@ Having watched the <a href="https://www.youtube.com/watch?v%3DY1-RLAl7iOI">video
 </div>
 </div>
 </div>
-<div id="outline-container-org627abfc" class="outline-4">
-<h4 id="org627abfc">Logging</h4>
-<div class="outline-text-4" id="text-org627abfc">
+<div id="outline-container-org7852902" class="outline-4">
+<h4 id="org7852902">Logging</h4>
+<div class="outline-text-4" id="text-org7852902">
 </div>
 <ul class="org-ul">
-<li><a id="orgff62a02"></a>package log<br /></li>
-<li><a id="org2b7ce48"></a>Telemetry<br /></li>
-<li><a id="org3fe80aa"></a>Push model (gets expensive over time)<br />
+<li><a id="org6906f0c"></a>package log<br /></li>
+<li><a id="orgb0942ff"></a>Telemetry<br /></li>
+<li><a id="orgc3976a4"></a>Push model (gets expensive over time)<br />
 <ul class="org-ul">
-<li><a id="orgad1efc6"></a>Graphite<br /></li>
-<li><a id="org409c9fc"></a>Statsd<br /></li>
-<li><a id="org6381355"></a>AirBrake<br /></li>
+<li><a id="org3aa1b57"></a>Graphite<br /></li>
+<li><a id="org377fb77"></a>Statsd<br /></li>
+<li><a id="org30c1f58"></a>AirBrake<br /></li>
 </ul>
 </li>
-<li><a id="org31c8be1"></a>Pull model (chosen)<br />
+<li><a id="org08db7bd"></a>Pull model (chosen)<br />
 <ul class="org-ul">
-<li><a id="org292685e"></a>expvar<br /></li>
-<li><a id="org5522b06"></a>Prometheus<br /></li>
-</ul>
-</li>
-</ul>
-</div>
-<div id="outline-container-orgfc49c04" class="outline-4">
-<h4 id="orgfc49c04">Testing</h4>
-<div class="outline-text-4" id="text-orgfc49c04">
-</div>
-<ul class="org-ul">
-<li><a id="orgc79b42c"></a>package testing<br />
-<ul class="org-ul">
-<li><a id="org3f4ff11"></a>Unit tests<br /></li>
-<li><a id="org440f13c"></a>reflect.DeepEqual<br /></li>
-</ul>
-</li>
-<li><a id="org6f55b53"></a>Integration<br />
-<ul class="org-ul">
-<li><a id="org2a8d488"></a>Use flags for starting services<br /></li>
-<li><a id="org2b03dae"></a>// +build integration<br /></li>
+<li><a id="org9f1e068"></a>expvar<br /></li>
+<li><a id="orge0481bd"></a>Prometheus<br /></li>
 </ul>
 </li>
 </ul>
 </div>
-<div id="outline-container-orgf9b1340" class="outline-4">
-<h4 id="orgf9b1340">Code validation</h4>
-<div class="outline-text-4" id="text-orgf9b1340">
+<div id="outline-container-org39c9d93" class="outline-4">
+<h4 id="org39c9d93">Testing</h4>
+<div class="outline-text-4" id="text-org39c9d93">
 </div>
 <ul class="org-ul">
-<li><a id="orgbd70cd6"></a>On Save<br />
+<li><a id="org5abd41f"></a>package testing<br />
 <ul class="org-ul">
-<li><a id="org11f3374"></a>Go fmt<br /></li>
-<li><a id="org503ac47"></a>Go import (go fmt++)<br /></li>
+<li><a id="orgc92bcfe"></a>Unit tests<br /></li>
+<li><a id="org0c20c5c"></a>reflect.DeepEqual<br /></li>
 </ul>
 </li>
-<li><a id="org5cd2ddb"></a>On Build<br />
+<li><a id="org9ab5ad9"></a>Integration<br />
 <ul class="org-ul">
-<li><a id="org6a24490"></a>Go vet<br /></li>
-<li><a id="orgf2710a0"></a>Golint<br /></li>
-<li><a id="orgb45ab79"></a>Go test<br /></li>
+<li><a id="org6522f1d"></a>Use flags for starting services<br /></li>
+<li><a id="orgc469f9f"></a>// +build integration<br /></li>
 </ul>
 </li>
-<li><a id="orgb71c116"></a>On Deploy<br />
-<ul class="org-ul">
-<li><a id="orgae3d28d"></a>go test -tags=integration<br /></li>
-</ul>
-</li>
-<li><a id="org429105d"></a>GoCov?<br /></li>
 </ul>
 </div>
-<div id="outline-container-org0eb684b" class="outline-4">
-<h4 id="org0eb684b">Dependency management</h4>
-<div class="outline-text-4" id="text-org0eb684b">
+<div id="outline-container-orgec238da" class="outline-4">
+<h4 id="orgec238da">Code validation</h4>
+<div class="outline-text-4" id="text-orgec238da">
 </div>
 <ul class="org-ul">
-<li><a id="orgca260b6"></a>Unimportant projects<br />
+<li><a id="org6a64320"></a>On Save<br />
 <ul class="org-ul">
-<li><a id="org0b28a1f"></a>go get -d (and hope)<br /></li>
+<li><a id="org3eb5818"></a>Go fmt<br /></li>
+<li><a id="orgc1af094"></a>Go import (go fmt++)<br /></li>
 </ul>
 </li>
-<li><a id="orgcb444d3"></a>Important<br />
+<li><a id="orgd0bd822"></a>On Build<br />
 <ul class="org-ul">
-<li><a id="org56886e2"></a>VENDOR (ie. copy into your repo)<br />
+<li><a id="org7eb2f5a"></a>Go vet<br /></li>
+<li><a id="org96427d4"></a>Golint<br /></li>
+<li><a id="org963cbba"></a>Go test<br /></li>
+</ul>
+</li>
+<li><a id="org188b3b5"></a>On Deploy<br />
 <ul class="org-ul">
-<li><a id="org5d49114"></a>Git submodules (no!).<br /></li>
-<li><a id="org49c1b4c"></a>Git subtrees (seem OK).<br /></li>
-<li><a id="org7264c53"></a>Tool (godep?).<br /></li>
-<li><a id="org0e545da"></a>Build<br /></li>
-<li><a id="orge90bb61"></a>For binaries (use _vendor subdir)<br /></li>
+<li><a id="org58c5fbe"></a>go test -tags=integration<br /></li>
+</ul>
+</li>
+<li><a id="org5a5796f"></a>GoCov?<br /></li>
+</ul>
+</div>
+<div id="outline-container-org20a4bcb" class="outline-4">
+<h4 id="org20a4bcb">Dependency management</h4>
+<div class="outline-text-4" id="text-org20a4bcb">
+</div>
+<ul class="org-ul">
+<li><a id="orgeebe3b6"></a>Unimportant projects<br />
+<ul class="org-ul">
+<li><a id="org4c4c3b6"></a>go get -d (and hope)<br /></li>
+</ul>
+</li>
+<li><a id="orged60052"></a>Important<br />
+<ul class="org-ul">
+<li><a id="orgb6608fc"></a>VENDOR (ie. copy into your repo)<br />
+<ul class="org-ul">
+<li><a id="org169a4e3"></a>Git submodules (no!).<br /></li>
+<li><a id="orgda73cf0"></a>Git subtrees (seem OK).<br /></li>
+<li><a id="org673f175"></a>Tool (godep?).<br /></li>
+<li><a id="orgcfe91de"></a>Build<br /></li>
+<li><a id="org545ecbd"></a>For binaries (use _vendor subdir)<br /></li>
 </ul>
 </li>
 </ul>

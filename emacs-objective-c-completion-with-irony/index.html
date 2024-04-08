@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-25 Fri 17:03 -->
+<!-- 2024-04-05 Fri 04:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs Objective-C completion with Irony</title>
@@ -253,6 +253,10 @@
            overflow: auto;
          }
 
+         b, strong {
+          font-weight: bold;
+         }
+
          pre {
            border: none;
            box-shadow: none;
@@ -267,7 +271,7 @@
            display: none;
          }
 
-         p, .org-ol, .org-ul {
+         p, .org-ol, .org-ul, .org-left {
            color: #3A4145;
            font-family: 'Lucida Grande', 'Lucida Sans Unicode',
                'Lucida Sans', Geneva, Verdana, sans-serif;
@@ -354,10 +358,10 @@
   <tr>
     <td id='contact-left'>
       <a style='color:rgb(51, 51, 51);' href='/'>index</a>
-      <a style='color:rgb(51, 51, 51);' href='/all'>all</a>
       <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
     </td>
     <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
       <a href='https://twitter.com/xenodium'>twitter</a>
       <a href='http://github.com/xenodium'>github</a>
       <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
@@ -369,12 +373,19 @@
       <a href='https://plainorg.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
       <a href='https://flathabits.com'>
         <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
       </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
     </td>
     <td style='padding-top:10px;'>
-      <span class='author'>Álvaro Ramírez</span>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
     </td>
   </tr>
 </table>
@@ -385,18 +396,18 @@
 <h2 id="emacs-objective-c-completion-with-irony"><span class="timestamp-wrapper"><span class="timestamp">08 January 2016</span></span> Emacs Objective-C completion with Irony</h2>
 <div class="outline-text-2" id="text-emacs-objective-c-completion-with-irony">
 </div>
-<div id="outline-container-orgd4fc58e" class="outline-3">
-<h3 id="orgd4fc58e">Install libclang on Mac</h3>
-<div class="outline-text-3" id="text-orgd4fc58e">
+<div id="outline-container-org86c969d" class="outline-3">
+<h3 id="org86c969d">Install libclang on Mac</h3>
+<div class="outline-text-3" id="text-org86c969d">
 <div class="org-src-container">
 <pre class="src src-sh">brew install llvm --with-clang
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgda497c1" class="outline-3">
-<h3 id="orgda497c1">Configure Emacs</h3>
-<div class="outline-text-3" id="text-orgda497c1">
+<div id="outline-container-org96889a1" class="outline-3">
+<h3 id="org96889a1">Configure Emacs</h3>
+<div class="outline-text-3" id="text-org96889a1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> <span style="color: #0086b3;">irony</span> <span style="color: #a71d5d;">:ensure</span> t
   <span style="color: #a71d5d;">:config</span>
@@ -412,45 +423,45 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org5f70b06" class="outline-3">
-<h3 id="org5f70b06">install irony server</h3>
-<div class="outline-text-3" id="text-org5f70b06">
+<div id="outline-container-org4af2398" class="outline-3">
+<h3 id="org4af2398">install irony server</h3>
+<div class="outline-text-3" id="text-org4af2398">
 <p>
 Run:
 </p>
-<pre class="example" id="org269cc11">
+<pre class="example" id="orga8870fe">
 M-x irony-install-server
 </pre>
 <p>
 NOTE: Needs libclang: Install with "brew install llvm &#x2013;with-clang" By default, irony-install-server did not find libclang on Mac OS. <i>irony-install-server</i> invokes cmake for you. Work around by adding:
 </p>
-<pre class="example" id="org616c77a">
+<pre class="example" id="org926a46a">
 -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm
 </pre>
 <p>
 For example:
 </p>
-<pre class="example" id="org71e31c0">
+<pre class="example" id="orgbed3da0">
 cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTALL_PREFIX\=/Users/your-user-name/.emacs.d/irony/ /Users/your-user-name/.emacs.d/elpa/irony-20160106.1223/server &amp;&amp; cmake --build . --use-stderr --config Release --target install
 </pre>
 </div>
 </div>
-<div id="outline-container-org38d6f18" class="outline-3">
-<h3 id="org38d6f18">Compilation database</h3>
-<div class="outline-text-3" id="text-org38d6f18">
+<div id="outline-container-org014f3dc" class="outline-3">
+<h3 id="org014f3dc">Compilation database</h3>
+<div class="outline-text-3" id="text-org014f3dc">
 </div>
-<div id="outline-container-org7e51cb0" class="outline-4">
-<h4 id="org7e51cb0">Install xctool</h4>
-<div class="outline-text-4" id="text-org7e51cb0">
+<div id="outline-container-org93fcec3" class="outline-4">
+<h4 id="org93fcec3">Install xctool</h4>
+<div class="outline-text-4" id="text-org93fcec3">
 <div class="org-src-container">
 <pre class="src src-sh">brew install xctool
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org96253ed" class="outline-4">
-<h4 id="org96253ed">Generate compilation database</h4>
-<div class="outline-text-4" id="text-org96253ed">
+<div id="outline-container-org9bb3753" class="outline-4">
+<h4 id="org9bb3753">Generate compilation database</h4>
+<div class="outline-text-4" id="text-org9bb3753">
 <div class="org-src-container">
 <pre class="src src-sh">xctool -sdk iphonesimulator -arch x86_64 -scheme SomeScheme -reporter pretty -reporter json-compilation-database:compile_commands.json clean build
 </pre>
@@ -458,9 +469,9 @@ cmake -DCMAKE_PREFIX_PATH=/Users/your-user-name/homebrew/opt/llvm -DCMAKE_INSTAL
 </div>
 </div>
 </div>
-<div id="outline-container-org3140694" class="outline-3">
-<h3 id="org3140694">Set Irony's database path</h3>
-<div class="outline-text-3" id="text-org3140694">
+<div id="outline-container-orgc22d673" class="outline-3">
+<h3 id="orgc22d673">Set Irony's database path</h3>
+<div class="outline-text-3" id="text-orgc22d673">
 <blockquote>
 <p>
 M-x irony-cdb-json-add-compile-commands-path
