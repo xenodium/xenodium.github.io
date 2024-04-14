@@ -1,5 +1,5 @@
 -- Executed with
--- pandoc -f org -t markdown-smart --strip-comments --wrap=none --lua-filter=org.lua index.org -o index.md && sed -i '' -e 's/{width="[0-9]*\\(%\\|px\\)"}//g' -e 's/{#\([a-zA-Z0-9_.-]*\)}/\n---\nid: \1\n---/g' -e 's/\(\.\.\/images\)/https:\/\/xenodium.com\/images/g' index.md
+-- pandoc -f org -t markdown-smart --strip-comments --wrap=none --lua-filter=org.lua index.org -o index.md && sed -i '' -e 's/{width="[0-9]*\\(%\\|px\\)"}//g' -e 's/{#\([a-zA-Z0-9_.-]*\)}/\n---\nid: \1\n---/g' -e 's/\(\.\.\/images\)/https:\/\/xenodium.com\/images/g' index.md && perl -0777 -i'' -pe 's/::: \{\.MODIFIED \.drawer\}\n\\\[.*?\\\]\n::://gs' index.md
 
 -- function Header(el)
 --   print(el)
