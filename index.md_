@@ -1,3 +1,40 @@
+# \[2024-05-16 Thu\] Emacs: git rename, courtesy of dired
+---
+id: emacs-git-rename-courtesy-of-dired
+---
+
+Emacs [wdired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Wdired.html) is a beautiful thing. You turn a directory representation into an editable buffer and you can do some magic. By magic, I mean you can apply your favourite text-editing commands to a directory and do some file management.
+
+Take, for example, batch-renaming. Turn `wdired` on via `dired-toggle-read-only`, use something like Magnar's [multiple-cursors](https://github.com/magnars/multiple-cursors.el) (or built-in [keyboard macros](https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html)) and commit via `wdired-finish-edit` (using the often-familar `C-c C-c` binding). You've now renamed multiple files as it if were any other text buffer. Pretty magical.
+
+![](https://xenodium.com/images/emacs-git-rename-courtesy-of-dired/wdired.gif)
+
+One downside (or so I thought) is that wdired didn't automagically also take care of git renames for me, you know [DWIM-style](emacs-dwim-do-what-i-mean/).
+
+Every time I renamed anything via `wdired` and subsequently pulled up my trusty [magit](https://magit.vc/), I was a little sad it wasn't all just handled… The renamed files were seen as deleted, along with all the untracked counterparts.
+
+![](https://xenodium.com/images/emacs-git-rename-courtesy-of-dired/rename-no-git.png)
+
+So, I set out to change this unacceptable state of affairs 😀. I started off by setting a breaking on `wdired-finish-edit` via edebug (see [why I love this util](inline-previous-result-and-why-you-should-edebug/)).
+
+I wanted to see what `wdired-finish-edit` did under the hood, which led me to `dired-rename-file`. As I stepped through the code, I spotted the `dired-vc-rename-file` variable, which does exactly what you think it does 🤦.
+
+One `setq` later…
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq dired-vc-rename-file t)
+```
+
+…and boom! From now on, renaming from dired does exactly what you would expect. Here's `magit` to prove it:
+
+![](https://xenodium.com/images/emacs-git-rename-courtesy-of-dired/rename-with-git.png)
+
+lol. I was so fixated on "adding git rename support", that I forgot to first search the documentation.
+
+While you can search for variables via the built-in `describe-variable`, I'm a fan of Wilfred's [helpful](https://github.com/Wilfred/helpful) equivalent: `helpful-variable`. Coupled with with your favourite completion framework (Abo Abo's [ivy](https://github.com/abo-abo/swiper) for me), it's as easy a fuzzy searching for anything you're after:
+
+![](https://xenodium.com/images/emacs-git-rename-courtesy-of-dired/dired-vc-rename-file.png)
+
 # \[2024-04-05 Fri\] Fresh Eyes now on the App Store
 ---
 id: fresh-eyes-now-on-the-app-store
