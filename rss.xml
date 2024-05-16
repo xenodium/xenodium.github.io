@@ -6,7 +6,85 @@
 <generator>Emacs webfeeder.el</generator>
 <link>http://xenodium.com</link>
 <atom:link href="http://xenodium.com/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Mon, 08 Apr 2024 10:51:10 +0100</lastBuildDate>
+<lastBuildDate>Thu, 16 May 2024 21:34:18 +0100</lastBuildDate>
+<item>
+  <title>Emacs: git rename, courtesy of dired</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-git-rename-courtesy-of-dired" class="outline-2">
+ <h2 id="emacs-git-rename-courtesy-of-dired"> <span class="timestamp-wrapper"> <span class="timestamp">16 May 2024</span></span> Emacs: git rename, courtesy of dired</h2>
+ <div class="outline-text-2" id="text-emacs-git-rename-courtesy-of-dired">
+ <p>
+Emacs  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Wdired.html">wdired</a> is a beautiful thing. You turn a directory representation into an editable buffer and you can do some magic. By magic, I mean you can apply your favourite text-editing commands to a directory and do some file management.
+</p>
+
+ <p>
+Take, for example, batch-renaming. Turn  <code>wdired</code> on via  <code>dired-toggle-read-only</code>, use something like Magnar's  <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a> (or built-in  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html">keyboard macros</a>) and commit via  <code>wdired-finish-edit</code> (using the often-familar  <code>C-c C-c</code> binding). You've now renamed multiple files as it if were any other text buffer. Pretty magical.
+</p>
+
+
+ <div id="orge0aef16" class="figure">
+ <p> <img src="../images/emacs-git-rename-courtesy-of-dired/wdired.gif" alt="wdired.gif" width="95%"></img></p>
+</div>
+
+ <p>
+One downside (or so I thought) is that wdired didn't automagically also take care of git renames for me, you know  <a href="https://xenodium.com/emacs-dwim-do-what-i-mean/">DWIM-style</a>.
+</p>
+
+ <p>
+Every time I renamed anything via  <code>wdired</code> and subsequently pulled up my trusty  <a href="https://magit.vc/">magit</a>, I was a little sad it wasn't all just handled… The renamed files were seen as deleted, along with all the untracked counterparts.
+</p>
+
+
+ <div id="org87732ba" class="figure">
+ <p> <img src="../images/emacs-git-rename-courtesy-of-dired/rename-no-git.png" alt="rename-no-git.png" width="75%"></img></p>
+</div>
+
+ <p>
+So, I set out to change this unacceptable state of affairs 😀. I started off by setting a breaking on  <code>wdired-finish-edit</code> via edebug (see  <a href="https://xenodium.com/inline-previous-result-and-why-you-should-edebug/">why I love this util</a>).
+</p>
+
+ <p>
+I wanted to see what  <code>wdired-finish-edit</code> did under the hood, which led me to  <code>dired-rename-file</code>. As I stepped through the code, I spotted the  <code>dired-vc-rename-file</code> variable, which does exactly what you think it does 🤦.
+</p>
+
+ <p>
+One  <code>setq</code> later…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> dired-vc-rename-file t)
+</pre>
+</div>
+
+ <p>
+…and boom! From now on, renaming from dired does exactly what you would expect. Here's  <code>magit</code> to prove it:
+</p>
+
+
+ <div id="org6be344f" class="figure">
+ <p> <img src="../images/emacs-git-rename-courtesy-of-dired/rename-with-git.png" alt="rename-with-git.png" width="100%"></img></p>
+</div>
+
+ <p>
+lol. I was so fixated on "adding git rename support", that I forgot to first search the documentation.
+</p>
+
+ <p>
+While you can search for variables via the built-in  <code>describe-variable</code>, I'm a fan of Wilfred's  <a href="https://github.com/Wilfred/helpful">helpful</a> equivalent:  <code>helpful-variable</code>. Coupled with with your favourite completion framework (Abo Abo's  <a href="https://github.com/abo-abo/swiper">ivy</a> for me), it's as easy a fuzzy searching for anything you're after:
+</p>
+
+
+ <div id="org0ef13af" class="figure">
+ <p> <img src="../images/emacs-git-rename-courtesy-of-dired/dired-vc-rename-file.png" alt="dired-vc-rename-file.png" width="95%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/emacs-git-rename-courtesy-of-dired</link>
+  <guid isPermaLink="false">http://xenodium.com/emacs-git-rename-courtesy-of-dired</guid>
+  <pubDate>Thu, 16 May 2024 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Fresh Eyes now on the App Store</title>
   <description><![CDATA[<div id="content" class="content">
@@ -32532,6 +32610,28 @@ maps key to action.
   <pubDate>Thu, 23 Apr 2015 00:00:00 +0100</pubDate>
 </item>
 <item>
+  <title>Learning Japanese bookmarks</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-learning-japanese-bookmarks" class="outline-2">
+ <h2 id="learning-japanese-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">23 April 2015</span></span> Learning Japanese bookmarks</h2>
+ <div class="outline-text-2" id="text-learning-japanese-bookmarks">
+ <span class="modified-timestamp">   <em>updated: 09 May 2024  </em></span>
+ <ul class="org-ul"> <li> <a href="https://www.ihlondon.com/foreign-languages/learn-japanese/beginners-japanese/">Beginners Japanese - International House London</a>.</li>
+ <li> <a href="https://www.soas.ac.uk/study/find-course/japanese-beginners-course">Japanese Beginners Course | SOAS</a>.</li>
+ <li> <a href="https://learnjapanese.moe/guide/">Japanese Guide - TheMoeWay</a>.</li>
+ <li> <a href="https://docs.google.com/document/d/1LH82FjsCqCgp6-TFqUcS_EB15V7sx7O1VCjREp6Lexw/edit">Japanese Resources - Google Docs</a>.</li>
+ <li> <a href="https://www.tofugu.com/japanese/learn-hiragana/">Learn Hiragana: Tofugu's Ultimate Guide</a>.</li>
+ <li> <a href="https://jpf.org.uk/language/courses.php">The Japan Foundation, London - Language Centre - Japanese Language Courses</a>.</li>
+ <li> <a href="https://kana-quiz.tofugu.com/">Tofugu’s Learn Kana Quiz</a>.</li>
+</ul></div>
+</div>
+</div>]]></description>
+  <link>http://xenodium.com/learning-japanese-bookmarks</link>
+  <guid isPermaLink="false">http://xenodium.com/learning-japanese-bookmarks</guid>
+  <pubDate>Thu, 23 Apr 2015 00:00:00 +0100</pubDate>
+</item>
+<item>
   <title>Meet up bookmarks</title>
   <description><![CDATA[<div id="content" class="content">
 
@@ -38028,16 +38128,13 @@ UPDATE:  <a href="https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-auto
  <h2 id="development-bookmarks"> <span class="timestamp-wrapper"> <span class="timestamp">13 July 2014</span></span> Development bookmarks</h2>
  <div class="outline-text-2" id="text-development-bookmarks">
  <span class="modified-timestamp">   <em>updated: 30 September 2021  </em></span>
- <ul class="org-ul"> <li>[[ <a href="https://www.redblobgames.com/grids/hexagons/">https://www.redblobgames.com/grids/hexagons/</a></li>
+ <ul class="org-ul"> <li> <a href="https://www.redblobgames.com/grids/hexagons/">Hexagonal Grids</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=25803288">Big O Notation – Explained as easily as possible | Hacker News</a>.</li>
  <li> <a href="https://dev.to/humblecoder00/comprehensive-big-o-notation-guide-in-plain-english-using-javascript-3n6m">Comprehensive Big O Notation Guide in Plain English, using Javascript</a>.</li>
  <li> <a href="https://justsimply.dev/">Just Simply | Stop saying how simple things are in our docs</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=25698707">Show HN: DevBooks – Help Developers find indy books | Hacker News</a>.</li>
  <li> <a href="https://codecatalog.org/2021/09/04/well-documented-code.html">Writing Well-Documented Code - Learn from Examples - Code Catalog</a>.</li>
-</ul> <p>
-][Hexagonal Grids]].
-</p>
- <ul class="org-ul"> <li> <a href="http://norvig.com/lispy.html">(How to Write a (Lisp) Interpreter (in Python)):  parse, tokenize, read from tokens, environments, eval, and repl </a>.</li>
+ <li> <a href="http://norvig.com/lispy.html">(How to Write a (Lisp) Interpreter (in Python)):  parse, tokenize, read from tokens, environments, eval, and repl </a>.</li>
  <li> <a href="https://amplitude.com/blog/12-signs-youre-working-in-a-feature-factory-3-years-later">12 Signs You’re Working in a Feature Factory - 3 Years Later</a>.</li>
  <li> <a href="http://www.exceptionnotfound.net/fundamental-laws-of-software-development/">15 Fundamental Laws of Software Development</a>.</li>
  <li> <a href="https://guifroes.com/2018/03/23/3-books-that-will-take-you-to-the-next-level/">3 books that will take you to the next level – Gui Froes</a>.</li>
@@ -38096,7 +38193,6 @@ UPDATE:  <a href="https://stuff-things.net/2020/01/24/not-stupid-ssh-tricks-auto
  <li> <a href="https://www.quora.com/How-does-Login-with-Facebook-option-work-on-third-party-websites">OAuth diagram/explanation (Quora)</a>.</li>
  <li> <a href="https://getpolarized.io/2019/01/08/top-pdfs-of-2018-hackernews.html">Over 500 Top PDFs posted to Hacker News in 2018</a>.</li>
  <li> <a href="https://news.ycombinator.com/item?id=18772873">Please do not attempt to simplify this code: favors completeness, boilerplate, and documentation in the name of stability and long term maintenance (Hacker News)</a>.</li>
- <li>Post snippets in a beautiful screenshot.</li>
  <li> <a href="https://quickleft.com/blog/readme-love-quick-easy-tips/">README Love: Quick and easy tips</a>.</li>
  <li> <a href="http://www.amazon.co.uk/Refactoring-Improving-Design-Existing-Technology/dp/0201485672/ref=sr_1_1?ie=UTF8&qid=1444472751&sr=8-1&keywords=refactoring+improving+the+design+of+existing+code">Refactoring: Improving the design of existing code (Book)</a>.</li>
  <li> <a href="https://twitter.com/sarahmei/status/783340259073335296">Sarah Mei on livable coebases</a>.</li>
