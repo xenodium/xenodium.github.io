@@ -1,6 +1,28 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-06-07 Fri] Hey mouse, don't mess with my Emacs font size
+:PROPERTIES:
+:CUSTOM_ID: hey-mouse-dont-mess-with-my-emacs-font-size
+:END:
+While most of my Emacs workflows are typically keyboard-driven, I'm fairly pragmatic about mouse usage. My MacBook's trackpad is great for just kicking back to read and scroll through text.
+
+There are brief times, however, when that keyboard-driven muscle memory overlap my mouse usage, resulting in a buffer catastrophe. I joke of course. What I'm actually referring to is nothing more than a slight annoyance. There are times when I inadvertently trigger =<C-wheel-up>= or =<C-wheel-down>= events (because I happen to hold =Ctrl= down while triggering scrolling events). This results in my buffer's font size quickly changing to either really large to super small, depending on whether I was scrolling up or down at the time. The snafu is further exacerbated by inertial scrolling on trackpads. Go ahead and press the Ctrl key while your buffer is carrying some of that inertial scrolling. The font size is affected just the same, even though there was no explicit physical/touching activity on the trackpad at the time.
+
+While this behaviour was a little annoying, I would typically just reopen the file via =C-x C-v RET= (aka =find-alternate-file=), which would reset the font size as a convenient side-effect. Now, you may wonder if reopening the file would also forget the point/cursor position, but that's not an issue if you've got the handy built-in [[https://www.emacswiki.org/emacs/SavePlace][save-place-mode]] turned on (highly recommended).
+
+Ok and all, but this is a second-class workaround at best. What I really wanted is for the mouse/trackpad to stop messing with my font size.
+
+Lucky for me, I bumped into a [[https://indieweb.social/@goldayan@clj.social/112195984778424216][simple solution]] shared by [[https://indieweb.social/@shanecelis@mastodon.gamedev.place][Shane Celis]] and [[https://indieweb.social/@goldayan@clj.social][Thanga Ayyanar]]. It worked a treat, and it's only a few lines of elisp.
+
+#+begin_src emacs-lisp :lexical no
+  (global-set-key (kbd "<pinch>") 'ignore)
+  (global-set-key (kbd "<C-wheel-up>") 'ignore)
+  (global-set-key (kbd "<C-wheel-down>") 'ignore)
+#+end_src
+
+Thank you folks. Balance restored.
+
 * [2024-05-16 Thu] Emacs: git rename, courtesy of dired
 :PROPERTIES:
 :CUSTOM_ID: emacs-git-rename-courtesy-of-dired
