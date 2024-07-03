@@ -1,3 +1,42 @@
+# \[2024-07-03 Wed\] Ready player mode
+---
+id: ready-player-mode
+---
+
+![](https://xenodium.com/images/ready-player-mode/meme.gif)
+
+As an Emacs user, I eventually made the leap over to [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) as my file manager of choice. Dired has [magical things like wdired](emacs-git-rename-courtesy-of-dired/). But this post isn't so much about dired and more about the occasional need to peak at media files (images, audio, and video) from Emacs (including dired).
+
+To view images in Emacs, there's [image mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html), a fantastic major mode for taking a quick look without leaving your editor. Image mode strikes a great balance. You can get in quickly and out. The `q` keyboard binding is fabulous for bailing out. While viewing an image, you may quickly open the previous/next one by using `n` and `p` keyboard binding. For me, this is just about all I need within my text editor. For anything else, I resort to my favorite image viewing app (macOS's Preview).
+
+For audio and video, we aren't as lucky with Emacs built-in features (even for a quick peak). While Emacs faithfully opens the files, it's not realistically practical for my typical needs.
+
+![](https://xenodium.com/images/ready-player-mode/no-handling.png)
+
+There's a convenient package aptly named [openwith](https://github.com/jpkotta/openwith), which automatically opens specific files in an external app. This isn't just for media files, but anything really. It works well with office docs, for example. While I've used it for quite some time, I found always bouncing to an external app for peaking at audio/video somewhat suboptimal.
+
+While a [reddit post](https://www.reddit.com/r/emacs/comments/1dtnjy7/is_there_imageview_but_for_audio) yielded some handy options, none were in the same spirit as image mode. Having said that, I did come across [mediainfo-mode](https://github.com/xFA25E/mediainfo-mode) on my search, which is pretty neat for viewing media metadata quickly. Bonus points for `q` keyboard binding to exit and `mediainfo-mode-open` command to open with an external app. There may be other packages out there (I'd love to hear about them), though most seemed to focus on listening to music (and playlist management), which is a different flow from what I'm after.
+
+## Ready player mode enters the chat
+
+With all that, I had no choice (I kid of course) but to go and throw some lines of elisp together and see if I could get to my ideal media experience, and so [ready player mode](https://github.com/xenodium/ready-player) was born…
+
+![](https://xenodium.com/images/ready-player-mode/ready-player.png)
+
+As core features, `ready-player-mode` has two buttons: one to play from within Emacs and one to open media in the preferred external app. You can `TAB` your way to the buttons. `RET` or `click` actions the buttons, in addition to the `SPC` keyboard binding to toggle playback.
+
+Like image mode, `ready-player-mode` offers `n/p` navigation to open the next/previous media file in the current directory.
+
+`ready-player-mode` attempts to display basic metadata if possible, courtesy of `ffprobe` and `ffmpeg`. You'll need these installed on your system if you want the optional metadata.
+
+Playback is handled by your favourite command line utility. `ready-player-mode` will try to use either `mpv`, `vlc`, `ffplay`, or `mplayer` (in that order), but you can customize that.
+
+`ready-player-mode` is available on [GitHub](https://github.com/xenodium/ready-player) if you're keen to check it out. Keep in mind this is a brand new package (a day old!), so it may need some improvements. If you do give it a try, [I'd love to hear](https://indieweb.social/@xenodium) how you got on. I've only tested on macOS so far.
+
+## Unrelated - Want your own blog?
+
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of Emacs and [drag and drop to the web](https://indieweb.social/@xenodium/112265481282475542). I'm launching a blogging service at [lmno.lol](https://lmno.lol). Looking for early adopters. [Get in touch](https://indieweb.social/@xenodium).
+
 # \[2024-06-07 Fri\] Hey mouse, don't mess with my Emacs font size
 ---
 id: hey-mouse-dont-mess-with-my-emacs-font-size
