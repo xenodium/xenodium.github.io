@@ -6,7 +6,157 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 03 Jul 2024 18:20:05 +0100</lastBuildDate>
+<lastBuildDate>Wed, 14 Jul 2024 21:30:31 +0100</lastBuildDate>
+<item>
+  <title>Its all up for grabs, compound with glue</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-its-all-up-for-grabs-and-it-compounds" class="outline-2">
+ <h2 id="its-all-up-for-grabs-and-it-compounds"> <span class="timestamp-wrapper"> <span class="timestamp">14 July 2024</span></span> It's all up for grabs, compound with glue</h2>
+ <div class="outline-text-2" id="text-its-all-up-for-grabs-and-it-compounds">
+ <p>
+I've written before, once you learn a little  <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a>,  <a href="https://www.gnu.org/software/emacs/">Emacs</a> becomes this hyper malleable editor/platform. A live playground of sorts, where almost everything is up for grabs. You can inspect and tweak behaviour of just about anything to your liking.
+</p>
+
+ <p>
+While the compounding benefits of using your favourite Emacs utilities are evident over time, learning elisp takes the compounding effect to another level. It empowers you to have those aha moments like "if I could just wire this awesome utility with that other one, it'd be perfect for me" and enable you to act on it.
+</p>
+
+ <p>
+Take, for example,  <a href="https://github.com/wolray/symbol-overlay">symbol-overlay</a> and  <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a>. Two Emacs packages I've been using for years. The first one is a feature you've likely experienced on your favourite IDE or editor without thinking too much about it. Placing your editor cursor on a variable automatically highlights its usages. It's one of those lovely features with zero learning demands.
+</p>
+
+
+ <div id="org6516788" class="figure">
+ <p> <img src="../images/its-all-up-for-grabs-and-it-compounds/overlay-symbol.gif" alt="overlay-symbol.gif" width="80%"></img></p>
+</div>
+
+ <p>
+The second utility,  <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a>, does demand some learning but can be so fun to use once you get the hang of it. Below is a little multiple cursor demo I used recently  <a href="https://www.reddit.com/r/emacs/comments/1dyn3zy/comment/lcbi10o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">in a reddit comment</a>, but you really should check out  <a href="https://emacsrocks.com/e13.html">Emacs Rocks! Episode 13: multiple-cursors</a> (stick around for the ending).
+</p>
+
+
+ <div id="org39713fd" class="figure">
+ <p> <img src="../images/its-all-up-for-grabs-and-it-compounds/mc_x2.gif" alt="mc_x2.gif" width="80%"></img></p>
+</div>
+
+ <p>
+So where am I going with this? While  <a href="https://github.com/wolray/symbol-overlay">symbol-overlay</a> offers a mechanism to rename symbols via  <code>symbol-overlay-rename</code>, I prefer  <a href="https://github.com/magnars/multiple-cursors.el">multiple-cursors</a> for this kind of thing… "if I could just get  <code>symbol-overlay</code> to tell  <code>multiple-cursors</code> where to place my cursors, it'd be just perfect for me".
+</p>
+
+ <p>
+I've been wanting this tweak for some time. Today's the day I finally act on it. I had no idea how to go about it, but opening  <code>symbol-overlay.el</code> (via  <code>M-x find-library symbol-overlay</code>) and browsing through all functions (via imenu) yields the first piece I needed:  <code>symbol-overlay-get-list</code>.
+</p>
+
+
+ <div id="org837bc88" class="figure">
+ <p> <img src="../images/its-all-up-for-grabs-and-it-compounds/imenu.png" alt="imenu.png" width="80%"></img></p>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">symbol-overlay-get-list</span> (dir  <span style="color: #0086b3;">&optional</span> symbol exclude)
+   <span style="color: #183691;">"Get all highlighted overlays in the buffer.</span>
+ <span style="color: #183691;">If SYMBOL is non-nil, get the overlays that belong to it.</span>
+ <span style="color: #183691;">DIR is an integer.</span>
+ <span style="color: #183691;">If EXCLUDE is non-nil, get all overlays excluding those belong to SYMBOL."</span>
+  ...)
+</pre>
+</div>
+
+ <p>
+Let's take  <code>symbol-overlay-get-list</code> for a spin, courtesy of  <code>M-x eval-expression</code>, and see what we get out of it:
+</p>
+
+
+ <div id="org3e239d3" class="figure">
+ <p> <img src="../images/its-all-up-for-grabs-and-it-compounds/eval.gif" alt="eval.gif" width="80%"></img></p>
+</div>
+
+ <p>
+With a list of overlays, we now know where to tell  <code>multiple-cursors</code> to do its thing. For the second piece, we needed to peek at any of the  <code>multiple-cursors</code> commands I already use. I happen to pick  <code>mc/mark-all-like-this</code> to examine what's under the hood.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">mc/mark-all-like-this</span> ()
+   <span style="color: #183691;">"Find and mark all the parts of the buffer matching the currently active region"</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">unless</span> (region-active-p)
+    (<span style="color: #333333;">error</span>  <span style="color: #183691;">"Mark a region to match first."</span>))
+  (mc/remove-fake-cursors)
+  (<span style="color: #a71d5d;">let</span> ((master (point))
+        (case-fold-search nil)
+        (point-first (< (point) (mark)))
+        (re (regexp-opt (mc/region-strings) mc/enclose-search-term)))
+    (mc/save-excursion
+     (goto-char 0)
+     (<span style="color: #a71d5d;">while</span> (search-forward-regexp re nil t)
+       (push-mark (match-beginning 0))
+       (<span style="color: #a71d5d;">when</span> point-first (exchange-point-and-mark))
+       (<span style="color: #a71d5d;">unless</span> (= master (point))
+         (mc/create-fake-cursor-at-point))
+       (<span style="color: #a71d5d;">when</span> point-first (exchange-point-and-mark)))))
+  (<span style="color: #a71d5d;">if</span> (> (mc/num-cursors) 1)
+      (multiple-cursors-mode 1)
+    (mc/disable-multiple-cursors-mode)))
+</pre>
+</div>
+
+ <p>
+The star of the  <code>mc/mark-all-like-this</code> attraction is  <code>mc/create-fake-cursor-at-point</code>, used to create each cursor. If we can just iterate over the overlays, we'd be able to create a fake cursor per overlay. There's some additional logic needed to ensure all fake cursors are placed in the same relative position within symbol (using an offset). Finally, we need to  enable  <code>multiple-cursors-mode</code>.
+</p>
+
+ <p>
+We put it all together in  <code>ar/mc-mark-all-symbol-overlays</code>:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ar/mc-mark-all-symbol-overlays</span> ()
+   <span style="color: #183691;">"Mark all symbol overlays using multiple cursors."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (mc/remove-fake-cursors)
+  (<span style="color: #a71d5d;">when-let*</span> ((overlays (symbol-overlay-get-list 0))
+              (point (point))
+              (point-overlay (seq-find
+                              (<span style="color: #a71d5d;">lambda</span> (overlay)
+                                (<span style="color: #a71d5d;">and</span> (<= (overlay-start overlay) point)
+                                     (<= point (overlay-end overlay))))
+                              overlays))
+              (offset (- point (overlay-start point-overlay))))
+    (<span style="color: #a71d5d;">setq</span> deactivate-mark t)
+    (mapc (<span style="color: #a71d5d;">lambda</span> (overlay)
+            (<span style="color: #a71d5d;">unless</span> (eq overlay point-overlay)
+              (mc/save-excursion
+               (goto-char (+ (overlay-start overlay) offset))
+               (mc/create-fake-cursor-at-point))))
+          overlays)
+    (mc/maybe-multiple-cursors-mode)))
+</pre>
+</div>
+
+ <p>
+and with that, you finally get to see it all in action…
+</p>
+
+
+ <div id="org1046553" class="figure">
+ <p> <img src="../images/its-all-up-for-grabs-and-it-compounds/symbol-overlay-meets-multiple-cursors.gif" alt="symbol-overlay-meets-multiple-cursors.gif" width="80%"></img></p>
+</div>
+</div>
+
+ <div id="outline-container-orgd534cf4" class="outline-3">
+ <h3 id="orgd534cf4">Unrelated - Want your own blog?</h3>
+ <div class="outline-text-3" id="text-orgd534cf4">
+ <p>
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of Emacs (or your favourite text editor) and  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. I'm launching a blogging service at  <a href="https://lmno.lol">lmno.lol</a>. Looking for early adopters.  <a href="https://indieweb.social/@xenodium">Get in touch</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/its-all-up-for-grabs-and-it-compounds</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/its-all-up-for-grabs-and-it-compounds</guid>
+  <pubDate>Sun, 14 Jul 2024 21:30:31 +0100</pubDate>
+</item>
 <item>
   <title>Ready Player Mode</title>
   <description><![CDATA[<div id="content" class="content">
