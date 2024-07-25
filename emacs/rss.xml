@@ -6,7 +6,92 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sun, 21 Jul 2024 19:15:56 +0100</lastBuildDate>
+<lastBuildDate>Thu, 25 Jul 2024 21:27:22 +0100</lastBuildDate>
+<item>
+  <title>Emacs macOS native emoji picker (revisited)</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-macos-native-emoji-picker-revisited" class="outline-2">
+ <h2 id="emacs-macos-native-emoji-picker-revisited"> <span class="timestamp-wrapper"> <span class="timestamp">25 July 2024</span></span> Emacs macOS native emoji picker (revisited)</h2>
+ <div class="outline-text-2" id="text-emacs-macos-native-emoji-picker-revisited">
+ <p>
+A couple of years ago, I was delighted to discover  <a href="https://lmno.lol/alvaro/emacs-freebie-macos-emoji-picker">a macOS freebie for us Emacs users</a>. Newer Macbook models started shipping with a globe/🌐 key, which summons the macOS native emoji picker. Pressing this key in Emacs works as you'd expect (no config required 🎉).
+</p>
+
+ <p>
+While I seldom use emojis, the globe key worked great for me until I started using an external keyboard, which didn't have this magical key. The potential solutions I came across suggest either reprogramming the keyboard or using the likes of  <a href="https://karabiner-elements.pqrs.org/">Karabiner-Elements</a> to map other keys to an alternate shortcut:  <code>Ctrl-⌘-SPC</code>. As far as I can tell, this is the only other available shortcut (please reach out if otherwise). Not a great option (it conflicts with Emacs's  <code>mark-sexp</code>). Not that I'd be super keen to lose this mark command, but even unbinding doesn't seem of much help.
+</p>
+
+ <p>
+While we have Emacs packages available for different emoji-picking experiences, I was keen on maintaining that native experience I enjoyed before. I nearly gave up on the matter until I remembered we have at least one more tool in the Emacs toolbox:  <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html">dynamic modules</a>. Thanks to Valeriy Savchenko's  <a href="https://github.com/SavchenkoValeriy/emacs-swift-module">emacs-swift-module</a>, we can leverage Swift to integrate native macOS experiences.
+</p>
+
+ <p>
+With that in mind, I set out to find the relevant macOS API, which turned out to be a lovely one-liner:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift">NSApp. <span style="color: #795da3;">orderFrontCharacterPalette</span>(<span style="color: #0086b3;">nil</span>)
+</pre>
+</div>
+
+ <p>
+Let's bring it into Emacs via  <code>emacs-swift-module</code>'s infrastructure:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-swift"> <span style="color: #a71d5d;">try</span> env. <span style="color: #795da3;">defun</span>(
+   <span style="color: #183691;">"macos-module--show-emoji-picker"</span>,
+  with:  <span style="color: #183691;">"Show emoji picker (macOS module implementation)."</span>
+) { (env: Environment)  <span style="color: #a71d5d;">in</span>
+  NSApp. <span style="color: #795da3;">orderFrontCharacterPalette</span>(<span style="color: #0086b3;">nil</span>)
+}
+</pre>
+</div>
+
+ <p>
+In theory, this is all we need. We can  <code>M-x eval-expression</code>  <code>(macos-module--show-emoji-picker)</code> and the picker simply pops up. I haven't worked out how define an interactive command from  <code>emacs-swift-module</code> just yet, so for now I'll just wrap with a little elisp:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">macos-show-emoji-picker</span> ()
+   <span style="color: #183691;">"Show macOS emoji picker."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (macos-module--show-emoji-picker))
+</pre>
+</div>
+
+ <p>
+And with that, we got our native macoOS emoji picker back at our fingertips:
+</p>
+
+
+ <div id="orgdbb33b2" class="figure">
+ <p> <img src="../images/emacs-macos-native-emoji-picker-revisited/hearts3.webp" alt="hearts3.webp" width="100%"></img></p>
+</div>
+
+ <p>
+While the dedicated globe key  <i>just worked</i> without configuration, it required newer hardware. This new approach works on older Macbooks too. Since it's an interactive command, you can optionally bind to your preferred keys.
+</p>
+
+ <p>
+Having said all that, you may have noticed a brief lag during insertion. I haven't worked out the source, but since I rarely use emojis, this will have to do for now. If you have a better macOS alternative working on external keyboards,  <a href="https://indieweb.social/@xenodium">I'd love to hear about it</a>!
+</p>
+</div>
+
+ <div id="outline-container-org3868e8e" class="outline-3">
+ <h3 id="org3868e8e">Unrelated - Want your own blog?</h3>
+ <div class="outline-text-3" id="text-org3868e8e">
+ <p>
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of your favourite text editor and  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. I'm launching a blogging service at  <a href="https://lmno.lol">lmno.lol</a>. Looking for early adopters.  <a href="https://indieweb.social/@xenodium">Get in touch</a>.</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/emacs-macos-native-emoji-picker-revisited</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/emacs-macos-native-emoji-picker-revisited</guid>
+  <pubDate>Thu, 25 Jul 2024 21:27:22 +0100</pubDate>
+</item>
 <item>
   <title>Real Player Mode now on MELPA</title>
   <description><![CDATA[<div id="content" class="content">
