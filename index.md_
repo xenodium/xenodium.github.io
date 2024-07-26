@@ -1,3 +1,64 @@
+# \[2024-07-25 Thu\] Emacs macOS native emoji picker (revisited)
+---
+id: emacs-macos-native-emoji-picker-revisited
+---
+
+## Update: Doh! I was wrong. There's a better way.
+
+So, I totally missed the macOS native emoji picker is actually supported out of the box 😭. Thanks to redditor [u/hrabannixlisp](https://www.reddit.com/user/hrabannixlisp/) who [pointed me in the right direction](https://www.reddit.com/r/emacs/comments/1ec5t4j/comment/ley1j59).
+
+`ns-do-show-character-palette` is bound to `C-s-SPC` by default, which didn't work for me as I use `(setq mac-command-modifier 'meta)`, that is, ⌘ as meta modifier.
+
+While I won't be giving up `(setq mac-command-modifier 'meta)`, I can certainly use `ns-do-show-character-palette` via `M-x` or a different binding. Thank you `u/hrabannixlisp`!
+
+## Read on for how I went about it the long convoluted way 🤷‍♂️
+
+A couple of years ago, I was delighted to discover [a macOS freebie for us Emacs users](https://lmno.lol/alvaro/emacs-freebie-macos-emoji-picker). Newer Macbook models started shipping with a globe/🌐 key, which summons the macOS native emoji picker. Pressing this key in Emacs works as you'd expect (no config required 🎉).
+
+While I seldom use emojis, the globe key worked great for me until I started using an external keyboard, which didn't have this magical key. The potential solutions I came across suggest either reprogramming the keyboard or using the likes of [Karabiner-Elements](https://karabiner-elements.pqrs.org/) to map other keys to an alternate shortcut: `Ctrl-⌘-SPC`. As far as I can tell, this is the only other available shortcut (please reach out if otherwise). Not a great option (it conflicts with Emacs's `mark-sexp`). Not that I'd be super keen to lose this mark command, but even unbinding doesn't seem of much help.
+
+While we have Emacs packages available for different emoji-picking experiences, I was keen on maintaining that native experience I enjoyed before. I nearly gave up on the matter until I remembered we have at least one more tool in the Emacs toolbox: [dynamic modules](https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html). Thanks to Valeriy Savchenko's [emacs-swift-module](https://github.com/SavchenkoValeriy/emacs-swift-module), we can leverage Swift to integrate native macOS experiences.
+
+With that in mind, I set out to find the relevant macOS API, which turned out to be a lovely one-liner:
+
+``` swift
+NSApp.orderFrontCharacterPalette(nil)
+```
+
+Let's bring it into Emacs via `emacs-swift-module`'s infrastructure:
+
+``` swift
+try env.defun(
+  "macos-module--show-emoji-picker",
+  with: "Show emoji picker (macOS module implementation)."
+) { (env: Environment) in
+  NSApp.orderFrontCharacterPalette(nil)
+}
+```
+
+In theory, this is all we need. We can `M-x eval-expression` `(macos-module--show-emoji-picker)` and the picker simply pops up. I haven't worked out how define an interactive command from `emacs-swift-module` just yet, so for now I'll just wrap with a little elisp:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defun macos-show-emoji-picker ()
+  "Show macOS emoji picker."
+  (interactive)
+  (macos-module--show-emoji-picker))
+```
+
+And with that, we got our native macoOS emoji picker back at our fingertips:
+
+![](https://xenodium.com/images/emacs-macos-native-emoji-picker-revisited/hearts3.webp)
+
+While the dedicated globe key *just worked* without configuration, it required newer hardware. This new approach works on older Macbooks too. Since it's an interactive command, you can optionally bind to your preferred keys.
+
+Having said all that, you may have noticed a brief lag during insertion. I haven't worked out the source, but since I rarely use emojis, this will have to do for now. If you have a better macOS alternative working on external keyboards, [I'd love to hear about it](https://indieweb.social/@xenodium)!
+
+I've added `macos-show-emoji-picker` to `EmacsMacOSModule`, a tiny repo I've used to experiment with [emacs-swift-module](https://github.com/SavchenkoValeriy/emacs-swift-module). You can find `EmacsMacOSModule` on [GitHub](https://github.com/xenodium/EmacsMacOSModule).
+
+## Unrelated - Want your own blog?
+
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of your favourite text editor and [drag and drop to the web](https://indieweb.social/@xenodium/112265481282475542). I'm launching a blogging service at [lmno.lol](https://lmno.lol). Looking for early adopters. [Get in touch](https://indieweb.social/@xenodium).
+
 # \[2024-07-24 Wed\] Fresh Eyes 1.7 released
 ---
 id: fresh-eyes-17-released
