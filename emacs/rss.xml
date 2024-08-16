@@ -6,7 +6,250 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 01 Aug 2024 09:42:21 +0100</lastBuildDate>
+<lastBuildDate>Fri, 16 Aug 2024 11:30:00 +0100</lastBuildDate>
+<item>
+  <title>The dired abstraction</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-the-dired-abstraction" class="outline-2">
+ <h2 id="the-dired-abstraction"> <span class="timestamp-wrapper"> <span class="timestamp">16 August 2024</span></span> The dired abstraction</h2>
+ <div class="outline-text-2" id="text-the-dired-abstraction">
+ <p>
+I recently  <a href="https://lmno.lol/alvaro/ready-player-mode">wrote about image-mode's next/previous item navigation</a>, a feature I wanted to bring to  <a href="https://github.com/xenodium/ready-player">ready player mode</a>.
+</p>
+
+ <p>
+I was curious to see how  <code>image-mode</code> resolved next and previous files, so I checked the associated keybinding (n) via  <a href="https://github.com/Wilfred/helpful">helpful-key</a> (my preferred alternative to  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Help.html">describe-key</a>), and landed on  <code>image-next-file</code>. While this function only takes care of high-level routing, it led me to  <code>image-mode--next-file</code>, which is where the actual next/previous file resolution happens:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">image-mode--next-file</span> (file n)
+   <span style="color: #183691;">"Go to the next image file in the parent buffer of FILE.</span>
+ <span style="color: #183691;">This is typically a Dired buffer, but may also be a tar/archive buffer.</span>
+ <span style="color: #183691;">Return the next image file from that buffer.</span>
+ <span style="color: #183691;">If N is negative, go to the previous file."</span>
+  ...)
+</pre>
+</div>
+
+ <p>
+While  <code>image-mode--next-file</code>'s implementation details are worth  <a href="https://github.com/emacs-mirror/emacs/blob/e4d22abcab60ead179e7d114faa4c2def559cfbb/lisp/image-mode.el#L1264">checking out</a>, its docstring already highlights the bit I found most interesting:  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a>'s involvement in the mix. I'm not sure why I initially found  <code>dired</code> usage surprising. Buffers are Emacs's backbone. They are the fundamental structures holding the content we work with, whether it’s editing text, reading logs, displaying information, and many others including file management… Dired specializes buffers for this last purpose. While  <code>dired</code> itself is a powerhouse, at its core it's just an ordered list of files.
+</p>
+
+ <p>
+Given a location within a  <code>dired</code> buffer, we can use its helpers to find next and previous files. Like  <code>image-mode</code>,  <code>ready-player</code> now mirrors this approach (minus tar/archive handling). This got me thinking more about the  <code>dired</code> abstraction… If it quacks like a duck, and walks like a duck, then it's probably  <i>errrm</i> a  <code>dired</code> buffer. What I actually mean is that associating a  <code>dired</code> buffer to a  <code>ready-player</code> buffer effectively attaches a playlist of sorts. It doesn't quite matter how this  <code>dired</code> buffer was constructed. What's important is that it's recognized as a  <code>dired</code> buffer, so all relevant helpers remain useful.
+</p>
+
+ <p>
+With  <code>dired</code> buffers acting as media playlists, we can easily create a directory playlist by merely pointing  <code>dired</code> to the current directory. This is the default behaviour in  <code>ready-player</code>. When you open a media file, we attach a  <code>dired</code> buffer pointing to the current directory. Play next or previous item, and you're effectively moving up and down the associated  <code>dired</code> buffer.
+</p>
+
+ <p>
+Things get more interesting when we craft  <code>dired</code> buffers in more creative ways than just supplying a path to a directory. One of my favourite commands is  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html">find-dired</a>. It runs the  <a href="https://www.man7.org/linux/man-pages/man1/find.1.html">find</a> utility, crafting a  <code>dired</code> buffer with its results.
+</p>
+
+
+ <div id="orgec3a2e5" class="figure">
+ <p> <img src="../images/the-dired-abstraction/find.png" alt="find.png" width="80%"></img></p>
+</div>
+
+ <p>
+For kicks, I added a  <code>ready-player-load-dired-playback-buffer</code> command to  <code>ready-player</code>, so we can just load any  <code>dired</code> buffer, including our newly generated one, courtesy of  <code>find-dired</code>.
+</p>
+
+ <p>
+With this generated buffer loaded and  <code>ready-player</code> random playback enabled, we get to see our lucky jumps across find results.
+</p>
+
+
+ <div id="org00f4004" class="figure">
+ <p> <img src="../images/the-dired-abstraction/find-random.gif" alt="find-random.gif" width="100%"></img></p>
+</div>
+
+ <p>
+At this point I thought "this is prolly as far as I'll take things"…  <code>ready-player</code> was born to address quick access to media, typically from  <code>dired</code> itself. For deep playlist handling, there are many other Emacs media players.
+</p>
+
+ <p>
+The thing is, with my newly found reusable  <code>dired</code> abstraction, a rough  <a href="https://en.wikipedia.org/wiki/M3U">m3u</a> playlist experiment didn't seem that far-fetched at all. I'd need to read an  <code>m3u</code> file and generate a  <code>dired</code> buffer. I knew nothing about m3u's, other than being text files including media paths, along with optional metadata. I figured  <i>minimal</i> m3u reading support shouldn't be too difficult.
+</p>
+
+ <p>
+If we are to create a playlist including the first three album tracks from the artist above, it'd look something like this:
+</p>
+
+ <pre class="example">
+#EXTM3U
+
+#EXTINF:-1,George Benson - Dance
+/absolute/path/to/Music/George Benson/Body Talk/01 Dance.mp3
+#EXTINF:-1,George Benson - When Love Has Grown
+/absolute/path/to/Music/George Benson/Body Talk/02 When Love Has Grown.mp3
+#EXTINF:-1,George Benson - Plum
+/absolute/path/to/Music/George Benson/Body Talk/03 Plum.mp3
+
+#EXTINF:-1,George Benson - So What
+/absolute/path/to/Music/George Benson/Original Album Classics/1-01 So What.mp3
+#EXTINF:-1,George Benson - The Gentle Rain
+/absolute/path/to/Music/George Benson/Original Album Classics/1-02 The Gentle Rain (From the Film, _The Gentle Rain_).mp3
+#EXTINF:-1,George Benson - All Clear
+/absolute/path/to/Music/George Benson/Original Album Classics/1-03 All Clear.mp3
+
+#EXTINF:-1,George Benson - Footin' It
+/absolute/path/to/Music/George Benson/The Shape Of Things To Come/01 Footin' It.mp3
+#EXTINF:-1,George Benson - Face It Boy It's Over
+/absolute/path/to/Music/George Benson/The Shape Of Things To Come/02 Face It Boy It's Over.mp3
+#EXTINF:-1,George Benson - Shape Of Things To Come
+/absolute/path/to/Music/George Benson/The Shape Of Things To Come/03 Shape Of Things To Come.mp3
+</pre>
+
+ <p>
+A crude function to extract file paths into a list would look something like the following:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ready-player--media-at-m3u-file</span> (m3u-path)
+   <span style="color: #183691;">"Read m3u playlist at M3U-PATH and return files."</span>
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (insert-file-contents m3u-path)
+    (<span style="color: #a71d5d;">let</span> ((files))
+      (<span style="color: #a71d5d;">while</span> (re-search-forward
+              (<span style="color: #a71d5d;">rx</span> bol (not (any  <span style="color: #183691;">"#"</span> space))
+                  (zero-or-more (not (any  <span style="color: #183691;">"\n"</span>)))
+                  eol)  <span style="color: #333333;">nil t)</span>
+        (<span style="color: #a71d5d;">when</span> (file-exists-p (match-string 0))
+          (<span style="color: #a71d5d;">push</span> (match-string 0) files)))
+      (nreverse files))))
+</pre>
+</div>
+
+ <p>
+Feeding our m3u file to our new function conveniently returns a list of found files:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #183691;">"/absolute/path/to/Music/George Benson/Body Talk/01 Dance.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/Body Talk/02 When Love Has Grown.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/Body Talk/03 Plum.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/Original Album Classics/1-01 So What.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/Original Album Classics/1-02 The Gentle Rain (From the Film, _The Gentle Rain_).mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/Original Album Classics/1-03 All Clear.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/The Shape Of Things To Come/01 Footin' It.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/The Shape Of Things To Come/02 Face It Boy It's Over.mp3"</span>
+  <span style="color: #183691;">"/absolute/path/to/Music/George Benson/The Shape Of Things To Come/03 Shape Of Things To Come.mp3"</span>)
+</pre>
+</div>
+
+ <p>
+Next we need to create a dired buffer from a list of files. This is where I thought things would get trickier, but I was pleasantly surprised.
+</p>
+
+ <p>
+The  <code>dired</code> docstring had the answer:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dired</span> (dirname  <span style="color: #0086b3;">&optional</span> switches)
+   <span style="color: #183691;">"...</span>
+
+ <span style="color: #183691;">If DIRNAME is a cons, its first element is taken as the directory name</span>
+ <span style="color: #183691;">and the rest as an explicit list of files to make directory entries for.</span>
+ <span style="color: #183691;">In this case, SWITCHES are applied to each of the files separately, and</span>
+ <span style="color: #183691;">therefore switches that control the order of the files in the produced</span>
+ <span style="color: #183691;">listing have no effect.</span>
+
+ <span style="color: #183691;">..."</span>
+  ...)
+</pre>
+</div>
+
+ <p>
+With that in mind, this is all it takes:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">let</span> ((default-directory  <span style="color: #183691;">"/absolute/path/to/Music/George Benson"</span>))
+  (dired '(<span style="color: #183691;">"*My fancy m3u list*"</span>
+            <span style="color: #183691;">"Body Talk/01 Dance.mp3"</span>
+            <span style="color: #183691;">"Body Talk/02 When Love Has Grown.mp3"</span>
+            <span style="color: #183691;">"Body Talk/03 Plum.mp3"</span>
+            <span style="color: #183691;">"Original Album Classics/1-01 So What.mp3"</span>
+            <span style="color: #183691;">"Original Album Classics/1-02 The Gentle Rain (From the Film, _The Gentle Rain_).mp3"</span>
+            <span style="color: #183691;">"Original Album Classics/1-03 All Clear.mp3"</span>
+            <span style="color: #183691;">"The Shape Of Things To Come/01 Footin' It.mp3"</span>
+            <span style="color: #183691;">"The Shape Of Things To Come/02 Face It Boy It's Over.mp3"</span>
+            <span style="color: #183691;">"The Shape Of Things To Come/03 Shape Of Things To Come.mp3"</span>)))
+</pre>
+</div>
+
+ <p>
+Here's the  <code>dired</code> buffer to prove it:
+</p>
+
+
+ <div id="org6f4b5e4" class="figure">
+ <p> <img src="../images/the-dired-abstraction/playlist.png" alt="playlist.png" width="100%"></img></p>
+</div>
+
+ <p>
+We now have all the pieces. We can wire them up in a  <code>ready-player-load-m3u-playlist</code> function.
+</p>
+
+ <p>
+From the previous snippet, you'd notice all file paths are relative to default-directory. While in the following snippet I use  <code>try-completion</code> to find the longest common substring amongst the paths, I wonder if there's a more appropriate built-in function for this?  <a href="https://indieweb.social/@xenodium">I'd love to hear</a>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">ready-player-load-m3u-playlist</span> ()
+   <span style="color: #183691;">"Load an .m3u playlist."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let*</span> ((m3u-path (read-file-name  <span style="color: #183691;">"find m3u: "</span> nil nil t nil
+                                   (<span style="color: #a71d5d;">lambda</span> (name)
+                                     (string-match  <span style="color: #183691;">"\\.m3u\\'"</span> name))))
+         (media-files (ready-player--media-at-m3u-file m3u-path))
+         (default-directory (file-name-directory
+                             (try-completion  <span style="color: #183691;">""</span> media-files)))
+         (m3u-fname (file-name-nondirectory m3u-path))
+         (dired-buffer-name (format  <span style="color: #183691;">"*%s*"</span> m3u-fname))
+         (dired-buffer (dired (append (list dired-buffer-name)
+                                      (mapcar (<span style="color: #a71d5d;">lambda</span> (path)
+                                                (file-relative-name path default-directory))
+                                              media-files)))))
+    (ready-player-load-dired-playback-buffer dired-buffer)))
+</pre>
+</div>
+
+ <p>
+We're good to go now! Invoking  <code>M-x ready-player-load-m3u-playlist</code> enables us to load our  <code>m3u</code> playlist, automatically opening the first media file, and also navigate each song in the list one by one.
+</p>
+
+
+ <div id="org0bc9f9c" class="figure">
+ <p> <img src="../images/the-dired-abstraction/benson.gif" alt="benson.gif" width="100%"></img></p>
+</div>
+
+ <p>
+This was a really fun experiment. While  <code>dired</code> is often used to manage files within a directory, its magic also extends to  <code>dired</code> buffers crafted in more creative ways.  <code>find-dired</code> and  <code>find-grep-dired</code> are my two favourite built-ins. Are there other ones you like?  <a href="https://indieweb.social/@xenodium">Do tell</a>.
+</p>
+
+ <p>
+Not long ago, I added  <code>ready-player-load-dired-playback-buffer</code> to ready-player, but  <code>ready-player-load-m3u-playlist</code> remains a local experiment (for now anyway). Let's see ;-)
+</p>
+</div>
+
+ <div id="outline-container-org4dfb8c1" class="outline-3">
+ <h3 id="org4dfb8c1">Unrelated - Want your own blog?</h3>
+ <div class="outline-text-3" id="text-org4dfb8c1">
+ <p>
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of your favourite text editor and  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. I'm launching a blogging service at  <a href="https://lmno.lol">lmno.lol</a>. Looking for early adopters.  <a href="https://indieweb.social/@xenodium">Get in touch</a>.</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/the-dired-abstraction</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/the-dired-abstraction</guid>
+  <pubDate>Fri, 16 Aug 2024 11:30:00 +0100</pubDate>
+</item>
 <item>
   <title>Ctrl-n/p everywhere. Balance restored.</title>
   <description><![CDATA[<div id="content" class="content">
