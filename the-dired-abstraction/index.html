@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-08-16 Fri 11:18 -->
+<!-- 2024-08-16 Fri 12:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The dired abstraction</title>
@@ -430,7 +430,7 @@ Things get more interesting when we craft <code>dired</code> buffers in more cre
 </p>
 
 
-<div id="orgec3a2e5" class="figure">
+<div id="org807055a" class="figure">
 <p><img src="../images/the-dired-abstraction/find.png" alt="find.png" width="80%" />
 </p>
 </div>
@@ -444,7 +444,7 @@ With this generated buffer loaded and <code>ready-player</code> random playback 
 </p>
 
 
-<div id="org00f4004" class="figure">
+<div id="org2076334" class="figure">
 <p><img src="../images/the-dired-abstraction/find-random.gif" alt="find-random.gif" width="100%" />
 </p>
 </div>
@@ -570,7 +570,7 @@ Here's the <code>dired</code> buffer to prove it:
 </p>
 
 
-<div id="org6f4b5e4" class="figure">
+<div id="orga5dc74c" class="figure">
 <p><img src="../images/the-dired-abstraction/playlist.png" alt="playlist.png" width="100%" />
 </p>
 </div>
@@ -589,8 +589,11 @@ From the previous snippet, you'd notice all file paths are relative to default-d
   (<span style="color: #a71d5d;">interactive</span>)
   (<span style="color: #a71d5d;">let*</span> ((m3u-path (read-file-name <span style="color: #183691;">"find m3u: "</span> nil nil t nil
                                    (<span style="color: #a71d5d;">lambda</span> (name)
-                                     (string-match <span style="color: #183691;">"\\.m3u\\'"</span> name))))
-         (media-files (ready-player--media-at-m3u-file m3u-path))
+                                     (<span style="color: #a71d5d;">or</span> (string-match <span style="color: #183691;">"\\.m3u\\'"</span> name)
+                                         (file-directory-p name)))))
+         (media-files (<span style="color: #a71d5d;">if</span> (string-match <span style="color: #183691;">"\\.m3u\\'"</span> m3u-path)
+                          (ready-player--media-at-m3u-file m3u-path)
+                        (<span style="color: #333333;">error</span> <span style="color: #183691;">"Not a .m3u file"</span>)))
          (default-directory (file-name-directory
                              (try-completion <span style="color: #183691;">""</span> media-files)))
          (m3u-fname (file-name-nondirectory m3u-path))
@@ -608,7 +611,7 @@ We're good to go now! Invoking <code>M-x ready-player-load-m3u-playlist</code> e
 </p>
 
 
-<div id="org0bc9f9c" class="figure">
+<div id="org1cd5ebc" class="figure">
 <p><img src="../images/the-dired-abstraction/benson.gif" alt="benson.gif" width="100%" />
 </p>
 </div>
@@ -622,9 +625,9 @@ Not long ago, I added <code>ready-player-load-dired-playback-buffer</code> to re
 </p>
 </div>
 
-<div id="outline-container-org4dfb8c1" class="outline-3">
-<h3 id="org4dfb8c1">Unrelated - Want your own blog?</h3>
-<div class="outline-text-3" id="text-org4dfb8c1">
+<div id="outline-container-orge478ab2" class="outline-3">
+<h3 id="orge478ab2">Unrelated - Want your own blog?</h3>
+<div class="outline-text-3" id="text-orge478ab2">
 <p>
 Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of your favourite text editor and <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. I'm launching a blogging service at <a href="https://lmno.lol">lmno.lol</a>. Looking for early adopters. <a href="https://indieweb.social/@xenodium">Get in touch</a>.</p>
 </div>

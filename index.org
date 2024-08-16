@@ -147,8 +147,11 @@ From the previous snippet, you'd notice all file paths are relative to default-d
     (interactive)
     (let* ((m3u-path (read-file-name "find m3u: " nil nil t nil
                                      (lambda (name)
-                                       (string-match "\\.m3u\\'" name))))
-           (media-files (ready-player--media-at-m3u-file m3u-path))
+                                       (or (string-match "\\.m3u\\'" name)
+                                           (file-directory-p name)))))
+           (media-files (if (string-match "\\.m3u\\'" m3u-path)
+                            (ready-player--media-at-m3u-file m3u-path)
+                          (error "Not a .m3u file")))
            (default-directory (file-name-directory
                                (try-completion "" media-files)))
            (m3u-fname (file-name-nondirectory m3u-path))
