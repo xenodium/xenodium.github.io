@@ -1,6 +1,104 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-09-11 Wed] Spiffing up those echo messages
+:PROPERTIES:
+:CUSTOM_ID: spiffing-up-those-echo-messages
+:END:
+Well-ingrained into every Emacs user is the echo area, a one-stop shop to receive any kind of message from the editor, located at the bottom of the frame. Posting messages to this area from elisp couldn't be simpler:
+
+#+begin_src emacs-lisp :lexical no
+  (message "Hello world")
+#+end_src
+
+#+ATTR_HTML: :width 75%
+[[file:images/spiffing-up-those-echo-messages/svg-hello-world.gif]]
+
+If we want to get a little fancier, we can propertize the text to add some styling.
+
+#+begin_src emacs-lisp :lexical no
+  (message (propertize "hello " 'face '(:foreground "#C3E88D"))
+           (propertize "world" 'face '(:foreground "#FF5370")))
+#+end_src
+
+#+ATTR_HTML: :width 75%
+[[file:images/spiffing-up-those-echo-messages/svg-hello-world-colors.gif]]
+
+With this in mind, I set out to add a tiny command to [[https://github.com/xenodium/ready-player][ready-player]].
+
+I wanted the ability to ask what's on without switching to another buffer. The echo area is perfect for that. It should display track title, artist, and album.
+
+#+begin_src emacs-lisp :lexical no
+  (message (concat "Ahead " ;; title
+                   (propertize "Wire " 'face '(:foreground "#C3E88D")) ;; artist
+                   (propertize "The Ideal Copy" 'face '(:foreground "#FF5370")))) ;; album
+#+end_src
+
+#+ATTR_HTML: :width 75%
+[[file:images/spiffing-up-those-echo-messages/svg-ready-player-colors.gif]]
+
+
+This kinda work, but I wasn't convinced with the styling. Maybe I need multi-line?
+
+#+begin_src emacs-lisp :lexical no
+  (message (concat "Ahead\n" ;; title
+                   (propertize "Wire\n" 'face '(:foreground "#C3E88D")) ;; artist
+                   (propertize "The Ideal Copy" 'face '(:foreground "#FF5370")))) ;; album
+#+end_src
+
+#+ATTR_HTML: :width 75%
+[[file:images/spiffing-up-those-echo-messages/svg-ready-player-colors-multiline.gif]]
+
+
+I felt something was missing. If I could just add the album artwork as a thumbnail... The ideal layout would maybe look something like:
+
+#+begin_src
+  +-------+
+  |       | Ahead
+  | image | Wire
+  |       | The Ideal Copy
+  +-------+
+#+end_src
+
+While the text-everywhere nature of Emacs buffers has many advantages, building more involved layouts can have its challenges. But hey, for that simple read-only message we're aiming at, we can certainly get creative without too much trouble. You see, Emacs has native svg support, so we can craft our fancy layout in elisp and tell Emacs to render it for us.
+
+While I'm a noob at doing anything in svg from Emacs, adding an image and three labels, really isn't that difficult.
+
+#+begin_src emacs-lisp :lexical no
+  (message
+   (let* ((image-width 90)
+          (image-height 90)
+          (text-height 25)
+          (svg (svg-create (frame-pixel-width) image-height)))
+     (svg-embed svg "path/to/thumbnail.png"
+                "image/png" nil
+                :x 0 :y 0 :width image-width :height image-height)
+     (svg-text svg "Ahead"
+               :x (+ image-width 10) :y text-height
+               :fill (face-attribute 'default :foreground))
+     (svg-text svg "Wire"
+               :x (+ image-width 10) :y (* 2 text-height)
+               :fill "#C3E88D")
+     (svg-text svg "The Ideal Copy" :x (+ image-width 10) :y (* 3 text-height)
+               :fill "#FF5370")
+     (with-temp-buffer
+       (svg-insert-image svg)
+       (buffer-string))))
+#+end_src
+
+The code is fairly self-explanatory. While there may be an even simpler way (please lemme know), I used a temporary buffer to embed the svg in the propertized text prior to feeding to the handy =message= function.
+
+...and with that, we get a richer display of the current track.
+
+#+ATTR_HTML: :width 75%
+[[file:images/spiffing-up-those-echo-messages/svg-ready-player-colors-image.gif]]
+
+While I haven't experimented with other ways of creating multi-column layouts in Emacs (including images), [[https://indieweb.social/@xenodium][I'd love to know]] if there's anything else available besides svg.
+
+** Enjoying these tips? Using one of my Emacs packages?
+
+Help make them sustainable. Consider [[https://github.com/sponsors/xenodium][supporting]] this work.
+
 * [2024-09-07 Sat] Seek and you shall find
 :PROPERTIES:
 :CUSTOM_ID: seek-and-you-shall-find

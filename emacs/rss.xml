@@ -6,7 +6,156 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 07 Sep 2024 14:27:15 +0100</lastBuildDate>
+<lastBuildDate>Wed, 11 Sep 2024 21:14:45 +0100</lastBuildDate>
+<item>
+  <title>Spiffing up those echo messages</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-spiffing-up-those-echo-messages" class="outline-2">
+ <h2 id="spiffing-up-those-echo-messages"> <span class="timestamp-wrapper"> <span class="timestamp">11 September 2024</span></span> Spiffing up those echo messages</h2>
+ <div class="outline-text-2" id="text-spiffing-up-those-echo-messages">
+ <p>
+Well-ingrained into every Emacs user is the echo area, a one-stop shop to receive any kind of message from the editor, located at the bottom of the frame. Posting messages to this area from elisp couldn't be simpler:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(message  <span style="color: #183691;">"Hello world"</span>)
+</pre>
+</div>
+
+
+ <div id="orga0b7afa" class="figure">
+ <p> <img src="../images/spiffing-up-those-echo-messages/svg-hello-world.gif" alt="svg-hello-world.gif" width="75%"></img></p>
+</div>
+
+ <p>
+If we want to get a little fancier, we can propertize the text to add some styling.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(message (propertize  <span style="color: #183691;">"hello "</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#C3E88D"</span>))
+         (propertize  <span style="color: #183691;">"world"</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#FF5370"</span>)))
+</pre>
+</div>
+
+
+ <div id="org99a70b1" class="figure">
+ <p> <img src="../images/spiffing-up-those-echo-messages/svg-hello-world-colors.gif" alt="svg-hello-world-colors.gif" width="75%"></img></p>
+</div>
+
+ <p>
+With this in mind, I set out to add a tiny command to  <a href="https://github.com/xenodium/ready-player">ready-player</a>.
+</p>
+
+ <p>
+I wanted the ability to ask what's on without switching to another buffer. The echo area is perfect for that. It should display track title, artist, and album.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(message (concat  <span style="color: #183691;">"Ahead "</span>  <span style="color: #969896;">;; </span> <span style="color: #969896;">title</span>
+                 (propertize  <span style="color: #183691;">"Wire "</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#C3E88D"</span>))  <span style="color: #969896;">;; </span> <span style="color: #969896;">artist</span>
+                 (propertize  <span style="color: #183691;">"The Ideal Copy"</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#FF5370"</span>))))  <span style="color: #969896;">;; </span> <span style="color: #969896;">album</span>
+</pre>
+</div>
+
+
+ <div id="orgc7ad63b" class="figure">
+ <p> <img src="../images/spiffing-up-those-echo-messages/svg-ready-player-colors.gif" alt="svg-ready-player-colors.gif" width="75%"></img></p>
+</div>
+
+
+ <p>
+This kinda work, but I wasn't convinced with the styling. Maybe I need multi-line?
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(message (concat  <span style="color: #183691;">"Ahead\n"</span>  <span style="color: #969896;">;; </span> <span style="color: #969896;">title</span>
+                 (propertize  <span style="color: #183691;">"Wire\n"</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#C3E88D"</span>))  <span style="color: #969896;">;; </span> <span style="color: #969896;">artist</span>
+                 (propertize  <span style="color: #183691;">"The Ideal Copy"</span> 'face '(<span style="color: #a71d5d;">:foreground</span>  <span style="color: #183691;">"#FF5370"</span>))))  <span style="color: #969896;">;; </span> <span style="color: #969896;">album</span>
+</pre>
+</div>
+
+
+ <div id="org0218213" class="figure">
+ <p> <img src="../images/spiffing-up-those-echo-messages/svg-ready-player-colors-multiline.gif" alt="svg-ready-player-colors-multiline.gif" width="75%"></img></p>
+</div>
+
+
+ <p>
+I felt something was missing. If I could just add the album artwork as a thumbnail… The ideal layout would maybe look something like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-nil">+-------+
+|       | Ahead
+| image | Wire
+|       | The Ideal Copy
++-------+
+</pre>
+</div>
+
+ <p>
+While the text-everywhere nature of Emacs buffers has many advantages, building more involved layouts can have its challenges. But hey, for that simple read-only message we're aiming at, we can certainly get creative without too much trouble. You see, Emacs has native svg support, so we can craft our fancy layout in elisp and tell Emacs to render it for us.
+</p>
+
+ <p>
+While I'm a noob at doing anything in svg from Emacs, adding an image and three labels, really isn't that difficult.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(message
+ (<span style="color: #a71d5d;">let*</span> ((image-width 90)
+        (image-height 90)
+        (text-height 25)
+        (svg (svg-create (frame-pixel-width) image-height)))
+   (svg-embed svg  <span style="color: #183691;">"path/to/thumbnail.png"</span>
+               <span style="color: #183691;">"image/png"</span> nil
+               <span style="color: #a71d5d;">:x</span> 0  <span style="color: #a71d5d;">:y</span> 0  <span style="color: #a71d5d;">:width</span> image-width  <span style="color: #a71d5d;">:height</span> image-height)
+   (svg-text svg  <span style="color: #183691;">"Ahead"</span>
+              <span style="color: #a71d5d;">:x</span> (+ image-width 10)  <span style="color: #a71d5d;">:y</span> text-height
+              <span style="color: #a71d5d;">:fill</span> (face-attribute 'default  <span style="color: #a71d5d;">:foreground</span>))
+   (svg-text svg  <span style="color: #183691;">"Wire"</span>
+              <span style="color: #a71d5d;">:x</span> (+ image-width 10)  <span style="color: #a71d5d;">:y</span> (* 2 text-height)
+              <span style="color: #a71d5d;">:fill</span>  <span style="color: #183691;">"#C3E88D"</span>)
+   (svg-text svg  <span style="color: #183691;">"The Ideal Copy"</span>  <span style="color: #a71d5d;">:x</span> (+ image-width 10)  <span style="color: #a71d5d;">:y</span> (* 3 text-height)
+              <span style="color: #a71d5d;">:fill</span>  <span style="color: #183691;">"#FF5370"</span>)
+   (<span style="color: #a71d5d;">with-temp-buffer</span>
+     (svg-insert-image svg)
+     (buffer-string))))
+</pre>
+</div>
+
+ <p>
+The code is fairly self-explanatory. While there may be an even simpler way (please lemme know), I used a temporary buffer to embed the svg in the propertized text prior to feeding to the handy  <code>message</code> function.
+</p>
+
+ <p>
+…and with that, we get a richer display of the current track.
+</p>
+
+
+ <div id="org288e40a" class="figure">
+ <p> <img src="../images/spiffing-up-those-echo-messages/svg-ready-player-colors-image.gif" alt="svg-ready-player-colors-image.gif" width="75%"></img></p>
+</div>
+
+ <p>
+While I haven't experimented with other ways of creating multi-column layouts in Emacs (including images),  <a href="https://indieweb.social/@xenodium">I'd love to know</a> if there's anything else available besides svg.
+</p>
+</div>
+ <div id="outline-container-org14fe7c0" class="outline-3">
+ <h3 id="org14fe7c0">Enjoying these tips? Using one of my Emacs packages?</h3>
+ <div class="outline-text-3" id="text-org14fe7c0">
+ <p>
+Help make them sustainable. Consider  <a href="https://github.com/sponsors/xenodium">supporting</a> this work.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/spiffing-up-those-echo-messages</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/spiffing-up-those-echo-messages</guid>
+  <pubDate>Wed, 11 Sep 2024 21:14:45 +0100</pubDate>
+</item>
 <item>
   <title>Seek and you shall find</title>
   <description><![CDATA[<div id="content" class="content">
