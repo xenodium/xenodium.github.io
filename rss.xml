@@ -6,7 +6,175 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 11 Sep 2024 21:14:53 +0100</lastBuildDate>
+<lastBuildDate>Thu, 19 Sep 2024 18:47:48 +0100</lastBuildDate>
+<item>
+  <title>Emacs bubble mode</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-emacs-bubble-mode" class="outline-2">
+ <h2 id="emacs-bubble-mode"> <span class="timestamp-wrapper"> <span class="timestamp">19 September 2024</span></span> Emacs bubble mode</h2>
+ <div class="outline-text-2" id="text-emacs-bubble-mode">
+ <p>
+From time to time, I want to grab a source code viewport of sorts and feed to an LLM for questioning. From Emacs, I normally use  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>'s  <code>chatgpt-shell-prompt-compose</code>, which automatically grabs the active region. This led me to explore a few options to select a region, or maybe even roll my own. I should also mention, these regions don't typically require compilable/complete structures.
+</p>
+
+ <p>
+In most of these instances, I just reach out to one of my region favourites like  <a href="https://github.com/magnars/expand-region.el">expand-region</a>,  <code>mark-defun</code>, or  <code>mark-whole-buffer</code>. Alternatively, I navigate to different points using sexp commands like  <code>backward-sexp</code> and  <code>forward-sexp</code> (or maybe something like  <code>sp-backward-up-sexp</code> from  <a href="https://github.com/Fuco1/smartparens">smartparens</a>), using  <code>set-mark-command</code> in-between to  activate the region.
+</p>
+
+ <p>
+While these commands typically yield balanced expressions, it's often unnecessary for my LLM queries. This led me to  <a href="https://indieweb.social/@xenodium/113158018599745252">ask folks</a> for different ways of selecting regions, which highlighted great package suggestions like  <a href="https://github.com/abo-abo/avy">avy</a>,  <a href="https://github.com/meow-edit">meow</a>, and  <a href="https://github.com/leoliu/easy-kill">easy-kill</a>.
+</p>
+
+ <p>
+While I've been intrigued by  <code>meow</code>'s modal editing for some time, I'm not ready for that fair trial jump. Will have to postpone it for a little longer.
+</p>
+
+ <p>
+ <code>Easy-kill</code> offers  <code>easy-mark</code>, in some ways similar to the built-in  <code>mark-sexp</code>, but with additional marking heuristics and possibly other goodies I missed. At present, I get similar benefits from the likes of  <code>expand-region</code> and the other sexp helpers.
+</p>
+
+ <p>
+ <code>Avy</code>'s  <code>avy-kill-ring-save-region</code> could work for my purpose, though I wish it left the region active. Maybe that's already possible? I could look into extending  <code>avy</code>, though  <a href="https://mastodon.social/@ctietze/113154167264208507">Christian's suggestions</a> led me to lean more on visual feedback in my own region-expanding experiments.
+</p>
+
+ <p>
+The goal was to enable extending regions in both vertical directions by simultaneously adding lines at both ends. Sure, this doesn't guarantee structural completeness, but it may just be enough for my LLM-feeding purpose. Maybe this already exists in the Emacs universe, but hey, it's an excuse to throw some elisp lines together…
+</p>
+
+ <p>
+Assuming there's an existing active region, expanding in both directions is pretty straightforward.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">bubble-expand</span>()
+   <span style="color: #183691;">"Expand region."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">when</span> (> (point) (mark))
+    (exchange-point-and-mark))
+  (forward-line -1)
+  (exchange-point-and-mark)
+  (forward-line 1)
+  (exchange-point-and-mark))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">bubble-shrink</span> ()
+   <span style="color: #183691;">"Shrink region."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">when</span> (< (point) (mark))
+    (exchange-point-and-mark))
+  (forward-line -1)
+  (exchange-point-and-mark)
+  (forward-line 1))
+</pre>
+</div>
+
+ <p>
+While I've yet to use this region-expanding approach long enough to validate its usefulness, it sure is fun to play with it.
+</p>
+
+
+ <div id="org0496f4f" class="figure">
+ <p> <img src="../images/emacs-bubble-mode/bubble-expand-shrink.gif" alt="bubble-expand-shrink.gif" width="75%"></img></p>
+</div>
+
+ <p>
+This got me thinking, what other funky things I could do with the region? Could I shift the region selection like a viewport of sorts? As you now expect, the answer in Emacs is almost always of course we can…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">bubble-shift-up</span> ()
+   <span style="color: #183691;">"Shift the region up by one line."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">when</span> (> (point) (mark))
+    (exchange-point-and-mark))
+  (forward-line -1)
+  (forward-line 0)
+  (exchange-point-and-mark)
+  (forward-line -1)
+  (end-of-line)
+  (activate-mark)
+  (exchange-point-and-mark))
+
+(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">bubble-shift-down</span> ()
+   <span style="color: #183691;">"Shift the region down by one line."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">when</span> (> (point) (mark))
+    (exchange-point-and-mark))
+  (forward-line)
+  (forward-line 0)
+  (exchange-point-and-mark)
+  (forward-line)
+  (end-of-line)
+  (activate-mark)
+  (exchange-point-and-mark))
+</pre>
+</div>
+
+
+ <div id="orgcd16752" class="figure">
+ <p> <img src="../images/emacs-bubble-mode/bubble-shift.gif" alt="bubble-shift.gif" width="75%"></img></p>
+</div>
+
+ <p>
+My friend Vaarnan also suggested looking into UX around providing line count, which is possible by providing a prefix into  <code>bubble-expand-region</code>.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">C-5 M-x bubble-expand-region
+</pre>
+</div>
+
+
+ <div id="orgcfda608" class="figure">
+ <p> <img src="../images/emacs-bubble-mode/bubble-number.gif" alt="bubble-number.gif" width="75%"></img></p>
+</div>
+
+ <p>
+These commands alone aren't as effective unless we have some key-bindings around them. I've tied things up into a minor mode, called… you guessed it:  <code>bubble-mode</code>. Oooh, a mode, you may say it's now official ;) Well, no. It's still an experiment of sorts and currently lives in my Emacs config repo.
+</p>
+
+ <p>
+The key bindings I've chosen are:
+</p>
+
+ <ul class="org-ul"> <li> <code>C-c C-w</code>: Enter bubble-mode.</li>
+ <li> <code>C-p</code>: bubble-expand.</li>
+ <li> <code>C-n</code>: bubble-shrink.</li>
+ <li> <code>S-C-p</code>: bubble-move-up.</li>
+ <li> <code>S-C-n</code>: bubble-move-down.</li>
+ <li> <code>Numbers 1-0</code>: Expand 1 to 10 lines.</li>
+ <li> <code>RET</code>: Exit bubble-mode.</li>
+</ul> <p>
+Note: Inspired by expand-region, any other key binding/command automatically exits  <code>bubble-mode</code>.
+</p>
+
+ <p>
+ <code>C-c C-w</code> kinda works for me as  <code>C-c w</code> is already bound to  <code>expand-region</code>. Let's see if that sticks, though I may have to give up the  <code>org-refile</code> binding.
+</p>
+
+ <p>
+So does it work for my original LLM intent? We shall see, but it seems to so far. Here's what that flow now looks like:
+</p>
+
+
+ <div id="org7ec497f" class="figure">
+ <p> <img src="../images/emacs-bubble-mode/bubble-whats-wrong.gif" alt="bubble-whats-wrong.gif" width="100%"></img></p>
+</div>
+</div>
+ <div id="outline-container-org0a05a80" class="outline-3">
+ <h3 id="org0a05a80">Enjoying this content? Using one of my Emacs packages?</h3>
+ <div class="outline-text-3" id="text-org0a05a80">
+ <p>
+Help make the work sustainable. Consider  <a href="https://github.com/sponsors/xenodium">sponsoring</a>. I'm also building  <a href="https://lmno.lol/">lmno.lol</a>. A platform to  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop</a> your blog to the web.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/emacs-bubble-mode</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/emacs-bubble-mode</guid>
+  <pubDate>Thu, 19 Sep 2024 00:00:00 +0100</pubDate>
+</item>
 <item>
   <title>Spiffing up those echo messages</title>
   <description><![CDATA[<div id="content" class="content">
