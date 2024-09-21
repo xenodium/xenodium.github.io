@@ -6,7 +6,119 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 19 Sep 2024 19:00:39 +0100</lastBuildDate>
+<lastBuildDate>Sat, 21 Sep 2024 19:00:49 +0100</lastBuildDate>
+<item>
+  <title>Quick pdf trim</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-quick-pdf-trim" class="outline-2">
+ <h2 id="quick-pdf-trim"> <span class="timestamp-wrapper"> <span class="timestamp">21 September 2024</span></span> Quick pdf trim</h2>
+ <div class="outline-text-2" id="text-quick-pdf-trim">
+ <p>
+My significant other needed to share proof of address by providing a number of bank statements for a period of time. That's easy enough to download as pdfs from the bank, but statements typically provide more personal information than the recipient requires. For a proof of address, the first page is more than enough.
+</p>
+
+ <p>
+macOS's Preview app can easily delete pages from a pdf by selecting undesired pages and hitting the delete key. This is fine for one pdf but for a handful of them, I figured there's a command line incantation I could use out there, and indeed there is:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">qpdf my.pdf --pages . 1 -- my-one-page.pdf
+</pre>
+</div>
+
+ <p>
+With command in mind, I resorted to my now my typical approach of:
+</p>
+
+ <ol class="org-ol"> <li>Converted it to a generic  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.</li>
+ <li>Batch apply.</li>
+</ol> <p>
+I'm could be done at this point, but since I now have the command fresh in mind…
+</p>
+
+ <ol class="org-ol"> <li>Save command for future usage.</li>
+</ol> <p>
+So let's get on with it.
+</p>
+</div>
+ <div id="outline-container-orgf932ae7" class="outline-3">
+ <h3 id="orgf932ae7">Converting to dwim-shell-command</h3>
+ <div class="outline-text-3" id="text-orgf932ae7">
+ <div class="org-src-container">
+ <pre class="src src-sh">qpdf  <span style="color: #183691;">'<<f>>'</span> --pages . 1 --  <span style="color: #183691;">'<<fne>>_1.<<e>>'</span>
+</pre>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgafae80e" class="outline-3">
+ <h3 id="orgafae80e">Batch apply</h3>
+ <div class="outline-text-3" id="text-orgafae80e">
+ <p>
+Other than show it in action, it may be worh mentioning dwim-shell-command recognizes files in region (in addition to dired's mark of course), so you can just select and apply.
+</p>
+
+
+ <div id="orgf697347" class="figure">
+ <p> <img src="../images/quick-pdf-trim/keep-1-page.gif" alt="keep-1-page.gif" width="95%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org13d5148" class="outline-3">
+ <h3 id="org13d5148">Save for future usage</h3>
+ <div class="outline-text-3" id="text-org13d5148">
+ <p>
+Saving these commands for future usage typically consists of merely wrapping in an Emacs command so we can invoke via M-x (and your favorite narrowing framework for that fuzzy quick magic).
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-keep-pdf-page</span> ()
+   <span style="color: #183691;">"Keep a page from pdf."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (<span style="color: #a71d5d;">let</span> ((page-num (read-number  <span style="color: #183691;">"Keep page number: "</span> 1)))
+    (dwim-shell-command-on-marked-files
+      <span style="color: #183691;">"Keep pdf page"</span>
+     (format  <span style="color: #183691;">"qpdf '</span> <span style="color: #0086b3;"><<f>></span> <span style="color: #183691;">' --pages . %d -- '</span> <span style="color: #0086b3;"><<fne>>_%d.<<e>></span> <span style="color: #183691;">'"</span> page-num page-num)
+      <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"qpdf"</span>)))
+</pre>
+</div>
+
+ <p>
+For this instance, there's a tiny bit of additional logic to ask the user which page they'd like to keep.
+</p>
+
+ <p>
+While there's no way I'll remember  <code>qpdf my.pdf --pages . 1 -- my-one-page.pdf</code>, I can easily find it in the future by searching with something like  <code>M-x keep page</code>.
+</p>
+
+
+ <div id="org0f4d346" class="figure">
+ <p> <img src="../images/quick-pdf-trim/keep-1-page-command.gif" alt="keep-1-page-command.gif" width="95%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgf8cece4" class="outline-3">
+ <h3 id="orgf8cece4">My toolbox</h3>
+ <div class="outline-text-3" id="text-orgf8cece4">
+ <p>
+I've saved a bunch of these commands and use many of them regularly. You can find in the  <a href="https://github.com/xenodium/dwim-shell-command?tab=readme-ov-file#my-toolbox">optional component of dwim-shell-command</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgcaae949" class="outline-3">
+ <h3 id="orgcaae949">Enjoying this content? Using one of my Emacs packages?</h3>
+ <div class="outline-text-3" id="text-orgcaae949">
+ <p>
+Help make the work sustainable. Consider  <a href="https://github.com/sponsors/xenodium">sponsoring</a>. I'm also building  <a href="https://lmno.lol/">lmno.lol</a>. A platform to  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop</a> your blog to the web.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/quick-pdf-trim</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/quick-pdf-trim</guid>
+  <pubDate>Sat, 21 Sep 2024 19:00:49 +0100</pubDate>
+</item>
 <item>
   <title>Emacs bubble mode</title>
   <description><![CDATA[<div id="content" class="content">
