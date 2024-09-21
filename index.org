@@ -1,6 +1,72 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-09-21 Sat] How I batch apply and save one-liners
+:PROPERTIES:
+:CUSTOM_ID: how-i-batch-apply-and-save-one-liners
+:END:
+My significant other needed to share proof of address by providing a number of bank statements for a period of time. That's easy enough to download as pdfs from the bank, but statements typically provide more personal information than the recipient requires. For a proof of address, the first page is more than enough.
+
+macOS's Preview app can easily delete pages from a pdf by selecting undesired pages and hitting the delete key. This is fine for one pdf but for a handful of them, I figured there's a command line incantation I could use out there, and indeed there is:
+
+#+begin_src sh
+  qpdf my.pdf --pages . 1 -- my-one-page.pdf
+#+end_src
+
+With command in mind, I resorted to my now my typical approach of:
+
+- Converted it to a generic [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]].
+- Batch apply.
+
+I'm could be done at this point, but since I now have the command fresh in mind...
+
+- Save command for future usage.
+
+So let's get on with it.
+
+** Converting to dwim-shell-command
+
+#+begin_src sh
+  qpdf '<<f>>' --pages . 1 -- '<<fne>>_1.<<e>>'
+#+end_src
+
+** Batch apply
+
+Other than show it in action, it may be worh mentioning dwim-shell-command recognizes files in region (in addition to dired's mark of course), so you can just select and apply.
+
+#+ATTR_HTML: :width 95%
+[[file:images/how-i-batch-apply-and-save-one-liners/keep-1-page.gif]]
+
+** Save for future usage
+
+Saving these commands for future usage typically consists of merely wrapping in an Emacs command so we can invoke via M-x (and your favorite narrowing framework for that fuzzy quick magic).
+
+#+begin_src emacs-lisp :lexical no
+  (defun dwim-shell-commands-keep-pdf-page ()
+    "Keep a page from pdf."
+    (interactive)
+    (let ((page-num (read-number "Keep page number: " 1)))
+      (dwim-shell-command-on-marked-files
+       "Keep pdf page"
+       (format "qpdf '<<f>>' --pages . %d -- '<<fne>>_%d.<<e>>'" page-num page-num)
+       :utils "qpdf")))
+#+end_src
+
+For this instance, there's a tiny bit of additional logic to ask the user which page they'd like to keep.
+
+While there's no way I'll remember =qpdf my.pdf --pages . 1 -- my-one-page.pdf=, I can easily find it in the future by searching with something like =M-x keep page=.
+
+#+ATTR_HTML: :width 95%
+[[file:images/how-i-batch-apply-and-save-one-liners/keep-1-page-command.gif]]
+
+** My toolbox
+
+I've saved a bunch of these commands and use many of them regularly. You can find in the [[https://github.com/xenodium/dwim-shell-command?tab=readme-ov-file#my-toolbox][optional component of dwim-shell-command]].
+
+** Enjoying this content? Using one of my Emacs packages?
+
+Help make the work sustainable. Consider [[https://github.com/sponsors/xenodium][sponsoring]]. I'm also building [[https://lmno.lol/][lmno.lol]]. A platform to [[https://indieweb.social/@xenodium/112265481282475542][drag and drop]] your blog to the web.
+
 * [2024-09-19 Thu] Emacs bubble mode
 :PROPERTIES:
 :CUSTOM_ID: emacs-bubble-mode
