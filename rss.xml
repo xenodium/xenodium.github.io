@@ -8,6 +8,134 @@
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
 <lastBuildDate>Sat, 21 Sep 2024 19:29:54 +0100</lastBuildDate>
 <item>
+  <title>Hide another detail</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-hide-another-detail" class="outline-2">
+ <h2 id="hide-another-detail"> <span class="timestamp-wrapper"> <span class="timestamp">21 October 2024</span></span> Hide another detail</h2>
+ <div class="outline-text-2" id="text-hide-another-detail">
+ <p>
+It's been 5 years since I talked about  <a href="https://xenodium.com/showhide-emacs-dired-details-in-style/">showing/hiding Emacs dired details in style</a>, a short post showcasing  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html">hide-details-mode</a> (built-in) and  <a href="https://github.com/purcell/diredfl">diredfl</a> (third-party).
+</p>
+
+ <p>
+While my dired usage increased over the years, my dired config remained largely unchanged. Today, I'll show a new dired tweak.
+</p>
+
+ <p>
+As you likely suspect by now, I'm a big fan of  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html">hide-details-mode</a>. It gives me super clean and minimalistic view of my files.
+</p>
+
+
+ <div id="org1298bde" class="figure">
+ <p> <img src="../images/hide-another-detail/before.png" alt="before.png" width="95%"></img></p>
+</div>
+
+ <p>
+If I need more details, it's one toggle away using my trusty C-( binding.
+</p>
+
+
+ <div id="org35a0a53" class="figure">
+ <p> <img src="../images/hide-another-detail/toggle-before.gif" alt="toggle-before.gif" width="95%"></img></p>
+</div>
+
+ <p>
+Now this is a super minor thing, but for a little while, I wished I could also hide the current directory's absolute path as part of  <code>hide-details-mode</code>'s toggling. In the same spirit as other hidden dired details, I rarely need to see the absolute path. And if I did, it'd only be a toggle away.
+</p>
+
+ <p>
+With that in mind, I set out to bend dired my way. I looked at the  <code>dired-hide-details-mode</code> built-in code (dired.el) and came across invisibility specs, which I hadn't used before. Dired uses  <code>add-to-invisibility-spec</code> and  <code>remove-from-invisibility-spec</code> to show and hide details using the  <code>invisible</code> property set to  <code>dired-hide-details-information</code>.
+</p>
+
+ <p>
+Now that we know what property to set, we need to find the text to apply it to. Dired offers that via  <code>dired-subdir-regexp</code>. All we need to do is match the regular expression and apply our invisible property to the relevant bounds.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">hide-dired-details-include-all-subdir-paths</span> ()
+  (<span style="color: #a71d5d;">save-excursion</span>
+    (goto-char (point-min))
+    (<span style="color: #a71d5d;">while</span> (re-search-forward dired-subdir-regexp nil t)
+      (<span style="color: #a71d5d;">let*</span> ((match-bounds (cons (match-beginning 1) (match-end 1)))
+             (path (file-name-directory (buffer-substring (car match-bounds)
+                                                          (cdr match-bounds))))
+             (path-start (car match-bounds))
+             (path-end (+ (car match-bounds) (length path)))
+             (inhibit-read-only t))
+        (put-text-property path-start path-end
+                           'invisible 'dired-hide-details-information)))))
+</pre>
+</div>
+
+ <p>
+All that's left is for us to add our new function to a hook, and we're good to go.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> dired
+   <span style="color: #a71d5d;">:hook</span> ((dired-mode . dired-hide-details-mode)
+         (dired-after-readin . hide-dired-details-include-all-subdir-paths)))
+</pre>
+</div>
+
+ <p>
+My Dired window is even cleaner now. The current directory's absolute path is now hidden.
+</p>
+
+
+ <div id="orgdc3f648" class="figure">
+ <p> <img src="../images/hide-another-detail/after.png" alt="after.png" width="95%"></img></p>
+</div>
+
+ <p>
+There may be times we need to peek at the absolute path. We can now toggle hiding this detail just like the others.
+</p>
+
+
+ <div id="org4db67da" class="figure">
+ <p> <img src="../images/hide-another-detail/toggle-after.gif" alt="toggle-after.gif" width="95%"></img></p>
+</div>
+</div>
+ <div id="outline-container-orgc35bd9f" class="outline-3">
+ <h3 id="orgc35bd9f">My first Emacs patch</h3>
+ <div class="outline-text-3" id="text-orgc35bd9f">
+ <p>
+While this is a rather small change, I figured I could use it to get my toes dipped as a first Emacs contribution. I've since reworked the patch to fit into dired.el's code and submitted for review.
+</p>
+
+ <p>
+I'm happy to report the tiny feature's now merged to master as of  <a href="https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=7cbca90569472af5643905fca5b7ab2dea67f876">a couple of days ago</a>. Yay! 🎉
+</p>
+
+ <p>
+It'll be sometime until the feature makes it to a release, but if you're living on the Emacs master edge, it should be available there. While the feature is disabled by default, it can enabled with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> dired-hide-details-hide-absolute-location t)
+</pre>
+</div>
+
+ <p>
+Happy hiding!
+</p>
+</div>
+</div>
+ <div id="outline-container-org8d2ed67" class="outline-3">
+ <h3 id="org8d2ed67">Enjoying this content? Using one of my Emacs packages?</h3>
+ <div class="outline-text-3" id="text-org8d2ed67">
+ <p>
+Help make the work sustainable. Consider  <a href="https://github.com/sponsors/xenodium">sponsoring</a>. I'm also building  <a href="https://lmno.lol/">lmno.lol</a>. A platform to  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop</a> your blog to the web.</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/hide-another-detail</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/hide-another-detail</guid>
+  <pubDate>Mon, 21 Oct 2024 00:00:00 +0100</pubDate>
+</item>
+<item>
   <title>How I batch apply and save one-liners</title>
   <description><![CDATA[<div id="content" class="content">
 
@@ -34,7 +162,7 @@ With command in mind, I resorted to my now my typical approach of:
  <ul class="org-ul"> <li>Convert to a generic  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.</li>
  <li>Batch apply.</li>
 </ul> <p>
-I could be done at this point, but since I now have the command fresh in mind…
+I'm could be done at this point, but since I now have the command fresh in mind…
 </p>
 
  <ul class="org-ul"> <li>Save command for future usage.</li>
@@ -459,10 +587,9 @@ Dusting off my old media collection brought lots of memories as I rediscovered t
 While plugging away at my own ready-player's pet peeves, I also collected a handful of feature requests. Let's go over the latest features.
 </p>
 </div>
-
- <div id="outline-container-orgaad9fc2" class="outline-3">
- <h3 id="orgaad9fc2">Seek (f/b binding) -  <a href="https://github.com/xenodium/ready-player/issues/11">feature request</a></h3>
- <div class="outline-text-3" id="text-orgaad9fc2">
+ <div id="outline-container-org737ec69" class="outline-3">
+ <h3 id="org737ec69">Seek (f/b binding) -  <a href="https://github.com/xenodium/ready-player/issues/11">feature request</a></h3>
+ <div class="outline-text-3" id="text-org737ec69">
  <p>
 While not a feature I initially thought ranked highly in priority, I now find myself seeking audio files from time to time. Ready Player delegates all playback to the likes of  <a href="https://mpv.io/">mpv</a>,  <a href="https://www.videolan.org/vlc/">vlc</a>,  <a href="https://mplayerhq.hu/design7/news.html">mplayer</a>, and so on… Up until now, interacting with these utilities merely consisted of feeding a media file path on to the respective process.
 </p>
@@ -488,46 +615,42 @@ If you're on a recent version of ready-player, seeking is automatically enabled 
 </div>
 
 
- <div id="orgb7e2605" class="figure">
+ <div id="org5454fd9" class="figure">
  <p> <img src="../images/seek-and-you-shall-find/seek.webp" alt="seek.webp" width="100%"></img></p>
 </div>
 </div>
 </div>
-
- <div id="outline-container-org1443857" class="outline-3">
- <h3 id="org1443857">Pause/resume (SPC binding) -  <a href="https://github.com/xenodium/ready-player/issues/10">feature request</a></h3>
- <div class="outline-text-3" id="text-org1443857">
+ <div id="outline-container-org8d66960" class="outline-3">
+ <h3 id="org8d66960">Pause/resume (SPC binding) -  <a href="https://github.com/xenodium/ready-player/issues/10">feature request</a></h3>
+ <div class="outline-text-3" id="text-org8d66960">
  <p>
 Until now, ready-player could only play and stop, so you always had to start playing tracks from the beginning. With  <code>mpv</code> ipc support now in place, adding pause/resume was a breeze. Like seek, it should just work for ya if  <code>mpv</code> is on your system and no explicit customization of  <code>ready-player-open-playback-commands</code>.
 </p>
 </div>
 </div>
-
- <div id="outline-container-org066ad05" class="outline-3">
- <h3 id="org066ad05">Repeat current file (r binding) -  <a href="https://github.com/xenodium/ready-player/issues/16">feature request</a></h3>
- <div class="outline-text-3" id="text-org066ad05">
+ <div id="outline-container-orgb7799f5" class="outline-3">
+ <h3 id="orgb7799f5">Repeat current file (r binding) -  <a href="https://github.com/xenodium/ready-player/issues/16">feature request</a></h3>
+ <div class="outline-text-3" id="text-orgb7799f5">
  <p>
 While repeating current playlist (or directory) was already supported, there was a feature request to enable repeating files. Toggling repeat now cycles through available modes.
 </p>
 
 
- <div id="orge1966b9" class="figure">
+ <div id="orgb776b12" class="figure">
  <p> <img src="../images/seek-and-you-shall-find/repeat.webp" alt="repeat.webp" width="50%"></img></p>
 </div>
 </div>
 </div>
-
- <div id="outline-container-orgf4a2cb8" class="outline-3">
- <h3 id="orgf4a2cb8">Selective players -  <a href="https://github.com/xenodium/ready-player/issues/13">feature request</a></h3>
- <div class="outline-text-3" id="text-orgf4a2cb8">
+ <div id="outline-container-org68fcbee" class="outline-3">
+ <h3 id="org68fcbee">Selective players -  <a href="https://github.com/xenodium/ready-player/issues/13">feature request</a></h3>
+ <div class="outline-text-3" id="text-org68fcbee">
  <p>
 With ready-player delegating to a single utility for either audio or video playback, folks may have a need to specify different utilities for either of these two. While I'm happy for  <code>mpv</code> to handle both audio and video, we now have a couple of prepending options.
 </p>
 </div>
-
- <div id="outline-container-org275b096" class="outline-4">
- <h4 id="org275b096">Use a predicate function</h4>
- <div class="outline-text-4" id="text-org275b096">
+ <div id="outline-container-org299755d" class="outline-4">
+ <h4 id="org299755d">Use a predicate function</h4>
+ <div class="outline-text-4" id="text-org299755d">
  <p>
 Prepend each utility with either the built-in  <code>ready-player-is-audio-p</code> or  <code>ready-player-is-video-p</code> functions, or maybe create your own predicate helper.
 </p>
@@ -540,10 +663,9 @@ Prepend each utility with either the built-in  <code>ready-player-is-audio-p</co
 </div>
 </div>
 </div>
-
- <div id="outline-container-orgdb7a927" class="outline-4">
- <h4 id="orgdb7a927">Use an extension list</h4>
- <div class="outline-text-4" id="text-orgdb7a927">
+ <div id="outline-container-org57a3ba9" class="outline-4">
+ <h4 id="org57a3ba9">Use an extension list</h4>
+ <div class="outline-text-4" id="text-org57a3ba9">
  <p>
 In this example, we delegate mp3 and ogg playback to ffplay and everything else to mpv.
 </p>
@@ -557,42 +679,38 @@ In this example, we delegate mp3 and ogg playback to ffplay and everything else 
 </div>
 </div>
 </div>
-
- <div id="outline-container-org2732e5d" class="outline-3">
- <h3 id="org2732e5d">Autoplay (a binding) -  <a href="https://github.com/xenodium/ready-player/issues/9">feature request</a></h3>
- <div class="outline-text-3" id="text-org2732e5d">
+ <div id="outline-container-org2e54d61" class="outline-3">
+ <h3 id="org2e54d61">Autoplay (a binding) -  <a href="https://github.com/xenodium/ready-player/issues/9">feature request</a></h3>
+ <div class="outline-text-3" id="text-org2e54d61">
  <p>
 Automatically start playing once file opens. No need for user to explicitly request playback.
 </p>
 </div>
 </div>
-
- <div id="outline-container-orgdc3d380" class="outline-3">
- <h3 id="orgdc3d380">Mark in dired (m binding) -  <a href="https://github.com/xenodium/ready-player/issues/8">feature request</a></h3>
- <div class="outline-text-3" id="text-orgdc3d380">
+ <div id="outline-container-org80c2258" class="outline-3">
+ <h3 id="org80c2258">Mark in dired (m binding) -  <a href="https://github.com/xenodium/ready-player/issues/8">feature request</a></h3>
+ <div class="outline-text-3" id="text-org80c2258">
  <p>
 Open a dired buffer and mark the currently played file.
 </p>
 
 
- <div id="org938f341" class="figure">
+ <div id="org6207264" class="figure">
  <p> <img src="../images/seek-and-you-shall-find/mark.gif" alt="mark.gif" width="100%"></img></p>
 </div>
 </div>
 </div>
-
- <div id="outline-container-org2366d7d" class="outline-3">
- <h3 id="org2366d7d">M3u playlists -  <a href="https://github.com/xenodium/ready-player/issues/14">feature request</a></h3>
- <div class="outline-text-3" id="text-org2366d7d">
+ <div id="outline-container-orgfffb230" class="outline-3">
+ <h3 id="orgfffb230">M3u playlists -  <a href="https://github.com/xenodium/ready-player/issues/14">feature request</a></h3>
+ <div class="outline-text-3" id="text-orgfffb230">
  <p>
 While I talked about how  <a href="https://lmno.lol/alvaro/the-dired-abstraction">the dired abstraction</a> made basic m3u playlist support possible, it wasn't until recently that I included this experiment in the package itself. In addition, .m3u are now recognized by Emacs and automatically open like any other file: find-file, dired, projectile…
 </p>
 </div>
 </div>
-
- <div id="outline-container-org3a7e8c7" class="outline-3">
- <h3 id="org3a7e8c7">Load recursive directory</h3>
- <div class="outline-text-3" id="text-org3a7e8c7">
+ <div id="outline-container-org2f28bd2" class="outline-3">
+ <h3 id="org2f28bd2">Load recursive directory</h3>
+ <div class="outline-text-3" id="text-org2f28bd2">
  <p>
 With  <a href="https://lmno.lol/alvaro/the-dired-abstraction">the dired abstraction</a> at its core, ready player can load any dired buffer. You could do something like:
 </p>
@@ -606,51 +724,46 @@ While uber flexible, there's no need to regularly do that, so you can now invoke
 </p>
 </div>
 </div>
-
- <div id="outline-container-org9e9d8af" class="outline-3">
- <h3 id="org9e9d8af">Toggle player view (C-c m m binding)</h3>
- <div class="outline-text-3" id="text-org9e9d8af">
+ <div id="outline-container-orga52ba06" class="outline-3">
+ <h3 id="orga52ba06">Toggle player view (C-c m m binding)</h3>
+ <div class="outline-text-3" id="text-orga52ba06">
  <p>
 While we can always get back to the player buffer via our favourite buffer-switching mechanism (I like  <a href="https://github.com/abo-abo/swiper">ivy</a>'s ivy-switch-buffer), we now have  <code>M-x ready-player-view-player</code> available for quicker toggle.
 </p>
 </div>
 </div>
-
- <div id="outline-container-org56e2117" class="outline-3">
- <h3 id="org56e2117">Remember session</h3>
- <div class="outline-text-3" id="text-org56e2117">
+ <div id="outline-container-orgfee4a5d" class="outline-3">
+ <h3 id="orgfee4a5d">Remember session</h3>
+ <div class="outline-text-3" id="text-orgfee4a5d">
  <p>
 Playback is now remembered across Emacs sessions. Toggling player view (C-c m m binding) or playback (C-c m SPC binding) starts the last song you were playing on your previous Emacs session.
 </p>
 </div>
 </div>
-
- <div id="outline-container-org01d44e7" class="outline-3">
- <h3 id="org01d44e7">Index + searching (/ or C-c m /)</h3>
- <div class="outline-text-3" id="text-org01d44e7">
+ <div id="outline-container-orgc9295de" class="outline-3">
+ <h3 id="orgc9295de">Index + searching (/ or C-c m /)</h3>
+ <div class="outline-text-3" id="text-orgc9295de">
  <p>
 We now have automatic indexing, which enables richer searching across your collection, not to mention that random access I was craving.
 </p>
 
 
- <div id="org665484a" class="figure">
+ <div id="org7a6c96d" class="figure">
  <p> <img src="../images/seek-and-you-shall-find/search.webp" alt="search.webp" width="100%"></img></p>
 </div>
 </div>
 </div>
-
- <div id="outline-container-org98bad0e" class="outline-3">
- <h3 id="org98bad0e">Global bindings</h3>
- <div class="outline-text-3" id="text-org98bad0e">
+ <div id="outline-container-org5b0c482" class="outline-3">
+ <h3 id="org5b0c482">Global bindings</h3>
+ <div class="outline-text-3" id="text-org5b0c482">
  <p>
 Last but not least, you may have noticed a handful of key bindings throughout the post. Single-character bindings all work within a ready-player buffer. Bindings prefixed  <code>C-c m</code> are now globally available when  <code>ready-player-mode</code> is turned on. This can be customized via  <code>ready-player-set-global-bindings</code>.
 </p>
 </div>
 </div>
-
- <div id="outline-container-org1f0591f" class="outline-3">
- <h3 id="org1f0591f">Please help make it all self-sustainable</h3>
- <div class="outline-text-3" id="text-org1f0591f">
+ <div id="outline-container-orgccb8da8" class="outline-3">
+ <h3 id="orgccb8da8">Please help make it all self-sustainable</h3>
+ <div class="outline-text-3" id="text-orgccb8da8">
  <p>
 If you find this package useful or got the features you wanted, please  <a href="https://github.com/sponsors/xenodium">consider sponsoring the work</a>. I've left my tech job (maybe a post for another time) and looking to make projects like ready-player self-sustainable.
 </p>

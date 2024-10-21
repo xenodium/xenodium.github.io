@@ -1,3 +1,75 @@
+# \[2024-10-21 Mon\] Hide another detail
+---
+id: hide-another-detail
+---
+
+It's been 5 years since I talked about [showing/hiding Emacs dired details in style](showhide-emacs-dired-details-in-style/), a short post showcasing [hide-details-mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html) (built-in) and [diredfl](https://github.com/purcell/diredfl) (third-party).
+
+While my dired usage increased over the years, my dired config remained largely unchanged. Today, I'll show a new dired tweak.
+
+As you likely suspect by now, I'm a big fan of [hide-details-mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html). It gives me super clean and minimalistic view of my files.
+
+![](https://xenodium.com/images/hide-another-detail/before.png)
+
+If I need more details, it's one toggle away using my trusty C-( binding.
+
+![](https://xenodium.com/images/hide-another-detail/toggle-before.gif)
+
+Now this is a super minor thing, but for a little while, I wished I could also hide the current directory's absolute path as part of `hide-details-mode`'s toggling. In the same spirit as other hidden dired details, I rarely need to see the absolute path. And if I did, it'd only be a toggle away.
+
+With that in mind, I set out to bend dired my way. I looked at the `dired-hide-details-mode` built-in code (dired.el) and came across invisibility specs, which I hadn't used before. Dired uses `add-to-invisibility-spec` and `remove-from-invisibility-spec` to show and hide details using the `invisible` property set to `dired-hide-details-information`.
+
+Now that we know what property to set, we need to find the text to apply it to. Dired offers that via `dired-subdir-regexp`. All we need to do is match the regular expression and apply our invisible property to the relevant bounds.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defun hide-dired-details-include-all-subdir-paths ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward dired-subdir-regexp nil t)
+      (let* ((match-bounds (cons (match-beginning 1) (match-end 1)))
+             (path (file-name-directory (buffer-substring (car match-bounds)
+                                                          (cdr match-bounds))))
+             (path-start (car match-bounds))
+             (path-end (+ (car match-bounds) (length path)))
+             (inhibit-read-only t))
+        (put-text-property path-start path-end
+                           'invisible 'dired-hide-details-information)))))
+```
+
+All that's left is for us to add our new function to a hook, and we're good to go.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package dired
+  :hook ((dired-mode . dired-hide-details-mode)
+         (dired-after-readin . hide-dired-details-include-all-subdir-paths)))
+```
+
+My Dired window is even cleaner now. The current directory's absolute path is now hidden.
+
+![](https://xenodium.com/images/hide-another-detail/after.png)
+
+There may be times we need to peek at the absolute path. We can now toggle hiding this detail just like the others.
+
+![](https://xenodium.com/images/hide-another-detail/toggle-after.gif)
+
+## My first Emacs patch
+
+While this is a rather small change, I figured I could use it to get my toes dipped as a first Emacs contribution. I've since reworked the patch to fit into dired.el's code and submitted for review.
+
+I'm happy to report the tiny feature's now merged to master as of [a couple of days ago](https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=7cbca90569472af5643905fca5b7ab2dea67f876). Yay! 🎉
+
+It'll be sometime until the feature makes it to a release, but if you're living on the Emacs master edge, it should be available there. While the feature is disabled by default, it can enabled with:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq dired-hide-details-hide-absolute-location t)
+```
+
+Happy hiding!
+
+## Enjoying this content? Using one of my Emacs packages?
+
+Help make the work sustainable. Consider [sponsoring](https://github.com/sponsors/xenodium). I'm also building [lmno.lol](https://lmno.lol/). A platform to [drag and drop](https://indieweb.social/@xenodium/112265481282475542) your blog to the web.
+
 # \[2024-09-21 Sat\] How I batch apply and save one-liners
 ---
 id: how-i-batch-apply-and-save-one-liners
@@ -18698,6 +18770,7 @@ id: sql-bookmarks
 -   [Literate SQL](https://modern-sql.com/use-case/literate-sql).
 -   [Show HN: SQL Trainer – Learn SQL by doing live data exercises (Hacker News)](https://news.ycombinator.com/item?id=18335723).
 -   [SQL Series: From A to Z - DEV Community](https://dev.to/helenanders26/sql-series-from-a-to-z-2pk9).
+-   [SQL tips and tricks](https://github.com/ben-n93/SQL-tips-and-tricks).
 -   [The interesting ideas in Datasette](https://simonwillison.net/2018/Oct/4/datasette-ideas/).
 -   [You Can Do it in SQL, Stop Writing Extra Code for it - DEV Community](https://dev.to/geshan/you-can-do-it-in-sql-stop-writing-extra-code-for-it-lok).
 
@@ -24612,6 +24685,8 @@ id: movie-backlog
 
 
 [TODO]{.todo .TODO} Take your pill.
+
+[TODO]{.todo .TODO} <https://www.metacritic.com>
 
 [TODO]{.todo .TODO} Chalk line.
 

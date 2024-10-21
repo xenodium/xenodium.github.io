@@ -6,7 +6,135 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Sat, 21 Sep 2024 19:00:49 +0100</lastBuildDate>
+<lastBuildDate>Mon, 21 Oct 2024 20:40:03 +0100</lastBuildDate>
+<item>
+  <title>Hide another detail</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-hide-another-detail" class="outline-2">
+ <h2 id="hide-another-detail"> <span class="timestamp-wrapper"> <span class="timestamp">21 October 2024</span></span> Hide another detail</h2>
+ <div class="outline-text-2" id="text-hide-another-detail">
+ <p>
+It's been 5 years since I talked about  <a href="https://xenodium.com/showhide-emacs-dired-details-in-style/">showing/hiding Emacs dired details in style</a>, a short post showcasing  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html">hide-details-mode</a> (built-in) and  <a href="https://github.com/purcell/diredfl">diredfl</a> (third-party).
+</p>
+
+ <p>
+While my dired usage increased over the years, my dired config remained largely unchanged. Today, I'll show a new dired tweak.
+</p>
+
+ <p>
+As you likely suspect by now, I'm a big fan of  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html">hide-details-mode</a>. It gives me super clean and minimalistic view of my files.
+</p>
+
+
+ <div id="org1298bde" class="figure">
+ <p> <img src="../images/hide-another-detail/before.png" alt="before.png" width="95%"></img></p>
+</div>
+
+ <p>
+If I need more details, it's one toggle away using my trusty C-( binding.
+</p>
+
+
+ <div id="org35a0a53" class="figure">
+ <p> <img src="../images/hide-another-detail/toggle-before.gif" alt="toggle-before.gif" width="95%"></img></p>
+</div>
+
+ <p>
+Now this is a super minor thing, but for a little while, I wished I could also hide the current directory's absolute path as part of  <code>hide-details-mode</code>'s toggling. In the same spirit as other hidden dired details, I rarely need to see the absolute path. And if I did, it'd only be a toggle away.
+</p>
+
+ <p>
+With that in mind, I set out to bend dired my way. I looked at the  <code>dired-hide-details-mode</code> built-in code (dired.el) and came across invisibility specs, which I hadn't used before. Dired uses  <code>add-to-invisibility-spec</code> and  <code>remove-from-invisibility-spec</code> to show and hide details using the  <code>invisible</code> property set to  <code>dired-hide-details-information</code>.
+</p>
+
+ <p>
+Now that we know what property to set, we need to find the text to apply it to. Dired offers that via  <code>dired-subdir-regexp</code>. All we need to do is match the regular expression and apply our invisible property to the relevant bounds.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">hide-dired-details-include-all-subdir-paths</span> ()
+  (<span style="color: #a71d5d;">save-excursion</span>
+    (goto-char (point-min))
+    (<span style="color: #a71d5d;">while</span> (re-search-forward dired-subdir-regexp nil t)
+      (<span style="color: #a71d5d;">let*</span> ((match-bounds (cons (match-beginning 1) (match-end 1)))
+             (path (file-name-directory (buffer-substring (car match-bounds)
+                                                          (cdr match-bounds))))
+             (path-start (car match-bounds))
+             (path-end (+ (car match-bounds) (length path)))
+             (inhibit-read-only t))
+        (put-text-property path-start path-end
+                           'invisible 'dired-hide-details-information)))))
+</pre>
+</div>
+
+ <p>
+All that's left is for us to add our new function to a hook, and we're good to go.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> dired
+   <span style="color: #a71d5d;">:hook</span> ((dired-mode . dired-hide-details-mode)
+         (dired-after-readin . hide-dired-details-include-all-subdir-paths)))
+</pre>
+</div>
+
+ <p>
+My Dired window is even cleaner now. The current directory's absolute path is now hidden.
+</p>
+
+
+ <div id="orgdc3f648" class="figure">
+ <p> <img src="../images/hide-another-detail/after.png" alt="after.png" width="95%"></img></p>
+</div>
+
+ <p>
+There may be times we need to peek at the absolute path. We can now toggle hiding this detail just like the others.
+</p>
+
+
+ <div id="org4db67da" class="figure">
+ <p> <img src="../images/hide-another-detail/toggle-after.gif" alt="toggle-after.gif" width="95%"></img></p>
+</div>
+</div>
+ <div id="outline-container-orgc35bd9f" class="outline-3">
+ <h3 id="orgc35bd9f">My first Emacs patch</h3>
+ <div class="outline-text-3" id="text-orgc35bd9f">
+ <p>
+While this is a rather small change, I figured I could use it to get my toes dipped as a first Emacs contribution. I've since reworked the patch to fit into dired.el's code and submitted for review.
+</p>
+
+ <p>
+I'm happy to report the tiny feature's now merged to master as of  <a href="https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=7cbca90569472af5643905fca5b7ab2dea67f876">a couple of days ago</a>. Yay! 🎉
+</p>
+
+ <p>
+It'll be sometime until the feature makes it to a release, but if you're living on the Emacs master edge, it should be available there. While the feature is disabled by default, it can enabled with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> dired-hide-details-hide-absolute-location t)
+</pre>
+</div>
+
+ <p>
+Happy hiding!
+</p>
+</div>
+</div>
+ <div id="outline-container-org8d2ed67" class="outline-3">
+ <h3 id="org8d2ed67">Enjoying this content? Using one of my Emacs packages?</h3>
+ <div class="outline-text-3" id="text-org8d2ed67">
+ <p>
+Help make the work sustainable. Consider  <a href="https://github.com/sponsors/xenodium">sponsoring</a>. I'm also building  <a href="https://lmno.lol/">lmno.lol</a>. A platform to  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop</a> your blog to the web.</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/hide-another-detail</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/hide-another-detail</guid>
+  <pubDate>Mon, 21 Oct 2024 20:40:03 +0100</pubDate>
+</item>
 <item>
   <title>How I batch apply and save one-liners</title>
   <description><![CDATA[<div id="content" class="content">
@@ -34,7 +162,7 @@ With command in mind, I resorted to my now my typical approach of:
  <ul class="org-ul"> <li>Convert to a generic  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>.</li>
  <li>Batch apply.</li>
 </ul> <p>
-I could be done at this point, but since I now have the command fresh in mind…
+I'm could be done at this point, but since I now have the command fresh in mind…
 </p>
 
  <ul class="org-ul"> <li>Save command for future usage.</li>
@@ -674,7 +802,7 @@ I've built other Emacs packages you may already use or would like to. Maybe I al
  <li> <a href="https://github.com/xenodium/company-org-block">company-org-block</a></li>
  <li> <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a></li>
 </ul> <p>
-I'm also building  <a href="https://lmno.lol">lmno.lol</a>, a new blogging platform, with  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. Maybe you want to try that too?  <a href="mailto:help%20at%20lmno.lol">Get in touch</a>.
+I'm also building  <a href="https://lmno.lol">lmno.lol</a>, a new blogging platform, with  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. Maybe you want to try that too?  <a href="mailto:help/at/lmno.lol">Get in touch</a>.
 </p>
 
  <p>
