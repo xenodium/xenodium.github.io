@@ -1,6 +1,79 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-10-21 Mon] Hide another detail
+:PROPERTIES:
+:CUSTOM_ID: hide-another-detail
+:END:
+It's been 5 years since I talked about [[https://xenodium.com/showhide-emacs-dired-details-in-style/][showing/hiding Emacs dired details in style]], a short post showcasing [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html][hide-details-mode]] (built-in) and [[https://github.com/purcell/diredfl][diredfl]] (third-party).
+
+While my dired usage increased over the years, my dired config remained largely unchanged. Today, I'll show a new dired tweak.
+
+As you likely suspect by now, I'm a big fan of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html][hide-details-mode]]. It gives me super clean and minimalistic view of my files.
+
+#+ATTR_HTML: :width 95%
+[[file:images/hide-another-detail/before.png]]
+
+If I need more details, it's one toggle away using my trusty C-( binding.
+
+#+ATTR_HTML: :width 95%
+[[file:images/hide-another-detail/toggle-before.gif]]
+
+Now this is a super minor thing, but for a little while, I wished I could also hide the current directory's absolute path as part of =hide-details-mode='s toggling. In the same spirit as other hidden dired details, I rarely need to see the absolute path. And if I did, it'd only be a toggle away.
+
+With that in mind, I set out to bend dired my way. I looked at the =dired-hide-details-mode= built-in code (dired.el) and came across invisibility specs, which I hadn't used before. Dired uses =add-to-invisibility-spec= and =remove-from-invisibility-spec= to show and hide details using the =invisible= property set to =dired-hide-details-information=.
+
+Now that we know what property to set, we need to find the text to apply it to. Dired offers that via =dired-subdir-regexp=. All we need to do is match the regular expression and apply our invisible property to the relevant bounds.
+
+#+begin_src emacs-lisp :lexical no
+  (defun hide-dired-details-include-all-subdir-paths ()
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward dired-subdir-regexp nil t)
+        (let* ((match-bounds (cons (match-beginning 1) (match-end 1)))
+               (path (file-name-directory (buffer-substring (car match-bounds)
+                                                            (cdr match-bounds))))
+               (path-start (car match-bounds))
+               (path-end (+ (car match-bounds) (length path)))
+               (inhibit-read-only t))
+          (put-text-property path-start path-end
+                             'invisible 'dired-hide-details-information)))))
+#+end_src
+
+All that's left is for us to add our new function to a hook, and we're good to go.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package dired
+    :hook ((dired-mode . dired-hide-details-mode)
+           (dired-after-readin . hide-dired-details-include-all-subdir-paths)))
+#+end_src
+
+My Dired window is even cleaner now. The current directory's absolute path is now hidden.
+
+#+ATTR_HTML: :width 95%
+[[file:images/hide-another-detail/after.png]]
+
+There may be times we need to peek at the absolute path. We can now toggle hiding this detail just like the others.
+
+#+ATTR_HTML: :width 95%
+[[file:images/hide-another-detail/toggle-after.gif]]
+
+** My first Emacs patch
+
+While this is a rather small change, I figured I could use it to get my toes dipped as a first Emacs contribution. I've since reworked the patch to fit into dired.el's code and submitted for review.
+
+I'm happy to report the tiny feature's now merged to master as of [[https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=7cbca90569472af5643905fca5b7ab2dea67f876][a couple of days ago]]. Yay! 🎉
+
+It'll be sometime until the feature makes it to a release, but if you're living on the Emacs master edge, it should be available there. While the feature is disabled by default, it can enabled with:
+
+#+begin_src emacs-lisp :lexical no
+  (setq dired-hide-details-hide-absolute-location t)
+#+end_src
+
+Happy hiding!
+
+** Enjoying this content? Using one of my Emacs packages?
+Help make the work sustainable. Consider [[https://github.com/sponsors/xenodium][sponsoring]]. I'm also building [[https://lmno.lol/][lmno.lol]]. A platform to [[https://indieweb.social/@xenodium/112265481282475542][drag and drop]] your blog to the web.
 * [2024-09-21 Sat] How I batch apply and save one-liners
 :PROPERTIES:
 :CUSTOM_ID: how-i-batch-apply-and-save-one-liners
@@ -66,7 +139,6 @@ I've saved a bunch of these commands and use many of them regularly. You can fin
 ** Enjoying this content? Using one of my Emacs packages?
 
 Help make the work sustainable. Consider [[https://github.com/sponsors/xenodium][sponsoring]]. I'm also building [[https://lmno.lol/][lmno.lol]]. A platform to [[https://indieweb.social/@xenodium/112265481282475542][drag and drop]] your blog to the web.
-
 * [2024-09-19 Thu] Emacs bubble mode
 :PROPERTIES:
 :CUSTOM_ID: emacs-bubble-mode
@@ -325,7 +397,7 @@ While repeating current playlist (or directory) was already supported, there was
 
 ** Selective players - [[https://github.com/xenodium/ready-player/issues/13][feature request]]
 
-With ready-player delegating to a single utility for either audio or video playback, folks may have a need to specify different utilities for either of these two. While I'm happy for =mpv= to handle both audio and video now have a couple of prepending options.
+With ready-player delegating to a single utility for either audio or video playback, folks may have a need to specify different utilities for either of these two. While I'm happy for =mpv= to handle both audio and video, we now have a couple of prepending options.
 
 *** Use a predicate function
 
@@ -9512,6 +9584,8 @@ Pressing Esc often dismisses or cancels macOS windows, menus, etc. This is also 
   }
 #+end_src
 
+ps. Note to self: Lennart's blog has [[https://blog.karssen.org/2024/06/05/using-emacs-key-bindings-in-gnome-firefox-and-other-applications/][notes on the topic but for linux]].
+
 UPDATE: Ensure bindings are only active when Emacs is _not_ active.
 * [2020-10-04 Sun] Basmati rice pudding recipe
   :PROPERTIES:
@@ -12274,7 +12348,7 @@ plot income using 2:xticlabels(strftime('%b', strptime('%Y-%m-%d', strcol(1)))) 
   :END:
 Via Minko Gechev's [[https://twitter.com/mgechev/status/1130441471105093632?s=12][tweet]]. Saving in an org block, just because...
 
-  #+begin_src sh :dir /sudo::
+  #+begin_src bash :dir /sudo::
     changeMAC() {
         local mac=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
         ifconfig en0 ether $mac
@@ -12287,7 +12361,7 @@ Via Minko Gechev's [[https://twitter.com/mgechev/status/1130441471105093632?s=12
   #+end_src
 
   #+RESULTS:
-  : Your new physical address is aa:36:ee:d2:ee:66
+  : Your new physical address is b4:b2:f8:77:bb:87
 
 ps. Also see [[http://xenodium.com/execute-org-blocks-as-root/][Execute org blocks as root]].
 
@@ -13891,10 +13965,13 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
   :CUSTOM_ID: macos-app-bookmarks
   :END:
   :MODIFIED:
-  [2024-07-31 Wed]
+  [2024-09-01 Sun]
   :END:
+- [[https://apps.louplummer.lol/post/applite-an-app-store-for-homebrew][Applite - An App Store for Homebrew | App Addict]].
 - [[https://eclecticlight.co/cirrus-bailiff/][Cirrus & Bailiff (iCloud debugging tools)]].
+- [[https://corkmac.app/][Cork: The Homebrew GUI for macOS]].
 - [[http://www.hcs.harvard.edu/~jrus/site/cocoa-text.html][Customizing the Cocoa Text System]].
+- [[https://darkreader.org/][Dark Reader]].
 - [[https://dmgbuild.readthedocs.io/en/latest/][dmgbuild - A command line tool to build .dmg files]].
 - [[https://github.com/GetStream/Winds/blob/master/README.md][GetStream/Winds: macOS rss reader]].
 - [[https://github.com/herrbischoff/awesome-macos-command-line#itunes][GitHub - herrbischoff/awesome-macos-command-line]].
@@ -13907,10 +13984,12 @@ ps. If wondering why my imenu experience looks a little different, that's becaus
 - [[https://eclecticlight.co/mac-troubleshooting-summary/][Mac Troubleshooting Summary – The Eclectic Light Company]].
 - [[https://github.com/kam800/MachObfuscator/blob/master/README.md][MachObfuscator/README.md at master · kam800/MachObfuscator · GitHub]].
 - [[https://papers.put.as/macosx/macosx/][macOS · Papers, Slides and Thesis Archive]].
+- [[https://maverickmac.github.io/2024-06-24/maverick-mac][Maverick Mac | A curated list of awesome mac applications and utilities]].
 - [[https://www.gonsie.com/blorg/ipad-setup.html][My iPad Setup]].
 - [[https://github.com/nikitavoloboev/my-mac-os][My wonderful world of macOS]].
 - [[https://github.com/nikitavoloboev/my-mac-os][my-mac-os: My wonderful world of macOS]].
 - [[https://thesweetsetup.com/netnewswire-5-0-relaunches-as-an-open-source-rss-reader-for-the-mac/][NetNewsWire 5.0 Relaunches as an Open-Source RSS Reader for the Mac – The Sweet Setup]].
+- [[https://github.com/jacklandrin/OnlySwitch][OnlySwitch: Toggle all sorts of things from menu bar]].
 - [[https://smilesoftware.com/pdfpen/?][PDF Editor - PDFpen - Edit PDF Files (Smile Software)]].
 - [[http://solutions.weblite.ca/pdfocrx/][PDF OCR X - Mac & Windows OCR Software to convert PDFs and Images to Text]].
 - [[https://apps.apple.com/us/app/rested-simple-http-requests/id421879749][‎RESTed - Simple HTTP Requests on the Mac App Store]].
@@ -18789,12 +18868,13 @@ Came across "incomprehensible buffer" error in package.el. [[http://osdir.com/ml
 :CUSTOM_ID: sql-bookmarks
 :END:
 :MODIFIED:
-[2019-02-12 Tue]
+[2024-09-28 Sat]
 :END:
 - [[https://www.pgcli.com/launching-litecli.html][Launching LiteCLI]].
 - [[https://modern-sql.com/use-case/literate-sql][Literate SQL]].
 - [[https://news.ycombinator.com/item?id=18335723][Show HN: SQL Trainer – Learn SQL by doing live data exercises (Hacker News)]].
 - [[https://dev.to/helenanders26/sql-series-from-a-to-z-2pk9][SQL Series: From A to Z - DEV Community]].
+- [[https://github.com/ben-n93/SQL-tips-and-tricks][SQL tips and tricks]].
 - [[https://simonwillison.net/2018/Oct/4/datasette-ideas/][The interesting ideas in Datasette]].
 - [[https://dev.to/geshan/you-can-do-it-in-sql-stop-writing-extra-code-for-it-lok][You Can Do it in SQL, Stop Writing Extra Code for it - DEV Community]].
 * [2015-11-26 Thu] Unix/Linux tools bookmarks
@@ -21027,7 +21107,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: japan-travel-bookmarks
 :END:
 :MODIFIED:
-[2024-02-24 Sat]
+[2024-09-01 Sun]
 :END:
 - [[https://www.nomadasaurus.com/things-to-do-in-yokohama-japan/][21 Awesome Things to Do in Yokohama, Japan (2020 Guide)]].
 - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
@@ -21045,6 +21125,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[http://www.bbc.com/travel/story/20181009-japans-special-take-on-a-packed-lunch][BBC - Travel - Japan’s special take on a packed lunch]].
 - [[https://www.tofugu.com/japan/bushido/][Bushido: Way of Total Bullshit]].
 - [[http://www.amazon.co.uk/Drinking-Japan-Alcoholic-Beverages-Establishments/dp/4805310545][Drinking Japan]].
+- [[https://japan.elifessler.com/eki-stamps/][Eki-stamps / 駅スタンプ | eli's japan blog]].
 - [[http://www.independent.co.uk/travel/asia/five-best-japanese-ryokan-406127.html][Five Best: Japanese Ryokan]].
 - Fuji Q Highland (rollercoaster theme park). Check out haunted hospital.
 - [[http://www.city.furano.hokkaido.jp/][Furano, Hokaido]].
@@ -21140,17 +21221,12 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: tokyo-travel-bookmarks
 :END:
 :MODIFIED:
-[2021-12-03 Fri]
+[2024-09-03 Tue]
 :END:
 - [[https://roadsandkingdoms.com/travel-guide/tokyo/know-before-you-go-to-tokyo/][14 Things to Know Before You Go to Tokyo]].
 - [[http://globalhelpswap.com/5-alternative-things-to-do-in-tokyo/][5 alternative things to do in Tokyo (by globalhelpswap)]].
 - [[https://roadsandkingdoms.com/travel-guide/tokyo/a-history-of-tokyo-in-8-dishes/][A History of Tokyo in 8 Dishes]].
 - Akasaka area (N/E of Roppongi).
-- Cup noodle museum.
-- Ginza Kimuraya (bakery). Try anpan (invented here).
-- Ichiran Ramen.
-- Pan No Tora Bakery (Kyoto?).
-- Zauo.com "Let's fixhing enjoy". Catch your own fish to eat.
 - Akasaka Sagamiya (also Mamekan, established in 1895).
 - Akihabara: Electronics district, arcades and comic stores.
 - Asakusa (tourist spot). Kaminarimon, Nakamise (oldest shopping street in Japan). Sensoji Temple.
@@ -21162,6 +21238,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Bentomi (Sushi).
 - [[https://cheese-stand.com/][CHEESE STAND （チーズスタンド）]].
 - Coffee Tengoku, Asakusa (best hotcakes/pancakes). Noting is premade. After 12 years, best hotcakes.
+- Cup noodle museum.
 - [[http://tabelog.com/en/tokyo/A1313/A131301/13002389/][Daiwasushi (food)]]. An account [[http://mjkobb.com/Prattling%20on/6570A66F-8F2F-49FD-912C-4A5D0C3862C8.html][here]].
 - Dorayaki (in Ukenbukuru). Seijuken is long established in Ningyocho.
 - [[http://dairycream.blogspot.co.uk/2016/07/doteno-iseya-127-year-old-tempura-don.html][Doteno-Iseya 土手の伊勢屋: 127-year old Tempura]].
@@ -21171,11 +21248,13 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[https://en.rocketnews24.com/2017/10/11/five-of-the-worst-areas-to-live-in-and-around-tokyo/?utm_content=buffer38deb&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer][Five of the worst areas to live in and around Tokyo | SoraNews24]].
 - [[http://www.tokyoeats.jp/fuunji/][Fu-unji & 風雲児 | Tokyo Eats]].
 - [[http://www.ghibli-museum.jp/en/welcome][Ghibli museum]] (book in advance or try [[http://www.lawson.co.jp/ghibli/museum/ticket/english.html][lawson]]).
+- Ginza Kimuraya (bakery). Try anpan (invented here).
 - Ginza.
 - [[http://tabelog.com/en/tokyo/A1301/A130103/13002611/][Ginzakyuubee (food)]].
 - [[http://unmissabletokyo.com/golden-gai][Golden Gai (lots tiny bars)]].
 - [[https://blog.govoyagin.com/tokyo-christmas][How to Spend a Magical Christmas in Tokyo (2019 update)]].
 - https://www.timeout.com/tokyo/restaurants/tokyo-coolest-kakigori
+- Ichiran Ramen.
 - Imperial Palace: Book to go inside. Beautiful park, great for pictures.
 - Irie known (sweet shop) for Mamekan. In Monzen-Nakacho.
 - Isetan (upscale food market).
@@ -21197,6 +21276,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Omoide yokocho: Alleyway next to Shinjuku station. Lots of yakitori restaurants.
 - [[http://ooo-koffee.com/][Omotesando Koffee]] (coffee and baked custard slice).
 - Omotesando side streets.
+- Pan No Tora Bakery (Kyoto?).
 - [[http://pignontokyo.jp/][Pignon | French Restaurant]].
 - Pound cake from Patisserie Gondola in Kudanue.
 - Roppongi.
@@ -21239,7 +21319,9 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[http://www.tsukiji-market.or.jp/etc/calendar/2016.html][Tsukiji Fish Market calendar]].
 - Tsukiji Fish Market: Sushi bars and food vendors (get there early, visitor numbers restricted).
 - Umemura in Asakusa (also Mamekan).
+- [[https://www.reddit.com/r/JapanTravel/comments/79c82l/unusual_things_to_do_in_tokyo/][Unusual things to do in Tokyo? ]].
 - Yurakucho Yakitori Alley
+- Zauo.com "Let's fixhing enjoy". Catch your own fish to eat.
 - [[http://tabelog.com/en/tokyo/A1303/A130301/13058009/][婁熊東京 (raw and grilled pork)]].
 - [[http://r.tabelog.com/tokyo/A1307/A130701/13041724/][酒友]] (Sake & good Shabushabu), Roppongi.
 
@@ -22450,9 +22532,10 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: ux-bookmarks
 :END:
 :MODIFIED:
-[2021-06-04 Fri]
+[2024-09-01 Sun]
 :END:
 - [[https://99designs.com/designer-blog/2014/01/20/11-kerning-tips/][10 kerning tips for improving your typography]].
+- [[https://www.nngroup.com/articles/ten-usability-heuristics/][10 Usability Heuristics for User Interface Design]].
 - [[http://line25.com/inspiration/flat-design-color-palettes][30 Flat Design Color Palettes That Just Work]].
 - [[https://learnui.design/blog/4-rules-intuitive-ux.html][4 Rules for Intuitive UX]].
 - [[http://tympanus.net/Development/AnimatedSVGIcons/][Animated SVG icons]].
@@ -24045,6 +24128,7 @@ maps key to action.
 [2022-12-17 Sat]
 :END:
 **** TODO Take your pill.
+**** TODO https://www.metacritic.com
 **** TODO Chalk line.
 **** TODO [[https://trace.moe/][Anime Scene Search Engine - trace.moe]].
 **** TODO [[https://poorlydrawnlines.com/][Poorly Drawn Lines]].
@@ -25253,12 +25337,12 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://blog.keithcirkel.co.uk/why-we-should-stop-using-grunt/][Why we should stop using Grunt & Gulp]].
 - [[http://xahlee.info/js/js.html][Xah Lee's JavaScript in Depth]].
 
-* [2014-07-14 Mon] HTML5 bookmarks
+* [2014-07-14 Mon] HTML bookmarks
 :PROPERTIES:
-:CUSTOM_ID: html5-bookmarks
+:CUSTOM_ID: html-bookmarks
 :END:
 :MODIFIED:
-[2021-06-27 Sun]
+[2024-09-01 Sun]
 :END:
 - [[https://hacks.mozilla.org/2016/08/a-few-html-tips/][A few HTML tips (Mozilla)]].
 - [[https://github.com/lyoshenka/awesome-motherfucking-website][awesome-motherfucking-website: An awesome list of websites about minimal web design and copious swearing]].
@@ -25266,6 +25350,7 @@ Bonus: See [[http://codefork.com/blog/index.php/2011/11/27/getting-the-solarized
 - [[http://mo.github.io/2015/10/19/chrome-devtools.html][Chrome Devtools Tips & Tricks]].
 - [[https://news.ycombinator.com/item?id=10416062][Chrome Devtools Tips and Tricks (Hacker News)]].
 - [[http://blog.chromium.org/2014/06/web-fundamentals-and-web-starter-kit.html][Chromium's web fundamentals and Web Starter Kit]].
+- [[https://ishadeed.com/article/css-grid-area/][CSS Grid Areas]].
 - [[https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_cookbook][CSS Layout cookbook - CSS: Cascading Style Sheets (MDN)]].
 - [[https://www.pandastrike.com/posts/20151015-rest-vs-relay][Facebook Relay: An Evil And/Or Incompetent Attack On REST]].
 - [[https://htmlhead.dev/][HEAD - A free guide to <head> elements]].
