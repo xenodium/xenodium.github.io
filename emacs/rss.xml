@@ -6,7 +6,233 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 13 Nov 2024 13:20:25 +0000</lastBuildDate>
+<lastBuildDate>Wed, 20 Nov 2024 08:24:27 +0000</lastBuildDate>
+<item>
+  <title>chatgpt-shell goes multi-model</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-chatgpt-shell-goes-multi-model" class="outline-2">
+ <h2 id="chatgpt-shell-goes-multi-model"> <span class="timestamp-wrapper"> <span class="timestamp">19 November 2024</span></span> chatgpt-shell goes multi-model</h2>
+ <div class="outline-text-2" id="text-chatgpt-shell-goes-multi-model">
+ <p>
+Over the last few months, I've been chipping at implementing  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>'s most requested and biggest feature: multi-model support. Today, I get to unveil the first two implementations:  <a href="https://www.anthropic.com/claude">Anthropic's Claude</a> and  <a href="https://gemini.google.com/">Google's Gemini</a>.
+</p>
+
+ <img src="https://raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/multi-model-shell.gif" width="99%"></img></div>
+ <div id="outline-container-org22bc7ee" class="outline-3">
+ <h3 id="org22bc7ee">Changing course</h3>
+ <div class="outline-text-3" id="text-org22bc7ee">
+ <p>
+In the past, I envisioned a different path for multi-model support. By isolating shell logic into a new package ( <a href="https://github.com/xenodium/shell-maker">shell-maker</a>), folks could use it as a  <a href="https://lmno.lol/alvaro/a-shell-maker">building block to create new shells</a> (adding support for their favourite LLM).
+</p>
+
+ <p>
+While each shell-maker-based shell currently shares a basic common experience, I did not foresee the minor differences affecting the general Emacs user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on  <code>chatgpt-shell</code> features, which I often missed when using other shells.
+</p>
+
+ <p>
+Along with slightly different shell experiences, we currently require multiple package installations (and setups). Depending on which camp you're on (batteries included vs fine-grained control) this may or may not be a downside.
+</p>
+
+ <p>
+With every new  <code>chatgpt-shell</code> feature I showcased, I was often asked if they could be used with other LLM providers. I typically answered with "I've been meaning to work on this…" or "I heard you can do multi-model  <code>chatgpt-shell</code> using a bridge like  <a href="https://docs.litellm.ai/docs/">liteLLM</a>". Neither of these where great answers, resulting in me just postponing the chunky work.
+</p>
+
+ <p>
+Eventually, I bit the bullet, changed course, and got to work on multi-model support. With my initial plan to spin multiple shells via  <code>shell-maker</code>,  <code>chatgpt-shell</code>'s implementation didn't exactly lend itself to support multiple clients. Long story short,  <code>chatgpt-shell</code> multi-model support required quite a bit of work. This where I divert to ask you to  <a href="https://github.com/sponsors/xenodium">help make this project sustainable by sponsoring the work</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-org0d70556" class="outline-3">
+ <h3 id="org0d70556">Make this project sustainable</h3>
+ <div class="outline-text-3" id="text-org0d70556">
+ <p>
+Maintaining, experimenting, implementing feature requests, and supporting open-source packages takes work. Today, chatgpt-shell has over  <a href="https://melpa.org/#/chatgpt-shell">20.5K downloads on MELPA</a> and many untracked others elsewhere. If you're one of the happy users,  <a href="https://github.com/sponsors/xenodium">consider sponsoring the project</a>. If you see potential, help  <a href="https://github.com/sponsors/xenodium">fuel development by sponsoring</a> too.
+</p>
+
+ <p>
+Perhaps you enjoy some of the content I write about? Find my Emacs posts/tips useful?
+</p>
+
+ <ul class="org-ul"> <li> <a href="https://xenodium.com/">Blog (xenodium.com)</a> (Web)</li>
+ <li> <a href="https://lmno.lol/alvaro">Blog (lmno.lol/alvaro)</a> (Web)</li>
+</ul> <p>
+Alternatively, you want a blogging platform that skips the yucky side effects of the modern web?
+</p>
+
+ <ul class="org-ul"> <li>I'm building  <a href="https://lmno.lol">lmno.lol</a> (my blog is  <a href="https://lmno.lol/alvaro">there</a>).</li>
+</ul> <p>
+Maybe you enjoy one of my other projects?
+</p>
+
+ <ul class="org-ul"> <li> <a href="https://plainorg.com">Plain Org</a> (org mode / iOS)</li>
+ <li> <a href="https://flathabits.com">Flat Habits</a> (org mode / iOS)</li>
+ <li> <a href="https://apps.apple.com/us/app/scratch/id1671420139">Scratch</a> (org mode / iOS)</li>
+ <li> <a href="https://github.com/xenodium/macosrec">macosrec</a> (macOS)</li>
+ <li> <a href="https://apps.apple.com/us/app/fresh-eyes/id6480411697?mt=12">Fresh Eyes</a> (macOS)</li>
+ <li> <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/company-org-block">company-org-block</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/org-block-capf">org-block-capf</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/ready-player">ready-player</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/sqlite-mode-extras">sqlite-mode-extras</a></li>
+ <li> <a href="https://github.com/xenodium/ob-chatgpt-shell">ob-chatgpt-shell</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/dall-e-shell">dall-e-shell</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/ob-dall-e-shell">ob-dall-e-shell</a> (Emacs)</li>
+ <li> <a href="https://github.com/xenodium/shell-maker">shell-maker</a> (Emacs)</li>
+</ul> <p>
+So, umm… I'll just leave my GitHub sponsor page  <a href="https://github.com/sponsors/xenodium">here</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-orge7541ed" class="outline-3">
+ <h3 id="orge7541ed">chatgpt-shell, more than a shell</h3>
+ <div class="outline-text-3" id="text-orge7541ed">
+ <p>
+With chatgpt-shell being a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a> shell, you can bring your favourite Emacs flows along.
+</p>
+
+ <img src="https://raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/cyberpunk.gif" width="99%"></img> <p>
+As I used  <code>chatgpt-shell</code> myself, I kept experimenting with different integrations and improvements. Read on for some of my favourites…
+</p>
+</div>
+ <div id="outline-container-org0e5aae0" class="outline-4">
+ <h4 id="org0e5aae0">A shell hybrid</h4>
+ <div class="outline-text-4" id="text-org0e5aae0">
+ <p>
+ <code>chatgpt-shell</code> includes a compose buffer experience. This is my favourite and most frequently used mechanism to interact with LLMs.
+</p>
+
+ <p>
+For example, select a region and invoke  <code>M-x chatgpt-shell-prompt-compose</code> ( <code>C-c C-e</code> is my preferred binding), and an editable buffer automatically copies the region and enables crafting a more thorough query. When ready, submit with the familiar  <code>C-c C-c</code> binding. The buffer automatically becomes read-only and enables single-character bindings.
+</p>
+
+
+ <div id="orgdaa6ebd" class="figure">
+ <p> <a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/compose.gif" width="98%"> <img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/compose.gif" alt="compose.gif" width="98%"></img></a>
+</p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgf9bed49" class="outline-4">
+ <h4 id="orgf9bed49">Navigation: n/p (or TAB/shift-TAB)</h4>
+ <div class="outline-text-4" id="text-orgf9bed49">
+ <p>
+Navigate through source blocks (including previous submissions in history). Source blocks are automatically selected.
+</p>
+</div>
+</div>
+ <div id="outline-container-orga69bf0b" class="outline-4">
+ <h4 id="orga69bf0b">Reply: r</h4>
+ <div class="outline-text-4" id="text-orga69bf0b">
+ <p>
+Reply with with follow-up requests using the  <code>r</code> binding.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgae7a479" class="outline-4">
+ <h4 id="orgae7a479">Give me more: m</h4>
+ <div class="outline-text-4" id="text-orgae7a479">
+ <p>
+Want to ask for more of the same data? Press  <code>m</code> to request more of it. This is handy to follow up on any kind of list (suggestion, candidates, results, etc).
+</p>
+</div>
+</div>
+ <div id="outline-container-org894ca12" class="outline-4">
+ <h4 id="org894ca12">Request entire snippets: e</h4>
+ <div class="outline-text-4" id="text-org894ca12">
+ <p>
+LLM being lazy and returning partial code? Press  <code>e</code> to request entire snippet.
+</p>
+</div>
+</div>
+ <div id="outline-container-orge4757a6" class="outline-4">
+ <h4 id="orge4757a6">Quick quick: q</h4>
+ <div class="outline-text-4" id="text-orge4757a6">
+ <p>
+I'm a big fan of quickly disposing of Emacs buffers with the  <code>q</code> binding. chatgpt-shell compose buffers are no exception.
+</p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org3c5f956" class="outline-3">
+ <h3 id="org3c5f956">Confirm inline mods (via diffs)</h3>
+ <div class="outline-text-3" id="text-org3c5f956">
+ <p>
+Request inline modifications, with explicit confirmation before accepting.
+</p>
+
+ <img src="https://raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/quick-insert.gif" width="99%"></img></div>
+</div>
+ <div id="outline-container-org7083c5b" class="outline-3">
+ <h3 id="org7083c5b">Execute snippets (a la  <a href="https://orgmode.org/worg/org-contrib/babel/intro.html">org babel</a>)</h3>
+ <div class="outline-text-3" id="text-org7083c5b">
+ <p>
+Both the shell and the compose buffers enable users to execute source blocks via  <code>C-c C-c</code>, leveraging  <a href="https://orgmode.org/worg/org-contrib/babel/intro.html">org babel</a>.
+</p>
+
+ <img src="https://raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/swiftui.gif" width="99%"></img></div>
+</div>
+ <div id="outline-container-orgb1d05af" class="outline-3">
+ <h3 id="orgb1d05af">Vision experiments</h3>
+ <div class="outline-text-3" id="text-orgb1d05af">
+ <p>
+I've been experimenting with image queries (currently ChatGPT only, please  <a href="https://github.com/sponsors/xenodium">sponsor</a> to help bring support for others).
+</p>
+
+ <p>
+Below is a handy integration to extract Japanese vocabulary. There's also a generic image descriptor available via  <code>M-x chatgpt-shell-describe-image</code> that works on any Emacs image (via dired, image buffer, point on image, or selecting a desktop region).
+</p>
+
+ <img src="https://raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/japanese-weekdays.gif" width="99%"></img></div>
+</div>
+ <div id="outline-container-org066cade" class="outline-3">
+ <h3 id="org066cade">Supporting new models</h3>
+ <div class="outline-text-3" id="text-org066cade">
+ <p>
+Your favourite model not yet supported? File a  <a href="https://github.com/xenodium/chatgpt-shell/issues/new">feature request</a>. You also know how to  <a href="https://github.com/sponsors/xenodium">fuel the project</a>. Want to contribute new models?  <a href="https://github.com/xenodium/chatgpt-shell/issues/new">Reach out</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgc89b6fe" class="outline-3">
+ <h3 id="orgc89b6fe">Local models</h3>
+ <div class="outline-text-3" id="text-orgc89b6fe">
+ <p>
+While the two new implementations rely on cloud APIs, local services are now possible. I've yet to use a local LLM, but please  <a href="https://github.com/xenodium/chatgpt-shell/issues/new">reach out</a>, so we can make these happen too. Want to contribute?
+</p>
+</div>
+</div>
+ <div id="outline-container-orgb0263e7" class="outline-3">
+ <h3 id="orgb0263e7">Should chatgpt-shell rename?</h3>
+ <div class="outline-text-3" id="text-orgb0263e7">
+ <p>
+With  <code>chatgpt-shell</code> going multi-model, it's not unreasonable to ask if this package should be renamed. Maybe it should. But that's additional work we can likely postpone for the time being (and avoid pushing users to migrate). For now, I'd prefer focusing on polishing the multi-model experience and work on ironing out any issues. For that, I'll need your help.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgf191c0b" class="outline-3">
+ <h3 id="orgf191c0b">Take Gemini and Claude for a spin</h3>
+ <div class="outline-text-3" id="text-orgf191c0b">
+ <p>
+Multi-model support required chunky structural changes. While I've been using it myself, I'll need wider usage to uncover issues. Please take it for a spin and  <a href="https://github.com/xenodium/chatgpt-shell/issues/new">file bugs or give feedback</a>. Or if you just want to ping me, I'd love to hear about your experience ( <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+ <ul class="org-ul"> <li>Be sure to update to  <code>chatgpt-shell</code> v2.0.1 and  <code>shell-maker</code> v0.68.1 as a minimum.</li>
+ <li>Set  <code>chatgpt-shell-anthropic-key</code> or  <code>chatgpt-shell-google-key</code>.</li>
+ <li>Swap models with existing  <code>M-x chatgpt-shell-swap-model-version</code> or set a default with  <code>(setq chatgpt-shell-model-version "claude-3-5-sonnet-20240620")</code> or  <code>(setq chatgpt-shell-model-version "claude-gemini-1.5-pro-latest")</code>.</li>
+ <li>Everything else should just work 🤞😅</li>
+</ul> <p>
+Happy Emacsing!
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model</guid>
+  <pubDate>Tue, 19 Nov 2024 08:24:27 +0000</pubDate>
+</item>
 <item>
   <title>chatgpt-shell splits up</title>
   <description><![CDATA[<div id="content" class="content">
