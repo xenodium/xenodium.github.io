@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-20 Wed 07:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>chatgpt-shell goes multi-model</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         b, strong {
+          font-weight: bold;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-chatgpt-shell-goes-multi-model" class="outline-2">
+<h2 id="chatgpt-shell-goes-multi-model"><span class="timestamp-wrapper"><span class="timestamp">19 November 2024</span></span> chatgpt-shell goes multi-model</h2>
+<div class="outline-text-2" id="text-chatgpt-shell-goes-multi-model">
+<p>
+Over the last few months, I've been chipping at implementing <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>'s most requested and biggest feature: multi-model support. Today, I get to unveil the first two implementations: <a href="https://www.anthropic.com/claude">Anthropic's Claude</a> and <a href="https://gemini.google.com/">Google's Gemini</a>.
+</p>
+
+
+<div id="org9851659" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/multi-model-shell.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/multi-model-shell.gif" alt="multi-model-shell.gif" width="97%" /></a>
+</p>
+</div>
+</div>
+<div id="outline-container-org2623292" class="outline-3">
+<h3 id="org2623292">Changing course</h3>
+<div class="outline-text-3" id="text-org2623292">
+<p>
+In the past, I envisioned a different path for multi-model support. By isolating shell logic into a new package (<a href="https://github.com/xenodium/shell-maker">shell-maker</a>), folks could use it as a <a href="https://lmno.lol/alvaro/a-shell-maker">building block to create new shells</a> (adding support for their favourite LLM).
+</p>
+
+<p>
+While each shell-maker-based shell currently shares a basic common experience, I did not foresee the minor differences affecting the general Emacs user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on <code>chatgpt-shell</code> features, which I often missed when using other shells.
+</p>
+
+<p>
+Along with slightly different shell experiences, we currently require multiple package installations (and setups). Depending on which camp you're on (batteries included vs fine-grained control) this may or may not be a downside.
+</p>
+
+<p>
+With every new <code>chatgpt-shell</code> feature I showcased, I was often asked if they could be used with other LLM providers. I typically answered with "I've been meaning to work on this&#x2026;" or "I heard you can do multi-model <code>chatgpt-shell</code> using a bridge like <a href="https://docs.litellm.ai/docs/">liteLLM</a>". Neither of these where great answers, resulting in me just postponing the chunky work.
+</p>
+
+<p>
+Eventually, I bit the bullet, changed course, and got to work on multi-model support. With my initial plan to spin multiple shells via <code>shell-maker</code>, <code>chatgpt-shell</code>'s implementation didn't exactly lend itself to support multiple clients. Long story short, <code>chatgpt-shell</code> multi-model support required quite a bit of work. This where I divert to ask you to <a href="https://github.com/sponsors/xenodium">help make this project sustainable by sponsoring the work</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org855e047" class="outline-3">
+<h3 id="org855e047">Make this project sustainable</h3>
+<div class="outline-text-3" id="text-org855e047">
+<p>
+Maintaining, experimenting, implementing feature requests, and supporting open-source packages takes work. Today, chatgpt-shell has over <a href="https://melpa.org/#/chatgpt-shell">20.5K downloads on MELPA</a> and many untracked others elsewhere. If you're one of the happy users, <a href="https://github.com/sponsors/xenodium">consider sponsoring the project</a>. If you see potential, help <a href="https://github.com/sponsors/xenodium">fuel development by sponsoring</a> too.
+</p>
+
+<p>
+Perhaps you enjoy some of the content I write about? Find my Emacs posts/tips useful?
+</p>
+
+<ul class="org-ul">
+<li><a href="https://xenodium.com/">Blog (xenodium.com)</a> (Web)</li>
+<li><a href="https://lmno.lol/alvaro">Blog (lmno.lol/alvaro)</a> (Web)</li>
+</ul>
+
+<p>
+Alternatively, you want a blogging platform that skips the yucky side effects of the modern web?
+</p>
+
+<ul class="org-ul">
+<li>I'm building <a href="https://lmno.lol">lmno.lol</a> (my blog is <a href="https://lmno.lol/alvaro">there</a>).</li>
+</ul>
+
+<p>
+Maybe you enjoy one of my other projects?
+</p>
+
+<ul class="org-ul">
+<li><a href="https://plainorg.com">Plain Org</a> (org mode / iOS)</li>
+<li><a href="https://flathabits.com">Flat Habits</a> (org mode / iOS)</li>
+<li><a href="https://apps.apple.com/us/app/scratch/id1671420139">Scratch</a> (org mode / iOS)</li>
+<li><a href="https://github.com/xenodium/macosrec">macosrec</a> (macOS)</li>
+<li><a href="https://apps.apple.com/us/app/fresh-eyes/id6480411697?mt=12">Fresh Eyes</a> (macOS)</li>
+<li><a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/company-org-block">company-org-block</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/org-block-capf">org-block-capf</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/ready-player">ready-player</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/sqlite-mode-extras">sqlite-mode-extras</a></li>
+<li><a href="https://github.com/xenodium/ob-chatgpt-shell">ob-chatgpt-shell</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/dall-e-shell">dall-e-shell</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/ob-dall-e-shell">ob-dall-e-shell</a> (Emacs)</li>
+<li><a href="https://github.com/xenodium/shell-maker">shell-maker</a> (Emacs)</li>
+</ul>
+
+<p>
+So, umm&#x2026; I'll just leave my GitHub sponsor page <a href="https://github.com/sponsors/xenodium">here</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org646975a" class="outline-3">
+<h3 id="org646975a">chatgpt-shell, more than a shell</h3>
+<div class="outline-text-3" id="text-org646975a">
+<p>
+With chatgpt-shell being a <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html">comint</a> shell, you can bring your favourite Emacs flows along.
+</p>
+
+
+<div id="org651217f" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/cyberpunk.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/cyberpunk.gif" alt="cyberpunk.gif" width="97%" /></a>
+</p>
+</div>
+
+<p>
+As I used <code>chatgpt-shell</code> myself, I kept experimenting with different integrations and improvements. Read on for some of my favourites&#x2026;
+</p>
+</div>
+<div id="outline-container-orgcf7a4e6" class="outline-4">
+<h4 id="orgcf7a4e6">A shell hybrid</h4>
+<div class="outline-text-4" id="text-orgcf7a4e6">
+<p>
+<code>chatgpt-shell</code> includes a compose buffer experience. This is my favourite and most frequently used mechanism to interact with LLMs.
+</p>
+
+<p>
+For example, select a region and invoke <code>M-x chatgpt-shell-prompt-compose</code> (<code>C-c C-e</code> is my preferred binding), and an editable buffer automatically copies the region and enables crafting a more thorough query. When ready, submit with the familiar <code>C-c C-c</code> binding. The buffer automatically becomes read-only and enables single-character bindings.
+</p>
+
+
+<div id="org16b3db2" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/compose.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/compose.gif" alt="compose.gif" width="97%" /></a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org13bf0d1" class="outline-4">
+<h4 id="org13bf0d1">Navigation: n/p (or TAB/shift-TAB)</h4>
+<div class="outline-text-4" id="text-org13bf0d1">
+<p>
+Navigate through source blocks (including previous submissions in history). Source blocks are automatically selected.
+</p>
+</div>
+</div>
+<div id="outline-container-org1294d52" class="outline-4">
+<h4 id="org1294d52">Reply: r</h4>
+<div class="outline-text-4" id="text-org1294d52">
+<p>
+Reply with with follow-up requests using the <code>r</code> binding.
+</p>
+</div>
+</div>
+<div id="outline-container-org28e2842" class="outline-4">
+<h4 id="org28e2842">Give me more: m</h4>
+<div class="outline-text-4" id="text-org28e2842">
+<p>
+Want to ask for more of the same data? Press <code>m</code> to request more of it. This is handy to follow up on any kind of list (suggestion, candidates, results, etc).
+</p>
+</div>
+</div>
+<div id="outline-container-orgaab7635" class="outline-4">
+<h4 id="orgaab7635">Request entire snippets: e</h4>
+<div class="outline-text-4" id="text-orgaab7635">
+<p>
+LLM being lazy and returning partial code? Press <code>e</code> to request entire snippet.
+</p>
+</div>
+</div>
+<div id="outline-container-org8b09ac1" class="outline-4">
+<h4 id="org8b09ac1">Quick quick: q</h4>
+<div class="outline-text-4" id="text-org8b09ac1">
+<p>
+I'm a big fan of quickly disposing of Emacs buffers with the <code>q</code> binding. chatgpt-shell compose buffers are no exception.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfcd9b17" class="outline-3">
+<h3 id="orgfcd9b17">Confirm inline mods (via diffs)</h3>
+<div class="outline-text-3" id="text-orgfcd9b17">
+<p>
+Request inline modifications, with explicit confirmation before accepting.
+</p>
+
+
+<div id="orgb2ab540" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/quick-insert.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/quick-insert.gif" alt="quick-insert.gif" width="97%" /></a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org451689f" class="outline-3">
+<h3 id="org451689f">Execute snippets (a la <a href="https://orgmode.org/worg/org-contrib/babel/intro.html">org babel</a>)</h3>
+<div class="outline-text-3" id="text-org451689f">
+<p>
+Both the shell and the compose buffers enable users to execute source blocks via <code>C-c C-c</code>, leveraging <a href="https://orgmode.org/worg/org-contrib/babel/intro.html">org babel</a>.
+</p>
+
+
+<div id="orgf7016d0" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/swiftui.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/swiftui.gif" alt="swiftui.gif" width="97%" /></a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org62a8dc5" class="outline-3">
+<h3 id="org62a8dc5">Vision experiments</h3>
+<div class="outline-text-3" id="text-org62a8dc5">
+<p>
+I've been experimenting with image queries (currently ChatGPT only, please <a href="https://github.com/sponsors/xenodium">sponsor</a> to help bring support for others).
+</p>
+
+<p>
+Below is a handy integration to extract Japanese vocabulary. There's also a generic image descriptor available via <code>M-x chatgpt-shell-describe-image</code> that works on any Emacs image (via dired, image buffer, point on image, or selecting a desktop region).
+</p>
+
+
+<div id="org8ce3cf6" class="figure">
+<p><a href="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/japanese-weekdays.gif" width="97%"><img src="https:/raw.githubusercontent.com/xenodium/chatgpt-shell/main/demos/japanese-weekdays.gif" alt="japanese-weekdays.gif" width="97%" /></a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1dcfe70" class="outline-3">
+<h3 id="org1dcfe70">Supporting new models</h3>
+<div class="outline-text-3" id="text-org1dcfe70">
+<p>
+Your favourite model not yet supported? File a <a href="https://github.com/xenodium/chatgpt-shell/issues/new">feature request</a>. You also know how to <a href="https://github.com/sponsors/xenodium">fuel the project</a>. Want to contribute new models? <a href="https://github.com/xenodium/chatgpt-shell/issues/new">Reach out</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org17c04d7" class="outline-3">
+<h3 id="org17c04d7">Local models</h3>
+<div class="outline-text-3" id="text-org17c04d7">
+<p>
+While the two new implementations rely on cloud APIs, local services are now possible. I've yet to use a local LLM, but please <a href="https://github.com/xenodium/chatgpt-shell/issues/new">reach out</a>, so we can make these happen too. Want to contribute?
+</p>
+</div>
+</div>
+<div id="outline-container-org945b509" class="outline-3">
+<h3 id="org945b509">Should chatgpt-shell rename?</h3>
+<div class="outline-text-3" id="text-org945b509">
+<p>
+With <code>chatgpt-shell</code> going multi-model, it's not unreasonable to ask if this package should be renamed. Maybe it should. But that's additional work we can likely postpone for the time being (and avoid pushing users to migrate). For now, I'd prefer focusing on polishing the multi-model experience and work on ironing out any issues. For that, I'll need your help.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd7a01ed" class="outline-3">
+<h3 id="orgd7a01ed">Take Gemini and Claude for a spin</h3>
+<div class="outline-text-3" id="text-orgd7a01ed">
+<p>
+Multi-model support required chunky structural changes. While I've been using it myself, I'll need wider usage to uncover issues. Please take it for a spin and <a href="https://github.com/xenodium/chatgpt-shell/issues/new">file bugs or give feedback</a>. Or if you just want to ping me, I'd love to hear about your experience (<a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="mailto:me__AT__xenodium.com">Email</a>).
+</p>
+
+<ul class="org-ul">
+<li>Be sure to update to <code>chatgpt-shell</code> v2.0.1 and <code>shell-maker</code> v0.68.1 as a minimum.</li>
+<li>Set <code>chatgpt-shell-anthropic-key</code> or <code>chatgpt-shell-google-key</code>.</li>
+<li>Swap models with existing <code>M-x chatgpt-shell-swap-model-version</code>.</li>
+<li>Everything else should just work 🤞😅</li>
+</ul>
+
+<p>
+Happy Emacsing!
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
