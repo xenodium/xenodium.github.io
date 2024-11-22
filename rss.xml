@@ -6,7 +6,66 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 21 Nov 2024 22:35:34 +0000</lastBuildDate>
+<lastBuildDate>Fri, 22 Nov 2024 09:41:48 +0000</lastBuildDate>
+<item>
+  <title>Toggle macOS menu bar from you know where</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-toggle-macos-menu-bar-from-you-know-where" class="outline-2">
+ <h2 id="toggle-macos-menu-bar-from-you-know-where"> <span class="timestamp-wrapper"> <span class="timestamp">22 November 2024</span></span> Toggle macOS menu bar from you know where</h2>
+ <div class="outline-text-2" id="text-toggle-macos-menu-bar-from-you-know-where">
+ <p>
+I'm a fan of macOS's auto-hide menu bar setting. Unless I'm reaching out to a menu item, I don't typically need to have a visible menu bar, so I set auto-hide to "Always".
+</p>
+
+
+ <div id="org7996a8d" class="figure">
+ <p> <img src="../images/toggle-macos-menu-bar-from-you-know-where/control-center.png" alt="control-center.png" width="95%"></img></p>
+</div>
+
+ <p>
+On rare occasions, I turn this setting off (say  <a href="https://lmno.lol/alvaro/chatgpt-shell-goes-offline">for a screen grab</a>). While reaching out to macOS Control Center is OK, I wanted to quickly toggle it from the comfort of Emacs via  <code>M-x</code> fuzzy search.
+</p>
+
+ <p>
+We can leverage AppleScript to toggle the setting on and off. In the past, I would write shell scripts for this kinda thing and invoke from the command line. These days, I dump them into a  <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a> and quickly forget about its implementation. From then on, I just M-x and fuzzy search for some magical incantation (I'm looking at you ffmpeg). I got  <a href="https://github.com/xenodium/dwim-shell-command?tab=readme-ov-file#my-toolbox">a bunch of these things</a>…
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">dwim-shell-commands-macos-toggle-menu-bar-autohide</span> ()
+   <span style="color: #183691;">"Toggle macOS menu bar auto-hide."</span>
+  (<span style="color: #a71d5d;">interactive</span>)
+  (dwim-shell-command-on-marked-files
+    <span style="color: #183691;">"Toggle menu bar auto-hide."</span>
+    <span style="color: #183691;">"current_status=$(osascript -e 'tell application \"System Events\" to get autohide menu bar of dock preferences')</span>
+
+ <span style="color: #183691;">if [ \"$current_status\" = \"true\" ]; then</span>
+ <span style="color: #183691;">    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to false'</span>
+ <span style="color: #183691;">    echo \"Auto-hide disabled.\"</span>
+ <span style="color: #183691;">else</span>
+ <span style="color: #183691;">    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'</span>
+ <span style="color: #183691;">    echo \"Auto-hide enabled.\"</span>
+ <span style="color: #183691;">fi"</span>
+    <span style="color: #a71d5d;">:utils</span>  <span style="color: #183691;">"osascript"</span>
+    <span style="color: #a71d5d;">:silent-success</span> t))
+</pre>
+</div>
+
+ <p>
+…and that's all there is to it.
+</p>
+
+
+ <div id="orgf15ed73" class="figure">
+ <p> <img src="../images/toggle-macos-menu-bar-from-you-know-where/autohide.webp" alt="autohide.webp" width="95%"></img></p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where</guid>
+  <pubDate>Fri, 22 Nov 2024 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>chatgpt-shell goes offline</title>
   <description><![CDATA[<div id="content" class="content">
