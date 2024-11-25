@@ -1,6 +1,34 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2024-11-25 Mon] LLM iterate and insert
+:PROPERTIES:
+:CUSTOM_ID: llm-iterate-and-insert
+:END:
+[[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] includes a couple of mechanisms to operate on an Emacs buffer region. That is, select a region and ask the [[https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model][LLM robots]] to modify it for us. Until now, both of these mechanisms didn't quite close the loop. They could either modify current region or iterate on a separate solution, but never both.
+
+** M-x chatgpt-shell-quick-insert
+
+While =chatgpt-shell='s quick insert mechanism already enabled selecting a region and requesting changes, it was more of a "I'm feeling lucky" situation. If the changes didn't pan out, you'd have to discard the suggestion and start over.
+
+With the latest changes, in addition to accepting or discarding (y/n bindings) suggestions, we can now iterate using the =i= binding.
+
+#+ATTR_HTML: :width 100%
+file:images/llm-iterate-and-insert/quick-insert-iterate.gif
+
+** M-x chatgpt-shell-prompt-compose
+
+While quick insertions rely on minibuffer input, =chatgpt-shell-prompt-compose= opens a dedicated buffer for a more thorough interactions. Select a region, invoke =chatgpt-shell-prompt-compose= (my preferred binding being =C-c C-e=), and a new compose buffer is created with the region text. Add your instructions and submit with =C-c C-c=. Post submission, the compose buffer becomes read-only and single-character key-bindings take over. For example: =r= replies (for further iteration) and =n/p= (or =TAB/shift-TAB=) navigation. There are [[https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#a-shell-hybrid][more bindings]].
+
+Until now, we could easily craft more involved queries and continue iterating from the compose buffer, but integrating suggested changes was a manual process. That is, navigate to a code block, select, copy it and then paste it elsewhere.
+
+With the latest changes, pressing =i= (insert) while on a code block will attempt to insert it wherever the initial interaction took place.
+
+#+ATTR_HTML: :width 100%
+file:images/llm-iterate-and-insert/compose-insert-iterate.gif
+
+Both of these changes show now be available on MELPA. While I demoed ChatGPT, the two mechanism should now work with any of the supported models (ChatGPT, Claude, Gemini, and Ollama).
+
 * [2024-11-22 Fri] Toggle macOS menu bar from you know where
 :PROPERTIES:
 :CUSTOM_ID: toggle-macos-menu-bar-from-you-know-where

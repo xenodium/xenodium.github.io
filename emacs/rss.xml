@@ -6,7 +6,66 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 22 Nov 2024 09:41:40 +0000</lastBuildDate>
+<lastBuildDate>Mon, 25 Nov 2024 18:29:00 +0000</lastBuildDate>
+<item>
+  <title>LLM iterate and insert</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-llm-iterate-and-insert" class="outline-2">
+ <h2 id="llm-iterate-and-insert"> <span class="timestamp-wrapper"> <span class="timestamp">25 November 2024</span></span> LLM iterate and insert</h2>
+ <div class="outline-text-2" id="text-llm-iterate-and-insert">
+ <p>
+ <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> includes a couple of mechanisms to operate on an Emacs buffer region. That is, select a region and ask the  <a href="https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model">LLM robots</a> to modify it for us. Until now, both of these mechanisms didn't quite close the loop. They could either modify current region or iterate on a separate solution, but never both.
+</p>
+</div>
+ <div id="outline-container-orgb452bb2" class="outline-3">
+ <h3 id="orgb452bb2">M-x chatgpt-shell-quick-insert</h3>
+ <div class="outline-text-3" id="text-orgb452bb2">
+ <p>
+While  <code>chatgpt-shell</code>'s quick insert mechanism already enabled selecting a region and requesting changes, it was more of a "I'm feeling lucky" situation. If the changes didn't pan out, you'd have to discard the suggestion and start over.
+</p>
+
+ <p>
+With the latest changes, in addition to accepting or discarding (y/n bindings) suggestions, we can now iterate using the  <code>i</code> binding.
+</p>
+
+
+ <div id="orgefafdd4" class="figure">
+ <p> <img src="../images/llm-iterate-and-insert/quick-insert-iterate.gif" alt="quick-insert-iterate.gif" width="100%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orga9e54aa" class="outline-3">
+ <h3 id="orga9e54aa">M-x chatgpt-shell-prompt-compose</h3>
+ <div class="outline-text-3" id="text-orga9e54aa">
+ <p>
+While quick insertions rely on minibuffer input,  <code>chatgpt-shell-prompt-compose</code> opens a dedicated buffer for a more thorough interactions. Select a region, invoke  <code>chatgpt-shell-prompt-compose</code> (my preferred binding being  <code>C-c C-e</code>), and a new compose buffer is created with the region text. Add your instructions and submit with  <code>C-c C-c</code>. Post submission, the compose buffer becomes read-only and single-character key-bindings take over. For example:  <code>r</code> replies (for further iteration) and  <code>n/p</code> (or  <code>TAB/shift-TAB</code>) navigation. There are  <a href="https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#a-shell-hybrid">more bindings</a>.
+</p>
+
+ <p>
+Until now, we could easily craft more involved queries and continue iterating from the compose buffer, but integrating suggested changes was a manual process. That is, navigate to a code block, select, copy it and then paste it elsewhere.
+</p>
+
+ <p>
+With the latest changes, pressing  <code>i</code> (insert) while on a code block will attempt to insert it wherever the initial interaction took place.
+</p>
+
+
+ <div id="orge0adb40" class="figure">
+ <p> <img src="../images/llm-iterate-and-insert/compose-insert-iterate.gif" alt="compose-insert-iterate.gif" width="100%"></img></p>
+</div>
+
+ <p>
+Both of these changes show now be available on MELPA. While I demoed ChatGPT, the two mechanism should now work with any of the supported models (ChatGPT, Claude, Gemini, and Ollama).
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/llm-iterate-and-insert</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/llm-iterate-and-insert</guid>
+  <pubDate>Mon, 25 Nov 2024 18:29:00 +0000</pubDate>
+</item>
 <item>
   <title>Toggle macOS menu bar from you know where</title>
   <description><![CDATA[<div id="content" class="content">
