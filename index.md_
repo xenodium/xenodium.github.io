@@ -1,3 +1,39 @@
+# \[2024-11-22 Fri\] Toggle macOS menu bar from you know where
+---
+id: toggle-macos-menu-bar-from-you-know-where
+---
+
+I'm a fan of macOS's auto-hide menu bar setting. Unless I'm reaching out to a menu item, I don't typically need to have a visible menu bar, so I set auto-hide to "Always".
+
+![](https://xenodium.com/images/toggle-macos-menu-bar-from-you-know-where/control-center.png)
+
+On rare occasions, I turn this setting off (say [for a screen grab](https://lmno.lol/alvaro/chatgpt-shell-goes-offline)). While reaching out to macOS Control Center is OK, I wanted to quickly toggle it from the comfort of Emacs via `M-x` fuzzy search.
+
+We can leverage AppleScript to toggle the setting on and off. In the past, I would write shell scripts for this kinda thing and invoke from the command line. These days, I dump them into a [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) and quickly forget about its implementation. From then on, I just M-x and fuzzy search for some magical incantation (I'm looking at you ffmpeg). I got [a bunch of these things](https://github.com/xenodium/dwim-shell-command?tab=readme-ov-file#my-toolbox)…
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defun dwim-shell-commands-macos-toggle-menu-bar-autohide ()
+  "Toggle macOS menu bar auto-hide."
+  (interactive)
+  (dwim-shell-command-on-marked-files
+   "Toggle menu bar auto-hide."
+   "current_status=$(osascript -e 'tell application \"System Events\" to get autohide menu bar of dock preferences')
+
+if [ \"$current_status\" = \"true\" ]; then
+    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to false'
+    echo \"Auto-hide disabled.\"
+else
+    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'
+    echo \"Auto-hide enabled.\"
+fi"
+   :utils "osascript"
+   :silent-success t))
+```
+
+…and that's all there is to it.
+
+![](https://xenodium.com/images/toggle-macos-menu-bar-from-you-know-where/autohide.webp)
+
 # \[2024-11-21 Thu\] chatgpt-shell goes offline
 ---
 id: chatgpt-shell-goes-offline
