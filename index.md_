@@ -1,3 +1,26 @@
+# \[2024-12-05 Thu\] LLM chat navigation
+---
+id: llm-chat-navigation
+---
+
+LLM chats are often handy for refining answers to a question or task, part of a bigger goal. Navigating the chat transcript, copying and pasting, can be a frequent operation in the bigger goal. If we can do it more efficiently, the better.
+
+While [chatgpt-shell](https://github.com/xenodium/chatgpt-shell/issues) offered `chatgpt-shell-next-item` and `chatgpt-shell-previous-item` commands, it had a few rough edges which prevented me from fully adopting. The default bindings `C-c C-n` and `C-c C-p` didn't exactly help either, making repeated navigation fairly clunky. [repeat-mode](https://karthinks.com/software/it-bears-repeating/) would have helped a little, yet I was yearning for a familiar experience… more like `tab` and `Shift-tab` in web browsers.
+
+While shells often `tab`-complete commands and/or arguments, I'm not super convinced `tab` completion is a good candidate for an LLM Emacs shell. Having said that, searching for previous prompts a la `Ctr-r` is indeed a handy feature and already supported in [chatgpt-shell](https://github.com/xenodium/chatgpt-shell/issues) (via `M-r`).
+
+This is all to say that the with the latest `chatgpt-shell` navigation changes (using `<tab>` and `<backtab>` bindings), the `chatgpt-shell` experience feels way more natural. You can see it in action…
+
+![](https://xenodium.com/images/llm-chat-navigation/shell.gif)
+
+Tab navigation jumps between prompts, links, and code blocks. You may have noticed code blocks are automatically selected, in case you want to quickly copy and paste elsewhere.
+
+This mode of navigation is also present in the [compose UX](https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model#a-shell-hybrid) (via M-x `chatgpt-shell-prompt-compose`). In addition to `<tab>` and `<backtab>`, you can use `n` and `p` bindings (post prompt submission).
+
+![](https://xenodium.com/images/llm-chat-navigation/compose-tab.gif)
+
+Give the new navigation a try. See how it feels. Some of it is fairly fresh, so [please file bugs if needed](https://github.com/xenodium/chatgpt-shell/issues/new).
+
 # \[2024-12-04 Wed\] Awesome elisp
 ---
 id: awesome-elisp
@@ -1212,7 +1235,7 @@ Install, enable via `M-x ready-player-mode` and you should be good to go.
 
 Open and preview media files (audio + video) like other files. If in repeat mode, ready-player attempts to play other files in the current directory. Track playback from the corresponding `dired` buffer.
 
-![](https://xenodium.com/images/real-player-mode-now-on-melpa/ready-player.gif)
+![](https://xenodium.com/images/ready-player-mode-now-on-melpa/ready-player.gif)
 
 Playback is handled by your favourite command line utility. `ready-player-mode` will try to use either [mpv](https://mpv.io/), [vlc](https://www.videolan.org/vlc/), [ffplay](https://ffmpeg.org/ffplay.html), or [mplayer](https://mplayerhq.hu/design7/news.html) (in that order), but you can customize that. I'd love to hear of other defaults worth considering.
 
