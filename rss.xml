@@ -6,7 +6,58 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 04 Dec 2024 21:13:42 +0000</lastBuildDate>
+<lastBuildDate>Thu, 05 Dec 2024 11:03:52 +0000</lastBuildDate>
+<item>
+  <title>LLM chat navigation</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-llm-chat-navigation" class="outline-2">
+ <h2 id="llm-chat-navigation"> <span class="timestamp-wrapper"> <span class="timestamp">05 December 2024</span></span> LLM chat navigation</h2>
+ <div class="outline-text-2" id="text-llm-chat-navigation">
+ <p>
+LLM chats are often handy for refining answers to a question or task, part of a bigger goal. Navigating the chat transcript, copying and pasting, can be a frequent operation in the bigger goal. If we can do it more efficiently, the better.
+</p>
+
+ <p>
+While  <a href="https://github.com/xenodium/chatgpt-shell/issues">chatgpt-shell</a> offered  <code>chatgpt-shell-next-item</code>  and  <code>chatgpt-shell-previous-item</code> commands, it had a few rough edges which prevented me from fully adopting. The default bindings  <code>C-c C-n</code> and  <code>C-c C-p</code> didn't exactly help either, making repeated navigation fairly clunky.  <a href="https://karthinks.com/software/it-bears-repeating/">repeat-mode</a> would have helped a little, yet I was yearning for a familiar experience… more like  <code>tab</code> and  <code>Shift-tab</code> in web browsers.
+</p>
+
+ <p>
+While shells often  <code>tab</code>-complete commands and/or arguments, I'm not super convinced  <code>tab</code> completion is a good candidate for an LLM Emacs shell. Having said that, searching for previous prompts a la  <code>Ctr-r</code> is indeed a handy feature and already supported in  <a href="https://github.com/xenodium/chatgpt-shell/issues">chatgpt-shell</a> (via  <code>M-r</code>).
+</p>
+
+ <p>
+This is all to say that the with the latest  <code>chatgpt-shell</code> navigation changes (using  <code><tab></code> and  <code><backtab></code> bindings), the  <code>chatgpt-shell</code> experience feels way more natural. You can see it in action…
+</p>
+
+
+ <div id="orgc53d2b8" class="figure">
+ <p> <img src="../images/llm-chat-navigation/shell.gif" alt="shell.gif" width="85%"></img></p>
+</div>
+
+ <p>
+Tab navigation jumps between prompts, links, and code blocks. You may have noticed code blocks are automatically selected, in case you want to quickly copy and paste elsewhere.
+</p>
+
+ <p>
+This mode of navigation is also present in the  <a href="https://lmno.lol/alvaro/chatgpt-shell-goes-multi-model#a-shell-hybrid">compose UX</a> (via M-x  <code>chatgpt-shell-prompt-compose</code>). In addition to  <code><tab></code> and  <code><backtab></code>, you can use  <code>n</code> and  <code>p</code> bindings (post prompt submission).
+</p>
+
+
+ <div id="org94e796c" class="figure">
+ <p> <img src="../images/llm-chat-navigation/compose-tab.gif" alt="compose-tab.gif" width="85%"></img></p>
+</div>
+
+ <p>
+Give the new navigation a try. See how it feels. Some of it is fairly fresh, so  <a href="https://github.com/xenodium/chatgpt-shell/issues/new">please file bugs if needed</a>.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/llm-chat-navigation</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/llm-chat-navigation</guid>
+  <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>Awesome elisp</title>
   <description><![CDATA[<div id="content" class="content">
@@ -2032,6 +2083,56 @@ Like this blog? Want to start a blog? Run your blog off a single file. Write fro
   <link>https://lmno.lol/alvaro/fresh-eyes-17-released</link>
   <guid isPermaLink="false">https://lmno.lol/alvaro/fresh-eyes-17-released</guid>
   <pubDate>Wed, 24 Jul 2024 00:00:00 +0100</pubDate>
+</item>
+<item>
+  <title>Ready Player Mode now on MELPA</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-ready-player-mode-now-on-melpa" class="outline-2">
+ <h2 id="ready-player-mode-now-on-melpa"> <span class="timestamp-wrapper"> <span class="timestamp">21 July 2024</span></span> Ready Player Mode now on MELPA</h2>
+ <div class="outline-text-2" id="text-ready-player-mode-now-on-melpa">
+ <p>
+A few weeks ago, I  <a href="https://lmno.lol/alvaro/ready-player-mode">announced Ready Player Mode</a>'s availability on  <a href="https://github.com/xenodium/ready-player">GitHub</a>. As of today, you can  <a href="https://melpa.org/#/ready-player">find it on MELPA</a>.
+</p>
+
+ <p>
+Ready Player Mode is  a lightweight major mode to open media (audio/video) files in an Emacs buffer.
+</p>
+
+ <p>
+Install, enable via  <code>M-x ready-player-mode</code> and you should be good to go.
+</p>
+
+ <p>
+Open and preview media files (audio + video) like other files. If in repeat mode, ready-player attempts to play other files in the current directory. Track playback from the corresponding  <code>dired</code> buffer.
+</p>
+
+
+ <div id="org1e5ac09" class="figure">
+ <p> <img src="../images/real-player-mode-now-on-melpa/ready-player.gif" alt="ready-player.gif" width="100%"></img></p>
+</div>
+
+ <p>
+Playback is handled by your favourite command line utility.  <code>ready-player-mode</code> will try to use either  <a href="https://mpv.io/">mpv</a>,  <a href="https://www.videolan.org/vlc/">vlc</a>,  <a href="https://ffmpeg.org/ffplay.html">ffplay</a>, or  <a href="https://mplayerhq.hu/design7/news.html">mplayer</a> (in that order), but you can customize that. I'd love to hear of other defaults worth considering.
+</p>
+
+ <p>
+Bonus rendering includes media thumbnails and metadata, if either  <a href="https://github.com/dirkvdb/ffmpegthumbnailer">ffmpegthumbnailer</a> or  <a href="https://ffmpeg.org/">ffmpeg</a> are found.
+</p>
+</div>
+ <div id="outline-container-org2831c3f" class="outline-3">
+ <h3 id="org2831c3f">Unrelated - Want your own blog?</h3>
+ <div class="outline-text-3" id="text-org2831c3f">
+ <p>
+Like this blog? Want to start a blog? Run your blog off a single file. Write from the comfort of your favourite text editor and  <a href="https://indieweb.social/@xenodium/112265481282475542">drag and drop to the web</a>. I'm launching a blogging service at  <a href="https://lmno.lol">lmno.lol</a>. Looking for early adopters.  <a href="https://indieweb.social/@xenodium">Get in touch</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/ready-player-mode-now-on-melpa</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/ready-player-mode-now-on-melpa</guid>
+  <pubDate>Sun, 21 Jul 2024 00:00:00 +0100</pubDate>
 </item>
 <item>
   <title>OCR those buffers</title>
