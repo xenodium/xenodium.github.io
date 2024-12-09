@@ -6,7 +6,67 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 05 Dec 2024 11:03:43 +0000</lastBuildDate>
+<lastBuildDate>Mon, 09 Dec 2024 21:36:42 +0000</lastBuildDate>
+<item>
+  <title>An experimental (e)shell pager</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-an-experimental-e-shell-pager" class="outline-2">
+ <h2 id="an-experimental-e-shell-pager"> <span class="timestamp-wrapper"> <span class="timestamp">09 December 2024</span></span> An experimental (e)shell pager</h2>
+ <div class="outline-text-2" id="text-an-experimental-e-shell-pager">
+ <p>
+These days, my LLM interactions primarily take place via  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>'s compose UX. I've grown fond of this hybrid style of interaction. On sharing the  <a href="https://bsky.app/profile/xenodium.bsky.social/post/3lco3ggkk4c2r">latest incarnation</a>,  <a href="https://bsky.app/profile/jllw.bsky.social">jllw</a> asked about the possibility to  <a href="https://bsky.app/profile/jllw.bsky.social/post/3lcpb6ygkws2v">port to comint shells</a>.
+</p>
+
+ <p>
+With  <a href="https://bsky.app/profile/jllw.bsky.social">jllw</a>'s great idea in mind, I set out to prototype an  <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html">eshell</a> pager, my preferred shell.
+</p>
+
+ <p>
+The initial results ain't too shabby:
+</p>
+
+
+ <div id="org45fc045" class="figure">
+ <p> <img src="../images/an-experimental-e-shell-pager/shell-pager.gif" alt="shell-pager.gif" width="85%"></img></p>
+</div>
+
+ <p>
+While you can easily flip through all  <code>eshell</code> commands and outputs (via single-character n/p bindings), you can also compose and fire off new commands using a magit-style approach. That is, craft your desired command and C-c C-c to send it off.
+</p>
+
+ <p>
+The prototype is currently focused on  <code>eshell</code>, but it can be easily ported to  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html">comint</a> and other shells by writing new  <code>shell-maker</code> configs:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(shell-pager--make-config
+  <span style="color: #a71d5d;">:shell-buffer</span> buffer
+  <span style="color: #a71d5d;">:page-buffer</span> (shell-pager--buffer)
+  <span style="color: #a71d5d;">:next</span> #'shell-pager--eshell-next
+  <span style="color: #a71d5d;">:previous</span> #'shell-pager--eshell-previous
+  <span style="color: #a71d5d;">:current</span> #'shell-pager--eshell-current-item
+  <span style="color: #a71d5d;">:subscribe</span> #'shell-pager--eshell-subscribe
+  <span style="color: #a71d5d;">:unsubscribe</span> #'shell-pager--eshell-unsubscribe
+  <span style="color: #a71d5d;">:submit</span> #'shell-pager--eshell-submit
+  <span style="color: #a71d5d;">:interrupt</span> #'shell-pager--eshell-interrupt)
+</pre>
+</div>
+
+ <p>
+ <code>shell-pager</code>'s super  <a href="https://github.com/xenodium/shell-pager">rough/experimental code is now on GitHub</a>.
+</p>
+
+ <p>
+It's been a fun experiment so far. Time will tell, whether or not  <code>shell-pager</code> can replace most of my  <code>eshell</code> interactions. The good news is that this isn't an all or nothing sorta thing.  <code>shell-pager</code> complements  <code>eshell</code>, so I can always jump back to eshell itself and continue with the very same shell history.
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/an-experimental-e-shell-pager</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/an-experimental-e-shell-pager</guid>
+  <pubDate>Mon, 09 Dec 2024 21:36:42 +0000</pubDate>
+</item>
 <item>
   <title>LLM chat navigation</title>
   <description><![CDATA[<div id="content" class="content">
