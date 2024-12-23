@@ -1,3 +1,37 @@
+# \[2024-12-09 Mon\] An experimental (e)shell pager
+---
+id: an-experimental-e-shell-pager
+---
+
+These days, my LLM interactions primarily take place via [chatgpt-shell](https://github.com/xenodium/chatgpt-shell)'s compose UX. I've grown fond of this hybrid style of interaction. On sharing the [latest incarnation](https://bsky.app/profile/xenodium.bsky.social/post/3lco3ggkk4c2r), [jllw](https://bsky.app/profile/jllw.bsky.social) asked about the possibility to [port to comint shells](https://bsky.app/profile/jllw.bsky.social/post/3lcpb6ygkws2v).
+
+With [jllw](https://bsky.app/profile/jllw.bsky.social)'s great idea in mind, I set out to prototype an [eshell](https://www.gnu.org/software/emacs/manual/html_mono/eshell.html) pager, my preferred shell.
+
+The initial results ain't too shabby:
+
+![](https://xenodium.com/images/an-experimental-e-shell-pager/shell-pager.gif)
+
+While you can easily flip through all `eshell` commands and outputs (via single-character n/p bindings), you can also compose and fire off new commands using a magit-style approach. That is, craft your desired command and C-c C-c to send it off.
+
+The prototype is currently focused on `eshell`, but it can be easily ported to [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Mode.html) and other shells by writing new `shell-maker` configs:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(shell-pager--make-config
+ :shell-buffer buffer
+ :page-buffer (shell-pager--buffer)
+ :next #'shell-pager--eshell-next
+ :previous #'shell-pager--eshell-previous
+ :current #'shell-pager--eshell-current-item
+ :subscribe #'shell-pager--eshell-subscribe
+ :unsubscribe #'shell-pager--eshell-unsubscribe
+ :submit #'shell-pager--eshell-submit
+ :interrupt #'shell-pager--eshell-interrupt)
+```
+
+`shell-pager`'s super [rough/experimental code is now on GitHub](https://github.com/xenodium/shell-pager).
+
+It's been a fun experiment so far. Time will tell, whether or not `shell-pager` can replace most of my `eshell` interactions. The good news is that this isn't an all or nothing sorta thing. `shell-pager` complements `eshell`, so I can always jump back to eshell itself and continue with the very same shell history.
+
 # \[2024-12-05 Thu\] LLM chat navigation
 ---
 id: llm-chat-navigation
