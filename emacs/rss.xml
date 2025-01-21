@@ -6,7 +6,191 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.com/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 01 Jan 2025 17:56:19 +0100</lastBuildDate>
+<lastBuildDate>Tue, 21 Jan 2025 22:08:48 +0000</lastBuildDate>
+<item>
+  <title>A platform that moulds to your needs</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-platform-that-moulds-to-your-needs" class="outline-2">
+ <h2 id="a-platform-that-moulds-to-your-needs"> <span class="timestamp-wrapper"> <span class="timestamp">21 January 2025</span></span> A platform that moulds to your needs</h2>
+ <div class="outline-text-2" id="text-a-platform-that-moulds-to-your-needs">
+ <p>
+Emacs users may be known for bringing in all sorts of diverse workflows into their beloved text editor. From the outside, I get how odd this may seem. We often treat our text editor as a platform of sorts to do our email, web browsing, calendars, project management, chat… the list goes on.
+</p>
+
+ <p>
+Take email, as an example. Back in 2018 I thought " <a href="https://lmno.lol/alvaro/trying-out-mu4e-and-offlineimap">managing email from Emacs… surely that's crazy-talk</a>", yet I gave it a try just in case. 7 years later and I never looked back. I still use the excellent  <a href="https://djcbsoftware.nl/code/mu/mu4e.html">mu4e</a> client.
+</p>
+
+ <p>
+As you become more accustomed to Emacs, you may find yourself wishing you could navigate other tasks just as efficiently. But this doesn't happen right away. The editor starts moulding to your needs, initially as you copy others's code/configurations, but this can only take you so far. Emacs truly does mould to your own needs, once you start learning a little  <a href="https://www.gnu.org/software/emacs/manual/elisp.html">elisp</a>.
+</p>
+
+ <p>
+When comparing  <code>elisp</code> to modern languages, one may be tempted to dismiss it as a niche language from another era. While both of those things may be true, its moulding and glueing capabilities remain just as relevant and powerful today, even in the  <a href="https://en.wikipedia.org/wiki/Large_language_model">LLM</a> era.
+</p>
+
+ <p>
+Take a random workflow like extracting vocabulary from a Japanese class paper handout. While it may seem far-fetched for Emacs to handle this, it's actually fairly straightforward with a little elisp glue. Often, this consists of finding some crucial utilities and glueing them up.
+</p>
+
+
+ <div id="orge4544be" class="figure">
+ <p> <img src="../images/a-platform-that-moulds-to-your-needs/lookup.gif" alt="lookup.gif" width="95%"></img></p>
+</div>
+</div>
+ <div id="outline-container-org2dee683" class="outline-3">
+ <h3 id="org2dee683">Take a screenshot</h3>
+ <div class="outline-text-3" id="text-org2dee683">
+ <p>
+I'm mostly on macOS, so I can use the built-in  <a href="https://support.apple.com/en-us/102646">screencapture</a> utility to capture the screen and save to a file.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(call-process  <span style="color: #183691;">"/usr/sbin/screencapture"</span> nil nil nil  <span style="color: #183691;">"-i"</span>  <span style="color: #183691;">"path/to/screenshot.png"</span>)
+</pre>
+</div>
+</div>
+</div>
+ <div id="outline-container-org59854ba" class="outline-3">
+ <h3 id="org59854ba">Get an LLM to OCR things for ya</h3>
+ <div class="outline-text-3" id="text-org59854ba">
+ <p>
+These days, there are no shortages of neither large language models nor Emacs clients. I built one:  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>, so I feed the screenshot to  <code>chatgpt-shell-lookup</code>, giving it a prompt like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">1. Fill out an org mode table using this format as an example:
+
+|----------+----------+-------+--------+---------+------|
+| Hiragana | Katakana | Kanji | Romaji | English | Tags |
+|----------+----------+-------+--------+---------+------|
+|          |          |       |        |         |      |
+|----------+----------+-------+--------+---------+------|
+
+2. Fill out Hiragana or Katakana when appropriate. Never both.
+3. Fill out Kanji when appropriate.
+4. Show long romaji vowels (i.e. ō).
+5. DO NOT use Markdown source blocks.
+6. DO NOT add any text or explanations outside the org table.
+</pre>
+</div>
+
+ <p>
+Be sure to always check LLM output ;)
+</p>
+</div>
+</div>
+ <div id="outline-container-org6ac7e46" class="outline-3">
+ <h3 id="org6ac7e46">Let org do its thing</h3>
+ <div class="outline-text-3" id="text-org6ac7e46">
+ <p>
+Since I requested  <a href="https://orgmode.org/">org</a> markup from the LLM, I can use  <code>org-mode</code> to navigate cells and tweak data as needed. The output I get looks a little something like this:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">| Hiragana               | Katakana   | Kanji                | Romaji               | English               | #Tags              |
+|------------------------+------------+----------------------+----------------------+-----------------------+--------------------|
+| べんきょう を します   |            | 勉強 を します       | benkyō o shimasu     | study                 | #study             |
+...
+| かいもの を します     |            | 買い物 を します     | kaimono o shimasu    | shop                  | #shopping          |
+...
+</pre>
+</div>
+</div>
+</div>
+ <div id="outline-container-org06c459f" class="outline-3">
+ <h3 id="org06c459f">Sarasa Gothic (detour)</h3>
+ <div class="outline-text-3" id="text-org06c459f">
+ <p>
+More of a side-note than anything… As a beginner Japanese learner, I quickly discovered I needed a font supporting my new rendering needs. I found  <a href="https://picaq.github.io/sarasa/">Sarasa Gothic Mono</a>, a lovely font (thanks to this  <a href="https://www.reddit.com/r/emacs/comments/1hgi7cj/recommendation_for_a_font_for_japanesechinese/">Reddit post</a>).
+</p>
+</div>
+</div>
+ <div id="outline-container-org8cd9c62" class="outline-3">
+ <h3 id="org8cd9c62">More elisp glue</h3>
+ <div class="outline-text-3" id="text-org8cd9c62">
+ <p>
+Now that I got my Japanese vocabulary in org format, I can continue leveraging elisp to glue other things from my target workflow, like iterating over the table and generating a  <a href="https://en.wikipedia.org/wiki/Tab-separated_values">tsv</a> with my new vocabulary:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">while</span> (org-at-table-p)
+  (<span style="color: #a71d5d;">let*</span> ((front ...)
+         (hiragana (org-table-get-field 1))
+         (katakana (org-table-get-field 2))
+         (kanji (org-table-get-field 3))
+         (romaji (org-table-get-field 4))
+         (meaning (org-table-get-field 5))
+         (tags (org-table-get-field 6)))
+    (<span style="color: #a71d5d;">with-current-buffer</span> output-buffer
+      (insert (format  <span style="color: #183691;">"%s\t%s\t%s\t%s\t%s\t%s\t%s\n"</span>
+                      front
+                      hiragana
+                      katakana
+                      kanji
+                      romaji
+                      meaning
+                      (replace-regexp-in-string  <span style="color: #183691;">"#"</span>  <span style="color: #183691;">""</span> tags)))))
+  (forward-line 1))
+</pre>
+</div>
+
+ <pre class="example" id="orgb4e5f38">
+べんきょう を します	べんきょう を します		勉強 を します	benkyō o shimasu	study	study
+...
+かいもの を します	かいもの を します		買い物 を します	kaimono o shimasu	shop	shopping
+...
+</pre>
+</div>
+</div>
+ <div id="outline-container-org3d26eec" class="outline-3">
+ <h3 id="org3d26eec">Anki</h3>
+ <div class="outline-text-3" id="text-org3d26eec">
+ <p>
+So where is all this elisp glueing going? Now that I have my new vocabulary in a .tsv table, I can feed it to  <a href="https://apps.ankiweb.net/">Anki</a>, the popular spaced repetition app. While there are a handful of existing  <a href="https://lmno.lol/alvaro/anki-bookmarks">Anki Emacs packages</a>, converting with an elisp loop was simple enough and gave me lots of freedom on how to structure my cards.
+</p>
+</div>
+</div>
+ <div id="outline-container-org367b6ba" class="outline-3">
+ <h3 id="org367b6ba">iPhone</h3>
+ <div class="outline-text-3" id="text-org367b6ba">
+ <p>
+Once I got the new vocabulary imported into Anki, I can subsequently sync it over to the iPhone. In some way, you can say that a bit of elisp glue here and there facilitated the entire workflow.
+</p>
+
+ <p>
+By the way, now you know why there's a random  <a href="https://github.com/xenodium/chatgpt-shell/blob/9c896feda89a2a879de807a5bd652beec7d6a3f6/chatgpt-shell.el#L1896">chatgpt-shell-japanese-lookup</a> function included in  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a>.
+</p>
+
+
+ <div id="org29c5b8c" class="figure">
+ <p> <img src="../images/a-platform-that-moulds-to-your-needs/anki.jpeg" alt="anki.jpeg" width="60%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org923b6d9" class="outline-3">
+ <h3 id="org923b6d9">Learn elisp</h3>
+ <div class="outline-text-3" id="text-org923b6d9">
+ <p>
+While Emacs and elisp may not be the most fashionable pair, they sure fill a huge void for me. They provide a platform that can easily mould to my specific needs.
+</p>
+
+ <p>
+If you're an Emacser and have been shying away from learning elisp, do yourself a favour and get your toes dipped. You'll be glad to.
+</p>
+
+ <p>
+Soon enough, you'll enable workflows that mould exactly to the way you like things to work. In other words, they simply  <a href="https://lmno.lol/alvaro/emacs-dwim-do-what-i-mean">do what ✨you✨ mean</a> ;)
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/a-platform-that-moulds-to-your-needs</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/a-platform-that-moulds-to-your-needs</guid>
+  <pubDate>Tue, 21 Jan 2025 22:08:48 +0000</pubDate>
+</item>
 <item>
   <title>Blogging minus the yucky bits of the modern web</title>
   <description><![CDATA[<div id="content" class="content">
