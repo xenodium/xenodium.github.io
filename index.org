@@ -1,6 +1,157 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-01-30 Thu] A tour of ready player mode
+:PROPERTIES:
+:CUSTOM_ID: a-tour-of-ready-player-mode
+:END:
+[[https://github.com/xenodium/ready-player][Ready Player Mode]], which began as a [[https://www.reddit.com/r/emacs/comments/1dtnjy7/is_there_imageview_but_for_audio/][tiny media-viewing experiment]], has now become my daily music player.
+
+Along the way, I moved from regular daily streaming to buying and playing music offline, relying on the odd streaming service exclusively for discovery. This setup's been working great so far. I get unrestricted playback (for life) with the occasional discovery session whenever I see fit.
+
+** Setup
+
+=Ready Player Mode= runs in Emacs. You install it, enable its minor mode (for media recognition), and you're ready to go.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package ready-player
+    :ensure t
+    :config
+    (ready-player-mode +1))
+#+end_src
+
+=Ready Player Mode= will try to use either [[https://mpv.io/][mpv]], [[https://www.videolan.org/vlc/][vlc]], [[https://ffmpeg.org/ffplay.html][ffplay]], or [[https://en.wikipedia.org/wiki/MPlayer][mplayer]] (in that order) to play media, but mpv works best.
+
+** Ready to go
+
+Post setup, you can open media files like any other text file and Emacs will just play it for you. Say, open a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] buffer, navigate to a file, and open as usual.
+
+#+ATTR_HTML: :width 60%
+[[file:images/a-tour-of-ready-player-mode/open-file.gif]]
+
+** Buttons vs key bindings
+
+If buttons are your cup of tea, use =tab= or =backtab= to navigate around.
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-tour-of-ready-player-mode/buttons.gif]]
+
+Alternatively, single-key bindings are available. You can find them all in the transient help menu, via the =?= binding.
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-tour-of-ready-player-mode/transient.png]]
+
+** Global key bindings
+
+Global key bindings are available, so you can interact with the player without switching buffers.
+
+#+ATTR_HTML: :width 85%
+[[file:images/a-tour-of-ready-player-mode/global.png]]
+
+Global bindings are under the =C-c m= prefix.
+
+| C-c m SPC | Toggle play/stop of media.                                  |
+| C-c m r   | Cycle through repeat settings: file, directory, off.        |
+| C-c m m   | Toggle switching between player buffer and previous buffer. |
+| C-c m s   | Toggle shuffle setting.                                     |
+| C-c m a   | Toggle autoplay setting.                                    |
+| C-c m n   | Open the next media file in the same directory.             |
+| C-c m c   | Open my media collection.                                   |
+| C-c m i   | Show playback info in the echo area.                        |
+| C-c m p   | Open the previous media file in the same directory.         |
+| C-c m /   | Search the `dired' playlist for playback (experimental).    |
+
+ If you prefer to use other bindings, disable default ones with:
+
+#+begin_src emacs-lisp :lexical no
+  (setq ready-player-set-global-bindings nil)
+#+end_src
+
+** Open externally
+
+You can always open the currently played file externally, using your system default player. This is bound to the =e= key.
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-tour-of-ready-player-mode/external.png]]
+
+** Repeat, shuffle, and autoplay
+
+Repeat, shuffle, and autoplay should do what you'd expect and can be toggled via =r= =s= and =a= keys.
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-tour-of-ready-player-mode/repeat-shuffle-autoplay.gif]]
+
+** Play current directory
+
+By default, =Ready Player= will continue playing other media found in the current directory. Use =n= and =p= bindings to move through different tracks.
+
+#+ATTR_HTML: :width 70%
+[[file:images/a-tour-of-ready-player-mode/next.gif]]
+
+** Seek
+
+=Ready Player= works best with [[https://mpv.io/][mpv]] player. If you have it installed, you can seek through tracks.
+
+#+ATTR_HTML: :width 90%
+[[file:images/a-tour-of-ready-player-mode/seek.gif]]
+
+** Play your collection
+
+=Ready Player= can remember your music collection, but needs a tiny addition to the existing setup via the =ready-player-my-media-collection-location= variable.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package ready-player
+    :custom
+    (ready-player-my-media-collection-location "~/path/to/your/music/collection")
+    :config
+    (ready-player-mode +1))
+#+end_src
+
+Your music collection is now available via the home button.
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-tour-of-ready-player-mode/home.png]]
+
+** Index + search
+
+Your music collection is automatically indexed. Same for the currently played directory, so you can search for tracks.
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-tour-of-ready-player-mode/magnifying.png]]
+
+#+ATTR_HTML: :width 95%
+[[file:images/a-tour-of-ready-player-mode/search.png]]
+
+** Bookmarking
+
+This is a new feature inspired by [[https://functional.cafe/@tristanC/113896948267754737][tristanC's use]] of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html][Emacs bookmarks]] with =Ready Player.= Bookmarks are now displayed and toggled from the player interface.
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-tour-of-ready-player-mode/bookmark.gif]]
+
+Bookmarks are searchable too.
+
+#+ATTR_HTML: :width 95%
+[[file:images/a-tour-of-ready-player-mode/search-bookmark.png]]
+
+** Download album cover
+
+Missing album cover? Download it via =M-x ready-player-download-album-artwork=.
+
+#+ATTR_HTML: :width 95%
+[[file:images/a-tour-of-ready-player-mode/artwork.gif]]
+
+** Embracing =dired=
+
+I mentioned playing media from current directory or your music collection, but =Ready Player= is really just playing media from a =dired= buffer. If you can craft a =dired= buffer, =Ready Player= [[https://lmno.lol/alvaro/the-dired-abstraction][should be able to play it]]. Think [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html][find-dired]].
+
+** Advanced features
+
+=Ready Player= should be umm... ready to play with little configuration. If you want further customizations, check out its [[https://github.com/xenodium/ready-player?tab=readme-ov-file#all-customizations][documentation]].
+
+Enjoy your unrestricted music offline, now and forever!
+
+✨[[https://github.com/sponsors/xenodium][sponsor]]✨ this project.
 * [2025-01-21 Tue] A platform that moulds to your needs
 :PROPERTIES:
 :CUSTOM_ID: a-platform-that-moulds-to-your-needs

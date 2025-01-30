@@ -6,7 +6,284 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Tue, 21 Jan 2025 22:09:06 +0000</lastBuildDate>
+<lastBuildDate>Thu, 30 Jan 2025 13:59:21 +0000</lastBuildDate>
+<item>
+  <title>A tour of ready player mode</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-tour-of-ready-player-mode" class="outline-2">
+ <h2 id="a-tour-of-ready-player-mode"> <span class="timestamp-wrapper"> <span class="timestamp">30 January 2025</span></span> A tour of ready player mode</h2>
+ <div class="outline-text-2" id="text-a-tour-of-ready-player-mode">
+ <p>
+ <a href="https://github.com/xenodium/ready-player">Ready Player Mode</a>, which began as a  <a href="https://www.reddit.com/r/emacs/comments/1dtnjy7/is_there_imageview_but_for_audio/">tiny media-viewing experiment</a>, has now become my daily music player.
+</p>
+
+ <p>
+Along the way, I moved from regular daily streaming to buying and playing music offline, relying on the odd streaming service exclusively for discovery. This setup's been working great so far. I get unrestricted playback (for life) with the occasional discovery session whenever I see fit.
+</p>
+</div>
+ <div id="outline-container-org77ed3a0" class="outline-3">
+ <h3 id="org77ed3a0">Setup</h3>
+ <div class="outline-text-3" id="text-org77ed3a0">
+ <p>
+ <code>Ready Player Mode</code> runs in Emacs. You install it, enable its minor mode (for media recognition), and you're ready to go.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> ready-player
+   <span style="color: #a71d5d;">:ensure</span> t
+   <span style="color: #a71d5d;">:config</span>
+  (ready-player-mode +1))
+</pre>
+</div>
+
+ <p>
+ <code>Ready Player Mode</code> will try to use either  <a href="https://mpv.io/">mpv</a>,  <a href="https://www.videolan.org/vlc/">vlc</a>,  <a href="https://ffmpeg.org/ffplay.html">ffplay</a>, or  <a href="https://en.wikipedia.org/wiki/MPlayer">mplayer</a> (in that order) to play media, but mpv works best.
+</p>
+</div>
+</div>
+ <div id="outline-container-org5dd79f1" class="outline-3">
+ <h3 id="org5dd79f1">Ready to go</h3>
+ <div class="outline-text-3" id="text-org5dd79f1">
+ <p>
+Post setup, you can open media files like any other text file and Emacs will just play it for you. Say, open a  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffer, navigate to a file, and open as usual.
+</p>
+
+
+ <div id="org38746c6" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/open-file.gif" alt="open-file.gif" width="60%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org4efd20c" class="outline-3">
+ <h3 id="org4efd20c">Buttons vs key bindings</h3>
+ <div class="outline-text-3" id="text-org4efd20c">
+ <p>
+If buttons are your cup of tea, use  <code>tab</code> or  <code>backtab</code> to navigate around.
+</p>
+
+
+ <div id="orgbfb9dd6" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/buttons.gif" alt="buttons.gif" width="70%"></img></p>
+</div>
+
+ <p>
+Alternatively, single-key bindings are available. You can find them all in the transient help menu, via the  <code>?</code> binding.
+</p>
+
+
+ <div id="org6827a6d" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/transient.png" alt="transient.png" width="70%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgcf1b7e1" class="outline-3">
+ <h3 id="orgcf1b7e1">Global key bindings</h3>
+ <div class="outline-text-3" id="text-orgcf1b7e1">
+ <p>
+Global key bindings are available, so you can interact with the player without switching buffers.
+</p>
+
+
+ <div id="org022c9f2" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/global.png" alt="global.png" width="85%"></img></p>
+</div>
+
+ <p>
+Global bindings are under the  <code>C-c m</code> prefix.
+</p>
+
+ <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"> <colgroup> <col class="org-left"></col> <col class="org-left"></col></colgroup> <tbody> <tr> <td class="org-left">C-c m SPC</td>
+ <td class="org-left">Toggle play/stop of media.</td>
+</tr> <tr> <td class="org-left">C-c m r</td>
+ <td class="org-left">Cycle through repeat settings: file, directory, off.</td>
+</tr> <tr> <td class="org-left">C-c m m</td>
+ <td class="org-left">Toggle switching between player buffer and previous buffer.</td>
+</tr> <tr> <td class="org-left">C-c m s</td>
+ <td class="org-left">Toggle shuffle setting.</td>
+</tr> <tr> <td class="org-left">C-c m a</td>
+ <td class="org-left">Toggle autoplay setting.</td>
+</tr> <tr> <td class="org-left">C-c m n</td>
+ <td class="org-left">Open the next media file in the same directory.</td>
+</tr> <tr> <td class="org-left">C-c m c</td>
+ <td class="org-left">Open my media collection.</td>
+</tr> <tr> <td class="org-left">C-c m i</td>
+ <td class="org-left">Show playback info in the echo area.</td>
+</tr> <tr> <td class="org-left">C-c m p</td>
+ <td class="org-left">Open the previous media file in the same directory.</td>
+</tr> <tr> <td class="org-left">C-c m /</td>
+ <td class="org-left">Search the `dired' playlist for playback (experimental).</td>
+</tr></tbody></table> <p>
+If you prefer to use other bindings, disable default ones with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> ready-player-set-global-bindings nil)
+</pre>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgbba8c7a" class="outline-3">
+ <h3 id="orgbba8c7a">Open externally</h3>
+ <div class="outline-text-3" id="text-orgbba8c7a">
+ <p>
+You can always open the currently played file externally, using your system default player. This is bound to the  <code>e</code> key.
+</p>
+
+
+ <div id="org02cabdf" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/external.png" alt="external.png" width="50%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org3ccd390" class="outline-3">
+ <h3 id="org3ccd390">Repeat, shuffle, and autoplay</h3>
+ <div class="outline-text-3" id="text-org3ccd390">
+ <p>
+Repeat, shuffle, and autoplay should do what you'd expect and can be toggled via  <code>r</code>  <code>s</code> and  <code>a</code> keys.
+</p>
+
+
+ <div id="orgfde1e07" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/repeat-shuffle-autoplay.gif" alt="repeat-shuffle-autoplay.gif" width="50%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orgb99e0d9" class="outline-3">
+ <h3 id="orgb99e0d9">Play current directory</h3>
+ <div class="outline-text-3" id="text-orgb99e0d9">
+ <p>
+By default,  <code>Ready Player</code> will continue playing other media found in the current directory. Use  <code>n</code> and  <code>p</code> bindings to move through different tracks.
+</p>
+
+
+ <div id="org8c5bc00" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/next.gif" alt="next.gif" width="70%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org4272e5d" class="outline-3">
+ <h3 id="org4272e5d">Seek</h3>
+ <div class="outline-text-3" id="text-org4272e5d">
+ <p>
+ <code>Ready Player</code> works best with  <a href="https://mpv.io/">mpv</a> player. If you have it installed, you can seek through tracks.
+</p>
+
+
+ <div id="orge895d29" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/seek.gif" alt="seek.gif" width="90%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org8b21a75" class="outline-3">
+ <h3 id="org8b21a75">Play your collection</h3>
+ <div class="outline-text-3" id="text-org8b21a75">
+ <p>
+ <code>Ready Player</code> can remember your music collection, but needs a tiny addition to the existing setup via the  <code>ready-player-my-media-collection-location</code> variable.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> ready-player
+   <span style="color: #a71d5d;">:custom</span>
+  (ready-player-my-media-collection-location  <span style="color: #183691;">"~/path/to/your/music/collection"</span>)
+   <span style="color: #a71d5d;">:config</span>
+  (ready-player-mode +1))
+</pre>
+</div>
+
+ <p>
+Your music collection is now available via the home button.
+</p>
+
+
+ <div id="org1b3c3fd" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/home.png" alt="home.png" width="50%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org925d94b" class="outline-3">
+ <h3 id="org925d94b">Index + search</h3>
+ <div class="outline-text-3" id="text-org925d94b">
+ <p>
+Your music collection is automatically indexed. Same for the currently played directory, so you can search for tracks.
+</p>
+
+
+ <div id="org20ae3f4" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/magnifying.png" alt="magnifying.png" width="50%"></img></p>
+</div>
+
+
+ <div id="orga6520ed" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/search.png" alt="search.png" width="95%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org8564478" class="outline-3">
+ <h3 id="org8564478">Bookmarking</h3>
+ <div class="outline-text-3" id="text-org8564478">
+ <p>
+This is a new feature inspired by  <a href="https://functional.cafe/@tristanC/113896948267754737">tristanC's use</a> of  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html">Emacs bookmarks</a> with  <code>Ready Player.</code> Bookmarks are now displayed and toggled from the player interface.
+</p>
+
+
+ <div id="orge8445c5" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/bookmark.gif" alt="bookmark.gif" width="50%"></img></p>
+</div>
+
+ <p>
+Bookmarks are searchable too.
+</p>
+
+
+ <div id="orge761bf7" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/search-bookmark.png" alt="search-bookmark.png" width="95%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org9badddd" class="outline-3">
+ <h3 id="org9badddd">Download album cover</h3>
+ <div class="outline-text-3" id="text-org9badddd">
+ <p>
+Missing album cover? Download it via  <code>M-x ready-player-download-album-artwork</code>.
+</p>
+
+
+ <div id="org86b19d6" class="figure">
+ <p> <img src="https://xenodium.github.io/images/a-tour-of-ready-player-mode/artwork.gif" alt="artwork.gif" width="95%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org3e12285" class="outline-3">
+ <h3 id="org3e12285">Embracing  <code>dired</code></h3>
+ <div class="outline-text-3" id="text-org3e12285">
+ <p>
+I mentioned playing media from current directory or your music collection, but  <code>Ready Player</code> is really just playing media from a  <code>dired</code> buffer. If you can craft a  <code>dired</code> buffer,  <code>Ready Player</code>  <a href="https://lmno.lol/alvaro/the-dired-abstraction">should be able to play it</a>. Think  <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-and-Find.html">find-dired</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-orge1dacbc" class="outline-3">
+ <h3 id="orge1dacbc">Advanced features</h3>
+ <div class="outline-text-3" id="text-orge1dacbc">
+ <p>
+ <code>Ready Player</code> should be umm… ready to play with little configuration. If you want further customizations, check out its  <a href="https://github.com/xenodium/ready-player?tab=readme-ov-file#all-customizations">documentation</a>.
+</p>
+
+ <p>
+Enjoy your unrestricted music offline, now and forever!
+</p>
+
+ <p>
+✨ <a href="https://github.com/sponsors/xenodium">sponsor</a>✨ this project.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/a-tour-of-ready-player-mode</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/a-tour-of-ready-player-mode</guid>
+  <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>A platform that moulds to your needs</title>
   <description><![CDATA[<div id="content" class="content">
