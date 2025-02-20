@@ -1,7 +1,164 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2025-01-30 Thu] A tour of ready player mode
+* [2025-02-20 Thu] Keychron K3 Pro: F1-F12 as default macOS keys
+:PROPERTIES:
+:CUSTOM_ID: keychron-k3-pro-f1-f12-as-default-macos-keys
+:END:
+
+#+ATTR_HTML: :width 70%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/keyboard.jpg]]
+
+After resetting my [[https://www.keychron.uk/products/keychron-k3-pro-qmk-via-wireless-custom-mechanical-keyboard][Keychron K3 Pro]], my F1 to F12 keys were no longer my default macOS keys. The entire row was defaulting to macOS's special keys (i.e. Mission Control, Launch Pad, Volume, etc). At first, I thought I may just need to revisit the macOS setting "Use F1, F2, etc keys as standard function keys", yet toggling the setting made no difference.
+
+#+ATTR_HTML: :width 70%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/settings.png]]
+
+Turns out, I had remapped those keys long ago and simply forgot about it. Factory resetting my keyboard got rid of this customization. This post is a reminder for my future self, and anyone else looking to remap their F1-F12 keys.
+
+** Save your current layout
+
+Via https://usevia.app, I saved my current keyboard layout (the out-of-box layout) and named it =k3_pro_ansi_white(before).json=.
+
+#+ATTR_HTML: :width 90%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/save.png]]
+
+** Apply your changes
+
+I made a second copy of the layout and named it =k3_pro_ansi_white(after).json=. In this new file, I located the two layers (first and second) and simply swapped the two row chunks using a text editor.
+
+The diff looks a little something like this:
+
+#+begin_src
+  --- k3_pro_ansi_white(before).json	2025-02-20 09:44:03
+  +++ k3_pro_ansi_white(after).json	2025-02-20 09:43:59
+  @@ -5,18 +5,18 @@
+     "layers": [
+       [
+         "KC_ESC",
+  -      "KC_BRID",
+  -      "KC_BRIU",
+  -      "CUSTOM(4)",
+  -      "CUSTOM(5)",
+  -      "BL_DEC",
+  -      "BL_INC",
+  -      "KC_MPRV",
+  -      "KC_MPLY",
+  -      "KC_MNXT",
+  -      "KC_MUTE",
+  -      "KC_VOLD",
+  -      "KC_VOLU",
+  +      "KC_F1",
+  +      "KC_F2",
+  +      "KC_F3",
+  +      "KC_F4",
+  +      "KC_F5",
+  +      "KC_F6",
+  +      "KC_F7",
+  +      "KC_F8",
+  +      "KC_F9",
+  +      "KC_F10",
+  +      "KC_F11",
+  +      "KC_F12",
+         "CUSTOM(8)",
+         "KC_DEL",
+         "BL_STEP",
+  @@ -103,18 +103,18 @@
+       ],
+       [
+         "KC_TRNS",
+  -      "KC_F1",
+  -      "KC_F2",
+  -      "KC_F3",
+  -      "KC_F4",
+  -      "KC_F5",
+  -      "KC_F6",
+  -      "KC_F7",
+  -      "KC_F8",
+  -      "KC_F9",
+  -      "KC_F10",
+  -      "KC_F11",
+  -      "KC_F12",
+  +      "KC_BRID",
+  +      "KC_BRIU",
+  +      "CUSTOM(4)",
+  +      "CUSTOM(5)",
+  +      "BL_DEC",
+  +      "BL_INC",
+  +      "KC_MPRV",
+  +      "KC_MPLY",
+  +      "KC_MNXT",
+  +      "KC_MUTE",
+  +      "KC_VOLD",
+  +      "KC_VOLU",
+         "KC_TRNS",
+         "KC_TRNS",
+         "BL_TOGG",
+#+end_src
+
+Similarly, here's side-by-side look via Emacs ediff:
+
+#+ATTR_HTML: :width 90%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/after-1.png]]
+
+#+ATTR_HTML: :width 90%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/after-2.png]]
+
+** Load your modified layout
+
+Now that we have =k3_pro_ansi_white(after).json= with our changes, all that's left is loading through https://usevia.app. You are now done.
+
+#+ATTR_HTML: :width 90%
+[[file:images/keychron-k3-pro-f1-f12-as-default-macos-keys/load.png]]
+
+While F1-F12 keys should now be available by default. To access your macOS special keys use the =fn= key.
+
+Enjoy your F1-F12 default keys!
+
+* [2025-02-03 Mon] E-ink bookmarks
+:PROPERTIES:
+:CUSTOM_ID: e-ink-bookmarks
+:END:
+:MODIFIED:
+[2025-02-08 Sat]
+:END:
+- [[https://giuliomagnifico.blog/post/2024-09-13-cpiartframe/][cPiArtFrame]].
+- [[https://www.reddit.com/r/eink/s/g6IMhIzWO9][DIY E-Ink clock update with more faces, github repo & full youtube tutorial]].
+- [[https://news.ycombinator.com/item?id=40607889][Show HN: E-Paper 7-color display showing the current weather | Hacker News]].
+
+* [2025-02-03 Mon] Sourdough bookmarks
+:PROPERTIES:
+:CUSTOM_ID: sourdough-bookmarks
+:END:
+:MODIFIED:
+[2025-02-03 Mon]
+:END:
+- [[https://www.reddit.com/r/Sourdough/comments/1ig9nnu/handy_little_guide][Reading crumbs structure: fermentation]].
+- [[https://www.reddit.com/r/Sourdough/comments/1i9uhyr/todays_loaf_and_some_advice_after_making_100/][Todays loaf and some advice after making 100+ loaves over 6 years]].
+
+* [2025-01-30 Thu] Cardamom Buns recipe
+  :PROPERTIES:
+  :CUSTOM_ID: cardamom-buns-a-yak-shaving-story-plus-recipe
+  :END:
+** Buns
+- 150 ml milk
+- 2 tsp instant yeast (2.25 tsp active-dry yeast, 17.5g fresh yeast)
+- 1 large egg
+- 1 egg yolk
+- 50 grams sugar
+- 1/2 tsp vanilla extract
+- 1/2 tsp ground cardamom
+- 1/2 tsp salt
+- 375 grams all-purpose or bread flour
+- 57 grams unsalted butter, softened
+
+** Filling
+- 71 grams unsalted butter, softened
+- 65 grams brown sugar
+- 1.5 tsp ground cardamom
+- Pinch of salt
+
+* [2025-01-30 Thu] A tour of Ready Player Mode
 :PROPERTIES:
 :CUSTOM_ID: a-tour-of-ready-player-mode
 :END:
@@ -1356,12 +1513,13 @@ Thank you!
 :CUSTOM_ID: anki-bookmarks
 :END:
 :MODIFIED:
-[2024-09-04 Wed]
+[2025-02-04 Tue]
 :END:
 - [[https://doubleloop.net/2020/08/02/adding-flashcards-to-your-digital-garden-with-org-roam-and-anki/][Adding flashcards to your digital garden (with org-roam and Anki) - doubleloop]].
 - [[https://rgoswami.me/posts/anki-decks-orgmode/][Anki Decks with Orgmode]].
 - [[https://github.com/louietan/anki-editor][anki-editor: Emacs minor mode for making Anki cards with Org]].
 - [[https://github.com/telotortium/emacs-od2ae][emacs-od2ae: Convert org-drill entries to anki-editor]].
+- [[https://github.com/l3kn/org-fc][GitHub - l3kn/org-fc: Spaced Repetition System for Emacs org-mode]].
 - [[https://github.com/eyeinsky/org-anki/][org-anki: Sync org notes to Anki via AnkiConnect]].
 - [[https://orgmode.org/worg/org-contrib/org-drill.html][org-drill.el - flashcards and spaced repetition for org-mode]].
 - [[https://github.com/l3kn/org-fc][org-fc: Spaced Repetition System for Emacs org-mode]].
@@ -5168,14 +5326,16 @@ You see? This post wasn't really about ChatGPT. Aren't you glad you stuck around
 :CUSTOM_ID: llm-bookmarks
 :END:
 :MODIFIED:
-[2023-09-17 Sun]
+[2025-02-08 Sat]
 :END:
 - [[https://vineeth.io/posts/2023/new-age-of-magic/][A New Age of Magic]].
 - [[https://news.ycombinator.com/item?id=35643219][Bark – Text-prompted generative audio model | Hacker News]].
 - [[https://news.ycombinator.com/item?id=35942583][Brex’s Prompt Engineering Guide | Hacker News]].
 - [[https://github.com/suno-ai/bark][GitHub - suno-ai/bark: 🔊 Text-Prompted Generative Audio Model]].
 - [[https://blog.rfox.eu/en/Programming/How_to_run_your_own_LLM_GPT.html][How to run your own LLM (GPT)]].
+- [[https://news.ycombinator.com/item?id=40408880][Llama3 implemented from scratch | Hacker News]].
 - [[https://promptperfect.jina.ai/][PromptPerfect - Elevate Your Prompts to Perfection with AI Prompt Engineering]].
+- [[https://www.reddit.com/r/BackyardAI/s/I5HLdePj6Z][Reddit - Dive into anythingHow Language Models work, Part 1]]
 - [[https://ykgoon.com/running-llm-locally.html][Running LLMs Locally | Y.K. Goon]].
 - [[https://sharegpt.com/][ShareGPT: Share your wildest ChatGPT conversations with one click.]].
 - [[https://news.ycombinator.com/item?id=35660751][Show HN: Automatic prompt optimizer for LLMs | Hacker News]].
@@ -12246,19 +12406,11 @@ Thank you Internet strangers! :)
   :PROPERTIES:
   :CUSTOM_ID: swiftui-bookmarks
   :END:
-:MODIFIED:
-[2021-11-23 Tue]
-:END:
-- [[https://github.com/AndreaMiotto/ActionOver][ActionOver: A custom SwiftUI modifier to present an Action Sheet on iPhone and a Popover on iPad and Mac]].
-- [[https://www.hackingwithswift.com/articles/224/common-swiftui-mistakes-and-how-to-fix-them][8 Common SwiftUI Mistakes - and how to fix them – Hacking with Swift]].
-- [[https://schwiftyui.com/swiftui/building-a-widget-for-ios-with-swiftui-and-widgetkit/][Building a Widget for iOS with SwiftUI and WidgetKit - SchwiftyUI]].
-- [[https://swiftui.diegolavalle.com/posts/linewrapping-stacks/][Line-Wrapping Stacks - Swift You and I]].
-- [[https://swiftwithmajid.com/2021/07/14/pull-to-refresh-in-swiftui/][Pull-to-Refresh in SwiftUI | Swift with Majid]].
-- [[https://blog.rizwan.dev/blog/swiftui-import-export-files][SwiftUI Import/Export files | Rizwan's Blog 👨‍💻]].
-- [[https://betterprogramming.pub/the-swiftui-toolbar-in-ios-14-b4a0fe6a3034][The SwiftUI Toolbar in iOS 14]].
-- [[https://trailingclosure.com/][Trailing Closure (SwiftUI tutotials)]].
-- [[https://www.avanderlee.com/swift/urlsession-common-pitfalls-with-background-download-upload-tasks/][URLSession: Common pitfalls with background download & upload tasks]].
+  :MODIFIED:
+  [2025-02-04 Tue]
+  :END:
 - [[https://twitter.com/clarko/status/1284940951031439361][ SwiftUI live-blur materials that you can use like a background color]].
+- [[https://www.hackingwithswift.com/articles/224/common-swiftui-mistakes-and-how-to-fix-them][8 Common SwiftUI Mistakes - and how to fix them – Hacking with Swift]].
 - [[https://emacsist.github.io/2020/01/07/swiftui-for-absolute-beginners%E8%AF%BB%E4%B9%A6/][<SwiftUI for Absolute Beginners>读书 - emacsist]].
 - [[https://developer.apple.com/documentation/swiftui/environmentvalues][@Environment values]].
 - [[https://twitter.com/natpanferova/status/1275903292946567168][`@State` `onChange`]].
@@ -12269,10 +12421,12 @@ Thank you Internet strangers! :)
 - [[https://swiftbysundell.com/articles/swiftui-state-management-guide/][A guide to SwiftUI’s state management system | Swift by Sundell]].
 - [[https://swiftbysundell.com/articles/swiftui-layout-system-guide-part-1/][A guide to the SwiftUI layout system - Part 1 | Swift by Sundell]].
 - [[https://github.com/jordansinger/SwiftUI-Kit][A SwiftUI iOS system components and interactions demo app based on iOS 14]].
+- [[https://github.com/AndreaMiotto/ActionOver][ActionOver: A custom SwiftUI modifier to present an Action Sheet on iPhone and a Popover on iPad and Mac]].
 - [[https://swiftui-lab.com/swiftui-animations-part1/][Advanced SwiftUI Animations - Part 1: Paths - The SwiftUI Lab]].
 - [[https://swiftui-lab.com/advanced-transitions/][Advanced SwiftUI Transitions - The SwiftUI Lab]].
 - [[https://github.com/krzysztofzablocki/AutomaticSettings][AutomaticSettings: Data driven settings UI]].
 - [[https://www.morningswiftui.com/blog/build-mapview-app-with-swiftui][Building a MapView app with SwiftUI — Morning SwiftUI]].
+- [[https://schwiftyui.com/swiftui/building-a-widget-for-ios-with-swiftui-and-widgetkit/][Building a Widget for iOS with SwiftUI and WidgetKit - SchwiftyUI]].
 - [[https://swiftwithmajid.com/2019/12/25/building-pager-view-in-swiftui/][Building Pager view in SwiftUI | Majid’s blog about Swift development]].
 - [[https://swiftwithmajid.com/2020/02/05/building-viewmodels-with-combine-framework/][Building ViewModels with Combine framework]].
 - [[https://www.donnywals.com/category/combine/][Category: Combine – Donny Wals]].
@@ -12319,6 +12473,7 @@ Thank you Internet strangers! :)
 - [[https://twitter.com/misaellandero/status/1285318302013837312][Integrate SwiftUI on UIKIT project its actually pretty easy]].
 - [[https://stackoverflow.com/questions/56505043/how-to-make-view-the-size-of-another-view-in-swiftui][ios - How to make view the size of another view in SwiftUI - Stack Overflow]].
 - [[https://elliehuxtable.com/lessons-learned-with-swift-ios-development/][Lessons learned with Swift + iOS development]].
+- [[https://swiftui.diegolavalle.com/posts/linewrapping-stacks/][Line-Wrapping Stacks - Swift You and I]].
 - [[https://twitter.com/dmartincy/status/1275913911506780161][LLDB "_regexp-break <file>:<line>:<column>", breakpoint at a particular source code line and column]].
 - [[https://swiftwithmajid.com/2020/07/08/mastering-grids-in-swiftui/][Mastering grids in SwiftUI | Swift with Majid]].
 - [[https://swiftwithmajid.com/2020/09/24/mastering-scrollview-in-swiftui/][Mastering ScrollView in SwiftUI | Swift with Majid]].
@@ -12331,6 +12486,7 @@ Thank you Internet strangers! :)
 - [[https://gumroad.com/l/practical-combine/wwdc2020][Practical Combine: An introduction to Combine with real examples]].
 - [[https://nalexn.github.io/swiftui-deep-linking/][Programmatic navigation in SwiftUI project - Alexey Naumov]].
 - [[https://medium.com/get-chip/propert-wrappers-in-swift-5-1-14f610530710][Property Wrappers in Swift 5.1. An introduction to one of Swift 5.1’s]].
+- [[https://swiftwithmajid.com/2021/07/14/pull-to-refresh-in-swiftui/][Pull-to-Refresh in SwiftUI | Swift with Majid]].
 - [[https://twitter.com/navdeep_ua/status/1296591355485945856][Recreate iOS style Welcome Screen to any app in 3 minutes]].
 - [[https://twitter.com/jsngr/status/1276700160643551232][Recreate this Control Center widget in SwiftUI]].
 - [[https://dev.to/gualtierofr/remote-images-in-swiftui-49jp][Remote images in SwiftUI - DEV Community]].
@@ -12357,8 +12513,10 @@ Thank you Internet strangers! :)
 - [[https://swiftui-lab.com/custom-styling/][SwiftUI Custom Styling - The SwiftUI Lab (scaleEffect and opacity on isPressed)]].
 - [[https://www.swiftcompiled.com/swiftui-datepicker/][SwiftUI DatePicker]].
 - [[https://github.com/Leon12345679/QuickActionCard][SwiftUI displaying customizable quick action card]].
+- [[https://troz.net/post/2024/swiftui-mac-2024/][SwiftUI for Mac 2024 :: TrozWare — Mac books & articles]].
 - [[https://troz.net/post/2020/swiftui_mac_big_sur/][SwiftUI for Mac on Big Sur :: TrozWare]].
 - [[https://twitter.com/jsngr/status/1276931917628219398][SwiftUI gives you .isPlaceholder in WidgetKit generate a placeholders]]
+- [[https://blog.rizwan.dev/blog/swiftui-import-export-files][SwiftUI Import/Export files | Rizwan's Blog 👨‍💻]].
 - [[https://kean.github.io/post/swiftui-layout-system][SwiftUI Layout System | Alexander Grebenyuk]].
 - [[https://www.simpleswiftguide.com/swiftui-navigationview-tutorial-with-examples/][SwiftUI NavigationView tutorial with examples - Simple Swift Guide]].
 - [[https://www.tomasznazarenko.com/frameworks/SwiftUI-notes/][SwiftUI notes - Tomasz Nazarenko Blog]].
@@ -12381,10 +12539,13 @@ Thank you Internet strangers! :)
 - [[https://medium.com/better-programming/the-complete-swiftui-documentation-youve-been-waiting-for-fdfe7241add9][The Complete SwiftUI Documentation You’ve Been Waiting For]].
 - [[https://swiftwithmajid.com/2020/07/02/the-difference-between-stateobject-environmentobject-and-observedobject-in-swiftui/][The difference between @StateObject, @EnvironmentObject, and @ObservedObject]].
 - [[https://swiftui-lab.com/a-powerful-combo/][The Power of the Hosting+Representable Combo (scroll SwiftUI list)]].
+- [[https://betterprogramming.pub/the-swiftui-toolbar-in-ios-14-b4a0fe6a3034][The SwiftUI Toolbar in iOS 14]].
 - [[https://theswiftdev.com/2019/10/31/the-ultimate-combine-framework-tutorial-in-swift/][The ultimate Combine framework tutorial in Swift - The.Swift.Dev.]].
+- [[https://trailingclosure.com/][Trailing Closure (SwiftUI tutotials)]].
 - [[https://twitter.com/dbuchanandev/status/1236411023340511233][Tweet on improving List SwiftUI performace (searching)]].
 - [[https://www.raywenderlich.com/4829472-uicollectionview-custom-layout-tutorial-pinterest][UICollectionView Custom Layout Tutorial: Pinterest | raywenderlich.com]].
 - [[https://medium.com/@dmytro.anokhin/url-image-view-in-swiftui-f08f85d942d8][URL Image view in SwiftUI]].
+- [[https://www.avanderlee.com/swift/urlsession-common-pitfalls-with-background-download-upload-tasks/][URLSession: Common pitfalls with background download & upload tasks]].
 - [[https://heckj.github.io/swiftui-notes/][Using Combine (extensive online book)]].
 - [[https://medium.com/better-programming/using-ios-14s-menu-as-a-picker-in-swiftui-b036c772037][Using iOS 14's Menu as a Picker in SwiftUI]].
 - [[https://swiftwithmajid.com/2019/10/30/view-composition-in-swiftui/][View composition in SwiftUI | Majid’s blog about Swift development]].
@@ -14766,11 +14927,12 @@ For scp:
   :CUSTOM_ID: fonts-bookmarks
   :END:
   :MODIFIED:
-  [2019-10-20 Sun]
+  [2025-02-03 Mon]
   :END:
 - [[https://www.getthefont.com/][Get the Font]].
 - [[https://github.com/rsms/inter][GitHub - rsms/inter: The Inter UI font family]].
 - [[https://input.fontbureau.com/][Input: Fonts for Code]].
+- [[https://x.com/Markbuschn/status/1866263306333229288][Need an industrial typeface like this, anyone?]].
 - [[https://app.programmingfonts.org/][Programming Fonts - Test Drive]].
 - [[https://www.kutilek.de/sudo-font/][Sudo Coding Font | Jens Kutílek]].
 - [[https://github.com/IBM/plex][The package of IBM’s typeface, IBM Plex (font)]].
@@ -15056,11 +15218,12 @@ I use command (⌘) as my Emacs Meta key. Recently discovered C-M-d is not avail
 :CUSTOM_ID: france-travel-bookmarks
 :END:
 :MODIFIED:
-[2023-06-09 Fri]
+[2025-02-04 Tue]
 :END:
 - [[https://www.lonelyplanet.com/articles/france-top-food-experiences][France's 10 top food experiences - Lonely Planet]].
 - [[https://thefrenchtouch.quora.com/GR-20-Best-Mountain-Hiking-in-France][GR 20 : Best Mountain Hiking in France - The French Touch - Quora]].
 - [[https://twitter.com/malk_zameth/status/1278288570021826563][Hmmm I want to take some August vacation time in a city I can go by train from paris and is nice to visit calm and not too expensive ]].
+- [[https://www.reddit.com/r/UtterlyInteresting/comments/1gfq75j/inside_the_walls_of_mont_saintmichel_france][Inside the walls of Mont Saint-Michel, France.]].
 * [2018-08-12 Sun] Corsica travel bookmarks
   :PROPERTIES:
   :CUSTOM_ID: corsica-travel-bookmarks
@@ -17160,7 +17323,7 @@ Success.
 :CUSTOM_ID: email-provider-bookmarks
 :END:
 :MODIFIED:
-[2018-05-29 Tue]
+[2025-02-08 Sat]
 :END:
 - [[https://www.robinwhittleton.com/2018/02/18/dropping-g-suite/][Dropping G Suite - Robin Whittleton]].
 - [[https://heluna.com/][Heluna - Cloud-based antispam]].
@@ -17171,6 +17334,7 @@ Success.
 - [[http://Posteo.de][Posteo]].
 - [[https://protonmail.com/][ProtonMail]].
 - [[https://soverin.net/][Soverin - Home - Soverin]].
+- [[https://news.ycombinator.com/item?id=40708476][Understanding SPF, DKIM, and DMARC: A Simple Guide | Hacker News]].
 * [2016-12-01 Thu] Go snippets
 :PROPERTIES:
 :CUSTOM_ID: go-snippets
@@ -17635,7 +17799,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 :CUSTOM_ID: money-bookmarks
 :END:
 :MODIFIED:
-[2021-11-23 Tue]
+[2025-02-04 Tue]
 :END:
 - [[https://www.thestreet.com/slideshow/13552416/1/10-countries-where-that-social-security-check-will-let-you-retire-in-style.html][10 Countries Where That Social Security Check Will Let You Retire in Style (TheStreet)]].
 - [[https://www.lovemoney.com/guides/75277/tax-relief-return-cut-your-income-tax-capital-gains-tax-inheritance-tax][20 items to consider for taxes: Income Tax, Council Tax, and Inheritance Tax (lovemoney.com)]].
@@ -17733,6 +17897,7 @@ _inclusive_; that is, it includes the days specified by mark and point.
 - [[https://www.nasdaq.com/symbol/][NDAQ Stock Quote - Nasdaq, Inc. Common Stock Price - Nasdaq]].
 - [[https://www.telegraph.co.uk/money/transferwise/overseas-mortgages/][Overseas mortgages: everything you need to know]].
 - [[https://www.moneysavingexpert.com/reclaim/parking-ticket-appeals/][Parking Ticket Appeals: Fight unfair fines - Money Saving Expert]].
+- [[https://www.reddit.com/r/FIREUK/comments/1d0w438/paying_missing_uk_national_insurance/][Paying missing UK national insurance contributions - good for FIRE?]].
 - [[https://marcusmichaels.github.io/personal-finance-flowchart][Personal Finance Flowchart (github)]].
 - [[https://www.moneysavingexpert.com/savings/personal-savings-allowance/][Personal Savings Allowance 2018/19 - up to £1,000 interest tax-free]].
 - [[https://imgur.com/ZBaOGJj][Plotted my income and outgoings]].
@@ -18480,11 +18645,12 @@ Via [[https://twitter.com/climagic][climagic]]'s [[https://twitter.com/climagic/
 :CUSTOM_ID: typescript-bookmarks
 :END:
 :MODIFIED:
-[2019-01-27 Sun]
+[2025-02-08 Sat]
 :END:
 - [[https://blog.mgechev.com/2018/11/19/introduction-bazel-typescript-tutorial/][Building TypeScript Projects with Bazel (Minko Gechev's blog)]].
 - [[http://definitelytyped.org][DefinitelyTyped: The repository for high quality TypeScript type definitions]].
 - [[https://github.com/ivogabe/gulp-typescript][gulp-typescript]].
+- [[https://www.ovistoica.com/blog/2024-7-05-modern-emacs-typescript-web-tsx-config][Modern Emacs Typescript Web (React) Config with lsp-mode, treesitter, tailwind, TSX & more...]].
 - [[https://github.com/Microsoft/TypeScript/wiki/JSX][React/JSX Typescript support]].
 - [[https://github.com/palantir/tslint][tslint]].
 - [[https://github.com/Asana/typed-react][Typed-react]].
@@ -19048,7 +19214,8 @@ Online documentation is great so far. More at [[https://docs.npmjs.com][docs.npm
 - [[https://www.youtube.com/watch][ Clojure in Emacs from absolute zero ]].
 - [[http://swannodette.github.io/2015/12/23/year-in-review/][2015 in review]].
 - [[http://www.clojurestacks.com/misc/2018/05/06/a-call-for-clojure-stacks.html][A call for Clojure stacks · Clojure Stacks]].
-- [[https://github.com/nrepl/nrepl][GitHub - nrepl/nrepl: A Clojure network REPL that provides a server and client, along with some common APIs of use to IDEs and other tools that may need to evaluate Clojure code in remote environments.]].
+- [[https://github.com/nrepl/nrepl][GitHub - nrepl/nrepl: A Clojure network REPL that provides a server and client, along with some common APIs of use to IDEs and other tools that may need to evaluate Clojure code in remote environments]].
+- [[https://whatacold.io/blog/2024-12-22-getting-started-with-cider/][Getting Started with Cider for Clojure Programming - Blog]].
 
 * [2015-12-21 Mon] Mac OS X tips backlog
 :PROPERTIES:
@@ -21957,21 +22124,27 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: learning-japanese-bookmarks
 :END:
 :MODIFIED:
-[2024-05-09 Thu]
+[2025-02-04 Tue]
 :END:
 - [[https://www.ihlondon.com/foreign-languages/learn-japanese/beginners-japanese/][Beginners Japanese - International House London]].
+- [[https://files.tofugu.com/articles/japanese/2016-04-05-hiragana-chart/sasagami-hiragana-chart-sample.jpg][Hiragana stroke table]].
+- [[https://www.reddit.com/r/LearnJapanese/s/sb0he9nYnQ][I discovered a website that has a list of the most common 6000]].
 - [[https://www.soas.ac.uk/study/find-course/japanese-beginners-course][Japanese Beginners Course | SOAS]].
 - [[https://learnjapanese.moe/guide/][Japanese Guide - TheMoeWay]].
 - [[https://docs.google.com/document/d/1LH82FjsCqCgp6-TFqUcS_EB15V7sx7O1VCjREp6Lexw/edit][Japanese Resources - Google Docs]].
+- [[https://mangadex.org/title/53c628b3-d1f5-43aa-8df3-080034285cb4/junji-ito-s-cat-diary-yon-mu][Junji Ito's Cat Diary: Yon & Mu (reading)]].
+- [[https://www.kansaiben.com/][Kansai-ben: Kansai Dialect Self-study Site]].
 - [[https://www.tofugu.com/japanese/learn-hiragana/][Learn Hiragana: Tofugu's Ultimate Guide]].
+- [[https://www.reddit.com/r/LearnJapanese/comments/1gdfrqg/sites_to_practice_japanese_reading][Sites to practice Japanese reading? ]].
 - [[https://jpf.org.uk/language/courses.php][The Japan Foundation, London - Language Centre - Japanese Language Courses]].
+- [[https://www.reddit.com/r/LearnJapanese/comments/1hhch8s/the_shortest_guide_to_learning_japanese][The shortest guide to learning Japanese]].
 - [[https://kana-quiz.tofugu.com/][Tofugu’s Learn Kana Quiz]].
 * [2015-04-23 Thu] Japan travel bookmarks
 :PROPERTIES:
 :CUSTOM_ID: japan-travel-bookmarks
 :END:
 :MODIFIED:
-[2024-09-01 Sun]
+[2025-02-03 Mon]
 :END:
 - [[https://www.nomadasaurus.com/things-to-do-in-yokohama-japan/][21 Awesome Things to Do in Yokohama, Japan (2020 Guide)]].
 - [[http://www.lonelyplanet.com/travel-tips-and-articles/77715][21 free things to do in Tokyo]].
@@ -21988,6 +22161,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[http://jnto.org.au/autumn-leaves-in-hokkaido/][Autumn Leaves in Hokkaido]].
 - [[http://www.bbc.com/travel/story/20181009-japans-special-take-on-a-packed-lunch][BBC - Travel - Japan’s special take on a packed lunch]].
 - [[https://www.tofugu.com/japan/bushido/][Bushido: Way of Total Bullshit]].
+- [[https://www.reddit.com/r/japanlife/comments/1i2ikgo/cool_japan_what_are_things_about_japan_that_you/][COOL JAPAN(?)" - What are things about Japan that you think are actually cool?]].
 - [[http://www.amazon.co.uk/Drinking-Japan-Alcoholic-Beverages-Establishments/dp/4805310545][Drinking Japan]].
 - [[https://japan.elifessler.com/eki-stamps/][Eki-stamps / 駅スタンプ | eli's japan blog]].
 - [[http://www.independent.co.uk/travel/asia/five-best-japanese-ryokan-406127.html][Five Best: Japanese Ryokan]].
@@ -22049,6 +22223,15 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[https://www.vitra.com/en-gb/magazine/details/the-hill-of-the-buddha][Vitra | The Hill of the Buddha]].
 - [[http://www.mymodernmet.com/profiles/blogs/zao-fox-village-miyagi-japan][Zao Fox Village]].
 - [[http://hekiunsou.jp/][国指定重要文化財「野村別邸　碧雲荘」]].
+- Neighbourhoods
+  - Mishuku
+  - Sancha neighborhood. Lots of places to eat.
+  - Sangenjaya
+  - Soba Noodle Kochi
+  - Seiki (Japanese dishes)
+  - Sent from my iPhone
+  - Sakae street
+  - Tokoshima (wine and yakitori)
 
 * [2015-10-21 Wed] Kyoto travel bookmarks
 :PROPERTIES:
@@ -22085,7 +22268,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 :CUSTOM_ID: tokyo-travel-bookmarks
 :END:
 :MODIFIED:
-[2024-09-03 Tue]
+[2025-02-08 Sat]
 :END:
 - [[https://roadsandkingdoms.com/travel-guide/tokyo/know-before-you-go-to-tokyo/][14 Things to Know Before You Go to Tokyo]].
 - [[http://globalhelpswap.com/5-alternative-things-to-do-in-tokyo/][5 alternative things to do in Tokyo (by globalhelpswap)]].
@@ -22120,6 +22303,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - https://www.timeout.com/tokyo/restaurants/tokyo-coolest-kakigori
 - Ichiran Ramen.
 - Imperial Palace: Book to go inside. Beautiful park, great for pictures.
+- [[https://www.reddit.com/r/Tokyo/comments/1dnwpwr/in_which_ward_are_you_living][In which ward are you living?]].
 - Irie known (sweet shop) for Mamekan. In Monzen-Nakacho.
 - Isetan (upscale food market).
 - [[http://tabelog.com/en/tokyo/A1313/A131301/13091991/][Isozushi (food)]].
@@ -22151,6 +22335,8 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Shibuya Crossing: Largest pedestrian crossing in the world.
 - Shimokitazawa (Shimokita for short). Bohemian, vintage shopping.
 - Shimokitazawa (thirft stores, music bands, pubs, and cafes).
+- [[https://www.reddit.com/r/Tokyo/comments/1dikh1q/short_trips_from_tokyo/][Short trips from Tokyo]].
+- [[https://www.reddit.com/r/Tokyo/comments/1dikh1q/short_trips_from_tokyo][Short trips from Tokyo]].
 - [[http://tabelog.com/en/tokyo/A1301/A130101/13002260/][Sukiyabashi Jiro]].
 - Sushi dai (Sushi, long queue, maybe turisty).
 - [[http://tabelog.com/en/tokyo/A1301/A130103/13005003/][Sushi Kanesaka]].
@@ -22176,6 +22362,7 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - [[https://twitter.com/yanarchy/status/1162570360769798144][Tokyo Twitter: any Japanese breakfast restaurants]].
 - [[https://www.cntraveller.com/article/travel-guide-tokyo][Tokyo, Japan - Condé Nast Traveller | CN Traveller]].
 - [[http://tokyocheapo.com/][TokyoCheapo]].
+- [[https://www.theguardian.com/artanddesign/gallery/2024/jul/08/tokyos-oldest-train-line-jr-yamanote-in-pictures][Tokyo’s oldest train line – in pictures | Art and design | The Guardian]].
 - Tokyu Hands and Loft (shops in Shibuya).
 - Toritake (yakitori at Shibuya).
 - Try Mos rice burger (fast food).
@@ -22184,6 +22371,8 @@ Basic iOS auto layout usage. See [[https://developer.apple.com/library/ios/docum
 - Tsukiji Fish Market: Sushi bars and food vendors (get there early, visitor numbers restricted).
 - Umemura in Asakusa (also Mamekan).
 - [[https://www.reddit.com/r/JapanTravel/comments/79c82l/unusual_things_to_do_in_tokyo/][Unusual things to do in Tokyo? ]].
+- [[https://www.alojapan.com/253056/walk-around-yoyogi-uehara-station-shibuya-binaural-city-soundsasmr-in-tokyo-japan-osmo-pocket/][Walk around Yoyogi-Uehara Station, Shibuya, Binaural City Sounds(ASMR) in Tok...]].
+- [[https://www.reddit.com/r/Tokyo/s/1mBB6ix3aW][What's something you know about in Tokyo that you think others should know about?]].
 - Yurakucho Yakitori Alley
 - Zauo.com "Let's fixhing enjoy". Catch your own fish to eat.
 - [[http://tabelog.com/en/tokyo/A1303/A130301/13058009/][婁熊東京 (raw and grilled pork)]].
@@ -23020,7 +23209,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :CUSTOM_ID: org-mode-bookmarks
 :END:
 :MODIFIED:
-[2021-11-23 Tue]
+[2025-02-04 Tue]
 :END:
 - [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
@@ -23047,6 +23236,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://emacs.stackexchange.com/questions/51399/org-babel-tangle-with-function-in-header-arguments/51769#51769][Executing org source blocks when loading file (and defining file-local vars)]].
 - [[https://github.com/nikclayton/ob-html-chrome][Export Org HTML SRC blocks as PNG files using Chrome]].
 - [[https://gitlab.com/ambrevar/ambrevar.gitlab.io/blob/master/feed-builder/feed-builder.el][feed-builder/feed-builder.el an org/blog rss implementation]].
+- [[https://howardism.org/Technical/Emacs/getting-more-boxes-done.html][Getting Boxes Done, the Code]].
 - [[https://github.com/DarkBuffalo/ox-report][GitHub - DarkBuffalo/ox-report: Export your org file to minutes report PDF file]].
 - [[https://github.com/misohena/el-easydraw][GitHub - misohena/el-easydraw: Embedded drawing tool for Emacs]].
 - [[https://github.com/niklasfasching/go-org][GitHub - niklasfasching/go-org: Org mode parser with html & pretty printed org rendering]].
@@ -23526,6 +23716,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 [2021-07-11 Sun]
 :END:
 **** TODO [[https://zenodo.org/record/4008297][CatMeows: A Publicly-Available Dataset of Cat Vocalizations | Zenodo]].
+**** TODO Pay What You Want (bandcamp).
 **** TODO [[https://twitter.com/cognazor/status/1196464349109530625][Zontali on Twitter: "Name one of your most emotionally resonant songs, and I ...]].
 **** TODO [[https://generative.fm/][Generative.fm]].
 **** TODO [[http://ivanish.ca/diminished-fifth/][Diminished Fifth]].
@@ -23540,7 +23731,459 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 **** TODO Mehboob Nadeem.
 **** TODO Nirmalya Dey.
 **** TODO [[https://www.youtube.com/watch?v=dPSr3swtLDk][Zia Mohiuddin]].
-
+**** TODO Music sites
+- [[http://3hive.com/][3hive]]
+- [[https://acloserlisten.com/][A Closer Listen]]
+- [[https://alfitude.com/][Alfitude]]
+- [[https://abductionradiation.tumblr.com/][Abduction Radiation]]
+- [[http://www.weraddicted.com/category/music/][Addicted]]
+- [[https://acidstag.com/category/music/][Acid Stag]]
+- [[https://www.adhoc.fm/][ADHOC]]
+- [[https://www.albumoftheyear.org/][Album of the Year]]
+- [[https://americansongwriter.com/news/][American Songwriter]]
+- [[http://www.anydecentmusic.com/][Any Decent Music?]]
+- [[https://aquariumdrunkard.com/][Aquarium Drunkard]]
+- [[https://atwoodmagazine.com/][Atwood Magazine]]
+- [[https://www.backseatmafia.com/][Backseat Mafia]]
+- [[http://www.birp.fm/][Birp!]]
+- [[https://www.blackplastic.co.uk/][Black Plastic]]
+- [[https://bleep.com/][Bleep]]
+- [[https://www.blindedbythefloodlights.com/][Blinded by the Floodlights]]
+- [[http://bloodbuzzed.blogspot.com/][Bloodbuzzed]]
+- [[https://brightonmusicblog.co.uk/][Brighton Music Blog]]
+- [[https://www.brooklynvegan.com/][Brooklyn Vegan]]
+- [[https://boaws.org/][Built on a Weak Spot]]
+- [[https://buzzbands.la/][buzzbands.la]]
+- [[http://www.cerealandsounds.com/][Cereal and Sounds]]
+- [[https://chillhop.com/blog/][Chillhop Blog]]
+- [[https://classicsdujour.com/][Classics Dujour]]
+- [[https://www.classicrockhistory.com/][Classic Rock History]]
+- [[https://cloutcloutclout.com/][Clout]]
+- [[https://clunkmag.com/?v=7516fd43adaa][Clunk Magazine]]
+- [[https://consequenceofsound.net/category/new-music/][Consequence of Sound]]
+- [[https://www.coolmusicandthings.co.uk/][Cool Music and Things]]
+- [[https://crackmagazine.net/][Crack Magazine]]
+- [[https://www.curiousformusic.com/][Curious for Music]]
+- [[https://darrensmusicblog.com/category/rock-music/][Darren’s Music Blog]]
+- [[https://www.pastemagazine.com/daytrotter][Daytrotter]]
+- [[https://www.desertislandcloud.com/][Desert Island Cloud]]
+- [[https://www.digitaltourbus.com/][Digital Tour Bus]]
+- [[https://diffuser.fm/][Diffuser.fm]]
+- [[https://disconaivete.com/][Disco Naivete’]]
+- [[http://www.discovernu.co/][DiscoverNu]]
+- [[https://discoverymusicscotland.com/][Discovery Music]]
+- [[https://dinkededition.co.uk/][Dinked]]
+- [[https://readdork.com/][Dork]]
+- [[https://www.dragcity.com/][Drag City]]
+- [[http://www.drivenfaroff.com/category/videos/][Driven Far Off]]
+- [[https://dmy.co/new-music][Dummy Magazine]]
+- [[https://earmilk.com/][Earmilk]]
+- [[https://www.eartothegroundmusic.co/][Ear to the Ground Music]]
+- [[https://eclecticmusiclover.com/][Eclectic Music Lover]]
+- [[http://www.elicitmagazine.com/][Elicit Magazine]]
+- [[https://exclaim.ca/music][Exclaim!]]
+- [[https://www.exposedmagazine.co.uk/category/music/][Exposed Magazine]]
+- [[https://www.famemagazine.co.uk/][Fame Magazine]]
+- [[https://www.factmag.com/][Fact Magazine]]
+- [[https://www.fashionably-early.com/][Fashionably Early]]
+- [[https://www.wunc.org/live-updates/north-carolina-local-music-blog-burns-wunc][First in Music]]
+- [[http://www.fluxblog.org/][Fluxblog]]
+- [[https://fortheloveofbands.com/][For the Love of Bands]]
+- [[https://fortherabbits.net/][For the Rabbits]]
+- [[https://fromthestrait.com/][From the Strait]]
+- [[https://fvmusicblog.com/blog/][FV Music Blog]]
+- [[http://www.gasmaskmagazine.com/][Gas Mask Magazine]]
+- [[https://giggoer.com/][Gig Goer]]
+- [[https://www.goldflakepaint.co.uk/posts/][GoldFlakePaint]]
+- [[https://www.goldenplec.com/][GoldenPlec]]
+- [[https://www.goldminemag.com/][Goldmine]]
+- [[https://www.gorillavsbear.net/][Gorilla Vs. Bear]]
+- [[http://www.godisinthetvzine.co.uk/category/new-music/][God is in the TV]]
+- [[https://www.grimygoods.com/new-music-2/][Grimy Goods]]
+- [[https://hardofhearingmusic.com/][Hard of Hearing Music]]
+- [[https://www.hardlyart.com/][Hardly Art]]
+- [[https://www.hearingthings.co/][Hearing Things!]]
+- [[https://highclouds.org/][High Clouds]]
+- [[https://hypem.com/site/highclouds/23232][Hype Machine]]
+- [[https://hi54.blog/][High Five For…]]
+- [[https://www.hotpress.com/music][Hot Press]]
+- [[https://hypem.com/latest][Hype Machine]]
+- [[https://hypem.com/list][hundreds of music sites]]
+- [[https://hypem.com/][latest posts]]
+- [[https://iheartmoosiq.tumblr.com/][I Herat Moosiq]]
+- [[https://imposemagazine.com/][Impose Magazine]]
+- [[http://www.intunemusic.co.uk/][In Tune]]
+- [[https://independentmusic.reviews/][Independent Music Reviews]]
+- [[https://indie-tapes.com/][Indie-Tapes]]
+- [[https://indie88.com/][Indie88]]
+- [[https://indie30.com/][Indie30]]
+- [[https://www.youtube.com/channel/UCVoraDictyd89xgZt-J2Frw][Indie Air]]
+- [[https://indieartistgo.com/category/indie-music/indie-music-interviews/][Indie Artist Go]]
+- [[https://www.indiecentralmusic.com/][Indie Central Music]]
+- [[https://www.indieisnotagenre.com/][Indie is not a Genre]]
+- [[https://indiemusicfilter.com/][Indie Music Filter]]
+- [[http://indieobsessive.blogspot.com/][Indie Obsessive]]
+- [[https://indiepulsemusic.com/][Indie Pulse Magazine]]
+- [[https://indierockcafe.com/][Indie Rock Cafe]]
+- [[http://indieunderground.ca/][Indie Underground]]
+- [[https://www.indiemuck.com/][Indiemuck]]
+- [[http://indietronica.org/][Indietronica]]
+- [[https://infinitevolumemag.com/][Infinite Volume Magazine]]
+- [[https://www.isthismusic.com/][Is This Music?]]
+- [[http://www.itsallindie.com/][It’s All Indie]]
+- [[https://www.itsindie.co.uk/music][It’s Indie and We Know it]]
+- [[https://www.iq-mag.net/][IQ]]
+- [[https://www.juno.co.uk/junodaily/category/music-news/][Juno]]
+- [[http://kaput-mag.com/en/][Kaput Magazine]]
+- [[https://keepwalkingmusic.com/][Keep Walking Music]]
+- [[https://twitter.com/SEBenAli][S. Ben Ali]]
+- [[https://larecord.com/][LA Record]]
+- [[http://blog.largeheartedboy.com/][Largehearted Boy]]
+- [[https://lefuturewave.com/][Lefuturewave]]
+- [[http://littleindieblogs.blogspot.com/][Little Indie Blogs]]
+- [[https://lucymccourt.com/][Lucy McCourt]]
+- [[https://madmackerel.org/][Mad Mackeral]]
+- [[https://melmagazine.com/entertainment/music][MEL Magazine]]
+- [[https://mixitallup.com/][Mix it all Up]]
+- [[https://www.youtube.com/user/MORindie][MORIndie]]
+- [[http://www.myoldkentuckyblog.com/][My Old Kentucky Blog]]
+- [[http://musicassent.com/][Music Assent]]
+- [[https://musicauthentic.com/][Music Authentic]]
+- [[https://www.musicbloggersnetwork.com/][Music Bloggers Network]]
+- [[https://www.musiccrowns.org/][Music Crowns]]
+- [[https://musicforthemisfits.com/][Music for Misfits]]
+- [[https://musicindustryblog.wordpress.com/][Music Industry Blog]]
+- [[https://musicmachinery.com/][Music Machinery]]
+- [[https://musicmattersgb.com/][Music Matters]]
+- [[https://musicreviewworld.com/][Music Review World]]
+- [[http://www.musicsavage.com/][Music Savage]]
+- [[https://www.musikblog.de/][Musikblog]]
+- [[http://www.neonfiller.com/wordpress/][Neon Filler]]
+- [[http://www.neonfiller.com/wordpress/?cat=268][Top 100 Indie and Alternative Albums list]]
+- [[https://neonmusic.co.uk/][Neon Music]]
+- [[https://newsoundgeneration.co.uk/][New Sound Generation UK]]
+- [[https://newsoundsmag.co.uk/][New Sounds]]
+- [[http://www.nitestylez.de/][NiteStylez]]
+- [[https://noctismag.com/][Noctis]]
+- [[https://noiseartists.net/][Noise Artists]]
+- [[https://notion.online/][Notion]]
+- [[https://nowthenmagazine.com/music][Now Then Magazine]]
+- [[https://www.nme.com/news/music][NME]]
+- [[https://www.nodepression.com/][No Depression]]
+- [[https://twitter.com/search?q=%23RootsMusic&src=hashtag_click][#RootsMusic]]
+- [[https://www.nordicmusicreview.com/][Nordic Music Review]]
+- [[http://www.nyctaper.com/][NYCTaper]]
+- [[http://www.obliviouspop.com/][Oblivious Pop]]
+- [[https://www.thegoldentiki.com/][Golden Tiki]]
+- [[https://www.obscuresound.com/][Obscure Sound]]
+- [[https://www.ohmyrockness.com/][Oh My Rockness]]
+- [[https://www.onegreatsong.co.uk/][One Great Song]]
+- [[http://www.1songday.com/][One Song a Day]]
+- [[http://onestoprecordshop.co.uk/][One Stop Record Shop]]
+- [[https://onequartmagazine.com/music/][One Quart Magazine]]
+- [[https://overblown.co.uk/][Overblown UK]]
+- [[http://ovrld.com/][Ovrld]]
+- [[https://pastelwasteland.com/][Pastel Wasteland]]
+- [[http://pilerats.com/music/bands/][Pilerats]]
+- [[https://pinkwafer.club/][Pink Wafer]]
+- [[https://pitchfork.com/][Pitchfork]]
+- [[http://plasticmag.co.uk/][Plastic]]
+- [[https://www.pleasepasstheindie.com/][Please Pass the Indie]]
+- [[https://poppedmusic.co.uk/][Popped Music UK]]
+- [[http://prtlsmusic.com/][Portals]]
+- [[http://post-trash.com/][Post-Trash]]
+- [[https://purplemelonmu.com/][Purple Melon]]
+- [[http://www.ravensingstheblues.com/][Raven Sings the Blues]]
+- [[https://www.recordoftheday.com/track-archive][Record of the Day]]
+- [[https://www.reddit.com/r/indiemusic/][Reddit]]
+- [[https://www.wearerhythmsection.com/][Rhythm Section]]
+- [[https://www.rightchordmusic.co.uk/][Right Cord Music]]
+- [[https://rockthepigeon.com/][Rock the Pigeon]]
+- [[https://www.padraigs.com/][Padraigs]]
+- [[https://www.scenepointblank.com/][Scene Point Blank]]
+- [[https://schonmagazine.com/][Schon!]]
+- [[https://www.sos-music.co.uk/][Scientists of Sound]]
+- [[http://www.scottishmusicnetwork.co.uk/][Scottish Music Network]]
+- [[https://shebops.net/][She Bops]]
+- [[https://www.shindig-magazine.com/][Shindig!]]
+- [[https://shoegazeblog.com/][Shoegaze Blog]]
+- [[https://sidekick-music.com/music-news/][Sidekick Music]]
+- [[https://sinusoidalmusic.com/][Sinusoidal Music]]
+- [[https://sodwee.com/blog/][Sodwee]]
+- [[https://soyoungmagazine.com/journal/][So Young Magazine]]
+- [[https://www.somekindofawesome.com/][Some Kind of Wonderful]]
+- [[https://www.souldoubtmag.com/][Sould Doubt Magazine]]
+- [[https://sgtmt.tumblr.com/][Sound Good to Me Too]]
+- [[https://www.spin.com/][SPIN]]
+- [[https://spinditty.com/artists-bands/][Spinditty]]
+- [[https://www.stampthewax.com/][Stamp The Wax]]
+- [[https://staticdive.com/][Static Dive]]
+- [[http://stepkid.com/][Stepkid]]
+- [[https://www.stereofox.com/][Stereofox]]
+- [[https://www.stereogum.com/music/][Stereogum]]
+- [[https://stereostickman.com/][Stereo Stickman]]
+- [[https://www.stillinrock.com/][Still in Rock]]
+- [[http://swelltonemusic.com/][Swell Tone]]
+- [[https://swimintothesound.com/][Swim into the Sound]]
+- [[https://syncmusicblog.com/][Sync.]]
+- [[https://www.tenementtv.com/][Tenement TV]]
+- [[https://testpressing.org/][Test Pressing]]
+- [[https://thatgrapejuice.net/][That Grape Juice]]
+- [[https://www.getalternative.com/category/music/][The Alternative]]
+- [[https://thebopscollective.com/][The Bops Collective]]
+- [[https://thebluewalrus.com/][The Blue Walrus]]
+- [[http://www.theburningear.com/][The Burning Ear]]
+- [[https://www.thedailylistening.com/][The Daily Listening]]
+- [[https://thedailymusicreport.com/best-new-music/][The Daily Music Report]]
+- [[http://www.thefader.com/][Fader]]
+- [[https://www.thegreyestates.com/][The Grey Estates]]
+- [[https://thehoneypop.com/][The HoneyPop]]
+- [[https://theindiegrid.co.uk/][The Indie Grid]]
+- [[https://www.theindiescene.co.uk/][The Indie Scene]]
+- [[http://theindiesound.com/][The Indie Sound]]
+- [[https://thelastmixedtape.com/][The Last Mixed Tape]]
+- [[https://www.thelineofbestfit.com/][The Line of Best Fit]]
+- [[https://www.thelunacollective.co/][The Luna Collective]]
+- [[https://themusic.com.au/][The Music]]
+- [[https://the-music-files.com/single-album-reviews/][The Music Files]]
+- [[http://www.themusicmanual.co.uk/][The Music Manual]]
+- [[https://www.themusicmermaid.com/][The Music Mermaid]]
+- [[http://www.themusicninja.com/][The Music Ninja]]
+- [[https://thenewlofi.com/][The New LoFi]]
+- [[https://www.theothersidereviews.com/][The Other Side Reviews]]
+- [[https://www.theplayground.co.uk/][The Playground]]
+- [[https://www.thepitldn.com/guestmixes][The Pit London]]
+- [[http://www.thepointofeverything.com/][The Point of Everything]]
+- [[https://thequietus.com/][The Quietus]]
+- [[https://www.thereviewsarein.com/][The Reviews are in]]
+- [[https://therevue.ca/category/music/][The Revue]]
+- [[https://thescenestar.typepad.com/][The Scenestar]]
+- [[https://thesonicmosquitosoup.wordpress.com/][The Sonic Mosquito Soup]]
+- [[https://www.theskinny.co.uk/music][The Skinny]]
+- [[https://thesoundsniffer.com/][The Sound Sniffer]]
+- [[https://staticdive.com/][The Static Dive]]
+- [[https://thethinair.net/][The Thin Air]]
+- [[http://www.thewaster.com/][The Waster]]
+- [[https://thewonderwhy.wixsite.com/website][The WonderWhy]]
+- [[https://www.thezineuk.co.uk/music/][The Zine UK]]
+- [[http://thissongissick.com/][This Song is Sick]]
+- [[https://threeimaginarygirls.com/record_review/][Three Imaginary Girls]]
+- [[https://www.tinymixtapes.com/][Tiny Mix Tapes]]
+- [[https://tonedefsound.com/][Tone Def Sound]]
+- [[https://www.topshelfrecords.com/words][Top Shelf Records]]
+- [[https://www.turntablekitchen.com/music/][Turntable Kitchen]]
+- [[http://turtletempo.co.uk/][Turtle Tempo UK]]
+- [[https://twostorymelody.com/][Two Story Melody]]
+- [[https://www.upsetmagazine.com/][Upset Magazine]]
+- [[https://upstreamindie.com/][Upstream Indie]]
+- [[http://www.undertheradarmag.com/][Under the Radar Magazine]]
+- [[https://www.uraniumwaves.com/][Uranium Waves]]
+- [[https://varioussmallflames.co.uk/][Various Small Flames]]
+- [[https://www.vulture.com/music/][Vulture]]
+- [[https://weallwantsomeone.org/][We all want someone to shout for]]
+- [[https://www.wepluggoodmusic.com/][We Plug Good Music]]
+- [[https://www.wewriteaboutmusic.com/][We Write About Music]]
+- [[https://whenthehornblows.com/][When the Horn Blows]]
+- [[https://www.wherethemusicmeets.com/][Where the Music Meets]]
+- [[https://www.wolfinasuit.com/][Wolf in a Suit]]
+- [[https://www.wordsformusic.blog/][Words for Music]]
+- [[https://www.xsnoize.com/][ZS Noize]]
+- [[https://xunemag.com/][Xune Mag]]
+- [[https://xlr8r.com/][XLR8R]]
+- [[https://yourromanfeatures.tumblr.com/][Your Roman Features]]
+- [[https://www.attackmagazine.com/][Attack Magazine]]
+- [[http://www.audiodrums.com/][Audiodrums]]
+- [[https://boilerroom.tv/][BoilerRoomTV]]
+- [[https://daily-beat.com/][Daily Beat]]
+- [[https://www.dancemusicnw.com/][Dance Music NW]]
+- [[https://datatransmission.co/][Data Transmission]]
+- [[https://www.deephouseamsterdam.com/][Deep House Amsterdam]]
+- [[https://www.djgym.co.uk/blog][DJ Gym]]
+- [[https://djmag.com/][DJ Mag]]
+- [[https://edm.com/][EDM.com]]
+- [[https://www.edmsauce.com/][EDM Sauce]]
+- [[https://www.edmtunes.com/][EDMTunes]]
+- [[https://edmidentity.com/][EDM Identity]]
+- [[https://ekm.co/][EKM]]
+- [[https://www.electrojams.com/][Electro Jams]]
+- [[https://www.electrowow.net/][ElectroWow]]
+- [[https://www.electronicbeats.net/][Electronic Beats]]
+- [[https://www.emeraldcityedm.com/][Emerald City EDM]]
+- [[https://www.fazemag.de/][FAZEmag]]
+- [[https://beastbarbecue.com/][of the Beast]]
+- [[https://www.dummymag.com/][Dummy Mag]]
+- [[https://www.hammarica.com/category/dj-interviews/][Hammarica]]
+- [[https://inverted-audio.com/][Inverted Audio]]
+- [[https://www.lifesupportmachine.co.uk/][Life Support Machine UK]]
+- [[https://www.magneticmag.com/][Magnetic Magazine]]
+- [[https://minimalfreaks.co/][Minimal Freaks]]
+- [[https://mixing.dj/][Mixing-DJ]]
+- [[https://mixmag.net/][MixMag]]
+- [[http://pilerats.com/music/electronic/][Pilerats]]
+- [[https://plasticmag.co.uk/category/features/][Plastic]]
+- [[https://www.purplesneakers.com.au/][Purple Sneakers]]
+- [[https://www.raveculture.com/][Rave Culture]]
+- [[http://raverrafting.com/][Raver Rafting]]
+- [[https://ra.co/][Resident Advisor]]
+- [[https://www.reddit.com/r/electronicmusic/][r/electronicmusic]]
+- [[http://www.robotdancemusic.com/][Robot Dance Music]]
+- [[https://runthetrap.com/][Run the Trap]]
+- [[http://www.smashtheclub.com/][Smash the Club]]
+- [[https://stoneyroads.com/][Stoney Roads]]
+- [[https://www.synthtopia.com/][Synthtopia]]
+- [[https://thatdrop.com/][That Drop]]
+- [[https://www.theuntz.com/][The Untz]]
+- [[https://thissongissick.com/][this song is sick]]
+- [[https://thissongslaps.com/][this song slaps]]
+- [[https://www.traxsource.com/][Traxsource]]
+- [[https://www.tropicalbass.com/][Tropical Bass]]
+- [[https://weraveyou.com/][We Rave You]]
+- [[https://whenwedip.com/][When We Dip]]
+- [[https://2dopeboyz.com/][2DopeBoyz]]
+- [[https://24hip-hop.com/category/new-music/][24Hip-Hop]]
+- [[https://albumtalks.com/][Album Talks]]
+- [[https://www.ballerstatus.com/music/][BallerStatus]]
+- [[https://beatroutemedia.com/][BeatRoute]]
+- [[https://beats-rhymes-lists.com/][Beats, Rhymes and Lists]]
+- [[https://bignoiseradio.com/][BigNoiseRadio]]
+- [[https://bignoiseradio.com/radio][Radio Stations]]
+- [[https://bignoiseradio.com/gallery][Five Elements]]
+- [[http://www.blackouthiphop.com/][BlackoutHipHop]]
+- [[https://centralsauce.com/][Central Sauce]]
+- [[https://www.complex.com/pigeons-and-planes/][Complex]]
+- [[https://rmc.library.cornell.edu/hiphop/digital_collections.php][Cornell Hip Hop Collection]]
+- [[https://www.datpiff.com/][Datpiff]]
+- [[http://www.desihiphop.com/][DesiHipHop]]
+- [[https://djbooth.net/][DJ Booth]]
+- [[https://www.dummymag.com/genre/rap/][Dummy Mag]]
+- [[https://earmilk.com/category/hiphop/][Earmilk]]
+- [[https://www.fakeshoredrive.com/][FakeShoreDrive]]
+- [[https://genius.com/][Genius]]
+- [[https://grungecake.com/][Grungecake]]
+- [[https://www.hiphopallaround.com/][Hip Hop All Around]]
+- [[https://hiphopdx.com/news][HipHopDX]]
+- [[https://hiphop-n-more.com/][HipHopnMore]]
+- [[http://www.hiphopondeck.com/][HipHopOnDeck]]
+- [[https://hiphoppush.com/][HipHopPush]]
+- [[https://hiphopsince1987.com/][HipHopSince87]]
+- [[https://www.hip-hopvibe.com/][Hip-HopVibe]]
+- [[https://hiphopwired.com/][HipHopWired]]
+- [[https://www.hot97.com/][Hot97]]
+- [[https://www.hotnewhiphop.com/][HotNewHipHop]]
+- [[https://hypebeast.com/][HypeBeast]]
+- [[https://www.thehypemagazine.com/][HypeMagazine]]
+- [[https://www.indiehiphop.net/][IndieHipHop]]
+- [[https://www.laonlock.com/][LA on Lock]]
+- [[https://www.mrcnnlive.com/category/video/][MRCNNLIVE]]
+- [[https://www.okayplayer.com/][OkayPlayer]]
+- [[http://onsmash.com/][OnSmash]]
+- [[http://pilerats.com/music/rap/][Pilerats]]
+- [[https://www.rap-up.com/][Rap-Up.com]]
+- [[https://rapradar.com/][RapRadar]]
+- [[http://www.rapreviews.com/][RapReviews]]
+- [[https://raptology.com/][Raptology]]
+- [[https://rapzilla.com/][Rapzilla]]
+- [[https://www.reddit.com/r/hiphopheads/][reddit/r/hiphopheads]]
+- [[https://www.respectmyregion.com/category/music/hip-hop/][RespectMyRegion]]
+- [[https://resultsandnohype.com/][ResultsandNoHype]]
+- [[https://royalbey.com/][Royal Bey]]
+- [[https://www.siccness.net/wp/][Siccness]]
+- [[https://www.sohh.com/][SOHH]]
+- [[https://www.stardom101mag.net/][Stardom101Mag]]
+- [[https://theboombox.com/category/hip-hop-news/][The BoomBox]]
+- [[https://www.thepitldn.com/music][The Pit London]]
+- [[https://thesource.com/][TheSource]]
+- [[https://www.thizzler.com/][Thizzler]]
+- [[https://undergroundhiphopblog.com/][UndergoundHipHopBlog]]
+- [[http://undergroundunderdogs.com/][Underground Underdogs]]
+- [[https://uproxx.com/music/][UPROXX]]
+- [[https://urbanvault.co.uk/category/u-s-music-news/][Urban Vault]]
+- [[https://www.thewordisbond.com/][WordisBond]]
+- [[https://worldstarhiphop.com/videos/][WorldStarHipHop]]
+- [[https://www.xxlmag.com/linkinbio/][XXL Magazine]]
+- [[https://1063atl.com/][106.3 Radio]]
+- [[http://bettermustcome.blogspot.com/][Better Must Come]]
+- [[https://www.blazinreggaevibes.com/\\][Blazin Reggae Vibes]]
+- [[http://www.canadianreggaeworld.com/blog][Canadian Reggae World]]
+- [[http://www.caribbeandanceradio.com/news][Caribbean Dance Radio]]
+- [[http://www.dancecrasher.co.uk/][Dancecrasher UK]]
+- [[https://www.dancehallmag.com/][Dancehall Magazine]]
+- [[https://www.digestivoreggae.com/][Digestivo Reggae]]
+- [[https://www.dubvendor.co.uk/][Dub Vendor UK]]
+- [[https://jamaicans.com/jamaica/jamaican-music/][Jamaicans.com]]
+- [[https://www.jumpuprecords.com/][Jump Up Records]]
+- [[https://reggaearoundtheworld.wordpress.com/][Reggae Around the World]]
+- [[https://reggaefestivalguide.com/][Reggae Festival Guide]]
+- [[https://www.reggaefraternityuk.com/][Reggae Fraternity UK]]
+- [[http://reggaenation.com/][ReggaeNation]]
+- [[https://reggaemani.wordpress.com/][ReggaeMani]]
+- [[https://www.reggaeshowtimeradio.com/][Reggae Showtime Radio]]
+- [[https://reggae-steady-ska.com/][Reggae Steady Ska]]
+- [[https://reggaereport.com/][Reggae Report]]
+- [[https://reggaeunite.blogspot.com/][Reggae Unite]]
+- [[https://reggaevibe.org/][ReggaeVibe]]
+- [[https://www.reggaeville.com/][Reggaeville]]
+- [[https://riddimsworld.com/][Riddims World]]
+- [[https://www.rootsreggaehub.com/][Roots Reggae Hub]]
+- [[https://thepier.org/][The Pier]]
+- [[https://www.torontoreggae.ca/][Toronto Reggae]]
+- [[https://trojanrecords.com/playlists/][Trojan Records]]
+- [[https://unitedreggae.com/][United Reggae]]
+- [[https://urbanislandz.com/][Urban Islandz]]
+- [[https://www.vprecords.com/artists/][VP Records]]
+- [[https://www.worldareggae.com/][World A Reggae]]
+- [[https://yardhype.com/][YardHype]]
+- [[https://americana-uk.com/][Americana UK]]
+- [[https://www.bluesandrootsradio.com/][Blues & Roots Radio]]
+- [[https://nashvillegab.com/][Nashville Gab]]
+- [[https://rockingmagpie.wordpress.com/][Rocking Magpie]]
+- [[https://tasteofcountry.com/][Taste of Country]]
+- [[https://twangville.com/][Twangville]]
+- [[http://www.midwesternhousewives.com/][Battle of the Midwestern Housewives]]
+- [[http://freeskafoundation.blogspot.com/][Free Ska Foundation]]
+- [[https://duffguidetoska.blogspot.com/][The Duff Guide]]
+- [[http://rudeboytrain.com/][Rude Boy Train]]
+- [[http://skabook.com/blog/][Skabook]]
+- [[https://beatroutemedia.com/category/music/][Beatroute]]
+- [[https://muumuse.com/][MuuMuse]]
+- [[https://www.folkradio.co.uk/][Folk Radio UK]]
+- [[https://www.loudersound.com/classic-rock][Classic Rock]]
+- [[https://www.eonmusic.co.uk/][eon music]]
+- [[https://lambgoat.com/][Lambgoat]]
+- [[https://www.mojo4music.com/][MOJO]]
+- [[https://rockandrollgarage.com/][Rock And Roll Garage]]
+- [[https://www.talkhouse.com/][Talkhouse]]
+- [[https://ultimateclassicrock.com/][Ultimate Classic Rock]]
+- [[http://www.disposable-america.com/][Disposable America]]
+- [[https://www.exitstencil.org/][Exit Stencil]]
+- [[http://www.explodinginsoundrecords.com/][Exploding in Sound Records]]
+- [[https://www.lauren-records.com/][Lauren Records]]
+- [[https://ghostly.com/][Ghostly]]
+- [[https://longwellrecords.com/blogs/news][Longwell Records]]
+- [[https://www.matadorrecords.com/][Matador Records]]
+- [[https://www.mergerecords.com/][Merge Records]]
+- [[https://www.polyvinylrecords.com/][Polyvinyl Records]]
+- [[http://www.postpresentmedium.com/releases.html][Post Present Medium]]
+- [[https://www.remotecontrolrecords.com.au/][Remote Control]]
+- [[https://www.slumberlandrecords.com/][Slumberland Records]]
+- [[https://www.subpop.com/][Sub Pop Records]]
+- [[http://westernvinyl.com/news/][Western Vinyl]]
+- [[https://player.fm/podcasts/vinyl][Best Vinyl Podcasts]]
+- [[https://dice.fm/blog][Dice]]
+- [[https://www.villagevoice.com/culture/music/][Village Voice]]
+- [[https://www.loudersound.com/][Louder]]
+- [[https://www.newreleasesnow.com/][New Releases]]
+- [[https://www.radiok.org/features/weekly-release-spotlight/][Radio K]]
+- [[https://www.rootsmusicreport.com/][Roots Music Report]]
+- [[https://www.theunsignedguide.com/news][The Unsigned Guide]]
+- [[https://topshelfmusicmag.com/][Top Shelf Music Magazine]]
+- [[https://twostorymelody.com/music-promotion-tips/][Two Story Melody]]
+- [[https://www.vinylmeplease.com/][Vinyl Me Please]]
+- [[https://www.palmersbar.net/][Palmer’s Bar]]
+- [[https://dittomusic.com/en/blog][Ditto]]
+- [[https://www.rightchordmusic.co.uk/][Rightcord Music UK]]
+- [[https://www.ispytunes.com/blog-made-for-musicians][ISpyTunes]]
+- [[https://tellingbeatzz.com/blog-2/][TellingBeatzz]]
 * [2015-03-06 Fri] UX scrapbook bookmarks
 :PROPERTIES:
 :CUSTOM_ID: ux-scrapbook-bookmarks
@@ -24884,6 +25527,7 @@ maps key to action.
 [2019-01-12 Sat]
 :END:
 **** TODO [[https://www.youtube.com/watch?v=wBraurRo_bg][Frank Ostaseski: "Inviting the Wisdom of Death into Life"]].
+**** TODO [[https://www.youtube.com/watch?v=to72IJzQT5k&t=5s][Adam Curtis   HyperNormalisation HD - YouTube]].
 **** TODO [[https://news.ycombinator.com/item?id=17210164][YouTube’s top creators are burning out (Hacker News)]].
 **** TODO [[https://www.youtube.com/playlist?list=PL94E35692EB9D36F3][Donald Knuth Lectures - YouTube]].
 **** TODO Rashomon by Akira Kurosawa.
@@ -24989,16 +25633,24 @@ maps key to action.
 :CUSTOM_ID: movie-backlog
 :END:
 :MODIFIED:
-[2022-12-17 Sat]
+[2025-02-16 Sun]
 :END:
+**** TODO [[https://www.netflix.com/title/81748580][Watch The Åre Murders | Netflix Official Site]].
+**** TODO [[https://www.netflix.com/title/81663325][Watch SAKAMOTO DAYS | Netflix Official Site]].
+**** TODO [[https://www.imdb.com/title/tt0089603/][Mishima: A Life in Four Chapters (1985) - IMDB]].
+**** TODO [[https://www.imdb.com/title/tt14039582/][Drive My Car (2021) - IMDb]].
+**** TODO [[https://www.imdb.com/title/tt6334354/][The Suicide Squad (2021) - IMDb]].
+**** TODO [[https://old.reddit.com/r/Cyberpunk/comments/1e5vauh/movies_that_feel_like_youre_watching_an/][Movies that feel like you're watching an adaptation of the Cyberpunk RPG?]].
+**** TODO [[https://x.com/davidcinema/status/1853817051040673997][Movies that get better with more viewings]].
+**** TODO [[https://www.reddit.com/r/movies/comments/1gvzbi1/zhang_yimou_chinas_greatest_director_part_2/][Zhang Yimou: China's Greatest Director | Part 2 ]].
 **** TODO Take your pill.
+**** TODO [[https://bsky.app/profile/jaafar.bsky.social/post/3ldfrkposdk22][A handful of choices, but Hundreds of Beavers caught my attention]].
 **** TODO https://www.metacritic.com
 **** TODO Chalk line.
 **** TODO [[https://trace.moe/][Anime Scene Search Engine - trace.moe]].
 **** TODO [[https://poorlydrawnlines.com/][Poorly Drawn Lines]].
 **** TODO [[https://www.rottentomatoes.com/m/vhyes][VHYes (2019) - Rotten Tomatoes]].
 **** TODO [[https://en.m.wikipedia.org/wiki/The_Sandman_(comic_book)][The Sandman (comic book) - Wikipedia]]
-**** TODO [[https://m.imdb.com/title/tt12326830/][The Sandman (TV Series 2020– ) - IMDb]]
 **** TODO [[https://m.imdb.com/title/tt1751634/][The Sandman (TV Series 2021– ) - IMDb]]
 **** TODO Korean [[https://www.reddit.com/r/squidgame/comments/pwjyum/god_bless_squid_game][films/shows to watch]]
 **** TODO Gemini man.
@@ -25235,8 +25887,9 @@ maps key to action.
 :CUSTOM_ID: books-backlog
 :END:
 :MODIFIED:
-[2021-02-06 Sat]
+[2025-02-04 Tue]
 :END:
+**** TODO [[https://indieweb.social/@fgbjr/112761146059418752][Frank Bennett: "20 books that have had an impact on who you are. …" - Indiewe...]].
 **** TODO [[https://books.apple.com/us/book/id1551005489][‎Swift Secrets on Apple Books]].
 **** TODO [[https://www.amazon.co.uk/Island-Aldous-Huxley/dp/0099477777][Island: Amazon.co.uk: Aldous Huxley: 9780099477778: Books]].
 **** TODO [[https://www.amazon.com/Hieroglyph-Stories-Visions-Better-Future-ebook/dp/B00H7LUR3K][Amazon.com: Hieroglyph: Stories and Visions for a Better Future eBook]].
@@ -25630,6 +26283,12 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://riseup.net/en/security/message-security/openpgp/best-practices][OpenPGP Best Practices - riseup.net]].
 - [[https://medium.com/@ahawkins/securing-my-digital-life-gpg-yubikey-ssh-on-macos-5f115cb01266][Securing My Digital Life: GPG, Yubikey, & SSH on macOS]].
 - [[https://www.gnupg.org/gph/en/manual.html][The GNU Privacy handbook]].
+* [2025-02-04 Tue] Raspberry Pi bookmarks
+:PROPERTIES:
+:CUSTOM_ID: raspberry-pi-bookmarks
+:END:
+- [[https://youtu.be/UtLyX72-688][Raspberry Pi 5: Getting Started - YouTubee]].
+
 * [2014-09-20 Sat] Emacs lisp bookmarks
 :PROPERTIES:
 :CUSTOM_ID: emacs-lisp-bookmarks
@@ -25716,22 +26375,37 @@ Via [[https://twitter.com/climagic/status/674688454526136320?refsrc%3Demail&s%3D
 - [[https://github.com/bddean/xml-plus][XML utilities for Emacs lisp]].
 - [[https://github.com/xuchunyang/elisp-demos/blob/master/elisp-demos.org][Xu Chunyang's Elisp demos/examples/snippets ]].
 
+* [2025-02-04 Tue] Alzheimer bookmarks
+:PROPERTIES:
+:CUSTOM_ID: alzheimer-bookmarks
+:END:
+:MODIFIED:
+[2025-02-08 Sat]
+:END:
+- [[https://indieweb.social/@cindyweinstein@mastodon.world/112485121178707057][#NYC #Alzheimer's Association hybrid event (in-person and Zoom)]].
+- [[https://dta.com.au/][Dementia Training Australia (DTA), Free online courses and resources]].
+- [[https://www.cnn.com/2024/05/16/health/video/gupta-alzheimers-reversed-patient-digvid][Woman claims Alzheimer’s symptoms were reversed after five years | CNN]].
 * [2014-09-19 Fri] Emacs bookmarks
 :PROPERTIES:
 :CUSTOM_ID: emacs-bookmarks
 :END:
 :MODIFIED:
-[2024-12-06 Fri]
+[2025-02-04 Tue]
 :END:
-- [[https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
+- [[https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/][Multi-Monitor Compatible Code to Center Emacs Frames on Screen  • Christian Tietze]].
 - [[https://karthinks.com/software/bridging-islands-in-emacs-1/][Bridging Islands in Emacs: re-builder and query-replace-regexp | Karthinks]].
+- [[https://www.fosskers.ca/en/blog/contributing-to-emacs][Colin Woodbury - Contributing to Emacs]].
 - [[https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0][Configuring Emacs and Eglot to work with Astro language server | by Jayaram |...]].
 - [[https://willschenk.com/articles/2020/tramp_tricks/][Emacs Tramp tricks]].
 - [[https://philjackson.github.io//emacs/shell/2021/07/26/export-an-environment-variable-to-emacs/][Export an environment variable to Emacs | Snippets and other bits]].
+- [[https://github.com/federicotdn/verb][GitHub - federicotdn/verb: HTTP client for Emacs]] (alternative to restclient).
+- [[https://www.fsf.org/licensing/assigning.html][How to Assign Copyright — Free Software Foundation]].
 - [[https://ruzkuku.com/texts/lesser-known.html#m-x-find-library-mode-local-ret-2004][Lesser known functionalities in core Emacs (see setq-mode-local)]].
 - [[https://ruzkuku.com/texts/lesser-known.html][Lesser known functionalities in core Emacs]].
 - [[https://www.ovistoica.com/blog/2024-7-05-modern-emacs-typescript-web-tsx-config][Modern Emacs Typescript Web (React) Config with lsp-mode, treesitter, tailwin...]].
+- [[https://www.ovistoica.com/blog/2024-7-05-modern-emacs-typescript-web-tsx-config][Modern Emacs Typescript Web (React) Config with lsp-mode, treesitter, tailwind...]].
 - [[https://philjackson.github.io/emacs/mu4e/email/2021/08/30/save-all-mu4e-attachments/][Save all mu4e attachments | Snippets and other bits]].
+- [[https://www.rahuljuliato.com/posts/emacs-docker-podman][Using Emacs for Container Development: Configuring Emacs for Podman and Docker]].
 ][Christian Tietze: Emacs: center window on current monitor]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-cdb.el][.emacs.d/gud-cdb.el (supports lldb)]].
 - [[https://github.com/junjiemars/.emacs.d/blob/master/config/gud-lldb.el][.emacs.d/gud-lldb.el at master · junjiemars/.emacs.d · GitHub]].

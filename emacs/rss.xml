@@ -6,7 +6,166 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.github.io/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 30 Jan 2025 13:58:47 +0000</lastBuildDate>
+<lastBuildDate>Thu, 20 Feb 2025 11:16:57 +0000</lastBuildDate>
+<item>
+  <title>Keychron K3 Pro: F1-F12 as default macOS keys</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-keychron-k3-pro-f1-f12-as-default-macos-keys" class="outline-2">
+ <h2 id="keychron-k3-pro-f1-f12-as-default-macos-keys"> <span class="timestamp-wrapper"> <span class="timestamp">20 February 2025</span></span> Keychron K3 Pro: F1-F12 as default macOS keys</h2>
+ <div class="outline-text-2" id="text-keychron-k3-pro-f1-f12-as-default-macos-keys">
+
+ <div id="org5c7b196" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/keyboard.jpg" alt="keyboard.jpg" width="70%"></img></p>
+</div>
+
+ <p>
+After resetting my  <a href="https://www.keychron.uk/products/keychron-k3-pro-qmk-via-wireless-custom-mechanical-keyboard">Keychron K3 Pro</a>, my F1 to F12 keys were no longer my default macOS keys. The entire row was defaulting to macOS's special keys (i.e. Mission Control, Launch Pad, Volume, etc). At first, I thought I may just need to revisit the macOS setting "Use F1, F2, etc keys as standard function keys", yet toggling the setting made no difference.
+</p>
+
+
+ <div id="org8da9fc2" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/settings.png" alt="settings.png" width="70%"></img></p>
+</div>
+
+ <p>
+Turns out, I had remapped those keys long ago and simply forgot about it. Factory resetting my keyboard got rid of this customization. This post is a reminder for my future self, and anyone else looking to remap their F1-F12 keys.
+</p>
+</div>
+ <div id="outline-container-orgafe38f2" class="outline-3">
+ <h3 id="orgafe38f2">Save your current layout</h3>
+ <div class="outline-text-3" id="text-orgafe38f2">
+ <p>
+Via  <a href="https://usevia.app">https://usevia.app</a>, I saved my current keyboard layout (the out-of-box layout) and named it  <code>k3_pro_ansi_white(before).json</code>.
+</p>
+
+
+ <div id="org26e24b2" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/save.png" alt="save.png" width="90%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-orga6a0a0d" class="outline-3">
+ <h3 id="orga6a0a0d">Apply your changes</h3>
+ <div class="outline-text-3" id="text-orga6a0a0d">
+ <p>
+I made a second copy of the layout and named it  <code>k3_pro_ansi_white(after).json</code>. In this new file, I located the two layers (first and second) and simply swapped the two row chunks using a text editor.
+</p>
+
+ <p>
+The diff looks a little something like this:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-nil">--- k3_pro_ansi_white(before).json	2025-02-20 09:44:03
++++ k3_pro_ansi_white(after).json	2025-02-20 09:43:59
+@@ -5,18 +5,18 @@
+   "layers": [
+     [
+       "KC_ESC",
+-      "KC_BRID",
+-      "KC_BRIU",
+-      "CUSTOM(4)",
+-      "CUSTOM(5)",
+-      "BL_DEC",
+-      "BL_INC",
+-      "KC_MPRV",
+-      "KC_MPLY",
+-      "KC_MNXT",
+-      "KC_MUTE",
+-      "KC_VOLD",
+-      "KC_VOLU",
++      "KC_F1",
++      "KC_F2",
++      "KC_F3",
++      "KC_F4",
++      "KC_F5",
++      "KC_F6",
++      "KC_F7",
++      "KC_F8",
++      "KC_F9",
++      "KC_F10",
++      "KC_F11",
++      "KC_F12",
+       "CUSTOM(8)",
+       "KC_DEL",
+       "BL_STEP",
+@@ -103,18 +103,18 @@
+     ],
+     [
+       "KC_TRNS",
+-      "KC_F1",
+-      "KC_F2",
+-      "KC_F3",
+-      "KC_F4",
+-      "KC_F5",
+-      "KC_F6",
+-      "KC_F7",
+-      "KC_F8",
+-      "KC_F9",
+-      "KC_F10",
+-      "KC_F11",
+-      "KC_F12",
++      "KC_BRID",
++      "KC_BRIU",
++      "CUSTOM(4)",
++      "CUSTOM(5)",
++      "BL_DEC",
++      "BL_INC",
++      "KC_MPRV",
++      "KC_MPLY",
++      "KC_MNXT",
++      "KC_MUTE",
++      "KC_VOLD",
++      "KC_VOLU",
+       "KC_TRNS",
+       "KC_TRNS",
+       "BL_TOGG",
+</pre>
+</div>
+
+ <p>
+Similarly, here's side-by-side look via Emacs ediff:
+</p>
+
+
+ <div id="org1427dd1" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/after-1.png" alt="after-1.png" width="90%"></img></p>
+</div>
+
+
+ <div id="orga195090" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/after-2.png" alt="after-2.png" width="90%"></img></p>
+</div>
+</div>
+</div>
+ <div id="outline-container-org0a130c3" class="outline-3">
+ <h3 id="org0a130c3">Load your modified layout</h3>
+ <div class="outline-text-3" id="text-org0a130c3">
+ <p>
+Now that we have  <code>k3_pro_ansi_white(after).json</code> with our changes, all that's left is loading through  <a href="https://usevia.app">https://usevia.app</a>. You are now done.
+</p>
+
+
+ <div id="org125e7a5" class="figure">
+ <p> <img src="https://xenodium.github.io/images/keychron-k3-pro-f1-f12-as-default-macos-keys/load.png" alt="load.png" width="90%"></img></p>
+</div>
+
+ <p>
+While F1-F12 keys should now be available by default. To access your macOS special keys use the  <code>fn</code> key.
+</p>
+
+ <p>
+Enjoy your F1-F12 default keys!
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/keychron-k3-pro-f1-f12-as-default-macos-keys/index.html</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/keychron-k3-pro-f1-f12-as-default-macos-keys/index.html</guid>
+  <pubDate>Thu, 20 Feb 2025 00:00:00 +0000</pubDate>
+</item>
 <item>
   <title>A tour of ready player mode</title>
   <description><![CDATA[<div id="content" class="content">
