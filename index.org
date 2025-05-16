@@ -1,6 +1,443 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-05-16 Fri] A richer Journelly org capture template
+:PROPERTIES:
+:CUSTOM_ID: a-richer-journelly-org-capture-template
+:END:
+In addition to including user content, [[https://journelly.com/][Journelly]] entries typically bundle a few extra details like timestamp, location, and weather information, which look a little something like this:
+
+#+ATTR_HTML: :width 50%
+[[file:images/a-richer-journelly-org-capture-template/rice-guys.jpg]]
+
+Behind the scenes, Journelly entries follow a fairly simple org structure:
+
+#+begin_src org
+  ,* [2025-04-23 Wed 13:24] @ Waterside House
+  :PROPERTIES:
+  :LATITUDE: 51.518714352892665
+  :LONGITUDE: -0.17575820941499262
+  :WEATHER_TEMPERATURE: 11.4°C
+  :WEATHER_CONDITION: Mostly Cloudy
+  :WEATHER_SYMBOL: cloud
+  :END:
+  Try out Rice Guys #food #london on Wednesdays in Paddington
+
+  [[file:Journelly.org.assets/images/C5890C25-5575-4F52-80D9-CE0087E9986C.jpg]]
+#+end_src
+
+While out and capturing entries from my iPhone, I rely on Journelly to leverages iOS location and weather APIs to include relevant information. On the other hand, when capturing from my Macbook, I rely on a basic Emacs org capture template (very similar to [[https://baty.net/posts/2025/04/journelly-org-mode-backed-journaling-for-i-os/][Jack Baty's]]):
+
+#+begin_src emacs-lisp :lexical no
+  (setq org-capture-templates
+        '(("j" "Journelly" entry (file "path/to/Journelly.org")
+           "* %U @ Home\n%?" :prepend t)))
+#+end_src
+
+These templates yield straightforward entries like:
+
+#+begin_src org
+  ,* [2025-05-16 Fri 12:42] @ Home
+  A simple entry from my Macbook.
+#+end_src
+
+I've been using this capture template for some time. It does a fine job, though you'd notice location and weather info aren't captured. No biggie, since the location of my laptop isn't typically relevant, but hey today seemed like a perfect day to get [[https://xkcd.com/356/][nerd snipped]] by [[https://bsky.app/profile/natharari.bsky.social/post/3lpbkzcduo223][@natharari]].
+
+And so, off I went, to look for a utility to capture location from the command line. I found [[https://github.com/fulldecent/corelocationcli][CoreLocationCLI]], which leverages the equivalent macOS location APIs. As a bonus, the project seemed active (modified only a few days ago).
+
+Installing CoreLocationCLI via [[https://brew.sh/][Homebrew]] was a breeze:
+
+#+begin_src sh
+  brew install corelocationcli
+#+end_src
+
+The first time you run corelocationcli, you'll get an message like:
+
+#+begin_src
+"CoreLocationCLI" can't be opened because it is from an unidentified developer...
+#+end_src
+
+You'll need to follow [[https://github.com/fulldecent/corelocationcli][CoreLocationCLI]]'s instructions:
+
+#+begin_src
+To approve the process and allow CoreLocationCLI to run, go to System Settings ➡️ Privacy & Security ➡️ General, and look in the bottom right corner for a button to click.
+#+end_src
+
+After approving the process, I ran into a snag:
+
+#+begin_src sh
+  $ CoreLocationCLI
+  CoreLocationCLI: ❌ The operation couldn’t be completed. (kCLErrorDomain error 0.)
+#+end_src
+
+Lucky for me, the [[https://github.com/fulldecent/corelocationcli][README]] had the solution:
+
+#+begin_src sh
+Note for Mac users: make sure Wi-Fi is turned on. Otherwise you will see kCLErrorDomain error 0.
+#+end_src
+
+Oddly, my WiFi was turned on, so I went ahead and toggled it. Success:
+
+#+begin_src sh
+  $ CoreLocationCLI
+  51.51871 -0.17575
+#+end_src
+
+We can start by wrapping this command-line utility return coordinates along with reverse geolocation (ie. description):
+
+#+begin_src emacs-lisp :lexical no
+  (defun journelly-get-location ()
+    "Get current location.
+
+  Return in the form:
+
+  `((lat . 51.51871)
+    (lon . -0.17575)
+    (description . \"Sunny House\"))
+
+  Signals an error if the location cannot be retrieved."
+    (unless (executable-find "CoreLocationCLI")
+      (error "Needs CoreLocationCLI (try brew install corelocationcli)"))
+    (with-temp-buffer
+      (if-let ((exit-code (call-process "CoreLocationCLI" nil t nil
+                                        "--format" "%latitude\t%longitude\t%thoroughfare"))
+               (success (eq exit-code 0))
+               (parts (split-string (buffer-string) "\t")))
+          `((lat . ,(string-to-number (nth 0 parts)))
+            (lon . ,(string-to-number (nth 1 parts)))
+            (description . ,(string-trim (nth 2 parts))))
+        (error "No location available"))))
+#+end_src
+
+Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS, since it requires setting up a developer account and obtaining an API key. No worries, I found the great [[https://api.met.no/][MET Norway API]] which is freely available without the need for keys.
+
+#+begin_src emacs-lisp :lexical no
+  (defun journelly-fetch-weather (lat lon)
+    "Fetch weather data from MET Norway API for LAT and LON.
+
+  Return the parsed JSON object."
+    (let* ((url (format "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%s&lon=%s" lat lon))
+           (args (list "-s" url)))
+      (with-temp-buffer
+        (apply #'call-process "curl" nil t nil args)
+        (goto-char (point-min))
+        (json-parse-buffer :object-type 'alist))))
+#+end_src
+
+We can take it for a spin with:
+
+#+begin_src emacs-lisp :lexical no
+  (journelly-fetch-weather 51.51871 -0.17575)
+#+end_src
+
+We get a nice object with a chunky time series (cropped for readability):
+
+#+begin_src emacs-lisp :lexical no
+  ((type . "Feature")
+   (geometry (type . "Point") (coordinates . [-0.1758 51.5187 30]))
+   (properties
+    (meta (updated_at . "2025-05-16T11:17:44Z")
+          (units (air_pressure_at_sea_level . "hPa")
+                 (air_temperature . "celsius")
+                 (cloud_area_fraction . "%")
+                 (precipitation_amount . "mm") (relative_humidity . "%")
+                 (wind_from_direction . "degrees") (wind_speed . "m/s")))
+    (timeseries
+     . [((time . "2025-05-16T12:00:00Z")
+         (data
+          (instant
+           (details (air_pressure_at_sea_level . 1025.6)
+                    (air_temperature . 18.0) (cloud_area_fraction . 4.7)
+                    (relative_humidity . 44.2)
+                    (wind_from_direction . 17.6) (wind_speed . 3.6)))
+          (next_12_hours (summary (symbol_code . "fair_day")) (details))
+          (next_1_hours (summary (symbol_code . "clearsky_day"))
+                        (details (precipitation_amount . 0.0)))
+          (next_6_hours (summary (symbol_code . "clearsky_day"))
+                        (details (precipitation_amount . 0.0)))))
+
+        ...
+
+
+       ((time . "2025-05-26T00:00:00Z")
+         (data
+          (instant
+           (details (air_pressure_at_sea_level . 1007.3)
+                    (air_temperature . 12.6)
+                    (cloud_area_fraction . 28.1)
+                    (relative_humidity . 91.3)
+                    (wind_from_direction . 258.7) (wind_speed . 3.5)))))])))
+
+#+end_src
+
+Journelly entries need only a tiny subset of the returned object, so let's add a helper to extract and format as preferred.
+
+#+begin_src emacs-lisp :lexical no
+  (defun journelly-fetch-weather-summary (lat lon)
+    "Fetch weather data from MET Norway API for LAT and LON.
+
+  Return in the form:
+
+   '((temperature . \"16.9°C\")
+     (symbol . \"cloudy\"))."
+    (let* ((data (journelly-fetch-weather lat lon))
+           (now (current-time))
+           (entry (seq-find
+                   (lambda (entry)
+                     (let-alist entry
+                       (time-less-p now (date-to-time .time))))
+                   (let-alist data
+                     .properties.timeseries)))
+           (unit (let-alist data
+                   .properties.meta.units.air_temperature)))
+      (unless entry
+        (error "Couldn't fetch weather data"))
+      (let-alist entry
+        `((temperature . ,(format "%.1f%s"
+                                  .data.instant.details.air_temperature
+                                  (cond
+                                   ((string= unit "celsius") "°C")
+                                   ((string= unit "fahrenheit") "°F")
+                                   (t (concat " " unit)))))
+          (symbol . ,(alist-get 'symbol_code .data.next_1_hours.summary))))))
+#+end_src
+
+We can take it for a spin with:
+
+#+begin_src emacs-lisp :lexical no
+  (journelly-fetch-weather-summary 51.51871 -0.17575)
+#+end_src
+
+Nice! Look at that, it's a sign that I should finish writing and go outside!
+
+#+begin_src emacs-lisp :lexical no
+  '((temperature . "19.0°C")
+    (symbol . "clearsky_day"))
+#+end_src
+
+I really should go outside, I'm just so close now... Or so I thought! That symbols (ie. "clearsky_day") isn't recognizable by Journelly, which relies on [[https://developer.apple.com/sf-symbols/][SF Symbols]] returned by [[https://developer.apple.com/weatherkit/][WeatherKit]]. I need some sort of mapping between these symbols. Gosh, I need to go outside and this is a perfect task for a robot! Whipped out [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] and asked the LLM robots to take on this grunt work, who gave me:
+
+#+begin_src json
+  {
+    "clearsky_day": "sun.max",
+    "clearsky_night": "moon.stars",
+    "clearsky_polartwilight": "sun.horizon",
+    ...
+    "snowshowers_and_thunder_day": "cloud.sun.bolt.snow",
+    "snowshowers_and_thunder_night": "cloud.moon.bolt.snow",
+    "thunderstorm": "cloud.bolt"
+  }
+#+end_src
+
+We're in elisp land so who wants json? Hey robot, I need an alist:
+
+#+ATTR_HTML: :width 90%
+[[file:images/a-richer-journelly-org-capture-template/chatgpt-shell.png]]
+
+Won't the LLM make mapping errors? Most certainly! But for now, I'm just getting a rough prototype and I need to get moving if I want to go outside!
+
+We plug our mapping into an elisp function
+
+#+begin_src emacs-lisp :lexical no
+  (defun journelly-resolve-metno-to-sf-symbol (symbol)
+    "Resolve Met.no weather SYMBOL strings to a corresponding SF Symbols."
+    (let ((symbols '(("clearsky_day" . "sun.max")
+                     ("clearsky_night" . "moon.stars")
+                     ("clearsky_polartwilight" . "sun.horizon")
+                     ...
+                     ("snowshowers_and_thunder_day" . "cloud.sun.bolt.snow")
+                     ("snowshowers_and_thunder_night" . "cloud.moon.bolt.snow")
+                     ("thunderstorm" . "cloud.bolt"))))
+      (map-elt symbols symbol)))
+#+end_src
+
+Does it work? Kinda seems like it.
+
+#+begin_src emacs-lisp :lexical no
+  (journelly-resolve-metno-to-sf-symbol
+   (map-elt (journelly-fetch-weather-summary 51.51871 -0.17575) 'symbol))
+#+end_src
+
+#+begin_src emacs-lisp :lexical no
+ "sun.max"
+#+end_src
+
+We got everything we need now, let's put the bits together:
+
+ #+begin_src emacs-lisp :lexical no
+   (defun journelly-generate-metadata ()
+     (let* ((location (journelly-get-location))
+            (weather (journelly-fetch-weather-summary
+                      (map-elt location 'lat)
+                      (map-elt location 'lon))))
+       (format "%s
+   :PROPERTIES:
+   :LATITUDE: %s
+   :LONGITUDE: %s
+   :WEATHER_TEMPERATURE: %s
+   :WEATHER_SYMBOL: %s
+   :END:"
+               (or (map-elt location 'description) "-")
+               (map-elt location 'lat)
+               (map-elt location 'lon)
+               (alist-get 'temperature weather)
+               (journelly-resolve-metno-to-sf-symbol
+                (alist-get 'symbol weather)))))
+ #+end_src
+
+Lovely, we now get the metadata we need.
+
+ #+begin_src emacs-lisp :lexical no
+   Waterside House
+   :PROPERTIES:
+   :LATITUDE: 51.51871
+   :LONGITUDE: -0.175758
+   :WEATHER_TEMPERATURE: 18.5°C
+   :WEATHER_SYMBOL: sun.max
+   :END:
+ #+end_src
+
+Damn, the temperature is dropping. I really do need to go outside. So close now!
+
+All we have to do is plug our =journelly-generate-metadata= function into our org template and... Bob's your uncle!
+
+#+begin_src emacs-lisp :lexical no
+  (setq org-capture-templates
+        '(("j" "Journelly" entry (file "path/to/Journelly.org")
+           "* %U @ %(journelly-generate-metadata)\n%?" :prepend t)))
+#+end_src
+
+We can now invoke our trusty =M-x org-capture= and off we go...
+
+#+ATTR_HTML: :width 80%
+[[file:images/a-richer-journelly-org-capture-template/capture.gif]]
+
+While the code currently lives in my Emacs config, it's [[https://github.com/xenodium/dotsies/blob/main/emacs/ar/journelly.el][available on GitHub]]. If you do take it for a spin, it may crash and burn. I blame the weather. In the UK, when sunny, you rush to go outside! 🌞🏃‍♂️💨
+
+* [2025-05-16 Fri] Weather + Location Org capture
+:PROPERTIES:
+:CUSTOM_ID: weather--location-org-capture
+:END:
+brew install corelocationcli
+Settings > Privacy > Accpet
+Restart WiFi
+- Write me a function that fetches using curl https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=35&lon=139
+- Convert from cons to ` ,
+- https://github.com/RhetTbull/locationator
+;; (defun journelly-fetch-weather (lat lon)
+;;   "Fetch weather data from MET Norway API using curl for the given LAT and LON,
+;; and return the parsed JSON object."
+;;   (let* ((url (format "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%s&lon=%s" lat lon))
+;;          (command (format "curl -s -H 'User-Agent: journelly-emacs-client' '%s'" url)))
+;;     (with-temp-buffer
+;;       (call-process-shell-command command nil t)
+;;       (goto-char (point-min))
+;;       (json-parse-buffer :object-type 'alist))))
+* [2025-05-09 Fri] Epaper: hello world
+:PROPERTIES:
+:CUSTOM_ID: epaper-hello-world
+:END:
+
+#+begin_src sh
+  brew install arduino-cli
+#+end_src
+
+#+begin_src sh
+arduino-cli core update-index
+arduino-cli core install esp32:esp32
+#+end_src
+
+
+Ran into issues
+
+#+begin_src sh
+  $rm -rf ~/Library/Arduino15/staging && arduino-cli core update-index && arduino-cli core install esp32:esp32
+  Downloading index: package_index.tar.bz2 downloaded
+  Downloading packages...
+  arduino:dfu-util@0.11.0-arduino5 downloaded
+  esp32:esp-rv32@2411 net/http: request canceled (Client.Timeout or context cancellation while reading body)
+  Error during install: net/http: request canceled (Client.Timeout or context cancellation while reading body)
+#+end_src
+
+#+begin_src sh
+    $ arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+#+end_src
+
+#+begin_src sh
+  $ arduino-cli core search esp32:esp32
+  ID          Version Name
+  esp32:esp32 3.2.0   esp32
+#+end_src
+
+This finally worked
+#+begin_src sh
+  $ arduino-cli core install esp32:esp32@2.0.14
+  Downloading packages...
+  arduino:dfu-util@0.11.0-arduino5 arduino:dfu-util@0.11.0-arduino5 already downloaded
+  esp32:esptool_py@4.5.1 downloaded
+  esp32:mklittlefs@3.0.0-gnu12-dc7f933 downloaded
+  esp32:mkspiffs@0.2.3 downloaded
+  esp32:openocd-esp32@v0.12.0-esp32-20230419 downloaded
+  esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0 downloaded
+  esp32:riscv32-esp-elf-gdb@11.2_20220823 downloaded
+  esp32:xtensa-esp-elf-gdb@11.2_20220823 downloaded
+  esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0 downloaded
+  esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0 downloaded
+  esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0 downloaded
+  esp32:esp32@2.0.14 downloaded
+  Installing arduino:dfu-util@0.11.0-arduino5...
+  Configuring tool....
+  arduino:dfu-util@0.11.0-arduino5 installed
+  Installing esp32:esptool_py@4.5.1...
+  Configuring tool....
+  esp32:esptool_py@4.5.1 installed
+  Installing esp32:mklittlefs@3.0.0-gnu12-dc7f933...
+  Configuring tool....
+  esp32:mklittlefs@3.0.0-gnu12-dc7f933 installed
+  Installing esp32:mkspiffs@0.2.3...
+  Configuring tool....
+  esp32:mkspiffs@0.2.3 installed
+  Installing esp32:openocd-esp32@v0.12.0-esp32-20230419...
+  Configuring tool....
+  esp32:openocd-esp32@v0.12.0-esp32-20230419 installed
+  Installing esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0...
+  Configuring tool....
+  esp32:riscv32-esp-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+  Installing esp32:riscv32-esp-elf-gdb@11.2_20220823...
+  Configuring tool....
+  esp32:riscv32-esp-elf-gdb@11.2_20220823 installed
+  Installing esp32:xtensa-esp-elf-gdb@11.2_20220823...
+  Configuring tool....
+  esp32:xtensa-esp-elf-gdb@11.2_20220823 installed
+  Installing esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0...
+  Configuring tool....
+  esp32:xtensa-esp32-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+  Installing esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0...
+  Configuring tool....
+  esp32:xtensa-esp32s2-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+  Installing esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0...
+  Configuring tool....
+  esp32:xtensa-esp32s3-elf-gcc@esp-2021r2-patch5-8.4.0 installed
+  Installing platform esp32:esp32@2.0.14...
+  Configuring platform....
+  Platform esp32:esp32@2.0.14 installed
+#+end_src
+
+#+begin_src sh
+  $ arduino-cli lib install GxEPD2
+  Downloading Adafruit BusIO@1.17.1...
+  Adafruit BusIO@1.17.1 downloaded
+  Installing Adafruit BusIO@1.17.1...
+  Installed Adafruit BusIO@1.17.1
+  Downloading Adafruit GFX Library@1.12.1...
+  Adafruit GFX Library@1.12.1 downloaded
+  Installing Adafruit GFX Library@1.12.1...
+  Installed Adafruit GFX Library@1.12.1
+  Downloading GxEPD2@1.6.4...
+  GxEPD2@1.6.4 downloaded
+  Installing GxEPD2@1.6.4...
+  Installed GxEPD2@1.6.4
+#+end_src
 * [2025-05-01 Thu] Journelly: like tweeting but for your eyes only (in plain text)
 :PROPERTIES:
 :CUSTOM_ID: journelly-like-tweeting-but-for-your-eyes-only
