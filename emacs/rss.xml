@@ -6,7 +6,418 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://xenodium.github.io/emacs/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Thu, 01 May 2025 15:30:00 +0100</lastBuildDate>
+<lastBuildDate>Fri, 16 May 2025 15:30:37 +0100</lastBuildDate>
+<item>
+  <title>A richer Journelly org capture template</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-a-richer-journelly-org-capture-template" class="outline-2">
+ <h2 id="a-richer-journelly-org-capture-template"> <span class="timestamp-wrapper"> <span class="timestamp">16 May 2025</span></span> A richer Journelly org capture template</h2>
+ <div class="outline-text-2" id="text-a-richer-journelly-org-capture-template">
+ <p>
+In addition to including user content,  <a href="https://journelly.com/">Journelly</a> entries typically bundle a few extra details like timestamp, location, and weather information, which look a little something like this:
+</p>
+
+
+ <div id="org523d04b" class="figure">
+ <p> <img src="../images/a-richer-journelly-org-capture-template/rice-guys.jpg" alt="rice-guys.jpg" width="50%"></img></p>
+</div>
+
+ <p>
+Behind the scenes, Journelly entries follow a fairly simple org structure:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">* [2025-04-23 Wed 13:24] @ Waterside House
+:PROPERTIES:
+:LATITUDE: 51.518714352892665
+:LONGITUDE: -0.17575820941499262
+:WEATHER_TEMPERATURE: 11.4°C
+:WEATHER_CONDITION: Mostly Cloudy
+:WEATHER_SYMBOL: cloud
+:END:
+Try out Rice Guys #food #london on Wednesdays in Paddington
+
+[[file:Journelly.org.assets/images/C5890C25-5575-4F52-80D9-CE0087E9986C.jpg]]
+</pre>
+</div>
+
+ <p>
+While out and capturing entries from my iPhone, I rely on Journelly to leverages iOS location and weather APIs to include relevant information. On the other hand, when capturing from my Macbook, I rely on a basic Emacs org capture template (very similar to  <a href="https://baty.net/posts/2025/04/journelly-org-mode-backed-journaling-for-i-os/">Jack Baty's</a>):
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> org-capture-templates
+      '((<span style="color: #183691;">"j"</span>  <span style="color: #183691;">"Journelly"</span> entry (file  <span style="color: #183691;">"path/to/Journelly.org"</span>)
+          <span style="color: #183691;">"* %U @ Home\n%?"</span>  <span style="color: #a71d5d;">:prepend</span> t)))
+</pre>
+</div>
+
+ <p>
+These templates yield straightforward entries like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-org">* [2025-05-16 Fri 12:42] @ Home
+A simple entry from my Macbook.
+</pre>
+</div>
+
+ <p>
+I've been using this capture template for some time. It does a fine job, though you'd notice location and weather info aren't captured. No biggie, since the location of my laptop isn't typically relevant, but hey today seemed like a perfect day to get  <a href="https://xkcd.com/356/">nerd snipped</a> by  <a href="https://bsky.app/profile/natharari.bsky.social/post/3lpbkzcduo223">@natharari</a>.
+</p>
+
+ <p>
+And so, off I went, to look for a utility to capture location from the command line. I found  <a href="https://github.com/fulldecent/corelocationcli">CoreLocationCLI</a>, which leverages the equivalent macOS location APIs. As a bonus, the project seemed active (modified only a few days ago).
+</p>
+
+ <p>
+Installing CoreLocationCLI via  <a href="https://brew.sh/">Homebrew</a> was a breeze:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">brew install corelocationcli
+</pre>
+</div>
+
+ <p>
+The first time you run corelocationcli, you'll get an message like:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-nil">"CoreLocationCLI" can't be opened because it is from an unidentified developer...
+</pre>
+</div>
+
+ <p>
+You'll need to follow  <a href="https://github.com/fulldecent/corelocationcli">CoreLocationCLI</a>'s instructions:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-nil">To approve the process and allow CoreLocationCLI to run, go to System Settings ➡️ Privacy & Security ➡️ General, and look in the bottom right corner for a button to click.
+</pre>
+</div>
+
+ <p>
+After approving the process, I ran into a snag:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">$ CoreLocationCLI
+CoreLocationCLI: ❌ The operation couldn’t be completed. (kCLErrorDomain error 0.)
+</pre>
+</div>
+
+ <p>
+Lucky for me, the  <a href="https://github.com/fulldecent/corelocationcli">README</a> had the solution:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">Note for Mac users: make sure Wi-Fi is turned on. Otherwise you will see kCLErrorDomain error 0.
+</pre>
+</div>
+
+ <p>
+Oddly, my WiFi was turned on, so I went ahead and toggled it. Success:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-sh">$ CoreLocationCLI
+51.51871 -0.17575
+</pre>
+</div>
+
+ <p>
+We can start by wrapping this command-line utility return coordinates along with reverse geolocation (ie. description):
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">journelly-get-location</span> ()
+   <span style="color: #183691;">"Get current location.</span>
+
+ <span style="color: #183691;">Return in the form:</span>
+
+ <span style="color: #183691;">`((lat . 51.51871)</span>
+ <span style="color: #183691;">  (lon . -0.17575)</span>
+ <span style="color: #183691;">  (description . \"Sunny House\"))</span>
+
+ <span style="color: #183691;">Signals an error if the location cannot be retrieved."</span>
+  (<span style="color: #a71d5d;">unless</span> (executable-find  <span style="color: #183691;">"CoreLocationCLI"</span>)
+    (<span style="color: #333333;">error</span>  <span style="color: #183691;">"Needs CoreLocationCLI (try brew install corelocationcli)"</span>))
+  (<span style="color: #a71d5d;">with-temp-buffer</span>
+    (<span style="color: #a71d5d;">if-let</span> ((exit-code (call-process  <span style="color: #183691;">"CoreLocationCLI"</span> nil t nil
+                                       <span style="color: #183691;">"--format"</span>  <span style="color: #183691;">"%latitude\t%longitude\t%thoroughfare"</span>))
+             (success (eq exit-code 0))
+             (parts (split-string (buffer-string)  <span style="color: #183691;">"\t"</span>)))
+        `((lat . ,(string-to-number (nth 0 parts)))
+          (lon . ,(string-to-number (nth 1 parts)))
+          (description . ,(string-trim (nth 2 parts))))
+      (<span style="color: #333333;">error</span>  <span style="color: #183691;">"No location available"</span>))))
+</pre>
+</div>
+
+ <p>
+Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS, since it requires setting up a developer account and obtaining an API key. No worries, I found the great  <a href="https://api.met.no/">MET Norway API</a> which is freely available without the need for keys.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">journelly-fetch-weather</span> (lat lon)
+   <span style="color: #183691;">"Fetch weather data from MET Norway API for LAT and LON.</span>
+
+ <span style="color: #183691;">Return the parsed JSON object."</span>
+  (<span style="color: #a71d5d;">let*</span> ((url (format  <span style="color: #183691;">"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%s&lon=%s"</span> lat lon))
+         (args (list  <span style="color: #183691;">"-s"</span> url)))
+    (<span style="color: #a71d5d;">with-temp-buffer</span>
+      (apply #'call-process  <span style="color: #183691;">"curl"</span> nil t nil args)
+      (goto-char (point-min))
+      (json-parse-buffer  <span style="color: #a71d5d;">:object-type</span> 'alist))))
+</pre>
+</div>
+
+ <p>
+We can take it for a spin with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(journelly-fetch-weather 51.51871 -0.17575)
+</pre>
+</div>
+
+ <p>
+We get a nice object with a chunky time series (cropped for readability):
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">((type .  <span style="color: #183691;">"Feature"</span>)
+ (geometry (type .  <span style="color: #183691;">"Point"</span>) (coordinates . [-0.1758 51.5187 30]))
+ (properties
+  (meta (updated_at .  <span style="color: #183691;">"2025-05-16T11:17:44Z"</span>)
+        (units (air_pressure_at_sea_level .  <span style="color: #183691;">"hPa"</span>)
+               (air_temperature .  <span style="color: #183691;">"celsius"</span>)
+               (cloud_area_fraction .  <span style="color: #183691;">"%"</span>)
+               (precipitation_amount .  <span style="color: #183691;">"mm"</span>) (relative_humidity .  <span style="color: #183691;">"%"</span>)
+               (wind_from_direction .  <span style="color: #183691;">"degrees"</span>) (wind_speed .  <span style="color: #183691;">"m/s"</span>)))
+  (timeseries
+   . [((time .  <span style="color: #183691;">"2025-05-16T12:00:00Z"</span>)
+       (data
+        (instant
+         (details (air_pressure_at_sea_level . 1025.6)
+                  (air_temperature . 18.0) (cloud_area_fraction . 4.7)
+                  (relative_humidity . 44.2)
+                  (wind_from_direction . 17.6) (wind_speed . 3.6)))
+        (next_12_hours (summary (symbol_code .  <span style="color: #183691;">"fair_day"</span>)) (details))
+        (next_1_hours (summary (symbol_code .  <span style="color: #183691;">"clearsky_day"</span>))
+                      (details (precipitation_amount . 0.0)))
+        (next_6_hours (summary (symbol_code .  <span style="color: #183691;">"clearsky_day"</span>))
+                      (details (precipitation_amount . 0.0)))))
+
+      ...
+
+
+     ((time .  <span style="color: #183691;">"2025-05-26T00:00:00Z"</span>)
+       (data
+        (instant
+         (details (air_pressure_at_sea_level . 1007.3)
+                  (air_temperature . 12.6)
+                  (cloud_area_fraction . 28.1)
+                  (relative_humidity . 91.3)
+                  (wind_from_direction . 258.7) (wind_speed . 3.5)))))])))
+
+</pre>
+</div>
+
+ <p>
+Journelly entries need only a tiny subset of the returned object, so let's add a helper to extract and format as preferred.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">journelly-fetch-weather-summary</span> (lat lon)
+   <span style="color: #183691;">"Fetch weather data from MET Norway API for LAT and LON.</span>
+
+ <span style="color: #183691;">Return in the form:</span>
+
+ <span style="color: #183691;"> '((temperature . \"16.9°C\")</span>
+ <span style="color: #183691;">   (symbol . \"cloudy\"))."</span>
+  (<span style="color: #a71d5d;">let*</span> ((data (journelly-fetch-weather lat lon))
+         (now (current-time))
+         (entry (seq-find
+                 (<span style="color: #a71d5d;">lambda</span> (entry)
+                   (<span style="color: #a71d5d;">let-alist</span> entry
+                     (time-less-p now (date-to-time .time))))
+                 (<span style="color: #a71d5d;">let-alist</span> data
+                   .properties.timeseries)))
+         (unit (<span style="color: #a71d5d;">let-alist</span> data
+                 .properties.meta.units.air_temperature)))
+    (<span style="color: #a71d5d;">unless</span> entry
+      (<span style="color: #333333;">error</span>  <span style="color: #183691;">"Couldn't fetch weather data"</span>))
+    (<span style="color: #a71d5d;">let-alist</span> entry
+      `((temperature . ,(format  <span style="color: #183691;">"%.1f%s"</span>
+                                .data.instant.details.air_temperature
+                                (<span style="color: #a71d5d;">cond</span>
+                                 ((string= unit  <span style="color: #183691;">"celsius"</span>)  <span style="color: #183691;">"°C"</span>)
+                                 ((string= unit  <span style="color: #183691;">"fahrenheit"</span>)  <span style="color: #183691;">"°F"</span>)
+                                 (t (concat  <span style="color: #183691;">" "</span> unit)))))
+        (symbol . ,(alist-get 'symbol_code .data.next_1_hours.summary))))))
+</pre>
+</div>
+
+ <p>
+We can take it for a spin with:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(journelly-fetch-weather-summary 51.51871 -0.17575)
+</pre>
+</div>
+
+ <p>
+Nice! Look at that, it's a sign that I should finish writing and go outside!
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">'((temperature .  <span style="color: #183691;">"19.0°C"</span>)
+  (symbol .  <span style="color: #183691;">"clearsky_day"</span>))
+</pre>
+</div>
+
+ <p>
+I really should go outside, I'm just so close now… Or so I thought! That symbols (ie. "clearsky_day") isn't recognizable by Journelly, which relies on  <a href="https://developer.apple.com/sf-symbols/">SF Symbols</a> returned by  <a href="https://developer.apple.com/weatherkit/">WeatherKit</a>. I need some sort of mapping between these symbols. Gosh, I need to go outside and this is a perfect task for a robot! Whipped out  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> and asked the LLM robots to take on this grunt work, who gave me:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-json">{
+   <span style="color: #a71d5d;">"clearsky_day"</span>:  <span style="color: #183691;">"sun.max"</span>,
+   <span style="color: #a71d5d;">"clearsky_night"</span>:  <span style="color: #183691;">"moon.stars"</span>,
+   <span style="color: #a71d5d;">"clearsky_polartwilight"</span>:  <span style="color: #183691;">"sun.horizon"</span>,
+  ...
+   <span style="color: #a71d5d;">"snowshowers_and_thunder_day"</span>:  <span style="color: #183691;">"cloud.sun.bolt.snow"</span>,
+   <span style="color: #a71d5d;">"snowshowers_and_thunder_night"</span>:  <span style="color: #183691;">"cloud.moon.bolt.snow"</span>,
+   <span style="color: #a71d5d;">"thunderstorm"</span>:  <span style="color: #183691;">"cloud.bolt"</span>
+}
+</pre>
+</div>
+
+ <p>
+We're in elisp land so who wants json? Hey robot, I need an alist:
+</p>
+
+
+ <div id="org48fd946" class="figure">
+ <p> <img src="../images/a-richer-journelly-org-capture-template/chatgpt-shell.png" alt="chatgpt-shell.png" width="90%"></img></p>
+</div>
+
+ <p>
+Won't the LLM make mapping errors? Most certainly! But for now, I'm just getting a rough prototype and I need to get moving if I want to go outside!
+</p>
+
+ <p>
+We plug our mapping into an elisp function
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">journelly-resolve-metno-to-sf-symbol</span> (symbol)
+   <span style="color: #183691;">"Resolve Met.no weather SYMBOL strings to a corresponding SF Symbols."</span>
+  (<span style="color: #a71d5d;">let</span> ((symbols '((<span style="color: #183691;">"clearsky_day"</span> .  <span style="color: #183691;">"sun.max"</span>)
+                   (<span style="color: #183691;">"clearsky_night"</span> .  <span style="color: #183691;">"moon.stars"</span>)
+                   (<span style="color: #183691;">"clearsky_polartwilight"</span> .  <span style="color: #183691;">"sun.horizon"</span>)
+                   ...
+                   (<span style="color: #183691;">"snowshowers_and_thunder_day"</span> .  <span style="color: #183691;">"cloud.sun.bolt.snow"</span>)
+                   (<span style="color: #183691;">"snowshowers_and_thunder_night"</span> .  <span style="color: #183691;">"cloud.moon.bolt.snow"</span>)
+                   (<span style="color: #183691;">"thunderstorm"</span> .  <span style="color: #183691;">"cloud.bolt"</span>))))
+    (map-elt symbols symbol)))
+</pre>
+</div>
+
+ <p>
+Does it work? Kinda seems like it.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(journelly-resolve-metno-to-sf-symbol
+ (map-elt (journelly-fetch-weather-summary 51.51871 -0.17575) 'symbol))
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp"> <span style="color: #183691;">"sun.max"</span>
+</pre>
+</div>
+
+ <p>
+We got everything we need now, let's put the bits together:
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">defun</span>  <span style="color: #795da3;">journelly-generate-metadata</span> ()
+  (<span style="color: #a71d5d;">let*</span> ((location (journelly-get-location))
+         (weather (journelly-fetch-weather-summary
+                   (map-elt location 'lat)
+                   (map-elt location 'lon))))
+    (format  <span style="color: #183691;">"%s</span>
+ <span style="color: #183691;">:PROPERTIES:</span>
+ <span style="color: #183691;">:LATITUDE: %s</span>
+ <span style="color: #183691;">:LONGITUDE: %s</span>
+ <span style="color: #183691;">:WEATHER_TEMPERATURE: %s</span>
+ <span style="color: #183691;">:WEATHER_SYMBOL: %s</span>
+ <span style="color: #183691;">:END:"</span>
+            (<span style="color: #a71d5d;">or</span> (map-elt location 'description)  <span style="color: #183691;">"-"</span>)
+            (map-elt location 'lat)
+            (map-elt location 'lon)
+            (alist-get 'temperature weather)
+            (journelly-resolve-metno-to-sf-symbol
+             (alist-get 'symbol weather)))))
+</pre>
+</div>
+
+ <p>
+Lovely, we now get the metadata we need.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">Waterside House
+ <span style="color: #a71d5d;">:PROPERTIES:</span>
+ <span style="color: #a71d5d;">:LATITUDE:</span> 51.51871
+ <span style="color: #a71d5d;">:LONGITUDE:</span> -0.175758
+ <span style="color: #a71d5d;">:WEATHER_TEMPERATURE:</span> 18.5°C
+ <span style="color: #a71d5d;">:WEATHER_SYMBOL:</span> sun.max
+ <span style="color: #a71d5d;">:END:</span>
+</pre>
+</div>
+
+ <p>
+Damn, the temperature is dropping. I really do need to go outside. So close now!
+</p>
+
+ <p>
+All we have to do is plug our  <code>journelly-generate-metadata</code> function into our org template and… Bob's your uncle!
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> org-capture-templates
+      '((<span style="color: #183691;">"j"</span>  <span style="color: #183691;">"Journelly"</span> entry (file  <span style="color: #183691;">"path/to/Journelly.org"</span>)
+          <span style="color: #183691;">"* %U @ %(journelly-generate-metadata)\n%?"</span>  <span style="color: #a71d5d;">:prepend</span> t)))
+</pre>
+</div>
+
+ <p>
+We can now invoke our trusty  <code>M-x org-capture</code> and off we go…
+</p>
+
+
+ <div id="org8db926c" class="figure">
+ <p> <img src="../images/a-richer-journelly-org-capture-template/capture.gif" alt="capture.gif" width="80%"></img></p>
+</div>
+
+ <p>
+While the code currently lives in my Emacs config, it's  <a href="https://github.com/xenodium/dotsies/blob/main/emacs/ar/journelly.el">available on GitHub</a>. If you do take it for a spin, it may crash and burn. I blame the weather. In the UK, when sunny, you rush to go outside! 🌞🏃‍♂️💨
+</p>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/a-richer-journelly-org-capture-template</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/a-richer-journelly-org-capture-template</guid>
+  <pubDate>Fri, 16 May 2025 15:30:37 +0100</pubDate>
+</item>
 <item>
   <title>Journelly: like tweeting but for your eyes only (in plain text)</title>
   <description><![CDATA[<div id="content" class="content">
