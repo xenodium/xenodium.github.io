@@ -76,7 +76,7 @@ $ CoreLocationCLI
 51.51871 -0.17575
 ```
 
-We can start by wrapping this command-line utility return coordinates along with reverse geolocation (ie. description):
+We can start by wrapping this command-line utility to return coordinates along with reverse geolocation (ie. description):
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun journelly-get-location ()
@@ -102,7 +102,19 @@ Signals an error if the location cannot be retrieved."
       (error "No location available"))))
 ```
 
-Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS, since it requires setting up a developer account and obtaining an API key. No worries, I found the great [MET Norway API](https://api.met.no/) which is freely available without the need for keys.
+A quick check shows it's working as expected.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(journelly-get-location)
+```
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+'((lat . 51.51871)
+  (lon . -0.17575)
+  (description . "Waterside House"))
+```
+
+Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS for its dependence on a developer account and obtaining an API key. No worries, I found the great [MET Norway API](https://api.met.no/) which is freely available without the need for keys.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun journelly-fetch-weather (lat lon)
@@ -201,14 +213,14 @@ We can take it for a spin with:
 (journelly-fetch-weather-summary 51.51871 -0.17575)
 ```
 
-Nice! Look at that, it's a sign that I should finish writing and go outside!
+Nice! Look at that weather, it's a sign I should finish writing and go outside!
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 '((temperature . "19.0°C")
   (symbol . "clearsky_day"))
 ```
 
-I really should go outside, I'm just so close now… Or so I thought! That symbols (ie. "clearsky_day") isn't recognizable by Journelly, which relies on [SF Symbols](https://developer.apple.com/sf-symbols/) returned by [WeatherKit](https://developer.apple.com/weatherkit/). I need some sort of mapping between these symbols. Gosh, I need to go outside and this is a perfect task for a robot! Whipped out [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) and asked the LLM robots to take on this grunt work, who gave me:
+I really should go outside, but I'm just so close now… Or so I thought! That symbol (ie. "clearsky_day") isn't recognizable by Journelly, which relies on [SF Symbols](https://developer.apple.com/sf-symbols/) returned by [WeatherKit](https://developer.apple.com/weatherkit/). I need a mapping of sorts between these symbols. Gosh, I do need to go outside. Let's speed things along. This is a perfect task for a robot! Whipped [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) out and asked the LLM robots to take on this grunt work, who gave me:
 
 ``` json
 {
@@ -277,13 +289,13 @@ We got everything we need now, let's put the bits together:
              (alist-get 'symbol weather)))))
 ```
 
-Lovely, we now get the metadata we need.
+Lovely, we now get the metadata we need in the expected format.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 Waterside House
 :PROPERTIES:
 :LATITUDE: 51.51871
-:LONGITUDE: -0.175758
+:LONGITUDE: -0.17575
 :WEATHER_TEMPERATURE: 18.5°C
 :WEATHER_SYMBOL: sun.max
 :END:

@@ -128,7 +128,7 @@ Oddly, my WiFi was turned on, so I went ahead and toggled it. Success:
 </div>
 
  <p>
-We can start by wrapping this command-line utility return coordinates along with reverse geolocation (ie. description):
+We can start by wrapping this command-line utility to return coordinates along with reverse geolocation (ie. description):
 </p>
 
  <div class="org-src-container">
@@ -157,7 +157,23 @@ We can start by wrapping this command-line utility return coordinates along with
 </div>
 
  <p>
-Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS, since it requires setting up a developer account and obtaining an API key. No worries, I found the great  <a href="https://api.met.no/">MET Norway API</a> which is freely available without the need for keys.
+A quick check shows it's working as expected.
+</p>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">(journelly-get-location)
+</pre>
+</div>
+
+ <div class="org-src-container">
+ <pre class="src src-emacs-lisp">'((lat . 51.51871)
+  (lon . -0.17575)
+  (description .  <span style="color: #183691;">"Waterside House"</span>))
+</pre>
+</div>
+
+ <p>
+Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS for its dependence on a developer account and obtaining an API key. No worries, I found the great  <a href="https://api.met.no/">MET Norway API</a> which is freely available without the need for keys.
 </p>
 
  <div class="org-src-container">
@@ -271,7 +287,7 @@ We can take it for a spin with:
 </div>
 
  <p>
-Nice! Look at that, it's a sign that I should finish writing and go outside!
+Nice! Look at that weather, it's a sign I should finish writing and go outside!
 </p>
 
  <div class="org-src-container">
@@ -281,7 +297,7 @@ Nice! Look at that, it's a sign that I should finish writing and go outside!
 </div>
 
  <p>
-I really should go outside, I'm just so close now… Or so I thought! That symbols (ie. "clearsky_day") isn't recognizable by Journelly, which relies on  <a href="https://developer.apple.com/sf-symbols/">SF Symbols</a> returned by  <a href="https://developer.apple.com/weatherkit/">WeatherKit</a>. I need some sort of mapping between these symbols. Gosh, I need to go outside and this is a perfect task for a robot! Whipped out  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> and asked the LLM robots to take on this grunt work, who gave me:
+I really should go outside, but I'm just so close now… Or so I thought! That symbol (ie. "clearsky_day") isn't recognizable by Journelly, which relies on  <a href="https://developer.apple.com/sf-symbols/">SF Symbols</a> returned by  <a href="https://developer.apple.com/weatherkit/">WeatherKit</a>. I need a mapping of sorts between these symbols. Gosh, I do need to go outside. Let's speed things along. This is a perfect task for a robot! Whipped  <a href="https://github.com/xenodium/chatgpt-shell">chatgpt-shell</a> out and asked the LLM robots to take on this grunt work, who gave me:
 </p>
 
  <div class="org-src-container">
@@ -370,14 +386,14 @@ We got everything we need now, let's put the bits together:
 </div>
 
  <p>
-Lovely, we now get the metadata we need.
+Lovely, we now get the metadata we need in the expected format.
 </p>
 
  <div class="org-src-container">
  <pre class="src src-emacs-lisp">Waterside House
  <span style="color: #a71d5d;">:PROPERTIES:</span>
  <span style="color: #a71d5d;">:LATITUDE:</span> 51.51871
- <span style="color: #a71d5d;">:LONGITUDE:</span> -0.175758
+ <span style="color: #a71d5d;">:LONGITUDE:</span> -0.17575
  <span style="color: #a71d5d;">:WEATHER_TEMPERATURE:</span> 18.5°C
  <span style="color: #a71d5d;">:WEATHER_SYMBOL:</span> sun.max
  <span style="color: #a71d5d;">:END:</span>
@@ -663,6 +679,10 @@ If you're curious about what Journelly can do, check out Bemfica's  <a href="htt
  <div id="outline-container-journelly-open-for-beta" class="outline-2">
  <h2 id="journelly-open-for-beta"> <span class="timestamp-wrapper"> <span class="timestamp">14 March 2025</span></span> Journelly open for beta</h2>
  <div class="outline-text-2" id="text-journelly-open-for-beta">
+ <p>
+UPDATE: Journelly is  <a href="https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only">now on the App Store</a>.
+</p>
+
  <p>
 I've reignited Journelly, my note-taking/journaling project. The iOS app is coming along nicely.
 </p>
