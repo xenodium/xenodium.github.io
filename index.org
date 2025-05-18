@@ -1,6 +1,66 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-05-18 Sun] LLM text chat is everywhere. Who’s optimizing its UX?
+:PROPERTIES:
+:CUSTOM_ID: llm-text-chat-is-everywhere-whos-optimizing-ux
+:END:
+When it comes to programming LLM tools, I've seen modes of interaction in the form of code completion, patch application, improvement suggestions, and text chat amongst others. Text chat is everywhere.
+
+In the context of text chat UX, I haven't really come across huge differentiators across offerings. That's not to say they don't exist. The landscape moves fast and there are far too many products out there for me to check out, thus my question to you is...
+
+** Who's optimizing or innovating LLM text chat UX?
+
+While there are plenty of new agents and model capabilities that are interesting in their own right, in the context of chat UX, I'm more interested in finding your favorite UX features. What are they? What do you love about them? Why? Do they feel like they reached or are close to reaching an optimal experience? On the other hand, what do you find that's rough about them? Tiny friction here and there? I'd love to know: [[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[https://bsky.app/profile/xenodium.bsky.social][Bluesky]].
+
+** Chat as a shell, is it keyboard optimized?
+
+Back in 2023, I released the [[https://xenodium.com/a-chatgpt-emacs-shell][first version of chatgpt-shell]]. To me, LLM chats felt like the perfect candidates to be implemented as shells. After all, aren't they just [[https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop][REPL]]s of sorts?
+
+1. Reads user input
+2. Evaluates the input
+3. Prints the result
+4. Loops back to read more input
+
+While this mode of LLM interaction served me well for some time, I couldn't shake the feeling there were tiny improvements to be made to shed a little friction here and there.
+
+** TAB navigation
+
+Not all LLM output is equal. I want to quickly jump to more interesting items like code blocks or links (via keyboard of course). Sure, I can search to navigate around, but don't we have better patterns already? Don't we often just TAB our way around apps and web pages?
+
+With that, I added TAB and Shift-TAB navigation to chatgpt-shell.
+
+** Editable vs read-only (why not both?)
+
+Most LLM text chat interfaces I've come across are made up of two components: the input text-box and the history of input requests along with their corresponding LLM outputs. While using the text-box, keyboard shortcuts are somewhat limited to modifier key shortcuts. I'd love to have a richer menu of options available or ways to quickly ask for things, without explicitly having to request a different interaction mode nor a menu of sorts. Circumstances aren't that different in a shell when you have to switch between character and line mode. In a way, the clunkiness intensifies when you'd like to input multi-line text through your shell. You better watch out for that muscle memory and avoid pressing enter prematurely while you intended to add a newline... Too late. Your incomplete request is already on its way.
+
+With all this in mind, it's easy to dismiss shell foundations given their quirks. The thing is, we don't have to throw the baby out with the bathwater. What we need is a veneer of sorts, automatically switching between edit and view mode just when you need it.
+
+** Reducing history noise
+
+While I want to have access to my LLM chat history (ie. the context), I'm hardly ever interested in seeing anything but the last LLM response. An always-present history feels like constant noise to me. If I want to see the history, I'd like to actively ask for it. Remember that veneer of sorts? Well, can't it act as viewport too? ...showing me only the very last response. Want access to previous entries? Can it act as a pager also? One interaction per page (request + response). But if I really want to open the history floodgates, just give me access to the "raw" shell... and so I started [[https://xenodium.com/an-experimental-e-shell-pager][experimenting with pagers of sorts]].
+
+** One chat interface to rule them all
+
+With my initial chatgpt-shell implementation, I envisioned multi-model chat support would be possible by isolating shell logic into a separate package ([[https://xenodium.com/a-chatgpt-shell-compose-ux-experiment][shell-maker]]) and let folks build whichever LLM chat they'd like (adding support for their favorite model).
+
+While new shells started popping up here and there, I didn't foresee minor shell UX differences affecting general user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on chatgpt-shell features, which I often missed when using some of the other shells. In the end, I bit the bullet and [[https://xenodium.com/chatgpt-shell-goes-multi-model][made chatgpt-shell go multi-model]].
+
+** Tying it all together
+
+TAB navigation, a smart veneer, a viewport, paging, optional access to chat history, a transient menu, a single interface driving different models, and a bunch of other tweaks currently make up chatgpt-shell's compose experience, available via Emacs's =M-x chatgpt-shell-prompt-compose= command or my preferred key binding: =C-c C-e=.
+
+Today, I bring another tweak. Compose buffers get a brand new header presenting all relevant shell details including model and paging information.
+
+#+ATTR_HTML: :width 98%
+[[file:images/llm-text-chat-is-everywhere-whos-optimizing-ux/compose-header.gif]]
+
+The new compose header is now available in the latest MELPA package version. Invoke  =M-x chatgpt-shell-prompt-compose= and off you go. It's pretty fresh, so please report issues.
+
+** Back to the original question...
+
+What are some of the text chat UX features you love? Bonus points if they are keyboard driven. I'd love to hear:  [[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[https://bsky.app/profile/xenodium.bsky.social][Bluesky]].
+
 * [2025-05-16 Fri] A richer Journelly org capture template
 :PROPERTIES:
 :CUSTOM_ID: a-richer-journelly-org-capture-template
@@ -83,7 +143,7 @@ Oddly, my WiFi was turned on, so I went ahead and toggled it. Success:
   51.51871 -0.17575
 #+end_src
 
-We can start by wrapping this command-line utility return coordinates along with reverse geolocation (ie. description):
+We can start by wrapping this command-line utility to return coordinates along with reverse geolocation (ie. description):
 
 #+begin_src emacs-lisp :lexical no
   (defun journelly-get-location ()
@@ -109,7 +169,19 @@ We can start by wrapping this command-line utility return coordinates along with
         (error "No location available"))))
 #+end_src
 
-Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS, since it requires setting up a developer account and obtaining an API key. No worries, I found the great [[https://api.met.no/][MET Norway API]] which is freely available without the need for keys.
+A quick check shows it's working as expected.
+
+#+begin_src emacs-lisp :lexical no
+  (journelly-get-location)
+#+end_src
+
+#+begin_src emacs-lisp :lexical no
+  '((lat . 51.51871)
+    (lon . -0.17575)
+    (description . "Waterside House"))
+#+end_src
+
+Now that we're able to get the current location, we need a way to fetch weather info. I discarded using WeatherKit on macOS for its dependence on a developer account and obtaining an API key. No worries, I found the great [[https://api.met.no/][MET Norway API]] which is freely available without the need for keys.
 
 #+begin_src emacs-lisp :lexical no
   (defun journelly-fetch-weather (lat lon)
@@ -208,14 +280,14 @@ We can take it for a spin with:
   (journelly-fetch-weather-summary 51.51871 -0.17575)
 #+end_src
 
-Nice! Look at that, it's a sign that I should finish writing and go outside!
+Nice! Look at that weather, it's a sign I should finish writing and go outside!
 
 #+begin_src emacs-lisp :lexical no
   '((temperature . "19.0°C")
     (symbol . "clearsky_day"))
 #+end_src
 
-I really should go outside, I'm just so close now... Or so I thought! That symbols (ie. "clearsky_day") isn't recognizable by Journelly, which relies on [[https://developer.apple.com/sf-symbols/][SF Symbols]] returned by [[https://developer.apple.com/weatherkit/][WeatherKit]]. I need some sort of mapping between these symbols. Gosh, I need to go outside and this is a perfect task for a robot! Whipped out [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] and asked the LLM robots to take on this grunt work, who gave me:
+I really should go outside, but I'm just so close now... Or so I thought! That symbol (ie. "clearsky_day") isn't recognizable by Journelly, which relies on [[https://developer.apple.com/sf-symbols/][SF Symbols]] returned by [[https://developer.apple.com/weatherkit/][WeatherKit]]. I need a mapping of sorts between these symbols. Gosh, I do need to go outside. Let's speed things along. This is a perfect task for a robot! Whipped [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] out and asked the LLM robots to take on this grunt work, who gave me:
 
 #+begin_src json
   {
@@ -285,13 +357,13 @@ We got everything we need now, let's put the bits together:
                 (alist-get 'symbol weather)))))
  #+end_src
 
-Lovely, we now get the metadata we need.
+Lovely, we now get the metadata we need in the expected format.
 
  #+begin_src emacs-lisp :lexical no
    Waterside House
    :PROPERTIES:
    :LATITUDE: 51.51871
-   :LONGITUDE: -0.175758
+   :LONGITUDE: -0.17575
    :WEATHER_TEMPERATURE: 18.5°C
    :WEATHER_SYMBOL: sun.max
    :END:
@@ -492,23 +564,6 @@ If you're unfamiliar with these things, you don't need to learn any of it to use
   - [X] Try out Pad Thai Story in Hammersmith
 
   [[file:Journelly.org.assets/images/4F0F3923-675A-461E-9B02-63CEDE76C765.jpg]]
-
-  ,* [2025-02-17 Mon 23:08] @ Wyatt Drive
-  :PROPERTIES:
-  :LATITUDE: 52.48425107944395
-  :LONGITUDE: -0.74188963460061163
-  :WEATHER_TEMPERATURE: 1.46°C
-  :WEATHER_CONDITION: Cloudy
-  :WEATHER_SYMBOL: cloud
-  :END:
-  Table tennis / ping pong clubs in London
-
-  https://www.experttabletennis.com/how-to-find-a-good-table-tennis-club-in-london
-
-  https://thatsup.co.uk/london/guide/where-to-play-table-tennis-in-london
-
-  https://thatsup.co.uk/london/guides
-
 #+end_src
 
 ** Join the beta group

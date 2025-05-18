@@ -6,7 +6,125 @@
 <generator>Emacs webfeeder.el</generator>
 <link>https://lmno.lol/alvaro</link>
 <atom:link href="https://lmno.lol/alvaro/rss.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Fri, 16 May 2025 16:12:54 +0100</lastBuildDate>
+<lastBuildDate>Sun, 18 May 2025 20:55:32 +0100</lastBuildDate>
+<item>
+  <title>LLM text chat is everywhere. Who’s optimizing UX?</title>
+  <description><![CDATA[<div id="content" class="content">
+
+ <div id="outline-container-llm-text-chat-is-everywhere-whos-optimizing-ux" class="outline-2">
+ <h2 id="llm-text-chat-is-everywhere-whos-optimizing-ux"> <span class="timestamp-wrapper"> <span class="timestamp">18 May 2025</span></span> LLM text chat is everywhere. Who’s optimizing UX?</h2>
+ <div class="outline-text-2" id="text-llm-text-chat-is-everywhere-whos-optimizing-ux">
+ <p>
+When it comes to programming LLM tools, I've seen modes of interaction in the form of code completion, patch application, improvement suggestions, and text chat amongst others. Text chat is everywhere.
+</p>
+
+ <p>
+In the context of text chat UX, I haven't really come across huge differentiators across offerings. That's not to say they don't exist. The landscape moves fast and there are far too many products out there for me to check out, thus my question to you is…
+</p>
+</div>
+ <div id="outline-container-org9eaa40f" class="outline-3">
+ <h3 id="org9eaa40f">Who's optimizing or innovating LLM text chat UX?</h3>
+ <div class="outline-text-3" id="text-org9eaa40f">
+ <p>
+While there are plenty of new agents and model capabilities that are interesting in their own right, in the context of chat UX, I'm more interested in finding your favorite UX features. What are they? What do you love about them? Why? Do they feel like they reached or are close to reaching an optimal experience? On the other hand, what do you find that's rough about them? Tiny friction here and there? I'd love to know:  <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="https://bsky.app/profile/xenodium.bsky.social">Bluesky</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgd4217ed" class="outline-3">
+ <h3 id="orgd4217ed">Chat as a shell, is it keyboard optimized?</h3>
+ <div class="outline-text-3" id="text-orgd4217ed">
+ <p>
+Back in 2023, I released the  <a href="https://xenodium.com/a-chatgpt-emacs-shell">first version of chatgpt-shell</a>. To me, LLM chats felt like the perfect candidates to be implemented as shells. After all, aren't they just  <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>s of sorts?
+</p>
+
+ <ol class="org-ol"> <li>Reads user input</li>
+ <li>Evaluates the input</li>
+ <li>Prints the result</li>
+ <li>Loops back to read more input</li>
+</ol> <p>
+While this mode of LLM interaction served me well for some time, I couldn't shake the feeling there were tiny improvements to be made to shed a little friction here and there.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgd9ed482" class="outline-3">
+ <h3 id="orgd9ed482">TAB navigation</h3>
+ <div class="outline-text-3" id="text-orgd9ed482">
+ <p>
+Not all LLM output is equal. I want to quickly jump to more interesting items like code blocks or links (via keyboard of course). Sure, I can search to navigate around, but don't we have better patterns already? Don't we often just TAB our way around apps and web pages?
+</p>
+
+ <p>
+With that, I added TAB and Shift-TAB navigation to chatgpt-shell.
+</p>
+</div>
+</div>
+ <div id="outline-container-org068d112" class="outline-3">
+ <h3 id="org068d112">Editable vs read-only (why not both?)</h3>
+ <div class="outline-text-3" id="text-org068d112">
+ <p>
+Most LLM text chat interfaces I've come across are made up of two components: the input text-box and the history of input requests along with their corresponding LLM outputs. While using the text-box, keyboard shortcuts are somewhat limited to modifier key shortcuts. I'd love to have a richer menu of options available or ways to quickly ask for things, without explicitly having to request a different interaction mode nor a menu of sorts. Circumstances aren't that different in a shell when you have to switch between character and line mode. In a way, the clunkiness intensifies when you'd like to input multi-line text through your shell. You better watch out for that muscle memory and avoid pressing enter prematurely while you intended to add a newline… Too late. Your incomplete request is already on its way.
+</p>
+
+ <p>
+With all this in mind, it's easy to dismiss shell foundations given their quirks. The thing is, we don't have to throw the baby out with the bathwater. What we need is a veneer of sorts, automatically switching between edit and view mode just when you need it.
+</p>
+</div>
+</div>
+ <div id="outline-container-org70ebc80" class="outline-3">
+ <h3 id="org70ebc80">Reducing history noise</h3>
+ <div class="outline-text-3" id="text-org70ebc80">
+ <p>
+While I want to have access to my LLM chat history (ie. the context), I'm hardly ever interested in seeing anything but the last LLM response. An always-present history feels like constant noise to me. If I want to see the history, I'd like to actively ask for it. Remember that veneer of sorts? Well, can't it act as viewport too? …showing me only the very last response. Want access to previous entries? Well, can act as a pager too. One interaction per page (request/response), but if I really want to open the history floodgates, just give me access to the "raw" shell… and so I started  <a href="https://xenodium.com/an-experimental-e-shell-pager">experimenting with pagers of sorts</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-org0856960" class="outline-3">
+ <h3 id="org0856960">One chat interface to rule them all</h3>
+ <div class="outline-text-3" id="text-org0856960">
+ <p>
+With my initial chatgpt-shell implementation, I envisioned multi-model chat support would be possible by isolating shell logic into a separate package ( <a href="https://xenodium.com/a-chatgpt-shell-compose-ux-experiment">shell-maker</a>) and let folks build whichever LLM chat they'd like (adding support for their favorite model).
+</p>
+
+ <p>
+While new shells started popping up here and there, I didn't foresee minor shell UX differences affecting general user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on chatgpt-shell features, which I often missed when using some of the other shells. In the end, I bit the bullet and  <a href="https://xenodium.com/chatgpt-shell-goes-multi-model">made chatgpt-shell go multi-model</a>.
+</p>
+</div>
+</div>
+ <div id="outline-container-org856a965" class="outline-3">
+ <h3 id="org856a965">Tying it all together</h3>
+ <div class="outline-text-3" id="text-org856a965">
+ <p>
+TAB navigation, a smart veneer, a viewport, paging, optional access to chat history, a transient menu, a single interface driving different models, and a bunch of other tweaks currently make up chatgpt-shell's compose experience, available via Emacs's  <code>M-x chatgpt-shell-prompt-compose</code> command or my preferred key binding:  <code>C-c C-e</code>.
+</p>
+
+ <p>
+Today, I bring another tweak. Compose buffers get a brand new header presenting all relevant shell details including model and paging information.
+</p>
+
+
+ <div id="orgddf5713" class="figure">
+ <p> <img src="https://xenodium.github.io/images/llm-text-chat-is-everywhere-whos-optimizing-ux/compose-header.gif" alt="compose-header.gif" width="98%"></img></p>
+</div>
+
+ <p>
+The new compose header is now available in the latest MELPA package version. Invoke   <code>M-x chatgpt-shell-prompt-compose</code> and off you go.
+</p>
+</div>
+</div>
+ <div id="outline-container-orgdf4ab2b" class="outline-3">
+ <h3 id="orgdf4ab2b">Back to the original question…</h3>
+ <div class="outline-text-3" id="text-orgdf4ab2b">
+ <p>
+What are some of the text chat UX features you love? Bonus points if they are keyboard driven. I'd love to hear:   <a href="https://indieweb.social/@xenodium">Mastodon</a> /  <a href="https://twitter.com/xenodium">Twitter</a> /  <a href="https://www.reddit.com/user/xenodium">Reddit</a> /  <a href="https://bsky.app/profile/xenodium.bsky.social">Bluesky</a>.
+</p>
+</div>
+</div>
+</div>
+</div>]]></description>
+  <link>https://lmno.lol/alvaro/llm-text-chat-is-everywhere-whos-optimizing-ux</link>
+  <guid isPermaLink="false">https://lmno.lol/alvaro/llm-text-chat-is-everywhere-whos-optimizing-ux</guid>
+  <pubDate>Sun, 18 May 2025 20:55:32 +0100</pubDate>
+</item>
 <item>
   <title>A richer Journelly org capture template</title>
   <description><![CDATA[<div id="content" class="content">
@@ -20,7 +138,7 @@ In addition to including user content,  <a href="https://journelly.com/">Journel
 
 
  <div id="org0c8f872" class="figure">
- <p> <img src="../images/a-richer-journelly-org-capture-template/rice-guys.jpg" alt="rice-guys.jpg" width="50%"></img></p>
+ <p> <img src="https://xenodium.github.io/images/a-richer-journelly-org-capture-template/rice-guys.jpg" alt="rice-guys.jpg" width="50%"></img></p>
 </div>
 
  <p>
