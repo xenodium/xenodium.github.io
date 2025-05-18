@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-05-18 Sun 20:43 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM text chat is everywhere. Who’s optimizing UX?</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         b, strong {
+          font-weight: bold;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-llm-text-chat-is-everywhere-whos-optimizing-ux" class="outline-2">
+<h2 id="llm-text-chat-is-everywhere-whos-optimizing-ux"><span class="timestamp-wrapper"><span class="timestamp">18 May 2025</span></span> LLM text chat is everywhere. Who’s optimizing UX?</h2>
+<div class="outline-text-2" id="text-llm-text-chat-is-everywhere-whos-optimizing-ux">
+<p>
+When it comes to programming LLM tools, I've seen modes of interaction in the form of code completion, patch application, improvement suggestions, and text chat amongst others. Text chat is everywhere.
+</p>
+
+<p>
+In the context of text chat UX, I haven't really come across huge differentiators across offerings. That's not to say they don't exist. The landscape moves fast and there are far too many products out there for me to check out, thus my question to you is&#x2026;
+</p>
+</div>
+<div id="outline-container-org9eaa40f" class="outline-3">
+<h3 id="org9eaa40f">Who's optimizing or innovating LLM text chat UX?</h3>
+<div class="outline-text-3" id="text-org9eaa40f">
+<p>
+While there are plenty of new agents and model capabilities that are interesting in their own right, in the context of chat UX, I'm more interested in finding your favorite UX features. What are they? What do you love about them? Why? Do they feel like they reached or are close to reaching an optimal experience? On the other hand, what do you find that's rough about them? Tiny friction here and there? I'd love to know: <a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="https://bsky.app/profile/xenodium.bsky.social">Bluesky</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd4217ed" class="outline-3">
+<h3 id="orgd4217ed">Chat as a shell, is it keyboard optimized?</h3>
+<div class="outline-text-3" id="text-orgd4217ed">
+<p>
+Back in 2023, I released the <a href="https://xenodium.com/a-chatgpt-emacs-shell">first version of chatgpt-shell</a>. To me, LLM chats felt like the perfect candidates to be implemented as shells. After all, aren't they just <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>s of sorts?
+</p>
+
+<ol class="org-ol">
+<li>Reads user input</li>
+<li>Evaluates the input</li>
+<li>Prints the result</li>
+<li>Loops back to read more input</li>
+</ol>
+
+<p>
+While this mode of LLM interaction served me well for some time, I couldn't shake the feeling there were tiny improvements to be made to shed a little friction here and there.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd9ed482" class="outline-3">
+<h3 id="orgd9ed482">TAB navigation</h3>
+<div class="outline-text-3" id="text-orgd9ed482">
+<p>
+Not all LLM output is equal. I want to quickly jump to more interesting items like code blocks or links (via keyboard of course). Sure, I can search to navigate around, but don't we have better patterns already? Don't we often just TAB our way around apps and web pages?
+</p>
+
+<p>
+With that, I added TAB and Shift-TAB navigation to chatgpt-shell.
+</p>
+</div>
+</div>
+<div id="outline-container-org068d112" class="outline-3">
+<h3 id="org068d112">Editable vs read-only (why not both?)</h3>
+<div class="outline-text-3" id="text-org068d112">
+<p>
+Most LLM text chat interfaces I've come across are made up of two components: the input text-box and the history of input requests along with their corresponding LLM outputs. While using the text-box, keyboard shortcuts are somewhat limited to modifier key shortcuts. I'd love to have a richer menu of options available or ways to quickly ask for things, without explicitly having to request a different interaction mode nor a menu of sorts. Circumstances aren't that different in a shell when you have to switch between character and line mode. In a way, the clunkiness intensifies when you'd like to input multi-line text through your shell. You better watch out for that muscle memory and avoid pressing enter prematurely while you intended to add a newline&#x2026; Too late. Your incomplete request is already on its way.
+</p>
+
+<p>
+With all this in mind, it's easy to dismiss shell foundations given their quirks. The thing is, we don't have to throw the baby out with the bathwater. What we need is a veneer of sorts, automatically switching between edit and view mode just when you need it.
+</p>
+</div>
+</div>
+<div id="outline-container-org70ebc80" class="outline-3">
+<h3 id="org70ebc80">Reducing history noise</h3>
+<div class="outline-text-3" id="text-org70ebc80">
+<p>
+While I want to have access to my LLM chat history (ie. the context), I'm hardly ever interested in seeing anything but the last LLM response. An always-present history feels like constant noise to me. If I want to see the history, I'd like to actively ask for it. Remember that veneer of sorts? Well, can't it act as viewport too? &#x2026;showing me only the very last response. Want access to previous entries? Well, can act as a pager too. One interaction per page (request/response), but if I really want to open the history floodgates, just give me access to the "raw" shell&#x2026; and so I started <a href="https://xenodium.com/an-experimental-e-shell-pager">experimenting with pagers of sorts</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org0856960" class="outline-3">
+<h3 id="org0856960">One chat interface to rule them all</h3>
+<div class="outline-text-3" id="text-org0856960">
+<p>
+With my initial chatgpt-shell implementation, I envisioned multi-model chat support would be possible by isolating shell logic into a separate package (<a href="https://xenodium.com/a-chatgpt-shell-compose-ux-experiment">shell-maker</a>) and let folks build whichever LLM chat they'd like (adding support for their favorite model).
+</p>
+
+<p>
+While new shells started popping up here and there, I didn't foresee minor shell UX differences affecting general user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on chatgpt-shell features, which I often missed when using some of the other shells. In the end, I bit the bullet and <a href="https://xenodium.com/chatgpt-shell-goes-multi-model">made chatgpt-shell go multi-model</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org856a965" class="outline-3">
+<h3 id="org856a965">Tying it all together</h3>
+<div class="outline-text-3" id="text-org856a965">
+<p>
+TAB navigation, a smart veneer, a viewport, paging, optional access to chat history, a transient menu, a single interface driving different models, and a bunch of other tweaks currently make up chatgpt-shell's compose experience, available via Emacs's <code>M-x chatgpt-shell-prompt-compose</code> command or my preferred key binding: <code>C-c C-e</code>.
+</p>
+
+<p>
+Today, I bring another tweak. Compose buffers get a brand new header presenting all relevant shell details including model and paging information.
+</p>
+
+
+<div id="orgddf5713" class="figure">
+<p><img src="../images/llm-text-chat-is-everywhere-whos-optimizing-ux/compose-header.gif" alt="compose-header.gif" width="98%" />
+</p>
+</div>
+
+<p>
+The new compose header is now available in the latest MELPA package version. Invoke  <code>M-x chatgpt-shell-prompt-compose</code> and off you go.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdf4ab2b" class="outline-3">
+<h3 id="orgdf4ab2b">Back to the original question&#x2026;</h3>
+<div class="outline-text-3" id="text-orgdf4ab2b">
+<p>
+What are some of the text chat UX features you love? Bonus points if they are keyboard driven. I'd love to hear:  <a href="https://indieweb.social/@xenodium">Mastodon</a> / <a href="https://twitter.com/xenodium">Twitter</a> / <a href="https://www.reddit.com/user/xenodium">Reddit</a> / <a href="https://bsky.app/profile/xenodium.bsky.social">Bluesky</a>.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
