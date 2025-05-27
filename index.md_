@@ -1,3 +1,323 @@
+# \[2025-05-27 Tue\] Awesome Emacs on macOS
+---
+id: awesome-emacs-on-macos
+---
+
+While GNU/Linux had been my operating system of choice for many years, these days I'm primarily on macOS. Lucky for me, I spend most of my time in Emacs itself (or a web browser), making the switch between operating systems a relatively painless task.
+
+I build [iOS and macOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) for a living, so naturally I've accumulated a handful of macOS-Emacs integrations and tweaks over time. Below are some of my favorites.
+
+## Emacs Plus
+
+For starters, I should mention I run Emacs on macOS via the excellent [Emacs Plus](https://github.com/d12frosted/homebrew-emacs-plus) [homebrew](https://brew.sh/) recipe. These are the options I use:
+
+``` {.bash org-language="sh"}
+brew install emacs-plus@30 --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-curvy-3d-icon
+```
+
+## Valeriy Savchenko's icons
+
+[Valeriy Savchenko](https://github.com/SavchenkoValeriy) has created some wonderful [macOS Emacs icons](https://github.com/SavchenkoValeriy/emacs-icons). These days, I use his [curvy 3D rendered icon](https://github.com/SavchenkoValeriy/emacs-icons?tab=readme-ov-file#curvy-3d-rendered-icon), which I get via Emacs Plus's `--with-savchenkovaleriy-big-sur-curvy-3d-icon` option.
+
+![](https://xenodium.github.io/images/awesome-emacs-on-macos/icon.png)
+
+## Modifiers
+
+It's been a long while since I've settled on using macOS's Command (⌘) as my Emacs Meta key. For that, you need:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq mac-command-modifier 'meta)
+```
+
+At the same time, I've disabled the ⌥ key to avoid inadvertent surprises.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq mac-option-modifier 'none)
+```
+
+## Enabling Control-Meta(⌘)-D
+
+After setting ⌘ as Meta key, I discovered C-M-d is not available to Emacs for binding keys. There's a [little workaround](enabling-control-meta-d-on-macos):
+
+``` {.bash org-language="sh"}
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
+```
+
+## Frames
+
+You may have noticed the `--with-no-frame-refocus` Emacs Plus option. I didn't like Emacs refocusing other frames when closing one, so I [sent a tiny patch over to Emacs Plus](no-emacs-frame-refocus-on-macos), which gave us that option.
+
+I also prefer reusing existing frames whenever possible.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq ns-pop-up-frames nil)
+```
+
+## Visual tweaks
+
+Most of my visual tweaks have been documented in my [Emacs eye candy post](my-emacs-eye-candy). For macOS-specific things, read on…
+
+It's been a while since I've added this, though vaguely remember needing it to fix mode line rendering artifacts.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq ns-use-srgb-colorspace nil)
+```
+
+I like using a transparent title bar and these two settings gave me just that:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+```
+
+I want a menu bar like other macOS apps, so I enable with:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package menu-bar
+  :config
+  (menu-bar-mode +1))
+```
+
+![](https://xenodium.github.io/images/awesome-emacs-on-macos/menu-bar.webp)
+
+## Emoji picker (a freebie!)
+
+If you got a more recent Apple keyboard, you can [press the 🌐 key to insert emojis](emacs-freebie-macos-emoji-picker) from anywhere, including Emacs. If you haven't got this key, you can always `M-x ns-do-show-character-palette`, which launches the very same dialog.
+
+## Longing long press for accents?
+
+If you prefer Apple's long-press approach to inserting accents or other special characters, I got [an Emacs version of that](an-accentuated-emacs-experiment).
+
+![](https://xenodium.github.io/images/an-accentuated-emacs-experiment/accentuated.webp)
+
+## Rotate macOS display
+
+I wanted to rotate my monitor from the comfort of M-x, so I [made Emacs do it](https://lmno.lol/alvaro/emacs-rotate-my-macos-display).
+
+## Open with
+
+While there are different flavors of "open with default macOS app" commands out there (ie. crux-open-with as part of Bozhidar Batsov's [crux](https://github.com/bbatsov/crux)), I wanted one that [let me choose a specific macOS app](https://lmno.lol/alvaro/emacs-open-with-macos-app).
+
+![](https://xenodium.github.io/images/emacs-open-with-macos-app/open-with_x2.webp)
+
+## SF Symbols (for work)
+
+Apple offers [SF Symbols](https://developer.apple.com/sf-symbols/) on all their platforms, so why not enable [Emacs to insert and render them?](emacs-insert-and-render-sf-symbols)
+
+This is particulary handy if you do any sort of iOS/macOS development, enabling you to insert SF Symbols using your favorite completion framework. I happen to remain a faithful [ivy](https://github.com/abo-abo/swiper) user.
+
+![](https://xenodium.github.io/images/emacs-insert-and-render-sf-symbols/sf-insert-trimmed_x1.8.webp)
+
+## SF Symbols (for fun)
+
+Speaking of enabling SF Symbol rendering, you can also use them to spiff your Emacs up. Check out Charles Choi's [Calle 24](https://github.com/kickingvegas/calle24) for a great-looking Emacs toolbar. Also, Christian Tietze shows how to [use SF Symbols as Emacs tab numbers](https://christiantietze.de/posts/2022/12/sf-symbols-emacs-tab-numbers/).
+
+## Quick kill
+
+While macOS's Activity Monitor does a fine job killing processes, I wanted something a little speedier, so I went with a [killing solution leveraging Emacs completions](https://lmno.lol/alvaro/emacs-quick-kill-process).
+
+![](https://xenodium.github.io/images/emacs-quick-kill-process/kill_x1.8.webp)
+
+## SwiftUI a la org babel
+
+Having learned how simple it was to [enable Objective-C babel support](org-babel-objective-c-support), I figured I could do something a little more creative with SwiftUI, so I published [ob-swiftui](https://lmno.lol/alvaro/ob-swiftui-updates) on MELPA.
+
+![](https://xenodium.github.io/images/ob-swiftui-updates/file-render.gif)
+
+## Changing macOS default apps
+
+I found the nifty [duti](https://github.com/moretension/duti) command-line tool to change default macOS applications super handy, but could never remember its name when I needed it. And so I decided to bring it into [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) as part of my [toolbox](https://github.com/xenodium/dwim-shell-command/tree/main?tab=readme-ov-file#build-a-rich-toolbox-or-use-mine).
+
+![](https://xenodium.github.io/images/hey-emacs-change-the-default-macos-app-for/set-default_x1.3.webp)
+
+I got a bunch of handy helpers in [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el) (specially all the image/video helpers via ffmpeg and imagemagick). Go check [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). There's loads in there, but here are my macOS-specific commands:
+
+-   dwim-shell-commands-macos-add-to-photos
+-   dwim-shell-commands-macos-bin-plist-to-xml
+-   dwim-shell-commands-macos-caffeinate
+-   dwim-shell-commands-macos-convert-to-mp4
+-   dwim-shell-commands-macos-empty-trash
+-   dwim-shell-commands-macos-install-iphone-device-ipa
+-   dwim-shell-commands-macos-make-finder-alias
+-   dwim-shell-commands-macos-ocr-text-from-desktop-region
+-   dwim-shell-commands-macos-ocr-text-from-image
+-   dwim-shell-commands-macos-open-with
+-   dwim-shell-commands-macos-open-with-firefox
+-   dwim-shell-commands-macos-open-with-safari
+-   dwim-shell-commands-macos-reveal-in-finder
+-   dwim-shell-commands-macos-screenshot-window
+-   dwim-shell-commands-macos-set-default-app
+-   dwim-shell-commands-macos-share
+-   dwim-shell-commands-macos-start-recording-window
+-   dwim-shell-commands-macos-abort-recording-window
+-   dwim-shell-commands-macos-end-recording-window
+-   dwim-shell-commands-macos-toggle-bluetooth-device-connection
+-   dwim-shell-commands-macos-toggle-dark-mode
+-   dwim-shell-commands-macos-toggle-display-rotation
+-   dwim-shell-commands-macos-toggle-menu-bar-autohide
+-   dwim-shell-commands-macos-version-and-hardware-overview-info
+
+## Toggle dark mode
+
+Continuing on the `dwim-shell-commands` family, I should also mention `dwim-shell-commands-macos-toggle-dark-mode`.
+
+While I hardly ever change my Emacs theme, I do toggle macOS dark mode from time to time to test macOS or web development.
+
+![](https://xenodium.github.io/images/awesome-emacs-on-macos/dark-toggle.gif)
+
+## Menu bar auto hide
+
+One last `dwim-shell-command`… One that showcases [toggling the macOS menu bar (autohide)](toggle-macos-menu-bar-from-you-know-where).
+
+![](https://xenodium.github.io/images/toggle-macos-menu-bar-from-you-know-where/autohide.webp)
+
+## Connect to your Bluetooth speaker
+
+While this didn't quite stick for me, it was a fun experiment to [add Emacs into the mix](https://lmno.lol/alvaro/emacs-connect-my-bluetooth-speaker).
+
+![](https://xenodium.github.io/images/emacs-connect-my-bluetooth-speaker/connect-disconnect.gif)
+
+## Eshell
+
+This is just a little fun banner I see whenever I launch [eshell](https://www.gnu.org/software/emacs/manual/html_mono/eshell.html).
+
+![](https://xenodium.github.io/images/awesome-emacs-on-macos/eshell.png)
+
+This is all you need:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package em-banner
+  :custom
+  (eshell-banner-message "
+\x1b[32m                             'c.                    \x1b[0m
+\x1b[32m                          ,xNMM.                    \x1b[0m
+\x1b[32m                        .OMMMMo                     \x1b[0m
+\x1b[32m                        OMMM0,                      \x1b[0m
+\x1b[32m              .;loddo:' loolloddol;.                \x1b[0m
+\x1b[32m            cKMMMMMMMMMMNWMMMMMMMMMM0:              \x1b[0m
+\x1b[33m          .KMMMMMMMMMMMMMMMMMMMMMMMWd.              \x1b[0m
+\x1b[33m          XMMMMMMMMMMMMMMMMMMMMMMMX.                \x1b[0m
+\x1b[31m        ;MMMMMMMMMMMMMMMMMMMMMMMM:                  \x1b[0m
+\x1b[31m        :MMMMMMMMMMMMMMMMMMMMMMMM:                  \x1b[0m
+\x1b[31m        .MMMMMMMMMMMMMMMMMMMMMMMMX.                 \x1b[0m
+\x1b[31m         kMMMMMMMMMMMMMMMMMMMMMMMMWd.               \x1b[0m
+\x1b[35m          .XMMMMMMMMMMMMMMMMMMMMMMMMMMk             \x1b[0m
+\x1b[35m           .XMMMMMMMMMMMMMMMMMMMMMMMMK.             \x1b[0m
+\x1b[34m             kMMMMMMMMMMMMMMMMMMMMMMd               \x1b[0m
+\x1b[34m              ;KMMMMMMMWXXWMMMMMMMk.                \x1b[0m
+\x1b[34m                .cooc,.    .,coo:.                  \x1b[0m
+
+\x1b[34m                        _/                  _/  _/  \x1b[0m
+\x1b[34m     _/_/      _/_/_/  _/_/_/      _/_/    _/  _/   \x1b[0m
+\x1b[34m  _/_/_/_/  _/_/      _/    _/  _/_/_/_/  _/  _/    \x1b[0m
+\x1b[34m _/            _/_/  _/    _/  _/        _/  _/     \x1b[0m
+\x1b[34m  _/_/_/  _/_/_/    _/    _/    _/_/_/  _/  _/      \x1b[0m
+
+
+"))
+```
+
+## Screencasts
+
+I wanted a quick way to record or take screenshots of macOS windows, so I now have [my lazy way](recordscreenshot-windows-the-lazy-way), leveraging [macosrec](https://github.com/xenodium/macosrec), a recording command line utility I built. Invoked via `M-x` of course.
+
+## Eglot (LSP) for iOS/macOS dev
+
+If you want any sort of code completion for your macOS projects, you'd be happy to know that eglot works out of the box.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package eglot
+  :ensure t
+  :hook (swift-mode . eglot-ensure)
+  :config
+  (message "warning: `jsonrpc--log-event' is ignored.")
+  (fset #'jsonrpc--log-event #'ignore)
+  (add-to-list 'eglot-server-programs '(swift-mode . ("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))))
+```
+
+## Search and play (Music app)
+
+This is another experiment that didn't quite stick, but I played with [controlling the Music app's playback](https://lmno.lol/alvaro/emacs-searchplay-music-macos).
+
+![](https://xenodium.github.io/images/emacs-searchplay-music-macos/music_search.gif)
+
+While I still purchase music via Apple's Music app, I now play directly from Emacs via [Ready Player Mode](a-tour-of-ready-player-mode). I'm fairly happy with this setup, having scratched that itch with my own package.
+
+```{=org}
+#+ATTR_HTML: :width 60%
+```
+![](http://localhost:8787/alvaro/a-tour-of-ready-player-mode/open-file.gif "1")
+
+By the way, those buttons also leverage SF Symbols on macOS.
+
+## Reveal -\> all \<- in Finder
+
+While there are plenty of solutions out there leveraging the `open` command line tool to reveal files in macOS's Finder, I wanted one that revealed multiple files in one go. For that, I [leveraged](native-emacsmacos-ux-integrations-via-swift-modules) the awesome [emacs-swift-module](https://github.com/SavchenkoValeriy/emacs-swift-module), also by [Valeriy Savchenko](https://github.com/SavchenkoValeriy).
+
+![](https://xenodium.github.io/images/native-emacsmacos-ux-integrations-via-swift-modules/reveal.webp)
+
+## Build your own macOS utils
+
+While elisp wasn't in my top languages to learn back in the day, I sure am glad I finally bit the bullet and learned a thing or two. This opened many possibilities. I now see Emacs as a platform to build utilities and tools off of. A [canvas of sorts](its-all-up-for-grabs-and-it-compounds), to be leveraged in and out of the editor.
+
+For example, you could [build your own bookmark launcher](https://lmno.lol/alvaro/building-your-own-bookmark-launcher) and invoke from anywhere on macOS.
+
+```{=org}
+#+ATTR_HTML: :width 100%
+```
+<https://xenodium.github.io/images/building-your-own-bookmark-launcher/launcher.gif>
+
+## Emacs as default email composer
+
+Turns out you can also [make Emacs your default email composer](mu4e-as-macos-mail-composer).
+
+## Emacs key bindings everywhere
+
+While not exactly an Emacs tweak itself, I wanted to extend Emacs bindings into other macOS apps. In particular, I wanted [more reliable Ctrl-n/p usage everywhere](https://lmno.lol/alvaro/improved-ctrl-p-ctrl-n-macos-movement), which I achieved via [Karabiner-Elements](https://karabiner-elements.pqrs.org/). I also mapped `C-g` to `Esc`, which really feels just great! I can now cancel things, dismiss menus, dialogs, etc. everywhere.
+
+## Org as lingua franca
+
+With my Emacs usage growing over time, it was a matter of time until I discovered org mode. This blog is well over 11 years old now, yet still powered by the [very same org file](https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/index.org) (beware, this file is big).
+
+With my org usage growing, I felt like I was missing org support outside of Emacs. And so I started building iOS apps revolving around my Emacs usage.
+
+### Journelly (iOS)
+
+[Journelly](journelly-like-tweeting-but-for-your-eyes-only) is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by org markup, which can be synced with Emacs via iCloud.
+
+![](https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/sideways.jpg)
+
+![](https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/emacs.gif)
+
+### Flat Habits (iOS)
+
+[Org habits](https://orgmode.org/manual/Tracking-your-habits.html) are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [Flat Habits](flat-habits-for-ios).
+
+```{=org}
+#+ATTR_HTML: :width 80% :height 80%
+```
+<https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif>
+
+![](https://xenodium.github.io/images/flat-habits-meets-org-agenda/flat_agenda.gif)
+
+### Scratch (iOS)
+
+While these days I'm using [Journelly](https://journelly.com/) to jot down just about anything, before that, I built and used [Scratch](scratch-a-minimal-scratch-area) as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by org markup.
+
+![](https://xenodium.github.io/images/scratch-a-minimal-scratch-area/scratch-download_no_audio_x2.6.webp)
+
+### Plain Org (iOS)
+
+For more involved writing, nothing beats Emacs org mode. But what if I want quick access to my org files while on the go? [Plain Org](https://plainorg.com/) is my iOS solution for that.
+
+![](https://xenodium.github.io/images/awesome-emacs-on-macos/plain-org.png)
+
+## Found this post useful?
+
+I'll keep looking for other macOS-related tips and update this post in the future.
+
+In the meantime, consider ✨[sponsoring](https://github.com/sponsors/xenodium)✨ this content, [my Emacs packages](https://github.com/sponsors/xenodium), [buying my apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690), or just [taking care of your eyes](https://apps.apple.com/us/app/fresh-eyes/id6480411697) ;)
+
 # \[2025-05-19 Mon\] Journelly 1.1 released
 ---
 id: journelly-1-1-released
