@@ -1,6 +1,97 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-07-23 Wed] Interactive ordering of dired items
+:PROPERTIES:
+:CUSTOM_ID: interactive-ordering-of-dired-items
+:END:
+Redditor [[https://www.reddit.com/user/sauntcartas/][sauntcartas]] offers a nice solution for [[https://www.reddit.com/r/emacs/comments/1m6qode/getting_filenames_from_a_dired_buffer_in_an/][getting dired filenames in an arbitrary order]]. I have to say, while relatively rare, this is something I need from time to time. You see, I like to apply batch file operations from the comfort of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] buffers (via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]).
+
+Take, for example, =M-x dwim-shell-commands-join-images-horizontally=. It does what it says on the tin. I can mark a handful of image files via dired and easily join them into a single file. The problem is that the file listing isn't always in the desired order, so this is where custom ordering comes in handy.
+
+I wanted an interactive way of reordering dired items. While [[https://www.reddit.com/r/emacs/comments/1m6qode/comment/n4pso9o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button][bouncing ideas]] with [[https://www.reddit.com/user/arthurno1/][arthurno1]], it led us to a [[https://github.com/mkhl/drag-stuff][drag-stuff]] experience, which I'm already a fan of. While =drag-stuff= works in most editable buffers, it breaks on dired. I figured I could just write a couple of dired-specific interactive commands to provide a similar dragging experience, and so I did.
+
+The commands can likely be simplified a bit, but hey they do the job for now.
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/dired-drag-item-up ()
+    "Drag dired item down in buffer."
+    (interactive)
+    (unless (dired-get-filename nil t)
+      (error "Not a dired draggable item"))
+    (when (= (line-number-at-pos) 2)
+      (error "Already at top"))
+    (let* ((inhibit-read-only t)
+           (col (current-column))
+           (item-start (line-beginning-position))
+           (item-end (1+ (line-end-position)))
+           (item (buffer-substring item-start item-end)))
+      (delete-region item-start item-end)
+      (forward-line -1)
+      (beginning-of-line)
+      (insert item)
+      (forward-line -1)
+      (move-to-column col)))
+
+  (defun ar/dired-drag-item-down ()
+    "Drag dired item down in buffer."
+    (interactive)
+    (unless (dired-get-filename nil t)
+      (error "Not a dired draggable item"))
+    (when (save-excursion
+            (forward-line 1)
+            (eobp))
+      (error "Already at bottom"))
+    (let* ((inhibit-read-only t)
+           (col (current-column))
+           (item-start (line-beginning-position))
+           (item-end (1+ (line-end-position)))
+           (item (buffer-substring item-start item-end)))
+      (delete-region item-start item-end)
+      (forward-line 1)
+      (beginning-of-line)
+      (insert item)
+      (forward-line -1)
+      (move-to-column col)))
+#+end_src
+
+I gotta say, these dired dragging commands work great with =M-x dwim-shell-commands-join-images-horizontally=. I bind them to =M-<up>= and =M-<down>=, same as =drag-stuff= elsewhere. You can see the new dired commands in action.
+
+#+ATTR_HTML: :width 90%
+[[file:images/interactive-ordering-of-dired-items/dired-reordering.gif]]
+
+** Bonus
+
+While bouncing ideas with =arthurno1=, we also came up with another helper to create new dired buffers populated from marked items.
+
+#+begin_src emacs-lisp :lexical no
+  (defun ar/dired-from-marked-items ()
+    "Create a new dired buffer containing only the marked files.
+
+  Also allow dragging items up and down via M-<up> and M-x<down>."
+    (interactive)
+    (let ((marked-files (dired-get-marked-files))
+          (buffer-name (generate-new-buffer-name
+                        (format "*%s (selection)*"
+                                (file-name-nondirectory
+                                 (directory-file-name default-directory))))))
+      (unless marked-files
+        (error "No dired marked files"))
+      (dired (cons buffer-name
+                   (mapcar (lambda (path)
+                             (file-relative-name path default-directory))
+                           marked-files)))))
+#+end_src
+
+#+ATTR_HTML: :width 90%
+[[file:images/interactive-ordering-of-dired-items/new-from-marked.gif]]
+
+** Make it all sustainable
+
+Learned something new? Enjoying this [[https://xenodium.com/][blog]] or [[https://github.com/xenodium][my projects]]? Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://github.com/sponsors/xenodium][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
 * [2025-07-23 Wed] Patching your Homebrew's Emacs Plus (macOS)
 :PROPERTIES:
 :CUSTOM_ID: patching-your-homebrews-emacs-plus-macos
@@ -173,7 +264,7 @@ Now you know at least two ways of building and patching Emacs on macOS. There ar
 
 ** Make it all sustainable
 
-Learned something new? Enjoying this [[https://xenodium.com/][blog]] or [[https://github.com/xenodium][my projects]]? Help make it [[https://github.com/sponsors/xenodium][sustainable]].
+Learned something new? Enjoying this [[https://xenodium.com/][blog]] or [[https://github.com/xenodium][my projects]]? Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
 
 Need a blog? [[https://github.com/sponsors/xenodium][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
 
