@@ -1,17 +1,17 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2025-07-23 Wed] Interactive ordering of dired items
+* [2025-07-24 Thu] Interactive ordering of dired items
 :PROPERTIES:
 :CUSTOM_ID: interactive-ordering-of-dired-items
 :END:
-Redditor [[https://www.reddit.com/user/sauntcartas/][sauntcartas]] offers a nice solution for [[https://www.reddit.com/r/emacs/comments/1m6qode/getting_filenames_from_a_dired_buffer_in_an/][getting dired filenames in an arbitrary order]]. I have to say, while relatively rare, this is something I need from time to time. You see, I like to apply batch file operations from the comfort of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] buffers (via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]).
+Redditor [[https://www.reddit.com/user/sauntcartas/][sauntcartas]] offers a nice solution for [[https://www.reddit.com/r/emacs/comments/1m6qode/getting_filenames_from_a_dired_buffer_in_an/][getting Emacs dired filenames in an arbitrary order]]. I have to say, while relatively rare, this is something I need from time to time. You see, I like to apply batch file operations from the comfort of [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] buffers (via [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]]).
 
-Take, for example, =M-x dwim-shell-commands-join-images-horizontally=. It does what it says on the tin. I can mark a handful of image files via dired and easily join them into a single file. The problem is that the file listing isn't always in the desired order, so this is where custom ordering comes in handy.
+Take, for example, =M-x dwim-shell-commands-join-images-horizontally=. It does what it says on the tin. I can mark a handful of image files via =dired= and easily join them into a single file. The problem is that the file listing isn't always in the desired order, so this is where custom ordering comes in handy.
 
-I wanted an interactive way of reordering dired items. While [[https://www.reddit.com/r/emacs/comments/1m6qode/comment/n4pso9o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button][bouncing ideas]] with [[https://www.reddit.com/user/arthurno1/][arthurno1]], it led us to a [[https://github.com/mkhl/drag-stuff][drag-stuff]] experience, which I'm already a fan of. While =drag-stuff= works in most editable buffers, it breaks on dired. I figured I could just write a couple of dired-specific interactive commands to provide a similar dragging experience, and so I did.
+I wanted an interactive way of reordering =dired= items. While [[https://www.reddit.com/r/emacs/comments/1m6qode/comment/n4pso9o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button][bouncing ideas]] with [[https://www.reddit.com/user/arthurno1/][arthurno1]], it led us to a [[https://github.com/rejeep/drag-stuff.el][drag-stuff]] experience, which I'm already a fan of. While =drag-stuff= works in most editable buffers, it breaks on =dired=. For now, I figured I could just write a couple of dired-specific interactive commands to provide a similar dragging experience, and so I did.
 
-The commands can likely be simplified a bit, but hey they do the job for now.
+We can likely improve the commands a bit, but hey they do the job as is...
 
 #+begin_src emacs-lisp :lexical no
   (defun ar/dired-drag-item-up ()
@@ -55,14 +55,23 @@ The commands can likely be simplified a bit, but hey they do the job for now.
       (move-to-column col)))
 #+end_src
 
-I gotta say, these dired dragging commands work great with =M-x dwim-shell-commands-join-images-horizontally=. I bind them to =M-<up>= and =M-<down>=, same as =drag-stuff= elsewhere. You can see the new dired commands in action.
+I gotta say, these =dired= dragging commands work great with =M-x dwim-shell-commands-join-images-horizontally=. I bind them to =M-<up>= and =M-<down>= same as =drag-stuff= elsewhere (already in my [[https://github.com/xenodium/dotsies/commit/a183363f20118b7cc527e48b36620034a64e2ec9][config]]).
+
+#+begin_src emacs-lisp :lexical no
+  (use-package dired
+    :bind (:map dired-mode-map
+                ("M-<up>" . ar/dired-drag-item-up)
+                ("M-<down>" . ar/dired-drag-item-down)))
+#+end_src
+
+ You can see the new =dired= commands in action.
 
 #+ATTR_HTML: :width 90%
 [[file:images/interactive-ordering-of-dired-items/dired-reordering.gif]]
 
 ** Bonus
 
-While bouncing ideas with =arthurno1=, we also came up with another helper to create new dired buffers populated from marked items.
+While bouncing ideas with =arthurno1=, we also came up with another helper to create new =dired= buffers populated from marked items, maybe needed for those times you want a more focused experience.
 
 #+begin_src emacs-lisp :lexical no
   (defun ar/dired-from-marked-items ()

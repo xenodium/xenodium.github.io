@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-07-23 Wed 22:21 -->
+<!-- 2025-07-24 Thu 09:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Interactive ordering of dired items</title>
@@ -393,22 +393,22 @@
 <div id="content" class="content">
 <h1 class="title">Álvaro Ramírez</h1>
 <div id="outline-container-interactive-ordering-of-dired-items" class="outline-2">
-<h2 id="interactive-ordering-of-dired-items"><span class="timestamp-wrapper"><span class="timestamp">23 July 2025</span></span> Interactive ordering of dired items</h2>
+<h2 id="interactive-ordering-of-dired-items"><span class="timestamp-wrapper"><span class="timestamp">24 July 2025</span></span> Interactive ordering of dired items</h2>
 <div class="outline-text-2" id="text-interactive-ordering-of-dired-items">
 <p>
-Redditor <a href="https://www.reddit.com/user/sauntcartas/">sauntcartas</a> offers a nice solution for <a href="https://www.reddit.com/r/emacs/comments/1m6qode/getting_filenames_from_a_dired_buffer_in_an/">getting dired filenames in an arbitrary order</a>. I have to say, while relatively rare, this is something I need from time to time. You see, I like to apply batch file operations from the comfort of <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffers (via <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>).
+Redditor <a href="https://www.reddit.com/user/sauntcartas/">sauntcartas</a> offers a nice solution for <a href="https://www.reddit.com/r/emacs/comments/1m6qode/getting_filenames_from_a_dired_buffer_in_an/">getting Emacs dired filenames in an arbitrary order</a>. I have to say, while relatively rare, this is something I need from time to time. You see, I like to apply batch file operations from the comfort of <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> buffers (via <a href="https://github.com/xenodium/dwim-shell-command">dwim-shell-command</a>).
 </p>
 
 <p>
-Take, for example, <code>M-x dwim-shell-commands-join-images-horizontally</code>. It does what it says on the tin. I can mark a handful of image files via dired and easily join them into a single file. The problem is that the file listing isn't always in the desired order, so this is where custom ordering comes in handy.
+Take, for example, <code>M-x dwim-shell-commands-join-images-horizontally</code>. It does what it says on the tin. I can mark a handful of image files via <code>dired</code> and easily join them into a single file. The problem is that the file listing isn't always in the desired order, so this is where custom ordering comes in handy.
 </p>
 
 <p>
-I wanted an interactive way of reordering dired items. While <a href="https://www.reddit.com/r/emacs/comments/1m6qode/comment/n4pso9o/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button">bouncing ideas</a> with <a href="https://www.reddit.com/user/arthurno1/">arthurno1</a>, it led us to a <a href="https://github.com/mkhl/drag-stuff">drag-stuff</a> experience, which I'm already a fan of. While <code>drag-stuff</code> works in most editable buffers, it breaks on dired. I figured I could just write a couple of dired-specific interactive commands to provide a similar dragging experience, and so I did.
+I wanted an interactive way of reordering <code>dired</code> items. While <a href="https://www.reddit.com/r/emacs/comments/1m6qode/comment/n4pso9o/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button">bouncing ideas</a> with <a href="https://www.reddit.com/user/arthurno1/">arthurno1</a>, it led us to a <a href="https://github.com/rejeep/drag-stuff.el">drag-stuff</a> experience, which I'm already a fan of. While <code>drag-stuff</code> works in most editable buffers, it breaks on <code>dired</code>. For now, I figured I could just write a couple of dired-specific interactive commands to provide a similar dragging experience, and so I did.
 </p>
 
 <p>
-The commands can likely be simplified a bit, but hey they do the job for now.
+We can likely improve the commands a bit, but hey they do the job as is&#x2026;
 </p>
 
 <div class="org-src-container">
@@ -455,20 +455,32 @@ The commands can likely be simplified a bit, but hey they do the job for now.
 </div>
 
 <p>
-I gotta say, these dired dragging commands work great with <code>M-x dwim-shell-commands-join-images-horizontally</code>. I bind them to <code>M-&lt;up&gt;</code> and <code>M-&lt;down&gt;</code>, same as <code>drag-stuff</code> elsewhere. You can see the new dired commands in action.
+I gotta say, these <code>dired</code> dragging commands work great with <code>M-x dwim-shell-commands-join-images-horizontally</code>. I bind them to <code>M-&lt;up&gt;</code> and <code>M-&lt;down&gt;</code> same as <code>drag-stuff</code> elsewhere (already in my <a href="https://github.com/xenodium/dotsies/commit/a183363f20118b7cc527e48b36620034a64e2ec9">config</a>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">use-package</span> dired
+  <span style="color: #a71d5d;">:bind</span> (<span style="color: #a71d5d;">:map</span> dired-mode-map
+              (<span style="color: #183691;">"M-&lt;up&gt;"</span> . ar/dired-drag-item-up)
+              (<span style="color: #183691;">"M-&lt;down&gt;"</span> . ar/dired-drag-item-down)))
+</pre>
+</div>
+
+<p>
+You can see the new <code>dired</code> commands in action.
 </p>
 
 
-<div id="orgc177e09" class="figure">
+<div id="orge3a9918" class="figure">
 <p><img src="../images/interactive-ordering-of-dired-items/dired-reordering.gif" alt="dired-reordering.gif" width="90%" />
 </p>
 </div>
 </div>
-<div id="outline-container-org4822424" class="outline-3">
-<h3 id="org4822424">Bonus</h3>
-<div class="outline-text-3" id="text-org4822424">
+<div id="outline-container-orgb792ef8" class="outline-3">
+<h3 id="orgb792ef8">Bonus</h3>
+<div class="outline-text-3" id="text-orgb792ef8">
 <p>
-While bouncing ideas with <code>arthurno1</code>, we also came up with another helper to create new dired buffers populated from marked items.
+While bouncing ideas with <code>arthurno1</code>, we also came up with another helper to create new <code>dired</code> buffers populated from marked items, maybe needed for those times you want a more focused experience.
 </p>
 
 <div class="org-src-container">
@@ -492,15 +504,15 @@ While bouncing ideas with <code>arthurno1</code>, we also came up with another h
 </div>
 
 
-<div id="org8fcd06b" class="figure">
+<div id="orga08ce79" class="figure">
 <p><img src="../images/interactive-ordering-of-dired-items/new-from-marked.gif" alt="new-from-marked.gif" width="90%" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org63be2cf" class="outline-3">
-<h3 id="org63be2cf">Make it all sustainable</h3>
-<div class="outline-text-3" id="text-org63be2cf">
+<div id="outline-container-orgb78840c" class="outline-3">
+<h3 id="orgb78840c">Make it all sustainable</h3>
+<div class="outline-text-3" id="text-orgb78840c">
 <p>
 Learned something new? Enjoying this <a href="https://xenodium.com/">blog</a> or <a href="https://github.com/xenodium">my projects</a>? Help make it sustainable by ✨<a href="https://github.com/sponsors/xenodium">sponsoring</a>✨
 </p>
