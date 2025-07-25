@@ -13132,6 +13132,27 @@ Once the snippet is evaluated, we're ready to use in an org babel block. We intr
 
 To try out an inline *preview*, create a new org file (eg. swiftui.org) and a source block like:
 
+``` org
+#+begin_src swift :results file :swiftui preview
+  VStack(spacing: 10) {
+      HStack(spacing: 10) {
+        Rectangle().fill(Color.yellow)
+        Rectangle().fill(Color.green)
+      }
+      Rectangle().fill(Color.blue)
+      HStack(spacing: 10) {
+        Rectangle().fill(Color.green)
+        Rectangle().fill(Color.yellow)
+      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+#+end_src
+```
+
+``` org
+#+results:
+```
+
 ![](https://xenodium.github.io/images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg)
 
 Place the cursor anywhere inside the source block (#+begin_src/#+end_src) and press C-c C-c (or M-x org-ctrl-c-ctrl-c).
@@ -14496,9 +14517,51 @@ It's way easier to maintain a blacklist (with no regex) using an org table.
 
 ## Blacklist
 
+``` org
+#+name: spam-entries
+| .spammy                |
+| dodgyfella@hotmail.com |
+| henryzeespammer.com    |
+| yumspam.com            |
+```
+
 and subsequently use org babel (elisp snippet) to generate the regex.
 
 ## Regex gen
+
+``` org
+#+begin_src emacs-lisp :var rows=spam-entries
+  (require 'dash)
+  (require 's)
+
+  (concat "^"
+          (s-join "|"
+                  (mapcar (lambda (entry)
+                            (setq entry (regexp-quote
+                                         (s-trim entry)))
+                            (assert (s-present? entry))
+                            (cond
+                             ;; Blacklist email address: joe@spammer.spammy
+                             ((s-contains-p "@" entry)
+                              (format "(%s)" entry))
+                             ;; Blacklist top-level domain: .spammy
+                             ((s-starts-with-p "\\." entry)
+                              (format "([^.]*%s)" entry))
+                             ;; Blacklist domain: @spammer.spammy
+                             (t
+                              (format "(.*@%s)" entry))))
+                          (-sort
+                           'string<
+                           (-map (lambda (row)
+                                   (nth 0 row))
+                                 rows))))
+          "$")
+
+#+end_src
+
+#+RESULTS:
+: ^([^.]*\.spammy)|(dodgyfella@hotmail\.com)|(.*@henryzeespammer\.com)|(.*@yumspam\.com)$
+```
 
 UPDATE: Tweaked elisp and regex (but not animation) also found John Bokma's post: [Blacklisting domains with Postfix](http://johnbokma.com/blog/2019/05/13/blacklisting-domains-with-postfix.html).
 
@@ -14815,15 +14878,44 @@ id: plotting-ledger-reports-in-org
 
 Save path to [my.ledger](plotting-ledger-reports-in-org/my.ledger) in *ledger-file* block.
 
+``` org
+#+name: ledger-file
+#+begin_src emacs-lisp
+"my.ledger"
+#+end_src
+```
+
 ## gnuplot terminal (png or qt)
 
 Select gnuplot terminal. Using png to output images, but qt is handy too for interactive chart inspection.
+
+``` org
+Use png for inline or qt for interactive
+#+name: gnuplot-term
+#+begin_src emacs-lisp
+"png"
+#+end_src
+```
 
 ## Monthly Income and Expenses
 
 Generate income report.
 
+``` org
+#+name: income-data
+#+begin_src bash :results table :noweb yes
+  ledger -f <<<ledger-file>>> -j reg ^Income -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
+#+end_src
+```
+
 Generate expenses report.
+
+``` org
+#+name: expenses-data
+#+begin_src sh :results table :noweb yes
+  ledger -f <<<ledger-file>>> -j reg ^Expenses -M --collapse
+#+end_src
+```
 
 Plot income vs expenses.
 
@@ -16116,12 +16208,52 @@ Small tables are the perfect use-case for Emacs [org-mode tables](https://orgmod
 
 Here's the org source for the table above (prior to exporting to HTML):
 
+``` org
+|-------------------------------------------------------------+--------+--------|
+|                                                             |  Ocado |   Asda |
+|-------------------------------------------------------------+--------+--------|
+| [[https://www.ocado.com/webshop/product/Coconut-Merchant-Organic-Raw-Extra-Virgin-Coconut-Oil/372144011][Coconut Merchant Organic Raw Extra Virgin Coconut Oil 500ml]] |   6.74 |        |
+| [[https://groceries.asda.com/product/oils/ktc-coconut-hair-oil/910000033621][KTC 100% pure coconut oil]]                                   |        |   2.00 |
+| [[https://www.ocado.com/webshop/product/Waitrose-Love-Life-Popcorn-Maize/25130011][Waitrose Love Life Popcorn Maize 510g]]                       |   1.50 |        |
+| [[https://groceries.asda.com/promotion/2-for-pound-1.50/ls89129][Cypressa Popping Corn 2x500g = 1000g]]                        |        |   1.50 |
+| [[https://www.ocado.com/webshop/product/Whitworths-Ground-Almonds/275684011][Whitworths Ground Almonds]]                                   |   2.00 |        |
+| [[https://groceries.asda.com/product/baking-nuts-seeds-fruit/whitworths-ground-almonds/910000797981][Whitworths Ground Almonds]]                                   |        |   1.60 |
+|-------------------------------------------------------------+--------+--------|
+| Total                                                       |        | £ 5.10 |
+|-------------------------------------------------------------+--------+--------|
+| -30%                                                        | £ 7.17 |        |
+|-------------------------------------------------------------+--------+--------|
+#+TBLFM: @8$3=vsum(@2$3..@7$3);£ %.2f::@9$2=vsum(@2$2..@7$2) * 0.7;£ %.2f
+```
+
 # \[2018-11-24 Sat\] Execute org blocks as root
 ---
 id: execute-org-blocks-as-root
 ---
 
 Been saving admin code snippets in my own [org source blocks](https://orgmode.org/manual/Working-with-source-code.html), some requiring root access. Handy for keeping tiny self-documented scripts to easily bootstrap other machines. TIL org source block's *:dir* argument can be used to run block as root by using tramp syntax: /:dir *sudo::*
+
+``` org
+
+As user:
+
+#+BEGIN_SRC sh
+  whoami
+#+END_SRC
+
+#+RESULTS:
+: user
+
+As root:
+
+#+BEGIN_SRC sh :dir /sudo::
+  whoami
+#+END_SRC
+
+#+RESULTS:
+: root
+
+```
 
 # \[2018-11-23 Fri\] Inline Swift computed properties
 ---
@@ -16152,6 +16284,22 @@ id: multiline-swift-strings
 Being an org-mode fan, I thought I'd give Swift multiline strings a try using Org [Babel's](https://orgmode.org/worg/org-contrib/babel/intro.html) [ob-swift](https://github.com/zweifisch/ob-swift). I get to verify it and document at the same time. Win.
 
 Swift org mode source blocks (ie. BEGIN_SRC/END_SRC) can be added as follows:
+
+``` org
+#+BEGIN_SRC swift :exports both
+  print("""
+       Hello World
+  """)
+
+  print("""
+       Hello World
+       """)
+#+END_SRC
+
+#+RESULTS:
+:      Hello World
+: Hello World
+```
 
 By pressing *C-c C-c* anywhere in the code block, the snippet is executed and its output captured in the *RESULT* block. Super handy for quickly trying out snippets and keeping as future reference.
 
@@ -17063,6 +17211,8 @@ set term png
 set xrange ['2018-06-09':'2018-07-11']
 plot data u 1:2 with linespoints title 'Weight in Kg'
 ```
+
+![](https://xenodium.github.io/images/fitbit-api-org-babel-and-gnuplot/weight.png)
 
 Fetching data and plotting through org babel and gnuplot is pretty sweet. I've barely scratched the surface. There's more at [Org-babel-gnuplot](https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html) and [Plotting tables in Org-Mode using org-plot](https://orgmode.org/worg/org-tutorials/org-plot.html). Either way, this is another Emacs super power to keep in the toolbox.
 
@@ -25247,7 +25397,6 @@ id: org-mode-bookmarks
 
 
 
--   \[\[<https://karl-voit.at/2017/08/12/org-rabbit-hole/>\]\[\[org-agenda\] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up\]\].
 -   [A Baby Steps Guide to Managing Your Tasks with Org](http://www.emacslife.com/baby-steps-org.html).
 -   [An Agenda for Life With Org Mode](https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html).
 -   [An Org Table Spreadsheet cheatsheet](https://scripter.co/notes/org-table-spreadsheet/).
@@ -25343,6 +25492,7 @@ id: org-mode-bookmarks
 -   [The compact Org-mode Guide](https://orgmode.org/guide/).
 -   [The Poor Org-User Spaced Repetition - Where parallels cross](https://ag91.github.io/blog/2020/09/04/the-poor-org-user-spaced-repetition/).
 -   [Tutorial 16.1 - Emacs orgmode tables](http://www.flutterbys.com.au/stats/tut/tut16.1.html).
+-   [UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up](https://karl-voit.at/2017/08/12/org-rabbit-hole/).
 -   [UOMF: Recurring Events with Org Mode](https://karl-voit.at/2017/01/15/org-clone-subtree-with-time-shift/).
 -   [Use Emacs Org Mode and REST APIs for an up-to-date Stock Portfolio](http://www.sastibe.de/2018/05/2018-05-11-emacs-org-mode-rest-apis-stocks/).
 -   [Using Emacs - 24 - Org Capture 2](http://cestlaz.github.io/posts/using-emacs-24-capture-2/#.WTtEbXWw5pg).
