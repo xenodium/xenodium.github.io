@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-07-25 Fri 15:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Writing experience: My decade with Org</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         b, strong {
+          font-weight: bold;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-writing-experience-my-decade-with-org" class="outline-2">
+<h2 id="writing-experience-my-decade-with-org"><span class="timestamp-wrapper"><span class="timestamp">25 July 2025</span></span> Writing experience: My decade with Org</h2>
+<div class="outline-text-2" id="text-writing-experience-my-decade-with-org">
+<p>
+While I missed <a href="https://www.emacswiki.org/emacs/Carnival">Emacs Carnival</a>'s <a href="https://christiantietze.de/posts/2025/06/emacs-carnival-2025-06-take-two/">Take two</a>, with this month's prompt being <a href="https://gregnewman.io/blog/emacs-carnival-2025-07-writing-experience/">Writing Experience</a>, I figured I may have a thing or two to share about my <a href="https://orgmode.org/">Org</a> adoption.
+</p>
+
+<p>
+<a href="https://orgmode.org/">Org mode</a> is often regarded as one of the indispensable <a href="https://www.gnu.org/software/emacs/">Emacs</a> features. A Swiss army of sorts enabling outlining, presentations, task management, agenda, note-taking, blogging, literate programming, the list goes on&#x2026; At its core, Org features are powered by a versatile markup. Kinda like <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> but on steroids. When starting with Org, it's easy to feel lost in the overwhelming <a href="http://doc.norang.ca/org-mode.html">sea of features</a>.
+</p>
+
+<p>
+Luckily, we don't have to know or understand all of Org to get started nor ever need to. You get to pick and use what's useful to you at any given time.
+</p>
+</div>
+<div id="outline-container-orgb5af321" class="outline-3">
+<h3 id="orgb5af321">Getting started</h3>
+<div class="outline-text-3" id="text-orgb5af321">
+<p>
+Want to get started with outlines? Easy. Let's say you wanted to start collecting <a href="https://www.python.org/">python</a> idioms, you can start with an entry like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">* Python idioms
+
+- Prefer double quotes if escaping single quotes.
+- Prefer string interpolation over join. Eg. "'%s'" % member_default.
+
+...
+</pre>
+</div>
+
+<p>
+That's precisely what I did when I started using Org nearly 12 years ago. I created a notes file and added <a href="https://xenodium.com/some-python-idioms">my first entry to collect python 2 idioms</a>. While the idioms may be outdated by now (who knows, it's been many years since I've written any significant amount of python code), but hey that's besides the point. I wanted to start a personal notes file and Org sounded awesome for that.
+</p>
+
+<p>
+Over time, my notes file grew in usefulness. The more I wrote, the more I could recall with search. That is, until I was away from my computer. At that point, I figured I could just export my notes to HTML (via <code>M-x org-export-dispatch</code>) and post online. Over time, folks started reaching out about something read in my notes, and so by then I suppose I had accidentally become a blogger.
+</p>
+</div>
+</div>
+<div id="outline-container-org4e337d8" class="outline-3">
+<h3 id="org4e337d8">Blogging</h3>
+<div class="outline-text-3" id="text-org4e337d8">
+<p>
+In 12 years of "blogging", my approach hasn't changed much. I still write to <a href="https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/index.org">the very same Org file</a> (beware it's big) I started writing notes to. I found this approach fairly accessible, with little ceremony. When I want to write, I open the usual text file and just write. It wasn't until fairly recently I learned this is often referred to as "<a href="https://mikegrindle.com/posts/obtf">one big text file</a>" (OBTF).
+</p>
+
+<p>
+My HTML exporting evolved into hacky <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">elisp</a> cobbled together over time. While the code was nothing to rave about, it did the job just fine for well over a decade. Having said that, it was more of an "it works on my machine" sorta thing. Last year, I finally decided to change my blogging approach and built a blogging platform (in 2024?! I know right?!). Well, the modern web has led us to a sea of tracking, bloat, advertising, the list goes on&#x2026; I wanted to offer a lightweight blogging alternative with none of the typical crummy bits, so I built <a href="https://lmno.lol">LMNO.lol</a>. Today, my <a href="https://xenodium.com">xenodium.com</a> blog runs off that.
+</p>
+</div>
+</div>
+<div id="outline-container-org6c15c58" class="outline-3">
+<h3 id="org6c15c58">Org and Markdown are friends</h3>
+<div class="outline-text-3" id="text-org6c15c58">
+<p>
+<a href="https://lmno.lol">LMNO.lol</a> is powered by Markdown. Wait, what? You may be wondering why an Org fan would build a blogging platform powered by a different markup? In a nutshell, reach. While I remain a faithful Org fan for its capabilities, if I want my blogging platform to appeal to more users, I can't ignore the fact that today Markdown is the prevalent format. Having said that, I wasn't about to give up on Org for personal use. I can actually have my cake and eat it too. You see, I continue writing to Org and convert to Markdown before uploading to <a href="https://lmno.lol">LMNO.lol</a> via <a href="https://pandoc.org/">pandoc</a>, the Swiss Army tool of file converters.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb6a77e0" class="outline-3">
+<h3 id="orgb6a77e0">Incremental Org adoption</h3>
+<div class="outline-text-3" id="text-orgb6a77e0">
+</div>
+<div id="outline-container-org7650af6" class="outline-4">
+<h4 id="org7650af6">Tables</h4>
+<div class="outline-text-4" id="text-org7650af6">
+<p>
+As you know, my Org adoption started with a very simple outline intended for personal notes, but we know <a href="https://doc.norang.ca/org-mode.html">Org is a universe of its own</a>. I soon learned about <a href="https://orgmode.org/manual/Built_002din-Table-Editor.html">Org tables</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">| name                 | job              | origin             |
+|----------------------+------------------+--------------------|
+| Fry                  | Delivery Boy     | Earth              |
+| Bender               | Bending Unit     | Earth              |
+| Leela                | Captain          | Mutant Underground |
+| Professor Farnsworth | Scientist        | Earth              |
+| Amy Wong             | Intern           | Mars               |
+| Dr. Zoidberg         | Staff Doctor     | Decapod 10         |
+| Hermes Conrad        | Bureaucrat       | Earth              |
+| Zapp Brannigan       | 25-Star General  | Earth              |
+| Mom                  | Owner of MomCorp | Earth              |
+| Nibbler              | Leela's pet      | Planet Eternium    |
+</pre>
+</div>
+
+<p>
+I'd keep finding really handy Org tips here and there. Like <a href="https://xenodium.com/org-tip-convert-csv-to-table">converting csv to Org by merely selecting the text</a> from my beloved editor.
+</p>
+
+
+<div id="org98c83c5" class="figure">
+<p><img src="../images/org-tip-convert-csv-to-table/csv-to-org-table.gif" alt="csv-to-org-table.gif" width="75%" height="75%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org05f114d" class="outline-4">
+<h4 id="org05f114d">Tasks</h4>
+<div class="outline-text-4" id="text-org05f114d">
+<p>
+We mentioned Org handling task management, amongst many other things. In a nutshell, tasks in Org are "simple TODO lists", using special keywords. I got started with Org tasks with something like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">* DONE Call granny
+* DONE Post on Reddit
+* STARTED Procrastinate some more
+* TODO Do your homework
+</pre>
+</div>
+
+<p>
+I say "simple TODO lists" (in quotes) because Org task management is a another universe of its own. You can schedule tasks in all sorts of ways (like recurring), as habits, tag them, refile them, etc. and even get a nice agenda view to interact with.
+</p>
+
+<p>
+I don’t have an agenda post on this myself, but <a href="https://christiantietze.de/">Christian Tietze</a> has a wonderful write-up showcasing <a href="https://christiantietze.de/posts/2022/12/updated-org-mode-agenda-display-buffer-alist/">an improved Org-mode agenda display</a>.
+</p>
+
+
+<div id="org6a9180d" class="figure">
+<p><img src="https://christiantietze.de/posts/2022/12/updated-org-mode-agenda-display-buffer-alist/2022-12-27_org-agenda.png" alt="2022-12-27_org-agenda.png" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org20b5bc2" class="outline-4">
+<h4 id="org20b5bc2">Babel</h4>
+<div class="outline-text-4" id="text-org20b5bc2">
+<p>
+Moving on from task management, I soon discovered <a href="https://orgmode.org/worg/org-contrib/babel/">babel</a>, another Org super power enabling you to include code snippets. Not too different to Markdown, but I found the ability to evaluate/execute snippets and capture output pretty magical.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">#+BEGIN_SRC python
+  print("Hello python world")
+#+END_SRC
+
+#+RESULTS:
+: Hello python world
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org20cd59c" class="outline-3">
+<h3 id="org20cd59c">Adding Objective-C Org babel support</h3>
+<div class="outline-text-3" id="text-org20cd59c">
+<p>
+At the time, I was writing a fair bit of Objective-C code but found babel support was missing. By looking at <code>ob-C.el</code> and <code>ob-java.el</code>, <a href="https://xenodium.com/org-babel-objective-c-support">I figured how to add Objective-C support</a>. Surprisingly, it took very little code and I could now execute Objective-C code just like python from the comfort of an Org buffer.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">#+BEGIN_SRC objc
+  #import &lt;Foundation/Foundation.h&gt;
+
+  int main() {
+    NSLog(@"Hello ObjC World");
+    return 0;
+  }
+#+END_SRC
+
+#+RESULTS:
+: Hello ObjC World
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c3ff9e" class="outline-3">
+<h3 id="org3c3ff9e">Adding Org block completion</h3>
+<div class="outline-text-3" id="text-org3c3ff9e">
+<p>
+With Org code blocks (and babel superpowers), I soon found myself including lots of snippets in my notes. I tried different different input mechanisms and eventually settled on <a href="https://xenodium.com/emacs-org-block-company-completion">writing my own company completion backend</a>.
+</p>
+
+
+<div id="org9df3406" class="figure">
+<p><img src="https://github.com/xenodium/company-org-block/raw/master/hello-company-org-block.gif" alt="hello-company-org-block.gif" width="95%" />
+</p>
+</div>
+
+<p>
+company-org-block is available on <a href="https://github.com/xenodium/company-org-block">GitHub</a> and <a href="https://melpa.org/#/company-org-block">MELPA</a>.
+</p>
+
+<p>
+Later on, with <a href="https://github.com/meliache">Michael Eliachevitch</a>'s help, we got <a href="https://github.com/xenodium/org-block-capf">org-block-capf</a> going.
+</p>
+
+
+<div id="org1392aa9" class="figure">
+<p><img src="https://github.com/xenodium/org-block-capf/raw/main/corfu.png" alt="corfu.png" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcdbd534" class="outline-3">
+<h3 id="orgcdbd534">Fitbit API, Org babel, and gnuplot</h3>
+<div class="outline-text-3" id="text-orgcdbd534">
+<p>
+I continued having fun with Org babel. You can combine source blocks for different purposes, so I used it to <a href="https://xenodium.com/fitbit-api-org-babel-and-gnuplot">fetch and plot Fitbit data</a> via <a href="http://gnuplot.info/">Gnuplot</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">#+BEGIN_SRC sh :results table
+curl -s -H "Authorization: Bearer TOKEN" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
+#+END_SRC
+
+#+RESULTS: weight-data
+| 2018-06-09 | 65.753 |
+| 2018-06-10 | 65.762 |
+...
+| 2018-07-10 |  64.22 |
+| 2018-07-11 |  63.95 |
+
+#+BEGIN_SRC gnuplot :var data=weight-data :exports code :file images/fitbit-api-org-babel-and-gnuplot/weight.png
+reset
+set title "My recent weight"
+set xdata time
+set timefmt '%Y-%m-%d'
+set format x "%d/%m/%y"
+set term png
+set xrange ['2018-06-09':'2018-07-11']
+plot data u 1:2 with linespoints title 'Weight in Kg'
+#+END_SRC
+</pre>
+</div>
+
+
+<div id="org555b6a9" class="figure">
+<p><img src="../images/fitbit-api-org-babel-and-gnuplot/weight.png" alt="weight.png" width="75%" height="75%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb623ec4" class="outline-3">
+<h3 id="orgb623ec4">Adding SwiftUI Org babel support</h3>
+<div class="outline-text-3" id="text-orgb623ec4">
+<p>
+Having learned that babel can generate images (like <a href="http://gnuplot.info/">Gnuplot</a>), I figured I could have <a href="https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks">fun with SwiftUI</a> too and built <a href="https://github.com/xenodium/ob-swiftui">ob-swiftui</a>. Also on <a href="https://melpa.org/#/ob-swiftui">MELPA</a>.
+</p>
+
+
+<div id="orgcdd16d3" class="figure">
+<p><img src="https://xenodium.github.io/images/ob-swiftui-updates/file-render.gif" alt="file-render.gif" width="90%" height="90%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf13a15d" class="outline-3">
+<h3 id="orgf13a15d">Adding Org links (DWIM style)</h3>
+<div class="outline-text-3" id="text-orgf13a15d">
+<p>
+Notes aren't complete without links to references. I was already using a keyboard shortcut of sorts, but <a href="https://xenodium.com/emacs-dwim-do-what-i-mean">I figured I could make it much smarter</a>. As in <a href="https://en.wikipedia.org/wiki/DWIM">DWIM</a>: Do what I mean. Like automatically fetching link title from the web and other things.
+</p>
+
+
+<div id="org1ded079" class="figure">
+<p><img src="../images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif" alt="do-what-i-mean.gif" width="50%" height="50%" />
+</p>
+</div>
+
+
+<div id="orge2b9113" class="figure">
+<p><img src="../images/emacs-dwim-do-what-i-mean/link-this-text.gif" alt="link-this-text.gif" width="50%" height="50%" />
+</p>
+</div>
+
+
+<div id="org0eac5a1" class="figure">
+<p><img src="../images/emacs-dwim-do-what-i-mean/edit-link.gif" alt="edit-link.gif" width="50%" height="50%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org39e77f0" class="outline-3">
+<h3 id="org39e77f0">Scraping useful links</h3>
+<div class="outline-text-3" id="text-org39e77f0">
+<p>
+Comments in posts can be a great source of recommendations (someone asking for books, blogs, etc), so I figured I could get Emacs to <a href="https://xenodium.com/emacs-link-scraping-2021-edition">extract all links from an online post and dump them to an org file</a>.
+</p>
+
+
+<div id="orgf72fe58" class="figure">
+<p><img src="../images/emacs-link-scraping-2021-edition/scrape.png" alt="scrape.png" width="95%" height="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga092fef" class="outline-3">
+<h3 id="orga092fef">Change your MAC address in Org of course</h3>
+<div class="outline-text-3" id="text-orga092fef">
+<p>
+Cause you never know when you're gonna need it, I randomly saved a snippet to <a href="https://xenodium.com/changing-mac-address-from-org-mode">change your MAC address from the comfort of your Org notes</a>. Execute via <code>C-c C-c</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">#+begin_src bash :dir /sudo::
+  changeMAC() {
+      local mac=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+      ifconfig en0 ether $mac
+      ifconfig en0 down
+      ifconfig en0 up
+      echo "Your new physical address is $mac"
+  }
+
+  changeMAC
+#+end_src
+
+#+RESULTS:
+: Your new physical address is b4:b2:f8:77:bb:87
+</pre>
+</div>
+
+<p>
+By the way, noticed the <code>:dir /sudo::</code> header? It enables executing the snippet as root.
+</p>
+</div>
+</div>
+<div id="outline-container-org2236526" class="outline-3">
+<h3 id="org2236526">Generating documentation for your Emacs package</h3>
+<div class="outline-text-3" id="text-org2236526">
+<p>
+Having built a handful of Emacs packages, maintaining a README.org documenting commands available (and keeping it up-to-date) was a bit of a chore. I figured you could automate things and generate <a href="https://xenodium.com/generating-elisp-org-docs">a nice Org table documenting your package commands and customizable variables</a>.
+</p>
+
+<p>
+When you see <a href="https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#chatgpt-shell-commands">this table</a> in my GitHub project, you now know how it was generated.
+</p>
+
+
+<div id="org0ebdd0a" class="figure">
+<p><img src="../images/generating-elisp-org-docs/commands.gif" alt="commands.gif" width="100%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf203a2e" class="outline-3">
+<h3 id="orgf203a2e">A noweb detour: the lesser known Org babel glue</h3>
+<div class="outline-text-3" id="text-orgf203a2e">
+<p>
+While Org babel's noweb support isn't super widely known, I learned it's <a href="https://xenodium.com/noweb-more-glue-for-your-org-toolbox">great for glueing org babel blocks</a>. I love how Org knowledge (and Emacs benefits really) just keep compounding. I started by just writing a simple Org outline. Remember?
+</p>
+
+
+<div id="org1181cd5" class="figure">
+<p><img src="../images/noweb-more-glue-for-your-org-toolbox/data-chart.gif" alt="data-chart.gif" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge1133e6" class="outline-3">
+<h3 id="orge1133e6">LLMs join the babel chat</h3>
+<div class="outline-text-3" id="text-orge1133e6">
+<p>
+In 2023, I <a href="https://xenodium.com/a-chatgpt-emacs-shell">started experimenting with LLMs and Emacs integrations</a>. Naturally, I had to add babel support too, so <a href="https://github.com/xenodium/chatgpt-shell">ob-chatgpt-shell</a> (<a href="https://melpa.org/#/ob-chatgpt-shell">MELPA</a>) and <a href="https://github.com/xenodium/ob-dall-e-shell">ob-dall-e-shell</a> (<a href="https://melpa.org/#/ob-dall-e-shell">MELPA</a>) were <a href="https://xenodium.com/chatgpt-shell-available-on-melpa#dall-e-shell%2C-ob-chatgpt-shell%2C-and-ob-dall-e-shell-(on-melpa-too)">added to the mix</a>.
+</p>
+
+
+<div id="org245d65d" class="figure">
+<p><img src="../images/chatgpt-shell-available-on-melpa/babel.png" alt="babel.png" width="70%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org82501ad" class="outline-3">
+<h3 id="org82501ad">Smarter Org capture templates</h3>
+<div class="outline-text-3" id="text-org82501ad">
+<p>
+Your knowledge base is only as useful as its wealth. The more you write, the better. And of course, the less friction, the more likely you are to write more.
+</p>
+
+<p>
+<a href="https://howardism.org/Technical/Emacs/capturing-intro.html">Org capture</a> is super useful to save your thoughts quickly into an Org file. You can come up with all sorts of templates to expedite the process. In addition to the base structure, I figured I could <a href="https://xenodium.com/a-richer-journelly-org-capture-template">automatically capture my current location, date, time, and weather</a> as part of a note.
+</p>
+
+
+<div id="orgb77dbc0" class="figure">
+<p><img src="../images/a-richer-journelly-org-capture-template/capture.gif" alt="capture.gif" width="80%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9d00de6" class="outline-3">
+<h3 id="org9d00de6">Presenting in style</h3>
+<div class="outline-text-3" id="text-org9d00de6">
+<p>
+There are no shortages of Emacs packages leveraging Org mode to give presentations (<a href="https://github.com/rlister/org-present">org-present</a> is one of many). I often enjoy <a href="https://daviwil.com">David Wilson</a>'s <a href="https://www.youtube.com/@SystemCrafters">videos</a>. In this one, <a href="https://systemcrafters.net/emacs-tips/presentations-with-org-present/">he shares his presentation setup</a>. I figured it'd be fun to <a href="https://xenodium.com/emacs-org-present-in-style">experiment with <code>org-present</code> to spiff things up</a>. I wanted a sort of smart navigation where items are automatically expanded and collapsed as I <code>&lt;tab&gt;</code> my way through a presentation.
+</p>
+
+
+<div id="org1dc5631" class="figure">
+<p><img src="../images/emacs-org-present-in-style/org-navigate_x1.6.webp" alt="org-navigate_x1.6.webp" width="80%" height="80%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org859266f" class="outline-3">
+<h3 id="org859266f">Org as lingua franca</h3>
+<div class="outline-text-3" id="text-org859266f">
+<p>
+With my Org usage growing, I felt like I was missing Org support outside of Emacs. Web access to my blog wasn't enough. I wanted to quickly capture things while on the go, so I started building iOS apps revolving around my Emacs and Org usage.
+</p>
+</div>
+<div id="outline-container-org5fc5b49" class="outline-4">
+<h4 id="org5fc5b49">Journelly (iOS)</h4>
+<div class="outline-text-4" id="text-org5fc5b49">
+<p>
+<a href="https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only">Journelly</a> is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by Org markup, which can be synced with Emacs via iCloud.
+</p>
+
+
+<div id="org59769b2" class="figure">
+<p><img src="../images/journelly-like-tweeting-but-for-your-eyes-only/sideways.jpg" alt="sideways.jpg" width="95%" />
+</p>
+</div>
+
+
+<div id="org9dd6b1d" class="figure">
+<p><img src="https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/emacs.gif" alt="emacs.gif" width="70%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org89f16ed" class="outline-4">
+<h4 id="org89f16ed">Flat Habits (iOS)</h4>
+<div class="outline-text-4" id="text-org89f16ed">
+<p>
+<a href="https://orgmode.org/manual/Tracking-your-habits.html">Org habits</a> are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build <a href="https://xenodium.com/flat-habits-for-ios">Flat Habits</a>.
+</p>
+
+
+<div id="orgde58374" class="figure">
+<p><img src="https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif" alt="flat_habits.gif" width="80%" height="80%" />
+</p>
+</div>
+
+
+<div id="orgb260fdc" class="figure">
+<p><img src="https://xenodium.github.io/images/flat-habits-meets-org-agenda/flat_agenda.gif" alt="flat_agenda.gif" width="75%" height="75%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb4631ed" class="outline-4">
+<h4 id="orgb4631ed">Scratch (iOS)</h4>
+<div class="outline-text-4" id="text-orgb4631ed">
+<p>
+While these days I'm using <a href="https://journelly.com/">Journelly</a> to jot down just about anything, before that, I built and used <a href="https://xenodium.com/scratch-a-minimal-scratch-area">Scratch</a> as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by Org markup.
+</p>
+
+
+<div id="orgf9dbe40" class="figure">
+<p><img src="https://xenodium.github.io/images/scratch-a-minimal-scratch-area/scratch-download_no_audio_x2.6.webp" alt="scratch-download_no_audio_x2.6.webp" width="50%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeeef558" class="outline-4">
+<h4 id="orgeeef558">Plain Org (iOS)</h4>
+<div class="outline-text-4" id="text-orgeeef558">
+<p>
+For more involved writing, nothing beats Emacs Org mode. But what if I want quick access to my Org files while on the go? <a href="https://plainorg.com/">Plain Org</a> is my iOS solution for that.
+</p>
+
+
+<div id="orgbee9aa7" class="figure">
+<p><img src="../images/awesome-emacs-on-macos/plain-org.png" alt="plain-org.png" width="90%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcada320" class="outline-4">
+<h4 id="orgcada320">LMNO.lol</h4>
+<div class="outline-text-4" id="text-orgcada320">
+<p>
+While I already mentioned <a href="https://lmno.lol">LMNO.lol</a>, it's been heavily inspired by my Org workflow. You write your notes or blog posts to a single plain text file, sprinkling <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> this time around, and just drag and drop it to the web. <a href="https://lmno.lol">LMNO.lol</a> takes care of the rest.
+</p>
+
+
+<div id="org984e5f5" class="figure">
+<p><img src="../images/blogging-minus-the-yucky-bits-of-modern-web/demo.gif" alt="demo.gif" width="95%" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7c1e812" class="outline-3">
+<h3 id="org7c1e812">Org bookmarks</h3>
+<div class="outline-text-3" id="text-org7c1e812">
+<p>
+While there is newer content out there, I did capture <a href="https://xenodium.com/org-mode-bookmarks">a handful of Org bookmarks</a> at some point. <a href="https://xenodium.com/org-tips-from-2015-03-18-emacs-hangout/">This one took me down memory lane</a>. <a href="https://sachachua.com/blog/">Sacha Chua</a> used make these really fun videos interviewing Emacs folks, often discussing their Emacs configs. I learned a ton from these videos. That time, Sacha interviewed <a href="https://howardism.org/">Howard Abrams</a>. Gosh, that was over 10 years ago.
+</p>
+
+<p>
+Off the top of my head, <a href="https://karl-voit.at/">Karl Voit</a> also comes to mind, <a href="https://karl-voit.at/2017/09/23/orgmode-as-markup-only">for championing Org for years</a>. I know I'm not doing it justice. There are far too many folks I've learned from, who kindly share their knowledge. I've <a href="https://xenodium.com/org-mode-bookmarks">bookmarked some of them</a> in the past.
+</p>
+
+<p>
+Naturally, my Org journey wouldn't be possible without <a href="https://orgmode.org">Org mode</a> itself and the incredible work from the authors and maintainers. I've personally donated to their cause and even got my ex-employer to donate multiple times.
+</p>
+</div>
+</div>
+<div id="outline-container-orge643730" class="outline-3">
+<h3 id="orge643730">I could keep showing more things&#x2026;</h3>
+<div class="outline-text-3" id="text-orge643730">
+<p>
+You could argue my Org usage is fairly random. Maybe it is. I'd say it's more organic than anything. I more or less started writing outlines and TODO lists, incrementally adopting whatever needed over time. It's up to you how much or little Org you adopt. Whatever you pick is the right answer for you. The Org feature set is just so vast. Some of the things I've tried didn't stick for me like <a href="https://xenodium.com/plotting-ledger-reports-in-org">plotting ledger reports</a> or <a href="https://xenodium.com/spam-blacklisting-with-emacs-org-babel">combating spam</a> through Org, but by trying things I got to discover other things that probably did stick.
+</p>
+
+<p>
+I could keep going, showing you more examples of the things I discovered, but in such a vast universe what's useful to me may not be useful to you. With such a diverse toolbox, it's highly likely you'll find just the right tool for your needs.
+</p>
+
+<p>
+Ok, we get it. The feature set is rich. But most importantly, your data is saved in plain, transparent text, easily accessible to other tools. Heck, I even wrote my own iOS apps to view and edit Org files on the go. In over ten years of using Org, I've never lost access to my data, and I never will. That alone is the non-negotiable cherry on the cake.
+</p>
+</div>
+</div>
+<div id="outline-container-org24db9e2" class="outline-3">
+<h3 id="org24db9e2">Make it all sustainable</h3>
+<div class="outline-text-3" id="text-org24db9e2">
+<p>
+Learned something new? Enjoying this <a href="https://xenodium.com/">blog</a> or <a href="https://github.com/xenodium">my projects</a>? I am an indie dev. Help make it sustainable by ✨<a href="https://github.com/sponsors/xenodium">sponsoring</a>✨
+</p>
+
+<p>
+Need a blog? <a href="https://github.com/sponsors/xenodium">I can help with that</a>. Maybe buy my <a href="https://apps.apple.com/us/developer/xenodium-ltd/id304568690">iOS apps</a> too ;)
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
