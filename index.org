@@ -1,6 +1,320 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-07-24 Thu] Writing experience: My decade with Org
+:PROPERTIES:
+:CUSTOM_ID: writing-experience-my-decade-with-org
+:END:
+While I missed [[https://www.emacswiki.org/emacs/Carnival][Emacs Carnival]]'s [[https://christiantietze.de/posts/2025/06/emacs-carnival-2025-06-take-two/][Take two]], with this month's prompt being [[https://gregnewman.io/blog/emacs-carnival-2025-07-writing-experience/][Writing Experience]], I figured I may have a thing or two to share about my [[https://orgmode.org/][Org]] adoption.
+
+[[https://orgmode.org/][Org mode]] is often regarded as one of the indispensable [[https://www.gnu.org/software/emacs/][Emacs]] features. A Swiss army of sorts enabling outlining, presentations, task management, agenda, note-taking, blogging, literate programming, the list goes on... At its core, Org features are powered by a versatile markup. Kinda like [[https://en.wikipedia.org/wiki/Markdown][Markdown]] but on steroids. When starting with Org, it's easy to feel lost in the overwhelming [[http://doc.norang.ca/org-mode.html][sea of features]].
+
+Luckily, we don't have to know or understand all of Org to get started nor ever need to. You get to pick and use what's useful to you at any given time.
+
+** Getting started
+
+Want to get started with outlines? Easy. Let's say you wanted to start collecting [[https://www.python.org/][python]] idioms, you can start with an entry like:
+
+#+begin_src org
+  ,* Python idioms
+
+  - Prefer double quotes if escaping single quotes.
+  - Prefer string interpolation over join. Eg. "'%s'" % member_default.
+
+  ...
+#+end_src
+
+That's precisely what I did when I started using Org nearly 12 years ago. I created a notes file and added [[https://xenodium.com/some-python-idioms][my first entry to collect python 2 idioms]]. While the idioms may be outdated by now (who knows, it's been many years since I've written any significant amount of python code), but hey that's besides the point. I wanted to start a personal notes file and Org sounded awesome for that.
+
+Over time, my notes file grew in usefulness. The more I wrote, the more I could recall with search. That is, until I was away from my computer. At that point, I figured I could just export my notes to HTML (via =M-x org-export-dispatch=) and post online. Over time, folks started reaching out about something read in my notes, and so by then I suppose I had accidentally become a blogger.
+
+** Blogging
+
+In 12 years of "blogging", my approach hasn't changed much. I still write to [[https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/index.org][the very same Org file]] (beware it's big) I started writing notes to. I found this approach fairly accessible, with little ceremony. When I want to write, I open the usual text file and just write. It wasn't until fairly recently I learned this is often referred to as "[[https://mikegrindle.com/posts/obtf][one big text file]]" (OBTF).
+
+My HTML exporting evolved into hacky [[https://en.wikipedia.org/wiki/Emacs_Lisp][elisp]] cobbled together over time. While the code was nothing to rave about, it did the job just fine for well over a decade. Having said that, it was more of an "it works on my machine" sorta thing. Last year, I finally decided to change my blogging approach and built a blogging platform (in 2024?! I know right?!). Well, the modern web has led us to a sea of tracking, bloat, advertising, the list goes on... I wanted to offer a lightweight blogging alternative with none of the typical crummy bits, so I built [[https://LMNO.lol][LMNO.lol]]. Today, my [[https://xenodium.com][xenodium.com]] blog runs off that.
+
+** Org and Markdown are friends
+
+[[https://LMNO.lol][LMNO.lol]] is powered by Markdown. Wait, what? You may be wondering why an Org fan would build a blogging platform powered by a different markup? In a nutshell, reach. While I remain a faithful Org fan for its capabilities, if I want my blogging platform to appeal to more users, I can't ignore the fact that today Markdown is the prevalent format. Having said that, I wasn't about to give up on Org for personal use. I can actually have my cake and eat it too. You see, I continue writing to Org and convert to Markdown before uploading to [[https://LMNO.lol][LMNO.lol]] via [[https://pandoc.org/][pandoc]], the Swiss Army tool of file converters.
+
+** Incremental Org adoption
+
+*** Tables
+
+As you know, my Org adoption started with a very simple outline intended for personal notes, but we know [[https://doc.norang.ca/org-mode.html][Org is a universe of its own]]. I soon learned about [[https://orgmode.org/manual/Built_002din-Table-Editor.html][Org tables]].
+
+#+begin_src org
+  | name                 | job              | origin             |
+  |----------------------+------------------+--------------------|
+  | Fry                  | Delivery Boy     | Earth              |
+  | Bender               | Bending Unit     | Earth              |
+  | Leela                | Captain          | Mutant Underground |
+  | Professor Farnsworth | Scientist        | Earth              |
+  | Amy Wong             | Intern           | Mars               |
+  | Dr. Zoidberg         | Staff Doctor     | Decapod 10         |
+  | Hermes Conrad        | Bureaucrat       | Earth              |
+  | Zapp Brannigan       | 25-Star General  | Earth              |
+  | Mom                  | Owner of MomCorp | Earth              |
+  | Nibbler              | Leela's pet      | Planet Eternium    |
+#+end_src
+
+I'd keep finding really handy Org tips here and there. Like [[https://xenodium.com/org-tip-convert-csv-to-table][converting csv to Org by merely selecting the text]] from my beloved editor.
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/org-tip-convert-csv-to-table/csv-to-org-table.gif]]
+
+*** Tasks
+
+We mentioned Org handling task management, amongst many other things. In a nutshell, tasks in Org are "simple TODO lists", using special keywords. I got started with Org tasks with something like this:
+
+#+begin_src org
+  ,* DONE Call granny
+  ,* DONE Post on Reddit
+  ,* STARTED Procrastinate some more
+  ,* TODO Do your homework
+#+end_src
+
+I say "simple TODO lists" (in quotes) because Org task management is a another universe of its own. You can schedule tasks in all sorts of ways (like recurring), as habits, tag them, refile them, etc. and even get a nice agenda view to interact with.
+
+I don’t have an agenda post on this myself, but [[https://christiantietze.de/][Christian Tietze]] has a wonderful write-up showcasing [[https://christiantietze.de/posts/2022/12/updated-org-mode-agenda-display-buffer-alist/][an improved Org-mode agenda display]].
+
+#+ATTR_HTML: :width 95%
+[[https://christiantietze.de/posts/2022/12/updated-org-mode-agenda-display-buffer-alist/2022-12-27_org-agenda.png]]
+
+*** Babel
+
+Moving on from task management, I soon discovered [[https://orgmode.org/worg/org-contrib/babel/][babel]], another Org super power enabling you to include code snippets. Not too different to Markdown, but I found the ability to evaluate/execute snippets and capture output pretty magical.
+
+#+begin_src org
+  ,#+BEGIN_SRC python
+    print("Hello python world")
+  ,#+END_SRC
+
+  ,#+RESULTS:
+  : Hello python world
+#+end_src
+
+** Adding Objective-C Org babel support
+
+At the time, I was writing a fair bit of Objective-C code but found babel support was missing. By looking at =ob-C.el= and =ob-java.el=, [[https://xenodium.com/org-babel-objective-c-support][I figured how to add Objective-C support]]. Surprisingly, it took very little code and I could now execute Objective-C code just like python from the comfort of an Org buffer.
+
+#+begin_src org
+  ,#+BEGIN_SRC objc
+    #import <Foundation/Foundation.h>
+
+    int main() {
+      NSLog(@"Hello ObjC World");
+      return 0;
+    }
+  ,#+END_SRC
+
+  ,#+RESULTS:
+  : Hello ObjC World
+#+end_src
+
+** Adding Org block completion
+
+With Org code blocks (and babel superpowers), I soon found myself including lots of snippets in my notes. I tried different different input mechanisms and eventually settled on [[https://xenodium.com/emacs-org-block-company-completion][writing my own company completion backend]].
+
+#+ATTR_HTML: :width 95%
+[[https://github.com/xenodium/company-org-block/raw/master/hello-company-org-block.gif]]
+
+company-org-block is available on [[https://github.com/xenodium/company-org-block][GitHub]] and [[https://melpa.org/#/company-org-block][MELPA]].
+
+Later on, with [[https://github.com/meliache][Michael Eliachevitch]]'s help, we got [[https://github.com/xenodium/org-block-capf][org-block-capf]] going.
+
+#+ATTR_HTML: :width 95%
+https://github.com/xenodium/org-block-capf/raw/main/corfu.png
+
+** Fitbit API, Org babel, and gnuplot
+
+I continued having fun with Org babel. You can combine source blocks for different purposes, so I used it to [[https://xenodium.com/fitbit-api-org-babel-and-gnuplot][fetch and plot Fitbit data]] via [[http://gnuplot.info/][Gnuplot]].
+
+#+begin_src org
+  ,#+BEGIN_SRC sh :results table
+  curl -s -H "Authorization: Bearer TOKEN" https://api.fitbit.com/1/user/USER_ID/body/weight/date/2018-06-09/2018-07-11.json | jq '.[][] | "\(.dateTime) \(.value)"' | sed 's/"//g'
+  ,#+END_SRC
+
+  ,#+RESULTS: weight-data
+  | 2018-06-09 | 65.753 |
+  | 2018-06-10 | 65.762 |
+  ...
+  | 2018-07-10 |  64.22 |
+  | 2018-07-11 |  63.95 |
+
+  ,#+BEGIN_SRC gnuplot :var data=weight-data :exports code :file images/fitbit-api-org-babel-and-gnuplot/weight.png
+  reset
+  set title "My recent weight"
+  set xdata time
+  set timefmt '%Y-%m-%d'
+  set format x "%d/%m/%y"
+  set term png
+  set xrange ['2018-06-09':'2018-07-11']
+  plot data u 1:2 with linespoints title 'Weight in Kg'
+  ,#+END_SRC
+#+end_src
+
+#+ATTR_HTML: :width 75% :height 75%
+[[file:images/fitbit-api-org-babel-and-gnuplot/weight.png]]
+
+** Adding SwiftUI Org babel support
+
+Having learned that babel can generate images (like [[http://gnuplot.info/][Gnuplot]]), I figured I could have [[https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks][fun with SwiftUI]] too and built [[https://github.com/xenodium/ob-swiftui][ob-swiftui]]. Also on [[https://melpa.org/#/ob-swiftui][MELPA]].
+
+#+ATTR_HTML: :width 90% :height 90%
+[[https://xenodium.github.io/images/ob-swiftui-updates/file-render.gif]]
+
+** Adding Org links (DWIM style)
+
+Notes aren't complete without links to references. I was already using a keyboard shortcut of sorts, but [[https://xenodium.com/emacs-dwim-do-what-i-mean][I figured I could make it much smarter]]. As in [[https://en.wikipedia.org/wiki/DWIM][DWIM]]: Do what I mean. Like automatically fetching link title from the web and other things.
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif]]
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-do-what-i-mean/link-this-text.gif]]
+
+#+ATTR_HTML: :width 50% :height 50%
+[[file:images/emacs-dwim-do-what-i-mean/edit-link.gif]]
+
+** Scraping useful links
+Comments in posts can be a great source of recommendations (someone asking for books, blogs, etc), so I figured I could get Emacs to [[https://xenodium.com/emacs-link-scraping-2021-edition][extract all links from an online post and dump them to an org file]].
+
+#+ATTR_HTML: :width 95% :height 95%
+[[file:images/emacs-link-scraping-2021-edition/scrape.png]]
+
+** Change your MAC address in Org of course
+
+Cause you never know when you're gonna need it, I randomly saved a snippet to [[https://xenodium.com/changing-mac-address-from-org-mode][change your MAC address from the comfort of your Org notes]]. Execute via =C-c C-c=.
+
+#+begin_src org
+  ,#+begin_src bash :dir /sudo::
+    changeMAC() {
+        local mac=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+        ifconfig en0 ether $mac
+        ifconfig en0 down
+        ifconfig en0 up
+        echo "Your new physical address is $mac"
+    }
+
+    changeMAC
+  ,#+end_src
+
+  ,#+RESULTS:
+  : Your new physical address is b4:b2:f8:77:bb:87
+#+end_src
+
+By the way, noticed the =:dir /sudo::= header? It enables executing the snippet as root.
+
+** Generating documentation for your Emacs package
+
+Having built a handful of Emacs packages, maintaining a README.org documenting commands available (and keeping it up-to-date) was a bit of a chore. I figured you could automate things and generate [[https://xenodium.com/generating-elisp-org-docs][a nice Org table documenting your package commands and customizable variables]].
+
+When you see [[https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#chatgpt-shell-commands][this table]] in my GitHub project, you now know how it was generated.
+
+#+ATTR_HTML: :width 100%
+[[file:images/generating-elisp-org-docs/commands.gif]]
+
+** A noweb detour: the lesser known Org babel glue
+
+While Org babel's noweb support isn't super widely known, I learned it's [[https://xenodium.com/noweb-more-glue-for-your-org-toolbox][great for glueing org babel blocks]]. I love how Org knowledge (and Emacs benefits really) just keep compounding. I started by just writing a simple Org outline. Remember?
+
+#+ATTR_HTML: :width 95%
+[[file:images/noweb-more-glue-for-your-org-toolbox/data-chart.gif]]
+
+** LLMs join the babel chat
+
+In 2023, I [[https://xenodium.com/a-chatgpt-emacs-shell][started experimenting with LLMs and Emacs integrations]]. Naturally, I had to add babel support too, so [[https://github.com/xenodium/chatgpt-shell][ob-chatgpt-shell]] ([[https://melpa.org/#/ob-chatgpt-shell][MELPA]]) and [[https://github.com/xenodium/ob-dall-e-shell][ob-dall-e-shell]] ([[https://melpa.org/#/ob-dall-e-shell][MELPA]]) were [[https://xenodium.com/chatgpt-shell-available-on-melpa#dall-e-shell%2C-ob-chatgpt-shell%2C-and-ob-dall-e-shell-(on-melpa-too)][added to the mix]].
+
+#+ATTR_HTML: :width 70%
+[[file:images/chatgpt-shell-available-on-melpa/babel.png]]
+
+** Smarter Org capture templates
+
+Your knowledge base is only as useful as its wealth. The more you write, the better. And of course, the less friction, the more likely you are to write more.
+
+[[https://howardism.org/Technical/Emacs/capturing-intro.html][Org capture]] is super useful to save your thoughts quickly into an Org file. You can come up with all sorts of templates to expedite the process. In addition to the base structure, I figured I could [[https://xenodium.com/a-richer-journelly-org-capture-template][automatically capture my current location, date, time, and weather]] as part of a note.
+
+#+ATTR_HTML: :width 80%
+[[file:images/a-richer-journelly-org-capture-template/capture.gif]]
+
+** Presenting in style
+
+There are no shortages of Emacs packages leveraging Org mode to give presentations ([[https://github.com/rlister/org-present][org-present]] is one of many). I often enjoy [[https://daviwil.com][David Wilson]]'s [[https://www.youtube.com/@SystemCrafters][videos]]. In this one, [[https://systemcrafters.net/emacs-tips/presentations-with-org-present/][he shares his presentation setup]]. I figured it'd be fun to [[https://xenodium.com/emacs-org-present-in-style][experiment with =org-present= to spiff things up]]. I wanted a sort of smart navigation where items are automatically expanded and collapsed as I =<tab>= my way through a presentation.
+
+#+ATTR_HTML: :width 80% :height 80%
+[[file:images/emacs-org-present-in-style/org-navigate_x1.6.webp]]
+
+** Org as lingua franca
+
+With my Org usage growing, I felt like I was missing Org support outside of Emacs. Web access to my blog wasn't enough. I wanted to quickly capture things while on the go, so I started building iOS apps revolving around my Emacs and Org usage.
+
+*** Journelly (iOS)
+
+[[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][Journelly]] is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by Org markup, which can be synced with Emacs via iCloud.
+
+#+ATTR_HTML: :width 95%
+[[file:images/journelly-like-tweeting-but-for-your-eyes-only/sideways.jpg]]
+
+#+ATTR_HTML: :width 70%
+[[https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/emacs.gif]]
+
+*** Flat Habits (iOS)
+
+[[https://orgmode.org/manual/Tracking-your-habits.html][Org habits]] are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [[https://xenodium.com/flat-habits-for-ios][Flat Habits]].
+
+#+ATTR_HTML: :width 80% :height 80%
+[[https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif]]
+
+#+ATTR_HTML: :width 75% :height 75%
+[[https://xenodium.github.io/images/flat-habits-meets-org-agenda/flat_agenda.gif]]
+
+*** Scratch (iOS)
+
+While these days I'm using [[https://journelly.com/][Journelly]] to jot down just about anything, before that, I built and used [[https://xenodium.com/scratch-a-minimal-scratch-area][Scratch]] as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by Org markup.
+
+#+ATTR_HTML: :width 50%
+[[https://xenodium.github.io/images/scratch-a-minimal-scratch-area/scratch-download_no_audio_x2.6.webp]]
+
+*** Plain Org (iOS)
+
+For more involved writing, nothing beats Emacs Org mode. But what if I want quick access to my Org files while on the go? [[https://plainorg.com/][Plain Org]] is my iOS solution for that.
+
+#+ATTR_HTML: :width 90%
+[[file:images/awesome-emacs-on-macos/plain-org.png]]
+
+*** LMNO.lol
+
+While I already mentioned [[https://lmno.lol][LMNO.lol]], it's been heavily inspired by my Org workflow. You write your notes or blog posts to a single plain text file, sprinkling [[https://en.wikipedia.org/wiki/Markdown][Markdown]] this time around, and just drag and drop it to the web. [[https://lmno.lol][LMNO.lol]] takes care of the rest.
+
+#+ATTR_HTML: :width 95%
+[[file:images/blogging-minus-the-yucky-bits-of-modern-web/demo.gif]]
+
+
+
+** Org bookmarks
+
+While there is newer content out there, I did capture [[https://xenodium.com/org-mode-bookmarks][a handful of Org bookmarks]] at some point. [[https://xenodium.com/org-tips-from-2015-03-18-emacs-hangout/][This one took me down memory lane]]. [[https://sachachua.com/blog/][Sacha Chua]] used make these really fun videos interviewing Emacs folks, often discussing their Emacs configs. I learned a ton from these videos. That time, Sacha interviewed [[https://howardism.org/][Howard Abrams]]. Gosh, that was over 10 years ago.
+
+Off the top of my head, [[https://karl-voit.at/][Karl Voit]] also comes to mind, [[https://karl-voit.at/2017/09/23/orgmode-as-markup-only][for championing Org for years]]. I know I'm not doing it justice. There are far too many folks I've learned from, who kindly share their knowledge. I've [[https://xenodium.com/org-mode-bookmarks][bookmarked some of them]] in the past.
+
+Naturally, my Org journey wouldn't be possible without [[https://orgmode.org][Org mode]] itself and the incredible work from the authors and maintainers. I've personally donated to their cause and even got my ex-employer to donate multiple times.
+
+** I could keep showing more things...
+
+You could argue my Org usage is fairly random. Maybe it is. I'd say it's more organic than anything. I more or less started writing outlines and TODO lists, incrementally adopting whatever needed over time. It's up to you how much or little Org you adopt. Whatever you pick is the right answer for you. The Org feature set is just so vast. Some of the things I've tried didn't stick for me like [[https://xenodium.com/plotting-ledger-reports-in-org][plotting ledger reports]] or [[https://xenodium.com/spam-blacklisting-with-emacs-org-babel][combating spam]] through Org, but by trying things I got to discover other things that probably did stick.
+
+I could keep going, showing you more examples of the things I discovered, but in such a vast universe what's useful to me may not be useful to you. With such a diverse toolbox, it's highly likely you'll find just the right tool for your needs.
+
+Ok, we get it. The feature set is rich. But most importantly, your data is saved in plain, transparent text, easily accessible to other tools. Heck, I even wrote my own iOS apps to view and edit Org files on the go. In over ten years of using Org, I've never lost access to my data, and I never will. That alone is the non-negotiable cherry on the cake.
+
+** Make it all sustainable
+
+Learned something new? Enjoying this [[https://xenodium.com/][blog]] or [[https://github.com/xenodium][my projects]]? I am an indie dev. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://github.com/sponsors/xenodium][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
 * [2025-07-24 Thu] Interactive ordering of dired items
 :PROPERTIES:
 :CUSTOM_ID: interactive-ordering-of-dired-items
@@ -13527,7 +13841,7 @@ Once the snippet is evaluated, we're ready to use in an org babel block. We intr
 
 To try out an inline /preview/, create a new org file (eg. swiftui.org) and a source block like:
 
-#+begin_src org :exports src
+#+begin_src org
   ,#+begin_src swift :results file :swiftui preview
     VStack(spacing: 10) {
         HStack(spacing: 10) {
@@ -13544,7 +13858,7 @@ To try out an inline /preview/, create a new org file (eg. swiftui.org) and a so
   ,#+end_src
 #+end_src
 
-#+begin_src org :exports src
+#+begin_src org
   ,#+results:
 #+end_src
 [[file:images/swiftui-layout-previews-using-emacs-org-blocks/vstack.jpg]]
@@ -14920,7 +15234,7 @@ Some email provider accept regular expressions to blacklist additional spam. My 
 It's way easier to maintain a blacklist (with no regex) using an org table.
 
 ** Blacklist
-  #+begin_src org :exports src
+  #+begin_src org
   ,#+name: spam-entries
   | .spammy                |
   | dodgyfella@hotmail.com |
@@ -14931,7 +15245,7 @@ It's way easier to maintain a blacklist (with no regex) using an org table.
 and subsequently use org babel (elisp snippet) to generate the regex.
 
 ** Regex gen
-  #+begin_src org :exports src
+  #+begin_src org
     ,#+begin_src emacs-lisp :var rows=spam-entries
       (require 'dash)
       (require 's)
@@ -15275,7 +15589,7 @@ I don't add linux sudoers frequently enough. Always looking it up. Keeping snipp
 
 Save path to [[file:plotting-ledger-reports-in-org/my.ledger][my.ledger]] in /ledger-file/ block.
 
-#+begin_src org :exports src
+#+begin_src org
   ,#+name: ledger-file
   ,#+begin_src emacs-lisp
   "my.ledger"
@@ -15286,7 +15600,7 @@ Save path to [[file:plotting-ledger-reports-in-org/my.ledger][my.ledger]] in /le
 
 Select gnuplot terminal. Using png to output images, but qt is handy too for interactive chart inspection.
 
-#+begin_src org :exports src
+#+begin_src org
 Use png for inline or qt for interactive
 ,#+name: gnuplot-term
 ,#+begin_src emacs-lisp
@@ -15298,7 +15612,7 @@ Use png for inline or qt for interactive
 
 Generate income report.
 
-#+begin_src org :exports src
+#+begin_src org
 ,#+name: income-data
 ,#+begin_src bash :results table :noweb yes
   ledger -f <<<ledger-file>>> -j reg ^Income -M --collapse --plot-amount-format="%(format_date(date, \"%Y-%m-%d\")) %(abs(quantity(scrub(display_amount))))\n"
@@ -15307,7 +15621,7 @@ Generate income report.
 
 Generate expenses report.
 
-#+begin_src org :exports src
+#+begin_src org
 ,#+name: expenses-data
 ,#+begin_src sh :results table :noweb yes
   ledger -f <<<ledger-file>>> -j reg ^Expenses -M --collapse
@@ -16540,7 +16854,7 @@ Small tables are the perfect use-case for Emacs [[https://orgmode.org/manual/Tab
 
 Here's the org source for the table above (prior to exporting to HTML):
 
-#+BEGIN_SRC org :exports src
+#+BEGIN_SRC org
   |-------------------------------------------------------------+--------+--------|
   |                                                             |  Ocado |   Asda |
   |-------------------------------------------------------------+--------+--------|
@@ -16563,7 +16877,7 @@ Here's the org source for the table above (prior to exporting to HTML):
   :END:
 Been saving admin code snippets in my own [[https://orgmode.org/manual/Working-with-source-code.html][org source blocks]], some requiring root access. Handy for keeping tiny self-documented scripts to easily bootstrap other machines. TIL org source block's /:dir/ argument can be used to run block as root by using tramp syntax: /:dir /sudo::/
 
-#+BEGIN_SRC org :exports src
+#+BEGIN_SRC org
 
 As user:
 
@@ -16616,7 +16930,7 @@ Being an org-mode fan, I thought I'd give Swift multiline strings a try using Or
 
 Swift org mode source blocks (ie. BEGIN_SRC/END_SRC) can be added as follows:
 
-#+BEGIN_SRC org :exports src
+#+BEGIN_SRC org
   ,#+BEGIN_SRC swift :exports both
     print("""
          Hello World
@@ -17509,7 +17823,6 @@ set xrange ['2018-06-09':'2018-07-11']
 plot data u 1:2 with linespoints title 'Weight in Kg'
 #+END_SRC
 
-#+RESULTS:
 #+ATTR_HTML: :width 75% :height 75%
 [[file:images/fitbit-api-org-babel-and-gnuplot/weight.png]]
 
@@ -25174,7 +25487,6 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 :MODIFIED:
 [2025-02-04 Tue]
 :END:
-- [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][[org-agenda] UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[http://www.emacslife.com/baby-steps-org.html][A Baby Steps Guide to Managing Your Tasks with Org]].
 - [[https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html][An Agenda for Life With Org Mode]].
 - [[https://scripter.co/notes/org-table-spreadsheet/][An Org Table Spreadsheet cheatsheet]].
@@ -25270,6 +25582,7 @@ From [[http://emacsblog.org][M-x all-things-emacs]], Ryan McGeary's OS X/Emacs [
 - [[https://orgmode.org/guide/][The compact Org-mode Guide]].
 - [[https://ag91.github.io/blog/2020/09/04/the-poor-org-user-spaced-repetition/][The Poor Org-User Spaced Repetition - Where parallels cross]].
 - [[http://www.flutterbys.com.au/stats/tut/tut16.1.html][Tutorial 16.1 - Emacs orgmode tables]].
+- [[https://karl-voit.at/2017/08/12/org-rabbit-hole/][UOMF: Org Mode As a Rabbit Hole: Agenda Tasks Piling Up]].
 - [[https://karl-voit.at/2017/01/15/org-clone-subtree-with-time-shift/][UOMF: Recurring Events with Org Mode]].
 - [[http://www.sastibe.de/2018/05/2018-05-11-emacs-org-mode-rest-apis-stocks/][Use Emacs Org Mode and REST APIs for an up-to-date Stock Portfolio]].
 - [[http://cestlaz.github.io/posts/using-emacs-24-capture-2/#.WTtEbXWw5pg][Using Emacs - 24 - Org Capture 2]].
