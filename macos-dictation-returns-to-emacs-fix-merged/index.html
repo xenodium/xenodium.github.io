@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-07-26 Sat 13:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>macOS dictation returns to Emacs (fix merged)</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         b, strong {
+          font-weight: bold;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-macos-dictation-returns-to-emacs-fix-merged" class="outline-2">
+<h2 id="macos-dictation-returns-to-emacs-fix-merged"><span class="timestamp-wrapper"><span class="timestamp">26 July 2025</span></span> macOS dictation returns to Emacs (fix merged)</h2>
+<div class="outline-text-2" id="text-macos-dictation-returns-to-emacs-fix-merged">
+<p>
+macOS apps typically benefit from built-in voice dictation input (included as a macOS freebie), with little to no additional work required from app developers.
+</p>
+
+
+<div id="orgfe59278" class="figure">
+<p><img src="../images/macos-dictation-returns-to-emacs-fix-merged/dictation.webp" alt="dictation.webp" width="95%" />
+</p>
+</div>
+
+<p>
+Emacs had supported this capability until relatively recently, when we began seeing reports that <a href="https://lists.gnu.org/archive/html/bug-gnu-emacs/2025-03/msg00585.html">dictation was no longer available as of Emacs 30</a>.
+</p>
+
+<p>
+While I have no direct experience with macOS dictation-related APIs, I bisected Emacs 30 changes affecting macOS-related code (typically Objective-C code with .m file extensions). This led me to a seemingly harmless change introducing NSTextInputClient, intended to remove a deprecation warning. From that change onwards, dictation stopped working.
+</p>
+
+<p>
+Reverting the change did indeed bring dictation back, but at the cost of re-introducing the deprecation warning. Looking closer at the current NSTextInputClient implementation, I noticed some stubbed-out methods. In particular, <code>selectedRange</code> stood out:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-objc">- (<span style="color: #0086b3;">NSRange</span>)<span style="color: #795da3;">selectedRange</span>
+{
+  <span style="color: #a71d5d;">if</span> (NS_KEYLOG)
+    NSLog (@<span style="color: #183691;">"selectedRange request"</span>);
+  <span style="color: #a71d5d;">return</span> NSMakeRange (NSNotFound, 0);
+}
+</pre>
+</div>
+
+<p>
+Turns out implementing <code>selectedRange</code> is all it took to bring dictation back:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-diff"><span style="color: #ffffff; background-color: #333333;">diff --git a/src/nsterm.m b/src/nsterm.m</span>
+<span style="color: #ffffff; background-color: #333333;">index 003aadb9782..2b34894f36e 100644</span>
+<span style="color: #ffffff; background-color: #333333;">--- </span><span style="color: #ffffff; background-color: #333333; font-weight: bold;">a/src/nsterm.m</span>
+<span style="color: #ffffff; background-color: #333333;">+++ </span><span style="color: #ffffff; background-color: #333333; font-weight: bold;">b/src/nsterm.m</span>
+<span style="color: #ffffff; background-color: #333333;">@@ -7413,7 +7413,24 @@</span><span style="color: #ffffff; background-color: #333333;"> - (NSRange)selectedRange</span>
+ {
+   if (NS_KEYLOG)
+     NSLog (@"selectedRange request");
+<span style="color: #333333; background-color: #ffecec;">-</span><span style="color: #333333; background-color: #ffecec;">  return NSMakeRange (NSNotFound, 0);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  struct window *w = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  struct buffer *buf = XBUFFER (w-&gt;contents);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  ptrdiff_t point = BUF_PT (buf);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  if (NILP (BVAR (buf, mark_active)))</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">    {</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">      NSUInteger selection_location = point - BUF_BEGV (buf);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">      return NSMakeRange (selection_location, 0);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">    }</span>
+<span style="color: #333333; background-color: #eaffea;">+</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  ptrdiff_t mark = marker_position (BVAR (buf, mark));</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  ptrdiff_t region_start = min (point, mark);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  ptrdiff_t region_end = max (point, mark);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  NSUInteger selection_location = region_start - BUF_BEGV (buf);</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  NSUInteger selection_length = region_end - region_start;</span>
+<span style="color: #333333; background-color: #eaffea;">+</span>
+<span style="color: #333333; background-color: #eaffea;">+</span><span style="color: #333333; background-color: #eaffea;">  return NSMakeRange (selection_location, selection_length);</span>
+ }
+</pre>
+</div>
+
+<p>
+Implementing <code>selectedRange</code> didn't just bring dictation back, but now leverages a newer macOS dictation implementation. You can see the slight differences in UI.
+</p>
+</div>
+<div id="outline-container-org4f38baf" class="outline-3">
+<h3 id="org4f38baf">Before</h3>
+<div class="outline-text-3" id="text-org4f38baf">
+
+<div id="org037a299" class="figure">
+<p><img src="../images/macos-dictation-returns-to-emacs-fix-merged/before.jpg" alt="before.jpg" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org18d9852" class="outline-3">
+<h3 id="org18d9852">After</h3>
+<div class="outline-text-3" id="text-org18d9852">
+
+<div id="org6ada4e8" class="figure">
+<p><img src="../images/macos-dictation-returns-to-emacs-fix-merged/after.jpg" alt="after.jpg" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0f50669" class="outline-3">
+<h3 id="org0f50669">Merged upstream</h3>
+<div class="outline-text-3" id="text-org0f50669">
+<p>
+I've since <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=79070">submitted a patch upstream</a>. I'm happy to report that as of today, the patch is now <a href="https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=6e64e0bd26b6c0f1c4e90c9bc0df37a2a9ac72da">merged into master</a>. Thank you Gerd Möllmann and Eli Zaretskii for your help! Also big thanks to Stephen Englen, Fritz Grabo, @veer66 and @dotemacs on the fediverse who <a href="https://indieweb.social/@xenodium/114891280426640026">quickly jumped in to help validate the fix</a>.
+</p>
+
+<p>
+While we've yet to find out when the next Emacs release will ship, we at least know the fix is coming! If like me, you'd like to get the fix backported to Emacs 30, I've <a href="https://xenodium.com/patching-your-homebrews-emacs-plus-macos">shown you how to do just that on Emacs Plus</a> (my favourite macOS build).
+</p>
+</div>
+</div>
+<div id="outline-container-orgcfa1710" class="outline-3">
+<h3 id="orgcfa1710">Make it all sustainable</h3>
+<div class="outline-text-3" id="text-orgcfa1710">
+<p>
+Glad macOS dictation is fixed? Enjoying this <a href="https://xenodium.com/">blog</a> or <a href="https://github.com/xenodium">my projects</a>? I am an 👉 indie dev 👈. Help make my work sustainable by ✨<a href="https://github.com/sponsors/xenodium">sponsoring</a>✨
+</p>
+
+<p>
+Need a blog? <a href="https://github.com/sponsors/xenodium">I can help with that</a>. Maybe buy my <a href="https://apps.apple.com/us/developer/xenodium-ltd/id304568690">macOS/iOS apps</a> too ;)
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
