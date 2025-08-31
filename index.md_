@@ -1,3 +1,24 @@
+# \[2025-08-29 Fri\] Dired buffers with media overlays
+---
+id: dired-buffers-with-media-overlays
+---
+
+It's been well over a year now since I've moved most of my music consumption away from streaming. I started purchasing music again, just so I can play offline at any time (and on my terms). That's not so say I don't stream, but that's now purely reserved for discovery. Most playback happens via [Ready Player Mode](https://xenodium.com/a-tour-of-ready-player-mode), a little Emacs player I built when I decided to take playback offline. This post isn't so much about [Ready Player](https://github.com/xenodium/ready-player) and more about a recent [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) experience.
+
+I had a directory with a handful of mp3s, which I wanted to split into separate album subdirectories. The challenge being the mp3 file names did not include album names. Sorting this out isn't a big task for a music-organization tool, but my brain quickly went hmmm… if dired displayed album metadata, I could just use that to quickly guide me through all the file management I needed. After all, I already know how to use [ffprobe](https://ffmpeg.org/ffprobe.html) to extract relevant metadata, so I could just enhance dired's listing to also show me metadata as overlays. [dired-git-info](https://github.com/clemera/dired-git-info) does just that.
+
+With that, [ready-player-dired-mode](https://github.com/xenodium/ready-player/blob/main/ready-player-dired.el) was born. After enabling with `M-x ready-player-dired-mode`, I can easily get on with my tiny file reorg [without any procrastination whatsoever](https://xkcd.com/1319/).
+
+![](https://xenodium.github.io/images/dired-buffers-with-media-overlays/dired-overlays.gif)
+
+I've just pushed [ready-player-dired-mode](https://github.com/xenodium/ready-player/blob/main/ready-player-dired.el) to [Ready Player's GitHub repo](https://github.com/xenodium/ready-player). It's pretty fresh, so you may (or may not) encounter rough edges.
+
+## Make it all sustainable
+
+Is [Ready Player](https://github.com/xenodium/ready-player) useful to you? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+
+Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [macOS/iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
+
 # \[2025-08-27 Wed\] Brisket recipe
 ---
 id: brisket-recipe
@@ -721,7 +742,7 @@ local_patch "dictation", sha: "cb102525bba7385d7d85c52d31101af3d2cbbf076468dacbf
 With that, we're ready to build Emacs Plus, which comes with a handy build script. I'm a fan of [Valeriy Savchenko's macOS icons](https://github.com/SavchenkoValeriy/emacs-icons), so I'll throw in the optional icon flag. I should also mention Emacs Plus offers a [rich catalog of app icons](https://github.com/d12frosted/homebrew-emacs-plus?tab=readme-ov-file#icons). Now back to building…
 
 ``` {.bash org-language="sh"}
-./build 30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
+HOMEBREW_DEVELOPER=1 ./build 30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
 ```
 
 The build output should look a little something like the following (look out for our applied patch)

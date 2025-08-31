@@ -5,9 +5,9 @@
 :PROPERTIES:
 :CUSTOM_ID: dired-buffers-with-media-overlays
 :END:
-It's been well over a year now since I've moved most of my music consumption away from streaming. I restarted purchasing music, just so I can play offline at any time (and on my terms). That's not so say I don't stream, but that's now purely reserved for discovery. These most playback happens via [[https://xenodium.com/a-tour-of-ready-player-mode][Ready Player Mode]], a little player I built when I decided to make the offline playback jump. This post isn't so much about [[https://github.com/xenodium/ready-player][Ready Player]] and more about a recent [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] experience.
+It's been well over a year now since I've moved most of my music consumption away from streaming. I started purchasing music again, just so I can play offline at any time (and on my terms). That's not so say I don't stream, but that's now purely reserved for discovery. Most playback happens via [[https://xenodium.com/a-tour-of-ready-player-mode][Ready Player Mode]], a little Emacs player I built when I decided to take playback offline. This post isn't so much about [[https://github.com/xenodium/ready-player][Ready Player]] and more about a recent [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] experience.
 
-I had a directory with a handful of mp3s, which I wanted to split into separate album subdirectories. The challenge being the mp3 file names did not include the album name. Sorting this out isn't a big task for a music-organization tool, but my brain quickly went hmmm... if dired displayed album metadata, I could just use that to quickly guide me through all the file management I needed. After all, I already know how to use [[https://ffmpeg.org/ffprobe.html][ffprobe]] to extract relevant metadata, so I could just enhance dired's listing to also show me metadata as overlays. [[https://github.com/clemera/dired-git-info][dired-git-info]] does just that.
+I had a directory with a handful of mp3s, which I wanted to split into separate album subdirectories. The challenge being the mp3 file names did not include album names. Sorting this out isn't a big task for a music-organization tool, but my brain quickly went hmmm... if dired displayed album metadata, I could just use that to quickly guide me through all the file management I needed. After all, I already know how to use [[https://ffmpeg.org/ffprobe.html][ffprobe]] to extract relevant metadata, so I could just enhance dired's listing to also show me metadata as overlays. [[https://github.com/clemera/dired-git-info][dired-git-info]] does just that.
 
 With that, [[https://github.com/xenodium/ready-player/blob/main/ready-player-dired.el][ready-player-dired-mode]] was born. After enabling with =M-x ready-player-dired-mode=, I can easily get on with my tiny file reorg [[https://xkcd.com/1319/][without any procrastination whatsoever]].
 
@@ -769,7 +769,7 @@ Now we add our patch details to =./Formula/emacs-plus@30.rb=:
 With that, we're ready to build Emacs Plus, which comes with a handy build script. I'm a fan of [[https://github.com/SavchenkoValeriy/emacs-icons][Valeriy Savchenko's macOS icons]], so I'll throw in the optional icon flag. I should also mention Emacs Plus offers a [[https://github.com/d12frosted/homebrew-emacs-plus?tab=readme-ov-file#icons][rich catalog of app icons]]. Now back to building...
 
 #+begin_src sh
-  ./build 30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
+  HOMEBREW_DEVELOPER=1 ./build 30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
 #+end_src
 
 The build output should look a little something like the following (look out for our applied patch)
