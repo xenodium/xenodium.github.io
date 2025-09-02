@@ -1,3 +1,38 @@
+# \[2025-08-31 Sun\] Who moved my text?
+---
+id: who-moved-my-text
+---
+
+I had an annoying [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) bug where sometimes the compose buffer's svg header would disappear while text was streaming into the Emacs buffer. There are a number of things that could have gone rogue when streaming and post-processing buffer text, so I wasn't quite sure where to start narrowing things down.
+
+I had a feeling I could maybe use something like `after-change-functions` hook to monitor changes, but that only tells me about the text modified. I wanted to know which of my functions triggered the change, so maybe I could print a few frames from the stack? So that's what I did…
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defun my-change-tracker (beg end len)
+  (let ((stack (mapcar (lambda (frame)
+                         (car (cdr frame)))
+                       (backtrace-frames))))
+    (message "Buffer %s changed: %d-%d | Stack: %s"
+             (buffer-name) beg end
+             (take 15 stack)))) ;; Adjust as needed
+
+(add-hook 'after-change-functions 'my-change-tracker nil t)
+```
+
+Here's an extract from the logs:
+
+> Buffer **claude llm (sonnet-4/Programming)\> compose** changed: 496-498 \| Stack: (backtrace-frames mapcar let my-change-tracker insert save-excursion let save-current-buffer progn if #\[(output) ((setq output (or output )) (if (buffer-live-p buffer) (progn (save-current-buffer (set-buffer buffer) (let ((inhibit-read-only t)) (save-excursion (if orig-region-active (progn (delete-region region-beginning region-end) (setq orig-region-active nil))) (goto-char marker) (insert output) (set-marker marker (+ (length output) (marker-position marker))))))))) ((region-end) (region-beginning) (orig-region-active) (marker . #\<marker at 496 in \*claude llm (sonnet-4/Programming)\> compose\*\>) (buffer . **claude llm (sonnet-4/Programming)\> compose**))\] shell-maker–write-reply…
+
+After increasing the number of logged frames, I started seeing bits of my code and… bingo! I found a very suspicious `delete-region`. After spotting this, fixing the bug was trivial.
+
+While the bug was annoying, I had been procrastinating on fixing as it could have been a number of things. In this case, printing frames from `after-change-functions` turned out perfect for narrowing things down. I'll be keeping this in the toolbox. Maybe it can help you too.
+
+## Make it all sustainable
+
+Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+
+Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
+
 # \[2025-08-29 Fri\] Dired buffers with media overlays
 ---
 id: dired-buffers-with-media-overlays
