@@ -1,3 +1,70 @@
+# \[2025-09-02 Tue\] Diverted mode
+---
+id: diverted-mode
+---
+
+James Dyer and I both ran into the same [workflow snag when fixing source indentation](https://emacs.dyerdwelling.family/emacs/20250826095622-emacs--a-better-way-to-indent-your-entire-buffer-in-emacs/). He explains it best:
+
+> 1.  You’re working in a file with inconsistent indentation
+> 2.  You want to fix the entire buffer’s formatting
+> 3.  You run C-x h (select all) followed by M-x indent-region
+> 4.  Your mark is now at the beginning of the buffer, disrupting your workflow
+
+Naturally, this is Emacs and were both able to patch our editor to smoothen things out.
+
+While I ran into the same `indent-region` snag after selecting an entire buffer (via `mark-whole-buffer`), I also faced it with `mark-defun` and er/expand-region (awesome [package](https://github.com/magnars/expand-region.el) btw).
+
+With three cases in mind, I wanted a somewhat generic solution, so I [built diverted.el](https://xenodium.com/mark-region-indent-restore-location), a little minor mode to identify these momentary diversions and try to bring the point back to the original location. Mind you, this was back in 2019 and until James's post, I hadn't heard of anyone else running into a similar snag. Since then, I kept the package as part of my config. James's post gave me the nudge I needed to move `diverted.el` out of my config and into [its own GitHub repo](https://github.com/xenodium/diverted).
+
+By default, `diverted.el` recognizes both `mark-defun` and `mark-whole-buffer` as diversions, but you can also recognize the likes of `er/expand-region` via `diverted-events`. I'm hoping configuring is fairly self-explanatory. To date, I only have `mark-whole-buffer`, `mark-defun`, and `er/expand-region` as recognized diversions.
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(defcustom diverted-events
+  (list
+   (make-diverted-event :from 'mark-defun
+                        :to 'indent-for-tab-command
+                        :breadcrumb (lambda ()
+                                      (diverted--pop-to-mark-command 2)))
+   (make-diverted-event :from 'mark-whole-buffer
+                        :to 'indent-for-tab-command
+                        :breadcrumb (lambda ()
+                                      (diverted--pop-to-mark-command 2))))
+  "Diversion events to look for.
+
+For example:
+
+  (add-to-list 'diverted-events
+    (make-diverted-event
+      :from 'er/expand-region
+      :to 'indent-for-tab-command
+      :breadcrumb (lambda ()
+                    (diverted--pop-to-mark-command 2))))"
+  :type '(repeat sexp)
+  :group 'diverted)
+```
+
+Read on for a little demo…
+
+## Without diverted-mode
+
+Notice how point is left at the top of the screen after pressing TAB to indent region.
+
+<img src="https://raw.githubusercontent.com/xenodium/diverted/main/demo/before.gif"/>
+
+## With diverted-mode
+
+Notice how point is left where it was prior to selecting the function and pressing TAB to indent region.
+
+<img src="https://raw.githubusercontent.com/xenodium/diverted/main/demo/after.gif"/>
+
+That's it for today. If you want to give `diverted.el` a try, head over to [GitHub](https://github.com/xenodium/diverted).
+
+## Make it all sustainable
+
+Reckon `diverted-mode` will be useful to you? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+
+Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
+
 # \[2025-08-31 Sun\] Who moved my text?
 ---
 id: who-moved-my-text
