@@ -1,6 +1,31 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-09-09 Tue] So you want ACP (Agent Client Protocol) for Emacs?
+:PROPERTIES:
+:CUSTOM_ID: so-you-want-acp-for-emacs
+:END:
+Last week, I was delighted to see the [[https://zed.dev/blog/claude-code-via-acp][Zed editor shipping beta support for their Claude Code integration]]. Being an Emacs enthusiast, you may wonder about my excitement. In their demo, the Zed team mentioned the integration is now possible thanks to [[https://agentclientprotocol.com/][Agent Client Protocol (ACP)]], which they developed in collaboration with Google. This is great news for Emacs users, as it opens the possibilities for deeper native agent integrations in our beloved editor. You can think of ACP as [[https://microsoft.github.io/language-server-protocol/][LSP]] but for LLM agents.
+
+While I have a bunch of [[https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#news][LLM models]] integrated into [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] (including [[https://xenodium.com/chatgpt-shell-goes-offline][local ones]]), I've yet to make much headway into enabling the models to access smarter context (ie. filesystem or local tools), beyond my [[https://www.reddit.com/r/emacs/comments/1mk2c8f][initial tool calling experiment]].
+
+Somehow, I wasn't super excited about tool calling, as it felt like these integrations would fall short when compared to more advanced agents like Anthropic's [[https://www.anthropic.com/claude-code][Claude Code]] or Google's [[https://github.com/google-gemini/gemini-cli][Gemini CLI]]. In fact, I haven't been that enthusiastic about these agents, since they offered relatively little API surface to enable deeper Emacs integration (which is where I live!). That is, until [[https://agentclientprotocol.com/][ACP]] came along.
+
+With ACP in mind, I'm much more likely to get on board with Emacs-agent integrations. I can now delegate all that complex agent logic to external tools and focus on building a great Emacs experience I'd be happy with.
+
+And with that, I had an initial go at prototyping a bare minimum but with enough UX shell goodies to get me excited about it. I chose Gemini for this prototype. You can see it all in its minimal glory:
+
+#+ATTR_HTML: :width 98%
+[[file:images/so-you-want-acp-for-emacs/agent-shell.gif]]
+
+** So how badly do you want ACP support in your beloved Emacs?
+
+While getting the initials kinda working was relatively straightforward (with everything I already know about building chatgpt-shell), adding support for all ACP features with a delightfully polished Emacs experience will take a bunch of effort. While I'm excited about the prospects, dedicating a chunk of my time to make this happen isn't super feasible. You may have noticed more Emacs-related work/posts from me lately. This is currently possible because I've gone full indie dev. The flexibility is great, but doing Emacs things isn't exactly gonna help pay the bills unless interested folks help [[https://github.com/sponsors/xenodium][fund/support the effort]].
+
+My shell packages have quite a few enthusiastic users who more often than not, are using my package to talk to paid cloud services from the likes of OpenAI, Anthropic, or Google. I'm looking at you folks! I understand you're sending money to these companies who are providing you with a great service, but also remember the lovely Emacs integrations you use, which also need funding (much more than these well-funded commercial entities). While I'm a fan of chat-like Emacs shells for LLM/agents and would like to build a new agent shell, I also want to dedicate a chunk of this effort to building a UX-agnostic ACP Emacs library (acp.el). This library could be leveraged by me or any other Emacs package author.
+
+=So how badly do you want ACP support in your beloved Emacs?= Enough to take your wallets out and [[https://github.com/sponsors/xenodium][help fund it]]?
+
 * [2025-09-02 Tue] Diverted mode
 :PROPERTIES:
 :CUSTOM_ID: diverted-mode
@@ -20,7 +45,7 @@ While I ran into the same =indent-region= snag after selecting an entire buffer 
 
 With three cases in mind, I wanted a somewhat generic solution, so I [[https://xenodium.com/mark-region-indent-restore-location][built diverted.el]], a little minor mode to identify these momentary diversions and try to bring the point back to the original location. Mind you, this was back in 2019 and until James's post, I hadn't heard of anyone else running into a similar snag. Since then, I kept the package as part of my config. James's post gave me the nudge I needed to move =diverted.el= out of my config and into [[https://github.com/xenodium/diverted][its own GitHub repo]].
 
-By default, =diverted.el= recognizes both =mark-defun= and =mark-whole-buffer= as diversions, but you can also recognize the likes of =er/expand-region= via =diverted-events=. I'm hoping configuring is fairly self-explanatory. To this date, I only have =mark-whole-buffer=, =mark-defun=, and =er/expand-region= as recognized diversions.
+By default, =diverted.el= recognizes both =mark-defun= and =mark-whole-buffer= as diversions, but you can also recognize the likes of =er/expand-region= via =diverted-events=. I'm hoping configuring is fairly self-explanatory. To date, I only have =mark-whole-buffer=, =mark-defun=, and =er/expand-region= as recognized diversions.
 
 #+begin_src emacs-lisp :lexical no
   (defcustom diverted-events
