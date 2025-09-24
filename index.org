@@ -1,6 +1,99 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-09-25 Thu] Introducing Emacs agent-shell (powered by ACP)
+:PROPERTIES:
+:CUSTOM_ID: introducing-agent-shell
+:END:
+Not long ago, I [[https://xenodium.com/introducing-acpel][introduced acp.el]], an Emacs lisp implementation of ACP ([[https://agentclientprotocol.com][Agent Client Protocol]]), the agent protocol [[https://zed.dev/blog/claude-code-via-acp][developed between Zed and Google folks]].
+
+While I've been happily accessing LLMs from my beloved text editor via [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] (a [[https://xenodium.com/a-tiny-upgrade-to-the-llm-model-picker][multi-model]] package I built), I've been fairly slow on the AI agents uptake. Probably a severe case of old man shouts at cloud sorta thing, but hey I do like well-integrated tools. When I heard of ACP, I knew this was the thing I was waiting for to goof around with agents.
+
+With an early [[https://github.com/xenodium/acp.el][acp.el]] in place, I set out to build an Emacs-native agent integration, and today I have an initial version of [[https://github.com/xenodium/agent-shell][agent-shell]] I can share.
+
+#+ATTR_HTML: :width 99%
+[[https://xenodium.github.io/images/introducing-agent-shell/agent-shell.png][file:images/introducing-agent-shell/agent-shell.png]]
+
+While =agent-shell= is a native Emacs shell in the comint mode sense (check out Mickey's [[https://www.masteringemacs.org/article/comint-writing-command-interpreter][comint article]] btw), you don't have to worry about switching between char and line modes to interact with tui utils. =agent-shell= is a regular Emacs buffer like any other you're used to.
+
+** Agent-agnostic
+
+Thanks to ACP, we can now build agent-agnostic experiences by configuring our clients to route traffic to their respective agent. You get multiple agents powering a consistent and familiar experience.
+
+Configuring different agents from =agent-shell= boils down which agent we want to run in the comms process. Here's an example of Gemini CLI vs Claude Code configuration:
+
+#+begin_src emacs-lisp :lexical no
+  (defun agent-shell-start-gemini-agent ()
+    "Start an interactive Gemini CLI agent shell."
+    (interactive)
+    (agent-shell--start
+     :new-session t
+     :mode-line-name "Gemini"
+     :buffer-name "Gemini"
+     :shell-prompt "Gemini> "
+     :shell-prompt-regexp "Gemini> "
+     :needs-authentication t
+     :authenticate-request-maker (lambda ()
+                                   (acp-make-authenticate-request :method-id "gemini-api-key"))
+     :client-maker (lambda ()
+                     (acp-make-client :command "gemini"
+                                      :command-params '("--experimental-acp")
+                                      :environment-variables (list (format "GEMINI_API_KEY=%s" (agent-shell-google-key)))))))
+#+end_src
+
+#+begin_src emacs-lisp :lexical no
+  (defun agent-shell-start-claude-code-agent ()
+    "Start an interactive Claude Code agent shell."
+    (interactive)
+    (agent-shell--start
+     :new-session t
+     :mode-line-name "Claude Code"
+     :buffer-name "Claude Code"
+     :shell-prompt "Claude Code> "
+     :shell-prompt-regexp "Claude Code> "
+     :client-maker (lambda ()
+                     (acp-make-client :command "claude-code-acp"
+                                      :environment-variables (list (format "ANTHROPIC_API_KEY=%s" (agent-shell-anthropic-key)))))))
+#+end_src
+
+I've yet to try other agents. If you get another one running, I'd love to hear about it. Maybe submit a [[https://github.com/xenodium/agent-shell/pulls][pull request]]?
+
+** Traffic
+
+While I now have an early ACP client available, I'm still fairly new to the protocol. I often inspect traffic in both directions to see what's going on. After staring at json for far too long, I figured I may as well build some tooling around [[https://github.com/xenodium/acp.el][acp.el]] to make my life easier, so I added a traffic buffer for that. From =agent-shell=, you can invoke it via =M-x agent-shell-view-traffic=.
+
+#+ATTR_HTML: :width 95%
+https://raw.githubusercontent.com/xenodium/acp.el/refs/heads/main/traffic.gif
+
+** Fake agents
+
+Developing =agent-shell= against paid agents got expensive quickly. Not only expensive, but my edit-compile-run cycle also became boringly slow waiting for agents. While I knew I wanted some sort of fake agent to work against, I fought the urge to go down that route. Ok not really, I was lazy, but I did work out a good compromise. Remember that traffic buffer I showed ya? I can save that traffic to disk and then replay it later. This enabled me to run problematic sessions once and quickly replay multiple times to fix bugs. While re-playing has its quirks and limitations, it's done the job for now.
+
+You can see a Claude Code session below, followed by its replayed counterpart via fake infrastructure.
+
+#+ATTR_HTML: :width 99%
+[[https://xenodium.github.io/images/introducing-agent-shell/agent-shell.png][file:images/introducing-agent-shell/claude.png]]
+
+#+ATTR_HTML: :width 99%
+[[https://xenodium.github.io/images/introducing-agent-shell/agent-shell.png][file:images/introducing-agent-shell/fake.png]]
+
+** What next
+
+Took quite a bit of work to get here. Having said that, it's only a start. I myself need to get more familiar with agent usage and evolve the package UX however it feels most natural within its new habitat. Lately, I've been experimenting with a quick diff buffer, driven by n/p keys, shown along with the permission dialog to apply changes.
+
+#+ATTR_HTML: :width 99%
+[[https://xenodium.github.io/images/introducing-agent-shell/diff.png][file:images/introducing-agent-shell/diff.png]]
+
+While I've implemented enough parts of the [[https://agentclientprotocol.com/protocol/schema][Agent Client Protocol Schema]] to make the package useful, it's hardly complete. I've yet to fully familiarize myself with all the features.
+
+** Take them for a spin
+
+Both of my newest Emacs packages, [[https://github.com/xenodium/agent-shell][agent-shell]] and [[https://github.com/xenodium/acp.el][acp.el]], are now available on GitHub. As an end-user, go straight to [[https://github.com/xenodium/agent-shell][agent-shell]]. If you're a package author and would like to build a different ACP experience, then give [[https://github.com/xenodium/acp.el][acp.el]] a try. Both packages are brand new and may have rough edges. Be sure to file bugs or feature requests as needed.
+
+** Paying for LLM tokens? How about sponsoring your Emacs tools?
+
+I've been heads down working on these packages for some time. If you're using cloud LLM services, you're likely already paying for tokens. If you find my work useful, consider [[https://github.com/sponsors/xenodium][routing some of those coins]] to fund the work. Maybe my tools make you more productive at work? Get your [[https://github.com/sponsors/xenodium][employer to fund the work]]. These packages take time and effort, but also cost me money. [[https://github.com/sponsors/xenodium][Help fund the work]].
+
 * [2025-09-14 Sun] Introducing acp.el
 :PROPERTIES:
 :CUSTOM_ID: introducing-acpel
@@ -54,7 +147,7 @@ I'm new at using ACP myself, so I've added a special logging buffer to =acp.el= 
 Look out for the =*acp traffic*= buffer, which looks a little like this:
 
 #+ATTR_HTML: :width 95%
-[[https://raw.githubusercontent.com/xenodium/acp.el/main/traffic.png]]
+https://raw.githubusercontent.com/xenodium/acp.el/refs/heads/main/traffic.gif
 
 If you're keen to experiment with ACP in Emacs lisp and build agent-agnostic packages, take a look at =acp.el= ([[https://github.com/xenodium/acp.el][now on GitHub]]). As mentioned, it's early days for this library, but it's a start. Please file issues and feature requests. If you build anything on top of =acp.el=, lemme know. I'd love to see it in action.
 
