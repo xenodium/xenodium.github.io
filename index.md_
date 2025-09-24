@@ -1,3 +1,64 @@
+# \[2025-09-14 Sun\] Introducing acp.el
+---
+id: introducing-acpel
+---
+
+I recently [shared my early Emacs experiments with ACP](https://xenodium.com/so-you-want-acp-for-emacs), the [Agent Client Protocol](https://agentclientprotocol.com) now supported by [Gemini CLI](https://github.com/google-gemini/gemini-cli) and [Claude Code](https://github.com/zed-industries/claude-code-acp) LLM agents.
+
+While we can already run these agents from Emacs with the likes of [vterm](https://github.com/akermu/emacs-libvterm), I'm keen to offer an Emacs-native alternative to drive them. To do that, I'm working an a new package: `agent-shell` (more on this to be shared soon). While this new Emacs agent shell has an opinionated user experience, it uses ACP under the hood. Being a protocol, it's entirely UI-agnostic. For this, I now have an early version available of the [acp.el](https://github.com/xenodium/acp.el) library.
+
+`acp.el` implements Agent Client Protocol for Emacs lisp as per [agentclientprotocol.com](https://agentclientprotocol.com). While this library is in its infancy, it's enabling me to carry on with my `agent-shell` work. `acp.el` lives as a separate library, is UI-agnostic, and can be used by Emacs package authors to build the their desired ACP-powered agent experience.
+
+You can instantiate an ACP client and send a request as follows:
+
+``` {.commonlisp org-language="emacs-lisp" exports="both"}
+(setq client (acp-make-client :command "gemini"
+                              :command-params '("--experimental-acp")
+                              :environment-variables (when api-key
+                                                       (list (format "GEMINI_API_KEY=%s" "your-api-key")))))
+
+(acp-send-request
+ :client client
+ :request (acp-make-initialize-request :protocol-version 1)
+ :on-success (lambda (response)
+               (message "Initialize success: %s" response))
+ :on-failure (lambda (error)
+               (message "Initialize failed: %s" error)))
+```
+
+``` {.commonlisp org-language="emacs-lisp"}
+((protocolVersion . 1)
+ (authMethods . [((id . oauth-personal)
+                  (name . Log in with Google)
+                  (description . :null))
+                 ((id . gemini-api-key)
+                  (name . Use Gemini API key)
+                  (description . Requires setting the `GEMINI_API_KEY` environment variable))
+                 ((id . vertex-ai)
+                  (name . Vertex AI)
+                  (description . :null))])
+ (agentCapabilities (loadSession . :false)
+                    (promptCapabilities (image . t)
+                                        (audio . t)
+                                        (embeddedContext . t))))
+```
+
+I'm new at using ACP myself, so I've added a special logging buffer to `acp.el` which enables me to inspect traffic and learn about the exchanges between clients and agents. You can enable logging with:
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setq acp-logging-enabled t)
+```
+
+Look out for the `*acp traffic*` buffer, which looks a little like this:
+
+![](https://raw.githubusercontent.com/xenodium/acp.el/main/traffic.png)
+
+If you're keen to experiment with ACP in Emacs lisp and build agent-agnostic packages, take a look at `acp.el` ([now on GitHub](https://github.com/xenodium/acp.el)). As mentioned, it's early days for this library, but it's a start. Please file issues and feature requests. If you build anything on top of `acp.el`, lemme know. I'd love to see it in action.
+
+## Make this work possible
+
+I'm working on two new Emacs packages: [acp.el](https://github.com/xenodium/acp.el) (introduced in this post) and `agent-shell` (I'll soon share more about that). Please help me make development of these packages [sustainable](https://github.com/sponsors/xenodium). These packages take time and effort, but also cost me money as I have to pay for LLM tokens throughout testing and development. Please [help fund it](https://github.com/sponsors/xenodium).
+
 # \[2025-09-09 Tue\] So you want ACP (Agent Client Protocol) for Emacs?
 ---
 id: so-you-want-acp-for-emacs

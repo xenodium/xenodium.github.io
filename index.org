@@ -7,7 +7,7 @@
 :END:
 I recently [[https://xenodium.com/so-you-want-acp-for-emacs][shared my early Emacs experiments with ACP]], the [[https://agentclientprotocol.com][Agent Client Protocol]] now supported by [[https://github.com/google-gemini/gemini-cli][Gemini CLI]] and [[https://github.com/zed-industries/claude-code-acp][Claude Code]] LLM agents.
 
-While we can already run these agents from Emacs with the likes [[https://github.com/akermu/emacs-libvterm][vterm]], I'm keen to offer an Emacs-native alternative to drive them. To do that, I'm working an a new package: =agent-shell= (more on this to be shared soon). While this new Emacs agent shell has an opinionated user experience, it uses ACP under the hood. Being a protocol, it's entirely UI-agnostic. For this, I now have an early version available of the [[https://github.com/xenodium/acp.el][acp.el]] library.
+While we can already run these agents from Emacs with the likes of [[https://github.com/akermu/emacs-libvterm][vterm]], I'm keen to offer an Emacs-native alternative to drive them. To do that, I'm working an a new package: =agent-shell= (more on this to be shared soon). While this new Emacs agent shell has an opinionated user experience, it uses ACP under the hood. Being a protocol, it's entirely UI-agnostic. For this, I now have an early version available of the [[https://github.com/xenodium/acp.el][acp.el]] library.
 
 =acp.el= implements Agent Client Protocol for Emacs lisp as per [[https://agentclientprotocol.com][agentclientprotocol.com]]. While this library is in its infancy, it's enabling me to carry on with my =agent-shell= work. =acp.el= lives as a separate library, is UI-agnostic, and can be used by Emacs package authors to build the their desired ACP-powered agent experience.
 
@@ -28,23 +28,22 @@ You can instantiate an ACP client and send a request as follows:
                  (message "Initialize failed: %s" error)))
 #+end_src
 
-Initialize success:
-
-#+RESULTS:
-: ((protocolVersion . 1)
-:  (authMethods . [((id . oauth-personal)
-:                   (name . Log in with Google)
-:                   (description . :null))
-:                  ((id . gemini-api-key)
-:                   (name . Use Gemini API key)
-:                   (description . Requires setting the `GEMINI_API_KEY` environment variable))
-:                  ((id . vertex-ai)
-:                   (name . Vertex AI)
-:                   (description . :null))])
-:  (agentCapabilities (loadSession . :false)
-:                     (promptCapabilities (image . t)
-:                                         (audio . t)
-:                                         (embeddedContext . t))))
+#+begin_src emacs-lisp
+  ((protocolVersion . 1)
+   (authMethods . [((id . oauth-personal)
+                    (name . Log in with Google)
+                    (description . :null))
+                   ((id . gemini-api-key)
+                    (name . Use Gemini API key)
+                    (description . Requires setting the `GEMINI_API_KEY` environment variable))
+                   ((id . vertex-ai)
+                    (name . Vertex AI)
+                    (description . :null))])
+   (agentCapabilities (loadSession . :false)
+                      (promptCapabilities (image . t)
+                                          (audio . t)
+                                          (embeddedContext . t))))
+#+end_src
 
 I'm new at using ACP myself, so I've added a special logging buffer to =acp.el= which enables me to inspect traffic and learn about the exchanges between clients and agents. You can enable logging with:
 
