@@ -1,6 +1,116 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-10-12 Sat] agent-shell 0.5 improvements
+:PROPERTIES:
+:CUSTOM_ID: agent-shell-0-5-improvements
+:END:
+While it's only been a few weeks since [[https://xenodium.com/introducing-agent-shell][introducing agent-shell]], we've landed [[https://github.com/xenodium/agent-shell/commits/main/][nearly 100 commits]] and enough improvements to warrant a new blog post.
+
+** More agents
+
+[[https://github.com/xenodium/agent-shell][agent-shell]] now includes support for two additional ACP-capable agents:
+
+- Claude Code
+- Codex via [[https://github.com/cola-io/codex-acp][codex-acp]] (new)
+- Gemini CLI
+- Goose (new)
+
+** Unified entry point
+
+In addition to starting new shells via agent-specific commands, we now have a unified =M-x agent-shell= entry point, enabling selection from a list of supported agents.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-0-5-improvements/picker.png]]
+
+The agent-specific commands remain available as usual:
+
+- =M-x agent-shell-anthropic-start-claude-code=
+- =M-x agent-shell-openai-start-codex=
+- =M-x agent-shell-google-start-gemini=
+- =M-x agent-shell-goose-start-agent=
+
+** Toggling display
+
+=agent-shell= now provides basic control to toggle display of shell buffers:
+
+- =M-x agent-shell-toggle=: Toggles display of the most recently accessed agent (per project).
+- =agent-shell-display-action=: Controls how agent shells are displayed when activated.
+
+** agent-shell-sidebar (new package)
+
+While =agent-shell= provides basic display toggling, [[https://github.com/cmacrae][Calum MacRae]] offers a comprehensive sidebar package. Check out [[https://github.com/cmacrae/agent-shell-sidebar][agent-shell-sidebar]].
+
+** Experimental dev container support (thanks to Fritz Grabo)
+
+=agent-shell= now has experimental support for running agents inside dev containers. See [[https://github.com/xenodium/agent-shell?tab=readme-ov-file#running-agents-in-devcontainers--docker-containers-experimental][docs]].
+
+** quick-diff improvements
+
+=quick-diff= buffers, proposing changes, get a more polished experience. More notably, diffs get context (thanks to David J. Rosenbaum), single-key patch navigation/acceptance, and file names now displayed in header line.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-5-improvements/quick-diff.png]]
+
+** Environment variables
+
+Environment variables can now be loaded from either the Emacs environment, .env files, and/or overridden inline:
+
+#+begin_src emacs-lisp
+  (setq agent-shell-anthropic-claude-environment
+        (agent-shell-make-environment-variables
+         :inherit-env t
+         :load-env "~/.env"
+         "CUSTOM_VAR" "custom_value"))
+#+end_src
+** Authentication methods
+
+Different authentication methods are now supported. For example:
+
+#+begin_src emacs-lisp
+  ;; Login-based auth
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication :login t))
+
+  ;; API key auth
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication
+         :api-key (lambda () (auth-source-pass-get "secret" "anthropic-api-key"))))
+#+end_src
+
+Check =agent-shell-*-authentication= per provider, as available options may differ.
+
+** UX polish
+
+On the smaller side, but also contributing to overall polish:
+
+- Single-key permission bindings (y/n/!).
+- Improved error messages.
+- Improved task status rendering.
+- Improved TAB navigation.
+
+** Traffic inspection and debugging
+
+While not technically part of =agent-shell=, [[https://github.com/xenodium/acp.el][acp.el]]'s traffic inspection has been getting some love to help users diagnose issues.
+
+** Contributions
+
+Thank you for your contributions!
+
+- David J. Rosenbaum: Context support in diffs ([[https://github.com/xenodium/agent-shell/pull/48][PR]]).
+- Fritz Grabo: Dev container support ([[https://github.com/xenodium/agent-shell/pull/19][PR]]).
+- Grant Surlyn: Doom Emacs installation instructions ([[https://github.com/xenodium/agent-shell/pull/37][PR]]).
+- Mark A. Hershberger: Goose key improvement ([[https://github.com/xenodium/agent-shell/issues/46][PR]]).
+- Ruslan Kamashev: Customization group fix ([[https://github.com/xenodium/agent-shell/pull/33][PR]]).
+
+** Sponsors
+
+Thank you to all sponsors. While LLMs aren't everyone's cup of tea, we're seeing editors across the board evolving to accommodate these new LLM tools. In a somewhat similar vein, [[https://microsoft.github.io/language-server-protocol/][LSP]] integration wasn't for everyone, but for those who did want it, Emacs luckily catered to them. Thank you for helping make this project sustainable while also enabling Emacs to cater to all.
+
+** Support this work
+
+If [[https://github.com/xenodium/agent-shell][agent-shell]] or [[https://github.com/xenodium/acp.el][acp.el]] are useful to you, consider [[https://github.com/sponsors/xenodium][sponsoring]] its development. LLM tokens aren't free, and neither is the time dedicated to building this stuff ;-)
+
 * [2025-10-08 Wed] Bending Emacs - Episode 2: From vanilla to your flavor
 :PROPERTIES:
 :CUSTOM_ID: bending-emacs-episode-2
