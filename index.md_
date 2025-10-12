@@ -1,3 +1,300 @@
+# \[2025-10-08 Wed\] Bending Emacs - Episode 2: From vanilla to your flavor
+---
+id: bending-emacs-episode-2
+---
+
+While still finding my footing making Emacs videos, today I'm sharing my second video.
+
+[Bending Emacs Episode 02: From vanilla to your flavor](https://www.youtube.com/watch?v=qTumnhiE1c8)
+
+The video is a little longer than I intended at 14:37, so plan accordingly.
+
+In this video, I show some of my favorite UI customizations, with additional tips and tricks along the way. Like my first video, I'm hoping you find unexpected goodies in there despite being familiar with the general topic.
+
+![](https://www.youtube.com/watch?v=qTumnhiE1c8)
+
+Read on for all supporting material…
+
+## Evaluating elisp
+
+Showcased a handful of ways to evaluate elisp.
+
+-   M-x eval-last-sexp
+
+-   M-x eval-expression
+
+-   M-x eval-buffer
+
+-   M-x ielm
+
+-   M-x org-ctrl-c-ctrl-c (Evaluate org source blocks)
+
+    Sample snippets:
+
+    ``` {.commonlisp org-language="emacs-lisp"}
+    (set-face-attribute 'default nil :background "DarkSlateGray")
+    ```
+
+    ``` {.commonlisp org-language="emacs-lisp"}
+    (set-face-attribute 'default nil :background "#212121")
+    ```
+
+## Launching a separate Emacs instance
+
+``` {.bash org-language="sh"}
+path/to/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs -Q --init-directory /tmp/secondary/.emacs.d --load path/to/other-emacs.el
+```
+
+other-emacs.el (minimal, almost vanilla setup):
+
+``` {.commonlisp org-language="emacs-lisp" results="none"}
+; -*- lexical-binding: t; -*-
+
+(server-force-delete)
+(make-directory "/tmp/secondary/" t)
+(setq server-socket-dir "/tmp/secondary/")
+(setq server-name "emacs-server")
+(server-start)
+
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")))
+
+(setq package-archive-priorities
+      '(("melpa" .  4)))
+
+(require 'package)
+(package-initialize)
+(mapc #'package-delete (mapcar #'cadr package-alist))
+
+(add-to-list 'custom-theme-load-path "path/to/emacs-materialized-theme")
+```
+
+## with-other-emacs macro (ie. evaluate elisp elsewhere)
+
+``` {.commonlisp org-language="emacs-lisp" results="none"}
+(defmacro with-other-emacs (&rest body)
+  "Evaluate BODY in the current buffer of the other Emacs instance."
+  `(call-process "emacsclient" nil nil nil
+                 "--socket-name=/tmp/secondary/emacs-server"
+                 "--eval"
+                 (prin1-to-string
+                  '(with-current-buffer (window-buffer (selected-window))
+                     ,@body))))
+```
+
+## Looking up functions
+
+-   M-x describe-function (built-in).
+-   M-x helpful-callable (via third-party [helpful](https://github.com/Wilfred/helpful) package).
+
+## Advicing org-babel-expand-body:emacs-lisp
+
+We want to extend source blocks to accept the `:other-emacs` header argument as follows:
+
+``` org
+#+begin_src emacs-lisp :other-emacs t
+  (message (propertize "Hello again twin" 'face '(:height 6.0)))
+#+end_src
+```
+
+So we advice `org-babel-expand-body:emacs-lisp`:
+
+``` {.commonlisp org-language="emacs-lisp" results="none"}
+(defun adviced:org-babel-expand-body:emacs-lisp:other-emacs (orig-fn body header-args)
+  (if (map-elt header-args :other-emacs)
+      (format "(with-other-emacs %s)" (funcall orig-fn body header-args))
+    (funcall orig-fn body header-args)))
+
+(advice-add #'org-babel-expand-body:emacs-lisp
+            :around #'adviced:org-babel-expand-body:emacs-lisp:other-emacs)
+```
+
+## UI customizations
+
+### Font ([JetBrains Mono](https://www.jetbrains.com/lp/mono/))
+
+``` {.commonlisp org-language="emacs-lisp"}
+(set-face-attribute 'default nil
+                    :height 160 ;; 16pt
+                    ;; brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono
+                    :family "JetBrains Mono")
+```
+
+### Theme ([Materialized](https://github.com/xenodium/emacs-materialized-theme))
+
+``` {.commonlisp org-language="emacs-lisp"}
+(load-theme 'materialized t)
+```
+
+### [Calle 24 toolbar](https://github.com/kickingvegas/calle24) (macOS)
+
+``` {.commonlisp org-language="emacs-lisp"}
+(use-package calle24 :ensure t
+  :config
+  (calle24-install)
+  (calle24-refresh-appearance)))
+```
+
+### Hide toolbar
+
+``` {.commonlisp org-language="emacs-lisp"}
+(tool-bar-mode -1)
+```
+
+### Titlebar
+
+No text in title bar
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setq-default frame-title-format "")
+```
+
+Transparent titlebar (macOS)
+
+``` {.commonlisp org-language="emacs-lisp"}
+(set-frame-parameter nil 'ns-transparent-titlebar t)
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+```
+
+### Hide scrollbars
+
+``` {.commonlisp org-language="emacs-lisp"}
+(scroll-bar-mode -1)
+```
+
+### Mode line
+
+[Minions](https://github.com/tarsius/minions)
+
+``` {.commonlisp org-language="emacs-lisp"}
+(use-package minions
+  :ensure t
+  :custom
+  (mode-line-modes-delimiters nil)
+  (minions-mode-line-lighter " …")
+  :config
+  (minions-mode +1)
+  (force-mode-line-update t))
+```
+
+[Moody](https://github.com/tarsius/moody)
+
+``` {.commonlisp org-language="emacs-lisp"}
+(use-package moody
+  :ensure t
+  :config
+  (setq-default mode-line-format
+                '(""
+                  mode-line-front-space
+                  mode-line-client
+                  mode-line-frame-identification
+                  mode-line-buffer-identification
+                  " "
+                  mode-line-position
+                  (vc-mode vc-mode)
+                  (multiple-cursors-mode mc/mode-line)
+                  mode-line-modes
+                  mode-line-end-spaces))
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+```
+
+### [Nyan Cat](https://github.com/TeMPOraL/nyan-mode) (of course)
+
+``` {.commonlisp org-language="emacs-lisp"}
+(use-package nyan-mode
+  :ensure t
+  :custom
+  (nyan-bar-length 10)
+  :config
+  (nyan-mode +1)))
+```
+
+### Welcome screen
+
+A little static welcome screen I cooked up.
+
+``` {.commonlisp org-language="emacs-lisp"}
+(defun ar/show-welcome-buffer ()
+  "Show *Welcome* buffer."
+  (with-current-buffer (get-buffer-create "*Welcome*")
+    (setq truncate-lines t)
+    (setq cursor-type nil)
+    (read-only-mode +1)
+    (ar/refresh-welcome-buffer)
+    (local-set-key (kbd "q") 'kill-this-buffer)
+    (add-hook 'window-size-change-functions
+              (lambda (_frame)
+                (ar/refresh-welcome-buffer)) nil t)
+    (add-hook 'window-configuration-change-hook
+              #'ar/refresh-welcome-buffer nil t)
+    (switch-to-buffer (current-buffer))))
+
+(defun ar/refresh-welcome-buffer ()
+  "Refresh welcome buffer content for WINDOW."
+  (when-let* ((inhibit-read-only t)
+              (welcome-buffer (get-buffer "*Welcome*"))
+              (window (get-buffer-window welcome-buffer))
+              (image-path "~/.emacs.d/emacs.png")
+              (image (create-image image-path nil nil :max-height 300))
+              (image-height (cdr (image-size image)))
+              (image-width (car (image-size image)))
+              (top-margin (floor (/ (- (window-height window) image-height) 2)))
+              (left-margin (floor (/ (- (window-width window) image-width) 2)))
+              (title "Welcome to Emacs"))
+    (with-current-buffer welcome-buffer
+      (erase-buffer)
+      (setq mode-line-format nil)
+      (goto-char (point-min))
+      (insert (make-string top-margin ?\n))
+      (insert (make-string left-margin ?\ ))
+      (insert-image image)
+      (insert "\n\n\n")
+      (insert (make-string (- (floor (/ (- (window-width window) (string-width title)) 2)) 1) ?\ ))
+      (insert (propertize title 'face '(:height 1.2))))))
+
+(ar/show-welcome-buffer)
+```
+
+## Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [me some comments](https://www.youtube.com/watch?v=qTumnhiE1c8).
+
+Please go [like my video](https://www.youtube.com/watch?v=qTumnhiE1c8), share with others, and [subscribe to my channel](https://www.youtube.com/@xenodium).
+
+If there's enough interest, I'll continue making more videos!
+
+# \[2025-09-30 Tue\] Bending Emacs - Episode 1: Applying CLI utils
+---
+id: bending-emacs-episode-1
+---
+
+While most of the content I share is typically covered in blog posts, I'm trying something new.
+
+Today, I'll share my first episode of Bending Emacs. This video focuses on how I like to apply (or batch-apply) command line utilities.
+
+![](https://www.youtube.com/watch?v=77NtPfgr4x0)
+
+While the video focuses on applying command line utilities, here's a list of all the things I used:
+
+1.  [Org mode](https://orgmode.org/) for the presentation itself.
+2.  [ffmpeg](https://ffmpeg.org/) does the heavy lifting converting videos to gifs.
+3.  Asked [Claude](https://claude.ai) for the relevant `ffmpeg` command via [chatgpt-shell](https://github.com/xenodium/chatgpt-shell)'s `M-x chatgpt-shell-prompt-compose`.
+4.  Browsed the video directory via [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) mode.
+5.  Previewed video thumbnails via [ready-player](https://xenodium.com/a-tour-of-ready-player-mode) mode.
+6.  Previewed gifs via [image mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html)'s `M-x image-toggle-animation`.
+7.  Validated the `ffmpeg` command via [eshell](https://www.gnu.org/software/emacs/manual/html_mono/eshell.html).
+8.  Applied a [DWIM shell command](https://github.com/xenodium/dwim-shell-command) via `M-x dwim-shell-command`.
+9.  Duplicated files from `dired` via `M-x dwim-shell-commands-duplicate`.
+
+## Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [me some comments](https://www.youtube.com/watch?v=77NtPfgr4x0).
+
+Please go [like my video](https://www.youtube.com/watch?v=77NtPfgr4x0), share with others, and [subscribe to my channel](https://www.youtube.com/@xenodium).
+
+If there's enough interest, I'll make more videos!
+
 # \[2025-09-25 Thu\] Introducing Emacs agent-shell (powered by ACP)
 ---
 id: introducing-agent-shell

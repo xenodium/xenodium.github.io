@@ -1,27 +1,320 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-10-08 Wed] Bending Emacs - Episode 2: From vanilla to your flavor
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-2
+:END:
+While still finding my footing making Emacs videos, today I'm sharing my second video.
+
+[[https://www.youtube.com/watch?v=qTumnhiE1c8][Bending Emacs Episode 02: From vanilla to your flavor]]
+
+The video is a little longer than I intended at 14:37, so plan accordingly.
+
+In this video, I show some of my favorite UI customizations, with additional tips and tricks along the way. Like my first video, I'm hoping you find unexpected goodies in there despite being familiar with the general topic.
+
+[[https://www.youtube.com/watch?v=qTumnhiE1c8][Video]]
+
+Read on for all supporting material...
+
+** Evaluating elisp
+
+Showcased a handful of ways to evaluate elisp.
+
+- M-x eval-last-sexp
+- M-x eval-expression
+- M-x eval-buffer
+- M-x ielm
+- M-x org-ctrl-c-ctrl-c (Evaluate org source blocks)
+
+  Sample snippets:
+
+  #+begin_src emacs-lisp
+    (set-face-attribute 'default nil :background "DarkSlateGray")
+  #+end_src
+
+  #+begin_src emacs-lisp
+    (set-face-attribute 'default nil :background "#212121")
+  #+end_src
+
+** Launching a separate Emacs instance
+
+#+begin_src sh
+  path/to/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs -Q --init-directory /tmp/secondary/.emacs.d --load path/to/other-emacs.el
+#+end_src
+
+other-emacs.el (minimal, almost vanilla setup):
+
+#+begin_src emacs-lisp :results none
+  ; -*- lexical-binding: t; -*-
+
+  (server-force-delete)
+  (make-directory "/tmp/secondary/" t)
+  (setq server-socket-dir "/tmp/secondary/")
+  (setq server-name "emacs-server")
+  (server-start)
+
+  (setq package-archives
+        '(("melpa" . "https://melpa.org/packages/")))
+
+  (setq package-archive-priorities
+        '(("melpa" .  4)))
+
+  (require 'package)
+  (package-initialize)
+  (mapc #'package-delete (mapcar #'cadr package-alist))
+
+  (add-to-list 'custom-theme-load-path "path/to/emacs-materialized-theme")
+#+end_src
+
+** with-other-emacs macro (ie. evaluate elisp elsewhere)
+
+#+begin_src emacs-lisp :results none
+  (defmacro with-other-emacs (&rest body)
+    "Evaluate BODY in the current buffer of the other Emacs instance."
+    `(call-process "emacsclient" nil nil nil
+                   "--socket-name=/tmp/secondary/emacs-server"
+                   "--eval"
+                   (prin1-to-string
+                    '(with-current-buffer (window-buffer (selected-window))
+                       ,@body))))
+#+end_src
+
+** Looking up functions
+
+- M-x describe-function (built-in).
+- M-x helpful-callable (via third-party [[https://github.com/Wilfred/helpful][helpful]] package).
+
+** Advicing org-babel-expand-body:emacs-lisp
+
+We want to extend source blocks to accept the =:other-emacs= header argument as follows:
+  #+begin_src org
+    ,#+begin_src emacs-lisp :other-emacs t
+      (message (propertize "Hello again twin" 'face '(:height 6.0)))
+    ,#+end_src
+  #+end_src
+
+  So we advice =org-babel-expand-body:emacs-lisp=:
+
+  #+begin_src emacs-lisp :results none
+    (defun adviced:org-babel-expand-body:emacs-lisp:other-emacs (orig-fn body header-args)
+      (if (map-elt header-args :other-emacs)
+          (format "(with-other-emacs %s)" (funcall orig-fn body header-args))
+        (funcall orig-fn body header-args)))
+
+    (advice-add #'org-babel-expand-body:emacs-lisp
+                :around #'adviced:org-babel-expand-body:emacs-lisp:other-emacs)
+  #+end_src
+
+** UI customizations
+
+*** Font ([[https://www.jetbrains.com/lp/mono/][JetBrains Mono]])
+
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil
+                      :height 160 ;; 16pt
+                      ;; brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono
+                      :family "JetBrains Mono")
+#+end_src
+
+*** Theme ([[https://github.com/xenodium/emacs-materialized-theme][Materialized]])
+
+#+begin_src emacs-lisp
+  (load-theme 'materialized t)
+#+end_src
+
+*** [[https://github.com/kickingvegas/calle24][Calle 24 toolbar]] (macOS)
+
+#+begin_src emacs-lisp
+  (use-package calle24 :ensure t
+    :config
+    (calle24-install)
+    (calle24-refresh-appearance)))
+#+end_src
+
+
+*** Hide toolbar
+#+begin_src emacs-lisp
+  (tool-bar-mode -1)
+#+end_src
+
+
+*** Titlebar
+
+No text in title bar
+
+#+begin_src emacs-lisp
+  (setq-default frame-title-format "")
+#+end_src
+
+Transparent titlebar (macOS)
+
+#+begin_src emacs-lisp
+  (set-frame-parameter nil 'ns-transparent-titlebar t)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+#+end_src
+
+*** Hide scrollbars
+
+#+begin_src emacs-lisp
+  (scroll-bar-mode -1)
+#+end_src
+
+*** Mode line
+
+[[https://github.com/tarsius/minions][Minions]]
+
+#+begin_src emacs-lisp
+  (use-package minions
+    :ensure t
+    :custom
+    (mode-line-modes-delimiters nil)
+    (minions-mode-line-lighter " …")
+    :config
+    (minions-mode +1)
+    (force-mode-line-update t))
+#+end_src
+
+
+[[https://github.com/tarsius/moody][Moody]]
+
+#+begin_src emacs-lisp
+  (use-package moody
+    :ensure t
+    :config
+    (setq-default mode-line-format
+                  '(""
+                    mode-line-front-space
+                    mode-line-client
+                    mode-line-frame-identification
+                    mode-line-buffer-identification
+                    " "
+                    mode-line-position
+                    (vc-mode vc-mode)
+                    (multiple-cursors-mode mc/mode-line)
+                    mode-line-modes
+                    mode-line-end-spaces))
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode))
+#+end_src
+
+
+*** [[https://github.com/TeMPOraL/nyan-mode][Nyan Cat]] (of course)
+
+#+begin_src emacs-lisp
+  (use-package nyan-mode
+    :ensure t
+    :custom
+    (nyan-bar-length 10)
+    :config
+    (nyan-mode +1)))
+#+end_src
+
+*** Welcome screen
+
+A little static welcome screen I cooked up.
+
+#+begin_src emacs-lisp
+  (defun ar/show-welcome-buffer ()
+    "Show *Welcome* buffer."
+    (with-current-buffer (get-buffer-create "*Welcome*")
+      (setq truncate-lines t)
+      (setq cursor-type nil)
+      (read-only-mode +1)
+      (ar/refresh-welcome-buffer)
+      (local-set-key (kbd "q") 'kill-this-buffer)
+      (add-hook 'window-size-change-functions
+                (lambda (_frame)
+                  (ar/refresh-welcome-buffer)) nil t)
+      (add-hook 'window-configuration-change-hook
+                #'ar/refresh-welcome-buffer nil t)
+      (switch-to-buffer (current-buffer))))
+
+  (defun ar/refresh-welcome-buffer ()
+    "Refresh welcome buffer content for WINDOW."
+    (when-let* ((inhibit-read-only t)
+                (welcome-buffer (get-buffer "*Welcome*"))
+                (window (get-buffer-window welcome-buffer))
+                (image-path "~/.emacs.d/emacs.png")
+                (image (create-image image-path nil nil :max-height 300))
+                (image-height (cdr (image-size image)))
+                (image-width (car (image-size image)))
+                (top-margin (floor (/ (- (window-height window) image-height) 2)))
+                (left-margin (floor (/ (- (window-width window) image-width) 2)))
+                (title "Welcome to Emacs"))
+      (with-current-buffer welcome-buffer
+        (erase-buffer)
+        (setq mode-line-format nil)
+        (goto-char (point-min))
+        (insert (make-string top-margin ?\n))
+        (insert (make-string left-margin ?\ ))
+        (insert-image image)
+        (insert "\n\n\n")
+        (insert (make-string (- (floor (/ (- (window-width window) (string-width title)) 2)) 1) ?\ ))
+        (insert (propertize title 'face '(:height 1.2))))))
+
+  (ar/show-welcome-buffer)
+#+end_src
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://www.youtube.com/watch?v=qTumnhiE1c8][me some comments]].
+
+Please go [[https://www.youtube.com/watch?v=qTumnhiE1c8][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
+
+* [2025-09-30 Tue] Bending Emacs - Episode 1: Applying CLI utils
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-1
+:END:
+While most of the content I share is typically covered in blog posts, I'm trying something new.
+
+Today, I'll share my first episode of Bending Emacs. This video focuses on how I like to apply (or batch-apply) command line utilities.
+
+[[https://www.youtube.com/watch?v=77NtPfgr4x0][Video]]
+
+While the video focuses on applying command line utilities, here's a list of all the things I used:
+
+1. [[https://orgmode.org/][Org mode]] for the presentation itself.
+2. [[https://ffmpeg.org/][ffmpeg]] does the heavy lifting converting videos to gifs.
+3. Asked [[https://claude.ai][Claude]] for the relevant =ffmpeg= command via [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]]'s =M-x chatgpt-shell-prompt-compose=.
+4. Browsed the video directory via [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] mode.
+5. Previewed video thumbnails via [[https://xenodium.com/a-tour-of-ready-player-mode][ready-player]] mode.
+5. Previewed gifs via [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html][image mode]]'s =M-x image-toggle-animation=.
+6. Validated the =ffmpeg= command via [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]].
+7. Applied a [[https://github.com/xenodium/dwim-shell-command][DWIM shell command]] via =M-x dwim-shell-command=.
+8. Duplicated files from =dired= via =M-x dwim-shell-commands-duplicate=.
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://www.youtube.com/watch?v=77NtPfgr4x0][me some comments]].
+
+Please go [[https://www.youtube.com/watch?v=77NtPfgr4x0][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll make more videos!
+
 * [2025-09-25 Thu] Introducing Emacs agent-shell (powered by ACP)
 :PROPERTIES:
 :CUSTOM_ID: introducing-agent-shell
 :END:
 Not long ago, I [[https://xenodium.com/introducing-acpel][introduced acp.el]], an Emacs lisp implementation of ACP ([[https://agentclientprotocol.com][Agent Client Protocol]]), the agent protocol [[https://zed.dev/blog/claude-code-via-acp][developed between Zed and Google folks]].
 
-While I've been happily accessing LLMs from my beloved text editor via [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] (a [[https://xenodium.com/a-tiny-upgrade-to-the-llm-model-picker][multi-model]] package I built), I've been fairly slow on the AI agents uptake. Probably a severe case of old man shouts at cloud sorta thing, but hey I do like well-integrated tools. When I heard of ACP, I knew this was the thing I was waiting for to goof around with agents.
+While I've been happily accessing LLMs from my beloved text editor via [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] (a [[https://xenodium.com/a-tiny-upgrade-to-the-llm-model-picker][multi-model]] package I built), I've been fairly slow on the AI agents uptake. Probably a severe case of [[https://knowyourmeme.com/memes/old-man-yells-at-cloud][old-man-shouts-at-cloud]] sorta thing, but hey I want well-integrated tools in my text editor. When I heard of ACP, I knew this was the thing I was waiting for to play around with agents.
 
-With an early [[https://github.com/xenodium/acp.el][acp.el]] in place, I set out to build an Emacs-native agent integration, and today I have an initial version of [[https://github.com/xenodium/agent-shell][agent-shell]] I can share.
+With an early [[https://github.com/xenodium/acp.el][acp.el]] client library in place, I set out to build an Emacs-native agent integration... Today, I have an initial version of [[https://github.com/xenodium/agent-shell][agent-shell]] I can share.
 
 #+ATTR_HTML: :width 99%
 [[file:images/introducing-agent-shell/agent-shell.png]]
 
-
-While =agent-shell= is a native Emacs shell in the comint mode sense (check out Mickey's [[https://www.masteringemacs.org/article/comint-writing-command-interpreter][comint article]] btw), you don't have to worry about switching between char and line modes to interact with tui utils. =agent-shell= is a regular Emacs buffer like any other you're used to.
+=agent-shell= is a native Emacs shell, powered by [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html][comint-mode]] (check out Mickey's [[https://www.masteringemacs.org/article/comint-writing-command-interpreter][comint article]] btw). As such, we don't have to dance between char and line modes to interact with things. =agent-shell= is just a regular Emacs buffer like any other you're used to.
 
 ** Agent-agnostic
 
-Thanks to ACP, we can now build agent-agnostic experiences by configuring our clients to route traffic to their respective agent. You get multiple agents powering a consistent and familiar experience.
+Thanks to ACP, we can now build agent-agnostic experiences by simply configuring our clients to communicate with their respective agents using a common protocol. As users, we benefit from a single, consistent experience, powered by any agent of our choice.
 
-Configuring different agents from =agent-shell= boils down which agent we want to run in the comms process. Here's an example of Gemini CLI vs Claude Code configuration:
+Configuring different agents from =agent-shell= boils down which agent we want running in the comms process. Here's an example of Gemini CLI vs Claude Code configuration:
 
 #+begin_src emacs-lisp :lexical no
   (defun agent-shell-start-gemini-agent ()
@@ -57,18 +350,18 @@ Configuring different agents from =agent-shell= boils down which agent we want t
                                       :environment-variables (list (format "ANTHROPIC_API_KEY=%s" (agent-shell-anthropic-key)))))))
 #+end_src
 
-I've yet to try other agents. If you get another one running, I'd love to hear about it. Maybe submit a [[https://github.com/xenodium/agent-shell/pulls][pull request]]?
+I've yet to try other agents. If you get another agent running, I'd love to hear about it. Maybe submit a [[https://github.com/xenodium/agent-shell/pulls][pull request]]?
 
 ** Traffic
 
-While I now have an early ACP client available, I'm still fairly new to the protocol. I often inspect traffic in both directions to see what's going on. After staring at json for far too long, I figured I may as well build some tooling around [[https://github.com/xenodium/acp.el][acp.el]] to make my life easier, so I added a traffic buffer for that. From =agent-shell=, you can invoke it via =M-x agent-shell-view-traffic=.
+While I've been relying on my [[https://github.com/xenodium/acp.el][acp.el]] client library, I'm still fairly new to the protocol. I often inspect traffic to see what's going on. After staring at json for far too long, I figured I may as well build some tooling around [[https://github.com/xenodium/acp.el][acp.el]] to make my life easier. I added a traffic buffer for that. From =agent-shell=, you can invoke it via =M-x agent-shell-view-traffic=.
 
 #+ATTR_HTML: :width 95%
 [[https://raw.githubusercontent.com/xenodium/acp.el/refs/heads/main/traffic.gif]]
 
 ** Fake agents
 
-Developing =agent-shell= against paid agents got expensive quickly. Not only expensive, but my edit-compile-run cycle also became boringly slow waiting for agents. While I knew I wanted some sort of fake agent to work against, I fought the urge to go down that route. Ok not really, I was lazy, but I did work out a good compromise. Remember that traffic buffer I showed ya? I can save that traffic to disk and then replay it later. This enabled me to run problematic sessions once and quickly replay multiple times to fix bugs. While re-playing has its quirks and limitations, it's done the job for now.
+Developing =agent-shell= against paid agents got expensive quickly. Not only expensive, but my edit-compile-run cycle also became boringly slow waiting for agents. While I knew I wanted some sort of fake agent to work against, I didn't want to craft the fake traffic myself. Remember that traffic buffer I showed ya? Well, I can now save that traffic to disk and replay it later. This enabled me to run problematic sessions once and quickly replay multiple times to fix things. While re-playing has its quirks and limitations, it's done the job for now.
 
 You can see a Claude Code session below, followed by its replayed counterpart via fake infrastructure.
 
@@ -78,9 +371,9 @@ You can see a Claude Code session below, followed by its replayed counterpart vi
 #+ATTR_HTML: :width 99%
 [[file:images/introducing-agent-shell/fake.png]]
 
-** What next
+** What's next
 
-Took quite a bit of work to get here. Having said that, it's only a start. I myself need to get more familiar with agent usage and evolve the package UX however it feels most natural within its new habitat. Lately, I've been experimenting with a quick diff buffer, driven by n/p keys, shown along with the permission dialog to apply changes.
+Getting here took quite a bit of work. Having said that, it's only a start. I myself need to get more familiar with agent usage and evolve the package UX however it feels most natural within its new habitat. Lately, I've been experimenting with a quick diff buffer, driven by n/p keys, shown along the permission dialog.
 
 #+ATTR_HTML: :width 99%
 [[https://xenodium.github.io/images/introducing-agent-shell/diff.png][file:images/introducing-agent-shell/diff.png]]
@@ -89,11 +382,11 @@ While I've implemented enough parts of the [[https://agentclientprotocol.com/pro
 
 ** Take them for a spin
 
-Both of my newest Emacs packages, [[https://github.com/xenodium/agent-shell][agent-shell]] and [[https://github.com/xenodium/acp.el][acp.el]], are now available on GitHub. As an end-user, go straight to [[https://github.com/xenodium/agent-shell][agent-shell]]. If you're a package author and would like to build a different ACP experience, then give [[https://github.com/xenodium/acp.el][acp.el]] a try. Both packages are brand new and may have rough edges. Be sure to file bugs or feature requests as needed.
+Both of my new Emacs packages, [[https://github.com/xenodium/agent-shell][agent-shell]] and [[https://github.com/xenodium/acp.el][acp.el]], are now available on GitHub. As an agent user, go straight to [[https://github.com/xenodium/agent-shell][agent-shell]]. If you're a package author and would like to build an ACP experience, then give [[https://github.com/xenodium/acp.el][acp.el]] a try. Both packages are brand new and may have rough edges. Be sure to file bugs or feature requests as needed.
 
 ** Paying for LLM tokens? How about sponsoring your Emacs tools?
 
-I've been heads down working on these packages for some time. If you're using cloud LLM services, you're likely already paying for tokens. If you find my work useful, consider [[https://github.com/sponsors/xenodium][routing some of those coins]] to fund the work. Maybe my tools make you more productive at work? Get your [[https://github.com/sponsors/xenodium][employer to fund the work]]. These packages take time and effort, but also cost me money. [[https://github.com/sponsors/xenodium][Help fund the work]].
+I've been heads down, working on these packages for some time. If you're using cloud LLM services, you're likely already paying for tokens. If you find my work useful, please consider [[https://github.com/sponsors/xenodium][routing some of those coins]] to help fund it. Maybe my tools make you more productive at work? Ask your [[https://github.com/sponsors/xenodium][employer to support the work]]. These packages not only take time and effort, but also cost me money. [[https://github.com/sponsors/xenodium][Help fund the work]].
 
 * [2025-09-14 Sun] Introducing acp.el
 :PROPERTIES:
