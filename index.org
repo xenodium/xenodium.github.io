@@ -1,11 +1,54 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-10-15 Wed] Bending Emacs - Episode 3: Git clone (the lazy way)
+:PROPERTIES:
+:CUSTOM_ID:bending-emacs-episode-3-git-clone-the-lazy-way
+:END:
+Continuing on the [[https://www.youtube.com/@xenodium/videos][Bending Emacs]] series, today I share a new episode.
+
+[[https://youtu.be/oYHlH9NWraM][Bending Emacs Episode 03: Git clone (the lazy way)]]
+
+In this video, I show my latest iteration on an expedited git clone flow.
+
+[[https://youtu.be/oYHlH9NWraM][Video]]
+
+If this topic sounds familiar, I covered it back in 2020 with my [[https://xenodium.com/emacs-clone-git-repo-from-clipboard][clone git repo from clipboard]] post.
+
+My git clone flow consists of copying a git repo URL to the clipboard and subsequently invoking =M-x dwim-shell-commands-git-clone-clipboard-url=. Everything else is taken care of for you.
+
+I've revisited this =git clone= command and added a couple of improvements:
+
+- Configurability (via =dwim-shell-commands-git-clone-dirs=). For example:
+
+  #+begin_src emacs-lisp :lexical no
+    (setq dwim-shell-commands-git-clone-dirs
+          '("~/Downloads"
+            "~/Desktop"))
+  #+end_src
+
+- Optional prefixes to change function behavior
+  - =C-u=: Pick target location =dwim-shell-commands-git-clone-dirs=.
+  - =C-u C-u=: Pick any directory.
+- Automatically place point/cursor at README file.
+
+I was going to post the snippet here, though may as well point you over to [[https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el#L1574][GitHub]] where =dwim-shell-commands-git-clone-clipboard-url= is more likely to remain up-to-date.
+
+Note that =dwim-shell-commands-git-clone-dirs= is now [[https://github.com/xenodium/dwim-shell-command/tree/main?tab=readme-ov-file#my-toolbox][optionally available]] as part of my [[https://github.com/xenodium/dwim-shell-command][dwim-shell-command]] package.
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://youtu.be/oYHlH9NWraM][me some comments]].
+
+Please go [[https://youtu.be/oYHlH9NWraM][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
 * [2025-10-12 Sat] agent-shell 0.5 improvements
 :PROPERTIES:
 :CUSTOM_ID: agent-shell-0-5-improvements
 :END:
-While it's only been a few weeks since [[https://xenodium.com/introducing-agent-shell][introducing agent-shell]], we've landed [[https://github.com/xenodium/agent-shell/commits/main/][nearly 100 commits]] and enough improvements to warrant a new blog post.
+While it's only been a few weeks since [[https://xenodium.com/introducing-agent-shell][introducing Emacs agent-shell]], we've landed [[https://github.com/xenodium/agent-shell/commits/main/][nearly 100 commits]] and enough improvements to warrant a new blog post.
 
 ** More agents
 
