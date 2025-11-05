@@ -1,3 +1,178 @@
+# \[2025-11-04 Tue\] agent-shell 0.17 improvements + MELPA
+---
+id: agent-shell-016-improvements-melpa
+---
+
+While it's only been a few weeks since the [last agent-shell post](https://xenodium.com/agent-shell-0-5-improvements), there are plenty of new updates to share.
+
+What's [agent-shell](https://github.com/xenodium/agent-shell) again? A native Emacs shell to interact with any LLM agent powered by ACP ([Agent Client Protocol](https://agentclientprotocol.com/)).
+
+## Thank you sponsors
+
+Before getting to the latest and greatest, I'd like to say thank you to [new and existing sponsors](https://github.com/sponsors/xenodium#sponsors) backing my projects.
+
+While the work going in remains largely unsustainable, your contributions are indeed helping me get closer to sustainability. Thank you!
+
+If you benefit from my content and projects, please [consider sponsoring](https://github.com/sponsors/xenodium) to make the work sustainable.
+
+## More productive at work?
+
+Work paying for your LLM tokens and other tools? Why not [get your employer to sponsor agent-shell](https://github.com/sponsors/xenodium) also?
+
+## MELPA
+
+Now on to the very first update… Both [agent-shell](https://melpa.org/#/agent-shell) and [acp.el](https://melpa.org/#/acp) are now available on MELPA. As such, `agent-shell` installation now boils down to:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package agent-shell :ensure t)
+```
+
+## New providers
+
+[OpenCode](https://opencode.ai/) and [Qwen Code](https://github.com/QwenLM/qwen-code) are two of the latest agents to join [agent-shell](https://github.com/xenodium/agent-shell). Both accessible via `M-x agent-shell` and `M-x agent-shell-new-shell` through the agent picker, but also directly from `M-x agent-shell-opencode-start-agent` and `M-x agent-shell-qwen-start`.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/qwen.png)
+
+## Send files - Thanks to Ian Davidson
+
+Adding files as context has seen quite a few improvements in different shapes. Thank you Ian Davidson for contributing embedded context support.
+
+### Send screenshots
+
+Invoke `M-x agent-shell-send-screenshot` to take a screenshot and automatically send it over to `agent-shell`.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/whos-this.webp)
+
+### Activity Indicator
+
+A little side-note, did you notice the activity indicator in the header bar? Yep. That's new too.
+
+### @ completion (experimental)
+
+While `@` file completion remains experimental, you can enable via:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-file-completion-enabled t)
+```
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/at-completion.gif)
+
+### Send files or regions
+
+From any file you can now invoke `M-x agent-shell-send-file` to send the current file to `agent-shell`. If region is selected, region information is sent also. Fancy sending a different file other than current one? Invoke `M-x agent-shell-send-file` with `C-u prefix`, or just use `M-x agent-shell-send-other-file`.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/send-region.gif)
+
+### Send `dired` files
+
+`M-x agent-shell-send-file`, also operates on `dired` files (selection or region), [DWIM style](https://xenodium.com/emacs-dwim-do-what-i-mean) ;-)
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/send-dired.gif)
+
+## Shorter paths in titles
+
+You may have noticed paths in section titles are no longer displayed as absolute paths. We're shortening those relative to project roots.
+
+## Shell creation / handling
+
+While you can invoke `M-x agent-shell` with `C-u` prefix to create new shells, `M-x agent-shell-new-shell` is now available (and more discoverable than `C-u`).
+
+## Cancelling sessions
+
+Cancelling prompt sessions (via `C-c C-c`) is much more reliable now. If you experienced a shell getting stuck after cancelling a session, that's because we were missing part of the protocol implementation. This is now implemented.
+
+## Shell commands
+
+Use the new `M-x agent-shell-insert-shell-command-output` to automatically insert shell (ie. bash) command output.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/ping.gif)
+
+## Markdown transcripts (experimental) - Thanks to Elle Najt
+
+Initial work for automatically saving markdown transcripts is now in place. We're still iterating on it, but if keen to try things out, you can enable as follows:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell--transcript-file-path-function #'agent-shell--default-transcript-file-path)
+```
+
+## Configuration
+
+### Turn off ASCII welcome banners
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-show-welcome-message nil)
+```
+
+### Turn off graphical header
+
+Text header
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-header-style 'text)
+```
+
+No header
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-header-style nil)
+```
+
+## Inline display of historical changes - Thanks to Elle Najt
+
+Applied changes are now displayed inline.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/inline-historical-diffs.png)
+
+## Session mode - Thanks to Elle Najt
+
+The new `M-x agent-shell-cycle-session-mode` and `M-x agent-shell-set-session-mode` can now be used to change the session mode.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/cycle.webp)
+
+## Agent capabilities
+
+You can now find out what capabilities and session modes are supported by your agent. Expand either of the two sections.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/capabilities.png)
+
+## Accepting/rejecting changes from diff buffer
+
+Tired of pressing `q` and `y` to accept changes from the diff buffer? Now just press `y` from the diff viewer to accept all hunks.
+
+Same goes for rejecting. No more `q` and `n`. Now just press `C-c C-c` from the diff buffer.
+
+## Transient menu
+
+We get a new basic transient menu. Currently available via `M-x agent-shell-help-menu`.
+
+![](https://xenodium.github.io/images/agent-shell-017-improvements-melpa/transient.png)
+
+## Contributions
+
+We got lots of awesome pull requests from wonderful folks. Thank you for your contributions!
+
+-   **Arthur Heymans**: Add a Package-Requires header ([PR](https://github.com/xenodium/agent-shell/pull/78)).
+-   **Elle Najt**: Execute commands in devcontainer ([PR](https://github.com/xenodium/agent-shell/pull/91)).
+-   **Elle Najt**: Fix Write tool diff preview for new files ([PR](https://github.com/xenodium/agent-shell/pull/109)).
+-   **Elle Najt**: Inline display of historical changes ([PR](https://github.com/xenodium/agent-shell/pull/92)).
+-   **Elle Najt**: Live Markdown transcripts ([PR](https://github.com/xenodium/agent-shell/pull/97)).
+-   **Elle Najt**: Prompt session mode cycling and modeline display ([PR](https://github.com/xenodium/agent-shell/pull/79)).
+-   **Fritz Grabo**: Devcontainer fallback workspace ([PR](https://github.com/xenodium/agent-shell/pull/95)).
+-   **Guilherme Pires**: Codex subscription auth ([PR](https://github.com/xenodium/agent-shell/pull/64)).
+-   **Hordur Freyr Yngvason**: Make qwen authentication optional ([PR](https://github.com/xenodium/agent-shell/pull/87)).
+-   **Ian Davidson**: Embedded context support ([PR](https://github.com/xenodium/agent-shell/pull/73)).
+-   **Julian Hirn**: Fix quick-diff window restoration for full-screen ([PR](https://github.com/xenodium/agent-shell/pull/89)).
+-   **Ruslan Kamashev**: Hide header line altogether ([PR](https://github.com/xenodium/agent-shell/pull/101)).
+-   **[festive-onion](https://github.com/festive-onion)**: Show Planning mode more reliably ([PR](https://github.com/xenodium/agent-shell/issues/102)).
+
+## Lots of other work ❤️😅
+
+Beyond what's been showcased here, much love and effort's been poured into polishing the `agent-shell` experience. Interested in the nitty-gritty? Have a look through the [173 commits](https://github.com/xenodium/agent-shell/commits/main/) since the last blog post.
+
+## Support this work
+
+If [agent-shell](https://github.com/xenodium/agent-shell) or [acp.el](https://github.com/xenodium/acp.el) are useful to you, please consider [sponsoring](https://github.com/sponsors/xenodium) its development. LLM tokens aren't free, and neither is the time dedicated to building this stuff ;-)
+
 # \[2025-10-27 Mon\] time-zones now on MELPA. Do I have your support?
 ---
 id: time-zones-now-on-melpa
