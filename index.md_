@@ -1,3 +1,48 @@
+# \[2025-11-12 Wed\] Want a WhatsApp Emacs client? Will you fund it?
+---
+id: want-a-whatsapp-emacs-client
+---
+
+Like it or not, [WhatsApp](https://www.whatsapp.com/) is a necessity for some of us. I wish it weren't the case, but here we are.
+
+Given the circumstances, I wish I could use WhatsApp a little more on my terms. And by that, I mean from an Emacs client, of course. Surely I'm not the only one who feels this way, right? Right?! Fortunately, [I'm not alone](https://www.reddit.com/r/emacs/comments/1opy9mp/i_cant_do_without_whatsapp_for_complicated/).
+
+With that in mind, I've been hard at work prototyping, exploring what's feasible. Spoiler alert: it's totally possible, though will require a fair bit of work.
+
+Thankfully, two wonderful projects offer a huge leg up: [wuzapi](https://github.com/asternic/wuzapi) and [whatsmeow](https://github.com/tulir/whatsmeow).
+
+[wuzapi](https://github.com/asternic/wuzapi) offers a [REST](https://en.wikipedia.org/wiki/REST) API on top of [whatsmeow](https://github.com/tulir/whatsmeow), a Go library leveraging WhatsApp's multi-device web API.
+
+Last week, I prototyped sending a WhatsApp message using `wuzapi`'s `REST` API.
+
+![](https://xenodium.github.io/images/want-a-whatsapp-emacs-client/whatsapp-send.gif)
+
+I got there fairly quickly by onboarding myself on to `wuzapi` using its web interface and wiring [shell-maker](https://github.com/xenodium/shell-maker) to send an HTTP message request via `curl`. While these two were enough for a quick demo, they won't cut it for a polished Emacs experience.
+
+While I can make REST work, I would like a simpler integration under the hood. REST is fine for outgoing messages, but then I need to integrate webhooks for incoming events. No biggie, can be done, but now I have to deal with two local services opening a couple of ports. Can we simplify a little? Yes we can.
+
+You may have seen me talk about [agent-shell](https://github.com/xenodium/agent-shell), my Emacs package implementing [Agent Client Protocol (ACP)](https://agentclientprotocol.com)… Why is this relevant, you may ask? Well, after building a native Emacs `ACP` implementation, I learned a bit about [json-rpc](https://www.jsonrpc.org/specification) over standard I/O. The simplicity here is that we can bring bidirectional communication to an Emacs-owned process. No need for multiple channels handling incoming vs outgoing messages.
+
+So where's this all going?
+
+I've been prototyping some patches on top of [wuzapi](https://github.com/asternic/wuzapi) to expose `json-rpc` over standard I/O (as an alternative to `REST`). This prototype goes far beyond my initial experiment with sending messages, and yet the Emacs integration is considerably simpler, not to mention looking very promising. Here's a demo showing incoming WhatsApp messages, received via `json-rpc`, all through a single Emacs-owned process. Look ma, no ports!
+
+![](https://xenodium.github.io/images/want-a-whatsapp-emacs-client/whatsapp-receive.gif)
+
+## It's feasible (but still lots to do)
+
+These early prototypes are encouraging, but we've only scratched the surface. Before you can send and receive messages, you need to onboard users to the WhatsApp Emacs client. That is, you need to create a `wuzapi` user, manage/connect to a session, authorize via a QR code, and more. You'll want this flow to be realiable and that's just onboarding.
+
+From there, you'll need to manage contacts, chats, multiple message types, incoming notifications… the list goes on. That's just the Emacs side. As mentioned, I've also been patching `wuzapi`. My plan is to [upstream these changes](https://github.com/asternic/wuzapi/issues/196), rather than maintaining a fork.
+
+## Will you fund the work?
+
+I've prototyped quite a few things now, including the onboarding experience with QR code scanning. At this point, I feel fairly optimistic about feasibility, which is all pretty exciting! But there's a bunch of work needed. Since going full-time indie dev, I have the time available (for now), but it's hard to justify this effort without aiming for some level of sustainability.
+
+If you're interested in making this a reality, [please consider sponsoring the effort](https://github.com/sponsors/xenodium), and please reach out to voice your interest ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Bluesky](https://bsky.app/profile/xenodium.bsky.social)).
+
+Reckon a WhatsApp Emacs client would help you stay focused at work (less time on your phone)? Ask your employer to [sponsor it](https://github.com/sponsors/xenodium) too ;-)
+
 # \[2025-11-05 Wed\] Bending Emacs - Episode 5: Ready Player Mode
 ---
 id: bending-emacs-episode-5-ready-player-mode

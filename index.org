@@ -1,6 +1,330 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-11-12 Wed] Want a WhatsApp Emacs client? Will you fund it?
+:PROPERTIES:
+:CUSTOM_ID: want-a-whatsapp-emacs-client
+:END:
+Like it or not, [[https://www.whatsapp.com/][WhatsApp]] is a necessity for some of us. I wish it weren't the case, but here we are.
+
+Given the circumstances, I wish I could use WhatsApp a little more on my terms. And by that, I mean from an Emacs client, of course. Surely I'm not the only one who feels this way, right? Right?! Fortunately, [[https://www.reddit.com/r/emacs/comments/1opy9mp/i_cant_do_without_whatsapp_for_complicated/][I'm not alone]].
+
+With that in mind, I've been hard at work prototyping, exploring what's feasible. Spoiler alert: it's totally possible, though will require a fair bit of work.
+
+Thankfully, two wonderful projects offer a huge leg up: [[https://github.com/asternic/wuzapi][wuzapi]] and [[https://github.com/tulir/whatsmeow][whatsmeow]].
+
+[[https://github.com/asternic/wuzapi][wuzapi]] offers a [[https://en.wikipedia.org/wiki/REST][REST]] API on top of [[https://github.com/tulir/whatsmeow][whatsmeow]], a Go library leveraging WhatsApp's multi-device web API.
+
+Last week, I prototyped sending a WhatsApp message using =wuzapi='s =REST= API.
+
+#+ATTR_HTML: :width 95%
+[[file:images/want-a-whatsapp-emacs-client/whatsapp-send.gif]]
+
+I got there fairly quickly by onboarding myself on to =wuzapi= using its web interface and wiring [[https://github.com/xenodium/shell-maker][shell-maker]] to send an HTTP message request via =curl=. While these two were enough for a quick demo, they won't cut it for a polished Emacs experience.
+
+While I can make REST work, I would like a simpler integration under the hood. REST is fine for outgoing messages, but then I need to integrate webhooks for incoming events. No biggie, can be done, but now I have to deal with two local services opening a couple of ports. Can we simplify a little? Yes we can.
+
+You may have seen me talk about [[https://github.com/xenodium/agent-shell][agent-shell]], my Emacs package implementing [[https://agentclientprotocol.com][Agent Client Protocol (ACP)]]... Why is this relevant, you may ask? Well, after building a native Emacs =ACP= implementation, I learned a bit about [[https://www.jsonrpc.org/specification][json-rpc]] over standard I/O. The simplicity here is that we can bring bidirectional communication to an Emacs-owned process. No need for multiple channels handling incoming vs outgoing messages.
+
+So where's this all going?
+
+I've been prototyping some patches on top of [[https://github.com/asternic/wuzapi][wuzapi]] to expose =json-rpc= over standard I/O (as an alternative to =REST=). This prototype goes far beyond my initial experiment with sending messages, and yet the Emacs integration is considerably simpler, not to mention looking very promising. Here's a demo showing incoming WhatsApp messages, received via =json-rpc=, all through a single Emacs-owned process. Look ma, no ports!
+
+#+ATTR_HTML: :width 95%
+[[file:images/want-a-whatsapp-emacs-client/whatsapp-receive.gif]]
+
+** It's feasible (but still lots to do)
+
+These early prototypes are encouraging, but we've only scratched the surface. Before you can send and receive messages, you need to onboard users to the WhatsApp Emacs client. That is, you need to create a =wuzapi= user, manage/connect to a session, authorize via a QR code, and more. You'll want this flow to be realiable and that's just onboarding.
+
+From there, you'll need to manage contacts, chats, multiple message types, incoming notifications... the list goes on. That's just the Emacs side. As mentioned, I've also been patching =wuzapi=. My plan is to [[https://github.com/asternic/wuzapi/issues/196][upstream these changes]], rather than maintaining a fork.
+
+** Will you fund the work?
+
+I've prototyped quite a few things now, including the onboarding experience with QR code scanning. At this point, I feel fairly optimistic about feasibility, which is all pretty exciting! But there's a bunch of work needed. Since going full-time indie dev, I have the time available (for now), but it's hard to justify this effort without aiming for some level of sustainability.
+
+If you're interested in making this a reality, [[https://github.com/sponsors/xenodium][please consider sponsoring the effort]], and please reach out to voice your interest ([[https://indieweb.social/@xenodium][Mastodon]] / [[https://twitter.com/xenodium][Twitter]] / [[https://www.reddit.com/user/xenodium][Reddit]] / [[https://bsky.app/profile/xenodium.bsky.social][Bluesky]]).
+
+Reckon a WhatsApp Emacs client would help you stay focused at work (less time on your phone)? Ask your employer to [[https://github.com/sponsors/xenodium][sponsor it]] too ;-)
+
+* [2025-11-05 Wed] Bending Emacs - Episode 5: Ready Player Mode
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-5-ready-player-mode
+:END:
+I'm now a bit over a month into my Emacs video-making journey. Today I bring a new episode.
+
+[[https://youtu.be/BjCgo6NC9Zw][Bending Emacs Episode 5: Ready Player Mode]]
+
+[[https://youtu.be/BjCgo6NC9Zw][Video]]
+
+Having migrated to mostly playing offline music, in this episode I show how to use [[https://github.com/xenodium/ready-player][Ready Player Mode]] (a package I built) for this purpose.
+
+This is what my =Ready Player= configuration mostly looks like:
+
+#+begin_src emacs-lisp :lexical no
+  (use-package ready-player
+    :ensure t
+    :custom
+    (ready-player-my-media-collection-location "~/Music/Music/Media.localized/Music")
+    :config
+    (ready-player-mode +1))
+#+end_src
+
+Note that =ready-player-mode= adds a global =C-c m=, which is https://github.com/xenodium/ready-player?tab=readme-ov-file#global-key-bindingsh
+
+On macOS, I have one additional bit to tweak button icons to use SF Symbols. You'll need to [[https://xenodium.com/emacs-insert-and-render-sf-symbols][tweak your fonts too]].
+
+#+begin_src emacs-lisp :lexical no
+  (set-fontset-font t nil "SF Pro Display" nil 'append)
+  (ready-player-macos-use-sf-symbols)
+#+end_src
+
+On a related blog post, I gave [[https://xenodium.com/a-tour-of-ready-player-mode][a tour of Ready Player Mode]].
+
+In the video, I also mentioned =dired= buffers are at the heard of =Ready Player=. My [[https://xenodium.com/the-dired-abstraction][dired abstraction post]] shows how to programmatically craft a valid =dired= buffer. Spoiler alert, it's pretty simple:
+
+#+begin_src emacs-lisp :lexical no
+  (let ((default-directory "/absolute/path/to/Music/George Benson"))
+    (dired '("*My fancy m3u list*"
+             "Body Talk/01 Dance.mp3"
+             "Body Talk/02 When Love Has Grown.mp3"
+             "Body Talk/03 Plum.mp3"
+             "Original Album Classics/1-01 So What.mp3"
+             "Original Album Classics/1-02 The Gentle Rain (From the Film, _The Gentle Rain_).mp3"
+             "Original Album Classics/1-03 All Clear.mp3"
+             "The Shape Of Things To Come/01 Footin' It.mp3"
+             "The Shape Of Things To Come/02 Face It Boy It's Over.mp3"
+             "The Shape Of Things To Come/03 Shape Of Things To Come.mp3")))
+
+#+end_src
+
+Hope you enjoyed the video!
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://youtu.be/BjCgo6NC9Zw][me some comments]].
+
+Please go [[https://youtu.be/BjCgo6NC9Zw][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
+** Make it all sustainable
+
+Enjoying this content or [[https://github.com/xenodium][my projects]]? I am an indie dev. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://lmno.lol][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
+* [2025-11-04 Tue] agent-shell 0.17 improvements + MELPA
+:PROPERTIES:
+:CUSTOM_ID: agent-shell-016-improvements-melpa
+:END:
+While it's only been a few weeks since the [[https://xenodium.com/agent-shell-0-5-improvements][last agent-shell post]], there are plenty of new updates to share.
+
+What's [[https://github.com/xenodium/agent-shell][agent-shell]] again? A native Emacs shell to interact with any LLM agent powered by ACP ([[https://agentclientprotocol.com/][Agent Client Protocol]]).
+
+** Thank you sponsors
+
+Before getting to the latest and greatest, I'd like to say thank you to [[https://github.com/sponsors/xenodium#sponsors][new and existing sponsors]] backing my projects.
+
+While the work going in remains largely unsustainable, your contributions are indeed helping me get closer to sustainability. Thank you!
+
+If you benefit from my content and projects, please [[https://github.com/sponsors/xenodium][consider sponsoring]] to make the work sustainable.
+
+** More productive at work?
+
+Work paying for your LLM tokens and other tools? Why not [[https://github.com/sponsors/xenodium][get your employer to sponsor agent-shell]] also?
+
+** MELPA
+
+Now on to the very first update... Both [[https://melpa.org/#/agent-shell][agent-shell]] and [[https://melpa.org/#/acp][acp.el]] are now available on MELPA. As such, =agent-shell= installation now boils down to:
+
+#+begin_src emacs-lisp :lexical no
+  (use-package agent-shell :ensure t)
+#+end_src
+
+** New providers
+
+[[https://opencode.ai/][OpenCode]] and [[https://github.com/QwenLM/qwen-code][Qwen Code]] are two of the latest agents to join [[https://github.com/xenodium/agent-shell][agent-shell]]. Both accessible via =M-x agent-shell= and =M-x agent-shell-new-shell= through the agent picker, but also directly from =M-x agent-shell-opencode-start-agent= and =M-x agent-shell-qwen-start=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/qwen.png]]
+
+** Send files - Thanks to Ian Davidson
+
+Adding files as context has seen quite a few improvements in different shapes. Thank you Ian Davidson for contributing embedded context support.
+
+*** Send screenshots
+
+Invoke =M-x agent-shell-send-screenshot= to take a screenshot and automatically send it over to =agent-shell=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/whos-this.webp]]
+
+*** Activity Indicator
+
+A little side-note, did you notice the activity indicator in the header bar? Yep. That's new too.
+
+*** @ completion (experimental)
+
+While =@= file completion remains experimental, you can enable via:
+
+#+begin_src emacs-lisp :lexical no
+  (setq agent-shell-file-completion-enabled t)
+#+end_src
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/at-completion.gif]]
+
+*** Send files or regions
+
+From any file you can now invoke =M-x agent-shell-send-file= to send the current file to =agent-shell=. If region is selected, region information is sent also. Fancy sending a different file other than current one? Invoke =M-x agent-shell-send-file= with =C-u prefix=, or just use =M-x agent-shell-send-other-file=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/send-region.gif]]
+
+*** Send =dired= files
+
+=M-x agent-shell-send-file=, also operates on =dired= files (selection or region), [[https://xenodium.com/emacs-dwim-do-what-i-mean][DWIM style]] ;-)
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/send-dired.gif]]
+
+** Shorter paths in titles
+
+You may have noticed paths in section titles are no longer displayed as absolute paths. We're shortening those relative to project roots.
+
+** Shell creation / handling
+
+While you can invoke =M-x agent-shell= with =C-u= prefix to create new shells, =M-x agent-shell-new-shell= is now available (and more discoverable than =C-u=).
+
+** Cancelling sessions
+
+Cancelling prompt sessions (via =C-c C-c=) is much more reliable now. If you experienced a shell getting stuck after cancelling a session, that's because we were missing part of the protocol implementation. This is now implemented.
+
+** Shell commands
+
+Use the new =M-x agent-shell-insert-shell-command-output= to automatically insert shell (ie. bash) command output.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/ping.gif]]
+
+** Markdown transcripts (experimental) - Thanks to Elle Najt
+
+Initial work for automatically saving markdown transcripts is now in place. We're still iterating on it, but if keen to try things out, you can enable as follows:
+
+#+begin_src emacs-lisp :lexical no
+  (setq agent-shell--transcript-file-path-function #'agent-shell--default-transcript-file-path)
+#+end_src
+
+** Configuration
+
+*** Turn off ASCII welcome banners
+
+#+begin_src emacs-lisp :lexical no
+  (setq agent-shell-show-welcome-message nil)
+#+end_src
+
+*** Turn off graphical header
+
+Text header
+
+#+begin_src emacs-lisp :lexical no
+  (setq agent-shell-header-style 'text)
+#+end_src
+
+No header
+
+#+begin_src emacs-lisp :lexical no
+  (setq agent-shell-header-style nil)
+#+end_src
+
+** Inline display of historical changes - Thanks to Elle Najt
+
+Applied changes are now displayed inline.
+
+#+ATTR_HTML: :width 95%
+[[file:images/agent-shell-017-improvements-melpa/inline-historical-diffs.png]]
+
+** Session mode - Thanks to Elle Najt
+
+The new =M-x agent-shell-cycle-session-mode= and =M-x agent-shell-set-session-mode= can now be used to change the session mode.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/cycle.webp]]
+
+** Agent capabilities
+
+You can now find out what capabilities and session modes are supported by your agent. Expand either of the two sections.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/capabilities.png]]
+
+** Accepting/rejecting changes from diff buffer
+
+Tired of pressing =q= and =y= to accept changes from the diff buffer? Now just press =y= from the diff viewer to accept all hunks.
+
+Same goes for rejecting. No more =q= and =n=. Now just press =C-c C-c= from the diff buffer.
+
+** Transient menu
+
+We get a new basic transient menu. Currently available via =M-x agent-shell-help-menu=.
+
+#+ATTR_HTML: :width 70%
+[[file:images/agent-shell-017-improvements-melpa/transient.png]]
+
+** Contributions
+
+We got lots of awesome pull requests from wonderful folks. Thank you for your contributions!
+
+- *Arthur Heymans*: Add a Package-Requires header ([[https://github.com/xenodium/agent-shell/pull/78][PR]]).
+- *Elle Najt*: Execute commands in devcontainer ([[https://github.com/xenodium/agent-shell/pull/91][PR]]).
+- *Elle Najt*: Fix Write tool diff preview for new files ([[https://github.com/xenodium/agent-shell/pull/109][PR]]).
+- *Elle Najt*: Inline display of historical changes ([[https://github.com/xenodium/agent-shell/pull/92][PR]]).
+- *Elle Najt*: Live Markdown transcripts ([[https://github.com/xenodium/agent-shell/pull/97][PR]]).
+- *Elle Najt*: Prompt session mode cycling and modeline display ([[https://github.com/xenodium/agent-shell/pull/79][PR]]).
+- *Fritz Grabo*: Devcontainer fallback workspace ([[https://github.com/xenodium/agent-shell/pull/95][PR]]).
+- *Guilherme Pires*: Codex subscription auth ([[https://github.com/xenodium/agent-shell/pull/64][PR]]).
+- *Hordur Freyr Yngvason*: Make qwen authentication optional ([[https://github.com/xenodium/agent-shell/pull/87][PR]]).
+- *Ian Davidson*: Embedded context support ([[https://github.com/xenodium/agent-shell/pull/73][PR]]).
+- *Julian Hirn*: Fix quick-diff window restoration for full-screen ([[https://github.com/xenodium/agent-shell/pull/89][PR]]).
+- *Ruslan Kamashev*: Hide header line altogether ([[https://github.com/xenodium/agent-shell/pull/101][PR]]).
+- *[[https://github.com/festive-onion][festive-onion]]*: Show Planning mode more reliably ([[https://github.com/xenodium/agent-shell/issues/102][PR]]).
+
+** Lots of other work ❤️😅
+
+Beyond what's been showcased here, much love and effort's been poured into polishing the =agent-shell= experience. Interested in the nitty-gritty? Have a look through the [[https://github.com/xenodium/agent-shell/commits/main/][173 commits]] since the last blog post.
+
+** Support this work
+
+If [[https://github.com/xenodium/agent-shell][agent-shell]] or [[https://github.com/xenodium/acp.el][acp.el]] are useful to you, please consider [[https://github.com/sponsors/xenodium][sponsoring]] its development. LLM tokens aren't free, and neither is the time dedicated to building this stuff ;-)
+
+* [2025-10-27 Mon] time-zones now on MELPA. Do I have your support?
+:PROPERTIES:
+:CUSTOM_ID: time-zones-now-on-melpa
+:END:
+A little over a week ago, I [[https://xenodium.com/emacs-time-zones-mode][introduced time-zones]], an Emacs utility to easily check city times around the world. Today, I'm happy to report, the package [[https://melpa.org/#/time-zones][has been accepted into MELPA]].
+
+#+ATTR_HTML: :width 80%
+[[file:images/time-zones-now-on-melpa/time-zones.gif]]
+
+It's been wonderful to see how well time-zones was [[https://www.reddit.com/r/emacs/comments/1oarhkl/a_new_world_clock_package/][received on Reddit]].
+
+✓ You asked for MELPA publishing and [[https://melpa.org/#/time-zones][I delivered]].
+
+✓ You asked for DST display and [[https://github.com/xenodium/time-zones/commit/c573e20d0406aa81315b8319722e2946df86cc33][I delivered]].
+
+✓ You asked for a UTC picker and [[https://github.com/xenodium/time-zones/commit/ec17963ce5e9f676c6f1117c7a11e536b72d7ad7][I delivered]].
+
+✓ You asked for UTC offset display and [[https://github.com/xenodium/time-zones/commit/b04d0c81b9cf06226a8fde430a4253204ba704b7][I delivered]].
+
+✓ You asked for Windows support and [[https://github.com/xenodium/time-zones/commit/54ba1151ef6864fe703116532085d653f9b4afc1][I delivered]].
+
+✓ You asked for help and bug fixes and [[https://github.com/xenodium/time-zones/issues?q=is%3Aissue%20state%3Aclosed][I delivered]].
+
+** Will you make the work sustainable?
+
+Bringing features and improving our beloved text editor takes time and effort. =time-zones= isn't my first package, I've also published a [[https://github.com/sponsors/xenodium][bunch of Emacs packages]]. Will you help make this work [[https://github.com/sponsors/xenodium][sustainable]]?
+
 * [2025-10-23 Thu] Bending Emacs - Episode 4: Batch renaming files
 :PROPERTIES:
 :CUSTOM_ID: bending-emacs-episode-4-batch-renaming-files
