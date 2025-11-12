@@ -1,3 +1,69 @@
+# \[2025-11-05 Wed\] Bending Emacs - Episode 5: Ready Player Mode
+---
+id: bending-emacs-episode-5-ready-player-mode
+---
+
+I'm now a bit over a month into my Emacs video-making journey. Today I bring a new episode.
+
+[Bending Emacs Episode 5: Ready Player Mode](https://youtu.be/BjCgo6NC9Zw)
+
+-![](https://youtu.be/BjCgo6NC9Zw)
+
+Having migrated to mostly playing offline music, in this episode I show how to use [Ready Player Mode](https://github.com/xenodium/ready-player) (a package I built) for this purpose.
+
+This is what my `Ready Player` configuration mostly looks like:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package ready-player
+  :ensure t
+  :custom
+  (ready-player-my-media-collection-location "~/Music/Music/Media.localized/Music")
+  :config
+  (ready-player-mode +1))
+```
+
+On macOS, I have one additional bit to tweak button icons to use SF Symbols. You'll need to [tweak your fonts too](https://xenodium.com/emacs-insert-and-render-sf-symbols).
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(set-fontset-font t nil "SF Pro Display" nil 'append)
+(ready-player-macos-use-sf-symbols)
+```
+
+On a related blog post, I gave [a tour of Ready Player Mode](https://xenodium.com/a-tour-of-ready-player-mode).
+
+In the video, I also mentioned `dired` buffers are at the heard of `Ready Player`. My [dired abstraction post](https://xenodium.com/the-dired-abstraction) shows how to programmatically craft a valid `dired` buffer. Spoiler alert, it's pretty simple:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(let ((default-directory "/absolute/path/to/Music/George Benson"))
+  (dired '("*My fancy m3u list*"
+           "Body Talk/01 Dance.mp3"
+           "Body Talk/02 When Love Has Grown.mp3"
+           "Body Talk/03 Plum.mp3"
+           "Original Album Classics/1-01 So What.mp3"
+           "Original Album Classics/1-02 The Gentle Rain (From the Film, _The Gentle Rain_).mp3"
+           "Original Album Classics/1-03 All Clear.mp3"
+           "The Shape Of Things To Come/01 Footin' It.mp3"
+           "The Shape Of Things To Come/02 Face It Boy It's Over.mp3"
+           "The Shape Of Things To Come/03 Shape Of Things To Come.mp3")))
+
+```
+
+Hope you enjoyed the video!
+
+## Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [me some comments](https://youtu.be/BjCgo6NC9Zw).
+
+Please go [like my video](https://youtu.be/BjCgo6NC9Zw), share with others, and [subscribe to my channel](https://www.youtube.com/@xenodium).
+
+If there's enough interest, I'll continue making more videos!
+
+## Make it all sustainable
+
+Enjoying this content or [my projects](https://github.com/xenodium)? I am an indie dev. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+
+Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
+
 # \[2025-11-04 Tue\] agent-shell 0.17 improvements + MELPA
 ---
 id: agent-shell-016-improvements-melpa
