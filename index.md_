@@ -1,3 +1,67 @@
+# \[2025-11-24 Mon\] WhatsApp from you know where
+---
+id: whatsapp-from-you-know-where
+---
+
+While there are plenty of messaging alternatives out there, for better or worse, [WhatsApp](https://www.whatsapp.com/) remains a necessity for some of us.
+
+With that in mind, I looked for ways to bring WhatsApp messaging to the comfort of my beloved text editor.
+
+As mentioned in [my initial findings](https://xenodium.com/want-a-whatsapp-emacs-client), WhatsApp on Emacs is totally doable with the help of [wuzapi](https://github.com/asternic/wuzapi) and [whatsmeow](https://github.com/tulir/whatsmeow), which offer a huge leg up.
+
+## Wasabi joins the chat
+
+Today, I introduce a super early version of [Wasabi](https://github.com/xenodium/wasabi/), a native Emacs interface for WhatsApp messaging.
+
+<img src="https://github.com/xenodium/wasabi/blob/main/screenshots/chats.png?raw=true" width="95%" alt="Chats view">
+
+<img src="https://github.com/xenodium/wasabi/blob/main/screenshots/chat.png?raw=true" width="95%" alt="Chat view">
+
+## Simple install as a feature/goal
+
+I wanted `Wasabi` installation/setup to be as simple as possible. Ideally, you install a single Emacs package and off you go.
+
+While leveraging [XMPP](https://xmpp.org/) is rather appealing in reusing existing Emacs messaging packages, I felt setting up a WhatsApp gateway or related infrastructure to be somewhat at odds with `wasabi`'s simple installation goal. Having said that, [wuzapi](https://github.com/asternic/wuzapi)/[whatsmeow](https://github.com/tulir/whatsmeow) offer a great middle ground. You install a single binary dependency, along with `wasabi`, and you're ready to go. This isn't too different from the [git](https://git-scm.com/) + [magit](https://magit.vc/) combo.
+
+As of now, `wasabi`'s installation/setup boils down to two steps if you're on macOS:
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(use-package wasabi :vc (:url "https://github.com/xenodium/wasabi"))
+```
+
+``` {.bash org-language="sh"}
+brew install asternic/wuzapi/wuzapi
+```
+
+While you may try [Homebrew](https://brew.sh/) on Linux, you're likely to prefer your native package manager. If that fails, [building wuzapi from source](https://github.com/xenodium/wasabi?tab=readme-ov-file#build-wuzapi-from-source) is also an option.
+
+## Upstreaming `wuzapi` patches
+
+While `wuzapi` runs as a [RESTful](https://en.wikipedia.org/wiki/REST) API service + [webhooks](https://en.wikipedia.org/wiki/Webhook), I wanted to simplify the Emacs integration by using [json-rpc](https://www.jsonrpc.org) over standard I/O, enabling us to leverage incoming `json-rpc` notifications in place of `webhooks`.
+
+I [floated the idea of adding json-rpc to wuzapi](https://github.com/asternic/wuzapi/pull/199) to `wuzapi`'s author Nicolas, and to my delight, he was keen on it. He's now merged [my initial proof of concept](https://github.com/asternic/wuzapi/pull/199#issuecomment-3534196183), and I followed up with a handful of additional patches (all merged now):
+
+-   [Add JSON-RPC 2.0 stdio mode (via -mode=stdio) for communication](https://github.com/asternic/wuzapi/pull/213)
+-   [Expose more HTTP endpoints as JSON-RPCs](https://github.com/asternic/wuzapi/pull/217).
+-   [Enable setting a custom data directory via -datadir=/path/to/data](https://github.com/asternic/wuzapi/pull/216).
+-   [Add Homebrew recipe/installation](https://github.com/asternic/wuzapi/pull/222).
+
+## Early days - But give it a try!
+
+With the latest [Wasabi](https://github.com/xenodium/wasabi/) Emacs package and [wuzapi](https://github.com/asternic/wuzapi) binary, you now get the initial WhatsApp experience I've been working towards. At present, you can send/receive messages to/from 1:1 or group chats. You can also download/view images as well as videos. Viewing reactions is also supported.
+
+Needless to say, you may find some initial rough edges in addition to missing features. Having said that, I'd love to hear your feedback and experience. As mentioned `Wasabi` is currently [available on GitHub](https://github.com/xenodium/wasabi/).
+
+## Reckon Wasabi is worth it?
+
+I've now put in quite a bit of effort prototyping things, upstreaming changes to `wuzapi`, and building the first iteration of [wasabi](https://github.com/xenodium/wasabi/). I gotta say, it feels great to be able to quickly message and catch up with different chats from the comfort of Emacs. Having said that, it's taken a lot of work to get here and will require plenty more to get to a polished and featureful experience.
+
+Since going full-time indie dev, I have the flexibility to work on projects of choice, but that's only to an extent. If I cannot make the project sustainable, I'll eventually move to work on something else that is.
+
+If you're keen on [Wasabi](https://github.com/xenodium/wasabi/)'s offering, [please consider sponsoring the effort](https://github.com/sponsors/xenodium), and please reach out to voice your interest ([Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Bluesky](https://bsky.app/profile/xenodium.bsky.social)).
+
+Reckon a WhatsApp Emacs client would help you stay focused at work (less time on your phone)? Ask your employer to [sponsor it](https://github.com/sponsors/xenodium) too ;-)
+
 # \[2025-11-12 Wed\] Want a WhatsApp Emacs client? Will you fund it?
 ---
 id: want-a-whatsapp-emacs-client
