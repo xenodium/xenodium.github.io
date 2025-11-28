@@ -1,6 +1,70 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-11-27 Thu] Bending Emacs - Episode 6: Overlays
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-6-overlays
+:END:
+The Bending Emacs series continues with a new a new episode.
+
+[[https://youtu.be/93wWCroTKnM][Bending Emacs Episode 6: Overlays]]
+
+[[https://youtu.be/93wWCroTKnM][Video]]
+
+Today we had a quick intro to overlays. Here's the snippet I used for adding snippets:
+
+#+begin_src emacs-lisp
+  (save-excursion
+    (goto-char (point-min))
+    (when (search-forward "Hello World" nil t)
+      (let* ((start (match-beginning 0))
+             (end (match-end 0))
+             (ov (make-overlay start end)))
+        (overlay-put ov 'face '(:box (:line-width 1 :color "yellow")))
+        ;; (overlay-put ov 'face 'underline)
+        ;; (overlay-put ov 'face 'highlight)
+        ;; (overlay-put ov 'before-string "🔥 ")
+        ;; (overlay-put ov 'after-string  " 🚀")
+        ;; (overlay-put ov 'display  "Howdy Planet")
+        ;; (overlay-put ov 'invisible t)
+        ;; (overlay-put ov 'help-echo "Yay overlay!")
+        ;; (overlay-put ov 'mouse-face 'success)
+        (overlay-put ov 'category 'overlays)
+        (overlay-put ov 'evaporate t)
+        ov)))
+
+#+end_src
+
+Similarly, this is what we used for removing the overlay.
+
+#+begin_src emacs-lisp
+  (remove-overlays (point-min) (point-max)
+                   'category 'overlays)
+#+end_src
+
+Of the experiments, you can find:
+
+- Redaction snippet [[https://xenodium.com/redact-that-buffer][at the related blog post]].
+- Dired media metadata at Ready Player's [[https://github.com/xenodium/ready-player/blob/main/ready-player-dired.el][ready-player-dired.el]].
+- Link previews: While I don't have elisp to share for link previews just yet, I did release a tiny thumbnail utility named [[https://github.com/xenodium/rinku][rinku]] ;)
+
+Hope you enjoyed the video!
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://youtu.be/93wWCroTKnM][me some comments]].
+
+Please go [[https://youtu.be/93wWCroTKnM][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
+** Make it all sustainable
+
+Enjoying this content or [[https://github.com/xenodium][my projects]]? I am an indie dev. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://lmno.lol][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
+
 * [2025-11-24 Mon] WhatsApp from you know where
 :PROPERTIES:
 :CUSTOM_ID: whatsapp-from-you-know-where
@@ -16345,9 +16409,9 @@ Took some notes along the way (mostly data with years attached) and dumped it in
   :END:
 - [[https://www.abandonedamerica.us/abandoned-georgia][Abandoned Georgia]].
 * [2019-11-24 Sun] Wizard zines comics in Emacs eshell
-  :PROPERTIES:
-  :CUSTOM_ID: wizard-zines-comics-eshell-util
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: wizard-zines-comics-eshell-util
+:END:
 Over at [[http://wizardzines.com][wizardzines.com]], [[https://jvns.ca][Julia Evans]] authors wonderful zines on topics like git, networking, linux, command-line utilities, and others. Some zines are paid. Some are free. No affiliation here, just a fan.
 
 A little while ago, Julia [[https://twitter.com/b0rk/status/1192304892435738624][tweeted]] about a utility she's building to view her original comics on similar topics. I instantly thought it'd be a fun tool to implement for Emacs [[https://www.gnu.org/software/emacs/manual/html_mono/eshell.html][eshell]].
