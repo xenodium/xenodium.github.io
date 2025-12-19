@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-12-19 Fri 21:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>agent-shell 0.25 updates</title>
+<meta name="author" content="Álvaro Ramírez" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type='text/css'>
+         /* https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile */
+
+         body {
+           font-size: 100%;
+           max-width: 88ch;
+           padding: 2ch;
+           margin: auto;
+           background-color: white;
+         }
+
+         .figure {
+           padding: 0;
+         }
+
+         /* Table left border */
+         .left {
+           border-left: 1px solid #ccc;
+         }
+
+         .author {
+           font-size: 1em;
+           text-align: right;
+           color: rgb(51, 51, 51);
+           font-weight: bold;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         .title {
+           display: none; /* Title already included in header. Hide. */
+           color: rgb(51, 51, 51);
+           font-size: 1em;
+           text-align: right;
+         }
+
+         .org-src-container {
+           background-color: #fbfbfb;
+           border-radius: 10px;
+         }
+
+         #contact-header {
+           width: 100%;
+         }
+
+         #contact-right {
+           text-align: right;
+         }
+
+         #contact-left {
+           text-align: left;
+         }
+
+         #content {
+         }
+
+         blockquote {
+           overflow: auto;
+         }
+
+         b, strong {
+          font-weight: bold;
+         }
+
+         pre {
+           border: none;
+           box-shadow: none;
+         }
+
+         pre.src {
+           overflow: auto;
+         }
+
+         /* Hide sh/bash/Emacs Lisp overlay */
+         pre.src:hover:before {
+           display: none;
+         }
+
+         p, .org-ol, .org-ul, .org-left {
+           color: #3A4145;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 1em;
+           font-style: normal;
+           font-weight: 300;
+           letter-spacing: 0.01rem;
+           line-height: 1.5em;
+           text-rendering: optimizelegibility;
+         }
+
+         h1, h2, h3, h4, h5, #preamble {
+           color: #2E2E2E;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           line-height: 1.15em;
+         }
+
+         h1 {
+           font-size: 2em;
+         }
+
+         h2 {
+           font-size: 1.6em;
+           letter-spacing: -0.02em;
+           margin-bottom: 0px;
+           text-indent: -3px;
+         }
+
+         h3 {
+           font-size: 1.2em;
+         }
+
+         #preamble {
+           text-align: right;
+         }
+
+         .timestamp {
+          color: #a9a9a9;
+          display: block;
+          font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+              'Lucida Sans', Geneva, Verdana, sans-serif;
+          font-size: 0.5em;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 1em;
+         }
+
+         .modified-timestamp {
+           color: #D3d3d3;
+           font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+               'Lucida Sans', Geneva, Verdana, sans-serif;
+           font-size: 0.8em;
+           text-rendering: optimizelegibility;
+         }
+
+         a {
+          color: #4183C4;
+          text-decoration: none;
+         }
+
+         a:visited {
+          background-color: #4183C4;
+         }
+
+         .outline-2 {
+         }
+
+         .example {
+           white-space: pre-wrap;
+           background-color: #f8ffe1;
+         }
+       </style>
+
+       <!-- Start of Goat Code -->
+       <script data-goatcounter="https://xenodium.goatcounter.com/count"
+               async src="//gc.zgo.at/count.js">
+       </script>
+       <!-- End of Goat Code -->
+</head>
+<body>
+<div id="preamble" class="status">
+
+<table id='contact-header'>
+  <tr>
+    <td id='contact-left'>
+      <a style='color:rgb(51, 51, 51);' href='/'>index</a>
+      <a style='color:rgb(51, 51, 51);' href='/rss.xml'>rss</a>
+    </td>
+    <td id='contact-right'>
+      <a rel='me' href='https://indieweb.social/@xenodium'>mastodon</a>
+      <a href='https://twitter.com/xenodium'>twitter</a>
+      <a href='http://github.com/xenodium'>github</a>
+      <a href='http://uk.linkedin.com/in/xenodium'>linkedin</a>
+      <a href='mailto:me@xenodium.com'>email</a>
+    </td>
+  </tr>
+  <tr>
+    <td style='text-align: left;'>
+      <a href='https://plainorg.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://plainorg.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id1671420139'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/scratch-a-minimal-scratch-area/scratch_icon.png'/>
+      </a>
+      <a href='https://flathabits.com'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='https://flathabits.com/favicon.ico'/>
+      </a>
+      <a href='https://apps.apple.com/app/id6480411697'>
+        <img style='padding-top: 5px; max-width: 4ch;' src='../images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'/>
+      </a>
+    </td>
+    <td style='padding-top:10px;'>
+      <span class='author'>Álvaro Ramírez</span><br/>
+      <a style='color:rgb(51, 51, 51);' href='https://github.com/sponsors/xenodium'>sponsor</a>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="content" class="content">
+<h1 class="title">Álvaro Ramírez</h1>
+<div id="outline-container-agent-shell-0-25-updates" class="outline-2">
+<h2 id="agent-shell-0-25-updates"><span class="timestamp-wrapper"><span class="timestamp">20 December 2025</span></span> agent-shell 0.25 updates</h2>
+<div class="outline-text-2" id="text-agent-shell-0-25-updates">
+<p>
+It's been a little while since the last <a href="https://github.com/xenodium/agent-shell">agent-shell</a> blog post <a href="https://xenodium.com/agent-shell-016-improvements-melpa">detailing changes</a>, so we're naturally due another one detailing the latest features.
+</p>
+</div>
+<div id="outline-container-org8f1c240" class="outline-3">
+<h3 id="org8f1c240">What's <code>agent-shell</code>?</h3>
+<div class="outline-text-3" id="text-org8f1c240">
+<p>
+A native <a href="https://www.gnu.org/software/emacs/">Emacs</a> shell to interact with any LLM agent powered by ACP (<a href="https://agentclientprotocol.com/">Agent Client Protocol</a>).
+</p>
+
+<center>✨ <a href="https://github.com/sponsors/xenodium">Sponsor agent-shell</a> ✨</center>
+</div>
+</div>
+<div id="outline-container-org7eb3f97" class="outline-3">
+<h3 id="org7eb3f97">So what's new?</h3>
+<div class="outline-text-3" id="text-org7eb3f97">
+<p>
+Let's go through the latest changes&#x2026;
+</p>
+</div>
+<div id="outline-container-org227398c" class="outline-4">
+<h4 id="org227398c">Viewport/compose (experimental)</h4>
+<div class="outline-text-4" id="text-org227398c">
+<p>
+The biggest change is the new experimental viewport/compose mode. While agent-shell's <a href="https://www.masteringemacs.org/article/comint-writing-command-interpreter">comint</a> shell experience has its benefits, some folks may opt for a more familiar buffer experience, that is less shell-like.
+</p>
+
+<p>
+There are perhaps 3 defining characteristics in the new viewport/compose feature:
+</p>
+
+<ol class="org-ol">
+<li><b>A dedicated compose buffer</b>: You get a full, multiline buffer dedicated to crafting prompts. I personally find this mode of operation more natural (no need to watch out for accidental submissions via RET), but also opens up the possibility to enable your favourite minor modes that may not play nice with <code>comint</code>. You can launch compose buffers via <code>M-x agent-shell-prompt-compose</code>, edit your prompt, and when you're ready, submit with the familiar <code>C-c C-c</code> binding.</li>
+</ol>
+
+
+<div id="org5c9582f" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose.gif" alt="compose.gif" width="95%" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li><b>Viewport</b>: I've <a href="https://xenodium.com/an-experimental-e-shell-pager">experimented with shell viewports before</a> and also added a <a href="https://xenodium.com/a-chatgpt-shell-compose-ux-experiment">similar experience to chatgpt-shell</a>. This compose/viewport UX quickly became my primary way of interacting with non-agent LLMs. This is a read-only buffer typically displaying the latest agent interaction. Use <code>n/p</code> to navigate through current interaction items. Use <code>f/b</code> to switch through pages/interactions.</li>
+
+<li><b>Auto-modal</b>: Compose and viewport modes complement each other and offer automatic transition between read-only and editable (compose) buffers. From a viewport, you can always press <code>r</code> to reply to the latest interaction. When replying, you automatically go into edit/compose mode. When submitting via <code>C-c C-c</code>, you automatically transition into viewport (read-only) mode.</li>
+</ol>
+
+
+<div id="org110717c" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-viewport-page.gif" alt="compose-viewport-page.gif" width="95%" />
+</p>
+</div>
+
+<p>
+While you can use <code>M-x agent-shell-prompt-compose</code> at any time to compose multi-line prompts and send from the shell, to get the <code>compose/viewport</code> hybrid experience, you need to enable with <code>(setq agent-shell-prefer-viewport-interaction t)</code>. From then on, <code>M-x agent-shell</code> will favor the <code>compose/viewport</code> experience. You can always jump between viewport and shell with <code>C-c C-o</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orga510ab1" class="outline-4">
+<h4 id="orga510ab1">Prompt queueing (experimental)</h4>
+<div class="outline-text-4" id="text-orga510ab1">
+<p>
+<code>agent-shell</code> buffers now offer the ability to queue additional prompts if the agent is busy. Use <code>M-x agent-shell-queue-request</code> to and <code>M-x agent-shell-remove-pending-request</code> to queue and remove requests.
+</p>
+
+
+<div id="orgc3e412c" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/queue.gif" alt="queue.gif" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2b7f733" class="outline-4">
+<h4 id="org2b7f733">Session model/mode</h4>
+<div class="outline-text-4" id="text-org2b7f733">
+<p>
+You can now change models via <code>M-x agent-shell-set-session-model</code> (<code>C-c C-v</code>), when supported by the agent.
+</p>
+
+<p>
+For Anthropic users, we now have <code>agent-shell-anthropic-default-model-id</code> and <code>agent-shell-anthropic-default-session-mode-id</code> to set default agent model and modes. You can view available values by expanding shell handshake items.
+</p>
+
+
+<div id="org3069384" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/models.png" alt="models.png" width="95%" />
+</p>
+</div>
+
+<p>
+If keen on using defaults for a different agent, <a href="https://github.com/xenodium/agent-shell/issues/new/choose">please file a feature request</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org685075f" class="outline-4">
+<h4 id="org685075f">Set preferred agent</h4>
+<div class="outline-text-4" id="text-org685075f">
+<p>
+By default, launching via <code>M-x agent-shell</code>, prompts users to select one of the supported agents. You can now skip this by setting your preferred agent (<a href="https://github.com/xenodium/agent-shell/pull/129">thank you Jonathan</a>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> agent-shell-new-shell-config (agent-shell-anthropic-make-claude-code-config))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeb8882d" class="outline-4">
+<h4 id="orgeb8882d">Automatic transcripts</h4>
+<div class="outline-text-4" id="text-orgeb8882d">
+<p>
+While <a href="https://github.com/xenodium/shell-maker">shell-maker</a> automatically prompts users to save content when killing <code>agent-shell</code> buffers, its integration was a little clunky with agents. Elle Najt's <code>agent-shell</code>-specific implementation is now enable by default, saving Markdown transcripts to <code>project/.agent-shell/transcripts</code>. When launching new shells, you should see a message like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">Created project/.agent-shell/transcripts/2025-12-17-22-07-38.md
+</pre>
+</div>
+
+<p>
+You can always open the current transcript via <code>M-x agent-shell-open-transcript</code>.
+</p>
+
+<p>
+To disable the new transcript generation use:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> agent-shell-transcript-file-path-function nil)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge72d100" class="outline-4">
+<h4 id="orge72d100">MCP servers</h4>
+<div class="outline-text-4" id="text-orge72d100">
+<p>
+Jonathan Jin introduced <code>agent-shell-mcp-servers</code>, enabling folks to add MCP servers to their agents.
+</p>
+
+<p>
+For example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #a71d5d;">setq</span> agent-shell-mcp-servers
+      '(((name . <span style="color: #183691;">"notion"</span>)
+         (type . <span style="color: #183691;">"http"</span>)
+         (headers . [])
+         (url . <span style="color: #183691;">"https://mcp.notion.com/mcp"</span>))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga88b08e" class="outline-4">
+<h4 id="orga88b08e">Buffer search</h4>
+<div class="outline-text-4" id="text-orga88b08e">
+<p>
+You can now search across shell nodes, including collapsed ones. When using <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html">isearch</a> (<a href="https://github.com/abo-abo/swiper">swiper</a> too), matching nodes are now automatically expanded.
+</p>
+</div>
+</div>
+<div id="outline-container-org8e41bb1" class="outline-4">
+<h4 id="org8e41bb1">DWIM context</h4>
+<div class="outline-text-4" id="text-org8e41bb1">
+<p>
+When invoking <code>M-x agent-shell</code>, active region, <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Flymake.html">flymake</a> errors, <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html">dired</a> and <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html">image</a> buffers are now automatically considered and brought over to <code>agent-shell</code> buffers to be considered while crafting prompts.
+</p>
+
+
+<div id="orge61623d" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-region.gif" alt="compose-region.gif" width="95%" />
+</p>
+</div>
+
+
+<div id="org2921cf8" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-files.gif" alt="compose-files.gif" width="95%" />
+</p>
+</div>
+
+
+<div id="org58e8b19" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-flymake.gif" alt="compose-flymake.gif" width="95%" />
+</p>
+</div>
+
+
+<div id="org1316a46" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-image.gif" alt="compose-image.gif" width="95%" />
+</p>
+</div>
+
+<p>
+There's one more. From a viewport buffer, selecting a region and pressing "r" (for reply) brings the selection over to the compose buffer as <a href="https://www.markdownlang.com/basic/blockquotes.html">blockquoted</a> text.
+</p>
+
+
+<div id="orgd37805d" class="figure">
+<p><img src="../images/agent-shell-0-25-updates/compose-reply.gif" alt="compose-reply.gif" width="95%" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge1a9e44" class="outline-4">
+<h4 id="orge1a9e44">Cursor support (migrated to Mike Moore's adapter)</h4>
+<div class="outline-text-4" id="text-orge1a9e44">
+<p>
+We've migrated Cursor agent support to use Mike Moore's <a href="https://github.com/blowmage/cursor-agent-acp-npm">ACP Adapter</a>.
+</p>
+
+<p>
+Install with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">npm install -g @blowmage/cursor-agent-acp
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7a03b33" class="outline-4">
+<h4 id="org7a03b33">New related packages</h4>
+<div class="outline-text-4" id="text-org7a03b33">
+<ul class="org-ul">
+<li><a href="https://github.com/ultronozm">Paul Nelson</a> built <a href="https://github.com/ultronozm/agent-shell-attention.el">agent-shell-attention.el</a> offering a mode line attention indicator.</li>
+<li><a href="https://github.com/nineluj">Julian Hirn</a> built <a href="https://github.com/nineluj/agent-review">agent-review</a> introducing a streamlined workflow.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4619b7c" class="outline-4">
+<h4 id="org4619b7c">Bug fixes</h4>
+<div class="outline-text-4" id="text-org4619b7c">
+<ul class="org-ul">
+<li><a href="https://github.com/xenodium/agent-shell/issues/106">#106</a>: Use replace-buffer-contents instead of erase-buffer/insert</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/127">#127</a>: No longer possible to select the Anthropic model used by Claude Code</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/142">#142</a>: [bug] Crash during message streaming: markdown overlay receives nil positions</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/143">#143</a>: gemini 0.17.1 requires authMethod to authenticate (fix by <a href="https://github.com/ag91">Andrea</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/144">#144</a>: Make collapsible indicator keymap customizable</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/145">#145</a>: Unable to enter Plan Mode until after first message is sent</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/150">#150</a>: Warning (undo): Buffer 'Codex Agent @ &#x2026;' undo info was 25664948 bytes long</li>
+<li><a href="https://github.com/xenodium/agent-shell/issues/154">#154</a>: Gemini CLI doesn't need authorization if already logged in</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb04004d" class="outline-4">
+<h4 id="orgb04004d">Pull requests</h4>
+<div class="outline-text-4" id="text-orgb04004d">
+<p>
+Thank you to all contributors for these improvements!
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/xenodium/agent-shell/pull/125">#125</a>: Fix error when viewing proposed diffs (<a href="https://github.com/jdpage">Nat Page</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/129">#129</a>: Support setting a preferred agent config (<a href="https://github.com/jinnovation">Jonathan Jin</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/138">#138</a>: Enable specifying MCP server configurations via custom variable (<a href="https://github.com/jinnovation">Jonathan Jin</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/139">#139</a>: Document MCP server config functionality (<a href="https://github.com/jinnovation">Jonathan Jin</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/140">#140</a>: README: Add MELPA badge + expand install instructions (<a href="https://github.com/jinnovation">Jonathan Jin</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/141">#141</a>: Add keybindings to cycle/set session mode (<a href="https://github.com/jinnovation">Jonathan Jin</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/149">#149</a>: Use fixed-pitch for ascii art logos (<a href="https://github.com/hexmode">Mark A. Hershberger</a>)</li>
+<li><a href="https://github.com/xenodium/agent-shell/pull/155">#155</a>: Give the new custom flag to gemini for skipping the authorization (<a href="https://github.com/ccqpein">ccQpein</a>)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9e390a6" class="outline-4">
+<h4 id="org9e390a6">Lots of other work ❤️😅</h4>
+<div class="outline-text-4" id="text-org9e390a6">
+<p>
+Beyond what's showcased, much love and effort's been poured into polishing the <code>agent-shell</code> experience. Interested in the nitty-gritty? Have a look through the <a href="https://github.com/xenodium/agent-shell/compare/e874872...bd9deb5">122 commits</a> since the last blog post.
+</p>
+</div>
+</div>
+<div id="outline-container-orga20b6f7" class="outline-4">
+<h4 id="orga20b6f7">Make the work sustainable</h4>
+<div class="outline-text-4" id="text-orga20b6f7">
+<p>
+If <a href="https://github.com/xenodium/agent-shell">agent-shell</a> or <a href="https://github.com/xenodium/acp.el">acp.el</a> are useful to you, please consider <a href="https://github.com/sponsors/xenodium">sponsoring</a> development. LLM tokens aren't free, and neither is the time dedicated to building this stuff ;-)
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
