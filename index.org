@@ -1,7 +1,152 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
-* [2025-11-28 Fri] Rinku: CLI link previews
+* [2025-12-13 Sat] Bending Emacs - Episode 8: completing-read
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-8-completing-read
+:END:
+Nearly a couple of weeks since the last [[https://www.youtube.com/@xenodium][Bending Emacs]] episode, so here's a new episode:
+
+[[https://youtu.be/J_WxzZXuTLI][Bending Emacs Episode 8: completing-read]]
+
+[[https://youtu.be/J_WxzZXuTLI][Video]]
+
+In this video, we take a look at the humble but mighty [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion.html][completing-read]] function. We can use it to craft our purpose-built tools, whether in pure elisp or to interact with command-line utilities.
+
+Of interest, I also highlighted the great [[https://github.com/xuchunyang/elisp-demos][elisp-demos]] package, which extends your help buffers with sample snippets.
+
+Here are some of the =completing-read= snippets we played with:
+
+Pick a queen:
+
+#+begin_src emacs-lisp
+  (completing-read "Pick a Queen: "
+                   '("Queen of Hearts ♥"
+                     "Queen of Spades ♠"
+                     "Queen of Clubs ♣"
+                     "Queen of Diamonds ♦")
+                   ;; predicate
+                   nil
+                   ;; require match
+                   t)
+#+end_src
+
+Our own hashing function with an algo picker:
+
+#+begin_src emacs-lisp
+  (defun misc/hash-region ()
+    (interactive)
+    (message "Hash: %s" (secure-hash (intern (completing-read
+                                              "Hash type: "
+                                              '(md5 sha1 sha224 sha256 sha384 sha512)))
+                                     (current-buffer)
+                                     (when (use-region-p)
+                                       (region-beginning))
+                                     (when (use-region-p)
+                                       (region-end)))))
+#+end_src
+
+A first look at integrating completing read with a CLI util:
+
+#+begin_src emacs-lisp
+  (completing-read "Select file: "
+                   (string-split (shell-command-to-string "ls -1 ../") "\n"))
+#+end_src
+
+Also got creative with [[https://github.com/lapfelix/BluetoothConnector][BluetoothConnector]] on macOS and =completing-read=.
+
+#+begin_src emacs-lisp
+  (completing-read "Toggle BT connection: "
+                   (mapcar (lambda (device)
+                             ;; Extract device name
+                             (nth 1 (split-string device " - ")))
+                           (seq-filter
+                            (lambda (line)
+                              ;; Keep lines like: af-8c-3b-b1-99-af - Device name
+                              (string-match-p "^[0-9a-f]\\{2\\}" line))
+                            (split-string (shell-command-to-string "BluetoothConnector") "\n"))))
+#+end_src
+
+Some of my completing-read uses:
+
+- [[https://xenodium.com/emacs-quick-kill-process][Emacs: quickly killing processes]].
+- [[https://xenodium.com/emacs-insert-and-render-sf-symbols][Emacs: insert and render SF symbols]].
+- [[https://github.com/xenodium/dwim-shell-command/blob/35ca64d529987578dbbdf3f07d34310ee727b4a5/dwim-shell-commands.el#L1357][macOS open with]].
+- [[https://github.com/xenodium/dwim-shell-command/blob/35ca64d529987578dbbdf3f07d34310ee727b4a5/dwim-shell-commands.el#L1339][macOS set default app]].
+- [[https://github.com/xenodium/dwim-shell-command/blob/35ca64d529987578dbbdf3f07d34310ee727b4a5/dwim-shell-commands.el#L1243][macOS share]] (the unhinged way).
+- [[https://github.com/xenodium/ready-player][ready-player]] search.
+
+  Hope you enjoyed the video!
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://youtu.be/J_WxzZXuTLI][me some comments]].
+
+Please go [[https://youtu.be/J_WxzZXuTLI][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
+** Make it all sustainable
+
+Enjoying this content or [[https://github.com/xenodium][my projects]]? I am an indie dev. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://lmno.lol][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
+* [2025-12-02 Tue] At one with your code
+:PROPERTIES:
+:CUSTOM_ID: at-one-with-your-code
+:END:
+While in the mood to [[https://xenodium.com/rinku-cli-link-previews][goof around with Emacs, CLI, and image rendering]], I've revised an idea to generate some sort of art from your codebase (or any text really). That is, given an image, generate a textual representation, potentially using source code as input.
+
+With that, here's [[https://github.com/xenodium/one][one]]: a utility to transform images into character art using text from your codebase.
+
+Rather than tell you more about it, best to see it in action.
+
+#+HTML: <img src="https://github.com/xenodium/one/blob/main/one.gif?raw=true" width="80%" alt="Screencast converting image to source code art" />
+
+Just a bit of fun. That's all there is to it.
+
+While I've only run it on macOS, =one='s written in Go, so should be fairly portable. I'd love to know if you get it running on Linux. The code's on [[https://github.com/xenodium/one][GitHub]].
+
+If you're on macOS, I've added a [[https://brew.sh][Homebrew]] on [[https://github.com/xenodium/homebrew-one][GitHub]], so you should just be able to install with:
+
+#+begin_src sh
+  brew install --HEAD xenodium/one/one
+#+end_src
+
+** Make it all sustainable
+
+Having fun with =one=? Enjoying this [[https://xenodium.com/][blog]] or [[https://github.com/xenodium][my projects]]? I am an 👉 indie dev 👈. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://lmno.lol][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
+* [2025-11-30 Sun] Bending Emacs - Episode 7: Eshell built-in commands
+:PROPERTIES:
+:CUSTOM_ID: bending-emacs-episode-7-eshell-built-in-commands
+:END:
+With my recent [[https://xenodium.com/rinku-cli-link-previews][rinku post]] and [[https://xenodium.com/bending-emacs-episode-6-overlays][Bending Emacs episode 6]] both fresh in mind, I figured I may as well make another Bending Emacs episode, so here we are:
+
+[[https://youtu.be/M6o1N2kfmuc][Bending Emacs Episode 7: Eshell built-in commands]]
+
+[[https://youtu.be/M6o1N2kfmuc][Video]]
+
+Check out the [[https://xenodium.com/rinku-cli-link-previews][rinku post]] for a rundown of things covered in the video.
+
+** Want more videos?
+
+Liked the video? Please let me know. Got feedback? Leave [[https://youtu.be/93wWCroTKnM][me some comments]].
+
+Please go [[https://youtu.be/M6o1N2kfmuc][like my video]], share with others, and [[https://www.youtube.com/@xenodium][subscribe to my channel]].
+
+If there's enough interest, I'll continue making more videos!
+
+** Make it all sustainable
+
+Enjoying this content or [[https://github.com/xenodium][my projects]]? I am an indie dev. Help make it sustainable by ✨[[https://github.com/sponsors/xenodium][sponsoring]]✨
+
+Need a blog? [[https://lmno.lol][I can help with that]]. Maybe buy my [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS apps]] too ;)
+
+* [2025-11-29 Sat] Rinku: CLI link previews
 :PROPERTIES:
 :CUSTOM_ID: rinku-cli-link-previews
 :END:
@@ -76,9 +221,13 @@ I was pleasantly surprised at how little code was needed. It basically scans for
         (with-temp-buffer
           (insert "\n")
           (dolist (path args)
-            (insert-image (create-image
-                           path (image-type-from-file-name path)
-                           nil :max-width 350))
+            (let ((spec (create-image
+                         (expand-file-name path)
+                         (image-type-from-file-name path)
+                         nil :max-width 350
+                         :conversion (lambda (data) data))))
+              (image-flush spec)
+              (insert-image spec))
             (insert "\n"))
           (insert "\n")
           (buffer-string))
