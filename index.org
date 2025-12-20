@@ -23,14 +23,14 @@ The biggest change is the new experimental viewport/compose mode. While agent-sh
 
 There are perhaps 3 defining characteristics in the new viewport/compose feature:
 
-1. *A dedicated compose buffer*: You get a full, multiline buffer dedicated to crafting prompts. I personally find this mode of operation more natural (no need to watch out for accidental submissions via RET), but also opens up the possibility to enable your favourite minor modes that may not play nice with =comint=. You can launch compose buffers via =M-x agent-shell-prompt-compose=, edit your prompt, and when you're ready, submit with the familiar =C-c C-c= binding.
+*A dedicated compose buffer*: You get a full, multiline buffer dedicated to crafting prompts. I personally find this mode of operation more natural (no need to watch out for accidental submissions via RET), but also opens up the possibility to enable your favourite minor modes that may not play nice with =comint=. You can launch compose buffers via =M-x agent-shell-prompt-compose=, edit your prompt, and when you're ready, submit with the familiar =C-c C-c= binding.
 
 #+ATTR_HTML: :width 95%
 [[file:images/agent-shell-0-25-updates/compose.gif]]
 
-2. *Viewport*: I've [[https://xenodium.com/an-experimental-e-shell-pager][experimented with shell viewports before]] and also added a [[https://xenodium.com/a-chatgpt-shell-compose-ux-experiment][similar experience to chatgpt-shell]]. This compose/viewport UX quickly became my primary way of interacting with non-agent LLMs. This is a read-only buffer typically displaying the latest agent interaction. Use =n/p= to navigate through current interaction items. Use =f/b= to switch through pages/interactions.
+*Viewport*: I've [[https://xenodium.com/an-experimental-e-shell-pager][experimented with shell viewports before]] and also added a [[https://xenodium.com/a-chatgpt-shell-compose-ux-experiment][similar experience to chatgpt-shell]]. This compose/viewport UX quickly became my primary way of interacting with non-agent LLMs. This is a read-only buffer typically displaying the latest agent interaction. Use =n/p= to navigate through current interaction items. Use =f/b= to switch through pages/interactions.
 
-3. *Auto-modal*: Compose and viewport modes complement each other and offer automatic transition between read-only and editable (compose) buffers. From a viewport, you can always press =r= to reply to the latest interaction. When replying, you automatically go into edit/compose mode. When submitting via =C-c C-c=, you automatically transition into viewport (read-only) mode.
+*Auto-modal*: Compose and viewport modes complement each other and offer automatic transition between read-only and editable (compose) buffers. From a viewport, you can always press =r= to reply to the latest interaction. When replying, you automatically go into edit/compose mode. When submitting via =C-c C-c=, you automatically transition into viewport (read-only) mode.
 
 #+ATTR_HTML: :width 95%
 [[file:images/agent-shell-0-25-updates/compose-viewport-page.gif]]
@@ -39,7 +39,7 @@ While you can use =M-x agent-shell-prompt-compose= at any time to compose multi-
 
 *** Prompt queueing (experimental)
 
-=agent-shell= buffers now offer the ability to queue additional prompts if the agent is busy. Use =M-x agent-shell-queue-request= to and =M-x agent-shell-remove-pending-request= to queue and remove requests.
+=agent-shell= buffers now offer the ability to queue additional prompts if the agent is busy. Use =M-x agent-shell-queue-request= and =M-x agent-shell-remove-pending-request= to queue and remove requests.
 
 #+ATTR_HTML: :width 95%
 [[file:images/agent-shell-0-25-updates/queue.gif]]
@@ -57,7 +57,7 @@ If keen on using defaults for a different agent, [[https://github.com/xenodium/a
 
 *** Set preferred agent
 
-By default, launching via =M-x agent-shell=, prompts users to select one of the supported agents. You can now skip this by setting your preferred agent ([[https://github.com/xenodium/agent-shell/pull/129][thank you Jonathan]]).
+By default, launching via =M-x agent-shell= prompts users to select one of the supported agents. You can now skip this by setting your preferred agent ([[https://github.com/xenodium/agent-shell/pull/129][thank you Jonathan]]).
 
 #+begin_src emacs-lisp :lexical no
   (setq agent-shell-new-shell-config (agent-shell-anthropic-make-claude-code-config))
@@ -99,7 +99,7 @@ You can now search across shell nodes, including collapsed ones. When using [[ht
 
 *** DWIM context
 
-When invoking =M-x agent-shell=, active region, [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Flymake.html][flymake]] errors, [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] and [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html][image]] buffers are now automatically considered and brought over to =agent-shell= buffers to be considered while crafting prompts.
+When invoking =M-x agent-shell=, active region, [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Flymake.html][flymake]] errors, [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][dired]] and [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html][image]] buffers are now automatically considered and brought over to =agent-shell= buffers to be included while crafting prompts.
 
 #+ATTR_HTML: :width 95%
 [[file:images/agent-shell-0-25-updates/compose-region.gif]]
