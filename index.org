@@ -1,6 +1,384 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2025-12-30 Tue] My 2025 review as an indie dev
+:PROPERTIES:
+:CUSTOM_ID: my-2025-review-as-an-indie-dev
+:END:
+In 2024, I took the leap to go indie full-time. By 2025, that shift enabled me to focus exclusively on building tools I care about, from a blogging platform, iOS apps, and macOS utilities, to Emacs packages. It also gave me the space to write regularly, covering topics like Emacs tips, development tutorials for macOS and iOS, a few cooking detours, and even launching a [[https://www.youtube.com/@xenodium][new YouTube channel]].
+
+The rest of this post walks through some of the highlights from 2025. If you’ve found my work useful, consider [[https://github.com/sponsors/xenodium][sponsoring]]. Now let’s jump in.
+
+** Launched a new blogging service
+
+For well over a decade, my blogging setup consisted of a handful of Elisp functions cobbled together over the years. While they did the job just fine, I couldn't shake the feeling that I could do better, and maybe even offer a blogging platform without the yucky bits of the modern web. At the beginning of the year, [[https://xenodium.com/blogging-minus-the-yucky-bits-of-modern-web][I launched LMNO.lol]]. Today, my [[https://xenodium.com][xenodium.com]] blog proudly runs on [[https://lmno.lol][LMNO.lol]].
+
+#+ATTR_HTML: :width 95%
+[[file:images/blogging-minus-the-yucky-bits-of-modern-web/demo.gif]]
+
+[[https://lmno.lol][LMNO.lol]] blogs render pretty much anywhere (Emacs and terminals included, of course).
+
+#+ATTR_HTML: :width 90%
+[[file:images/blogging-minus-the-yucky-bits-of-modern-web/anywhere.gif]]
+
+2026 is a great year to [[https://lmno.lol][start a blog]]! Custom domains totally welcome.
+
+** A journaling/note-taking app that feels like tweeting
+
+Sure, there are plenty of journaling and note-taking apps out there. For one reason or another, none of them stuck for me (including my own apps). That is, until I learned a thing or two from social media.
+
+With that in mind, [[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][Journelly was born]]: /like tweeting, but for your eyes only/. With the right user experience, I felt compelled to write things down all the time. Saving to Markdown and Org markup was the mighty sweet cherry on the cake.
+
+#+HTML: <center>
+#+HTML:  <a href="https://apps.apple.com/app/id6470714669"><img src="https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/icon.png" alt="Journelly app icon" width="180px"/></a>
+#+HTML:  <br>
+#+HTML:  <a href="https://apps.apple.com/app/id6470714669"><img src="https://xenodium.github.io/images/flat-habits-for-ios/download-on-app-store.png" alt="Download on App Store button link" width="180px"/></a>
+#+HTML:  <br>
+#+HTML:  <br>
+#+HTML: </center>
+
+#+ATTR_HTML: :width 98%
+[[file:images/journelly-1-3-released/sideways.png]]
+
+** Let's learn Japanese
+
+As a Japanese language learning noob, what better way to procrastinate than by building yet another Kana-practicing iOS app? Turns out, it kinda did the job.
+
+Here's [[https://xenodium.com/mochi-invaders-now-on-the-app-store][mochi invaders]], a fun way to practice your Kana
+
+#+HTML: <center>
+#+HTML:  <a href="https://apps.apple.com/app/id6747766176"><img src="https://xenodium.github.io/images/mochi-invaders-now-on-the-app-store/icon.png" alt="Mochi Invaders app icon" width="180px"/></a>
+#+HTML:  <br>
+#+HTML:  <a href="https://apps.apple.com/app/id6747766176"><img src="https://xenodium.github.io/images/flat-habits-for-ios/download-on-app-store.png" alt="Download on App Store button link" width="180px"/></a>
+#+HTML:  <br>
+#+HTML:  <br>
+#+HTML: </center>
+
+#+ATTR_HTML: :width 95%
+[[https://xenodium.github.io/images/mochi-invaders-now-on-the-app-store/primary.png]]
+
+#+ATTR_HTML: :width 95%
+[[https://xenodium.github.io/images/mochi-invaders-now-on-the-app-store/secondary.png]]
+
+** A new Emacs-native AI/LLM agent (powered by ACP)
+
+2025 brought us the likes of Claude Code, Gemini CLI, Goose, Codex, and many more AI/LLM CLI agents. While shell-based utilities have their appeal, I wanted a native Emacs integration, so I simply ignored agents for quite some time.
+
+I was initially tempted to write my own Emacs agent, but ultimately decided against it. My hope was that agent providers would somehow converge to offer editor integration, so I could focus on building an Emacs integration while leveraging the solid work from many teams producing agents. With LLM APIs historically fragmented, my hope for agent convergence seemed fairly far-fetched.
+
+To my surprise, ACP ([[https://agentclientprotocol.com][Agent Client Protocol]]) was [[https://zed.dev/blog/claude-code-via-acp][announced by Zed and Google folks]]. This was the cue I had been waiting for, so I set out to build [[https://github.com/xenodium/acp.el][acp.el]], a UX agnostic elisp library, followed by an actual client: [[https://github.com/xenodium/acp.el][agent-shell]].
+
+#+ATTR_HTML: :width 99%
+[[file:images/introducing-agent-shell/agent-shell.png]]
+
+I'm fairly happy with how =agent-shell='s been shaping up. This is my most popular package from 2025, receiving [[https://github.com/xenodium/agent-shell/issues?q=is%3Aissue][lots of user feedback]]. If you're curious about the feature-set, I've written about =agent-shell='s progress from early on:
+
+- [[https://xenodium.com/agent-shell-0-25-updates][agent-shell 0.25 updates]]
+- [[https://xenodium.com/agent-shell-016-improvements-melpa][agent-shell 0.17 improvements + MELPA]]
+- [[https://xenodium.com/agent-shell-0-5-improvements][agent-shell 0.5 improvements]]
+- [[https://xenodium.com/introducing-agent-shell][Introducing Emacs agent-shell (powered by ACP)]]
+- [[https://xenodium.com/introducing-acpel][Introducing acp.el]]
+- [[https://xenodium.com/so-you-want-acp-for-emacs][So you want ACP (Agent Client Protocol) for Emacs?]]
+
+** chatgpt-shell improvements
+
+While [[https://github.com/xenodium/agent-shell][agent-shell]] is the new kid on the block, [[https://github.com/xenodium/chatgpt-shell][chatgpt-shell]] received [[https://xenodium.com/deepseek-open-router-kagi-and-perplexity-join-the-chat][DeepSeek, Open Router, Kagi, and Perplexity support]], in addition to a handful of other improvements and bugfixes.
+
+** A new YouTube channel
+
+While most of what I share usually ends up as a blog post, this year I decided to try something new. I started the [[https://www.youtube.com/@xenodium][Bending Emacs YouTube channel]] and posted 8 episodes:
+
+- [[https://xenodium.com/bending-emacs-episode-1][Bending Emacs - Episode 1: Applying CLI utils]]
+- [[https://xenodium.com/bending-emacs-episode-2][Bending Emacs - Episode 2: From vanilla to your flavor]]
+- [[https://xenodium.com/bending-emacs-episode-3-git-clone-the-lazy-way][Bending Emacs - Episode 3: Git clone (the lazy way)]]
+- [[https://xenodium.com/bending-emacs-episode-4-batch-renaming-files][Bending Emacs - Episode 4: Batch renaming files]]
+- [[https://xenodium.com/bending-emacs-episode-5-ready-player-mode][Bending Emacs - Episode 5: Ready Player Mode]]
+- [[https://xenodium.com/bending-emacs-episode-6-overlays][Bending Emacs - Episode 6: Overlays]]
+- [[https://xenodium.com/bending-emacs-episode-7-eshell-built-in-commands][Bending Emacs - Episode 7: Eshell built-in commands]]
+- [[https://xenodium.com/bending-emacs-episode-8-completing-read][Bending Emacs - Episode 8: completing-read]]
+
+Enjoying the content? Leave me a comment or subscribe to [[https://www.youtube.com/@xenodium][my channel]].
+
+** My decade with org (Emacs Carnival)
+
+While I enthusiastically joined the [[https://www.emacswiki.org/emacs/Carnival][Emacs Carnival]], I didn't quite manage monthly posts. Having said that, when I did participate, I went all in, documenting my [[https://xenodium.com/writing-experience-my-decade-with-org][org experience over the last decade]]. Ok well... I also joined in with my [[https://xenodium.com/emacs-elevator-pitch][elevator pitch ;)]]
+
+** Awesome Emacs on macOS
+
+While migrating workflows to Emacs makes them extra portable across platforms, I've also accumulated a bunch of tweaks [[https://xenodium.com/awesome-emacs-on-macos][enhancing your Emacs experience on macOS]].
+
+#+ATTR_HTML: :width 70%
+[[file:images/awesome-emacs-on-macos/icon.png]]
+
+** A new time zone Emacs package
+
+Emacs ships with a perfectly functional world clock, available via =M-x world-clock=, but I wanted a little more, so I built [[https://github.com/xenodium/time-zones][time-zones]].
+
+#+ATTR_HTML: :width 80%
+[[file:images/emacs-time-zones-mode/time-zones.gif]]
+
+Also covered in:
+
+- [[https://xenodium.com/time-zones-now-on-melpa][time-zones now on MELPA. Do I have your support?]]
+- [[https://xenodium.com/emacs-time-zones-mode][Emacs time-zones]]
+
+** A new WhatsApp Emacs client
+
+For better or worse, I rely on WhatsApp Messenger. Migrating to a different client or protocol just isn't viable for me, so I did the next best thing and built an Emacs client.
+
+While not a trivial task, [[https://github.com/asternic/wuzapi][wuzapi]] and [[https://github.com/tulir/whatsmeow][whatsmeow]] offered a huge leg up. I wanted tighter Emacs integration, so I [[https://github.com/asternic/wuzapi/pulls?q=is%3Apr%20is%3Amerged%20author%3Axenodium%20][upstreamed a handful of patches]] to add JSON-RPC support, plus easier macOS [[https://github.com/asternic/wuzapi?tab=readme-ov-file#homebrew-installation][installation via Homebrew]].
+
+- [[https://xenodium.com/whatsapp-from-you-know-where][WhatsApp from you know where]]
+- [[https://xenodium.com/want-a-whatsapp-emacs-client][Want a WhatsApp Emacs client?]]
+
+** Spiff that shell up
+
+While both macOS and iOS offer APIs for generating URL previews, they also let you fetch rich page metadata. I built [[https://github.com/xenodium/rinku][rinku]], a tiny command-line utility, and showed how to [[https://xenodium.com/rinku-cli-link-previews][wire it all up via eshell]] for a nifty shell experience.
+
+#+ATTR_HTML: :width 95%
+[[file:images/rinku-cli-link-previews/rinku.gif]]
+
+With similar =eshell= magic, you can also get a neat =cat= experience.
+
+#+ATTR_HTML: :width 95%
+[[file:images/rinku-cli-link-previews/cat.png]]
+
+** Emacs can trim your videos too
+
+Emacs is just about the perfect porcelain for command-line utilities. With little ceremony, you can integrate almost any CLI tool. [[https://magit.vc/][Magit]] remains the gold standard for CLI integration.
+
+While trimming videos doesn't typically spring to mind as an Emacs use case, I was pleasantly [[https://xenodium.com/emacs-as-your-video-trimming-tool][surprised by the possibilities]].
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-as-your-video-trimming-tool/trim.gif]]
+
+** Landing Emacs patches upstream
+
+While I've built my [[https://github.com/sponsors/xenodium][fair share of Emacs packages]], I'm still fairly new at submitting Emacs features upstream. This year, I landed my [[https://xenodium.com/emacs-send-to-aka-macos-sharing-merged-upstream][send-to (aka sharing on macOS) patch]]. While the proposal [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=76120][did spark quite the discussion]], I'm glad I stuck with it. Both Eli and Stefan were amazingly helpful.
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-send-to-aka-macos-sharing-merged-upstream/context-menu.png]]
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-send-to-aka-macos-sharing-merged-upstream/send-to.png]]
+
+This year, I also wanted to experiment with dictating into my Emacs text buffers, but unfortunately [[https://lists.gnu.org/archive/html/bug-gnu-emacs/2025-03/msg00585.html][dictation had regressed in Emacs 30]].
+
+Bummer. But hey, it gave me a new opportunity to submit [[https://xenodium.com/macos-dictation-returns-to-emacs-fix-merged][another patch upstream]].
+
+#+ATTR_HTML: :width 95%
+[[file:images/macos-dictation-returns-to-emacs-fix-merged/dictation.webp]]
+
+** Ready Player improvements
+
+[[https://github.com/xenodium/ready-player][Ready Player]], my Emacs media-playing package [[https://github.com/xenodium/ready-player/commits/main/?since=2025-01-01][received further improvements]] like starring media (via Emacs bookmarks), enabling further customizations, and other bug fixes. Also showcased a [[https://xenodium.com/a-tour-of-ready-player-mode][tour of its features]].
+
+#+ATTR_HTML: :width 60%
+[[file:images/a-tour-of-ready-player-mode/open-file.gif]]
+
+** GitHub activity
+
+- Commits: 1,095
+- Issues created: 37
+- PRs reviewed: 106
+- Average commits per day: ~3
+
+** New GitHub projects
+
+- [[https://github.com/xenodium/EverTime][EverTime]] - An ever present clock for macOS
+- [[https://github.com/xenodium/acp.el][acp.el]] - An ACP implementation in Emacs lisp
+- [[https://github.com/xenodium/agent-shell][agent-shell]] - A native Emacs buffer to interact with LLM agents powered by ACP
+- [[https://github.com/xenodium/diverted][diverted]] - Identify temporary Emacs diversions and return to original location
+- [[https://github.com/xenodium/emacs-materialized-theme][emacs-materialized-theme]] - An Emacs theme derived from Material
+- [[https://github.com/xenodium/homebrew-evertime][homebrew-evertime]] - EverTime formula for the Homebrew package manager
+- [[https://github.com/xenodium/homebrew-one][homebrew-one]] - Homebrew recipe for one
+- [[https://github.com/xenodium/homebrew-rinku][homebrew-rinku]] - Homebrew recipe for rinku
+- [[https://github.com/xenodium/one][one]] - Transform images into character art using text from your codebase
+- [[https://github.com/xenodium/rinku][rinku]] - Generate link previews from the command line (macOS)
+- [[https://github.com/xenodium/time-zones][time-zones]] - View time at any city across the world in Emacs
+- [[https://github.com/xenodium/video-trimmer][video-trimmer]] - A video-trimming utility for Emacs
+- [[https://github.com/xenodium/wasabi][wasabi]] - A WhatsApp Emacs client powered by wuzapi and whatsmeow
+
+** Blog posts
+
+- [[https://xenodium.com/journelly-1-3-released][Journelly 1.3 released: Hello Markdown!]]
+- [[https://xenodium.com/agent-shell-0-25-updates][agent-shell 0.25 updates]]
+- [[https://xenodium.com/bending-emacs-episode-8-completing-read][Bending Emacs - Episode 8: completing-read]]
+- [[https://xenodium.com/at-one-with-your-code][At one with your code]]
+- [[https://xenodium.com/bending-emacs-episode-7-eshell-built-in-commands][Bending Emacs - Episode 7: Eshell built-in commands]]
+- [[https://xenodium.com/rinku-cli-link-previews][Rinku: CLI link previews]]
+- [[https://xenodium.com/bending-emacs-episode-6-overlays][Bending Emacs - Episode 6: Overlays]]
+- [[https://xenodium.com/whatsapp-from-you-know-where][WhatsApp from you know where]]
+- [[https://xenodium.com/want-a-whatsapp-emacs-client][Want a WhatsApp Emacs client? Will you fund it?]]
+- [[https://xenodium.com/bending-emacs-episode-5-ready-player-mode][Bending Emacs - Episode 5: Ready Player Mode]]
+- [[https://xenodium.com/agent-shell-016-improvements-melpa][agent-shell 0.17 improvements + MELPA]]
+- [[https://xenodium.com/time-zones-now-on-melpa][time-zones now on MELPA. Do I have your support?]]
+- [[https://xenodium.com/bending-emacs-episode-4-batch-renaming-files][Bending Emacs - Episode 4: Batch renaming files]]
+- [[https://xenodium.com/emacs-time-zones-mode][Emacs time-zones]]
+- [[https://xenodium.com/bending-emacs-episode-3-git-clone-the-lazy-way][Bending Emacs - Episode 3: Git clone (the lazy way)]]
+- [[https://xenodium.com/agent-shell-0-5-improvements][agent-shell 0.5 improvements]]
+- [[https://xenodium.com/bending-emacs-episode-2][Bending Emacs - Episode 2: From vanilla to your flavor]]
+- [[https://xenodium.com/bending-emacs-episode-1][Bending Emacs - Episode 1: Applying CLI utils]]
+- [[https://xenodium.com/introducing-agent-shell][Introducing Emacs agent-shell (powered by ACP)]]
+- [[https://xenodium.com/introducing-acpel][Introducing acp.el]]
+- [[https://xenodium.com/so-you-want-acp-for-emacs][So you want ACP (Agent Client Protocol) for Emacs?]]
+- [[https://xenodium.com/diverted-mode][Diverted mode]]
+- [[https://xenodium.com/who-moved-my-text][Who moved my text?]]
+- [[https://xenodium.com/dired-buffers-with-media-overlays][Dired buffers with media overlays]]
+- [[https://xenodium.com/brisket-recipe][Brisket recipe]]
+- [[https://xenodium.com/a-tiny-upgrade-to-the-llm-model-picker][A tiny upgrade to the LLM model picker]]
+- [[https://xenodium.com/emacs-elevator-pitch][Emacs elevator pitch]]
+- [[https://xenodium.com/emacs-as-your-video-trimming-tool][Emacs as your video-trimming tool]]
+- [[https://xenodium.com/macos-dictation-returns-to-emacs-fix-merged][macOS dictation returns to Emacs (fix merged)]]
+- [[https://xenodium.com/writing-experience-my-decade-with-org][Writing experience: My decade with Org]]
+- [[https://xenodium.com/interactive-ordering-of-dired-items][Interactive ordering of dired items]]
+- [[https://xenodium.com/patching-your-homebrews-emacs-plus-macos][Patching your Homebrew's Emacs Plus (macOS)]]
+- [[https://xenodium.com/emacs-send-to-aka-macos-sharing-merged-upstream][Emacs send-to (aka macOS sharing) merged upstream]]
+- [[https://xenodium.com/mochi-invaders-now-on-the-app-store][Mochi Invaders now on the App Store]]
+- [[https://xenodium.com/markdown-is-coming-to-journelly][Markdown is coming to Journelly]]
+- [[https://xenodium.com/evertime-available-via-homebrew][EverTime available via Homebrew]]
+- [[https://xenodium.com/journelly-1-2-released][Journelly 1.2 released]]
+- [[https://xenodium.com/ranking-officer-now-on-the-app-store][Ranking Officer now on the App Store]]
+- [[https://xenodium.com/awesome-emacs-on-macos][Awesome Emacs on macOS]]
+- [[https://xenodium.com/journelly-1-1-released][Journelly 1.1 released]]
+- [[https://xenodium.com/llm-text-chat-is-everywhere-whos-optimizing-ux][LLM text chat is everywhere. Who's optimizing its UX?]]
+- [[https://xenodium.com/a-richer-journelly-org-capture-template][A richer Journelly org capture template]]
+- [[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][Journelly: like tweeting but for your eyes only (in plain text)]]
+- [[https://xenodium.com/journelly-vs-emacs-why-not-both][Journelly vs Emacs: Why Not Both?]]
+- [[https://xenodium.com/the-mac-observer-showcases-journelly][The Mac Observer showcases Journelly]]
+- [[https://xenodium.com/journelly-open-for-beta][Journelly open for beta]]
+- [[https://xenodium.com/deepseek-open-router-kagi-and-perplexity-join-the-chat][DeepSeek, Open Router, Kagi, and Perplexity join the chat]]
+- [[https://xenodium.com/keychron-k3-pro-f1-f12-as-default-macos-keys][Keychron K3 Pro: F1-F12 as default macOS keys]]
+- [[https://xenodium.com/e-ink-bookmarks][E-ink bookmarks]]
+- [[https://xenodium.com/sourdough-bookmarks][Sourdough bookmarks]]
+- [[https://xenodium.com/cardamom-buns-a-yak-shaving-story-plus-recipe][Cardamom Buns recipe]]
+- [[https://xenodium.com/a-tour-of-ready-player-mode][A tour of Ready Player Mode]]
+- [[https://xenodium.com/a-platform-that-moulds-to-your-needs][A platform that moulds to your needs]]
+- [[https://xenodium.com/blogging-minus-the-yucky-bits-of-modern-web][Blogging minus the yucky bits of the modern web]]
+
+Hope you enjoyed my 2025 contributions. [[https://github.com/sponsors/xenodium][Sponsor]] the work.
+
+* [2025-12-21 Sun] Journelly 1.3 released: Hello Markdown!
+:PROPERTIES:
+:CUSTOM_ID: journelly-1-3-released
+:END:
+#+ATTR_HTML: :width 98%
+[[file:images/journelly-1-3-released/markdown.png]]
+
+#+BEGIN_EXPORT html
+<center>
+<a href="https://apps.apple.com/app/id6470714669"><img src="https://xenodium.github.io/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px"/></a><br>
+<p>Journelly 1.3 available on the App Store</p><br>
+</center>
+#+END_EXPORT
+
+** What is Journelly?
+
+[[https://journelly.com/][Journelly]] feels like tweeting but for your eyes only.
+
+A fresh take on frictionless note-taking or journaling for iOS, powered by plain text (Markdown + Org).
+
+- Save cooking recipes, movies, music, restaurants, coffee shops...
+- Jot down your thoughts.
+- Save your favorite quotes.
+- Use it as a journal, memo book, or notes.
+- Write your shopping lists.
+- Document your travels.
+- Lots more...
+
+Check out [[https://journelly.com][journelly.com]] for details.
+
+#+ATTR_HTML: :width 98%
+[[file:images/journelly-1-3-released/sideways.png]]
+
+** What's new?
+
+Journelly v1.3 brings Markdown support (the most requested feature), along with Simplified Chinese localization and other enhancements.
+
+*** Markdown support
+
+Journelly [[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][first launched]] with [[https://orgmode.org/worg/org-syntax.html][Org]] markup support, popular among Emacs enthusiasts. Markdown support has by far been the most requested feature. Thank you to everyone who reached out, shared your interest, and helped beta test early builds.
+
+Whether you're a fan of [[https://en.wikipedia.org/wiki/Markdown][Markdown]] or [[https://orgmode.org/][Org-mode]], Journelly now lets you store entries in your preferred format. Choose your favorite markup on first launch or via the app menu.
+
+#+BEGIN_EXPORT html
+<center>
+<img src="https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/images/journelly-1-3-released/welcome.png" alt="welcome.png" width="50%"/>
+</center>
+#+END_EXPORT
+
+*** So you like Markdown things?
+
+While on topic, I also run [[https://lmno.lol/][lmno.lol]], a Markdown-powered blogging service. Simple and focused, without the frustrating parts of the modern web. Custom domains welcome. My [[https://xenodium.com/][xenodium.com]] blog runs off [[https://lmno.lol/][lmno.lol]].
+
+*** Simplified Chinese (简体中文)
+
+*Simplified Chinese* (简体中文) is now available, joining Journelly's list of supported languages:
+
+- Simplified Chinese (简体中文)
+- Danish
+- Dutch
+- English
+- Finnish
+- French
+- German
+- Italian
+- Japanese
+- Norwegian
+- Spanish
+- Swedish
+
+*** Home Screen Widget
+
+A *home screen widget* is now available, offering quick access to three key actions right from the home screen.
+
+#+BEGIN_EXPORT html
+<center>
+<img src="https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/images/journelly-1-3-released/widget.png" alt="widget.png" width="50%"/>
+</center>
+#+END_EXPORT
+
+*** Discoverable mode
+
+Prefer clear buttons over swipe gestures? You can now enable *Discoverable Mode* under “Menu > View.” This new mode makes features more visible and easier to navigate, perfect for folks favoring more explicit interaction over gestures or subtle hints.
+
+#+BEGIN_EXPORT html
+<center>
+<img src="https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/images/journelly-1-3-released/discoverable-mode.gif" alt="discoverable-mode.gif" width="50%"/>
+</center>
+#+END_EXPORT
+
+*** Org rendering
+
+For Org users: Journelly now renders both quote and code blocks.
+
+#+BEGIN_EXPORT html
+<center>
+<img src="https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/images/journelly-1-3-released/blocks.png" alt="blocks.png" width="50%"/>
+</center>
+#+END_EXPORT
+
+*** Tidying the list up
+
+The entry list received a little refresh to make better use of screen space. Bottom-aligned controls also make for easier one-handed use.
+
+*** Love Journelly? I need your help
+
+[[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][Since launch]], Journelly has remained a *single-payment* app. *No subscriptions*. I get it, subscriptions are no fun.
+
+That said, *sustainable development is tough without regular downloads*. I'm hoping the new Markdown support helps Journelly reach a wider audience.
+
+Help Journelly grow:
+
+- [[https://apps.apple.com/app/id6470714669?action=write-review][Leave a review on the App Store]].
+- [[https://apps.apple.com/app/id6470714669][Share Journelly]] with your friends.
+
+*** Thank you
+
+Hope you enjoy the v1.3 update.
+
+Thank you for using Journelly and supporting indie development 💛💙❤️
+
 * [2025-12-20 Sat] agent-shell 0.25 updates
 :PROPERTIES:
 :CUSTOM_ID: agent-shell-0-25-updates
@@ -1828,7 +2206,7 @@ Stranger: Sir this is a Wendy's.
 
 ** Emacs Carnival
 
-This post if part of the [[https://www.emacswiki.org/emacs/Carnival][Emacs Carnival]], themed [[https://takeonrules.com/2025/08/01/emacs-carnival-2025-08-your-elevator-pitch-for-emacs/]["Your Elevator Pitch for Emacs", hosted by Jeremy Friesen]].
+This post is part of the [[https://www.emacswiki.org/emacs/Carnival][Emacs Carnival]], themed [[https://takeonrules.com/2025/08/01/emacs-carnival-2025-08-your-elevator-pitch-for-emacs/]["Your Elevator Pitch for Emacs", hosted by Jeremy Friesen]].
 
 ** Make it all sustainable
 
@@ -2619,6 +2997,8 @@ As of today [[https://apps.apple.com/app/id6747766176][Mochi Invaders]] is avail
 :PROPERTIES:
 :CUSTOM_ID: markdown-is-coming-to-journelly
 :END:
+✨UPDATE✨ Journelly v1.3 [[https://xenodium.com/journelly-1-3-released][launched with Markdown support]].
+
 When [[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only][Journelly launched]], I [[https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only#no-lock-in-(powered-by-org-plain-text)][asked users to get in touch]] if they were interested in Markdown support.
 
 Since then, Markdown has by far been the most requested feature.
@@ -3642,7 +4022,7 @@ While my typical Journelly use-case hops between taking notes, journaling, today
 
 While I want a smooth mobile note-taking experience, I also don't want my notes to live in a data island of sorts. I'm a fan of plain text. I've been writing my notes and blog posts at [[https://xenodium.com/][xenodium.com]] using [[https://orgmode.org/worg/org-syntax.html][Org]] plain text for well over a decade now, so my solution naturally had to have some plain text thrown at it.
 
-Journelly stores entries using [[https://orgmode.org/worg/org-syntax.html][Org]] markup for now, but [[https://www.markdownguide.org/basic-syntax/][Markdown]] is coming too. Interested in Markdown support? [[mailto:journelly+markdown@xenodium.com?subject=I'm%20interested%20Markdown%20for%20Journelly&body=Just%20want%20to%20register%20my%20interest%20in%20Markdown%20support%20for%20Journelly][Please reach out]]. The more requests I receive, the sooner I'll get it out the door. Oh, and since we're talking Markdown, I also launched [[https://lmno.lol/][lmno.lol]], a Markdown-powered blogging service (minus the yucky bits of the modern web). Custom domains are welcome too. My [[https://xenodium.com/][xenodium.com]] blog runs off [[https://lmno.lol/][lmno.lol]].
+Journelly stores entries using [[https://orgmode.org/worg/org-syntax.html][Org]] markup for now, but [[https://www.markdownguide.org/basic-syntax/][Markdown]] is coming too (UPDATE: [[https://xenodium.com/journelly-1-3-released][launched]]). Interested in Markdown support? [[mailto:journelly+markdown@xenodium.com?subject=I'm%20interested%20Markdown%20for%20Journelly&body=Just%20want%20to%20register%20my%20interest%20in%20Markdown%20support%20for%20Journelly][Please reach out]]. The more requests I receive, the sooner I'll get it out the door. Oh, and since we're talking Markdown, I also launched [[https://lmno.lol/][lmno.lol]], a Markdown-powered blogging service (minus the yucky bits of the modern web). Custom domains are welcome too. My [[https://xenodium.com/][xenodium.com]] blog runs off [[https://lmno.lol/][lmno.lol]].
 
 Is it really powered by Org markup? Go ahead and fire up your beloved [[https://www.gnu.org/software/emacs/][Emacs]], [[https://www.vim.org/][Vim]], [[https://neovim.io/][Neovim]], [[https://code.visualstudio.com/][VS Code]], [[https://www.sublimetext.com/][Sublime Text]], [[https://zed.dev/][Zed]]... and take a peek. It's just text.
 
@@ -9896,9 +10276,9 @@ Note: both of these variables are prefixed =ns-= (macOS-only settings).
 
 I've been on [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] font for quite some time now. In the past, I've also been a fan of [[https://madmalik.github.io/mononoki/][Mononoki]] and [[https://en.wikipedia.org/wiki/Menlo_(typeface)][Menlo]] (on macOS) or [[https://github.com/andreberg/Meslo-Font][Meslo]] (similar elsewhere).
 
-** Theme (Material)
+** Theme (Materialized)
 
-I'm using the great [[https://github.com/cpaulik/emacs-material-theme][Material Theme for Emacs]], with a [[https://github.com/xenodium/dotsies/blob/790465b1824481b81bf5c6e08949128c13d76f95/emacs/features/fe-ui.el#L42][bunch of tweaks of my own]].
+I'm using [[https://github.com/xenodium/emacs-materialized-theme][Materialized]] which I derived from the great [[https://github.com/cpaulik/emacs-material-theme][Material Theme for Emacs]].
 
 ** Modeline tabs/ribbons (Moody)
 
