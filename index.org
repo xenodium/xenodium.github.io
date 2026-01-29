@@ -1,6 +1,1943 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2026-01-29 Thu] Film/TV bookmarks (chaos resolved)
+:PROPERTIES:
+:CUSTOM_ID: film-tv-bookmarks-chaos-resolved
+:END:
+I've been somewhat chaotically "bookmarking" things to watch for some time. The info typically goes straight to an Emacs org file primarily via [[https://journelly.com/][Journelly]].
+
+I'm fairly forgiving in my input form. I often link to [[https://www.reddit.com][Reddit]] discussions, [[https://www.imdb.com][IMDB]]/[[https://letterboxd.com][Letterboxd]] links, or at times simply write movie or director names. The only real requirement is to sprinkle some hashtags (#film or #series or #watch) for retrieval.
+
+While this flexibility is important (makes it more likely for me to actually write), it's not super practical to browse through this mixed structure when looking for something to watch. Yesterday, I finally did something about that.
+
+Here's what my =save-to-Journelly= flow may look like for a Reddit link:
+
+#+ATTR_HTML: :width 95%
+[[file:images/film-tv-bookmarks-chaos-resolved/sharing.png]]
+
+All entries are saved to Journelly.org, a plain text org file ([[https://xenodium.com/journelly-1-3-released][Markdown is supported too]]), so I first extracted all relevant entries (containing #film or #series or #watch). A matching entry looks a little something like this:
+
+#+begin_src org
+  ,* [2026-01-29 Thu 09:52] @ Home
+  :PROPERTIES:
+  :LATITUDE: 51.5007
+  :LONGITUDE: -0.1246
+  :WEATHER_TEMPERATURE: 4.2°C
+  :WEATHER_CONDITION: Cloudy
+  :WEATHER_SYMBOL: cloud
+  :END:
+  #film #hongkong #watch
+
+  https://www.reddit.com/r/movies/comments/1j85b52/just_rewatched_kung_fu_hustle_still_felt_great
+#+end_src
+
+Having extracted non-personal items from =Journelly.org=, I created a git repo with just one file: =watchlist.org= including entries like the one above.
+
+With personal/private details out of the way, I decided to let the LLM robots loose. That is, hand =watchlist.org= over to a [[https://claude.com/product/claude-code][Claude Code agent]], via Emacs [[https://github.com/xenodium/agent-shell][agent-sell]] to organize my chaos.
+
+First I asked to normalize data by extracting all film/tv info from each entry, visiting Reddit/IMDB/Letterboxd links if needed, which yielded =normalized.org=:
+
+#+begin_src text
+  Kung Fu Hustle
+  https://www.imdb.com/title/tt0373074
+#+end_src
+
+Next I asked to generate metadata for me (using the fields I wanted from =IMDB=), stored in org drawers, saved to =db.org=:
+
+#+begin_src org
+  ,* Kung Fu Hustle
+  :PROPERTIES:
+  :TYPE: film
+  :YEAR: 2004
+  :IMDB: https://www.imdb.com/title/tt0373074/
+  :IMDB_RATING: 7.7
+  :COUNTRY: Hong Kong
+  :DIRECTOR: Stephen Chow
+  :GENRE: action, comedy, fantasy
+  :RUNTIME: 99
+  :ADDED: [2026-01-28]
+  :THUMBNAIL: file:thumbnails/tt0373074.png
+  :IMDB_THUMBNAIL: https://m.media-amazon.com/images/M/MV5BNGU2OWVlM2ItZGZlOC00Yzk2LWE1NzEtMDYwMzE4YTE5MzQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg
+  :END:
+#+end_src
+
+Finally, I asked to generate HTML from =db.org= so I can render and easily browse.
+
+#+begin_src html
+    <div>
+      <a href="https://www.imdb.com/title/tt0373074/"><img src="https://m.media-amazon.com/images/M/MV5BNGU2OWVlM2ItZGZlOC00Yzk2LWE1NzEtMDYwMzE4YTE5MzQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kung Fu Hustle" width="150" height="225"></a>
+      <p><strong>Kung Fu Hustle (2004)</strong></p>
+      <p>action · comedy · fantasy</p>
+      <p>Hong Kong · Stephen Chow</p>
+    </div>
+#+end_src
+
+For each transformation, =Claude Code= created a python script. I've yet to decide what to do with all the generated source. Do I clean it up? Rewrite it? For now, I'm happy with the experiment result. I managed to organize some of my chaos! In some ways, this may not be too different from me writing a hacky/ugly script, when it's acceptable to do so.
+
+At the center of all this is my beloved org syntax. Thanks to plain text formats, we can easily peek at them, query them, poke at them, and bend til our heart's content. It's just so versatile and now we can throw them at LLMs too.
+
+Oh, and if you're curious about that watch list, here you go:
+
+#+BEGIN_EXPORT html
+<div class="grid">
+  <div>
+    <a href="https://www.imdb.com/title/tt3148266/"><img src="https://m.media-amazon.com/images/M/MV5BMTQ2NDUxMjY1M15BMl5BanBnXkFtZTgwMzM0MTE5NTE@._V1_FMjpg_UY1024_.jpg" alt="12 Monkeys" width="150" height="225"></a>
+    <p><strong>12 Monkeys (2015)</strong></p>
+    <p>tv · adventure · drama · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3113498/"><img src="https://m.media-amazon.com/images/M/MV5BMWJhZmUwYjEtNzgxZC00ZWUzLWJmN2QtYmE4YjI5MzYxZmMyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="2149: The Aftermath" width="150" height="225"></a>
+    <p><strong>2149: The Aftermath (2021)</strong></p>
+    <p>sci-fi</p>
+    <p>Canada · Benjamin Duffield</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13016388/"><img src="https://m.media-amazon.com/images/M/MV5BMDdkYWZiZWYtMzA0Yi00NzNlLThkODktY2Q3N2NjN2ExZmMwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="3 Body Problem" width="150" height="225"></a>
+    <p><strong>3 Body Problem (2024)</strong></p>
+    <p>tv · adventure · drama · fantasy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0225009/"><img src="https://m.media-amazon.com/images/M/MV5BYTJhYjQ5NDMtMDBlNy00NTBkLWEzZTQtMjQ4MTNiZWFkY2ExXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="964 Pinocchio" width="150" height="225"></a>
+    <p><strong>964 Pinocchio (1991)</strong></p>
+    <p>horror · sci-fi</p>
+    <p>Japan · Shozin Fukui</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0405296/"><img src="https://m.media-amazon.com/images/M/MV5BMDliMjJiYTYtYWU0YS00OTUzLWI4MjMtYmM1YzgxNDcwOTZjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="A Scanner Darkly" width="150" height="225"></a>
+    <p><strong>A Scanner Darkly (2006)</strong></p>
+    <p>animation · comedy · crime</p>
+    <p>United States · Richard Linklater</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1832382/"><img src="https://m.media-amazon.com/images/M/MV5BMDM0ZWRmMzctM2M5ZS00ZjU0LWIxN2MtNWNlNGY1ZDhjMDVhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="A Separation" width="150" height="225"></a>
+    <p><strong>A Separation (2011)</strong></p>
+    <p>drama</p>
+    <p>Iran · Asghar Farhadi</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt17921714/"><img src="https://m.media-amazon.com/images/M/MV5BNDNmMDI1NjctZmNkMy00NjdkLTgyYTEtNzFlZjRlYmFiYjhjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="A Small Light" width="150" height="225"></a>
+    <p><strong>A Small Light (2023)</strong></p>
+    <p>tv · biography · drama · history</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0093502/"><img src="https://m.media-amazon.com/images/M/MV5BNTRhMmExNjctNDkzZS00ZmY5LWJiMzQtODdhMGIyNjllMjc3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="A Taxing Woman" width="150" height="225"></a>
+    <p><strong>A Taxing Woman (1987)</strong></p>
+    <p>comedy · crime</p>
+    <p>Japan · Jûzô Itami</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6794990/"><img src="https://m.media-amazon.com/images/M/MV5BZTIyMDYwNTctOGZkOC00NjkzLWI2NDMtZTc2YWY5OWUxMzA2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Absentia" width="150" height="225"></a>
+    <p><strong>Absentia (2017)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>Israel</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12151818/"><img src="https://m.media-amazon.com/images/M/MV5BOTBhZjBjMzctZjNlZC00YTAxLWI1MTItMDRmN2JmZWQ0YmY0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Across the Furious Sea" width="150" height="225"></a>
+    <p><strong>Across the Furious Sea (2023)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>China · Baoping Cao</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0094625/"><img src="https://m.media-amazon.com/images/M/MV5BNGY0ODg1MWMtYjQ4My00MWExLTgxZGMtODNhOTMxYjczODhkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Akira" width="150" height="225"></a>
+    <p><strong>Akira (1988)</strong></p>
+    <p>animation · action · drama</p>
+    <p>Japan · Katsuhiro Ôtomo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0437086/"><img src="https://m.media-amazon.com/images/M/MV5BYmZhZGQzM2MtMWEyZC00YTU1LTk4YTQtMTg3ZjEzM2U1NTkxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Alita: Battle Angel" width="150" height="225"></a>
+    <p><strong>Alita: Battle Angel (2019)</strong></p>
+    <p>action · adventure · sci-fi</p>
+    <p>United States · Robert Rodriguez</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0185125/"><img src="https://m.media-amazon.com/images/M/MV5BYzgyNWMzNDItZmJhZi00NzZmLTkyNmMtMjBiNjUyMmNkYjg4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="All About My Mother" width="150" height="225"></a>
+    <p><strong>All About My Mother (1999)</strong></p>
+    <p>comedy · drama · romance</p>
+    <p>Spain · Pedro Almodóvar</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2261227/"><img src="https://m.media-amazon.com/images/M/MV5BNTY4MWY1ZDktZjQxZS00ZDc5LWE3OTctZDU5MzQ2ZWU5ZTJkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Altered Carbon" width="150" height="225"></a>
+    <p><strong>Altered Carbon (2018)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5069086/"><img src="https://m.media-amazon.com/images/M/MV5BMjU1MzQ5ZjQtOTEwOC00MjJjLTk3OTYtYTgyM2IzZmQ4MTE2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Altered Hours" width="150" height="225"></a>
+    <p><strong>Altered Hours (2016)</strong></p>
+    <p>sci-fi · thriller</p>
+    <p>United States · Bruce Wemple</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0211915/"><img src="https://m.media-amazon.com/images/M/MV5BOTNmYzY0MWQtZGZmNy00Y2Y4LWFmMDQtMTZjYTdiYzEwZGQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Amelie" width="150" height="225"></a>
+    <p><strong>Amelie (2001)</strong></p>
+    <p>comedy · romance</p>
+    <p>France · Jean-Pierre Jeunet</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0245712/"><img src="https://m.media-amazon.com/images/M/MV5BMmUzNDI1MDYtNmIxNC00NjczLTk0ZDEtYWFkZDcxMWVhYTEwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Amores Perros" width="150" height="225"></a>
+    <p><strong>Amores Perros (2000)</strong></p>
+    <p>drama · thriller</p>
+    <p>Mexico · Alejandro G. Iñárritu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8020896/"><img src="https://m.media-amazon.com/images/M/MV5BZDU1NGM3ZjAtYTM1My00ZmU5LTljNGQtYTljNmUyMGEwZjgxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="An Elephant Sitting Still" width="150" height="225"></a>
+    <p><strong>An Elephant Sitting Still (2018)</strong></p>
+    <p>crime · drama</p>
+    <p>China · Bo Hu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt17009710/"><img src="https://m.media-amazon.com/images/M/MV5BYTk3MjFkZmQtMThiYi00N2JhLTk2YzItZTE5ZGUxZTIyZDVkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Anatomy of a Fall" width="150" height="225"></a>
+    <p><strong>Anatomy of a Fall (2023)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>France · Justine Triet</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11126994/"><img src="https://m.media-amazon.com/images/M/MV5BYjA2NzhlMDItNWRmZC00MzRjLWE3ZjAtZjBlZDAwOWY2ODdjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Arcane" width="150" height="225"></a>
+    <p><strong>Arcane (2021)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13365348/"><img src="https://m.media-amazon.com/images/M/MV5BYjMzOTk2NzktNzYxNy00YTY4LTg1NTgtYWY5NmIzNzdiMzllXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Archive 81" width="150" height="225"></a>
+    <p><strong>Archive 81 (2022)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0096461/"><img src="https://m.media-amazon.com/images/M/MV5BN2Q1YmQyNDgtY2M5Mi00NzQ0LThmNzAtNWIzZjllZjVmOTI2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="As Tears Go By" width="150" height="225"></a>
+    <p><strong>As Tears Go By (1988)</strong></p>
+    <p>crime · drama · romance</p>
+    <p>Hong Kong · Wong Kar-Wai</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13528562/"><img src="https://m.media-amazon.com/images/M/MV5BMzQ4ZWY0Y2EtZGY5NC00Mzc2LTllZjMtNmZhOWQ0MjVmMjAzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Asakusa Kid" width="150" height="225"></a>
+    <p><strong>Asakusa Kid (2021)</strong></p>
+    <p>biography · drama</p>
+    <p>Japan · Gekidan Hitori</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7298400/"><img src="https://m.media-amazon.com/images/M/MV5BMGI0NTZlYmEtYWVkOC00ZTA5LThiMTQtZWU4ZWRmNTNkODgxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ash Is Purest White" width="150" height="225"></a>
+    <p><strong>Ash Is Purest White (2018)</strong></p>
+    <p>crime · drama · romance</p>
+    <p>China · Jia Zhang-ke</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt15713446/"><img src="https://m.media-amazon.com/images/M/MV5BN2M1MGExNDItZjI5Ni00ZWU1LWFlMGUtYTA3NWQ5OWZiYTEwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Asura" width="150" height="225"></a>
+    <p><strong>Asura (2023)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>Indonesia</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0185906/"><img src="https://m.media-amazon.com/images/M/MV5BMTQ3NTdmOTEtZTRmMi00NTg5LWI5NmUtYTNiOTc0ZmNkODU0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Band of Brothers" width="150" height="225"></a>
+    <p><strong>Band of Brothers (2001)</strong></p>
+    <p>tv · action · drama · history</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2017109/"><img src="https://m.media-amazon.com/images/M/MV5BMTkzNTA1MDI5M15BMl5BanBnXkFtZTcwNTY3NjAwOQ@@._V1_FMjpg_UY1024_.jpg" alt="Banshee" width="150" height="225"></a>
+    <p><strong>Banshee (2013)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5348176/"><img src="https://m.media-amazon.com/images/M/MV5BYzdlYWZkNjQtMWYwNi00YjNkLTljYjgtZjRhMmQ2YTQ1MWQ0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Barry" width="150" height="225"></a>
+    <p><strong>Barry (2018)</strong></p>
+    <p>tv · action · comedy · crime</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0407362/"><img src="https://m.media-amazon.com/images/M/MV5BNmMzYzdmNWMtM2ZmMi00Y2E2LWI5ZTMtYWJlNmJiMDgyYWRiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Battlestar Galactica" width="150" height="225"></a>
+    <p><strong>Battlestar Galactica (2004)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1349938/"><img src="https://m.media-amazon.com/images/M/MV5BMTc0NjEzMTAyM15BMl5BanBnXkFtZTcwMTQ3NTM0Mw@@._V1_FMjpg_UY1024_.jpg" alt="Being Human (UK)" width="150" height="225"></a>
+    <p><strong>Being Human (UK) (2008)</strong></p>
+    <p>tv · comedy · drama · fantasy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0997147/"><img src="https://m.media-amazon.com/images/M/MV5BMTgyMjQ5MTc3OV5BMl5BanBnXkFtZTcwNjUwMzY0Mg@@._V1_FMjpg_UY1024_.jpg" alt="Big Man Japan" width="150" height="225"></a>
+    <p><strong>Big Man Japan (2007)</strong></p>
+    <p>action · comedy · sci-fi</p>
+    <p>Japan · Hitoshi Matsumoto</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3469910/"><img src="https://m.media-amazon.com/images/M/MV5BZWUyYTMwZGQtNmJlMy00NThhLTlmYWUtNjJmMWQ2Y2M2OTMwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Black Coal, Thin Ice" width="150" height="225"></a>
+    <p><strong>Black Coal, Thin Ice (2014)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>China · Yi'nan Diao</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2375692/"><img src="https://m.media-amazon.com/images/M/MV5BMjA5NjAyOTk5MV5BMl5BanBnXkFtZTgwNTI4OTMyMDI@._V1_FMjpg_UY1024_.jpg" alt="Black Sails" width="150" height="225"></a>
+    <p><strong>Black Sails (2014)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>South Africa</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0084988/"><img src="https://m.media-amazon.com/images/M/MV5BOWY2OGZjZDYtYjQwNC00NjEzLTg2YzEtMGJiOTdlYjAyZmMwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Blackadder" width="150" height="225"></a>
+    <p><strong>Blackadder (1983)</strong></p>
+    <p>tv · comedy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt21867434/"><img src="https://m.media-amazon.com/images/M/MV5BYzEzZDM5NWEtODgzNC00MTE5LWFhZTYtMGE2YTkxMzFiZWIyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="BlackBerry" width="150" height="225"></a>
+    <p><strong>BlackBerry (2023)</strong></p>
+    <p>biography · comedy · drama</p>
+    <p>Canada · Matt Johnson</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0083658/"><img src="https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Blade Runner" width="150" height="225"></a>
+    <p><strong>Blade Runner (1982)</strong></p>
+    <p>action · drama · sci-fi</p>
+    <p>United States · Ridley Scott</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1856101/"><img src="https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_FMjpg_UY1024_.jpg" alt="Blade Runner 2049" width="150" height="225"></a>
+    <p><strong>Blade Runner 2049 (2017)</strong></p>
+    <p>action · drama · mystery</p>
+    <p>United States · Denis Villeneuve</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9359796/"><img src="https://m.media-amazon.com/images/M/MV5BZDYzYWI2NzYtOWNkMS00YzA4LThlNWEtNmMxNDIwYmVmYTgzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Blade Runner: Black Lotus" width="150" height="225"></a>
+    <p><strong>Blade Runner: Black Lotus (2021)</strong></p>
+    <p>tv · animation · action · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9772374/"><img src="https://m.media-amazon.com/images/M/MV5BZThkZDk0N2YtMjJjMC00MTU2LThkZDktZWQ3MTgxNGI2YTQ4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Bloody Hell" width="150" height="225"></a>
+    <p><strong>Bloody Hell (2020)</strong></p>
+    <p>comedy · horror · mystery</p>
+    <p>Australia · Alister Grierson</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0979432/"><img src="https://m.media-amazon.com/images/M/MV5BN2MzODhjYTEtZTA2ZS00ZTRjLTlkZDYtNTBkNTdhNWJlMTYwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Boardwalk Empire" width="150" height="225"></a>
+    <p><strong>Boardwalk Empire (2010)</strong></p>
+    <p>tv · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3398228/"><img src="https://m.media-amazon.com/images/M/MV5BZmMwMDlkNTEtMmQzZS00ODQ0LWJlZmItOTgwYWMwZGM4MzFiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Bojack Horseman" width="150" height="225"></a>
+    <p><strong>Bojack Horseman (2014)</strong></p>
+    <p>tv · animation · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11343600/"><img src="https://m.media-amazon.com/images/M/MV5BNDZjNTJmMmEtZjYwOS00MTYzLTgwYTYtYWJiMDkxNDMzMDAyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Brand New Cherry Flavor" width="150" height="225"></a>
+    <p><strong>Brand New Cherry Flavor (2021)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0088846/"><img src="https://m.media-amazon.com/images/M/MV5BNjI1MTAzNmYtYzQ3Zi00ZWE0LWJiZmQtY2UwZWU3ZTE4OGQ3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Brazil" width="150" height="225"></a>
+    <p><strong>Brazil (1985)</strong></p>
+    <p>drama · sci-fi · thriller</p>
+    <p>United Kingdom · Terry Gilliam</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2249364/"><img src="https://m.media-amazon.com/images/M/MV5BNDU4ODc2MWMtNDBhMC00N2M3LWI5YzAtMGFjN2U1ZjBlOGU4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Broadchurch" width="150" height="225"></a>
+    <p><strong>Broadchurch (2013)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0810788/"><img src="https://m.media-amazon.com/images/M/MV5BMTczMzg4NjU1Ml5BMl5BanBnXkFtZTcwODc4NzY5Nw@@._V1_FMjpg_UY1024_.jpg" alt="Burn Notice" width="150" height="225"></a>
+    <p><strong>Burn Notice (2007)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7282468/"><img src="https://m.media-amazon.com/images/M/MV5BZWU3YzgzMTgtOTIwYi00MmNkLWExYWEtZTEyOTAzYzEwM2Q2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Burning" width="150" height="225"></a>
+    <p><strong>Burning (2018)</strong></p>
+    <p>drama · mystery · thriller</p>
+    <p>South Korea · Lee Chang-dong</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0319969/"><img src="https://m.media-amazon.com/images/M/MV5BMjNkYTAwMjQtNjZlNC00MGZiLWE1YTYtNmNjMjE5ODAzY2U2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Carnivale" width="150" height="225"></a>
+    <p><strong>Carnivale (2003)</strong></p>
+    <p>tv · drama · fantasy · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6517102/"><img src="https://m.media-amazon.com/images/M/MV5BMjAzMjU2MjYzMl5BMl5BanBnXkFtZTgwNTQ4Nzk1NjM@._V1_FMjpg_UY1024_.jpg" alt="Castlevania" width="150" height="225"></a>
+    <p><strong>Castlevania (2017)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0109424/"><img src="https://m.media-amazon.com/images/M/MV5BNDQ4ZmYxODctZDVlZC00OTcxLWJjOGItZjRlMzk4MDA1Yjg1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Chungking Express" width="150" height="225"></a>
+    <p><strong>Chungking Express (1994)</strong></p>
+    <p>comedy · crime · drama</p>
+    <p>Hong Kong · Wong Kar-Wai</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt24478470/"><img src="https://m.media-amazon.com/images/M/MV5BNzI5ZWZjN2UtNjRiNS00MzViLTgzNjMtZWEyZTlmNWJhYjJkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="City Hunter" width="150" height="225"></a>
+    <p><strong>City Hunter (2024)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>Japan · Yûichi Satô</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0317248/"><img src="https://m.media-amazon.com/images/M/MV5BYjY4NGI5OTUtY2ZlZS00Zjk4LTk5N2MtN2JmYWVjNGNmMGRlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="City of God" width="150" height="225"></a>
+    <p><strong>City of God (2002)</strong></p>
+    <p>crime · drama</p>
+    <p>Brazil · Kátia Lund</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt32828123/"><img src="https://m.media-amazon.com/images/M/MV5BYTE5ZjM5MWQtMjU0MS00YzEzLTg5YTQtYmVjZWQ1Mzc0NTc3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Cloud" width="150" height="225"></a>
+    <p><strong>Cloud (2024)</strong></p>
+    <p>action · crime · drama</p>
+    <p>Japan · Kiyoshi Kurosawa</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1632547/"><img src="https://m.media-amazon.com/images/M/MV5BOTA5YzJiODUtZWU3OS00YWE5LTk3YTQtNDVlMWIxOTNiOTM4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Cold Fish" width="150" height="225"></a>
+    <p><strong>Cold Fish (2010)</strong></p>
+    <p>crime · drama · horror</p>
+    <p>Japan · Sion Sono</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4209256/"><img src="https://m.media-amazon.com/images/M/MV5BMTg1MzAzODQ5OF5BMl5BanBnXkFtZTgwMDA1MDI0NTM@._V1_FMjpg_UY1024_.jpg" alt="Colony" width="150" height="225"></a>
+    <p><strong>Colony (2016)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4643084/"><img src="https://m.media-amazon.com/images/M/MV5BODg5NDU5NjM1NV5BMl5BanBnXkFtZTgwOTE0NjY1NjM@._V1_FMjpg_UY1024_.jpg" alt="Counterpart" width="150" height="225"></a>
+    <p><strong>Counterpart (2017)</strong></p>
+    <p>tv · drama · sci-fi · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0190332/"><img src="https://m.media-amazon.com/images/M/MV5BMzRmMTU2OWEtZjI0Ni00MGRhLThjOTItZTJiNmM4MDk0ZWU2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Crouching Tiger Hidden Dragon" width="150" height="225"></a>
+    <p><strong>Crouching Tiger Hidden Dragon (2000)</strong></p>
+    <p>action · adventure · drama</p>
+    <p>Taiwan · Ang Lee</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0123948/"><img src="https://m.media-amazon.com/images/M/MV5BNDcyMTRiMWQtMjA4MS00OTk3LTkxYmMtMjI4ODAyNGVlZTU0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Cure" width="150" height="225"></a>
+    <p><strong>Cure (1997)</strong></p>
+    <p>crime · horror · mystery</p>
+    <p>Japan · Kiyoshi Kurosawa</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12590266/"><img src="https://m.media-amazon.com/images/M/MV5BM2JkMzM2ZmYtNWU4MS00MjZhLWFhZWUtYWFjYTJkN2RhZDliXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Cyberpunk: Edgerunners" width="150" height="225"></a>
+    <p><strong>Cyberpunk: Edgerunners (2022)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>Japan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2094262/"><img src="https://m.media-amazon.com/images/M/MV5BYzc5ODJmOTItYzgwOC00YTM4LTk5YmQtYjhkMWU3ZDdlMzg5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="DaVinci's Demons" width="150" height="225"></a>
+    <p><strong>DaVinci's Demons (2013)</strong></p>
+    <p>tv · adventure · biography · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0101258/"><img src="https://m.media-amazon.com/images/M/MV5BMTE0OGQxNmYtMTU0Mi00ZTc1LTk5OGUtZWY2NDIzNTQ0YjgyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Days of Being Wild" width="150" height="225"></a>
+    <p><strong>Days of Being Wild (1990)</strong></p>
+    <p>crime · drama · romance</p>
+    <p>Hong Kong · Wong Kar-Wai</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6616260/"><img src="https://m.media-amazon.com/images/M/MV5BYzlkMjFmYzctNzc2MS00N2Q5LTllYzItODBmOTBkMTk3YzQyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Deadwind" width="150" height="225"></a>
+    <p><strong>Deadwind (2018)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>Finland</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0348914/"><img src="https://m.media-amazon.com/images/M/MV5BODFiMjBkNDMtN2I1NS00YWM3LTliNWEtMTg0NjVlN2I5YTNlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Deadwood" width="150" height="225"></a>
+    <p><strong>Deadwood (2004)</strong></p>
+    <p>tv · crime · drama · history</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt20863760/"><img src="https://m.media-amazon.com/images/M/MV5BYjkzNWZjYzktYjAwNS00YTVkLWIzNjUtNGM5MWRlMTUxMWY2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Dear Child" width="150" height="225"></a>
+    <p><strong>Dear Child (2023)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>Germany</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12477480/"><img src="https://m.media-amazon.com/images/M/MV5BN2NhZjcxYjItNDhlOC00Y2U2LWE4NDktMDJhNTQ1NzNjMmNmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Decision to Leave" width="150" height="225"></a>
+    <p><strong>Decision to Leave (2022)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt35111035/"><img src="https://m.media-amazon.com/images/M/MV5BYzg3ZGY5MmUtNGViOC00ZjRkLTg4ZmYtMDI1NWZiZDQ0Zjc2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Demon City" width="150" height="225"></a>
+    <p><strong>Demon City (2024)</strong></p>
+    <p>action · adventure · crime</p>
+    <p>Japan · Seiji Tanaka</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7120662/"><img src="https://m.media-amazon.com/images/M/MV5BZjVhN2FhMzctZDlkMS00NTY3LWEyZmEtOTE5NDlkN2JkNDE3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Derry Girls" width="150" height="225"></a>
+    <p><strong>Derry Girls (2018)</strong></p>
+    <p>tv · comedy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7137380/"><img src="https://m.media-amazon.com/images/M/MV5BODI4MTI2OTAyMV5BMl5BanBnXkFtZTgwNjY3NDY1NjM@._V1_FMjpg_UY1024_.jpg" alt="Destroyer" width="150" height="225"></a>
+    <p><strong>Destroyer (2018)</strong></p>
+    <p>action · crime · drama</p>
+    <p>United States · Karyn Kusama</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8134186/"><img src="https://m.media-amazon.com/images/M/MV5BMDBmMGFiNGYtNDRjMS00NzJlLWE5YjctOTkzNDM0ODM5YTRlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Devs" width="150" height="225"></a>
+    <p><strong>Devs (2020)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4047038/"><img src="https://m.media-amazon.com/images/M/MV5BMDBlZTEzMGMtNjkwNS00MzlhLTkxN2MtYTM5OGQwZWNmYWRhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Dirk Gently's Holistic Detective Agency" width="150" height="225"></a>
+    <p><strong>Dirk Gently's Holistic Detective Agency (2016)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1136608/"><img src="https://m.media-amazon.com/images/M/MV5BMTM4OTI1OTM5NF5BMl5BanBnXkFtZTcwMzk5MTU1Mg@@._V1_FMjpg_UY1024_.jpg" alt="District 9" width="150" height="225"></a>
+    <p><strong>District 9 (2009)</strong></p>
+    <p>action · sci-fi · thriller</p>
+    <p>South Africa · Neill Blomkamp</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8416494/"><img src="https://m.media-amazon.com/images/M/MV5BYjY1MDExMzctMzQ4Mi00NmU1LWIyMWItZTkzZDk2YmY2NGI2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Doom Patrol" width="150" height="225"></a>
+    <p><strong>Doom Patrol (2019)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1606375/"><img src="https://m.media-amazon.com/images/M/MV5BYzgzNDVjNjgtNzQxZS00N2E2LTkxNjgtNjIzMGZiM2UwYWQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Downton Abbey" width="150" height="225"></a>
+    <p><strong>Downton Abbey (2010)</strong></p>
+    <p>tv · drama · romance</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1343727/"><img src="https://m.media-amazon.com/images/M/MV5BODkyNDQzMzUzOF5BMl5BanBnXkFtZTcwODYyMDEyOA@@._V1_FMjpg_UY1024_.jpg" alt="Dredd" width="150" height="225"></a>
+    <p><strong>Dredd (2012)</strong></p>
+    <p>action · crime · sci-fi</p>
+    <p>United Kingdom · Pete Travis</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6867482/"><img src="https://m.media-amazon.com/images/M/MV5BNWI1NmY1NzMtMjE1MS00Njg3LWFiYmEtY2E3ZWNhNDAyZjVkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Drops of God" width="150" height="225"></a>
+    <p><strong>Drops of God (2023)</strong></p>
+    <p>tv · drama</p>
+    <p>France</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1160419/"><img src="https://m.media-amazon.com/images/M/MV5BNWIyNmU5MGYtZDZmNi00ZjAwLWJlYjgtZTc0ZGIxMDE4ZGYwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Dune" width="150" height="225"></a>
+    <p><strong>Dune (2021)</strong></p>
+    <p>action · adventure · drama</p>
+    <p>United States · Denis Villeneuve</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0105382/"><img src="https://m.media-amazon.com/images/M/MV5BZTUzYmUyODktMmFkYS00YjY0LWJlOTctM2Q2NjE4NGQ2OTQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Dust of Angels" width="150" height="225"></a>
+    <p><strong>Dust of Angels (1992)</strong></p>
+    <p>action · crime · drama</p>
+    <p>Taiwan · Hsiao-Ming Hsu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1631867/"><img src="https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_FMjpg_UY1024_.jpg" alt="Edge of Tomorrow" width="150" height="225"></a>
+    <p><strong>Edge of Tomorrow (2014)</strong></p>
+    <p>action · adventure · sci-fi</p>
+    <p>United States · Doug Liman</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3823098/"><img src="https://m.media-amazon.com/images/M/MV5BYjM5ZDg4ZjItNWJhYy00MTIyLWI1NWQtNTFkY2QzYTU3ZTg5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Edie" width="150" height="225"></a>
+    <p><strong>Edie (2017)</strong></p>
+    <p>adventure · drama</p>
+    <p>United Kingdom · Simon Hunter</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1535108/"><img src="https://m.media-amazon.com/images/M/MV5BNDc2NjU0MTcwNV5BMl5BanBnXkFtZTcwMjg4MDg2OQ@@._V1_FMjpg_UY1024_.jpg" alt="Elysium" width="150" height="225"></a>
+    <p><strong>Elysium (2013)</strong></p>
+    <p>action · drama · sci-fi</p>
+    <p>United States · Neill Blomkamp</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2953050/"><img src="https://m.media-amazon.com/images/M/MV5BNGEyNzk2M2MtNjBhZS00MzYwLWI0Y2YtYjc5ZWE2MjM0YWE5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Encanto" width="150" height="225"></a>
+    <p><strong>Encanto (2021)</strong></p>
+    <p>animation · comedy · family</p>
+    <p>United States · Jared Bush</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2701582/"><img src="https://m.media-amazon.com/images/M/MV5BOTdhYzQyMzItNTk0YS00MWNmLWFlMDctZGU0NGEzYTVlZTgzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Endeavour" width="150" height="225"></a>
+    <p><strong>Endeavour (2012)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0238380/"><img src="https://m.media-amazon.com/images/M/MV5BMTkzMzA1OTI3N15BMl5BanBnXkFtZTYwMzUyMDg5._V1_FMjpg_UY1024_.jpg" alt="Equilibrium" width="150" height="225"></a>
+    <p><strong>Equilibrium (2002)</strong></p>
+    <p>action · drama · sci-fi</p>
+    <p>United States · Kurt Wimmer</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8772296/"><img src="https://m.media-amazon.com/images/M/MV5BZjVlN2M2N2MtOWViZC00MzIxLTlhZWEtMTIwNDIwMzE3ZWJiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Euphoria" width="150" height="225"></a>
+    <p><strong>Euphoria (2019)</strong></p>
+    <p>tv · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9541602/"><img src="https://m.media-amazon.com/images/M/MV5BNjkwYmRiY2EtYTAwZi00ZTA1LTk4OTgtNzlhYTVlM2RmOWExXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Extreme Job" width="150" height="225"></a>
+    <p><strong>Extreme Job (2019)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>South Korea · Lee Byeong-heon</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt16304446/"><img src="https://m.media-amazon.com/images/M/MV5BNjkxYjNkMGMtOTkyNC00YTRhLWIyZDctNmFmZjYxNjEwMDdjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Fair Play" width="150" height="225"></a>
+    <p><strong>Fair Play (2023)</strong></p>
+    <p>drama · thriller</p>
+    <p>United States · Chloe Domont</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt21027780/"><img src="https://m.media-amazon.com/images/M/MV5BZjNkY2M5NWMtZjJiMy00YTZmLWI2NWEtZTI0MjhmNDc4ZThmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Fallen Leaves" width="150" height="225"></a>
+    <p><strong>Fallen Leaves (2023)</strong></p>
+    <p>comedy · drama · romance</p>
+    <p>Finland · Aki Kaurismäki</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12637874/"><img src="https://m.media-amazon.com/images/M/MV5BYzE1MTZmY2ItMTgxNi00OGU5LTk4NTItMmY2ODFhYzhjZjRkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Fallout" width="150" height="225"></a>
+    <p><strong>Fallout (2024)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2802850/"><img src="https://m.media-amazon.com/images/M/MV5BMjMzMTIzMTUwN15BMl5BanBnXkFtZTgwNjE0NTg0MTE@._V1_FMjpg_UY1024_.jpg" alt="Fargo" width="150" height="225"></a>
+    <p><strong>Fargo (2014)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0303461/"><img src="https://m.media-amazon.com/images/M/MV5BYzYyZWYzNzUtOWQ4Yi00Y2Q4LWJjZjgtZTllNjg2ZGM0MTcyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Firefly" width="150" height="225"></a>
+    <p><strong>Firefly (2002)</strong></p>
+    <p>tv · adventure · drama · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0804484/"><img src="https://m.media-amazon.com/images/M/MV5BMzY5OGJhYzItNGQyOS00NmU3LWFhOWMtNGY1OGVlNTlmYjc0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Foundation" width="150" height="225"></a>
+    <p><strong>Foundation (2021)</strong></p>
+    <p>tv · drama · sci-fi</p>
+    <p>Ireland</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0310455/"><img src="https://m.media-amazon.com/images/M/MV5BNjExMDJlZWUtNzQxMS00ZGI4LTg1N2QtMmU3NTkyN2Q4NzYyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Foyle's War" width="150" height="225"></a>
+    <p><strong>Foyle's War (2002)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1119644/"><img src="https://m.media-amazon.com/images/M/MV5BMWVlMmE1MmEtNjhjMC00MDdmLWIzZGMtNjc1YTZmNDc2MWExXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Fringe" width="150" height="225"></a>
+    <p><strong>Fringe (2008)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9813792/"><img src="https://m.media-amazon.com/images/M/MV5BYzM5ZWMxOGEtZjEyMC00YjQ0LThiYjEtZjVkZGEzN2NlOGEwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="From" width="150" height="225"></a>
+    <p><strong>From (2022)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0451829/"><img src="https://m.media-amazon.com/images/M/MV5BMzFlMTRlODUtMmQxZC00M2JiLTk2MGMtMmZjNTdiNmE0MTI0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Funky Forest" width="150" height="225"></a>
+    <p><strong>Funky Forest (2005)</strong></p>
+    <p>comedy · fantasy</p>
+    <p>Japan · Katsuhito Ishii</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4975856/"><img src="https://m.media-amazon.com/images/M/MV5BODExYjljNzEtMDc3ZC00MzAwLTg3MzMtN2M4NWNkMmE3N2U5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Future Man" width="150" height="225"></a>
+    <p><strong>Future Man (2017)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13159924/"><img src="https://m.media-amazon.com/images/M/MV5BYWU4YTljYmItYjczNS00MWY0LWI3NjctZjJhYjU3NWNmNWZhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Gen V" width="150" height="225"></a>
+    <p><strong>Gen V (2023)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0113568/"><img src="https://m.media-amazon.com/images/M/MV5BNzljMjA3MTQtMjM1OS00OGJjLWJiYzctZDRiMTk1NWI5YzQ5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ghost in the Shell" width="150" height="225"></a>
+    <p><strong>Ghost in the Shell (1995)</strong></p>
+    <p>animation · action · crime</p>
+    <p>Japan · Mamoru Oshii</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4513678/"><img src="https://m.media-amazon.com/images/M/MV5BMDJmZmM2NmQtMzhlYi00MGNkLTlhMWUtYjM1MmFlMTA1YTliXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ghostbusters Afterlife" width="150" height="225"></a>
+    <p><strong>Ghostbusters Afterlife (2021)</strong></p>
+    <p>adventure · comedy · fantasy</p>
+    <p>United States · Jason Reitman</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt23289160/"><img src="https://m.media-amazon.com/images/M/MV5BMjc5MjllMGUtMDIwMS00ZDVkLWEzODQtM2NlMTMwMTZhNThmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Godzilla Minus One" width="150" height="225"></a>
+    <p><strong>Godzilla Minus One (2023)</strong></p>
+    <p>action · adventure · drama</p>
+    <p>Japan · Takashi Yamazaki</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1193460/"><img src="https://m.media-amazon.com/images/M/MV5BNzgzNjgyMjUxOF5BMl5BanBnXkFtZTgwMzI1NzE1MjE@._V1_FMjpg_UY1024_.jpg" alt="Going By The Book" width="150" height="225"></a>
+    <p><strong>Going By The Book (2007)</strong></p>
+    <p>action · comedy</p>
+    <p>South Korea · Hee-chan Ra</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2049116/"><img src="https://m.media-amazon.com/images/M/MV5BYWUwYmYwNmItMTRiMy00ZDBhLWE3OTUtMDdmYjA1Mzc2M2IwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Gomorrah" width="150" height="225"></a>
+    <p><strong>Gomorrah (2014)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>Italy</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0295368/"><img src="https://m.media-amazon.com/images/M/MV5BMTM3NjY5OTM4N15BMl5BanBnXkFtZTcwNjk3NzYyMQ@@._V1_FMjpg_UY1024_.jpg" alt="Guns & Talks" width="150" height="225"></a>
+    <p><strong>Guns & Talks (2001)</strong></p>
+    <p>action · drama · comedy</p>
+    <p>South Korea · Jang Jin</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2543312/"><img src="https://m.media-amazon.com/images/M/MV5BZTRkNzQwMjAtMzg5Mi00ZDQwLThmYWYtNmQwMDFiYmIxOWRhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Halt and Catch Fire" width="150" height="225"></a>
+    <p><strong>Halt and Catch Fire (2014)</strong></p>
+    <p>tv · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5834204/"><img src="https://m.media-amazon.com/images/M/MV5BMWIxMzk4NmItZmM1YS00ODUyLWFlNjgtZDQ4MzljZTZmZDQ5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Handmaid's Tale" width="150" height="225"></a>
+    <p><strong>Handmaid's Tale (2017)</strong></p>
+    <p>tv · drama · sci-fi · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6932244/"><img src="https://m.media-amazon.com/images/M/MV5BNzMyNWFjNjYtYzYwNi00ZWY5LWFjNjQtZDdhYWQyMTFmZjUzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Hanna" width="150" height="225"></a>
+    <p><strong>Hanna (2019)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2243973/"><img src="https://m.media-amazon.com/images/M/MV5BNjBmYjdiMzItNTEwNi00YTI2LTg4YjctOTRjNDYxNTUxNGQ1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Hannibal" width="150" height="225"></a>
+    <p><strong>Hannibal (2013)</strong></p>
+    <p>tv · crime · drama · horror</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11052434/"><img src="https://m.media-amazon.com/images/M/MV5BYTc1YjA5ODctODBjZi00MzkzLThhZDUtZGY1MzQ2MDVhNmQ5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Hausen" width="150" height="225"></a>
+    <p><strong>Hausen (2020)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>Germany</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3280150/"><img src="https://m.media-amazon.com/images/M/MV5BMTU4NTU0NDc5OV5BMl5BanBnXkFtZTgwMjc0ODk1NTE@._V1_FMjpg_UY1024_.jpg" alt="Heavy Water War (Kampen om tungtvannet)" width="150" height="225"></a>
+    <p><strong>Heavy Water War (Kampen om tungtvannet) (2015)</strong></p>
+    <p>tv · drama · history · war</p>
+    <p>Norway</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0813715/"><img src="https://m.media-amazon.com/images/M/MV5BMjI3ODU0OTQ1MV5BMl5BanBnXkFtZTgwNzI0MTQ2MzE@._V1_FMjpg_UY1024_.jpg" alt="Heroes" width="150" height="225"></a>
+    <p><strong>Heroes (2006)</strong></p>
+    <p>tv · crime · drama · fantasy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10220588/"><img src="https://m.media-amazon.com/images/M/MV5BZmFmYTU0YTItZTk4ZS00ZWMzLThmOTgtOGIyOTBkY2QwZjc0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Hotel Del Luna" width="150" height="225"></a>
+    <p><strong>Hotel Del Luna (2019)</strong></p>
+    <p>tv · action · comedy · drama</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0338564/"><img src="https://m.media-amazon.com/images/M/MV5BNWZjNDdiOWUtZDI0Ni00YmY1LTk4MmYtM2Y0YTY3ZTc3OWFiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Infernal Affairs" width="150" height="225"></a>
+    <p><strong>Infernal Affairs (2002)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>Hong Kong · Wai Keung Lau</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10399622/"><img src="https://m.media-amazon.com/images/M/MV5BMzA3Y2M0MGYtMzRmMS00MmNkLTg5MTUtNjc0YjBmZjc0Y2IwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Inside the Yellow Cocoon Shell" width="150" height="225"></a>
+    <p><strong>Inside the Yellow Cocoon Shell (2023)</strong></p>
+    <p>drama</p>
+    <p>Vietnam · Thien An Pham</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0092379/"><img src="https://m.media-amazon.com/images/M/MV5BNGQ5OTMzNDQtMGNlMy00OWI3LTkwNjQtNjM3ZTA0NmZkZGUyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Inspector Morse" width="150" height="225"></a>
+    <p><strong>Inspector Morse (1987)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1220719/"><img src="https://m.media-amazon.com/images/M/MV5BZmJjZDE0MmYtNzgwYy00NTg2LWE0NDYtNzA0YTA4MjA0NmYxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ip Man" width="150" height="225"></a>
+    <p><strong>Ip Man (2008)</strong></p>
+    <p>action · biography · drama</p>
+    <p>Hong Kong · Wilson Yip</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0113481/"><img src="https://m.media-amazon.com/images/M/MV5BZGFjNWVhMzktZjJkZi00NWI3LWJiY2MtMTM1MGMxYzI0NmFjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Johnny Mnemonic" width="150" height="225"></a>
+    <p><strong>Johnny Mnemonic (1995)</strong></p>
+    <p>action · drama · sci-fi</p>
+    <p>Canada · Robert Longo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0260991/"><img src="https://m.media-amazon.com/images/M/MV5BMTI1NDA4NTMyN15BMl5BanBnXkFtZTYwNTA2ODc5._V1_FMjpg_UY1024_.jpg" alt="JSA: Joint Security Area" width="150" height="225"></a>
+    <p><strong>JSA: Joint Security Area (2000)</strong></p>
+    <p>action · drama · thriller</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt22074164/"><img src="https://m.media-amazon.com/images/M/MV5BMzNjY2QyMDItMDFiZC00NmZjLTlhMmQtNzdlYzU2MWMzYTU2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Jury Duty" width="150" height="225"></a>
+    <p><strong>Jury Duty (2023)</strong></p>
+    <p>tv · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1489428/"><img src="https://m.media-amazon.com/images/M/MV5BZGIzNmFlMzgtYWY0MC00NjFmLWJhMGItZTM2YjVlZjY3ZjBlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Justified" width="150" height="225"></a>
+    <p><strong>Justified (2010)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4613272/"><img src="https://m.media-amazon.com/images/M/MV5BNGIxN2Q1NzgtNDU5YS00MzIwLWE1ZGEtOTRlZDdkNjU5Y2Q3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kaili Blues" width="150" height="225"></a>
+    <p><strong>Kaili Blues (2015)</strong></p>
+    <p>drama · mystery</p>
+    <p>China · Bi Gan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11398870/"><img src="https://m.media-amazon.com/images/M/MV5BYjU0NWQ4NjYtOGQ3OS00OGU5LWE3YmEtOTBkM2Q5NGQzY2ZjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kalifat" width="150" height="225"></a>
+    <p><strong>Kalifat (2020)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>Sweden</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11102190/"><img src="https://m.media-amazon.com/images/M/MV5BMGNjNzM0YzMtODc2Yi00NDM3LWE3YjAtN2E5OTk4ZTlhYzQxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Katla" width="150" height="225"></a>
+    <p><strong>Katla (2021)</strong></p>
+    <p>tv · drama · fantasy · mystery</p>
+    <p>Iceland</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5537002/"><img src="https://m.media-amazon.com/images/M/MV5BNTRhODE3NTYtOGEwOC00OGQ4LTgzYjItNDdhNGU4YTdmODcyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Killers of the Flower Moon" width="150" height="225"></a>
+    <p><strong>Killers of the Flower Moon (2023)</strong></p>
+    <p>crime · drama · history</p>
+    <p>United States · Martin Scorsese</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0478024/"><img src="https://m.media-amazon.com/images/M/MV5BMTk5NTU2NzAyNV5BMl5BanBnXkFtZTgwNjAyOTEzMjE@._V1_FMjpg_UY1024_.jpg" alt="Killzone (SPL)" width="150" height="225"></a>
+    <p><strong>Killzone (SPL) (2005)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>Hong Kong · Wilson Yip</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6611916/"><img src="https://m.media-amazon.com/images/M/MV5BYWQyMDQyYzItYWFhNi00YmViLTkwZTctY2M2NjEyNDJmNGQ5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kingdom" width="150" height="225"></a>
+    <p><strong>Kingdom (2019)</strong></p>
+    <p>tv · action · drama · horror</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0848538/"><img src="https://m.media-amazon.com/images/M/MV5BMTU0ODg3Mzc1Ml5BMl5BanBnXkFtZTgwMzQ3NjI2MDE@._V1_FMjpg_UY1024_.jpg" alt="Kung Fu Dunk" width="150" height="225"></a>
+    <p><strong>Kung Fu Dunk (2008)</strong></p>
+    <p>action · comedy · sport</p>
+    <p>China · Yen-Ping Chu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0373074/"><img src="https://m.media-amazon.com/images/M/MV5BNGU2OWVlM2ItZGZlOC00Yzk2LWE1NzEtMDYwMzE4YTE5MzQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kung Fu Hustle" width="150" height="225"></a>
+    <p><strong>Kung Fu Hustle (2004)</strong></p>
+    <p>action · comedy · fantasy</p>
+    <p>Hong Kong · Stephen Chow</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0113247/"><img src="https://m.media-amazon.com/images/M/MV5BYmU2OWQwNGYtNDA1ZS00ZGJjLWFhMDAtZGI4MGRhYzY0ZDY4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="La Haine" width="150" height="225"></a>
+    <p><strong>La Haine (1995)</strong></p>
+    <p>crime · drama</p>
+    <p>France · Mathieu Kassovitz</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4063800/"><img src="https://m.media-amazon.com/images/M/MV5BZDk2NDA3MzktNTQyOS00YjY0LWI2ZDgtMWI2MTQ5N2Q1Njg0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Le Bureau des Legendes" width="150" height="225"></a>
+    <p><strong>Le Bureau des Legendes (2015)</strong></p>
+    <p>tv · drama · thriller</p>
+    <p>France</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt27722618/"><img src="https://m.media-amazon.com/images/M/MV5BYTE2OWQxZWMtNjdjNC00NGNhLWE5OTUtZDA2ZjhhMjk0MmRmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Left Handed Girl" width="150" height="225"></a>
+    <p><strong>Left Handed Girl (2024)</strong></p>
+    <p>drama</p>
+    <p>Taiwan · Shih-Ching Tsou</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5114356/"><img src="https://m.media-amazon.com/images/M/MV5BYmM4NDNlYzctNDgxYi00OWU5LTg4NTctOWE2NzMyMjgxY2QwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Legion" width="150" height="225"></a>
+    <p><strong>Legion (2017)</strong></p>
+    <p>tv · action · sci-fi · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2521668/"><img src="https://m.media-amazon.com/images/M/MV5BMjEwOTExNDY5MV5BMl5BanBnXkFtZTgwMzMzOTU5MTE@._V1_FMjpg_UY1024_.jpg" alt="Les Revenants" width="150" height="225"></a>
+    <p><strong>Les Revenants (2012)</strong></p>
+    <p>tv · drama · fantasy · horror</p>
+    <p>France</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8089592/"><img src="https://m.media-amazon.com/images/M/MV5BZWQ2YzA5ZDgtNGM1Yi00OGVjLWFmMDAtNjMwODc1MDgyMTg3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Little Fires Everywhere" width="150" height="225"></a>
+    <p><strong>Little Fires Everywhere (2020)</strong></p>
+    <p>tv · drama · mystery · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt26314963/"><img src="https://m.media-amazon.com/images/M/MV5BMzcxZDQ2OTctMjFhYi00MGZlLWJlZTMtNzM4OTI4MTM2Zjk4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Locked In" width="150" height="225"></a>
+    <p><strong>Locked In (2023)</strong></p>
+    <p>mystery · thriller</p>
+    <p>United States · David C. Snyder</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6128254/"><img src="https://m.media-amazon.com/images/M/MV5BMjRmMzRlNWQtOGRlMS00YzliLTg1MDItY2M4MjNlMWRiMGE0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Lodge 49" width="150" height="225"></a>
+    <p><strong>Lodge 49 (2018)</strong></p>
+    <p>tv · comedy · drama · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5439796/"><img src="https://m.media-amazon.com/images/M/MV5BMTYyODg0NDU1OV5BMl5BanBnXkFtZTgwNjcxMzU0MjI@._V1_FMjpg_UY1024_.jpg" alt="Logan Lucky" width="150" height="225"></a>
+    <p><strong>Logan Lucky (2017)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>United States · Steven Soderbergh</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9140554/"><img src="https://m.media-amazon.com/images/M/MV5BYzA2YjM2ZWQtYTZhMS00OTI3LTlhYzQtZjBiZWZkMDdlNjA5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Loki" width="150" height="225"></a>
+    <p><strong>Loki (2021)</strong></p>
+    <p>tv · action · adventure · fantasy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8185182/"><img src="https://m.media-amazon.com/images/M/MV5BNTBhODJiMDgtYjEzMy00MTU0LTlmYmEtMDRlYTY4NmM5ZjY1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Long Day's Journey Into Night" width="150" height="225"></a>
+    <p><strong>Long Day's Journey Into Night (2018)</strong></p>
+    <p>drama · mystery · romance</p>
+    <p>China · Bi Gan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1276104/"><img src="https://m.media-amazon.com/images/M/MV5BMTg5NTA3NTg4NF5BMl5BanBnXkFtZTcwNTA0NDYzOA@@._V1_FMjpg_UY1024_.jpg" alt="Looper" width="150" height="225"></a>
+    <p><strong>Looper (2012)</strong></p>
+    <p>action · drama · sci-fi</p>
+    <p>United States · Rian Johnson</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2531336/"><img src="https://m.media-amazon.com/images/M/MV5BMDJhODQ3ZDEtN2JmMS00Yjk5LTk1ZTUtMzI3YTU0NTNjMjAyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Lupin" width="150" height="225"></a>
+    <p><strong>Lupin (2021)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>France</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0808357/"><img src="https://m.media-amazon.com/images/M/MV5BNzc4Mzc4NTQtMzkwZS00ZWUzLTk1YWUtNDVlY2U1YTMzMTg2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Lust, Caution" width="150" height="225"></a>
+    <p><strong>Lust, Caution (2007)</strong></p>
+    <p>drama · history · romance</p>
+    <p>Taiwan · Ang Lee</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1740299/"><img src="https://m.media-amazon.com/images/M/MV5BMTU0NTQ5NjU1MV5BMl5BanBnXkFtZTgwMzAxNjY5NjE@._V1_FMjpg_UY1024_.jpg" alt="Man in the High Castle" width="150" height="225"></a>
+    <p><strong>Man in the High Castle (2015)</strong></p>
+    <p>tv · drama · sci-fi · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11358398/"><img src="https://m.media-amazon.com/images/M/MV5BOGYyNGIwNDItMDRjOS00YmZiLWIxMTAtMTQ3YzA0MTAwMzkxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Man Standing Next" width="150" height="225"></a>
+    <p><strong>Man Standing Next (2020)</strong></p>
+    <p>thriller</p>
+    <p>South Korea · Min-ho Woo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7801964/"><img src="https://m.media-amazon.com/images/M/MV5BOWM5NzMzZTMtNzYwOS00YzBhLTg1OTQtZDY5YWI3M2ExZWU0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Manhunt" width="150" height="225"></a>
+    <p><strong>Manhunt (2019)</strong></p>
+    <p>tv · biography · crime · drama</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8421350/"><img src="https://m.media-amazon.com/images/M/MV5BMTFlNjg0YjAtYzMwOC00Zjc0LTkwYjAtZmRiYzdjNjcyYjc2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Manifest" width="150" height="225"></a>
+    <p><strong>Manifest (2018)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2189461/"><img src="https://m.media-amazon.com/images/M/MV5BMTcwMDU5NzMzOV5BMl5BanBnXkFtZTgwNzk5NTE0MzE@._V1_FMjpg_UY1024_.jpg" alt="Marco Polo" width="150" height="225"></a>
+    <p><strong>Marco Polo (2014)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5788792/"><img src="https://m.media-amazon.com/images/M/MV5BMTE1MTgyNzY5NTleQTJeQWpwZ15BbWU4MDA2NDkyODYz._V1_FMjpg_UY1024_.jpg" alt="Marvelous Mrs Maisel" width="150" height="225"></a>
+    <p><strong>Marvelous Mrs Maisel (2017)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0092402/"><img src="https://m.media-amazon.com/images/M/MV5BNjViZjgwMzQtM2VjYS00NTBlLTlhNWYtYmQyZWI3MzAwMWY0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Max Headroom" width="150" height="225"></a>
+    <p><strong>Max Headroom (1987)</strong></p>
+    <p>tv · comedy · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13651794/"><img src="https://m.media-amazon.com/images/M/MV5BMjA0ODViOWUtYzFjYy00ZDZlLWFlMmMtMjU2NzFmNWNlZmFhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="May December" width="150" height="225"></a>
+    <p><strong>May December (2023)</strong></p>
+    <p>comedy · drama</p>
+    <p>United States · Todd Haynes</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0017136/"><img src="https://m.media-amazon.com/images/M/MV5BMjhjMGYyMjAtMzJkYy00NzhlLWIwY2MtMWQ2ODIxZDUyOGYyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Metropolis" width="150" height="225"></a>
+    <p><strong>Metropolis (1927)</strong></p>
+    <p>drama · sci-fi</p>
+    <p>Germany · Fritz Lang</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10574558/"><img src="https://m.media-amazon.com/images/M/MV5BYWFjMDM5MzgtZWI3OC00ZWRmLThlNTktN2ZkMTc3ZTA5NGEzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Midnight Mass" width="150" height="225"></a>
+    <p><strong>Midnight Mass (2021)</strong></p>
+    <p>tv · drama · fantasy · horror</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8772262/"><img src="https://m.media-amazon.com/images/M/MV5BMzQxNzQzOTQwM15BMl5BanBnXkFtZTgwMDQ2NTcwODM@._V1_FMjpg_UY1024_.jpg" alt="Midsommar" width="150" height="225"></a>
+    <p><strong>Midsommar (2019)</strong></p>
+    <p>drama · horror · mystery</p>
+    <p>United States · Ari Aster</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0181689/"><img src="https://m.media-amazon.com/images/M/MV5BYTdmNzM3YzItZTRkYS00MTY5LTg4ZmItNjFmNTk2N2Q2NmNlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Minority Report" width="150" height="225"></a>
+    <p><strong>Minority Report (2002)</strong></p>
+    <p>action · crime · mystery</p>
+    <p>United States · Steven Spielberg</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1548850/"><img src="https://m.media-amazon.com/images/M/MV5BYjJjYjE2MTMtOGE5OS00YWVlLTk4NzktOTRjNjcyZjYxZTkxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Misfits" width="150" height="225"></a>
+    <p><strong>Misfits (2009)</strong></p>
+    <p>tv · comedy · drama · fantasy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt38498244/"><img src="https://m.media-amazon.com/images/M/MV5BYWFiOGI0NDQtOTlhNS00MTE4LTliMzktNDk3MWQzM2VlMmI2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Miss King" width="150" height="225"></a>
+    <p><strong>Miss King (2024)</strong></p>
+    <p>tv · drama · thriller</p>
+    <p>Japan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt31510819/"><img src="https://m.media-amazon.com/images/M/MV5BZDVmMzJkOWUtMjdjMi00NzA4LTgxMTItYjA4NjVjZDI0ZWU1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Mobland" width="150" height="225"></a>
+    <p><strong>Mobland (2024)</strong></p>
+    <p>tv · crime · drama</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt36147111/"><img src="https://m.media-amazon.com/images/G/01/imdb/images/social/imdb_logo.png" alt="Mogura" width="150" height="225"></a>
+    <p><strong>Mogura (2024)</strong></p>
+    <p>tv</p>
+    <p></p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0312172/"><img src="https://m.media-amazon.com/images/M/MV5BNWM0YjQ4ZjYtNWYyYi00ZDVmLTg5NDQtOTkzZjljYzg2ZWI1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Monk" width="150" height="225"></a>
+    <p><strong>Monk (2002)</strong></p>
+    <p>tv · comedy · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt24640580/"><img src="https://m.media-amazon.com/images/M/MV5BNTg4NTI5NmItNGJjNC00ZmFhLTg0NzctZWQxZjAzYTAyNTQwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Moving" width="150" height="225"></a>
+    <p><strong>Moving (2023)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7472896/"><img src="https://m.media-amazon.com/images/M/MV5BNzA0MDk0NDE5N15BMl5BanBnXkFtZTgwODk5MjAzNjM@._V1_FMjpg_UY1024_.jpg" alt="Mr Inbetween" width="150" height="225"></a>
+    <p><strong>Mr Inbetween (2018)</strong></p>
+    <p>tv · comedy · crime · drama</p>
+    <p>Australia</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4158110/"><img src="https://m.media-amazon.com/images/M/MV5BMTE0Mjc1MTk2MjFeQTJeQWpwZ15BbWU4MDk2NzI4MDYx._V1_FMjpg_UY1024_.jpg" alt="Mr. Robot" width="150" height="225"></a>
+    <p><strong>Mr. Robot (2015)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0310775/"><img src="https://m.media-amazon.com/images/M/MV5BM2ZlYmM2OGUtMzkxMS00YjZlLTg4NjctZjc3OWRlYjY0YmI1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Sympathy for Mr. Vengeance" width="150" height="225"></a>
+    <p><strong>Sympathy for Mr. Vengeance (2002)</strong></p>
+    <p>crime · drama · thriller</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14759574/"><img src="https://m.media-amazon.com/images/M/MV5BNmI3ZjNhNjQtMWNlMi00OTc0LThmYTYtMDM2NGY2NWU1MmRlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Mrs. Davis" width="150" height="225"></a>
+    <p><strong>Mrs. Davis (2023)</strong></p>
+    <p>tv · comedy · drama · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12940504/"><img src="https://m.media-amazon.com/images/M/MV5BN2ZiZWU3MzMtNGM5OC00ZWVkLTkxNjUtMTYwZGU4MzgxYzk0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="My Name" width="150" height="225"></a>
+    <p><strong>My Name (2021)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2707408/"><img src="https://m.media-amazon.com/images/M/MV5BNzQwOTcwMzIwN15BMl5BanBnXkFtZTgwMjYxMTA0NjE@._V1_FMjpg_UY1024_.jpg" alt="Narcos" width="150" height="225"></a>
+    <p><strong>Narcos (2015)</strong></p>
+    <p>tv · biography · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10451852/"><img src="https://m.media-amazon.com/images/M/MV5BM2FhMTg4ZGYtOGNkZi00MTg2LTg4M2QtMGU3NmFjZTEzMjVjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Nine Days" width="150" height="225"></a>
+    <p><strong>Nine Days (2020)</strong></p>
+    <p>drama · fantasy</p>
+    <p>United States · Edson Oda</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1527793/"><img src="https://m.media-amazon.com/images/M/MV5BMjg3NzY0N2ItZGFlMy00NzAzLTk2NjItMDk2YTU3ZWU0MDA1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="No Other Choice" width="150" height="225"></a>
+    <p><strong>No Other Choice (2025)</strong></p>
+    <p>comedy · crime · drama</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4591834/"><img src="https://m.media-amazon.com/images/M/MV5BYWVlY2MxNDYtNGUyZi00NDhlLTgyNzEtZWU1ZTQxMGM3MTM4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Nobel" width="150" height="225"></a>
+    <p><strong>Nobel (2016)</strong></p>
+    <p>tv · drama · thriller · war</p>
+    <p>Norway</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0098878/"><img src="https://m.media-amazon.com/images/M/MV5BZmM4MzM0YjctMDlmZS00YTZiLWJjZTYtNmFiZTc5NzM3NDY2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Northern Exposure" width="150" height="225"></a>
+    <p><strong>Northern Exposure (1990)</strong></p>
+    <p>tv · adventure · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4192998/"><img src="https://m.media-amazon.com/images/M/MV5BZTA5NjE4MWUtNmNhZC00YWFkLWFmNTEtOWIwNjQ3NTE3YThlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Occupied (Okkupert)" width="150" height="225"></a>
+    <p><strong>Occupied (Okkupert) (2015)</strong></p>
+    <p>tv · drama · thriller</p>
+    <p>Norway</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0364569/"><img src="https://m.media-amazon.com/images/M/MV5BMTAwNzNjYWItZmI0Ni00ZTcyLWIwNWMtZjlmNGMxZTEyYTJmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Oldboy" width="150" height="225"></a>
+    <p><strong>Oldboy (2003)</strong></p>
+    <p>action · drama · mystery</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0103285/"><img src="https://m.media-amazon.com/images/M/MV5BOWEwZmU2N2ItNWVkNi00OGRhLWE1N2YtNzM1MDRiYWM4MjgyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Once Upon a Time in China" width="150" height="225"></a>
+    <p><strong>Once Upon a Time in China (1991)</strong></p>
+    <p>action</p>
+    <p>Hong Kong · Hark Tsui</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0102592/"><img src="https://m.media-amazon.com/images/M/MV5BMmNmNmQ0M2MtZjIzNi00OTVkLTkxMzAtOTM1ZDA4Y2UyNTkwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="One False Move" width="150" height="225"></a>
+    <p><strong>One False Move (1992)</strong></p>
+    <p>crime · drama · thriller</p>
+    <p>United States · Carl Franklin</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0368909/"><img src="https://m.media-amazon.com/images/M/MV5BOTcwMTAzNDItODg2MC00MjE0LWEyNzYtYzZjNjZmNjdhODE2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ong Bak" width="150" height="225"></a>
+    <p><strong>Ong Bak (2003)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>Thailand · Prachya Pinkaew</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt15398776/"><img src="https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Oppenheimer" width="150" height="225"></a>
+    <p><strong>Oppenheimer (2023)</strong></p>
+    <p>biography · drama · history</p>
+    <p>United States · Christopher Nolan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2234222/"><img src="https://m.media-amazon.com/images/M/MV5BNzdmMzI1NjktOTE5MS00MWM1LWI1YTAtODE4YjkzZmRlNzI4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Orphan Black" width="150" height="225"></a>
+    <p><strong>Orphan Black (2013)</strong></p>
+    <p>tv · drama · sci-fi · thriller</p>
+    <p>Canada</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5071412/"><img src="https://m.media-amazon.com/images/M/MV5BZDk1ZTdjOWItNTJmYS00MGIzLThmY2ItZWNiOGY5MzJlNTA5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ozark" width="150" height="225"></a>
+    <p><strong>Ozark (2017)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13702796/"><img src="https://m.media-amazon.com/images/M/MV5BMmUzNjNlNDktYzAxZS00OTMzLTlhZjItMmI2NDJhNWEwYzhiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Pacifiction" width="150" height="225"></a>
+    <p><strong>Pacifiction (2022)</strong></p>
+    <p>drama · thriller</p>
+    <p>France · Albert Serra</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0457430/"><img src="https://m.media-amazon.com/images/M/MV5BOTc1NTAxMWItMWFlNy00MmU2LTkwMTMtNzMwOTg5OTQ5YTFiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Pan's Labyrinth" width="150" height="225"></a>
+    <p><strong>Pan's Labyrinth (2006)</strong></p>
+    <p>drama · fantasy · war</p>
+    <p>Mexico · Guillermo del Toro</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12004706/"><img src="https://m.media-amazon.com/images/M/MV5BNjMwYWMxNjYtY2I2NC00OWE0LTg4MmQtMmI5ZGI2NzU4ODhiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Panchayat" width="150" height="225"></a>
+    <p><strong>Panchayat (2020)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>India</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11680642/"><img src="https://m.media-amazon.com/images/M/MV5BNGM2NjRjMzAtZjY5Ni00MWVkLWJlMTQtMWVmOWE1N2M2ZWM0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Pantheon" width="150" height="225"></a>
+    <p><strong>Pantheon (2022)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13238346/"><img src="https://m.media-amazon.com/images/M/MV5BYjQyMTNhNjUtN2VmYy00NWRhLTkwOTctMGVmNTBmNDIxYjZhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Past Lives" width="150" height="225"></a>
+    <p><strong>Past Lives (2023)</strong></p>
+    <p>drama · romance</p>
+    <p>United States · Celine Song</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13146488/"><img src="https://m.media-amazon.com/images/M/MV5BZDIyMGU2NTktOTM3YS00OTRjLWJiMmItNDEyNjVhZTZiZGUxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Peacemaker" width="150" height="225"></a>
+    <p><strong>Peacemaker (2022)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2442560/"><img src="https://m.media-amazon.com/images/M/MV5BMTQxODYzNTQzOV5BMl5BanBnXkFtZTgwMTI2MDYwMDE@._V1_FMjpg_UY1024_.jpg" alt="Peaky Blinders" width="150" height="225"></a>
+    <p><strong>Peaky Blinders (2013)</strong></p>
+    <p>tv · crime · drama</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8324422/"><img src="https://m.media-amazon.com/images/M/MV5BZThiMmZjNTMtMTNkYS00YTU3LWI5MWEtZWIzZDkwZjMzMmIwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="PEN15" width="150" height="225"></a>
+    <p><strong>PEN15 (2019)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2628232/"><img src="https://m.media-amazon.com/images/M/MV5BZjkxMDAzMDgtNzFhNS00MjJkLWI5NTctZGRjODg3MzRiOWEzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Penny Dreadful" width="150" height="225"></a>
+    <p><strong>Penny Dreadful (2014)</strong></p>
+    <p>tv · drama · fantasy · horror</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt27503384/"><img src="https://m.media-amazon.com/images/M/MV5BNGVmODFkM2MtOTEzMy00MjFjLThjZmYtODMxZmI1MzcyNDkyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Perfect Days" width="150" height="225"></a>
+    <p><strong>Perfect Days (2023)</strong></p>
+    <p>drama</p>
+    <p>Japan · Wim Wenders</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0808417/"><img src="https://m.media-amazon.com/images/M/MV5BNzk3NTI2NGUtNmM1Yy00YTRmLWE2YTItZTYyNGM0ZjdjOTliXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Persepolis" width="150" height="225"></a>
+    <p><strong>Persepolis (2007)</strong></p>
+    <p>animation · biography · drama</p>
+    <p>France · Vincent Paronnaud</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0089374/"><img src="https://m.media-amazon.com/images/M/MV5BZTMxMWUxNjctOGNiOC00MzRkLWI1NjktZWUzOGJiZTM2ZDg1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Police Story" width="150" height="225"></a>
+    <p><strong>Police Story (1985)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>Hong Kong · Jackie Chan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14230458/"><img src="https://m.media-amazon.com/images/M/MV5BYWU2MjRjZTYtMjVkMS00MTBjLWFiMTAtYmZlYTk1YjkyMWFkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Poor Things" width="150" height="225"></a>
+    <p><strong>Poor Things (2023)</strong></p>
+    <p>comedy · drama · romance</p>
+    <p>Ireland · Yorgos Lanthimos</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5016504/"><img src="https://m.media-amazon.com/images/M/MV5BNzcxYzY1ZjYtNzY0OS00ZDliLWJmNjQtYmE4YWE5YjViMTFhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Preacher" width="150" height="225"></a>
+    <p><strong>Preacher (2016)</strong></p>
+    <p>tv · adventure · comedy · fantasy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14584394/"><img src="https://m.media-amazon.com/images/M/MV5BZGI4YTVkNzUtMzViNy00NzVjLTg4MjUtZjYwMGM1NWU4OTYyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Primo" width="150" height="225"></a>
+    <p><strong>Primo (2023)</strong></p>
+    <p>tv · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt22041854/"><img src="https://m.media-amazon.com/images/M/MV5BOWRjYjVhYWUtNjM2OS00OWE1LTk5ZmYtZDM3MjllNzI1ZmQ4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Priscilla" width="150" height="225"></a>
+    <p><strong>Priscilla (2023)</strong></p>
+    <p>biography · drama · music</p>
+    <p>Italy · Sofia Coppola</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3823996/"><img src="https://m.media-amazon.com/images/M/MV5BNjIyNTdiMzItOGM0Ny00YmFlLTkyOWQtOGQ3NzNmMTgxMTQwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Professor T" width="150" height="225"></a>
+    <p><strong>Professor T (2015)</strong></p>
+    <p>tv · comedy · crime · drama</p>
+    <p>Belgium</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0101640/"><img src="https://m.media-amazon.com/images/M/MV5BZjZlMThlZTktOGYxNS00NjY0LWFkMzAtMjNiOTYxYjYxZWFmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Raise the Red Lantern" width="150" height="225"></a>
+    <p><strong>Raise the Red Lantern (1991)</strong></p>
+    <p>drama · romance</p>
+    <p>China · Yimou Zhang</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13623580/"><img src="https://m.media-amazon.com/images/M/MV5BNjA5ZTdkOWYtNmMzYy00ZmM0LTg3YWYtNDgyODY5OTIxN2RlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Reservation Dogs" width="150" height="225"></a>
+    <p><strong>Reservation Dogs (2021)</strong></p>
+    <p>tv · comedy · crime</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0102293/"><img src="https://m.media-amazon.com/images/M/MV5BOGYxZmE1YTQtM2MyOC00NTczLThhNzYtYWE0OTk0MDgxOTU1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Riki Oh" width="150" height="225"></a>
+    <p><strong>Riki Oh (1991)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>Hong Kong · Ngai Choi Lam</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11016042/"><img src="https://m.media-amazon.com/images/M/MV5BMmI0NzgyY2ItODVmMy00YzQzLWI3ODAtMzExZDMxYWU0YmZhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ripley" width="150" height="225"></a>
+    <p><strong>Ripley (2024)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0093870/"><img src="https://m.media-amazon.com/images/M/MV5BZWM1YzRhODktZDE1MC00NzBlLTk0NGMtOGNhZDQyMmJiZGFiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Robocop" width="150" height="225"></a>
+    <p><strong>Robocop (1987)</strong></p>
+    <p>action · crime · sci-fi</p>
+    <p>United States · Paul Verhoeven</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0384766/"><img src="https://m.media-amazon.com/images/M/MV5BMGQ0M2YxMGEtMDQ2MC00NGEwLTliMTQtODVkYWZkNDFkM2Y3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Rome" width="150" height="225"></a>
+    <p><strong>Rome (2005)</strong></p>
+    <p>tv · action · drama · romance</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1979319/"><img src="https://m.media-amazon.com/images/M/MV5BNDgzODM2MjUyMF5BMl5BanBnXkFtZTgwMzg4MjA1OTE@._V1_FMjpg_UY1024_.jpg" alt="Rurouni Kenshin" width="150" height="225"></a>
+    <p><strong>Rurouni Kenshin (2012)</strong></p>
+    <p>action · adventure · drama</p>
+    <p>Japan · Keishi Otomo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7520794/"><img src="https://m.media-amazon.com/images/M/MV5BYTMyYjU1MGEtYzE3ZS00MjJhLTllZWUtNmEyNmIyNGQ1NWMzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Russian Doll" width="150" height="225"></a>
+    <p><strong>Russian Doll (2019)</strong></p>
+    <p>tv · comedy · drama · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt21056886/"><img src="https://m.media-amazon.com/images/M/MV5BZmEyOWU1YjctNjgxNS00MTcyLTk3NDgtZmY3ZjBkY2RkN2YxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Scavengers Reign" width="150" height="225"></a>
+    <p><strong>Scavengers Reign (2023)</strong></p>
+    <p>tv · animation · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8649252/"><img src="https://m.media-amazon.com/images/M/MV5BNmMzYWI0M2UtOGI3MS00OGI2LTk1ZDYtOWU3NDgwZDU0ZTY4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Scrapper" width="150" height="225"></a>
+    <p><strong>Scrapper (2023)</strong></p>
+    <p>comedy · drama</p>
+    <p>United Kingdom · Charlotte Regan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt33204697/"><img src="https://m.media-amazon.com/images/M/MV5BZWEwMjgwOTYtZmM1MC00MzdhLWJhMmUtNmNhNGMxMDdkYzNmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Secret Level" width="150" height="225"></a>
+    <p><strong>Secret Level (2024)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7949218/"><img src="https://m.media-amazon.com/images/M/MV5BMDEwYTg3MWQtZTNmMi00ZjU1LTkwNWQtZDFmODQ5NjcwMDc2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="See" width="150" height="225"></a>
+    <p><strong>See (2019)</strong></p>
+    <p>tv · action · drama · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0341555/"><img src="https://m.media-amazon.com/images/M/MV5BM2RkM2FlMjQtMWUwYy00ODg5LWEwYWEtMWM5MmMwMjFjNGIyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Sex is Zero" width="150" height="225"></a>
+    <p><strong>Sex is Zero (2002)</strong></p>
+    <p>comedy · drama · romance</p>
+    <p>South Korea · JK Youn</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0117615/"><img src="https://m.media-amazon.com/images/M/MV5BMzEwN2E3NjAtZTk0MS00NDUzLWI2NmYtMDg5M2E3ZjRhOGMyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shall We Dance" width="150" height="225"></a>
+    <p><strong>Shall We Dance (1996)</strong></p>
+    <p>comedy · drama · music</p>
+    <p>Japan · Masayuki Suô</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1586680/"><img src="https://m.media-amazon.com/images/M/MV5BMjM5MzAzNTQyOV5BMl5BanBnXkFtZTgwNjY0MjcyNjM@._V1_FMjpg_UY1024_.jpg" alt="Shameless" width="150" height="225"></a>
+    <p><strong>Shameless (2011)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0429087/"><img src="https://m.media-amazon.com/images/M/MV5BNzdlODA5MWEtOTM3MC00NjZkLTk2MjItMzExZTk1NjUxZGViXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shantaram" width="150" height="225"></a>
+    <p><strong>Shantaram (2022)</strong></p>
+    <p>tv · action · adventure · crime</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0286112/"><img src="https://m.media-amazon.com/images/M/MV5BM2JhYTkzYmUtYjY1Mi00OWNjLTk4N2ItNDRkZTIyMzgyMjMyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shaolin Soccer" width="150" height="225"></a>
+    <p><strong>Shaolin Soccer (2001)</strong></p>
+    <p>action · comedy · fantasy</p>
+    <p>Hong Kong · Stephen Chow</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2649356/"><img src="https://m.media-amazon.com/images/M/MV5BYTY4OTQ0N2EtMDExMC00NTYzLTk0NmItYTRjNDYxOWU5ZDY3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Sharp Objects" width="150" height="225"></a>
+    <p><strong>Sharp Objects (2018)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10737918/"><img src="https://m.media-amazon.com/images/M/MV5BYWVlMmRjOTYtMDgwYy00NDQxLTkzZGEtY2UzZDc0YzBmNmE4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shin Ultraman" width="150" height="225"></a>
+    <p><strong>Shin Ultraman (2022)</strong></p>
+    <p>action · adventure · drama</p>
+    <p>Japan · Shinji Higuchi</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0164882/"><img src="https://m.media-amazon.com/images/M/MV5BNjc1N2U1MDAtYjAyYS00MTBiLWI5NTAtZWFlMmI2Yjg3MmQyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shinobi No Mono" width="150" height="225"></a>
+    <p><strong>Shinobi No Mono (1962)</strong></p>
+    <p>action · drama</p>
+    <p>Japan · Satsuo Yamamoto</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2788316/"><img src="https://m.media-amazon.com/images/M/MV5BNzBkNjFkZDItYjQ1OS00MWNmLThjYzYtOWM1ZTkzZDYwODI1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shogun" width="150" height="225"></a>
+    <p><strong>Shogun (2024)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1130884/"><img src="https://m.media-amazon.com/images/M/MV5BN2FjNWExYzEtY2YzOC00YjNlLTllMTQtNmIwM2Q1YzBhOWM1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Shutter Island" width="150" height="225"></a>
+    <p><strong>Shutter Island (2010)</strong></p>
+    <p>drama · mystery · thriller</p>
+    <p>Canada · Martin Scorsese</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5332206/"><img src="https://m.media-amazon.com/images/M/MV5BNzM5Njc3YTctMmIzNi00Mjk2LWFhYjUtNTk5ODFkOTU3YzhiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Signal" width="150" height="225"></a>
+    <p><strong>Signal (2016)</strong></p>
+    <p>tv · crime · drama · fantasy</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14688458/"><img src="https://m.media-amazon.com/images/M/MV5BNjA5ODM4YTEtNDcxZi00N2ViLTg0MTgtNGQxNjBjZWY5YTk3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Silo" width="150" height="225"></a>
+    <p><strong>Silo (2023)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0248654/"><img src="https://m.media-amazon.com/images/M/MV5BMDA5YTAxNGMtOWYxYy00ZDdkLWIwODUtNjdlYmNhMWQ5NzViXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Six Feet Under" width="150" height="225"></a>
+    <p><strong>Six Feet Under (2001)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5875444/"><img src="https://m.media-amazon.com/images/M/MV5BY2NkNTBiYWUtMGFiZS00MGI4LWE3YjMtZTU3NzhhZmEyYzlkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Slow Horses" width="150" height="225"></a>
+    <p><strong>Slow Horses (2022)</strong></p>
+    <p>tv · drama · thriller</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6439752/"><img src="https://m.media-amazon.com/images/M/MV5BODI2MDliNDEtNzg3ZC00Y2RlLWI1YmItZTYyOWM0NzMwNGJmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Snowfall" width="150" height="225"></a>
+    <p><strong>Snowfall (2017)</strong></p>
+    <p>tv · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1706620/"><img src="https://m.media-amazon.com/images/M/MV5BMTQ3NzA1MTY3MV5BMl5BanBnXkFtZTgwNzE2Mzg5MTE@._V1_FMjpg_UY1024_.jpg" alt="Snowpiercer" width="150" height="225"></a>
+    <p><strong>Snowpiercer (2013)</strong></p>
+    <p>action · sci-fi · thriller</p>
+    <p>South Korea · Bong Joon Ho</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt12759100/"><img src="https://m.media-amazon.com/images/M/MV5BM2U3ZThlODMtMGU0YS00ZDVkLWE2ZmItNmI0ZDM5MDNiMGJkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Somebody Somewhere" width="150" height="225"></a>
+    <p><strong>Somebody Somewhere (2022)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0108188/"><img src="https://m.media-amazon.com/images/M/MV5BYjk2NGRhZDUtNjVmNy00NmFiLTk3MWQtMzIyZjc1ZmExYzAzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Sonatine" width="150" height="225"></a>
+    <p><strong>Sonatine (1993)</strong></p>
+    <p>action · comedy · crime</p>
+    <p>Japan · Takeshi Kitano</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1442449/"><img src="https://m.media-amazon.com/images/M/MV5BNTc4ZjlkNjUtOWZlMS00ODQ0LTg2MWUtMjBkNjMwOTJkOWZmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Spartacus" width="150" height="225"></a>
+    <p><strong>Spartacus (2010)</strong></p>
+    <p>tv · action · adventure · biography</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0477507/"><img src="https://m.media-amazon.com/images/M/MV5BYTAzZWU4NzItNDVlNi00MDIyLWJkODAtYTg2MzE3Y2Q5NTI1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Spiral (Engrenage)" width="150" height="225"></a>
+    <p><strong>Spiral (Engrenage) (2005)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>France</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt22375054/"><img src="https://m.media-amazon.com/images/M/MV5BNDE2OTQ0NjEtNmEwMC00NmRjLThiOGMtN2M1N2Q2YWY0NGY4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Strange Darling" width="150" height="225"></a>
+    <p><strong>Strange Darling (2023)</strong></p>
+    <p>horror · thriller</p>
+    <p>United States · JT Mollner</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0114558/"><img src="https://m.media-amazon.com/images/M/MV5BNzk1NGY4ZGUtYzllYy00ODM0LTljNmItYTY5NGI4YWQxNTQxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Strange Days" width="150" height="225"></a>
+    <p><strong>Strange Days (1995)</strong></p>
+    <p>crime · drama · sci-fi</p>
+    <p>United States · Kathryn Bigelow</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1492179/"><img src="https://m.media-amazon.com/images/M/MV5BOTE4YjQ3NzgtNGI1My00MzkxLWIwY2EtOTQzMzZiYzBiMTg2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Strike Back" width="150" height="225"></a>
+    <p><strong>Strike Back (2010)</strong></p>
+    <p>tv · action · drama · thriller</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7660850/"><img src="https://m.media-amazon.com/images/M/MV5BYTY4YTVkY2QtMjRmOS00YzliLWIxOWQtMTdkOTVkN2UzODNmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Succession" width="150" height="225"></a>
+    <p><strong>Succession (2018)</strong></p>
+    <p>tv · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0430651/"><img src="https://m.media-amazon.com/images/M/MV5BZWViMDk1MzYtM2FiYS00MTdkLWI3YTQtNmFjN2FlMTY0NmM1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Survive Style 5+" width="150" height="225"></a>
+    <p><strong>Survive Style 5+ (2004)</strong></p>
+    <p>comedy · fantasy · horror</p>
+    <p>Japan · Gen Sekiguchi</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0234837/"><img src="https://m.media-amazon.com/images/M/MV5BNGMxM2IwZjgtNGQ0My00ZTc0LTk3MTMtYTIyNWI2OWJhZGU5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Suzhou River" width="150" height="225"></a>
+    <p><strong>Suzhou River (2000)</strong></p>
+    <p>drama · romance</p>
+    <p>Germany · Ye Lou</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0386064/"><img src="https://m.media-amazon.com/images/M/MV5BNjUzNTVlYzQtOGYxMy00NmExLTgzYTQtOGEyM2YyM2YzYjJkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Taegukgi" width="150" height="225"></a>
+    <p><strong>Taegukgi (2004)</strong></p>
+    <p>action · drama · war</p>
+    <p>South Korea · Kang Je-kyu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0287467/"><img src="https://m.media-amazon.com/images/M/MV5BM2NjMmQyYmQtMjRjMi00OGVjLWFlMDAtNDYzNDE0MmY4YjE1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Talk to Her" width="150" height="225"></a>
+    <p><strong>Talk to Her (2002)</strong></p>
+    <p>drama · mystery · romance</p>
+    <p>Spain · Pedro Almodóvar</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6878038/"><img src="https://m.media-amazon.com/images/M/MV5BNTczN2QxM2MtMjBkYi00ZDk4LWI3MGYtMzcyYTAxM2JmMzJiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Taxi Driver" width="150" height="225"></a>
+    <p><strong>Taxi Driver (2017)</strong></p>
+    <p>action · drama · history</p>
+    <p>South Korea · Hun Jang</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10986410/"><img src="https://m.media-amazon.com/images/M/MV5BZmI3YWVhM2UtNDZjMC00YTIzLWI2NGUtZWIxODZkZjVmYTg1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Ted Lasso" width="150" height="225"></a>
+    <p><strong>Ted Lasso (2020)</strong></p>
+    <p>tv · comedy · drama · sport</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11743610/"><img src="https://m.media-amazon.com/images/M/MV5BOTU3NDc5OTYtNjUxNS00MzgxLWI3YjItZmZmNWJkYTNiNGUwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Terminal List" width="150" height="225"></a>
+    <p><strong>Terminal List (2022)</strong></p>
+    <p>tv · action · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0088247/"><img src="https://m.media-amazon.com/images/M/MV5BZmE0YzIxM2QtMGNlMi00MjRmLWE3MWMtOWQzMGVjMmU0YTFmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Terminator" width="150" height="225"></a>
+    <p><strong>Terminator (1984)</strong></p>
+    <p>action · adventure · sci-fi</p>
+    <p>United Kingdom · James Cameron</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0096251/"><img src="https://m.media-amazon.com/images/M/MV5BY2YwM2EyZDMtZTdhYi00NDg1LTgxYWItNWU2NDdiY2JiZGJjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Tetsuo: The Iron Man" width="150" height="225"></a>
+    <p><strong>Tetsuo: The Iron Man (1989)</strong></p>
+    <p>horror · sci-fi</p>
+    <p>Japan · Shin'ya Tsukamoto</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt30423279/"><img src="https://m.media-amazon.com/images/M/MV5BYjM1OWEzZDctMTZkZS00ZjIyLTk5OGEtZGIzZWZhNjNlNmM5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The 8 Show" width="150" height="225"></a>
+    <p><strong>The 8 Show (2024)</strong></p>
+    <p>tv · comedy · drama · horror</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2149175/"><img src="https://m.media-amazon.com/images/M/MV5BMjIzNTEzMDY3OF5BMl5BanBnXkFtZTcwMzI5NDI5OA@@._V1_FMjpg_UY1024_.jpg" alt="The Americans" width="150" height="225"></a>
+    <p><strong>The Americans (2013)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt15314262/"><img src="https://m.media-amazon.com/images/M/MV5BNzg3YjVmZGYtOTc5MC00MDdiLTllOTYtZWQ0ODQ1MmMyNTExXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Beekeeper" width="150" height="225"></a>
+    <p><strong>The Beekeeper (2024)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>United Kingdom · David Ayer</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1190634/"><img src="https://m.media-amazon.com/images/M/MV5BMGRlZDE2ZGEtZTU5Mi00ODdkLWFmMTEtY2UwMmViNWNmZjczXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Boys" width="150" height="225"></a>
+    <p><strong>The Boys (2019)</strong></p>
+    <p>tv · action · comedy · crime</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1733785/"><img src="https://m.media-amazon.com/images/M/MV5BMjQ3MDAzNDU4NV5BMl5BanBnXkFtZTgwNjE2NDQ0NzE@._V1_FMjpg_UY1024_.jpg" alt="The Bridge (Broen/Bron)" width="150" height="225"></a>
+    <p><strong>The Bridge (Broen/Bron) (2011)</strong></p>
+    <p>tv · crime · mystery · thriller</p>
+    <p>Sweden</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt17632862/"><img src="https://m.media-amazon.com/images/M/MV5BYzMxMjRmZDQtNWEzNC00ZDUyLTk0YzgtMDBkODJkNjExMTkzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Brothers Sun" width="150" height="225"></a>
+    <p><strong>The Brothers Sun (2024)</strong></p>
+    <p>tv · action · comedy · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1259521/"><img src="https://m.media-amazon.com/images/M/MV5BNTUxNzYyMjg2N15BMl5BanBnXkFtZTcwMTExNzExNw@@._V1_FMjpg_UY1024_.jpg" alt="The Cabin in the Woods" width="150" height="225"></a>
+    <p><strong>The Cabin in the Woods (2011)</strong></p>
+    <p>horror · mystery · thriller</p>
+    <p>Canada · Drew Goddard</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4903242/"><img src="https://m.media-amazon.com/images/M/MV5BMjEwNjc4MzY4NF5BMl5BanBnXkFtZTgwOTY2NjA0NDM@._V1_FMjpg_UY1024_.jpg" alt="The Detour" width="150" height="225"></a>
+    <p><strong>The Detour (2016)</strong></p>
+    <p>tv · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7766378/"><img src="https://m.media-amazon.com/images/M/MV5BZGIyYzNmNjYtZTM3OC00OGE0LTgyNzctYzQ0OTYxYjhiZTNlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Electric State" width="150" height="225"></a>
+    <p><strong>The Electric State (2025)</strong></p>
+    <p>action · adventure · comedy</p>
+    <p>United States · Anthony Russo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5867314/"><img src="https://m.media-amazon.com/images/M/MV5BMzI3OWYwNTQtOWM1Yi00Zjc1LWJmOGItN2UzMTNmNmJmZjE3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Empty Man" width="150" height="225"></a>
+    <p><strong>The Empty Man (2020)</strong></p>
+    <p>drama · horror · mystery</p>
+    <p>United States · David Prior</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6257970/"><img src="https://m.media-amazon.com/images/M/MV5BNTVkZTI3MmMtMDY1Yi00NjJhLTgyYTctNWE1OTJkNmZiZjdlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The End of the F***ing World" width="150" height="225"></a>
+    <p><strong>The End of the F***ing World (2017)</strong></p>
+    <p>tv · adventure · comedy · crime</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3230854/"><img src="https://m.media-amazon.com/images/M/MV5BYzUyYmI3MjctY2Q2MC00NmFjLTgwZGUtNWQzZWNlYmVjNzE2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Expanse" width="150" height="225"></a>
+    <p><strong>The Expanse (2015)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt15567174/"><img src="https://m.media-amazon.com/images/M/MV5BY2RiMjhkMzYtOWFmYS00YmRkLWIxYmYtN2FmZDEwODllYzA3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Fall of the House of Usher" width="150" height="225"></a>
+    <p><strong>The Fall of the House of Usher (2023)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt21344706/"><img src="https://m.media-amazon.com/images/M/MV5BODM0ZTc5YTAtZmMxNi00YzJkLWEzODItZDczZTRlNTc1NGE3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Glory" width="150" height="225"></a>
+    <p><strong>The Glory (2022)</strong></p>
+    <p>tv · drama · mystery · thriller</p>
+    <p>South Korea</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0901487/"><img src="https://m.media-amazon.com/images/M/MV5BMjM0NTE3NjkyNl5BMl5BanBnXkFtZTgwMzQyNzE1MjE@._V1_FMjpg_UY1024_.jpg" alt="The Good The Bad The Weird" width="150" height="225"></a>
+    <p><strong>The Good The Bad The Weird (2008)</strong></p>
+    <p>action · adventure · comedy</p>
+    <p>South Korea · Kim Jee-woon</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4016934/"><img src="https://m.media-amazon.com/images/M/MV5BOTllZDI1OGItOGUxNS00OGZhLWIzMjAtYzllZTY1YTA0ZmYwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Handmaiden" width="150" height="225"></a>
+    <p><strong>The Handmaiden (2016)</strong></p>
+    <p>drama · romance · thriller</p>
+    <p>South Korea · Park Chan-wook</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8290362/"><img src="https://m.media-amazon.com/images/M/MV5BMDE4MzYwMjgtMTliNS00MDFmLWEyZGEtOWM1MDA2ZDgzODM1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Head" width="150" height="225"></a>
+    <p><strong>The Head (2020)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>Spain</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14849194/"><img src="https://m.media-amazon.com/images/M/MV5BOTliOWYyYmYtMjZlNy00ZDQwLWE4NTgtNTFmYTQ5MTcxNDMwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Holdovers" width="150" height="225"></a>
+    <p><strong>The Holdovers (2023)</strong></p>
+    <p>comedy · drama</p>
+    <p>United States · Alexander Payne</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0468492/"><img src="https://m.media-amazon.com/images/M/MV5BMTQzYzI1MDAtYzVkOC00N2U1LThmNzYtNmYyNDg5MzQwYjEwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Host" width="150" height="225"></a>
+    <p><strong>The Host (2006)</strong></p>
+    <p>drama · horror · sci-fi</p>
+    <p>South Korea · Bong Joon Ho</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0097202/"><img src="https://m.media-amazon.com/images/M/MV5BMjQyZDJhNTktYjZiZC00ODU4LTg5OTYtYjc2MzA2OGFjMzZmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Killer" width="150" height="225"></a>
+    <p><strong>The Killer (1989)</strong></p>
+    <p>action · crime · drama</p>
+    <p>Hong Kong · John Woo</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0826760/"><img src="https://m.media-amazon.com/images/M/MV5BMmJjZjU1MGYtODY0Yy00NjM2LTk0YzYtZTc4YzgyOWU4NWNiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Killing" width="150" height="225"></a>
+    <p><strong>The Killing (2007)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>Denmark</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt4179452/"><img src="https://m.media-amazon.com/images/M/MV5BMjE1MzYzNjk3OF5BMl5BanBnXkFtZTgwMzk0MzYwNzE@._V1_FMjpg_UY1024_.jpg" alt="The Last Kingdom" width="150" height="225"></a>
+    <p><strong>The Last Kingdom (2015)</strong></p>
+    <p>tv · action · drama · history</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3581920/"><img src="https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Last of Us" width="150" height="225"></a>
+    <p><strong>The Last of Us (2023)</strong></p>
+    <p>tv · action · adventure · drama</p>
+    <p>Canada</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14190592/"><img src="https://m.media-amazon.com/images/M/MV5BMjVjZDkzMTMtMDRmOC00ZThhLThmZWItNmMyODg4MWE0Y2FmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Lazarus Project" width="150" height="225"></a>
+    <p><strong>The Lazarus Project (2022)</strong></p>
+    <p>tv · action · drama · fantasy</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2699128/"><img src="https://m.media-amazon.com/images/M/MV5BNTE3MDc1MjY4NV5BMl5BanBnXkFtZTgwMDg4MjQ4MTE@._V1_FMjpg_UY1024_.jpg" alt="The Leftovers" width="150" height="225"></a>
+    <p><strong>The Leftovers (2014)</strong></p>
+    <p>tv · drama · fantasy · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11247158/"><img src="https://m.media-amazon.com/images/M/MV5BMjI0ZjE2NDgtM2IxMy00NTk3LWFhMTEtMWNhOWJiYjIzYzY2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Legend of Vox Machina" width="150" height="225"></a>
+    <p><strong>The Legend of Vox Machina (2022)</strong></p>
+    <p>tv · animation · action · adventure</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7320300/"><img src="https://m.media-amazon.com/images/M/MV5BZjljODIzMGQtMDA4ZS00OGNjLTliZjgtNmQ0YWI2Y2JmODNlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Letdown" width="150" height="225"></a>
+    <p><strong>The Letdown (2017)</strong></p>
+    <p>tv · comedy</p>
+    <p>Australia</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1527788/"><img src="https://m.media-amazon.com/images/M/MV5BMTgzMTkxNjAxNV5BMl5BanBnXkFtZTgwMDU3MDE0MjE@._V1_FMjpg_UY1024_.jpg" alt="The Man from Nowhere" width="150" height="225"></a>
+    <p><strong>The Man from Nowhere (2010)</strong></p>
+    <p>action · crime · drama</p>
+    <p>South Korea · Lee Jeong-beom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0133093/"><img src="https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Matrix" width="150" height="225"></a>
+    <p><strong>The Matrix (1999)</strong></p>
+    <p>action · sci-fi</p>
+    <p>United States · Lana Wachowski</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6116856/"><img src="https://m.media-amazon.com/images/M/MV5BMWFmYmE4MmEtNjgxNy00NjE1LWFmNzItNGRiMDJjYmFmZDU2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Night Comes for Us" width="150" height="225"></a>
+    <p><strong>The Night Comes for Us (2018)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>Indonesia · Timo Tjahjanto</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8310612/"><img src="https://m.media-amazon.com/images/M/MV5BYTE3ODVkZGItNzBmZi00MzkzLWEwZmEtZDEwZjJhMmUyODhiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Other Two" width="150" height="225"></a>
+    <p><strong>The Other Two (2019)</strong></p>
+    <p>tv · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8550800/"><img src="https://m.media-amazon.com/images/M/MV5BOGY0YjJmOWItOGI2MS00N2VmLTlmNjYtMDM3YjY1MzkyM2E1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Outsider" width="150" height="225"></a>
+    <p><strong>The Outsider (2020)</strong></p>
+    <p>tv · crime · drama · horror</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt31938062/"><img src="https://m.media-amazon.com/images/M/MV5BMThjMjYxM2YtM2IzZC00NDdmLThiNDYtNzEyNzA0YTRmYTk3XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Pitt" width="150" height="225"></a>
+    <p><strong>The Pitt (2025)</strong></p>
+    <p>tv · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt10048342/"><img src="https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Queen's Gambit" width="150" height="225"></a>
+    <p><strong>The Queen's Gambit (2020)</strong></p>
+    <p>tv · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1899353/"><img src="https://m.media-amazon.com/images/M/MV5BOGUxM2Q0MzItZDRmYy00ZWY1LWFiNzctNmY3Njg2ODJjZWNmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Raid" width="150" height="225"></a>
+    <p><strong>The Raid (2011)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>Indonesia · Gareth Evans</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2265171/"><img src="https://m.media-amazon.com/images/M/MV5BMDMyNTMzZmYtNDIxYi00YTNkLWE2ZTMtM2M4ZGQwYTFjZTEyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Raid 2" width="150" height="225"></a>
+    <p><strong>The Raid 2 (2014)</strong></p>
+    <p>action · crime · thriller</p>
+    <p>Indonesia · Gareth Evans</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0093894/"><img src="https://m.media-amazon.com/images/M/MV5BMDQwYzMwMDItYzFhZC00YjkzLTlmODAtMzg3NDFlNDhhZjYzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Running Man" width="150" height="225"></a>
+    <p><strong>The Running Man (1987)</strong></p>
+    <p>action · sci-fi · thriller</p>
+    <p>United States · Paul Michael Glaser</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0286486/"><img src="https://m.media-amazon.com/images/M/MV5BMTcwNzQwODI5NV5BMl5BanBnXkFtZTcwNzQxMjI5MQ@@._V1_FMjpg_UY1024_.jpg" alt="The Shield" width="150" height="225"></a>
+    <p><strong>The Shield (2002)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0141842/"><img src="https://m.media-amazon.com/images/M/MV5BMjRmMTNiMTQtMDg1ZS00MGM1LWE1MGUtYjEzMGFjNWUzOWRkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Sopranos" width="150" height="225"></a>
+    <p><strong>The Sopranos (1999)</strong></p>
+    <p>tv · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt19760052/"><img src="https://m.media-amazon.com/images/M/MV5BMTBkZTk1NzMtMTNlMC00ZjFmLWE5ZWYtYzg0NmVlNzllNTRlXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Taste of Things" width="150" height="225"></a>
+    <p><strong>The Taste of Things (2023)</strong></p>
+    <p>drama · history · romance</p>
+    <p>France · Anh Hung Tran</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt14364876/"><img src="https://m.media-amazon.com/images/M/MV5BNDFiNTFiYTYtMzA4Mi00OTBjLWEzYTctYTFhMGJmNDQ2N2FmXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Tower" width="150" height="225"></a>
+    <p><strong>The Tower (2021)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0840361/"><img src="https://m.media-amazon.com/images/M/MV5BMTcyNzcxODg3Nl5BMl5BanBnXkFtZTcwMTUyNjQ3Mw@@._V1_FMjpg_UY1024_.jpg" alt="The Town" width="150" height="225"></a>
+    <p><strong>The Town (2010)</strong></p>
+    <p>crime · drama · thriller</p>
+    <p>United States · Ben Affleck</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1312171/"><img src="https://m.media-amazon.com/images/M/MV5BMzlmMmIxODItYzBjNC00YjMwLWIwOTAtNzVlMTBlNTNkMjZjXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Umbrella Academy" width="150" height="225"></a>
+    <p><strong>The Umbrella Academy (2019)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0306414/"><img src="https://m.media-amazon.com/images/M/MV5BZWYyNmRhYjktNjBhNC00M2NhLWEzYmMtZDYwNmIyZTRiZWMzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Wire" width="150" height="225"></a>
+    <p><strong>The Wire (2002)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7160372/"><img src="https://m.media-amazon.com/images/M/MV5BNjk4MTQ3MGEtZmI4OS00N2NhLWI5ZjgtYWE5ZWVkZGExYTQ1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="The Zone of Interest" width="150" height="225"></a>
+    <p><strong>The Zone of Interest (2023)</strong></p>
+    <p>drama · history · war</p>
+    <p>United Kingdom · Jonathan Glazer</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0108394/"><img src="https://m.media-amazon.com/images/M/MV5BNWMxNWE2NGYtMzYwOS00NmJhLTgwNjAtNGM3ODIwNjU5MTZiXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Three Colors: Blue" width="150" height="225"></a>
+    <p><strong>Three Colors: Blue (1993)</strong></p>
+    <p>drama · music · mystery</p>
+    <p>France · Krzysztof Kieslowski</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0111495/"><img src="https://m.media-amazon.com/images/M/MV5BMTQ0YTQyYzItNGEzMi00NmI4LWJkOTMtOWMyMjAwMWEzYTZhXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Three Colors: Red" width="150" height="225"></a>
+    <p><strong>Three Colors: Red (1994)</strong></p>
+    <p>drama · mystery · romance</p>
+    <p>France · Krzysztof Kieslowski</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0111507/"><img src="https://m.media-amazon.com/images/M/MV5BMWUyMWJiYTEtNmIzYi00OTYxLTlkYjEtMGFjMjY3NDc5Mjk0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Three Colors: White" width="150" height="225"></a>
+    <p><strong>Three Colors: White (1994)</strong></p>
+    <p>comedy · drama · romance</p>
+    <p>France · Krzysztof Kieslowski</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2887954/"><img src="https://m.media-amazon.com/images/M/MV5BYjkxMjU2ODUtNzdlZi00NDg0LWEyZDgtZGE3NTVkNDYyZjIzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Tokyo Vice" width="150" height="225"></a>
+    <p><strong>Tokyo Vice (2022)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>Japan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0427954/"><img src="https://m.media-amazon.com/images/M/MV5BM2JhMjVjZTktODVkYi00ZTM2LTlkMDAtMDBhMDVjYTQxZmYzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Tom Yum Goong (The Protector)" width="150" height="225"></a>
+    <p><strong>Tom Yum Goong (The Protector) (2005)</strong></p>
+    <p>action · crime · drama</p>
+    <p>Thailand · Prachya Pinkaew</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0100802/"><img src="https://m.media-amazon.com/images/M/MV5BZjRlMzBkOGMtMTA1Ny00ZWI4LTkzMDItOGVkNWJkN2E4ZTkwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Total Recall" width="150" height="225"></a>
+    <p><strong>Total Recall (1990)</strong></p>
+    <p>action · adventure · sci-fi</p>
+    <p>United States · Paul Verhoeven</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt3561180/"><img src="https://m.media-amazon.com/images/M/MV5BMjEwOTQ0OTIwNV5BMl5BanBnXkFtZTgwNTAwODY2NzE@._V1_FMjpg_UY1024_.jpg" alt="Trapped" width="150" height="225"></a>
+    <p><strong>Trapped (2015)</strong></p>
+    <p>tv · crime · drama · mystery</p>
+    <p>Iceland</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0084827/"><img src="https://m.media-amazon.com/images/M/MV5BMTA4Y2VjOWEtMWQ5MS00YWU5LTkxZTMtNzVmMDYyNWFiODU5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Tron" width="150" height="225"></a>
+    <p><strong>Tron (1982)</strong></p>
+    <p>action · adventure · sci-fi</p>
+    <p>United States · Steven Lisberger</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8239946/"><img src="https://m.media-amazon.com/images/M/MV5BOTY0YzY3MTMtOWQ5Yi00ODY2LThhOGMtMzFlMjhlODcxOGU1XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Tumbbad" width="150" height="225"></a>
+    <p><strong>Tumbbad (2018)</strong></p>
+    <p>drama · fantasy · horror</p>
+    <p>India · Rahi Anil Barve</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt6499752/"><img src="https://m.media-amazon.com/images/M/MV5BMjI0NzcyMjM5Ml5BMl5BanBnXkFtZTgwMzk2NzAyNTM@._V1_FMjpg_UY1024_.jpg" alt="Upgrade" width="150" height="225"></a>
+    <p><strong>Upgrade (2018)</strong></p>
+    <p>action · sci-fi · thriller</p>
+    <p>United States · Leigh Whannell</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8033592/"><img src="https://m.media-amazon.com/images/M/MV5BYWUxMjZjNDYtYjUxYS00NmM5LWE2ZDItODljNTI0ZjJjMWQzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Us and Them" width="150" height="225"></a>
+    <p><strong>Us and Them (2018)</strong></p>
+    <p>drama · romance</p>
+    <p>China · Rene Liu</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2384811/"><img src="https://m.media-amazon.com/images/M/MV5BMjMwMTA5NDc5M15BMl5BanBnXkFtZTgwMjQ4MTY0MjE@._V1_FMjpg_UY1024_.jpg" alt="Utopia" width="150" height="225"></a>
+    <p><strong>Utopia (2013)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United Kingdom</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8652818/"><img src="https://m.media-amazon.com/images/M/MV5BOWUyNDFjOWUtNGM5MS00YTUzLWFhYzYtZDg5NDNjMWJiY2MyXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Violet Evergarden: The Movie" width="150" height="225"></a>
+    <p><strong>Violet Evergarden: The Movie (2020)</strong></p>
+    <p>animation · drama · fantasy</p>
+    <p>Japan · Taichi Ishidate</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0441909/"><img src="https://m.media-amazon.com/images/M/MV5BMjA0NTUxMjY1OV5BMl5BanBnXkFtZTcwNjI2OTMzMQ@@._V1_FMjpg_UY1024_.jpg" alt="Volver" width="150" height="225"></a>
+    <p><strong>Volver (2006)</strong></p>
+    <p>comedy · drama</p>
+    <p>Spain · Pedro Almodóvar</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2215676/"><img src="https://m.media-amazon.com/images/M/MV5BOTJjZmU5NTctODVlYy00MGM0LTgzNjUtNjU5NDkyYTcxZWQ4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Warped Forest" width="150" height="225"></a>
+    <p><strong>Warped Forest (2011)</strong></p>
+    <p>comedy · fantasy</p>
+    <p>Japan · Shunichirô Miki</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5743796/"><img src="https://m.media-amazon.com/images/M/MV5BNTE5MjE3NTUtNTQxMC00ZjIwLWE2ZjctNmQ2NDc3ZmY2YTE0XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Warrior" width="150" height="225"></a>
+    <p><strong>Warrior (2019)</strong></p>
+    <p>tv · action · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt2618986/"><img src="https://m.media-amazon.com/images/M/MV5BMjUwY2NmZDItZjdjNC00ZGQ3LTk2NTEtNjY5NTQxOGYwNGY4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Wayward Pines" width="150" height="225"></a>
+    <p><strong>Wayward Pines (2015)</strong></p>
+    <p>tv · drama · horror · mystery</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0439100/"><img src="https://m.media-amazon.com/images/M/MV5BOWVmOGQyNDEtY2Y1NS00MGM2LWI5ZTMtNmJmOGUwNjY0N2FkXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Weeds" width="150" height="225"></a>
+    <p><strong>Weeds (2005)</strong></p>
+    <p>tv · comedy · crime · drama</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt0475784/"><img src="https://m.media-amazon.com/images/M/MV5BMjM2MTA5NjIwNV5BMl5BanBnXkFtZTgwNjI2OTMxNTM@._V1_FMjpg_UY1024_.jpg" alt="Westworld" width="150" height="225"></a>
+    <p><strong>Westworld (2016)</strong></p>
+    <p>tv · drama · mystery · sci-fi</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt9647768/"><img src="https://m.media-amazon.com/images/M/MV5BZTgwZTYyNjItOTQ5YS00MjZhLTkyODAtMzc5YWQzZDIwMTAzXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Wild Goose Lake" width="150" height="225"></a>
+    <p><strong>Wild Goose Lake (2019)</strong></p>
+    <p>crime · drama</p>
+    <p>China · Yi'nan Diao</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt5362988/"><img src="https://m.media-amazon.com/images/M/MV5BMTUyMjU1OTUwM15BMl5BanBnXkFtZTgwMDg1NDQ2MjI@._V1_FMjpg_UY1024_.jpg" alt="Wind River" width="150" height="225"></a>
+    <p><strong>Wind River (2017)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>United Kingdom · Taylor Sheridan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt1399683/"><img src="https://m.media-amazon.com/images/M/MV5BMjA0OTM3MDMxNF5BMl5BanBnXkFtZTcwMDY1MjI0Mw@@._V1_FMjpg_UY1024_.jpg" alt="Winter's Bone" width="150" height="225"></a>
+    <p><strong>Winter's Bone (2010)</strong></p>
+    <p>crime · drama · mystery</p>
+    <p>United States · Debra Granik</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt11041332/"><img src="https://m.media-amazon.com/images/M/MV5BNzMyM2QyNWUtMjQzMS00M2U0LTgxODUtOWU2ZjcxNzdjN2EwXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Yellowjackets" width="150" height="225"></a>
+    <p><strong>Yellowjackets (2021)</strong></p>
+    <p>tv · drama · mystery · thriller</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt7335184/"><img src="https://m.media-amazon.com/images/M/MV5BZmU4ZWZlMmItZTc1My00YjU5LTk1ZTQtMjA4MzM5Yzk5NWQ5XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="You" width="150" height="225"></a>
+    <p><strong>You (2018)</strong></p>
+    <p>tv · crime · drama · romance</p>
+    <p>United States</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt13664452/"><img src="https://m.media-amazon.com/images/M/MV5BMjViMThmZWMtMDhiNS00OWVkLThlNzYtMDA1NWQwZjRkMjYxXkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Yu Yu Hakusho" width="150" height="225"></a>
+    <p><strong>Yu Yu Hakusho (2023)</strong></p>
+    <p>tv · action · adventure · comedy</p>
+    <p>Japan</p>
+  </div>
+  <div>
+    <a href="https://www.imdb.com/title/tt8332438/"><img src="https://m.media-amazon.com/images/M/MV5BMWYwNGVjZWItMjA3Yi00YjBkLTliYmItM2E0NWRjZDU5ODc4XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Zero Zero Zero" width="150" height="225"></a>
+    <p><strong>Zero Zero Zero (2020)</strong></p>
+    <p>tv · crime · drama · thriller</p>
+    <p>Italy</p>
+  </div>
+</div>
+#+END_EXPORT
+
 * [2026-01-23 Fri] Introducing Kitty Cards
 :PROPERTIES:
 :CUSTOM_ID: introducing-kitty-cards
