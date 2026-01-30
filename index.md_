@@ -1,13 +1,82 @@
-# \[2026-01-29 Thu\] Film / TV bookmarks
+# \[2026-01-29 Thu\] Film/TV bookmarks (chaos resolved)
 ---
-id: film-tv-bookmarks
+id: film-tv-bookmarks-chaos-resolved
 ---
 
-I've been somewhat chaotically "bookmarking" things to watch for some time (Reddit links, IMDB links, movie names, director names, etc). The info typically goes straight to an Emacs org file primarily via [Journelly](https://journelly.com/).
+I've been somewhat chaotically "bookmarking" things to watch for some time. The info typically goes straight to an Emacs org file primarily via [Journelly](https://journelly.com/).
 
-While being forgiving in input form is important (makes it more likely for me to write), it's not super practical to browse the different kind of data. Yesterday, I finally did something about that. A little scripting and LLM help got me my first browsable catalog.
+I'm fairly forgiving in my input form. I often link to [Reddit](https://www.reddit.com) discussions, [IMDB](https://www.imdb.com)/[Letterboxd](https://letterboxd.com) links, or at times simply write movie or director names. The only real requirement is to sprinkle some hashtags (#film or #series or #watch) for retrieval.
 
-Maybe I'll write this up and also share the film/tv series list.
+While this flexibility is important (makes it more likely for me to actually write), it's not super practical to browse through this mixed structure when looking for something to watch. Yesterday, I finally did something about that.
+
+Here's what my `save-to-Journelly` flow may look like for a Reddit link:
+
+![](https://xenodium.github.io/images/film-tv-bookmarks-chaos-resolved/sharing.png)
+
+All entries are saved to Journelly.org, a plain text org file ([Markdown is supported too](https://xenodium.com/journelly-1-3-released)), so I first extracted all relevant entries (containing #film or #series or #watch). A matching entry looks a little something like this:
+
+``` org
+* [2026-01-29 Thu 09:52] @ Home
+:PROPERTIES:
+:LATITUDE: 51.5007
+:LONGITUDE: -0.1246
+:WEATHER_TEMPERATURE: 4.2°C
+:WEATHER_CONDITION: Cloudy
+:WEATHER_SYMBOL: cloud
+:END:
+#film #hongkong #watch
+
+https://www.reddit.com/r/movies/comments/1j85b52/just_rewatched_kung_fu_hustle_still_felt_great
+```
+
+Having extracted non-personal items from `Journelly.org`, I created a git repo with just one file: `watchlist.org` including entries like the one above.
+
+With personal/private details out of the way, I decided to let the LLM robots loose. That is, hand `watchlist.org` over to a [Claude Code agent](https://claude.com/product/claude-code), via Emacs [agent-sell](https://github.com/xenodium/agent-shell) to organize my chaos.
+
+First I asked to normalize data by extracting all film/tv info from each entry, visiting Reddit/IMDB/Letterboxd links if needed, which yielded `normalized.org`:
+
+``` text
+Kung Fu Hustle
+https://www.imdb.com/title/tt0373074
+```
+
+Next I asked to generate metadata for me (using the fields I wanted from `IMDB`), stored in org drawers, saved to `db.org`:
+
+``` org
+* Kung Fu Hustle
+:PROPERTIES:
+:TYPE: film
+:YEAR: 2004
+:IMDB: https://www.imdb.com/title/tt0373074/
+:IMDB_RATING: 7.7
+:COUNTRY: Hong Kong
+:DIRECTOR: Stephen Chow
+:GENRE: action, comedy, fantasy
+:RUNTIME: 99
+:ADDED: [2026-01-28]
+:THUMBNAIL: file:thumbnails/tt0373074.png
+:IMDB_THUMBNAIL: https://m.media-amazon.com/images/M/MV5BNGU2OWVlM2ItZGZlOC00Yzk2LWE1NzEtMDYwMzE4YTE5MzQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg
+:END:
+```
+
+Finally, I asked to generate HTML from `db.org` so I can render and easily browse.
+
+``` html
+<div>
+  <a href="https://www.imdb.com/title/tt0373074/"><img src="https://m.media-amazon.com/images/M/MV5BNGU2OWVlM2ItZGZlOC00Yzk2LWE1NzEtMDYwMzE4YTE5MzQ2XkEyXkFqcGc@._V1_FMjpg_UY1024_.jpg" alt="Kung Fu Hustle" width="150" height="225"></a>
+  <p><strong>Kung Fu Hustle (2004)</strong></p>
+  <p>action · comedy · fantasy</p>
+  <p>Hong Kong · Stephen Chow</p>
+</div>
+```
+
+For each transformation, `Claude Code` generated a python script. I've yet to decide what to do with all the resulting source code. Do I clean it up? Rewrite it?
+
+For now, I'm happy with the results of the experiment. I managed to organize some of my chaos! In some ways, this isn't too different from me writing a quick/hacky/ugly script, when it's acceptable to do so.
+
+At the center of all it all my beloved org syntax. Thanks to plain text formats, we can easily peek at them, query them, poke at them, tweak them, and bend til our heart's content. It's just so versatile and now we can throw them at LLMs, too.
+
+Oh, and if you're curious about that watch list, here you go. Do you have some movie/show suggestions for me?
 
 <div class="grid">
   <div>
@@ -3978,7 +4047,7 @@ That's it for today. If you want to give `diverted.el` a try, head over to [GitH
 
 ## Make it all sustainable
 
-Reckon `diverted-mode` will be useful to you? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Reckon `diverted-mode` will be useful to you? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4013,7 +4082,7 @@ While the bug was annoying, I had been procrastinating on fixing as it could hav
 
 ## Make it all sustainable
 
-Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Learned something new? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4034,7 +4103,7 @@ I've just pushed [ready-player-dired-mode](https://github.com/xenodium/ready-pla
 
 ## Make it all sustainable
 
-Is [Ready Player](https://github.com/xenodium/ready-player) useful to you? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Is [Ready Player](https://github.com/xenodium/ready-player) useful to you? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [macOS/iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4098,7 +4167,7 @@ If you prefer to keep graphics out of model-picking, I got you covered. Set `cha
 
 ## Make it all sustainable
 
-Is [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) useful to you? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Is [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) useful to you? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [macOS/iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4162,11 +4231,11 @@ Stranger: [Sir this is a Wendy's](https://knowyourmeme.com/memes/sir-this-is-a-w
 
 ## Emacs Carnival
 
-This post is part of the [Emacs Carnival](https://www.emacswiki.org/emacs/Carnival). This month is [Your Elevator Pitch for Emacs, hosted by Jeremy Friesen](https://takeonrules.com/2025/08/01/emacs-carnival-2025-08-your-elevator-pitch-for-emacs/).
+This post is part of the [Emacs Carnival](https://www.emacswiki.org/emacs/Carnival), themed ["Your Elevator Pitch for Emacs", hosted by Jeremy Friesen](https://takeonrules.com/2025/08/01/emacs-carnival-2025-08-your-elevator-pitch-for-emacs/).
 
 ## Make it all sustainable
 
-Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Learned something new? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4183,7 +4252,7 @@ The solution relies on [ffmpeg](https://www.youtube.com/watch?v=9kaIXkImCAM) to 
 
 ## Make it all sustainable
 
-Find [video-trimmer-mode](https://github.com/xenodium/dotsies/blob/main/emacs/ar/video-trimmer.el) useful? Want me to publish to [MELPA](https://melpa.org)? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Find [video-trimmer-mode](https://github.com/xenodium/dotsies/blob/main/emacs/ar/video-trimmer.el) useful? Want me to publish to [MELPA](https://melpa.org)? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [macOS/iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4258,11 +4327,11 @@ Implementing `selectedRange` didn't just bring dictation back, but now leverages
 
 I've since [submitted a patch upstream](https://debbugs.gnu.org/cgi/bugreport.cgi?bug=79070). I'm happy to report that as of today, the patch is now [merged into master](https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=6e64e0bd26b6c0f1c4e90c9bc0df37a2a9ac72da). Thank you Gerd Möllmann and Eli Zaretskii for your help! Also big thanks to Stephen Englen, Fritz Grabo, \@veer66 and \@dotemacs on the fediverse who [quickly jumped in to help validate the fix](https://indieweb.social/@xenodium/114891280426640026).
 
-While we've yet to find out when the next Emacs release will ship, we at least know the fix is coming! If like me, you'd like to get the fix backported to Emacs 30, I've [shown you how to do just that on Emacs Plus](patching-your-homebrews-emacs-plus-macos) (my favourite macOS build).
+While we've yet to find out when the next Emacs release will ship, we at least know the fix is coming! If like me, you'd like to get the fix backported to Emacs 30, I've [shown you how to do just that on Emacs Plus](https://xenodium.com/patching-your-homebrews-emacs-plus-macos) (my favourite macOS build).
 
 ## Make it all sustainable
 
-Glad macOS dictation is fixed? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Glad macOS dictation is fixed? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make my work sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [macOS/iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4290,7 +4359,7 @@ Want to get started with outlines? Easy. Let's say you wanted to start collectin
 ...
 ```
 
-That's precisely what I did when I started using Org nearly 12 years ago. I created a notes file and added [my first entry to collect python 2 idioms](some-python-idioms). While the idioms may be outdated by now (who knows, it's been many years since I've written any significant amount of python code), but hey that's besides the point. I wanted to start a personal notes file and Org sounded awesome for that.
+That's precisely what I did when I started using Org nearly 12 years ago. I created a notes file and added [my first entry to collect python 2 idioms](https://xenodium.com/some-python-idioms). While the idioms may be outdated by now (who knows, it's been many years since I've written any significant amount of python code), but hey that's besides the point. I wanted to start a personal notes file and Org sounded awesome for that.
 
 Over time, my notes file grew in usefulness. The more I wrote, the more I could recall with search. That is, until I was away from my computer. At that point, I figured I could just export my notes to HTML (via `M-x org-export-dispatch`) and post online. Over time, folks started reaching out about something read in my notes, and so by then I suppose I had accidentally become a blogger.
 
@@ -4325,7 +4394,7 @@ As you know, my Org adoption started with a very simple outline intended for per
 | Nibbler              | Leela's pet      | Planet Eternium    |
 ```
 
-I'd keep finding really handy Org tips here and there. Like [converting csv to Org by merely selecting the text](org-tip-convert-csv-to-table) from my beloved editor.
+I'd keep finding really handy Org tips here and there. Like [converting csv to Org by merely selecting the text](https://xenodium.com/org-tip-convert-csv-to-table) from my beloved editor.
 
 ![](https://xenodium.github.io/images/org-tip-convert-csv-to-table/csv-to-org-table.gif)
 
@@ -4391,7 +4460,7 @@ Later on, with [Michael Eliachevitch](https://github.com/meliache)'s help, we go
 
 ## Fitbit API, Org babel, and gnuplot
 
-I continued having fun with Org babel. You can combine source blocks for different purposes, so I used it to [fetch and plot Fitbit data](fitbit-api-org-babel-and-gnuplot) via [Gnuplot](http://gnuplot.info/).
+I continued having fun with Org babel. You can combine source blocks for different purposes, so I used it to [fetch and plot Fitbit data](https://xenodium.com/fitbit-api-org-babel-and-gnuplot) via [Gnuplot](http://gnuplot.info/).
 
 ``` org
 #+BEGIN_SRC sh :results table
@@ -4421,13 +4490,13 @@ plot data u 1:2 with linespoints title 'Weight in Kg'
 
 ## Adding SwiftUI Org babel support
 
-Having learned that babel can generate images (like [Gnuplot](http://gnuplot.info/)), I figured I could have [fun with SwiftUI](swiftui-layout-previews-using-emacs-org-blocks) too and built [ob-swiftui](https://github.com/xenodium/ob-swiftui). Also on [MELPA](https://melpa.org/#/ob-swiftui).
+Having learned that babel can generate images (like [Gnuplot](http://gnuplot.info/)), I figured I could have [fun with SwiftUI](https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks) too and built [ob-swiftui](https://github.com/xenodium/ob-swiftui). Also on [MELPA](https://melpa.org/#/ob-swiftui).
 
 ![](https://xenodium.github.io/images/ob-swiftui-updates/file-render.gif)
 
 ## Adding Org links (DWIM style)
 
-Notes aren't complete without links to references. I was already using a keyboard shortcut of sorts, but [I figured I could make it much smarter](emacs-dwim-do-what-i-mean). As in [DWIM](https://en.wikipedia.org/wiki/DWIM): Do what I mean. Like automatically fetching link title from the web and other things.
+Notes aren't complete without links to references. I was already using a keyboard shortcut of sorts, but [I figured I could make it much smarter](https://xenodium.com/emacs-dwim-do-what-i-mean). As in [DWIM](https://en.wikipedia.org/wiki/DWIM): Do what I mean. Like automatically fetching link title from the web and other things.
 
 ![](https://xenodium.github.io/images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif)
 
@@ -4437,13 +4506,13 @@ Notes aren't complete without links to references. I was already using a keyboar
 
 ## Scraping useful links
 
-Comments in posts can be a great source of recommendations (someone asking for books, blogs, etc), so I figured I could get Emacs to [extract all links from an online post and dump them to an org file](emacs-link-scraping-2021-edition).
+Comments in posts can be a great source of recommendations (someone asking for books, blogs, etc), so I figured I could get Emacs to [extract all links from an online post and dump them to an org file](https://xenodium.com/emacs-link-scraping-2021-edition).
 
 ![](https://xenodium.github.io/images/emacs-link-scraping-2021-edition/scrape.png)
 
 ## Change your MAC address in Org of course
 
-Cause you never know when you're gonna need it, I randomly saved a snippet to [change your MAC address from the comfort of your Org notes](changing-mac-address-from-org-mode). Execute via `C-c C-c`.
+Cause you never know when you're gonna need it, I randomly saved a snippet to [change your MAC address from the comfort of your Org notes](https://xenodium.com/changing-mac-address-from-org-mode). Execute via `C-c C-c`.
 
 ``` org
 #+begin_src bash :dir /sudo::
@@ -4466,7 +4535,7 @@ By the way, noticed the `:dir /sudo::` header? It enables executing the snippet 
 
 ## Generating documentation for your Emacs package
 
-Having built a handful of Emacs packages, maintaining a README.org documenting commands available (and keeping it up-to-date) was a bit of a chore. I figured you could automate things and generate [a nice Org table documenting your package commands and customizable variables](generating-elisp-org-docs).
+Having built a handful of Emacs packages, maintaining a README.org documenting commands available (and keeping it up-to-date) was a bit of a chore. I figured you could automate things and generate [a nice Org table documenting your package commands and customizable variables](https://xenodium.com/generating-elisp-org-docs).
 
 When you see [this table](https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file#chatgpt-shell-commands) in my GitHub project, you now know how it was generated.
 
@@ -4474,13 +4543,13 @@ When you see [this table](https://github.com/xenodium/chatgpt-shell?tab=readme-o
 
 ## A noweb detour: the lesser known Org babel glue
 
-While Org babel's noweb support isn't super widely known, I learned it's [great for glueing org babel blocks](noweb-more-glue-for-your-org-toolbox). I love how Org knowledge (and Emacs benefits really) just keep compounding. I started by just writing a simple Org outline. Remember?
+While Org babel's noweb support isn't super widely known, I learned it's [great for glueing org babel blocks](https://xenodium.com/noweb-more-glue-for-your-org-toolbox). I love how Org knowledge (and Emacs benefits really) just keep compounding. I started by just writing a simple Org outline. Remember?
 
 ![](https://xenodium.github.io/images/noweb-more-glue-for-your-org-toolbox/data-chart.gif)
 
 ## LLMs join the babel chat
 
-In 2023, I [started experimenting with LLMs and Emacs integrations](a-chatgpt-emacs-shell). Naturally, I had to add babel support too, so [ob-chatgpt-shell](https://github.com/xenodium/chatgpt-shell) ([MELPA](https://melpa.org/#/ob-chatgpt-shell)) and [ob-dall-e-shell](https://github.com/xenodium/ob-dall-e-shell) ([MELPA](https://melpa.org/#/ob-dall-e-shell)) were [added to the mix](chatgpt-shell-available-on-melpa#dall-e-shell%2C-ob-chatgpt-shell%2C-and-ob-dall-e-shell-(on-melpa-too)).
+In 2023, I [started experimenting with LLMs and Emacs integrations](https://xenodium.com/a-chatgpt-emacs-shell). Naturally, I had to add babel support too, so [ob-chatgpt-shell](https://github.com/xenodium/chatgpt-shell) ([MELPA](https://melpa.org/#/ob-chatgpt-shell)) and [ob-dall-e-shell](https://github.com/xenodium/ob-dall-e-shell) ([MELPA](https://melpa.org/#/ob-dall-e-shell)) were [added to the mix](https://xenodium.com/chatgpt-shell-available-on-melpa#dall-e-shell%2C-ob-chatgpt-shell%2C-and-ob-dall-e-shell-(on-melpa-too)).
 
 ![](https://xenodium.github.io/images/chatgpt-shell-available-on-melpa/babel.png)
 
@@ -4488,13 +4557,13 @@ In 2023, I [started experimenting with LLMs and Emacs integrations](a-chatgpt-em
 
 Your knowledge base is only as useful as its wealth. The more you write, the better. And of course, the less friction, the more likely you are to write more.
 
-[Org capture](https://howardism.org/Technical/Emacs/capturing-intro.html) is super useful to save your thoughts quickly into an Org file. You can come up with all sorts of templates to expedite the process. In addition to the base structure, I figured I could [automatically capture my current location, date, time, and weather](a-richer-journelly-org-capture-template) as part of a note.
+[Org capture](https://howardism.org/Technical/Emacs/capturing-intro.html) is super useful to save your thoughts quickly into an Org file. You can come up with all sorts of templates to expedite the process. In addition to the base structure, I figured I could [automatically capture my current location, date, time, and weather](https://xenodium.com/a-richer-journelly-org-capture-template) as part of a note.
 
 ![](https://xenodium.github.io/images/a-richer-journelly-org-capture-template/capture.gif)
 
 ## Presenting in style
 
-There are no shortages of Emacs packages leveraging Org mode to give presentations ([org-present](https://github.com/rlister/org-present) is one of many). I often enjoy [David Wilson](https://daviwil.com)'s [videos](https://www.youtube.com/@SystemCrafters). In this one, [he shares his presentation setup](https://systemcrafters.net/emacs-tips/presentations-with-org-present/). I figured it'd be fun to [experiment with `org-present` to spiff things up](emacs-org-present-in-style). I wanted a sort of smart navigation where items are automatically expanded and collapsed as I `<tab>` my way through a presentation.
+There are no shortages of Emacs packages leveraging Org mode to give presentations ([org-present](https://github.com/rlister/org-present) is one of many). I often enjoy [David Wilson](https://daviwil.com)'s [videos](https://www.youtube.com/@SystemCrafters). In this one, [he shares his presentation setup](https://systemcrafters.net/emacs-tips/presentations-with-org-present/). I figured it'd be fun to [experiment with `org-present` to spiff things up](https://xenodium.com/emacs-org-present-in-style). I wanted a sort of smart navigation where items are automatically expanded and collapsed as I `<tab>` my way through a presentation.
 
 ![](https://xenodium.github.io/images/emacs-org-present-in-style/org-navigate_x1.6.webp)
 
@@ -4504,7 +4573,7 @@ With my Org usage growing, I felt like I was missing Org support outside of Emac
 
 ### Journelly (iOS)
 
-[Journelly](journelly-like-tweeting-but-for-your-eyes-only) is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by Org markup, which can be synced with Emacs via iCloud.
+[Journelly](https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only) is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by Org markup, which can be synced with Emacs via iCloud.
 
 ![](https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/sideways.jpg)
 
@@ -4512,7 +4581,7 @@ With my Org usage growing, I felt like I was missing Org support outside of Emac
 
 ### Flat Habits (iOS)
 
-[Org habits](https://orgmode.org/manual/Tracking-your-habits.html) are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [Flat Habits](flat-habits-for-ios).
+[Org habits](https://orgmode.org/manual/Tracking-your-habits.html) are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [Flat Habits](https://xenodium.com/flat-habits-for-ios).
 
 ![](https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif)
 
@@ -4520,7 +4589,7 @@ With my Org usage growing, I felt like I was missing Org support outside of Emac
 
 ### Scratch (iOS)
 
-While these days I'm using [Journelly](https://journelly.com/) to jot down just about anything, before that, I built and used [Scratch](scratch-a-minimal-scratch-area) as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by Org markup.
+While these days I'm using [Journelly](https://journelly.com/) to jot down just about anything, before that, I built and used [Scratch](https://xenodium.com/scratch-a-minimal-scratch-area) as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by Org markup.
 
 ![](https://xenodium.github.io/images/scratch-a-minimal-scratch-area/scratch-download_no_audio_x2.6.webp)
 
@@ -4538,15 +4607,15 @@ While I already mentioned [LMNO.lol](https://lmno.lol), it's been heavily inspir
 
 ## Org bookmarks
 
-While there is newer content out there, I did capture [a handful of Org bookmarks](org-mode-bookmarks) at some point. [This one took me down memory lane](org-tips-from-2015-03-18-emacs-hangout/). [Sacha Chua](https://sachachua.com/blog/) used make these really fun videos interviewing Emacs folks, often discussing their Emacs configs. I learned a ton from these videos. That time, Sacha interviewed [Howard Abrams](https://howardism.org/). Gosh, that was over 10 years ago.
+While there is newer content out there, I did capture [a handful of Org bookmarks](https://xenodium.com/org-mode-bookmarks) at some point. [This one took me down memory lane](https://xenodium.com/org-tips-from-2015-03-18-emacs-hangout/). [Sacha Chua](https://sachachua.com/blog/) used make these really fun videos interviewing Emacs folks, often discussing their Emacs configs. I learned a ton from these videos. That time, Sacha interviewed [Howard Abrams](https://howardism.org/). Gosh, that was over 10 years ago.
 
-Off the top of my head, [Karl Voit](https://karl-voit.at/) also comes to mind, [for championing Org for years](https://karl-voit.at/2017/09/23/orgmode-as-markup-only). I know I'm not doing it justice. There are far too many folks I've learned from, who kindly share their knowledge. I've [bookmarked some of them](org-mode-bookmarks) in the past.
+Off the top of my head, [Karl Voit](https://karl-voit.at/) also comes to mind, [for championing Org for years](https://karl-voit.at/2017/09/23/orgmode-as-markup-only). I know I'm not doing it justice. There are far too many folks I've learned from, who kindly share their knowledge. I've [bookmarked some of them](https://xenodium.com/org-mode-bookmarks) in the past.
 
 Naturally, my Org journey wouldn't be possible without [Org mode](https://orgmode.org) itself and the incredible work from the authors and maintainers. I've personally donated to their cause and even got my ex-employer to donate multiple times.
 
 ## I could keep showing more things…
 
-You could argue my Org usage is fairly random. Maybe it is. I'd say it's more organic than anything. I more or less started writing outlines and TODO lists, incrementally adopting whatever needed over time. It's up to you how much or little Org you adopt. Whatever you pick is the right answer for you. The Org feature set is just so vast. Some of the things I've tried didn't stick for me like [plotting ledger reports](plotting-ledger-reports-in-org) or [combating spam](spam-blacklisting-with-emacs-org-babel) through Org, but by trying things I got to discover other things that probably did stick.
+You could argue my Org usage is fairly random. Maybe it is. I'd say it's more organic than anything. I more or less started writing outlines and TODO lists, incrementally adopting whatever needed over time. It's up to you how much or little Org you adopt. Whatever you pick is the right answer for you. The Org feature set is just so vast. Some of the things I've tried didn't stick for me like [plotting ledger reports](https://xenodium.com/plotting-ledger-reports-in-org) or [combating spam](https://xenodium.com/spam-blacklisting-with-emacs-org-babel) through Org, but by trying things I got to discover other things that probably did stick.
 
 I could keep going, showing you more examples of the things I discovered, but in such a vast universe what's useful to me may not be useful to you. With such a diverse toolbox, it's highly likely you'll find just the right tool for your needs.
 
@@ -4554,7 +4623,7 @@ Ok, we get it. The feature set is rich. But most importantly, your data is saved
 
 ## Make it all sustainable
 
-Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Learned something new? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? I am an 👉 indie dev 👈. Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4653,7 +4722,7 @@ Also allow dragging items up and down via M-<up> and M-x<down>."
 
 ## Make it all sustainable
 
-Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Learned something new? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4827,7 +4896,7 @@ Now you know at least two ways of building and patching Emacs on macOS. There ar
 
 ## Make it all sustainable
 
-Learned something new? Enjoying this [blog](https://xenodium.com) or [my projects](https://github.com/xenodium)? Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
+Learned something new? Enjoying this [blog](https://xenodium.com/) or [my projects](https://github.com/xenodium)? Help make it sustainable by ✨[sponsoring](https://github.com/sponsors/xenodium)✨
 
 Need a blog? [I can help with that](https://lmno.lol). Maybe buy my [iOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id304568690) too ;)
 
@@ -4949,11 +5018,11 @@ If you just want a quick way to take notes or journal privately, Journelly alrea
 
 ## Org mode enthusiasts
 
-I got this one pretty well-covered also. I'm an Emacs org mode enthusiast myself and regularly [share my Journelly entries between my iPhone and Mac](a-richer-journelly-org-capture-template). You don't need to take my word for it though. jcs is a seasoned Emacs enthusiast. [From Irreal, he's covered Journelly pretty well](https://irreal.org/blog/?s=Journelly). While [journelly.com](https://journelly.com/) quotes and links to posts from happy users, I've been collecting posts from different users. I should share a post with all of them too!
+I got this one pretty well-covered also. I'm an Emacs org mode enthusiast myself and regularly [share my Journelly entries between my iPhone and Mac](https://xenodium.com/a-richer-journelly-org-capture-template). You don't need to take my word for it though. jcs is a seasoned Emacs enthusiast. [From Irreal, he's covered Journelly pretty well](https://irreal.org/blog/?s=Journelly). While [journelly.com](https://journelly.com/) quotes and links to posts from happy users, I've been collecting posts from different users. I should share a post with all of them too!
 
 ## Markdown enthusiasts
 
-Which brings me back to this post: there are a lot of Markdown users out there. While Journelly’s UX has caught the interest of some Markdown fans, many prefer to stick with their favorite format. Your interest was heard! I did say, [the more requests I get, the sooner I'll get Markdown support out the door](journelly-for-ios), and so here we are.
+Which brings me back to this post: there are a lot of Markdown users out there. While Journelly’s UX has caught the interest of some Markdown fans, many prefer to stick with their favorite format. Your interest was heard! I did say, [the more requests I get, the sooner I'll get Markdown support out the door](https://xenodium.com/journelly-for-ios), and so here we are.
 
 You can now try Markdown support via TestFlight. I look forward to your feedback.
 
@@ -5102,7 +5171,7 @@ At the same time, I've disabled the ⌥ key to avoid inadvertent surprises.
 
 ## Enabling Control-Meta(⌘)-D
 
-After setting ⌘ as Meta key, I discovered C-M-d is not available to Emacs for binding keys. There's a [little workaround](enabling-control-meta-d-on-macos):
+After setting ⌘ as Meta key, I discovered C-M-d is not available to Emacs for binding keys. There's a [little workaround](https://xenodium.com/enabling-control-meta-d-on-macos):
 
 ``` {.bash org-language="sh"}
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
@@ -5110,7 +5179,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 
 ## Frames
 
-You may have noticed the `--with-no-frame-refocus` Emacs Plus option. I didn't like Emacs refocusing other frames when closing one, so I [sent a tiny patch over to Emacs Plus](no-emacs-frame-refocus-on-macos), which gave us that option.
+You may have noticed the `--with-no-frame-refocus` Emacs Plus option. I didn't like Emacs refocusing other frames when closing one, so I [sent a tiny patch over to Emacs Plus](https://xenodium.com/no-emacs-frame-refocus-on-macos), which gave us that option.
 
 I also prefer reusing existing frames whenever possible.
 
@@ -5120,7 +5189,7 @@ I also prefer reusing existing frames whenever possible.
 
 ## Visual tweaks
 
-Most of my visual tweaks have been documented in my [Emacs eye candy post](my-emacs-eye-candy). For macOS-specific things, read on…
+Most of my visual tweaks have been documented in my [Emacs eye candy post](https://xenodium.com/my-emacs-eye-candy). For macOS-specific things, read on…
 
 It's been a while since I've added this, though vaguely remember needing it to fix mode line rendering artifacts.
 
@@ -5147,13 +5216,13 @@ I want a menu bar like other macOS apps, so I enable with:
 
 ## Emoji picker (a freebie!)
 
-If you got a more recent Apple keyboard, you can [press the 🌐 key to insert emojis](emacs-freebie-macos-emoji-picker) from anywhere, including Emacs. If you haven't got this key, you can always `M-x ns-do-show-character-palette`, which launches the very same dialog.
+If you got a more recent Apple keyboard, you can [press the 🌐 key to insert emojis](https://xenodium.com/emacs-freebie-macos-emoji-picker) from anywhere, including Emacs. If you haven't got this key, you can always `M-x ns-do-show-character-palette`, which launches the very same dialog.
 
 Also check out Charles Choi's [macOS Native Emoji Picking in Emacs from the Edit Menu](http://yummymelon.com/devnull/macos-native-emoji-picking-in-emacs-from-the-edit-menu.html).
 
 ## Longing long press for accents?
 
-If you prefer Apple's long-press approach to inserting accents or other special characters, I got [an Emacs version of that](an-accentuated-emacs-experiment).
+If you prefer Apple's long-press approach to inserting accents or other special characters, I got [an Emacs version of that](https://xenodium.com/an-accentuated-emacs-experiment).
 
 ![](https://xenodium.github.io/images/an-accentuated-emacs-experiment/accentuated.webp)
 
@@ -5169,11 +5238,11 @@ While there are different flavors of "open with default macOS app" commands out 
 
 ## Open in Xcode (at line number)
 
-Shifting from Emacs to Xcode via "Open with" is simple enough, but don't you want to also [visit the very same line](open-in-xcode-at-line-number)?
+Shifting from Emacs to Xcode via "Open with" is simple enough, but don't you want to also [visit the very same line](https://xenodium.com/open-in-xcode-at-line-number)?
 
 ## SF Symbols (for work)
 
-Apple offers [SF Symbols](https://developer.apple.com/sf-symbols/) on all their platforms, so why not enable [Emacs to insert and render them?](emacs-insert-and-render-sf-symbols)
+Apple offers [SF Symbols](https://developer.apple.com/sf-symbols/) on all their platforms, so why not enable [Emacs to insert and render them?](https://xenodium.com/emacs-insert-and-render-sf-symbols)
 
 This is particulary handy if you do any sort of iOS/macOS development, enabling you to insert SF Symbols using your favorite completion framework. I happen to remain a faithful [ivy](https://github.com/abo-abo/swiper) user.
 
@@ -5191,7 +5260,7 @@ While macOS's Activity Monitor does a fine job killing processes, I wanted somet
 
 ## SwiftUI a la org babel
 
-Having learned how simple it was to [enable Objective-C babel support](org-babel-objective-c-support), I figured I could do something a little more creative with SwiftUI, so I published [ob-swiftui](https://lmno.lol/alvaro/ob-swiftui-updates) on MELPA.
+Having learned how simple it was to [enable Objective-C babel support](https://xenodium.com/org-babel-objective-c-support), I figured I could do something a little more creative with SwiftUI, so I published [ob-swiftui](https://lmno.lol/alvaro/ob-swiftui-updates) on MELPA.
 
 ![](https://xenodium.github.io/images/ob-swiftui-updates/file-render.gif)
 
@@ -5238,7 +5307,7 @@ While I hardly ever change my Emacs theme, I do toggle macOS dark mode from time
 
 ## Menu bar auto hide
 
-One last `dwim-shell-command`… One that showcases [toggling the macOS menu bar (autohide)](toggle-macos-menu-bar-from-you-know-where).
+One last `dwim-shell-command`… One that showcases [toggling the macOS menu bar (autohide)](https://xenodium.com/toggle-macos-menu-bar-from-you-know-where).
 
 ![](https://xenodium.github.io/images/toggle-macos-menu-bar-from-you-know-where/autohide.webp)
 
@@ -5290,7 +5359,7 @@ This is all you need:
 
 ## Screencasts
 
-I wanted a quick way to record or take screenshots of macOS windows, so I now have [my lazy way](recordscreenshot-windows-the-lazy-way), leveraging [macosrec](https://github.com/xenodium/macosrec), a recording command line utility I built. Invoked via `M-x` of course.
+I wanted a quick way to record or take screenshots of macOS windows, so I now have [my lazy way](https://xenodium.com/recordscreenshot-windows-the-lazy-way), leveraging [macosrec](https://github.com/xenodium/macosrec), a recording command line utility I built. Invoked via `M-x` of course.
 
 ## Eglot (LSP) for iOS/macOS dev
 
@@ -5312,7 +5381,7 @@ This is another experiment that didn't quite stick, but I played with [controlli
 
 ![](https://xenodium.github.io/images/emacs-searchplay-music-macos/music_search.gif)
 
-While I still purchase music via Apple's Music app, I now play directly from Emacs via [Ready Player Mode](a-tour-of-ready-player-mode). I'm fairly happy with this setup, having scratched that itch with my own package.
+While I still purchase music via Apple's Music app, I now play directly from Emacs via [Ready Player Mode](https://xenodium.com/a-tour-of-ready-player-mode). I'm fairly happy with this setup, having scratched that itch with my own package.
 
 ![](https://xenodium.github.io/images/a-tour-of-ready-player-mode/open-file.gif)
 
@@ -5320,19 +5389,19 @@ By the way, those buttons also leverage SF Symbols on macOS.
 
 ## Reveal -\> all \<- in Finder
 
-While there are plenty of solutions out there leveraging the `open` command line tool to reveal files in macOS's Finder, I wanted one that revealed multiple files in one go. For that, I [leveraged](native-emacsmacos-ux-integrations-via-swift-modules) the awesome [emacs-swift-module](https://github.com/SavchenkoValeriy/emacs-swift-module), also by [Valeriy Savchenko](https://github.com/SavchenkoValeriy).
+While there are plenty of solutions out there leveraging the `open` command line tool to reveal files in macOS's Finder, I wanted one that revealed multiple files in one go. For that, I [leveraged](https://xenodium.com/native-emacsmacos-ux-integrations-via-swift-modules) the awesome [emacs-swift-module](https://github.com/SavchenkoValeriy/emacs-swift-module), also by [Valeriy Savchenko](https://github.com/SavchenkoValeriy).
 
 ![](https://xenodium.github.io/images/native-emacsmacos-ux-integrations-via-swift-modules/reveal.webp)
 
 ## Use the macOS Trash
 
-The macOS trash has saved my bacon in more than one occasion. [Make Emacs aware of it](rm-important-txt-oh-sht/). Also check out `M-x dwim-shell-commands-macos-empty-trash`.
+The macOS trash has saved my bacon in more than one occasion. [Make Emacs aware of it](https://xenodium.com/rm-important-txt-oh-sht/). Also check out `M-x dwim-shell-commands-macos-empty-trash`.
 
 ![](https://xenodium.github.io/images/rm-important-txt-oh-sht/recovered_x1.6.webp)
 
 ## Build your own macOS utils
 
-While elisp wasn't in my top languages to learn back in the day, I sure am glad I finally bit the bullet and learned a thing or two. This opened many possibilities. I now see Emacs as a platform to build utilities and tools off of. A [canvas of sorts](its-all-up-for-grabs-and-it-compounds), to be leveraged in and out of the editor.
+While elisp wasn't in my top languages to learn back in the day, I sure am glad I finally bit the bullet and learned a thing or two. This opened many possibilities. I now see Emacs as a platform to build utilities and tools off of. A [canvas of sorts](https://xenodium.com/its-all-up-for-grabs-and-it-compounds), to be leveraged in and out of the editor.
 
 For example, you could [build your own bookmark launcher](https://lmno.lol/alvaro/building-your-own-bookmark-launcher) and invoke from anywhere on macOS.
 
@@ -5340,7 +5409,7 @@ For example, you could [build your own bookmark launcher](https://lmno.lol/alvar
 
 ## Emacs as default email composer
 
-Turns out you can also [make Emacs your default email composer](mu4e-as-macos-mail-composer).
+Turns out you can also [make Emacs your default email composer](https://xenodium.com/mu4e-as-macos-mail-composer).
 
 ## Emacs key bindings everywhere
 
@@ -5354,7 +5423,7 @@ With my org usage growing, I felt like I was missing org support outside of Emac
 
 ### Journelly (iOS)
 
-[Journelly](journelly-like-tweeting-but-for-your-eyes-only) is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by org markup, which can be synced with Emacs via iCloud.
+[Journelly](https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only) is my latest iOS app, centered around note-taking and journaling. The app feels like tweeting, but for your eyes only of course. It's powered by org markup, which can be synced with Emacs via iCloud.
 
 ![](https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/sideways.jpg)
 
@@ -5362,7 +5431,7 @@ With my org usage growing, I felt like I was missing org support outside of Emac
 
 ### Flat Habits (iOS)
 
-[Org habits](https://orgmode.org/manual/Tracking-your-habits.html) are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [Flat Habits](flat-habits-for-ios).
+[Org habits](https://orgmode.org/manual/Tracking-your-habits.html) are handy for tracking daily habits. However, it wasn't super practical for me as I often wanted to check things off while on the go (away from Emacs). That led me to build [Flat Habits](https://xenodium.com/flat-habits-for-ios).
 
 ![](https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif)
 
@@ -5370,7 +5439,7 @@ With my org usage growing, I felt like I was missing org support outside of Emac
 
 ### Scratch (iOS)
 
-While these days I'm using [Journelly](https://journelly.com/) to jot down just about anything, before that, I built and used [Scratch](scratch-a-minimal-scratch-area) as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by org markup.
+While these days I'm using [Journelly](https://journelly.com/) to jot down just about anything, before that, I built and used [Scratch](https://xenodium.com/scratch-a-minimal-scratch-area) as scratch pad of sorts. No iCloud syncing, but needless to say, it's also powered by org markup.
 
 ![](https://xenodium.github.io/images/scratch-a-minimal-scratch-area/scratch-download_no_audio_x2.6.webp)
 
@@ -5418,7 +5487,7 @@ Check out [journelly.com](https://journelly.com) for details.
 
 ## What's new?
 
-Journelly v1.1 is the first release since [launching](journelly-like-tweeting-but-for-your-eyes-only). It adds support for 10 new languages and delivers the first round of feature requests and bug fixes.
+Journelly v1.1 is the first release since [launching](https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only). It adds support for 10 new languages and delivers the first round of feature requests and bug fixes.
 
 ### New features
 
@@ -5491,7 +5560,7 @@ Today I learned something new from Ellane’s [post](https://ellanew.com/ptpl/15
 
 Currently, Journelly stores entries in Org plain text format, but Markdown support is on the way. Interested in Markdown? [Please reach out](mailto:journelly+markdown@xenodium.com?subject=I'm%20interested%20Markdown%20for%20Journelly&body=Just%20want%20to%20register%20my%20interest%20in%20Markdown%20support%20for%20Journelly). Early support is already available on beta builds. Lemme know if you'd like to join the TestFlight group.
 
-On the topic of Markdown: I also run [lmno.lol](https://lmno.lol/), a Markdown-powered blogging service. Simple and focused, without the frustrating parts of the modern web. Custom domains are welcome too! My [xenodium.com]() blog runs off [lmno.lol](https://lmno.lol/).
+On the topic of Markdown: I also run [lmno.lol](https://lmno.lol/), a Markdown-powered blogging service. Simple and focused, without the frustrating parts of the modern web. Custom domains are welcome too! My [xenodium.com](https://xenodium.com/) blog runs off [lmno.lol](https://lmno.lol/).
 
 # \[2025-05-18 Sun\] LLM text chat is everywhere. Who’s optimizing its UX?
 ---
@@ -5508,7 +5577,7 @@ While there are plenty of new agents and model capabilities that are interesting
 
 ## Chat as a shell, is it keyboard optimized?
 
-Back in 2023, I released the [first version of chatgpt-shell](a-chatgpt-emacs-shell). To me, LLM chats felt like the perfect candidates to be implemented as shells. After all, aren't they just [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)s of sorts?
+Back in 2023, I released the [first version of chatgpt-shell](https://xenodium.com/a-chatgpt-emacs-shell). To me, LLM chats felt like the perfect candidates to be implemented as shells. After all, aren't they just [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)s of sorts?
 
 1.  Reads user input
 2.  Evaluates the input
@@ -5531,13 +5600,13 @@ With all this in mind, it's easy to dismiss shell foundations given their quirks
 
 ## Reducing history noise
 
-While I want to have access to my LLM chat history (ie. the context), I'm hardly ever interested in seeing anything but the last LLM response. An always-present history feels like constant noise to me. If I want to see the history, I'd like to actively ask for it. Remember that veneer of sorts? Well, can't it act as viewport too? …showing me only the very last response. Want access to previous entries? Can it act as a pager also? One interaction per page (request + response). But if I really want to open the history floodgates, just give me access to the "raw" shell… and so I started [experimenting with pagers of sorts](an-experimental-e-shell-pager).
+While I want to have access to my LLM chat history (ie. the context), I'm hardly ever interested in seeing anything but the last LLM response. An always-present history feels like constant noise to me. If I want to see the history, I'd like to actively ask for it. Remember that veneer of sorts? Well, can't it act as viewport too? …showing me only the very last response. Want access to previous entries? Can it act as a pager also? One interaction per page (request + response). But if I really want to open the history floodgates, just give me access to the "raw" shell… and so I started [experimenting with pagers of sorts](https://xenodium.com/an-experimental-e-shell-pager).
 
 ## One chat interface to rule them all
 
-With my initial chatgpt-shell implementation, I envisioned multi-model chat support would be possible by isolating shell logic into a separate package ([shell-maker](a-chatgpt-shell-compose-ux-experiment)) and let folks build whichever LLM chat they'd like (adding support for their favorite model).
+With my initial chatgpt-shell implementation, I envisioned multi-model chat support would be possible by isolating shell logic into a separate package ([shell-maker](https://xenodium.com/a-chatgpt-shell-compose-ux-experiment)) and let folks build whichever LLM chat they'd like (adding support for their favorite model).
 
-While new shells started popping up here and there, I didn't foresee minor shell UX differences affecting general user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on chatgpt-shell features, which I often missed when using some of the other shells. In the end, I bit the bullet and [made chatgpt-shell go multi-model](chatgpt-shell-goes-multi-model).
+While new shells started popping up here and there, I didn't foresee minor shell UX differences affecting general user experience. Learning the quirks of each new shell felt like unnecessary friction in developing muscle memory. I also became dependent on chatgpt-shell features, which I often missed when using some of the other shells. In the end, I bit the bullet and [made chatgpt-shell go multi-model](https://xenodium.com/chatgpt-shell-goes-multi-model).
 
 ## Tying it all together
 
@@ -5906,7 +5975,7 @@ While my typical Journelly use-case hops between taking notes, journaling, today
 
 ## No lock-in (powered by org plain text)
 
-While I want a smooth mobile note-taking experience, I also don't want my notes to live in a data island of sorts. I'm a fan of plain text. I've been writing my notes and blog posts at [xenodium.com]() using [Org](https://orgmode.org/worg/org-syntax.html) plain text for well over a decade now, so my solution naturally had to have some plain text thrown at it.
+While I want a smooth mobile note-taking experience, I also don't want my notes to live in a data island of sorts. I'm a fan of plain text. I've been writing my notes and blog posts at [xenodium.com](https://xenodium.com/) using [Org](https://orgmode.org/worg/org-syntax.html) plain text for well over a decade now, so my solution naturally had to have some plain text thrown at it.
 
 Journelly stores entries using [Org](https://orgmode.org/worg/org-syntax.html) markup for now, but [Markdown](https://www.markdownguide.org/basic-syntax/) is coming too (UPDATE: [launched](https://xenodium.com/journelly-1-3-released)). Interested in Markdown support? [Please reach out](mailto:journelly+markdown@xenodium.com?subject=I'm%20interested%20Markdown%20for%20Journelly&body=Just%20want%20to%20register%20my%20interest%20in%20Markdown%20support%20for%20Journelly). The more requests I receive, the sooner I'll get it out the door. Oh, and since we're talking Markdown, I also launched [lmno.lol](https://lmno.lol/), a Markdown-powered blogging service (minus the yucky bits of the modern web). Custom domains are welcome too. My [xenodium.com](https://xenodium.com/) blog runs off [lmno.lol](https://lmno.lol/).
 
@@ -5928,7 +5997,7 @@ There's little structure enforced on Journelly entries. Write whatever you want.
 
 ## Thank you beta testers!
 
-Nearly 300 folks signed up to [Journelly's TestFlight](journelly-open-for-beta). Thank you for testing, reporting issues, and all the great suggestions. While many of your feature requests made it to the launch, I've had to defer quite few to enable the v1 release. The good news is I now have a healthy backlog I can work on to bring features over time.
+Nearly 300 folks signed up to [Journelly's TestFlight](https://xenodium.com/journelly-open-for-beta). Thank you for testing, reporting issues, and all the great suggestions. While many of your feature requests made it to the launch, I've had to defer quite few to enable the v1 release. The good news is I now have a healthy backlog I can work on to bring features over time.
 
 ## Support indie development
 
@@ -5940,6 +6009,7 @@ Support independent development.
 <a href="https://apps.apple.com/app/id6470714669"><img src="https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/icon.png" alt="download-on-app-store.png" width="180px"/></a><br><br>
 <a href="https://apps.apple.com/app/id6470714669"><img src="https://xenodium.github.io/images/flat-habits-for-ios/download-on-app-store.png" alt="download-on-app-store.png" width="180px"/></a>
 <br><br>
+<center>
   <a href='https://lmno.lol'>
     <img alt='LMNO.lol' height="40" src='https://xenodium.github.io/images/journelly-like-tweeting-but-for-your-eyes-only/lmno-icon.png'>
   </a>
@@ -5956,6 +6026,7 @@ Support independent development.
     <img alt='Fresh Eyes' width="40" height="40" src='https://xenodium.github.io/images/fresh-eyes-now-on-the-app-store/fresh_eyes_icon.png'>
   </a>
 </center>
+</center>
 
 # \[2025-04-02 Wed\] Journelly vs Emacs: Why Not Both?
 ---
@@ -5968,7 +6039,7 @@ From my perspective as the author, I'm building this app to fill a void I have, 
 
 When I’m on my computer, nearly all my writing goes through org-mode. I’ve been an org fan for well over a decade. My blog is powered by a [single org file](https://raw.githubusercontent.com/xenodium/xenodium.github.io/refs/heads/master/index.org) (be warned, it's a chunky file).
 
-It's no secret I'm also an Emacs fan. I love how this platform [moulds to my needs](a-platform-that-moulds-to-your-needs). But when I’m on the go and on my iPhone, I want a different experience — quick mobile access, minimal ceremony, optimized for smaller touch screens. I want to capture quick notes on the go, with as little friction as possible. Optionally, I want to include photos, lists, checklists, location, weather, timestamps… I also want this experience to feel like other well-integrated iOS apps. The way I like to put it is: Journelly sorta feels like tweeting, but for your eyes only.
+It's no secret I'm also an Emacs fan. I love how this platform [moulds to my needs](https://xenodium.com/a-platform-that-moulds-to-your-needs). But when I’m on the go and on my iPhone, I want a different experience — quick mobile access, minimal ceremony, optimized for smaller touch screens. I want to capture quick notes on the go, with as little friction as possible. Optionally, I want to include photos, lists, checklists, location, weather, timestamps… I also want this experience to feel like other well-integrated iOS apps. The way I like to put it is: Journelly sorta feels like tweeting, but for your eyes only.
 
 ![](https://xenodium.github.io/images/journelly-vs-emacs-why-not-both/journelly.gif)
 
@@ -5984,7 +6055,7 @@ Back to the original question: why use another tool for quick notes other than E
 
 Journelly is still in beta, though lucky for me, [Mac Observer showcased a thorough review](https://www.macobserver.com/tips/round-ups/journelly-journal-app-ios/). If keen to join the beta group, reach out at journelly/./invite/@/xenodium.com or [Mastodon](https://indieweb.social/@xenodium) / [Twitter](https://twitter.com/xenodium) / [Reddit](https://www.reddit.com/user/xenodium) / [Bluesky](https://bsky.app/profile/xenodium.bsky.social).
 
-P.S. Emacs org continues to be, and likely always will be, my writing epicentre. I now have three revolving [org-based apps on the App Store](https://apps.apple.com/us/developer/xenodium-ltd/id304568690), with Journelly soon to become the fourth one. if interested, check out [my org bundle](the-org-bundle).
+P.S. Emacs org continues to be, and likely always will be, my writing epicentre. I now have three revolving [org-based apps on the App Store](https://apps.apple.com/us/developer/xenodium-ltd/id304568690), with Journelly soon to become the fourth one. if interested, check out [my org bundle](https://xenodium.com/the-org-bundle).
 
 # \[2025-03-25 Tue\] The Mac Observer showcases Journelly
 ---
@@ -6000,14 +6071,14 @@ id: the-mac-observer-showcases-journelly
 
 [Bemfica de Oliva](https://www.macobserver.com/author/bemfica_deoliva/) does a wonderful rundown of Journelly's features and capabilities, much better than anything else I've posted before. They even mentioned [Org](https://orgmode.org) markup and [Emacs](https://www.gnu.org/software/emacs/) text editor, for those who want to drop down to its plain text storage. A nice treat, as these aren't typically showcased in the space.
 
-If you're curious about what Journelly can do, check out Bemfica's [post](https://www.macobserver.com/tips/round-ups/journelly-journal-app-ios/). Alternatively, if you just want to play with it, [join the TestFlight beta group](journelly-open-for-beta).
+If you're curious about what Journelly can do, check out Bemfica's [post](https://www.macobserver.com/tips/round-ups/journelly-journal-app-ios/). Alternatively, if you just want to play with it, [join the TestFlight beta group](https://xenodium.com/journelly-open-for-beta).
 
 # \[2025-03-14 Fri\] Journelly open for beta
 ---
 id: journelly-open-for-beta
 ---
 
-UPDATE: Journelly is [now on the App Store](journelly-like-tweeting-but-for-your-eyes-only).
+UPDATE: Journelly is [now on the App Store](https://xenodium.com/journelly-like-tweeting-but-for-your-eyes-only).
 
 I've reignited Journelly, my note-taking/journaling project. The iOS app is coming along nicely.
 
@@ -6054,7 +6125,7 @@ You can reach out at journelly/./invite/@/xenodium.com or [Mastodon](https://ind
 id: deepseek-open-router-kagi-and-perplexity-join-the-chat
 ---
 
-Back in November, [I announced the chatgpt-shell Emacs package going offline](deepseek-open-router-kagi-and-perplexity-join-the-chat). In real terms, it meant adding [Ollama](https://ollama.com/) support after [chatgpt-shell went multi-model](chatgpt-shell-goes-multi-model). Since then, support for a handful of providers and models has been added.
+Back in November, [I announced the chatgpt-shell Emacs package going offline](https://xenodium.com/deepseek-open-router-kagi-and-perplexity-join-the-chat). In real terms, it meant adding [Ollama](https://ollama.com/) support after [chatgpt-shell went multi-model](https://xenodium.com/chatgpt-shell-goes-multi-model). Since then, support for a handful of providers and models has been added.
 
 While [DeepSeek](https://www.deepseek.com/) is the latest joinee, [Open Router](https://openrouter.ai/) (thank you [djr7C4](https://github.com/xenodium/chatgpt-shell/pull/276)), [Kagi summarizer](https://kagi.com/summarizer/index.html), and [Perplexity](https://perplexity.ai/) are also a model-swap away.
 
@@ -6886,6 +6957,9 @@ id: blogging-minus-the-yucky-bits-of-modern-web
 
 Happy New Year! If you follow [my blog](https://lmno.lol/alvaro), you may have noticed that I've been hosting it on [lmno.lol](https://lmno.lol) for a while now, a blogging service I built (invitation-only until now).
 
+```{=org}
+#+ATTR_HTML: :width 90%
+```
 [![](https://xenodium.github.io/images/blogging-minus-the-yucky-bits-of-modern-web/lmno.png)](https://lmno.lol)
 
 ## Why build a blogging platform
@@ -6962,7 +7036,7 @@ I hope you like [lmno.lol](https://lmno.lol). Happy blogging!
 id: symbol-overlay-mc-now-on-melpa
 ---
 
-Some time ago, I wrote about [adding multiple cursor support to symbol-overlay](its-all-up-for-grabs-and-it-compounds/) by gluing the two packages together. If you're keen to learn how to bend Emacs to your way, have a look at that post.
+Some time ago, I wrote about [adding multiple cursor support to symbol-overlay](https://xenodium.com/its-all-up-for-grabs-and-it-compounds/) by gluing the two packages together. If you're keen to learn how to bend Emacs to your way, have a look at that post.
 
 ![](https://xenodium.github.io/images/its-all-up-for-grabs-and-it-compounds/symbol-overlay-meets-multiple-cursors.gif)
 
@@ -7146,7 +7220,7 @@ Maintaining, experimenting, implementing feature requests, and supporting open-s
 
 Perhaps you enjoy some of the content I write about? Find my Emacs posts/tips useful?
 
--   [Blog (xenodium.com)]() (Web)
+-   [Blog (xenodium.com)](https://xenodium.com/) (Web)
 -   [Blog (lmno.lol/alvaro)](https://lmno.lol/alvaro) (Web)
 
 Alternatively, you want a blogging platform that skips the yucky side effects of the modern web?
@@ -7287,7 +7361,7 @@ Maintaining, experimenting, implementing feature requests, and supporting open-s
 
 Perhaps you enjoy some of the content I write about? Find my Emacs posts/tips useful?
 
--   [Blog (xenodium.com)]() (Web)
+-   [Blog (xenodium.com)](https://xenodium.com/) (Web)
 -   [Blog (lmno.lol/alvaro)](https://lmno.lol/alvaro) (Web)
 
 Alternatively, you want a blogging platform that skips the yucky side effects of the modern web?
@@ -7466,7 +7540,7 @@ Help make the work sustainable. Consider [sponsoring](https://github.com/sponsor
 id: hide-another-detail
 ---
 
-It's been 5 years since I talked about [showing/hiding Emacs dired details in style](showhide-emacs-dired-details-in-style/), a short post showcasing [hide-details-mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html) (built-in) and [diredfl](https://github.com/purcell/diredfl) (third-party).
+It's been 5 years since I talked about [showing/hiding Emacs dired details in style](https://xenodium.com/showhide-emacs-dired-details-in-style/), a short post showcasing [hide-details-mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Misc-Dired-Features.html) (built-in) and [diredfl](https://github.com/purcell/diredfl) (third-party).
 
 While my dired usage increased over the years, my dired config remained largely unchanged. Today, I'll show a new dired tweak.
 
@@ -7803,11 +7877,11 @@ Help make them sustainable. Consider [supporting](https://github.com/sponsors/xe
 id: seek-and-you-shall-find
 ---
 
-A couple of months ago, I [introduced Ready Player Mode](ready-player-mode/), an Emacs major mode used to peek at media files from my beloved text editor. The goal was simple. Treat opening media files like any other file, that is, open and go.
+A couple of months ago, I [introduced Ready Player Mode](https://xenodium.com/ready-player-mode/), an Emacs major mode used to peek at media files from my beloved text editor. The goal was simple. Treat opening media files like any other file, that is, open and go.
 
 The initial implementation served me well while reviewing lots of tiny audio files I used to practice learning a new language. At this point, I started thinking, could I use ready-player for regular music consumption? The thing is, long ago I had stopped buying music and relied on streamed music from online services. Could I go back to offline?
 
-Dusting off my old media collection brought lots of memories as I rediscovered tunes. Having said that, the ready-player experience wasn't quite cutting it for an extended listening experience. I no longer wanted to occasionally peek at media to learn a language. I wanted to load a full music collection. I wanted random access to everything. I wanted Emacs to remember what I was listening to across sessions… While I did [add some pluggable flows](the-dired-abstraction/), I still needed additional changes to make the experience more pleasant.
+Dusting off my old media collection brought lots of memories as I rediscovered tunes. Having said that, the ready-player experience wasn't quite cutting it for an extended listening experience. I no longer wanted to occasionally peek at media to learn a language. I wanted to load a full music collection. I wanted random access to everything. I wanted Emacs to remember what I was listening to across sessions… While I did [add some pluggable flows](https://xenodium.com/the-dired-abstraction/), I still needed additional changes to make the experience more pleasant.
 
 While plugging away at my own ready-player's pet peeves, I also collected a handful of feature requests. Let's go over the latest features.
 
@@ -8240,7 +8314,7 @@ Like this blog? Want to start a blog? Run your blog off a single file. Write fro
 id: fresh-eyes-17-released
 ---
 
-Back in April, [I introduced Fresh Eyes](fresh-eyes-20-20-20-for-macos): a tiny macOS utility helping me take care of my eyes.
+Back in April, [I introduced Fresh Eyes](https://xenodium.com/fresh-eyes-20-20-20-for-macos): a tiny macOS utility helping me take care of my eyes.
 
 I spend a bunch of time in front of a computer screen and [Fresh Eyes](https://apps.apple.com/us/app/fresh-eyes/id6480411697) has been helping me stick with the often recommended [20-20-20 rule](https://en.wikipedia.org/wiki/Computer_vision_syndrome).
 
@@ -8448,7 +8522,7 @@ id: ready-player-mode
 
 ![](https://xenodium.github.io/images/ready-player-mode/meme.gif)
 
-As an Emacs user, I eventually made the leap over to [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) as my file manager of choice. Dired has [magical things like wdired](emacs-git-rename-courtesy-of-dired/). But this post isn't so much about dired and more about the occasional need to peek at media files (images, audio, and video) from Emacs (including dired).
+As an Emacs user, I eventually made the leap over to [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) as my file manager of choice. Dired has [magical things like wdired](https://xenodium.com/emacs-git-rename-courtesy-of-dired/). But this post isn't so much about dired and more about the occasional need to peek at media files (images, audio, and video) from Emacs (including dired).
 
 To view images in Emacs, there's [image mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Image-Mode.html), a fantastic major mode for taking a quick look without leaving your editor. Image mode strikes a great balance. You can get in quickly and out. The `q` keyboard binding is fabulous for bailing out. While viewing an image, you may quickly open the previous/next one by using `n` and `p` keyboard binding. For me, this is just about all I need within my text editor. For anything else, I resort to my favorite image viewing app (macOS's Preview).
 
@@ -8526,13 +8600,13 @@ Take, for example, batch-renaming. Turn `wdired` on via `dired-toggle-read-only`
 
 ![](https://xenodium.github.io/images/emacs-git-rename-courtesy-of-dired/wdired.gif)
 
-One downside (or so I thought) is that wdired didn't automagically also take care of git renames for me, you know [DWIM-style](emacs-dwim-do-what-i-mean/).
+One downside (or so I thought) is that wdired didn't automagically also take care of git renames for me, you know [DWIM-style](https://xenodium.com/emacs-dwim-do-what-i-mean/).
 
 Every time I renamed anything via `wdired` and subsequently pulled up my trusty [magit](https://magit.vc/), I was a little sad it wasn't all just handled… The renamed files were seen as deleted, along with all the untracked counterparts.
 
 ![](https://xenodium.github.io/images/emacs-git-rename-courtesy-of-dired/rename-no-git.png)
 
-So, I set out to change this unacceptable state of affairs 😀. I started off by setting a breakpoint on `wdired-finish-edit` via edebug (see [why this util is awesome](inline-previous-result-and-why-you-should-edebug/)).
+So, I set out to change this unacceptable state of affairs 😀. I started off by setting a breakpoint on `wdired-finish-edit` via edebug (see [why this util is awesome](https://xenodium.com/inline-previous-result-and-why-you-should-edebug/)).
 
 I wanted to see what `wdired-finish-edit` did under the hood, which led me to `dired-rename-file`. As I stepped through the code, I spotted the `dired-vc-rename-file` variable, which does exactly what you think it does 🤦.
 
@@ -8559,7 +8633,7 @@ While you can search for variables via the built-in `describe-variable`, I'm a f
 id: fresh-eyes-now-on-the-app-store
 ---
 
-A couple of days ago, [I introduced Fresh Eyes](fresh-eyes-20-20-20-for-macos), a little macOS utility to help me practice the [20-20-20 rule](https://en.wikipedia.org/wiki/Computer_vision_syndrome) and take better care of my vision while on the computer.
+A couple of days ago, [I introduced Fresh Eyes](https://xenodium.com/fresh-eyes-20-20-20-for-macos), a little macOS utility to help me practice the [20-20-20 rule](https://en.wikipedia.org/wiki/Computer_vision_syndrome) and take better care of my vision while on the computer.
 
 ![](https://xenodium.github.io/images/fresh-eyes-now-on-the-app-store/big-sur-eyes.gif)
 
@@ -8600,7 +8674,7 @@ If looking for alternatives, [Samuel W. Flint](https://samuelwflint.com/) [offer
 
 ## Update
 
-[Fresh Eyes](https://apps.apple.com/app/id1558358855) has now [been approved and is available on the macOS App Store](fresh-eyes-now-on-the-app-store).
+[Fresh Eyes](https://apps.apple.com/app/id1558358855) has now [been approved and is available on the macOS App Store](https://xenodium.com/fresh-eyes-now-on-the-app-store).
 
 <center>
   <a href="https://apps.apple.com/app/id6480411697">
@@ -8628,7 +8702,7 @@ brew reinstall emacs-plus@29 --with-imagemagick --with-no-frame-refocus --with-n
 
 ![](https://xenodium.github.io/images/emacs-293-emergency-release/29.3.png)
 
-ps. Like this splash screen? Check out the [Emacs eye candy post](my-emacs-eye-candy/).
+ps. Like this splash screen? Check out the [Emacs eye candy post](https://xenodium.com/my-emacs-eye-candy/).
 
 # \[2024-03-24 Sun\] Emacs: Toggling the continuation indicator
 ---
@@ -8699,7 +8773,7 @@ While you can still get each of my apps individually, you now have the option to
 
 Continuing on the org storage theme, I got another app in the works. Also joining [The Org bundle](https://apps.apple.com/us/app-bundle/the-org-bundle/id1717663541), maintaining its privacy-first approach: offline, no cloud, no login, no ads, no tracking, no social… this time in the journaling space.
 
-Journelly is currently [in beta, want to join](an-ios-journaling-app-powered-by-org-plain-text)?
+Journelly is currently [in beta, want to join](https://xenodium.com/an-ios-journaling-app-powered-by-org-plain-text)?
 
 ![](https://xenodium.github.io/images/the-org-bundle/journelly-demo.gif)
 
@@ -8710,7 +8784,7 @@ id: sqlite-mode-extras-on-melpa
 
 ![](https://xenodium.github.io/images/sqlite-mode-goodies/sqlite-previous.gif)
 
-Emacs 29 [introduced the handy sqlite-mode](emacs-29s-sqlite-mode). Soon after, I tried a couple of experiments [here](further-sqlite-mode-extensions/) and [there](sqlite-mode-goodies) to bring additional functionality.
+Emacs 29 [introduced the handy sqlite-mode](https://xenodium.com/emacs-29s-sqlite-mode). Soon after, I tried a couple of experiments [here](https://xenodium.com/further-sqlite-mode-extensions/) and [there](https://xenodium.com/sqlite-mode-goodies) to bring additional functionality.
 
 Folks reached out. The additions seemed useful to them and were keen on upstreaming or pushing to MELPA. While I can't commit to upstreaming at this moment, I can happily meet halfway on MELPA.
 
@@ -8898,7 +8972,7 @@ The thing is, if most of my potential server-side needs merely require an entry 
 
 There are no shortages of serverless options offering [functions as a service](https://en.wikipedia.org/wiki/Function_as_a_service). Google Cloud, AWS Lambda, Azure Functions, Vercel Functions, Netlify Functions, Fastly, Cloudflare workers, I could go on…
 
-While I haven't researched the different offerings, I had made a mental note to check out Cloudflare Workers as they had [announced D1](https://blog.cloudflare.com/introducing-d1), their database backed by SQLite …and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even [Emacs 29 got some SQLite love](emacs-29s-sqlite-mode/), which prompted me to add [cell navigation/navigation](sqlite-mode-goodies/) and [try other experiments](further-sqlite-mode-extensions/).
+While I haven't researched the different offerings, I had made a mental note to check out Cloudflare Workers as they had [announced D1](https://blog.cloudflare.com/introducing-d1), their database backed by SQLite …and who doesn't love SQLite? ;) OK, I'm no expert here, but I have had a pleasant experience whenever I've used it. These days, even [Emacs 29 got some SQLite love](https://xenodium.com/emacs-29s-sqlite-mode/), which prompted me to add [cell navigation/navigation](https://xenodium.com/sqlite-mode-goodies/) and [try other experiments](https://xenodium.com/further-sqlite-mode-extensions/).
 
 ## D1 / SQLite in beta
 
@@ -9083,9 +9157,9 @@ Gave this primer a try? I'd love to hear from ya ([Mastodon](https://indieweb.so
 id: a-chatgpt-shell-compose-ux-experiment
 ---
 
-It's been roughly 9 months since I [experimented](a-chatgpt-emacs-shell/) with wiring the [ChatGPT](https://openai.com/blog/chatgpt) API to an Emacs [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html) buffer in [chatgpt-shell](https://github.com/xenodium/chatgpt-shell). ChatGPT's request-response nature maps fairly well to a shell's mode of interaction.
+It's been roughly 9 months since I [experimented](https://xenodium.com/a-chatgpt-emacs-shell/) with wiring the [ChatGPT](https://openai.com/blog/chatgpt) API to an Emacs [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html) buffer in [chatgpt-shell](https://github.com/xenodium/chatgpt-shell). ChatGPT's request-response nature maps fairly well to a shell's mode of interaction.
 
-In the past, I've also talked about [blurring the lines between shell and editor](yasnippet-in-emacs-eshell/). That is, using Emacs as your shell ([eshell](https://www.masteringemacs.org/article/complete-guide-mastering-eshell) being my favourite) enables compounding goodies from both shell and editor when both are used from the same app.
+In the past, I've also talked about [blurring the lines between shell and editor](https://xenodium.com/yasnippet-in-emacs-eshell/). That is, using Emacs as your shell ([eshell](https://www.masteringemacs.org/article/complete-guide-mastering-eshell) being my favourite) enables compounding goodies from both shell and editor when both are used from the same app.
 
 Keeping interactions within the same app also cuts down on some of that friction that comes with context switching between your text editor and the browser for [llm](https://en.wikipedia.org/wiki/Large_language_model) things.
 
@@ -9311,7 +9385,7 @@ And like Journelly for iOS, I got other org things available on iOS:
 
 -   As an [Org mode](https://orgmode.org/) fan, so I wrote [Plain Org](https://plainorg.com/) for iOS. It's on the [App Store](https://apps.apple.com/app/id1578965002).
 -   Inspired by [Atomic Habits](https://jamesclear.com/atomic-habits), I wrote [Flat Habits](https://flathabits.com/) for iOS. Also on the [App Store](https://apps.apple.com/app/id1558358855).
--   I needed an Emacs-inspired [**scratch**](scratch-a-minimal-scratch-area) buffer on iOS (who doesn't?), so I [built one](scratch-a-minimal-scratch-area/).
+-   I needed an Emacs-inspired [**scratch**](https://xenodium.com/scratch-a-minimal-scratch-area) buffer on iOS (who doesn't?), so I [built one](https://xenodium.com/scratch-a-minimal-scratch-area/).
 
 Just like the stuff I do or [write about](https://xenodium.com)? [Sponsor me](https://github.com/sponsors/xenodium).
 
@@ -9374,7 +9448,7 @@ The snippet uses `org-element` to iterate over links to collect/return them in a
 (browser-bookmarks "/private/tmp/bookmarks.org")
 ```
 
-We can now feed our list to our preferred narrowing framework (ivy, helm, ido, vertico) and use it to quickly select a bookmark. In the past, I've [used the likes of ivy-read](emacs-utilities-for-your-os/) directly, though have since adopted the humble but mighty `completing-read` which hooks up to any of the above frameworks.
+We can now feed our list to our preferred narrowing framework (ivy, helm, ido, vertico) and use it to quickly select a bookmark. In the past, I've [used the likes of ivy-read](https://xenodium.com/emacs-utilities-for-your-os/) directly, though have since adopted the humble but mighty `completing-read` which hooks up to any of the above frameworks.
 
 With that in mind, let's use `completing-read` to make a selection and split the text to extract the corresponding URL. Feed it to `browse-url`, and you got your preferred browser opening your bookmark.
 
@@ -9554,7 +9628,7 @@ active, share files in region.  Otherwise share file at point."
   (macos-module--share (vconcat (macos--files-dwim))))
 ```
 
-On a side note, `(macos--files-dwim)` chooses files depending on context. That is, [do what I mean (DWIM) style](emacs-dwim-do-what-i-mean/). If there's a file associated with current buffer, share it. When in [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) (the directory editor, aka file manager), look at region, selected files, or default to file at point.
+On a side note, `(macos--files-dwim)` chooses files depending on context. That is, [do what I mean (DWIM) style](https://xenodium.com/emacs-dwim-do-what-i-mean/). If there's a file associated with current buffer, share it. When in [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) (the directory editor, aka file manager), look at region, selected files, or default to file at point.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun macos--files-dwim ()
@@ -10015,7 +10089,7 @@ brew install ~/Downloads/gnupg.rb
 id: redact-that-buffer
 ---
 
-As I was getting ready to take an Emacs screenshot in the [previous post](emacs-send-to-kindle/), I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found [redacted.el](https://github.com/bkaestner/redacted.el), built-in `toggle-rot13-mode`, and [unpackaged/lorem-ipsum-overlay](https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words). All great options. I wanted a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
+As I was getting ready to take an Emacs screenshot in the [previous post](https://xenodium.com/emacs-send-to-kindle/), I figured I may want to redact email addresses before moving forward. I had a quick look for existing options and found [redacted.el](https://github.com/bkaestner/redacted.el), built-in `toggle-rot13-mode`, and [unpackaged/lorem-ipsum-overlay](https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words). All great options. I wanted a solution I could feed a single regular expression to obscure matches. I also wanted toggling capabilities, so I had a quick go at it…
 
 ![](https://xenodium.github.io/images/redact-that-buffer/redact-regexp.gif)
 
@@ -10056,7 +10130,7 @@ The solution is overlay-based, ensuring the buffer content remains unchanged. Th
 id: emacs-send-to-kindle
 ---
 
-While on Mastodon, I spotted [\@summeremacs](https://indieweb.social/@summeremacs@fashionsocial.host) looking into [sending Emacs text selections to a Kindle via email](https://indieweb.social/@summeremacs@fashionsocial.host/111058226788825431). This sparked my interest as I previously looked into [sending pdfs to my Kindle](emailing-pdfs-to-kindle-from-mu4e/) via [mu4e](https://github.com/djcb/mu).
+While on Mastodon, I spotted [\@summeremacs](https://indieweb.social/@summeremacs@fashionsocial.host) looking into [sending Emacs text selections to a Kindle via email](https://indieweb.social/@summeremacs@fashionsocial.host/111058226788825431). This sparked my interest as I previously looked into [sending pdfs to my Kindle](https://xenodium.com/emailing-pdfs-to-kindle-from-mu4e/) via [mu4e](https://github.com/djcb/mu).
 
 Kindle offers a neat service where you can email a file to your `@kindle.com` address and it automatically shows up in your Kindle library.
 
@@ -10172,7 +10246,7 @@ Amongst the steps, [shasum](https://linux.die.net/man/1/shasum) is the star play
 shasum -a 256 path/to/downloaded/file
 ```
 
-Not a huge deal. One can copy the hash from the output, but why go through multiple small manual steps when I know I can get Emacs to simplify the lot? I've expedited a similar flow in the past when [cloning git repos](emacs-clone-git-repo-from-clipboard/). Let's simplify again so hashing a hosted file boils down to:
+Not a huge deal. One can copy the hash from the output, but why go through multiple small manual steps when I know I can get Emacs to simplify the lot? I've expedited a similar flow in the past when [cloning git repos](https://xenodium.com/emacs-clone-git-repo-from-clipboard/). Let's simplify again so hashing a hosted file boils down to:
 
 -   Copy the file URL from browser.
 -   Run an Emacs interactive command.
@@ -10321,7 +10395,7 @@ We can see that `edebug-previous-result` invokes `message` which is responsible 
 id: further-sqlite-mode-extensions
 ---
 
-I've continued poking at Emacs 29's sqlite-mode. Since [my last post on extensions](sqlite-mode-goodies/), I've experimented a little with adding a handful of interactive functions:
+I've continued poking at Emacs 29's sqlite-mode. Since [my last post on extensions](https://xenodium.com/sqlite-mode-goodies/), I've experimented a little with adding a handful of interactive functions:
 
 -   `sqlite-mode-extras-compose-and-execute`: Compose and execute a query.
 
@@ -10411,7 +10485,7 @@ Being a rewards card, I opted to look into `StoreCard.pass`, but like all other 
 }
 ```
 
-I had no clue what values I should use for a Tesco Clubcard. I did, however, have a photo of the barcode I needed. This is in fact what prompted looking into [scanning barcodes from Emacs](emacs-scan-this-qrcode), which worked just great. It gave me all the crucial bits for the Clubcard.
+I had no clue what values I should use for a Tesco Clubcard. I did, however, have a photo of the barcode I needed. This is in fact what prompted looking into [scanning barcodes from Emacs](https://xenodium.com/emacs-scan-this-qrcode), which worked just great. It gave me all the crucial bits for the Clubcard.
 
 ``` json
 "barcode": {
@@ -10510,7 +10584,7 @@ Redditor u/stupergenius [suggested using the image's original background color](
 id: sqlite-mode-goodies
 ---
 
-I recently [wrote about Emacs 29's new sqlite-mode](emacs-29s-sqlite-mode/), which enables you to browse sqlite databases from your beloved editor.
+I recently [wrote about Emacs 29's new sqlite-mode](https://xenodium.com/emacs-29s-sqlite-mode/), which enables you to browse sqlite databases from your beloved editor.
 
 Out of the box, it supports the following browsing features:
 
@@ -10582,7 +10656,7 @@ Pressing `RET` on a table shows its content via `sqlite-mode-list-data`. `DEL` d
 id: emacs-scan-this-qrcode
 ---
 
-Another day, another tool brought to my Emacs fingertips. A while ago, I wrote about easily [copying text from desktop to mobile via QR codes](copy-from-desktop-to-mobile-via-qr-code/). Later on, I brought it under [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) as [dwim-shell-commands-clipboard-to-qr](https://github.com/xenodium/dwim-shell-command/blob/67da65f97d7f5477e19407d25887c23fab31517d/dwim-shell-commands.el#L593).
+Another day, another tool brought to my Emacs fingertips. A while ago, I wrote about easily [copying text from desktop to mobile via QR codes](https://xenodium.com/copy-from-desktop-to-mobile-via-qr-code/). Later on, I brought it under [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) as [dwim-shell-commands-clipboard-to-qr](https://github.com/xenodium/dwim-shell-command/blob/67da65f97d7f5477e19407d25887c23fab31517d/dwim-shell-commands.el#L593).
 
 This time around, I needed the opposite: to scan a code from an image file. This is where [zbar](https://github.com/mchehab/zbar)'s `zbarimg` comes in. These days, I'm mostly on macOS, so I installed via [Homebrew](https://brew.sh/):
 
@@ -10659,7 +10733,7 @@ Luckily, we also have the built-in Emacs psychotherapist we can chat to, courtes
 <figcaption>The Emacs doctor</figcaption>
 </figure>
 
-A little while ago, I wanted to give [ChatGPT](https://openai.com/blog/chatgpt) a try, preferably from Emacs (of course). I figured a shell interface would be a great fit for the interaction. Emacs already shipped with a general command interpreter ([comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html)), so I cobbled together a [ChatGPT Emacs shell](a-chatgpt-emacs-shell/).
+A little while ago, I wanted to give [ChatGPT](https://openai.com/blog/chatgpt) a try, preferably from Emacs (of course). I figured a shell interface would be a great fit for the interaction. Emacs already shipped with a general command interpreter ([comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html)), so I cobbled together a [ChatGPT Emacs shell](https://xenodium.com/a-chatgpt-emacs-shell/).
 
 <figure width="75%">
 <img src="https://xenodium.github.io/images/chatgpt-visits-the-emacs-doctor/cyberpunk.gif" />
@@ -10824,7 +10898,7 @@ Happy Emacsing!
 id: chatgpt-shell-v0601-updates
 ---
 
-Back in April, I shared [chatgpt-shell updates](chatgpt-shell-available-on-melpa/), showcasing [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) features. It's been a little while, so here's an update with the latest additions.
+Back in April, I shared [chatgpt-shell updates](https://xenodium.com/chatgpt-shell-available-on-melpa/), showcasing [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) features. It's been a little while, so here's an update with the latest additions.
 
 Like this project? Consider ✨[sponsoring](https://github.com/sponsors/xenodium)✨.
 
@@ -10936,7 +11010,7 @@ Now let's duplicate the current region.
 
 Since I already have a well-internalized key-binding duplicating lines/regions in text buffers, I could extend a similar behaviour to dired files with almost zero adoption effort.
 
-In case you haven't noticed, I've made it a [part-time job](https://youtu.be/urcL86UpqZc?t=177) to make command line utilities easily accessible from Emacs ([1](joining-images-from-the-comfort-of-dired/) [2](emacs-dwim-shell-command/) [3](emacs-password-protect-current-pdf-revisited/) [4](dwim-shell-command-now-on-windows/) [5](recordscreenshot-windows-the-lazy-way/) [6](emacs-ffmpeg-and-macos-alias-commands/) [7](emacs-quick-kill-process/) [8](hey-emacs-change-the-default-macos-app-for/) [9](hey-emacs-where-did-i-take-that-photo/) [10](emacs-open-with-macos-app/) [11](emacs-macos-sharing-dwim-style-improved/) [12](emacs-macos-share-from-dired-dwim-style/) [13](emacs-reveal-in-finder-dwim-style/) [14](dwim-shell-command-usages-pdftotext-and-scp/) [15](dwim-shell-command-with-template-prompts/) [16](seamless-command-line-utils/) [17](dwim-shell-command-video-streams/) [18](dwim-shell-command-improvements/) [19](dwim-shell-command-on-melpa/) [20](emacs-dwim-shell-command-multi-language/) [21](png-to-icns-emacs-dwim-style/)) via [dwim-shell-command](https://github.com/xenodium/dwim-shell-command). Partly because it's fairly quick and partly 'cause it's fun.
+In case you haven't noticed, I've made it a [part-time job](https://youtu.be/urcL86UpqZc?t=177) to make command line utilities easily accessible from Emacs ([1](https://xenodium.com/joining-images-from-the-comfort-of-dired/) [2](https://xenodium.com/emacs-dwim-shell-command/) [3](https://xenodium.com/emacs-password-protect-current-pdf-revisited/) [4](https://xenodium.com/dwim-shell-command-now-on-windows/) [5](https://xenodium.com/recordscreenshot-windows-the-lazy-way/) [6](https://xenodium.com/emacs-ffmpeg-and-macos-alias-commands/) [7](https://xenodium.com/emacs-quick-kill-process/) [8](https://xenodium.com/hey-emacs-change-the-default-macos-app-for/) [9](https://xenodium.com/hey-emacs-where-did-i-take-that-photo/) [10](https://xenodium.com/emacs-open-with-macos-app/) [11](https://xenodium.com/emacs-macos-sharing-dwim-style-improved/) [12](https://xenodium.com/emacs-macos-share-from-dired-dwim-style/) [13](https://xenodium.com/emacs-reveal-in-finder-dwim-style/) [14](https://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/) [15](https://xenodium.com/dwim-shell-command-with-template-prompts/) [16](https://xenodium.com/seamless-command-line-utils/) [17](https://xenodium.com/dwim-shell-command-video-streams/) [18](https://xenodium.com/dwim-shell-command-improvements/) [19](https://xenodium.com/dwim-shell-command-on-melpa/) [20](https://xenodium.com/emacs-dwim-shell-command-multi-language/) [21](https://xenodium.com/png-to-icns-emacs-dwim-style/)) via [dwim-shell-command](https://github.com/xenodium/dwim-shell-command). Partly because it's fairly quick and partly 'cause it's fun.
 
 Jame's post gave me yet another opportunity to exercise my errrm part-time job. This time, duplicating files. All I need is the [cp](https://www.man7.org/linux/man-pages/man1/cp.1.html) utility and a template:
 
@@ -10958,7 +11032,7 @@ I seldom type these template's myself when I want to execute a command (via `M-x
    :utils "cp"))
 ```
 
-There's nothing much to the command. Most logic is handled by the template, replacing `<<f>>` with the current file and `<<f(u)>>` with a uniquified version of it. Having said this, there's a bunch of free [DWIM](emacs-dwim-do-what-i-mean/) love that kicks in, courtesy of the `dwim-shell-command` package by yours truly. Let's give our new `dwim-shell-commands-duplicate` command a spin.
+There's nothing much to the command. Most logic is handled by the template, replacing `<<f>>` with the current file and `<<f(u)>>` with a uniquified version of it. Having said this, there's a bunch of free [DWIM](https://xenodium.com/emacs-dwim-do-what-i-mean/) love that kicks in, courtesy of the `dwim-shell-command` package by yours truly. Let's give our new `dwim-shell-commands-duplicate` command a spin.
 
 Like `crux-duplicate-current-line-or-region` duplicates the current line, our new command duplicates the current dired file.
 
@@ -11001,7 +11075,7 @@ While duplicating files using a template was a mere `cp -R '<<f>>' '<<f(u)>>'` a
 
 You can find my ever-growing list of similar commands over at [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el) (the optional part of the package). Got some nifty usages? Would love to check 'em out. [Get in touch](https://indieweb.social/@xenodium).
 
-Like this or [other content]()? [✨Sponsor✨ via GitHub Sponsors](https://github.com/sponsors/xenodium).
+Like this or [other content](https://xenodium.com/)? [✨Sponsor✨ via GitHub Sponsors](https://github.com/sponsors/xenodium).
 
 ## Update
 
@@ -11018,7 +11092,7 @@ I recently wanted a few images stitched together. A perfect job for [ImageMagick
 convert image1.jpg image2.jpg image3.jpg +append joined.jpg
 ```
 
-Great, now I know, but I'll rarely use it and will soon forget it. I may as well add it to my [repository](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el) of [DWIM](https://en.wikipedia.org/wiki/DWIM) command line utilities, wrapped in a convenient Emacs function, applicable from different contexts… [know what I mean](emacs-dwim-do-what-i-mean/)? 🙃
+Great, now I know, but I'll rarely use it and will soon forget it. I may as well add it to my [repository](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el) of [DWIM](https://en.wikipedia.org/wiki/DWIM) command line utilities, wrapped in a convenient Emacs function, applicable from different contexts… [know what I mean](https://xenodium.com/emacs-dwim-do-what-i-mean/)? 🙃
 
 I built [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) for this purpose. You can take the above command and easily turn it into an interactive Emacs command with something like the following:
 
@@ -11490,24 +11564,24 @@ In addition to replacing `shell-command` with `dwim-shell-command`, I also use i
 
 I've covered many of the use-cases before:
 
--   [Emacs DWIM shell-command](emacs-dwim-shell-command/)
--   [Emacs: Password-protect current pdf (revisited)](emacs-password-protect-current-pdf-revisited/)
--   [png to icns (Emacs DWIM style)](png-to-icns-emacs-dwim-style/)
--   [Emacs: DWIM shell command (multi-language)](emacs-dwim-shell-command-multi-language/)
--   [dwim-shell-command on Melpa](dwim-shell-command-on-melpa/)
--   [dwim-shell-command improvements](dwim-shell-command-improvements/)
--   [dwim-shell-command video streams](dwim-shell-command-video-streams/)
--   [dwim-shell-command with template prompts](dwim-shell-command-with-template-prompts/)
--   [dwim-shell-command usages: pdftotext and scp](dwim-shell-command-usages-pdftotext-and-scp/)
--   [Emacs: Reveal in macOS Finder (DWIM style)](emacs-reveal-in-finder-dwim-style/)
--   [Emacs: macOS sharing (DWIM style)](emacs-macos-share-from-dired-dwim-style/)
+-   [Emacs DWIM shell-command](https://xenodium.com/emacs-dwim-shell-command/)
+-   [Emacs: Password-protect current pdf (revisited)](https://xenodium.com/emacs-password-protect-current-pdf-revisited/)
+-   [png to icns (Emacs DWIM style)](https://xenodium.com/png-to-icns-emacs-dwim-style/)
+-   [Emacs: DWIM shell command (multi-language)](https://xenodium.com/emacs-dwim-shell-command-multi-language/)
+-   [dwim-shell-command on Melpa](https://xenodium.com/dwim-shell-command-on-melpa/)
+-   [dwim-shell-command improvements](https://xenodium.com/dwim-shell-command-improvements/)
+-   [dwim-shell-command video streams](https://xenodium.com/dwim-shell-command-video-streams/)
+-   [dwim-shell-command with template prompts](https://xenodium.com/dwim-shell-command-with-template-prompts/)
+-   [dwim-shell-command usages: pdftotext and scp](https://xenodium.com/dwim-shell-command-usages-pdftotext-and-scp/)
+-   [Emacs: Reveal in macOS Finder (DWIM style)](https://xenodium.com/emacs-reveal-in-finder-dwim-style/)
+-   [Emacs: macOS sharing (DWIM style)](https://xenodium.com/emacs-macos-share-from-dired-dwim-style/)
 
 # \[2023-05-01 Mon\] chatgpt-shell siblings now on MELPA also
 ---
 id: chatgpt-shell-siblings-now-on-melpa-also
 ---
 
-In [chatgpt-shell updates](chatgpt-shell-available-on-melpa/), I highlighted `dall-e-shell` (a DALL-E Emacs shell), `ob-chatgpt-shell` (ChatGPT org babel support), and `ob-dall-e-shell` (DALL-E org babel support) were initially excluded from the [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) MELPA submission while I worked out their split.
+In [chatgpt-shell updates](https://xenodium.com/chatgpt-shell-available-on-melpa/), I highlighted `dall-e-shell` (a DALL-E Emacs shell), `ob-chatgpt-shell` (ChatGPT org babel support), and `ob-dall-e-shell` (DALL-E org babel support) were initially excluded from the [chatgpt-shell](https://github.com/xenodium/chatgpt-shell) MELPA submission while I worked out their split.
 
 That's now sorted and the packages are available on MELPA.
 
@@ -11629,7 +11703,7 @@ id: llm-bookmarks
 id: chatgpt-shell-available-on-melpa
 ---
 
-About a month ago, I posted about an experiment to build [a ChatGPT Emacs shell](a-chatgpt-emacs-shell/) using [comint mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). Since then, it's turned into a package of sorts, evolving with [user feedback](https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+) and [pull requests](https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed).
+About a month ago, I posted about an experiment to build [a ChatGPT Emacs shell](https://xenodium.com/a-chatgpt-emacs-shell/) using [comint mode](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). Since then, it's turned into a package of sorts, evolving with [user feedback](https://github.com/xenodium/chatgpt-shell/issues?q=is%3Aissue+is%3Aclosed+) and [pull requests](https://github.com/xenodium/chatgpt-shell/pulls?q=is%3Apr+is%3Aclosed).
 
 ## Now on MELPA
 
@@ -11691,7 +11765,7 @@ You can save your current session to a transcript and restore later.
 
 ## shell-maker (make your own AI shells)
 
-While ChatGPT is a popular service, there are many others sprouting. Some are cloud-based, others local, proprietary, open source… In any case, it'd be great be able to hook on to them without much overhead. [shell-maker](a-shell-maker/) should help with that. The first `shell-maker` clients are `chatgpt-shell` and `dall-e-shell`.
+While ChatGPT is a popular service, there are many others sprouting. Some are cloud-based, others local, proprietary, open source… In any case, it'd be great be able to hook on to them without much overhead. [shell-maker](https://xenodium.com/a-shell-maker/) should help with that. The first `shell-maker` clients are `chatgpt-shell` and `dall-e-shell`.
 
 ![](https://xenodium.github.io/images/chatgpt-shell-available-on-melpa/dalle.png)
 
@@ -11786,7 +11860,7 @@ Integrating command line utilities into Emacs and making them quickly accessible
 -   dwim-shell-commands-video-to-optimized-gif
 -   dwim-shell-commands-video-to-webp
 
-If it ever took you a little while to find the right command incantation to get things right, only to forget all about it next time you need it ([I'm looking at you ffmpeg](emacs-ffmpeg-and-macos-alias-commands)), `dwim-shell-command` can help you easily save things for posterity and make them easily accessible in the future.
+If it ever took you a little while to find the right command incantation to get things right, only to forget all about it next time you need it ([I'm looking at you ffmpeg](https://xenodium.com/emacs-ffmpeg-and-macos-alias-commands)), `dwim-shell-command` can help you easily save things for posterity and make them easily accessible in the future.
 
 Since we're talking ffmpeg, here's all it takes to have gif conversion handy:
 
@@ -11925,7 +11999,7 @@ It's been a while since I've made visually significant changes to my Emacs confi
 
 ## Nyan Mode
 
-First things first. The adorable and colorful little fella in my mode line is a [Nyan Cat](https://en.wikipedia.org/wiki/Nyan_Cat) (if you dare, check the [meme video](https://www.youtube.com/watch?v=QH2-TGUlwu4)). Yes, I know it's sooo 2011, but it's 2023 and I still love the little guy hanging out in my Emacs mode line. I still get asked about it.
+First things first. The adorable and colorful little fella in my mode line is a [Nyan Cat](https://en.wikipedia.org/wiki/Nyan_Cat) (if you dare, check the [meme video](https://www.youtube.com/watch?v=2yJgwwDcgV8)). Yes, I know it's sooo 2011, but it's 2023 and I still love the little guy hanging out in my Emacs mode line. I still get asked about it.
 
 ![](https://xenodium.github.io/images/my-emacs-eye-candy/Nyan.png)
 
@@ -11964,9 +12038,9 @@ Note: both of these variables are prefixed `ns-` (macOS-only settings).
 
 I've been on [JetBrains Mono](https://www.jetbrains.com/lp/mono/) font for quite some time now. In the past, I've also been a fan of [Mononoki](https://madmalik.github.io/mononoki/) and [Menlo](https://en.wikipedia.org/wiki/Menlo_(typeface)) (on macOS) or [Meslo](https://github.com/andreberg/Meslo-Font) (similar elsewhere).
 
-## Theme (Material)
+## Theme (Materialized)
 
-I'm using the great [Material Theme for Emacs](https://github.com/cpaulik/emacs-material-theme), with a [bunch of tweaks of my own](https://github.com/xenodium/dotsies/blob/790465b1824481b81bf5c6e08949128c13d76f95/emacs/features/fe-ui.el#L42).
+I'm using [Materialized](https://github.com/xenodium/emacs-materialized-theme) which I derived from the great [Material Theme for Emacs](https://github.com/cpaulik/emacs-material-theme).
 
 ## Modeline tabs/ribbons (Moody)
 
@@ -11984,7 +12058,7 @@ Hiding the mode line isn't something I use in most major modes. However, I found
 
 ## Welcome screen
 
-Back in October 2022, I experimented with [adding a minimal welcome screen](emacs-a-welcoming-experiment/). I was initially hesitant, as I was already a fan of the welcome scratch buffer. In any case, I figured I'd eventually get tired of it and remove it. Well, it's enabled in my config still ;) My initial attachment to a landing scratch quickly faded. I'm only a `C-x b` binding away from invoking ivy-switch-buffer to get me anywhere.
+Back in October 2022, I experimented with [adding a minimal welcome screen](https://xenodium.com/emacs-a-welcoming-experiment/). I was initially hesitant, as I was already a fan of the welcome scratch buffer. In any case, I figured I'd eventually get tired of it and remove it. Well, it's enabled in my config still ;) My initial attachment to a landing scratch quickly faded. I'm only a `C-x b` binding away from invoking ivy-switch-buffer to get me anywhere.
 
 ![](https://xenodium.github.io/images/my-emacs-eye-candy/welcome.png)
 
@@ -11998,7 +12072,7 @@ Here's `zone-pgm-rotate` in all its glory. Oh and it's built-in!
 
 ![](https://xenodium.github.io/images/my-emacs-eye-candy/rotate.webp)
 
-Coincidentally, I had a go at writing [a basic zone a little while ago](emacs-zones-to-lift-you-up/).
+Coincidentally, I had a go at writing [a basic zone a little while ago](https://xenodium.com/emacs-zones-to-lift-you-up/).
 
 ![](https://xenodium.github.io/images/my-emacs-eye-candy/zone.gif)
 
@@ -12013,7 +12087,7 @@ What is some of your favorite Emacs eye candy? [reddit](https://www.reddit.com/r
 id: a-shell-maker
 ---
 
-A few weeks ago, I wrote about an experiment to bring [ChatGPT to Emacs as a shell](a-chatgpt-emacs-shell/). I was fairly new to both [ChatGPT](https://openai.com/blog/chatgpt) and building anything on top of [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). It was a fun exercise, which also generated some interest.
+A few weeks ago, I wrote about an experiment to bring [ChatGPT to Emacs as a shell](https://xenodium.com/a-chatgpt-emacs-shell/). I was fairly new to both [ChatGPT](https://openai.com/blog/chatgpt) and building anything on top of [comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html). It was a fun exercise, which also generated some interest.
 
 As mentioned in the previous post, I took inspiration in other Emacs packages (primarily [ielm](https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Interaction.html)) to figure out what I needed from comint. Soon, I got ChatGPT working.
 
@@ -12077,7 +12151,7 @@ Flat Habits is a habit tracker that’s mindful of your time, data, and privacy.
   </a>
 </center>
 
-If you care about how your data is stored, Flat Habits is powered by [org](https://orgmode.org) plain text markup without any cloud component. You can use your [favorite editor](frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at habit data, if that's your cup of tea.
+If you care about how your data is stored, Flat Habits is powered by [org](https://orgmode.org) plain text markup without any cloud component. You can use your [favorite editor](https://xenodium.com/frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at habit data, if that's your cup of tea.
 
 ## What's new?
 
@@ -12097,7 +12171,7 @@ Is Flat Habits helping you keep up with your habits? Please [rate/review](https:
 id: a-chatgpt-emacs-shell
 ---
 
-UPDATE: `chatgpt-shell` [has evolved a bit](chatgpt-shell-available-on-melpa/) and is now [on MELPA](https://melpa.org/#/chatgpt-shell).
+UPDATE: `chatgpt-shell` [has evolved a bit](https://xenodium.com/chatgpt-shell-available-on-melpa/) and is now [on MELPA](https://melpa.org/#/chatgpt-shell).
 
 I had been meaning to give [ChatGPT](https://openai.com/blog/chatgpt) a good try, preferably from Emacs. As an [eshell](https://www.gnu.org/software/emacs/manual/html_mono/eshell.html) fan, ChatGPT seemed like the perfect fit for a shell interface of sorts. With that in mind, I set out to wire ChatGPT with Emacs's general command interpreter ([comint](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell-Prompts.html)).
 
@@ -12362,7 +12436,7 @@ Removed a bunch of duplication and now rely primarily on existing `org-next-visi
 id: emacs-insert-and-render-sf-symbols
 ---
 
-About a week ago, I added an Emacs [function to insert SF symbol names](emacs-macro-me-some-sf-symbols/). This is specially useful for SwiftUI. I didn't bother too much with inserting symbols themselves since I hadn't figured out a way to render them for all buffers. That's now changed.
+About a week ago, I added an Emacs [function to insert SF symbol names](https://xenodium.com/emacs-macro-me-some-sf-symbols/). This is specially useful for SwiftUI. I didn't bother too much with inserting symbols themselves since I hadn't figured out a way to render them for all buffers. That's now changed.
 
 Christian Tietze and Alan Third both have useful posts in this space:
 
@@ -12542,7 +12616,7 @@ All of these are now included in [dwim-shell-commands.el](https://github.com/xen
 id: emacs-generate-a-swift-initializer
 ---
 
-Back in 2020, I wrote a semi-automatic [yasnippet](https://github.com/joaotavora/yasnippet) to [generate Swift initializers](smarter-snippets/). I say semi-automatic because it could have been a little smarter. While it helped generate some of the code, what I really wanted was full context-aware generation. The Swift struct already had a few properties defined, so a smarter yasnippet should have been able to use this info for code generation.
+Back in 2020, I wrote a semi-automatic [yasnippet](https://github.com/joaotavora/yasnippet) to [generate Swift initializers](https://xenodium.com/smarter-snippets/). I say semi-automatic because it could have been a little smarter. While it helped generate some of the code, what I really wanted was full context-aware generation. The Swift struct already had a few properties defined, so a smarter yasnippet should have been able to use this info for code generation.
 
 ![](https://xenodium.github.io/images/smarter-snippets/snippet.gif)
 
@@ -12774,7 +12848,7 @@ If you prefer the previous version (without a dependency on [dwim-shell-command]
 id: hey-emacs-change-the-default-macos-app-for
 ---
 
-A few weeks ago, I [added an "open with"](emacs-open-with-macos-app/) command to [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
+A few weeks ago, I [added an "open with"](https://xenodium.com/emacs-open-with-macos-app/) command to [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). It's pretty handy for opening files using an external app (ie. not Emacs) other than the default macOS one.
 
 `dwim-shell-commands-macos-open-with` and `dwim-shell-commands-open-externally` are typically enough for me to handle opening files outside of Emacs. But every now and then I'd like to change the default macOS app associated with specific file types. Now this isn't particularly challenging in macOS, but it does require a little navigating to get to the right place to change this default setting.
 
@@ -12819,7 +12893,7 @@ As an added bonus, I get to reuse `dwim-shell-commands--macos-apps` from "open w
 
 As usual, I've added `dwim-shell-commands-macos-set-default-app` to [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el), which you can install via [MELPA](https://melpa.org/#/dwim-shell-command).
 
-Did you find this tiny integration useful? Check out [Hey Emacs, where did I take that photo?](hey-emacs-where-did-i-take-that-photo/)
+Did you find this tiny integration useful? Check out [Hey Emacs, where did I take that photo?](https://xenodium.com/hey-emacs-where-did-i-take-that-photo/)
 
 # \[2022-11-02 Wed\] Hey Emacs, where did I take that photo?
 ---
@@ -13012,7 +13086,7 @@ There's likely a better way of getting a list of available apps (happy to take s
 id: emacs-macos-sharing-dwim-style-improved
 ---
 
-A quick follow-up to [Emacs: macOS sharing (DWIM style)](emacs-macos-share-from-dired-dwim-style/)… Though functional, the implementation had a couple of drawbacks.
+A quick follow-up to [Emacs: macOS sharing (DWIM style)](https://xenodium.com/emacs-macos-share-from-dired-dwim-style/)… Though functional, the implementation had a couple of drawbacks.
 
 Tohiko [noticed fullscreen wasn't working at all](https://www.reddit.com/r/emacs/comments/y1tneh/comment/is0pgkf) while Calvin [proposed enumeration for tighter Emacs integration](https://lobste.rs/s/qga1px/emacs_macos_sharing_dwim_style#c_safiuw).
 
@@ -13103,9 +13177,9 @@ Here's the new snippet, now [pushed to dwim-shell-commands.el](https://github.co
 id: emacs-macos-share-from-dired-dwim-style
 ---
 
-UPDATE: See an improved implementation [here](emacs-macos-sharing-dwim-style-improved).
+UPDATE: See an improved implementation [here](https://xenodium.com/emacs-macos-sharing-dwim-style-improved).
 
-A few days ago, [I wrote dwim-shell-commands-macos-reveal-in-finder](emacs-reveal-in-finder-dwim-style/). While I've written a bunch of other [dwim-shell-commands](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el), what set this case apart was the use of [Swift](https://www.swift.org/) to glue an Emacs workflow.
+A few days ago, [I wrote dwim-shell-commands-macos-reveal-in-finder](https://xenodium.com/emacs-reveal-in-finder-dwim-style/). While I've written a bunch of other [dwim-shell-commands](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el), what set this case apart was the use of [Swift](https://www.swift.org/) to glue an Emacs workflow.
 
 ``` {.commonlisp org-language="emacs-lisp"}
 (defun dwim-shell-commands-macos-reveal-in-finder ()
@@ -13259,7 +13333,7 @@ I love seeing what others get up to by using `dwim-shell-command`. Are there new
 
 Special mention goes to Bozhidar Batsov's [crux](https://github.com/bbatsov/crux) which achieves similar functionality via `crux-open-with`. [crux](https://github.com/bbatsov/crux) provides a bunch of other useful functions. Some of my favourites being `crux-duplicate-current-line-or-region`, `crux-transpose-windows`, `crux-delete-file-and-buffer`, and `crux-rename-buffer-and-file`, but I digress.
 
-Moving on to a [dragon](https://github.com/mwh/dragon) equivalent on macOS, I thought I had it covered via [reveal-in-osx-finder](https://github.com/kaz-yos/reveal-in-osx-finder) or [reveal-in-folder](https://github.com/jcs-elpa/reveal-in-folder). Turns out, neither of these reveal multiple [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html)-selected files within [Finder](https://en.wikipedia.org/wiki/Finder_(software)). At first, I thought this could be easily achieved by passing additional flags/params to macOS's `open` command, but it doesn't seem to be the case. Having said that, this [Stack Overflow post](https://stackoverflow.com/questions/7652928/launch-finder-window-with-specific-files-selected), has a solution in Objective-C, which is where things got a little more interesting. You see, back in July I [added multi-language support](emacs-dwim-shell-command-multi-language/) to [dwim-shell-command](emacs-dwim-shell-command-multi-language/) and while it highlighted language flexibility, I hadn't yet taken advantage of this feature myself. That is, until today.
+Moving on to a [dragon](https://github.com/mwh/dragon) equivalent on macOS, I thought I had it covered via [reveal-in-osx-finder](https://github.com/kaz-yos/reveal-in-osx-finder) or [reveal-in-folder](https://github.com/jcs-elpa/reveal-in-folder). Turns out, neither of these reveal multiple [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html)-selected files within [Finder](https://en.wikipedia.org/wiki/Finder_(software)). At first, I thought this could be easily achieved by passing additional flags/params to macOS's `open` command, but it doesn't seem to be the case. Having said that, this [Stack Overflow post](https://stackoverflow.com/questions/7652928/launch-finder-window-with-specific-files-selected), has a solution in Objective-C, which is where things got a little more interesting. You see, back in July I [added multi-language support](https://xenodium.com/emacs-dwim-shell-command-multi-language/) to [dwim-shell-command](https://xenodium.com/emacs-dwim-shell-command-multi-language/) and while it highlighted language flexibility, I hadn't yet taken advantage of this feature myself. That is, until today.
 
 The Objective-C snippet from the Stack Overflow post can be written as a Swift one-liner. Ok I lie. It's actually two lines, counting the import, but you can see that this multi-language Emacs transition/integration is pretty easy to add.
 
@@ -13327,7 +13401,7 @@ id: dwim-shell-command-usages-pdftotext-and-scp
 
 [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is a little Emacs package I wrote to enable crafting more reusable shell commands. I intended to use it as an [async-shell-command](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html) alternative (and I do these days). The more surprising win was bringing lots of command-line utilities (sometimes with complicated invocations) and making them quickly accessible. I no longer need to remember their respective parameters, order, flags, etc.
 
-I've migrated most [one-liners](emacs-password-protect-current-pdf-revisited/) and [scripts](png-to-icns-emacs-dwim-style/) I had to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) equivalents. They are available at [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). Having said that, it's great to discover new usages from `dwim-shell-command` users.
+I've migrated most [one-liners](https://xenodium.com/emacs-password-protect-current-pdf-revisited/) and [scripts](https://xenodium.com/png-to-icns-emacs-dwim-style/) I had to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) equivalents. They are available at [dwim-shell-commands.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-commands.el). Having said that, it's great to discover new usages from `dwim-shell-command` users.
 
 Take [u/TiMueller](https://www.reddit.com/user/TiMueller/)'s Reddit comment, [showcasing pdftotext](https://www.reddit.com/r/emacs/comments/w8s2ov/comment/iq7idav/?utm_source=share&utm_medium=web2x&context=3). Neat utility I was unaware of. It does as it says on the tin and converts a pdf to text. Can be easily saved to your accessible repertoire with:
 
@@ -13390,7 +13464,7 @@ You can enable macOS system trash in Emacs by setting `trash-directory` along wi
 id: cycling-through-window-layout-revisited
 ---
 
-Last year, I wrote a little script to [cycle through window layouts via Hammerspoon](cycling-window-layouts-via-hammerspoon). The cycling set I chose didn't stick, so here's another go.
+Last year, I wrote a little script to [cycle through window layouts via Hammerspoon](https://xenodium.com/cycling-window-layouts-via-hammerspoon). The cycling set I chose didn't stick, so here's another go.
 
 ![](https://xenodium.github.io/images/cycling-through-window-layout-revisited/cycle_layout.webp)
 
@@ -13433,7 +13507,7 @@ hs.hotkey.bind({"alt"}, "F", reframeFocusedWindow)
 
 Looping through layouts is done with a global key-binding of `option f` or, if familiar with a macOS keyboard, `⌥ f`.
 
-For those unfamiliar with [Hammerspoon](http://hammerspoon.org/)… If you're a tinkerer and a macOS user, you'd love [Hammerspoon](http://hammerspoon.org/). Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. For example, here's a stint at [writing a narrowing utility for macOS](emacs-utilities-for-your-os/) using [chooser](http://www.hammerspoon.org/docs/hs.chooser.html).
+For those unfamiliar with [Hammerspoon](http://hammerspoon.org/)… If you're a tinkerer and a macOS user, you'd love [Hammerspoon](http://hammerspoon.org/). Like elisp gluing all things Emacs, Hammerspoon uses Lua to glue all things macOS. For example, here's a stint at [writing a narrowing utility for macOS](https://xenodium.com/emacs-utilities-for-your-os/) using [chooser](http://www.hammerspoon.org/docs/hs.chooser.html).
 
 # \[2022-08-18 Thu\] dwim-shell-command with template prompts
 ---
@@ -13446,7 +13520,7 @@ Somewhat recently, I wanted to quickly create an empty/transparent png file. [Im
 convert -verbose -size 200x400 xc:none empty200x400.png
 ```
 
-Great, I now know the one-liner for it. But because I'm in the mood of saving these as [seamless command-line utils](seamless-command-line-utils/), I figured I should save the [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) equivalent.
+Great, I now know the one-liner for it. But because I'm in the mood of saving these as [seamless command-line utils](https://xenodium.com/seamless-command-line-utils/), I figured I should save the [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) equivalent.
 
 I wanted configurable image dimensions, so I used [read-number](https://www.gnu.org/software/emacs/manual/html_node/calc/Formatting-Lisp-Functions.html) together with [format](https://www.gnu.org/software/emacs/manual/html_node/elisp/Formatting-Strings.html) to create the templated command and fed it to `dwim-shell-command-on-marked-files`. Job done:
 
@@ -13500,7 +13574,7 @@ convert image1.png image2.png image3.png combined.pdf
 
 Using `convert` for this purpose was pretty straightforward. I'm sure I'll use it again in a similar context, but what if I can make future usage more seamless? In the past, I would just make a note of usage and revisit when needed. Though this works well enough, it often requires some amount of manual work (looking things up, tweaking command, etc) if you happen to forget the command syntax.
 
-I wanted common one-liners (or [longer shell scripts](png-to-icns-emacs-dwim-style/)) to be easily reusable and accessible from Emacs. Turns out, the [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) experiment is working fairly well for this purpose. In addition to providing template expansion, it generally [tries to do what I mean](emacs-dwim-shell-command/) (focus when needed, reveal new files, rename buffers, etc).
+I wanted common one-liners (or [longer shell scripts](https://xenodium.com/png-to-icns-emacs-dwim-style/)) to be easily reusable and accessible from Emacs. Turns out, the [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) experiment is working fairly well for this purpose. In addition to providing template expansion, it generally [tries to do what I mean](https://xenodium.com/emacs-dwim-shell-command/) (focus when needed, reveal new files, rename buffers, etc).
 
 Here's how I saved the `convert` command instance for future usage:
 
@@ -13601,7 +13675,7 @@ What other use-cases would you consider? `dwim-shell-command` is [available on m
 id: emacs-freebie-macos-emoji-picker
 ---
 
-I recently ran a little experiment to bring macOS's [long-press-accents-like behavior](an-accentuated-emacs-experiment/) to Emacs. What I forgot to mention is that macOS's character viewer *just works* from our beloved editor.
+I recently ran a little experiment to bring macOS's [long-press-accents-like behavior](https://xenodium.com/an-accentuated-emacs-experiment/) to Emacs. What I forgot to mention is that macOS's character viewer *just works* from our beloved editor.
 
 If you have a newer MacBook model, you can press the 🌐 key to summon the emoji picker (character viewer). You may need to set this key binding [from macOS keyboard preferences](https://support.apple.com/en-gb/guide/mac-help/mchlp1560/mac).
 
@@ -13619,7 +13693,7 @@ Edits:
 id: dwim-shell-command-video-streams
 ---
 
-I continue hunting for use-cases I can migrate to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command)… After adding [clipboard support](dwim-shell-command-improvements/) (via []
+I continue hunting for use-cases I can migrate to [dwim-shell-command](https://github.com/xenodium/dwim-shell-command)… After adding [clipboard support](https://xenodium.com/dwim-shell-command-improvements/) (via []
 ---
 id: cb
 ---) I found one more.
@@ -13882,10 +13956,10 @@ What kind of command-line tools? ffmpeg, convert, gifsycle, atool, qdpf, plutil,
 
 I've written about `dwim-shell-command` before:
 
--   [Emacs: DWIM shell command (multi-language)](emacs-dwim-shell-command-multi-language/)
--   [png to icns (Emacs DWIM style)](png-to-icns-emacs-dwim-style/)
--   [Emacs: Password-protect current pdf (revisited)](emacs-password-protect-current-pdf-revisited/)
--   [Emacs DWIM shell-command](emacs-dwim-shell-command/)
+-   [Emacs: DWIM shell command (multi-language)](https://xenodium.com/emacs-dwim-shell-command-multi-language/)
+-   [png to icns (Emacs DWIM style)](https://xenodium.com/png-to-icns-emacs-dwim-style/)
+-   [Emacs: Password-protect current pdf (revisited)](https://xenodium.com/emacs-password-protect-current-pdf-revisited/)
+-   [Emacs DWIM shell-command](https://xenodium.com/emacs-dwim-shell-command/)
 
 [Irreal](https://irreal.org/blog/)'s also covered it:
 
@@ -13928,11 +14002,11 @@ Or if you prefer to add to your Emacs config:
 (eshell/alias "unzip" "atool --extract --explain $1")
 ```
 
-While [I'm fan of Emacs eshell](yasnippet-in-emacs-eshell/), it's not everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
+While [I'm fan of Emacs eshell](https://xenodium.com/yasnippet-in-emacs-eshell/), it's not everyone's cup of tea. Lucky for us all, aliases are a popular feature across shells. Happy unzipping!
 
 ## Bonus
 
-Since I'm a keen on using "unzip" mnemonic everywhere in Emacs (not just my shell), I now have a [DWIM shell-command](emacs-dwim-shell-command/) for it:
+Since I'm a keen on using "unzip" mnemonic everywhere in Emacs (not just my shell), I now have a [DWIM shell-command](https://xenodium.com/emacs-dwim-shell-command/) for it:
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun dwim-shell-command-unzip ()
@@ -13988,7 +14062,7 @@ As I prune my [Emacs config](https://github.com/xenodium/dotsies/) off, I came a
 
 You see, I had forgotten about [zone.el](https://github.com/emacs-mirror/emacs/blob/master/lisp/play/zone.el) altogether: a fabulous package to tickle your heart. You can think of it as screensaver built into Emacs.
 
-If the built-in zones don't do it for ya, check out the few on melpa ([nyan](https://depp.brause.cc/zone-nyan/), [sl](https://github.com/kawabata/zone-sl), and [rainbow](added-emacs-zone-rainbow/)).
+If the built-in zones don't do it for ya, check out the few on melpa ([nyan](https://depp.brause.cc/zone-nyan/), [sl](https://github.com/kawabata/zone-sl), and [rainbow](https://xenodium.com/added-emacs-zone-rainbow/)).
 
 So, my nostalgic bit of elisp dates `Jun 17 2016`: a basic but functional zone ([zone-words](https://github.com/xenodium/dotsies/blob/main/emacs/ar/zone-words.el)), displaying words from [WordNet](http://wordnet.princeton.edu/). Surely the package can use plenty of improvements ([here's one](https://github.com/xenodium/dotsies/commit/00215e215be1413ea9d0085dd2de5123c635b8c0)), but hey this is Emacs and pretty much all existing code will run, no matter how old. In Emacs time, 2016 is practically yesterday!
 
@@ -14001,7 +14075,7 @@ UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is 
 
 ![](https://xenodium.github.io/images/emacs-dwim-shell-command-multi-language/csv.gif)
 
-I keep on [goofying around](png-to-icns-emacs-dwim-style/) with [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) and it's sibling `dwim-shell-command-on-marked-files` from [dwim-shell-command.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-command.el).
+I keep on [goofying around](https://xenodium.com/png-to-icns-emacs-dwim-style/) with [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) and it's sibling `dwim-shell-command-on-marked-files` from [dwim-shell-command.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-command.el).
 
 In addition to defaulting to [zsh](https://en.wikipedia.org/wiki/Z_shell), `dwim-shell-command-on-marked-files` now support other shells and languages. This comes in handy if you have snippets in different languages and would like to easily invoke them from Emacs. Multi-language support enables "using the best tool for the job" kinda thing. Or maybe you just happen to know how to solve a particular problem in a specific language.
 
@@ -14061,7 +14135,7 @@ UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is 
 
 ![](https://xenodium.github.io/images/png-to-icns-emacs-dwim-style/icns.gif)
 
-Since [writing a DWIM version of the shell-command](emacs-dwim-shell-command/), I've been having a little fun [revisiting command line utilities](emacs-password-protect-current-pdf-revisited/) I sometimes invoke from my beloved editor. In this instance, converting a png file to an icns icon. What's more interesting about this case is that it's not just a one-liner, but a short script in itself. Either way, it's just as easy to invoke from Emacs using `dwim-shell-command--on-marked-files`.
+Since [writing a DWIM version of the shell-command](https://xenodium.com/emacs-dwim-shell-command/), I've been having a little fun [revisiting command line utilities](https://xenodium.com/emacs-password-protect-current-pdf-revisited/) I sometimes invoke from my beloved editor. In this instance, converting a png file to an icns icon. What's more interesting about this case is that it's not just a one-liner, but a short script in itself. Either way, it's just as easy to invoke from Emacs using `dwim-shell-command--on-marked-files`.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun dwim-shell-command-convert-image-to-icns ()
@@ -14097,9 +14171,9 @@ UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is 
 
 ![](https://xenodium.github.io/images/emacs-password-protect-current-pdf-revisited/passprotect.gif)
 
-With a recent look at writing [DWIM shell commands](emacs-dwim-shell-command/), I've been revisiting my custom Emacs functions invoking command line utilities.
+With a recent look at writing [DWIM shell commands](https://xenodium.com/emacs-dwim-shell-command/), I've been revisiting my custom Emacs functions invoking command line utilities.
 
-Take this [post](emacs-password-protect-current-pdf/), for example, where I invoke [qpdf](https://github.com/qpdf/qpdf) via a elisp. Using the new `dwim-shell-command--on-marked-files` in [dwim-shell-command.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-command.el), the code is stripped down to a bare minimum:
+Take this [post](https://xenodium.com/emacs-password-protect-current-pdf/), for example, where I invoke [qpdf](https://github.com/qpdf/qpdf) via a elisp. Using the new `dwim-shell-command--on-marked-files` in [dwim-shell-command.el](https://github.com/xenodium/dwim-shell-command/blob/main/dwim-shell-command.el), the code is stripped down to a bare minimum:
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun dwim-shell-commands-pdf-password-protect ()
@@ -14114,7 +14188,7 @@ Take this [post](emacs-password-protect-current-pdf/), for example, where I invo
    :extensions "pdf"))
 ```
 
-Compare the above `dwim-shell-command--on-marked-files` usage to my [previous implementation](emacs-password-protect-current-pdf/):
+Compare the above `dwim-shell-command--on-marked-files` usage to my [previous implementation](https://xenodium.com/emacs-password-protect-current-pdf/):
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun pdf-password-protect ()
@@ -14152,7 +14226,7 @@ id: emacs-dwim-shell-command
 
 UPDATE: [dwim-shell-command](https://github.com/xenodium/dwim-shell-command) is now available on [melpa](https://melpa.org/#/dwim-shell-command).
 
-I've [talked about DWIM before](emacs-dwim-do-what-i-mean/), where I bend Emacs to help me do what I mean. Emacs is also great for [wrapping command-line one-liners with elisp](emacs-password-protect-current-pdf/), so I can quickly invoke commands without thinking too much about flags, arguments, etc.
+I've [talked about DWIM before](https://xenodium.com/emacs-dwim-do-what-i-mean/), where I bend Emacs to help me do what I mean. Emacs is also great for [wrapping command-line one-liners with elisp](https://xenodium.com/emacs-password-protect-current-pdf/), so I can quickly invoke commands without thinking too much about flags, arguments, etc.
 
 I keep thinking the [shell-command](https://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html) is ripe for plenty of enhancements using our DWIM fairydust.
 
@@ -14276,7 +14350,7 @@ The code for [dwim-shell-command.el](https://github.com/xenodium/dotsies/blob/ma
 id: emacs-password-protect-current-pdf
 ---
 
-UPDATE: Check out [Password-protect current pdf (revisted)](emacs-password-protect-current-pdf-revisited) for a simpler version.
+UPDATE: Check out [Password-protect current pdf (revisted)](https://xenodium.com/emacs-password-protect-current-pdf-revisited) for a simpler version.
 
 Every so often, I need to password-protect a pdf. On macOS, [Preview has a simple solution](https://support.apple.com/en-gb/guide/preview/prvw587dd90f/mac), but I figured there must be a command line utility to make this happen. There are options, but [qdf](https://github.com/qpdf/qpdf) did the job just fine.
 
@@ -14284,7 +14358,7 @@ Every so often, I need to password-protect a pdf. On macOS, [Preview has a simpl
 qpdf --verbose --encrypt USER-PASSWORD OWNER-PASSWORD KEY-LENGTH -- input.pdf output.pdf
 ```
 
-So what does `qpdf` have to do with Emacs? Command-line utilities are easy to invoke from Emacs via `shell-command` (M-!), but I don't want to remember the command nor the parameters. I may as well add a function that [does what I mean](emacs-dwim-do-what-i-mean/) and password-protect either buffers or [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) files.
+So what does `qpdf` have to do with Emacs? Command-line utilities are easy to invoke from Emacs via `shell-command` (M-!), but I don't want to remember the command nor the parameters. I may as well add a function that [does what I mean](https://xenodium.com/emacs-dwim-do-what-i-mean/) and password-protect either buffers or [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) files.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 (defun pdf-password-protect ()
@@ -14473,13 +14547,13 @@ id: emacs-dwim-swiper-vs-isearch-vs-phi-search
 
 ![](https://xenodium.github.io/images/emacs-dwim-swiper-vs-isearch-vs-phi-search/search-dwim.gif)
 
-I've [talked about DWIM](emacs-dwim-do-what-i-mean/) in the past, that wonderful Emacs ability to [do what ✨I✨ mean](https://en.wikipedia.org/wiki/DWIM).
+I've [talked about DWIM](https://xenodium.com/emacs-dwim-do-what-i-mean/) in the past, that wonderful Emacs ability to [do what ✨I✨ mean](https://en.wikipedia.org/wiki/DWIM).
 
 Emacs being hyper-configurable, we can always teach it more things, so it can do exactly what we mean.
 
 There are no shortages of buffer searching packages for Emacs. I'm a fan of Oleh Krehel's [swiper](https://github.com/abo-abo/swiper), but before that, I often relied on the built-in [isearch](https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html). Swiper is my default goto mechanism and have it bound to `C-s` (replacing the built-in [isearch-forward](https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Isearch.html)).
 
-Swiper services most needs until I start combining with other tools. Take [keyboard macros](https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html) and [multiple cursors](https://github.com/magnars/multiple-cursors.el). Both wonderful, but neither can rely on swiper to do their thing. Ok, swiper does, but [in a different way](emacs-swiper-and-multiple-cursors/).
+Swiper services most needs until I start combining with other tools. Take [keyboard macros](https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html) and [multiple cursors](https://github.com/magnars/multiple-cursors.el). Both wonderful, but neither can rely on swiper to do their thing. Ok, swiper does, but [in a different way](https://xenodium.com/emacs-swiper-and-multiple-cursors/).
 
 Rather than binding `C-s` to swiper, let's write a DWIM function that's aware of macros and multiple cursors. It must switch between swiper, isearch, and [phi-search](https://github.com/avkoval/phi-search) depending on what I want (search buffer, define macro, or search multiple cursors).
 
@@ -14635,7 +14709,7 @@ When building software for the Apple ecosystem, Xcode is often the editor of cho
 
 When I saw [Mikael Konradsson](https://twitter.com/konrad1977)'s post describing [his Emacs Swift development setup](https://www.reddit.com/r/emacs/comments/sndriv/i_finally_got_full_autocompetion_in_swift_with/), I reached out to say hello. While exchanging tips and tricks, the topic of searching Apple's docs came up. It had been a while since I looked into this, so it was a great reminder to revisit the space.
 
-Back in June 2020, I wrote a snippet to [fuzzy search hackingwithswift.com](emacs-search-hackingwithswiftcom/), using Emacs's [ivy](https://github.com/abo-abo/swiper) completion framework. With a similar online API, we could also search Apple's docs. Turns out, there is and we can we can use it to search [developer.apple.com](https://developer.apple.com/search) from our beloved editor.
+Back in June 2020, I wrote a snippet to [fuzzy search hackingwithswift.com](https://xenodium.com/emacs-search-hackingwithswiftcom/), using Emacs's [ivy](https://github.com/abo-abo/swiper) completion framework. With a similar online API, we could also search Apple's docs. Turns out, there is and we can we can use it to search [developer.apple.com](https://developer.apple.com/search) from our beloved editor.
 
 ``` {.commonlisp org-language="emacs-lisp" lexical="no"}
 ;;; counsel-apple-search.el -*- lexical-binding: t; -*-
@@ -14788,11 +14862,11 @@ Hacker News has a [summary of Atomic Habits](https://news.ycombinator.com/item?i
 
 After reading Atomic Habits during the first lockdown, I was excited to try out its actionables, specially tracking to keep me honest.
 
-I tried a bunch of iOS apps, but wanted no friction, no tracking, no cloud, no social, no analytics, no account, etc. so eventually [built Flat Habits](frictionless-org-habits-on-ios/) ([flathabits.com](https://flathabits.com)). Also wanted to own my habit data (as plain text), so I made sure Flat Habits stored its data locally as an org file.
+I tried a bunch of iOS apps, but wanted no friction, no tracking, no cloud, no social, no analytics, no account, etc. so eventually [built Flat Habits](https://xenodium.com/frictionless-org-habits-on-ios/) ([flathabits.com](https://flathabits.com)). Also wanted to own my habit data (as plain text), so I made sure Flat Habits stored its data locally as an org file.
 
 I'm an Emacs nutter and can say the strength in habit tracking lies in removing daily friction from the tracking process itself. A quickly accessible mobile app can really help with that. For me, Emacs plays a less important role here. The plain text part is cherry on top (bringing piece of mind around lock-in). In my case, it's been months since I looked at the plain text file itself from an Emacs org buffer. The iOS app, on the other hand, gets daily usage.
 
-As for forming lasting habits (the actual goal here)… it's been well over a year since I started running as a regular form of exercise. While reading Atomic Habits really changed how I think of habits, a tracker played a crucial part in the daily grind. I happen to have built a tracker that [plays nice with Emacs](flat-habits-meets-org-agenda/).
+As for forming lasting habits (the actual goal here)… it's been well over a year since I started running as a regular form of exercise. While reading Atomic Habits really changed how I think of habits, a tracker played a crucial part in the daily grind. I happen to have built a tracker that [plays nice with Emacs](https://xenodium.com/flat-habits-meets-org-agenda/).
 
 It's a new year. If you're looking at forming new habits, you may want some inspiration and also practical and concrete guidance. The book Atomic Habits can help with that. You can decide on which apps and how to implement the tracking process later on. Pen and paper is also a viable option and there are plenty of templates you can download.
 
@@ -15119,9 +15193,9 @@ While working on the parser, I happened to be reading [Atomic Habits](https://ja
 
 ![](https://xenodium.github.io/images/frictionless-org-habits-on-ios/flat_habits.gif)
 
-I love being able to save habit data to plain text and easily track on my iPhone (via Flat Habits) or laptop (via Emacs). I wanted to [extend similar convenience to org tasks](org-habits-on-ios-check-tasks-youre-next/), so I built [Plain Org](https://plainorg.com).
+I love being able to save habit data to plain text and easily track on my iPhone (via Flat Habits) or laptop (via Emacs). I wanted to [extend similar convenience to org tasks](https://xenodium.com/org-habits-on-ios-check-tasks-youre-next/), so I built [Plain Org](https://plainorg.com).
 
-My previous [post](org-habits-on-ios-check-tasks-youre-next/) mentioned *quickly adding new tasks and searching existing ones* as Plain Org's driving goals. Of course, neither of those are as useful without automatic cloud syncing, so pluging into [iOS's third party cloud support](https://support.apple.com/en-gb/HT206481#thirdparty) was a must-have.
+My previous [post](https://xenodium.com/org-habits-on-ios-check-tasks-youre-next/) mentioned *quickly adding new tasks and searching existing ones* as Plain Org's driving goals. Of course, neither of those are as useful without automatic cloud syncing, so pluging into [iOS's third party cloud support](https://support.apple.com/en-gb/HT206481#thirdparty) was a must-have.
 
 With these baseline features in place, I [started an alpha/beta group](https://www.reddit.com/r/orgmode/comments/p5bonn/ios_plain_org_alpha_builds_now_on_testflight_dm/) via [TestFlight](https://testflight.apple.com/). Early Plain Org adopters have been wonderfully supportive, given lots of great feedback, and helped shape the initial feature set you see below.
 
@@ -15175,7 +15249,7 @@ Today Plain Org joins the likes of [Beorg](https://beorg.app/), [MobileOrg](http
 id: plain-org-for-ios-a-month-later
 ---
 
-A month ago, I posted about my desire to [bring org tasks/TODOs to iOS](org-habits-on-ios-check-tasks-youre-next/) and make them quickly available from my iPhone.
+A month ago, I posted about my desire to [bring org tasks/TODOs to iOS](https://xenodium.com/org-habits-on-ios-check-tasks-youre-next/) and make them quickly available from my iPhone.
 
 Since then, I've received some great feedback, which I've been slowly chipping away at. My intent isn't so much to move my org workflow over to iOS, but to supplement Emacs while away from my laptop.
 
@@ -15213,7 +15287,7 @@ I now have an early implementation of sorts, [available on TestFlight](https://w
 id: flat-habits-11-released
 ---
 
-[Flat Habits](https://flathabits.com/) 1.1 is now available on the [App Store](https://apps.apple.com/app/id1558358855). Flat Habits is a habit tracker that’s mindful of your time, data, and privacy. It's powered by [org](https://orgmode.org) plain text markup, enabling you to use your [favorite editor](frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at your habit data.
+[Flat Habits](https://flathabits.com/) 1.1 is now available on the [App Store](https://apps.apple.com/app/id1558358855). Flat Habits is a habit tracker that’s mindful of your time, data, and privacy. It's powered by [org](https://orgmode.org) plain text markup, enabling you to use your [favorite editor](https://xenodium.com/frictionless-org-habits-on-ios/) (Emacs, Vim, VSCode, etc.) to poke at your habit data.
 
 ## What's new?
 
@@ -15266,7 +15340,7 @@ Hopefully you don't run into issues, but if you do, I hope the app helps ya sort
 id: show-in-finder--show-in-emacs
 ---
 
-From Christian Tietze's [Open macOS Finder Window in Emacs Dired](https://christiantietze.de/posts/2021/07/open-finder-window-in-dired/), I learned about [reveal-in-osx-finder](https://github.com/kaz-yos/reveal-in-osx-finder). This is handy for the few times I want to transition from Emacs to Finder for file management. I say few times since Emacs's directory editor, [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html), is just awesome. I've written about dired customizations [here](showhide-emacs-dired-details-in-style/) and [here](showhide-emacs-dired-details-in-style/), but since dired is *just another buffer,* you can apply your Emacs magic like multiple cursors to [batch rename files in an editable dired buffer](batch-renaming-with-counsel-find-dired-and-wdired/).
+From Christian Tietze's [Open macOS Finder Window in Emacs Dired](https://christiantietze.de/posts/2021/07/open-finder-window-in-dired/), I learned about [reveal-in-osx-finder](https://github.com/kaz-yos/reveal-in-osx-finder). This is handy for the few times I want to transition from Emacs to Finder for file management. I say few times since Emacs's directory editor, [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html), is just awesome. I've written about dired customizations [here](https://xenodium.com/showhide-emacs-dired-details-in-style/) and [here](https://xenodium.com/showhide-emacs-dired-details-in-style/), but since dired is *just another buffer,* you can apply your Emacs magic like multiple cursors to [batch rename files in an editable dired buffer](https://xenodium.com/batch-renaming-with-counsel-find-dired-and-wdired/).
 
 To transition from macOS Finder to Emacs, Christian offers an Emacs interactive command that fetches Finder's location and opens a dired buffer via AppleScript. On a similar note, I learned from redditor [u/pndc](https://www.reddit.com/user/pndc/) that [Finder's proxy icons can be dragged over to Emacs](https://www.reddit.com/r/emacs/comments/ohgz0s/open_macos_finder_windows_path_in_dired/h4p8a8f?utm_source=share&utm_medium=web2x&context=3), which handily drops ya into a dired buffer.
 
@@ -15355,7 +15429,7 @@ Happy searching and replacing!
 id: previewing-swiftui-layouts-in-emacs-revisited
 ---
 
-Back in May 2020, I shared a snippet to extend [ob-swift](https://github.com/zweifisch/ob-swift) to [preview SwiftUI layouts using Emacs org blocks](swiftui-layout-previews-using-emacs-org-blocks/).
+Back in May 2020, I shared a snippet to extend [ob-swift](https://github.com/zweifisch/ob-swift) to [preview SwiftUI layouts using Emacs org blocks](https://xenodium.com/swiftui-layout-previews-using-emacs-org-blocks/).
 
 ![](https://xenodium.github.io/images/swiftui-layout-previews-using-emacs-org-blocks/ob-swiftui.gif)
 
@@ -15631,7 +15705,7 @@ When enabled, the character "\<" triggers company completion of org blocks.
 
 ![](https://xenodium.github.io/images/emacs-org-block-completion-on-melpa/hello-company-org-block.gif)
 
-I get the occasional ping to package the [code from this post](emacs-org-block-company-completion) and publish it [on melpa](https://melpa.org/#/company-org-block). Finally gave it a go. Moved the code [here](https://github.com/xenodium/company-org-block).
+I get the occasional ping to package the [code from this post](https://xenodium.com/emacs-org-block-company-completion) and publish it [on melpa](https://melpa.org/#/company-org-block). Finally gave it a go. Moved the code [here](https://github.com/xenodium/company-org-block).
 
 This was my first time publishing on melpa. The process was very [smooth](https://github.com/melpa/melpa/pull/7593). Big thanks to melpa volunteers!
 
@@ -15640,7 +15714,7 @@ This was my first time publishing on melpa. The process was very [smooth](https:
 id: emacs-dwim-do-what-i-mean
 ---
 
-Update: There's a DWIM [follow-up for searching](emacs-dwim-swiper-vs-isearch-vs-phi-search/).
+Update: There's a DWIM [follow-up for searching](https://xenodium.com/emacs-dwim-swiper-vs-isearch-vs-phi-search/).
 
 ![](https://xenodium.github.io/images/emacs-dwim-do-what-i-mean/do-what-i-mean.gif)
 
@@ -15728,7 +15802,7 @@ id: emacs-link-scraping-2021-edition
 
 A recent Hacker News post, [Ask HN: Favorite Blogs by Individuals](https://news.ycombinator.com/item?id=27302195), led me to dust off my oldie but trusty [command to extract comment links](https://github.com/xenodium/dotsies/blob/92ef8259f016cdd4f67caf0e520096f6da4f7a18/emacs/ar/ar-url.el#L42). I use it to dissect these wonderful references more effectively.
 
-You see, I wrote this command [back in 2015](get-emacs-to-gather-links-in-posts/). We can likely revisit and improve. The [enlive](https://github.com/zweifisch/enlive) package continues to do a fine job [fetching](https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L39), parsing, and [querying](https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L142) HTML. Let's improve my code instead… we can shed a few redundant bits and maybe use [newer libraries and features](modern-elisp-libraries/).
+You see, I wrote this command [back in 2015](https://xenodium.com/get-emacs-to-gather-links-in-posts/). We can likely revisit and improve. The [enlive](https://github.com/zweifisch/enlive) package continues to do a fine job [fetching](https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L39), parsing, and [querying](https://github.com/zweifisch/enlive/blob/604a8ca272b6889f114e2b5a13adb5b1dc4bae86/enlive.el#L142) HTML. Let's improve my code instead… we can shed a few redundant bits and maybe use [newer libraries and features](https://xenodium.com/modern-elisp-libraries/).
 
 Most importantly, let's improve the user experience by sanitizing and filtering URLs a little better.
 
@@ -15753,7 +15827,7 @@ We start by writing a function that looks for a URL in the clipboard and subsequ
                               (replace-regexp-in-string "^http\\(s\\)*://" "" l2))))))
 ```
 
-Let's chat *(current-kill 0)* for a sec. No improvement from my previous usage, but let's just say building interactive commands that work with your current clipboard (or [kill ring](https://www.gnu.org/software/emacs/manual/html_node/emacs/Kill-Ring.html) in Emacs terminology) is super handy (see [clone git repo from clipboard](emacs-clone-git-repo-from-clipboard/)).
+Let's chat *(current-kill 0)* for a sec. No improvement from my previous usage, but let's just say building interactive commands that work with your current clipboard (or [kill ring](https://www.gnu.org/software/emacs/manual/html_node/emacs/Kill-Ring.html) in Emacs terminology) is super handy (see [clone git repo from clipboard](https://xenodium.com/emacs-clone-git-repo-from-clipboard/)).
 
 Moving on to sanitizing and filtering URLs… Links often have trailing slashes. Let's flush them. [string-remove-suffix](https://github.com/emacs-mirror/emacs/blob/3af9e84ff59811734dcbb5d55e04e1fdb7051e77/lisp/emacs-lisp/subr-x.el#L261) to the rescue. This and other handy string-manipulating functions are built into Emacs since 24.4 as part of [subr-x.el](https://github.com/emacs-mirror/emacs/blob/master/lisp/emacs-lisp/subr-x.el).
 
@@ -15810,7 +15884,7 @@ In a case like Hacker News's, we don't want to surprise-attack the user and bomb
 
 ## The org way
 
-My [2015 solution](get-emacs-to-gather-links-in-posts/) leveraged an [org mode](https://orgmode.org/) buffer to dump the fetched links. The org way is still my favorite. You can use whatever existing Emacs super powers you already have on top of the org buffer, including searching and filtering fueled by your favourite completion framework. I'm a fan of [Oleh](https://oremacs.com/)'s [swiper](https://github.com/abo-abo/swiper).
+My [2015 solution](https://xenodium.com/get-emacs-to-gather-links-in-posts/) leveraged an [org mode](https://orgmode.org/) buffer to dump the fetched links. The org way is still my favorite. You can use whatever existing Emacs super powers you already have on top of the org buffer, including searching and filtering fueled by your favourite completion framework. I'm a fan of [Oleh](https://oremacs.com/)'s [swiper](https://github.com/abo-abo/swiper).
 
 ![](https://xenodium.github.io/images/emacs-link-scraping-2021-edition/scrape_org.gif)
 
@@ -15871,11 +15945,11 @@ id: emacs-plus-with-native-comp
 
 I'm a big fan of [Boris Buliga](https://d12frosted.io/)'s [Emacs Plus](https://github.com/d12frosted/homebrew-emacs-plus) [homebrew](https://brew.sh/) recipe for customizing and installing Emacs builds on macOS.
 
-For a little while, I took a detour and built Emacs myself, so I could enable [Andrea Corallo](https://twitter.com/Koral_001)'s fantastic [native compilation](http://akrl.sdf.org/gccemacs.html). I documented the steps [here](trying-out-gccemacs-on-macos/). Though it was fairly straightforward, I did miss Emacs Plus's convenience.
+For a little while, I took a detour and built Emacs myself, so I could enable [Andrea Corallo](https://twitter.com/Koral_001)'s fantastic [native compilation](http://akrl.sdf.org/gccemacs.html). I documented the steps [here](https://xenodium.com/trying-out-gccemacs-on-macos/). Though it was fairly straightforward, I did miss Emacs Plus's convenience.
 
 I had been meaning to check back on Emacs Plus for native compilation support. Turns out, it was merged back in [Dec 2020](https://github.com/d12frosted/homebrew-emacs-plus/pull/188), and it works great!
 
-Enabling native compilation is simple (just use *–with-native-comp*). As a bonus, you get all the Emacs Plus goodies. I'm loving *–with-elrumo2-icon*, enabling a spiffy icon to go with macOS Big Sur. *–with-no-frame-refocus* is also handy to [avoid refocusing other frames](no-emacs-frame-refocus-on-macos/) when another one is closed.
+Enabling native compilation is simple (just use *–with-native-comp*). As a bonus, you get all the Emacs Plus goodies. I'm loving *–with-elrumo2-icon*, enabling a spiffy icon to go with macOS Big Sur. *–with-no-frame-refocus* is also handy to [avoid refocusing other frames](https://xenodium.com/no-emacs-frame-refocus-on-macos/) when another one is closed.
 
 In any case, here's the minimum needed to install Emacs Plus with native compilation support enabled:
 
@@ -15886,7 +15960,7 @@ brew install emacs-plus@28 --with-native-comp
 
 Sit tight. Homebrew will build and install some chunky dependencies (including gcc and libgccjit).
 
-Note: Your init.el needs tweaking to take advantage of native compilation. See my [previous post](trying-out-gccemacs-on-macos/) for how I set mine, or go straight to [my config](https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19).
+Note: Your init.el needs tweaking to take advantage of native compilation. See my [previous post](https://xenodium.com/trying-out-gccemacs-on-macos/) for how I set mine, or go straight to [my config](https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L19).
 
 # \[2021-05-02 Sun\] Cycling window layouts with hammerspoon
 ---
@@ -17167,7 +17241,7 @@ id: qr-code-bookmarks
 id: trying-out-gccemacs-on-macos
 ---
 
-*UPDATE: I'm no longer using these steps. See [Emacs plus –with-native-comp](emacs-plus-with-native-comp/) for an easier alternative.*
+*UPDATE: I'm no longer using these steps. See [Emacs plus –with-native-comp](https://xenodium.com/emacs-plus-with-native-comp/) for an easier alternative.*
 
 Below are the instructions I use to build Andrea Corallo's [gccemacs](http://akrl.sdf.org/gccemacs.html) on macOS. It is based on [Allen Dang](https://github.com/AllenDang)'s handy [instructions](https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e) plus some changes of my own.
 
@@ -25154,6 +25228,7 @@ id: parenting-bookmarks
 -   [Things people don't warn you about parenthood](https://twitter.com/biomickwatson/status/1138778734054510592).
 -   [Visual Book Notes: No-Drama Discipline (2014)](http://sachachua.com/blog/2019/03/visual-book-notes-no-drama-discipline-2014/).
 -   [Why It's Okay to Throw Your Children's Art Away - The Atlantic](https://www.theatlantic.com/family/archive/2018/09/throw-your-childrens-art-away/570379/).
+-   [Yoto player review// is it worth it? everything you need to know - YouTube](https://www.youtube.com/watch?v=VbgLXurbS2M).
 
 # \[2016-01-19 Tue\] Ippudo London: yes, but…
 ---
