@@ -1,6 +1,412 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+
+* [2026-06-11 Thu] agent-shell 0.55 updates
+  :PROPERTIES:
+  :CUSTOM_ID: agent-shell-0-55-updates
+  :END:
+It's been a little while since my [[https://xenodium.com/agent-shell-0-47-1-updates][last agent-shell update]], so let's go through the latest highlights as of v0.55.
+
+** What's =agent-shell=?
+
+[[https://github.com/xenodium/agent-shell][agent-shell]] is a native [[https://www.gnu.org/software/emacs/][Emacs]] mode to interact with AI agents powered by ACP ([[https://agentclientprotocol.com/][Agent Client Protocol]]).
+
+** Picking up where I left off
+If you noticed slower project activity in April, [[https://xenodium.com/and-then-there-were-three][this is why]]. I'm getting better at the [[https://xenodium.com/and-then-there-were-three][new 24-hour job]], so [[https://github.com/xenodium/agent-shell/commits/main/][I've resumed working on agent-shell]].
+
+I'm still chipping away at the backlog that built up while I was away, but if there's anything in particular you'd like me to look at, feel free to ping.
+
+** Anthropic, Google, and why ACP matters
+
+With Anthropic's [[https://zed.dev/blog/anthropic-subscription-changes][SDK subscription support changing]], Google's [[https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/][Gemini CLI deprecation]], and [[https://github.com/google-antigravity/antigravity-cli/issues/31][Antigravity's unclear support for the Agent Client Protocol (ACP)]], vendor-neutral tools matter more than ever.
+
+Luckily, =agent-shell= is built on [[https://agentclientprotocol.com/][ACP]], which sidesteps the problem. When a vendor changes course, you can swap providers and keep using your preferred tool. No need to reshape that hard-earned muscle memory.
+
+On that note, the list of agents supported by =agent-shell= continues to grow.
+
+*** Supported agents
+
+Here's a list of the latest agents now supported by =agent-shell=.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/agents.png]]
+
+- [[https://docs.augmentcode.com/cli/overview][Auggie]]
+- [[https://code.claude.com/docs/en/overview][Claude]]
+- [[https://cline.bot/cli][Cline]]
+- [[https://www.codebuddy.ai/][CodeBuddy]] ([[https://github.com/xenodium/agent-shell/pull/483][new]] by [[https://github.com/illidan127][@illidan127]])
+- [[https://github.com/openai/codex][Codex]]
+- [[https://github.com/blowmage/cursor-agent-acp-npm][Cursor]]
+- [[https://factory.ai][Factory Droid]]
+- [[https://github.com/google-gemini/gemini-cli][Gemini CLI]]
+- [[https://github.com/github/copilot-cli][GitHub Copilot CLI]]
+- [[https://block.github.io/goose/][Goose]]
+- [[https://hermes-agent.nousresearch.com/][Hermes]] ([[https://github.com/xenodium/agent-shell/pull/583][new]] by [[https://github.com/yitang][@yitang]])
+- [[https://www.kimi.com/code][Kimi Code]] ([[https://github.com/xenodium/agent-shell/pull/528][new]] by [[https://github.com/nicolaisingh][@nicolaisingh]])
+- [[https://kiro.dev/][Kiro]]
+- [[https://github.com/mistralai/mistral-vibe][Mistral Vibe]]
+- [[https://opencode.ai/][OpenCode]]
+- [[https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent][Pi]]
+- [[https://github.com/QwenLM/qwen-code][Qwen Code]]
+
+** agent-shell needs your support
+
+Speaking of vendor-neutral tools being more important than ever, there are a couple of ways to help keep =agent-shell= going. Some cost money, others just a click. All are appreciated ;)
+
+*** Sponsorships for agent-shell longevity
+
+=agent-shell= has been attracting quite a few users. It's nice to hear folks are using =agent-shell= on a daily basis. They are often relieved =agent-shell= exists as an alternative to AI-tools commonly mandated at work. Those tools have well-funded engineering teams behind them, while =agent-shell= is just me, an indie dev ;) Time spent on =agent-shell= is time away from work that pays the bills, so if it's useful to you, please consider [[https://github.com/sponsors/xenodium][sponsoring]] the project.
+
+Every individual sponsorship genuinely helps keep the project going. And if your employer benefits from your =agent-shell= use, they're typically in a position to contribute at a scale individuals can't, so nudge them to chip in too.
+
+*** GitHub stars for Anthropic credit
+
+[[https://claude.com/contact-sales/claude-for-oss][Anthropic offers 6 months of free Claude Max 20x]] for qualifying open-source projects with at least 5,000+ GitHub stars. [[https://github.com/xenodium/agent-shell/][Starring agent-shell]] costs nothing and can save me some money. We're only a 5th of the way there ;) so if you don't mind a couple of clicks, the project can really use [[https://github.com/xenodium/agent-shell/][another GitHub star]].
+
+Speaking of GitHub stars, =agent-shell= is now my most popular Emacs package, recently overtaking [[https://github.com/xenodium/chatgpt-shell/][chatgpt-shell]].
+
+#+HTML: <a href="https://www.star-history.com/#xenodium/agent-shell&xenodium/chatgpt-shell&Date"> <img src="https://api.star-history.com/svg?repos=xenodium/agent-shell,xenodium/chatgpt-shell&type=Date" alt="Star History Chart" width="100%"/> </a>
+
+** New markdown renderer
+
+agent-shell now ships with a brand new, more performant inline markdown renderer. This is the [[https://github.com/xenodium/agent-shell/pull/597][biggest internal change]] in some time. Enabled by default via =agent-shell-markdown-render-function= (moving away from the overlay-based renderer in shell-maker).
+
+*** Access/navigate table content
+
+Table content is now accessible. Point can land on any cell, which wasn't possible with the previous overlay implementation. In addition, tables are now also navigable: =TAB= and =S-TAB= move between cells.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/table.gif]]
+
+*** Improved source block support (enabled by default)
+
+Source-block syntax highlighting is now on by default. The per-snippet copy button is now keyboard-accessible too (previously mouse-click only, due to the overlay implementation).
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/blocks.png]]
+
+*** New blockquotes support
+
+Blockquotes now render in both shell and viewport. More importantly, you can select text in either a viewport page (or the shell itself), press =r= (for reply) and the selection becomes a blockquote in a fresh prompt.
+
+Viewport
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/viewport-quote.gif]]
+
+Shell
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/shell-quote.gif]]
+
+** Session restoration
+
+Session restoration got a meaningful overhaul ([[https://github.com/xenodium/agent-shell/pull/605][#605]] by [[https://github.com/nhojb][@nhojb]]), now exposed via =agent-shell-session-restore-verbosity=, with four levels:
+
+- =minimal= (default): title only, so restore is fast and quiet (needs =session/resume= support).
+- =last=: render the last prompt turn (needs =session/load= support).
+- =first-last=: render the first and last prompt turns (needs =session/load= support).
+- =full=: replay the whole conversation (needs =session/load= support).
+
+Feature availability is agent-specific, requiring either =session/resume= or =session/load= request support. =agent-shell= degrades as needed, ultimately falling back to creating a new session.
+
+Note that anything but =minimal= verbosity is fairly new, so please [[https://github.com/xenodium/agent-shell/issues][report bugs or rough edges]].
+
+Relatedly, =agent-shell-session-strategy= now defaults to ='prompt=, and ='new-deferred= has been retired.
+
+** Session forking
+
+You can now fork the current session, starting a new shell that shares the conversation history so far and diverges from there. Invoke via =M-x agent-shell-fork=.
+
+** Restart/reload session
+
+You can now restart the current shell anew (drop history) via =M-x agent-shell-restart= or reload (keep history) via =agent-shell-reload=.
+
+** Downloads/Temp shells
+
+The new =agent-shell-new-downloads-shell= and =agent-shell-new-temp-shell= commands create agents anchored at either =~/Downloads= or a temp directory. Both are also reachable via =C-u M-x agent-shell=.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/starting.png]]
+
+** TRAMP support
+
+[[https://github.com/xenodium/acp.el/pull/20][acp.el #20]] by [[https://github.com/martenlienen][@martenlienen]] landed support for ACP connections over TRAMP, now making it possible to drive remote agents from =agent-shell=. Pair it with [[https://github.com/junyi-hou/agent-shell-tramp][agent-shell-tramp]] for the user-facing integration.
+
+** Viewport improvements
+
+Viewport interaction =(setq agent-shell-prefer-viewport-interaction t)= continues to be my primary way to interact with agents. It is focused (see only the latest interaction), fast (single-key bindings: =y= = yes, =c= = continue, =m= = more...), and offers a richer editing experience (dedicated prompt-crafting buffer).
+
+The viewport is just a viewport to shell content. You can have your cake and eat it too, by jumping to the related shell buffer if needed.
+
+*** Queueing
+
+From a viewport, you can press =r= to reply to the latest agent response. In the past, you could only reply to idle agents. You can now press =r= to reply to busy agents too, automatically queuing requests on submission.
+
+*** List editing mode
+
+A new (basic) =agent-shell-list-edit-mode= lets you edit list-style content inside the viewport.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/lists.gif]]
+
+** Improved buffer selection
+
+Some commands prompt you to pick one of your active shell buffers (e.g. =M-x agent-shell-send-region-to=). The picker now shows extra context for each buffer to help you choose.
+
+#+ATTR_HTML: :width 95%
+[[file:images/agent-shell-0-55-updates/select.png]]
+
+The same mechanism is now used by the new =M-x agent-shell-switch-buffer= command. More on the underlying API later.
+
+** Improved folding
+
+Folding got smarter ([[https://github.com/xenodium/agent-shell/pull/608][#608]] by [[https://github.com/codeluggage][@codeluggage]]):
+
+- =M-x agent-shell-ui-toggle-fragment= toggles the fragment at or near point (DWIM).
+- =M-x agent-shell-ui-toggle-all-fragments= cycles globally between all-expanded and all-collapsed.
+
+Together they replace the previous =agent-shell-ui-toggle-fragment-at-point=, which is now an internal primitive.
+
+** =c= joins the viewport reply gang
+
+You can now press =c= from a viewport to quickly send a "continue" request, joining the rest of the single-key reply shortcuts:
+
+- =c=: replies "continue" (new)
+- =y=: replies "yes"
+- =m=: replies "more"
+- =a=: replies "again"
+- =1= … =9=: replies with the corresponding numbered choice
+- =r=: opens the reply compose buffer
+- =R=: same as =r=, with the agent response quoted
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/single-bindings.png]]
+
+** More compact status rendering
+
+Tool call status is now rendered as a compact icon-based label by default (=agent-shell--inverse-icon-status-kind-label=). =agent-shell-styles.el= ships several alternatives, picked via =agent-shell-status-kind-label-function=.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/compact.png]]
+
+To get the previous word-based label back:
+
+#+begin_src emacs-lisp
+(setq agent-shell-status-kind-label-function
+      #'agent-shell--inverse-label-status-kind-label)
+#+end_src
+
+** Codex defaults
+
+You can now set a default model and session mode for Codex via =agent-shell-openai-default-model-id= and =agent-shell-openai-default-session-mode-id= ([[https://github.com/xenodium/agent-shell/pull/405][#405]] by [[https://github.com/robjgray][@robjgray]]). Both must match an ID from Codex's "Available models" / "Available modes" listings.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/header.png]]
+
+** Emacs 31 fixes
+
+Headers had a few rendering hiccups on Emacs 31. These are now fixed ([[https://github.com/xenodium/agent-shell/pull/588][#588]] and [[https://github.com/xenodium/agent-shell/pull/590][#590]] by [[https://github.com/nhojb][@nhojb]], [[https://github.com/xenodium/agent-shell/pull/463][#463]] by [[https://github.com/ftlio][@ftlio]]). Warnings from deprecated =when-let= usage were also cleared.
+
+** Wayland clipboard support
+
+=wl-paste= is now a supported clipboard handler for pasting images on Wayland ([[https://github.com/xenodium/agent-shell/pull/461][#461]] by [[https://github.com/martenlienen][@martenlienen]]).
+
+** Windows clipboard support
+
+Similarly, pasting clipboard images now works on Windows via PowerShell ([[https://github.com/xenodium/agent-shell/pull/572][#572]] by [[https://github.com/repelliuss][@repelliuss]]).
+
+
+** Header improvements
+
+The graphical header got minor tweaks here and there. For example, thought level is now displayed in the header. It can be changed via =M-x agent-shell-viewport-set-session-thought-level= as well as menus ([[https://github.com/xenodium/agent-shell/pull/601][#601]] by [[https://github.com/martenlienen][@martenlienen]]).
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/model.png]]
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/mode.png]]
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-55-updates/thought.png]]
+
+** Session config options
+
+agent-shell now supports ACP session config options ([[https://github.com/xenodium/agent-shell/pull/553][#553]] by [[https://github.com/greggroth][@greggroth]] and [[https://github.com/xenodium/agent-shell/pull/613][#613]] by [[https://github.com/catern][@catern]]). Bind =C-c C-s= (or call =agent-shell-set-session-config-option=) to pick from the options the agent advertises. Broadcasted as =config-option-update= and available externally via =agent-shell-subscribe-to=.
+
+** Interrupt confirmation
+
+You can now skip interrupt confirmations by unsetting =agent-shell-confirm-interrupt= ([[https://github.com/xenodium/agent-shell/pull/424][#424]] by [[https://github.com/emil-e][@emil-e]]).
+
+** Public functions
+
+*** Resume sessions by ID
+
+You can now resume an existing session by its ID via =M-x agent-shell-resume-session= ([[https://github.com/xenodium/agent-shell/pull/332][#332]]). Primarily useful for external integrations.
+
+*** Outgoing request decorator
+
+You can now use =agent-shell-outgoing-request-decorator= to tag or transform outgoing requests.
+
+*** Subscribe to idle events
+
+=agent-shell-subscribe-to= now broadcasts =idle= events ([[https://github.com/xenodium/agent-shell/pull/509][#509]] by [[https://github.com/arthurgleckler][@arthurgleckler]]).
+
+*** Getting shell buffers
+
+=agent-shell-shell-buffer= returns the underlying shell buffer for the current context.
+
+*** Last vs interaction at point
+
+=agent-shell-goto-last-interaction= jumps to the latest prompt/response pair, while =agent-shell-interaction-at-point= returns the interaction at point as data.
+
+*** Shell status
+
+=agent-shell-status= returns ='busy=, ='blocked=, or ='ready= status for any shell buffer.
+
+*** Session title
+
+The agent-supplied session title is now exposed via the =session-title-changed= event (delivered via =agent-shell-subscribe-to=) ([[https://github.com/xenodium/agent-shell/pull/559][#559]] by [[https://github.com/smagnuso][@smagnuso]]). Can be handy for buffer names, bookmarks, or recent listings.
+
+** New third-party packages
+
+The =agent-shell= family of third-party packages keeps growing. Recent additions:
+
+- [[https://github.com/xenodium/agent-shell-knockknock][agent-shell-knockknock]]: Notifications for =agent-shell= via [[https://github.com/konrad1977/knockknock][knockknock.el]].
+- [[https://github.com/zackattackz/agent-shell-notifications][agent-shell-notifications]]: Desktop notifications for =agent-shell= events.
+- [[https://github.com/nohzafk/agent-shell-hud][agent-shell-hud]]: Real-time =agent-shell= status overlay via a floating dashboard.
+- [[https://github.com/lgmoneda/agent-shell-pet][agent-shell-pet]]: Codex-like pets that broadcast agent-shell session states.
+- [[https://github.com/junyi-hou/agent-shell-tramp][agent-shell-tramp]]: Tramp integration for =agent-shell=.
+- [[https://github.com/Embedded-Focus/agent-circus][agent-circus]]: Run AI coding agents in sandboxed Docker containers.
+
+** Pull requests
+
+Thank you to all contributors for these improvements!
+
+- [[https://github.com/xenodium/agent-shell/pull/308][#308]]: Fix heartbeat nil value crash in timer and busy indicator ([[https://github.com/ElleNajt][@ElleNajt]])
+- [[https://github.com/xenodium/agent-shell/pull/340][#340]]: Add documentation about the OAuth Anthropic authentication ([[https://github.com/chemtov][@chemtov]])
+- [[https://github.com/xenodium/agent-shell/pull/397][#397]]: Add detailed context usage indicator mode ([[https://github.com/emil-e][@emil-e]])
+- [[https://github.com/xenodium/agent-shell/pull/398][#398]]: Expose outgoing-request-decorator as a defcustom ([[https://github.com/emil-e][@emil-e]])
+- [[https://github.com/xenodium/agent-shell/pull/405][#405]]: Codex defaults for session mode and model ([[https://github.com/robjgray][@robjgray]])
+- [[https://github.com/xenodium/agent-shell/pull/408][#408]]: Use diff-command for diffing ([[https://github.com/timfel][@timfel]])
+- [[https://github.com/xenodium/agent-shell/pull/413][#413]]: Track and manage diff buffers for each permission request ([[https://github.com/emil-e][@emil-e]])
+- [[https://github.com/xenodium/agent-shell/pull/418][#418]]: Add defvar for agent-shell-mode-hook + test ([[https://github.com/emil-e][@emil-e]])
+- [[https://github.com/xenodium/agent-shell/pull/420][#420]]: Replace all references to "Claude Code Agent" with "Claude Agent" ([[https://github.com/jinnovation][@jinnovation]])
+- [[https://github.com/xenodium/agent-shell/pull/421][#421]]: Add agent-shell-clear ([[https://github.com/Makesesama][@Makesesama]])
+- [[https://github.com/xenodium/agent-shell/pull/424][#424]]: Add agent-shell-confirm-interrupt option ([[https://github.com/emil-e][@emil-e]])
+- [[https://github.com/xenodium/agent-shell/pull/425][#425]]: README: Update all references to Claude Code ([[https://github.com/jinnovation][@jinnovation]])
+- [[https://github.com/xenodium/agent-shell/pull/429][#429]]: Viewport attachment fixes ([[https://github.com/nhojb][@nhojb]])
+- [[https://github.com/xenodium/agent-shell/pull/438][#438]]: Fix for structured input from toolCall.rawInput.plan ([[https://github.com/timfel][@timfel]])
+- [[https://github.com/xenodium/agent-shell/pull/442][#442]]: Add related project =agent-circus= to README.org ([[https://github.com/rpoisel][@rpoisel]])
+- [[https://github.com/xenodium/agent-shell/pull/445][#445]]: Use project-name instead of default-directory in header ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/446][#446]]: Droid: use native acp client and support default model and mode ([[https://github.com/kohnish][@kohnish]])
+- [[https://github.com/xenodium/agent-shell/pull/450][#450]]: Fix restart using wrong default-directory ([[https://github.com/zackattackz][@zackattackz]])
+- [[https://github.com/xenodium/agent-shell/pull/453][#453]]: Ensure that viewport compiles ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/457][#457]]: Prefer cache directory over tmp for caching ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/460][#460]]: Unhandled method returns an error, unblocking client ([[https://github.com/0x6362][@0x6362]])
+- [[https://github.com/xenodium/agent-shell/pull/461][#461]]: Add wl-paste as a Wayland image handler ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/463][#463]]: Fix header text invisible when font-get :size returns 0 ([[https://github.com/ftlio][@ftlio]])
+- [[https://github.com/xenodium/agent-shell/pull/469][#469]]: Do not create a file if no image in Wayland clipboard ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/473][#473]]: Caching project files completions for improved performance ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/477][#477]]: Handle non-text content in user_message_chunk during session load ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/483][#483]]: Add CodeBuddy agent support ([[https://github.com/illidan127][@illidan127]])
+- [[https://github.com/xenodium/agent-shell/pull/489][#489]]: Snapshot session strategy in any case ([[https://github.com/timfel][@timfel]])
+- [[https://github.com/xenodium/agent-shell/pull/492][#492]]: Update claude-agent-acp repository ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/498][#498]]: Normalize missing MCP transport collection fields for ACP compatibility ([[https://github.com/CsBigDataHub][@CsBigDataHub]])
+- [[https://github.com/xenodium/agent-shell/pull/503][#503]]: Add agent-shell-macext to related projects ([[https://github.com/cxa][@cxa]])
+- [[https://github.com/xenodium/agent-shell/pull/509][#509]]: Add =agent-shell-idle-alert-functions= ([[https://github.com/arthurgleckler][@arthurgleckler]])
+- [[https://github.com/xenodium/agent-shell/pull/513][#513]]: Quote reply to the complete response with =R= ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/515][#515]]: Make detection of binary files more robust ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/523][#523]]: Add agent-shell-org-transcript to Related projects ([[https://github.com/lllShamanlll][@lllShamanlll]])
+- [[https://github.com/xenodium/agent-shell/pull/528][#528]]: Add support for Kimi Code CLI using ACP ([[https://github.com/nicolaisingh][@nicolaisingh]])
+- [[https://github.com/xenodium/agent-shell/pull/529][#529]]: Sort the session list based on recency ([[https://github.com/smagnuso][@smagnuso]])
+- [[https://github.com/xenodium/agent-shell/pull/530][#530]]: Add simple blinking circle as busy indicator ([[https://github.com/rudolf-adamkovic][@rudolf-adamkovic]])
+- [[https://github.com/xenodium/agent-shell/pull/532][#532]]: Fix removing queued messages ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/536][#536]]: Add programmatic query API: agent-shell-query and agent-shell-shell-buffer ([[https://github.com/eddof13][@eddof13]])
+- [[https://github.com/xenodium/agent-shell/pull/539][#539]]: Add ob-agent-shell to related projects in readme ([[https://github.com/eddof13][@eddof13]])
+- [[https://github.com/xenodium/agent-shell/pull/545][#545]]: Keep buffer name on agent-shell-reload and -restart ([[https://github.com/timfel][@timfel]])
+- [[https://github.com/xenodium/agent-shell/pull/550][#550]]: Add agent-recall to related projects ([[https://github.com/Marx-A00][@Marx-A00]])
+- [[https://github.com/xenodium/agent-shell/pull/551][#551]]: Avoid gitignore update for external data dirs ([[https://github.com/Silex][@Silex]])
+- [[https://github.com/xenodium/agent-shell/pull/552][#552]]: Use helper function from shell-maker rather than eob ([[https://github.com/smagnuso][@smagnuso]])
+- [[https://github.com/xenodium/agent-shell/pull/553][#553]]: Add ACP session config options support ([[https://github.com/greggroth][@greggroth]])
+- [[https://github.com/xenodium/agent-shell/pull/554][#554]]: Fix error when cancelling session selection prompt ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/555][#555]]: Add some niceties useful for =agent-shell-list= ([[https://github.com/vermiculus][@vermiculus]])
+- [[https://github.com/xenodium/agent-shell/pull/559][#559]]: Expose topic in agent-shell ([[https://github.com/smagnuso][@smagnuso]])
+- [[https://github.com/xenodium/agent-shell/pull/561][#561]]: Update Pi coding agent logo to look more official ([[https://github.com/jeff-phil][@jeff-phil]])
+- [[https://github.com/xenodium/agent-shell/pull/565][#565]]: Enable @ and / completion when reading queued prompts ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/571][#571]]: Fix unkillable buffer after major-mode change ([[https://github.com/Scott-Guest][@Scott-Guest]])
+- [[https://github.com/xenodium/agent-shell/pull/572][#572]]: Add clipboard image support for Windows ([[https://github.com/repelliuss][@repelliuss]])
+- [[https://github.com/xenodium/agent-shell/pull/574][#574]]: Add agent-shell-pet link to README ([[https://github.com/lgmoneda][@lgmoneda]])
+- [[https://github.com/xenodium/agent-shell/pull/582][#582]]: Add a few additional forward declarations ([[https://github.com/tychoish][@tychoish]])
+- [[https://github.com/xenodium/agent-shell/pull/583][#583]]: Add Hermes Agent support ([[https://github.com/yitang][@yitang]])
+- [[https://github.com/xenodium/agent-shell/pull/588][#588]]: Fix header foreground color (emacs 31) ([[https://github.com/nhojb][@nhojb]])
+- [[https://github.com/xenodium/agent-shell/pull/589][#589]]: Only trim response region when region is active ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/590][#590]]: Fix context-limit header color (emacs-31) ([[https://github.com/nhojb][@nhojb]])
+- [[https://github.com/xenodium/agent-shell/pull/595][#595]]: Fix =/= completion regression in viewport buffers ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/600][#600]]: Do not emit permission-request for auto-handled permissions ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/601][#601]]: Expose thought level (reasoning effort) in header, mode line and keymaps ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/602][#602]]: Update README with Opencode and Ollama setup instructions ([[https://github.com/dvictori][@dvictori]])
+- [[https://github.com/xenodium/agent-shell/pull/605][#605]]: Add =agent-shell-restore-context= defcustom ([[https://github.com/nhojb][@nhojb]])
+- [[https://github.com/xenodium/agent-shell/pull/608][#608]]: Toggle folding for everything & comfortably fold at point ([[https://github.com/codeluggage][@codeluggage]])
+- [[https://github.com/xenodium/agent-shell/pull/609][#609]]: Prevent accidental auto-scrolling in viewport buffers on tool calls ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/611][#611]]: Fix =agent-shell-hermes-acp-command= ([[https://github.com/TamsynUlthara][@TamsynUlthara]])
+- [[https://github.com/xenodium/agent-shell/pull/613][#613]]: Improve completion for set-session-config-option ([[https://github.com/catern][@catern]])
+- [[https://github.com/xenodium/agent-shell/pull/618][#618]]: Fix header not showing session mode name ([[https://github.com/deftsp][@deftsp]])
+- [[https://github.com/xenodium/agent-shell/pull/621][#621]]: Reindent Elisp files ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/623][#623]]: Add agent-shell-hud to related packages ([[https://github.com/nohzafk][@nohzafk]])
+- [[https://github.com/xenodium/agent-shell/pull/625][#625]]: Fix source-block face background not rendering when theme loads after package ([[https://github.com/phairoh][@phairoh]])
+- [[https://github.com/xenodium/agent-shell/pull/627][#627]]: Hermes: add default-session-mode-id to match other agents ([[https://github.com/yitang][@yitang]])
+- [[https://github.com/xenodium/agent-shell/pull/629][#629]]: Write =.agent-shell/= to =.git/info/exclude= instead of =.gitignore= ([[https://github.com/phairoh][@phairoh]])
+- [[https://github.com/xenodium/agent-shell/pull/632][#632]]: Render tool call parameters for non-standard tools like MCP calls ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/633][#633]]: Add GitHub Actions workflow for ERT tests ([[https://github.com/phairoh][@phairoh]])
+- [[https://github.com/xenodium/agent-shell/pull/634][#634]]: Update art generated by =agent-shell-hermes--ascii-art= ([[https://github.com/TamsynUlthara][@TamsynUlthara]])
+- [[https://github.com/xenodium/agent-shell/pull/639][#639]]: Preserve window position when restarting ([[https://github.com/Gleek][@Gleek]])
+
+*** Bug fixes
+
+- [[https://github.com/xenodium/agent-shell/issues/202][#202]]: Header icon is double the expected size
+- [[https://github.com/xenodium/agent-shell/issues/278][#278]]: Heartbeat causes high CPU usage with many agent buffers
+- [[https://github.com/xenodium/agent-shell/issues/366][#366]]: =.agent-shell/= directory at risk when switching git branches
+- [[https://github.com/xenodium/agent-shell/issues/400][#400]]: =agent-shell-viewport-reply-1= errors with "Text is read-only"
+- [[https://github.com/xenodium/agent-shell/issues/401][#401]]: Garbled characters output when using non-English languages
+- [[https://github.com/xenodium/agent-shell/issues/412][#412]]: Diff buffer management is messy
+- [[https://github.com/xenodium/agent-shell/issues/414][#414]]: =agent-shell-mode-hook= timing makes subscribing to events difficult
+- [[https://github.com/xenodium/agent-shell/issues/417][#417]]: Unhandled notifications with kiro
+- [[https://github.com/xenodium/agent-shell/issues/426][#426]]: Starting conversation before agent has initialized leaves "dangling" text
+- [[https://github.com/xenodium/agent-shell/issues/431][#431]]: Heartbeat timer keeps running after failed/abandoned authentication in OpenAI
+- [[https://github.com/xenodium/agent-shell/issues/435][#435]]: =xclip= clipboard handler silently saves text as PNG in terminal mode
+- [[https://github.com/xenodium/agent-shell/issues/441][#441]]: Background agent notifications treated as stale after =session/prompt= response
+- [[https://github.com/xenodium/agent-shell/issues/443][#443]]: =image-type=: Invalid image type ='svg= on calling agent-shell
+- [[https://github.com/xenodium/agent-shell/issues/455][#455]]: agent-shell enters frozen/hanging state when receiving unknown notifications
+- [[https://github.com/xenodium/agent-shell/issues/462][#462]]: Header text invisible when =font-get :size= returns 0
+- [[https://github.com/xenodium/agent-shell/issues/465][#465]]: Session load crashes on non-text user message chunks (e.g. images)
+- [[https://github.com/xenodium/agent-shell/issues/466][#466]]: =agent-shell-diff-accept-all= / =-reject-all= now focus the originating shell
+- [[https://github.com/xenodium/agent-shell/issues/468][#468]]: =wl-paste-image-handler= breaks pasting text
+- [[https://github.com/xenodium/agent-shell/issues/481][#481]]: History input rolls back in =insert= editing mode while pressing up/down arrows
+- [[https://github.com/xenodium/agent-shell/issues/485][#485]]: Shells created in other workspaces no longer display
+- [[https://github.com/xenodium/agent-shell/issues/493][#493]]: Tables rendered in agent-shell break cursor (point) navigation
+- [[https://github.com/xenodium/agent-shell/issues/533][#533]]: Can't install agent-shell from MELPA
+- [[https://github.com/xenodium/agent-shell/issues/548][#548]]: Copied highlighted text from agent output includes trailing backtick
+- [[https://github.com/xenodium/agent-shell/issues/563][#563]]: "Cannot modify map in-place" when starting agents
+- [[https://github.com/xenodium/agent-shell/issues/577][#577]]: =agent-shell-get-config= does not work in an =agent-shell-command-prefix= function
+- [[https://github.com/xenodium/agent-shell/issues/587][#587]]: Long region preview's "Expand..." button is sent literally to the agent
+- [[https://github.com/xenodium/agent-shell/issues/617][#617]]: OpenCode: consent prompt shows empty input when =request_permission= arrives before =tool_call_update= populates =rawInput=
+
+*** Lots of polish
+
+Beyond what's showcased, I've poured much love and effort into polishing the =agent-shell= experience. Interested in the nitty-gritty? Have a look through [[https://github.com/xenodium/agent-shell/commits/main/][my regular commits]].
+
+** Make the work sustainable
+
+If [[https://github.com/xenodium/agent-shell][agent-shell]] is useful to you, please consider [[https://github.com/sponsors/xenodium][sponsoring]] the project. I'm now back to working on =agent-shell= daily.
+
+LLM tokens aren't free, and neither is the time dedicated to building this stuff (especially as an indie dev). I also have bills to pay ;)
+
+Unless I can make this work sustainable, I will have to shift my focus to work on something else that is.
+
+✨ [[https://github.com/sponsors/xenodium][Sponsor agent-shell]] ✨
+
 * [2026-04-03 Fri] ...and then there were three (expect delays)
 :PROPERTIES:
 :CUSTOM_ID: and-then-there-were-three
