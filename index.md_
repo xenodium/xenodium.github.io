@@ -1,3 +1,243 @@
+# \[2026-07-22 Wed\] agent-shell 0.63 updates
+---
+id: agent-shell-0-63-updates
+---
+
+It hasn't been long since the [0.55 update](https://xenodium.com/agent-shell-0-55-updates), but plenty has landed since. Let's go through the highlights as of v0.63.
+
+## What's `agent-shell`?
+
+[agent-shell](https://github.com/xenodium/agent-shell) is a native [Emacs](https://www.gnu.org/software/emacs/) mode to interact with AI agents powered by ACP ([Agent Client Protocol](https://agentclientprotocol.com/)).
+
+## Supported agents
+
+The roster keeps growing. This cycle adds two new agents:
+
+-   [Grok Build](https://x.ai/) (xAI), [#720](https://github.com/xenodium/agent-shell/pull/720) by [\@eddof13](https://github.com/eddof13).
+-   [Oh My Pi](https://github.com/can1357/oh-my-pi) (`omp`), [#631](https://github.com/xenodium/agent-shell/pull/631) by [\@tychoish](https://github.com/tychoish).
+
+Additionally:
+
+-   **Claude** regains rendering thinking output, since agent server started omitting by default.
+-   **Cursor** now runs on the official [Cursor CLI](https://cursor.com/docs/cli) (`agent acp`). Note a recent CLI is required, as the `acp` subcommand was only added in 2026.
+-   **Codex** now uses [\@agentclientprotocol/codex-acp](https://github.com/agentclientprotocol/codex-acp).
+-   **Cline** now accepts a default model and session mode via defcustoms ([#693](https://github.com/xenodium/agent-shell/pull/693) by [\@nhojb](https://github.com/nhojb)).
+-   **Goose** no longer requires an OpenAI key by default ([#711](https://github.com/xenodium/agent-shell/pull/711) by [\@hoyon](https://github.com/hoyon)).
+-   **Qwen** now has explicit support for OpenAI-compatible keys.
+
+## Preferred agent
+
+`agent-shell-preferred-agent-config` gained finer control over agent selection. Set it to an agent identifier to skip the picker entirely, or wrap it to keep the picker with a preselected default:
+
+-   `(setq agent-shell-preferred-agent-config 'claude-code)` always starts Claude, no prompt.
+-   `(setq agent-shell-preferred-agent-config '(preselect . claude-code))` keeps the picker but preselects Claude as the default.
+
+## Custom markdown renderers
+
+The new markdown renderer introduced in 0.55 is now extensible. Third-party packages can claim and render specific markdown constructs (source blocks, inline code ranges, and more) through a set of now-public helpers.
+
+Thanks to [Andrea Alberti](https://github.com/alberti42) for driving the first integration in [agent-shell-math-renderer](https://github.com/alberti42/agent-shell-math-renderer), which renders LaTeX math equations as SVGs.
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/math-renderer-demo.jpeg)
+
+## agent-shell faces
+
+If you've wanted more theming control over `agent-shell` buffers, this is now possible via `agent-shell-faces.el`. Additionally, check out `agent-shell-markdown.el` for Markdown theming.
+
+## Less chatter, more grouping
+
+If your agent session requires lots of tool use (fairly typical), you may notice that shell output is fairly verbose or chatty. This can be quite distracting, so from now on, tool usage as well as thinking are grouped together under an "Activity" section (collapsed by default). If you're a fan of the chatty output, not to worry. Use `agent-shell-activity-group-expand-by-default` to expand the lot by default.
+
+The new "Activity" section has customisable headers (via `agent-shell-activity-group-header-label-function`). You now have three ways of rendering the activity header:
+
+### Descriptive
+
+Collapsed
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/descriptive-collapsed.png)
+
+Expanded
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/descriptive.png)
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-activity-group-header-label-function
+      #'agent-shell-activity-group-descriptive-label)
+```
+
+### Count
+
+Collapsed
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/count-collapsed.png)
+
+Expanded
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/count.png)
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-activity-group-header-label-function
+      #'agent-shell-activity-group-count-label)
+```
+
+### Tally
+
+Collapsed
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/tally-collapsed.png)
+
+Expanded
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/tally.png)
+
+``` {.commonlisp org-language="emacs-lisp" lexical="no"}
+(setq agent-shell-activity-group-header-label-function
+      #'agent-shell-activity-group-tally-label)
+```
+
+## Inline image and rich content rendering
+
+`agent-shell` can now render agent-supplied image content inline, whether base64-encoded, a remote URL, or a `resource_link=/=resource` content block ([#676](https://github.com/xenodium/agent-shell/pull/676) by [\@melito](https://github.com/melito)). Audio and other binary resources now render as links you can open externally.
+
+## Per-agent MCP servers
+
+You can now attach MCP servers to a specific agent through its config's `:mcp-servers` entry, rather than sharing one global list across every agent, as requested in [#593](https://github.com/xenodium/agent-shell/issues/593).
+
+## Diff improvements
+
+Section titles now summarize lines added and removed.
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/diff-count.png)
+
+In addition, pressing `RET` in a diff buffer jumps to the file location where the change would apply, while multi-diff permission requests are now supported.
+
+## Improved out-of-turn handling
+
+Some agents emit notifications outside of the usual prompt session request/response turn. Historically, these have been dropped by `agent-shell`. These out-of-turn notifications should now render as expected. Please [file a bug](https://github.com/xenodium/agent-shell/issues) if you continue to run into issues.
+
+## New copy commands
+
+A few new commands for grabbing hidden content out of the shell buffer:
+
+-   `M-x agent-shell-copy-as-markdown` copies buffer text as markdown.
+-   `M-x agent-shell-copy-source-block-at-point` copies the source block at point.
+-   `M-x agent-shell-copy-link-url-at-point` copies the URL of the link at point.
+
+## Viewport tweaks
+
+The viewport picked up a few refinements:
+
+-   `agent-shell-viewport-dismiss-on-send` dismisses the viewport once you send.
+-   Submitting prompts via `C-u C-c C-c` now enables you to continue queuing additional requests.
+-   History navigation now preserves your in-progress prompt.
+
+## Session choices
+
+The new `agent-shell-session-choices-function` lets you customize what options are presented when starting a new shell. This is useful if you'd like to hide some of these options:
+
+![](https://xenodium.github.io/images/agent-shell-0-55-updates/starting.png)
+
+## Agent-specific notification adapters
+
+A new notification-adapter mechanism enables agent-specific logic to preprocess notifications before handing back to agent-agnostic handling, starting with a Cursor notification adapter ([#702](https://github.com/xenodium/agent-shell/pull/702) by [\@aburtsev](https://github.com/aburtsev)).
+
+## Narrow to block
+
+`M-x agent-shell-narrow-to-block` narrows the buffer to the most recent N blocks (defaulting to 1), handy for focusing on the latest exchange ([#672](https://github.com/xenodium/agent-shell/pull/672) by [\@arthurgleckler](https://github.com/arthurgleckler)).
+
+## Keeping the system awake while busy
+
+To keep a long agent turn from being cut short by idle sleep, `agent-shell` now keeps the system awake while an agent is busy, releasing it as soon as the turn finishes (the display may still blank). It won't override a hard sleep such as closing a laptop lid. This needs the `system-sleep` library (Emacs 31.1+) and can be disabled via `agent-shell-inhibit-system-sleep`. Thanks to [\@shipmints](https://github.com/shipmints) for [proposing the idea](https://github.com/xenodium/agent-shell/issues/644).
+
+## Artist support
+
+`M-x agent-shell-artist-insert-text-drawing` lets you sketch simple text drawings to drop into a prompt. Check out [Bending Emacs episode 14](https://www.youtube.com/watch?v=7fdHeUoRRgg) for a demo, crafting iOS UI.
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/artist.png)
+
+## New third-party packages
+
+The `agent-shell` package family keeps expanding. Recent additions:
+
+-   [agent-shell-math-renderer](https://github.com/alberti42/agent-shell-math-renderer): Render LaTeX math equations as SVGs in `agent-shell`.
+-   [agent-shell-dashboard](https://github.com/wandersoncferreira/agent-shell-dashboard): A landing page for `agent-shell`.
+-   [agent-shell-links.el](https://github.com/ultronozm/agent-shell-links.el): Bookmarks and Org links for `agent-shell` sessions.
+-   [agent-shell-desktop](https://github.com/timfel/agent-shell-desktop.el): Desktop save mode integration, resuming shells by folder, config, and session id.
+
+## Maintenance and housekeeping
+
+Keeping up with the project requires daily work. Luckily, I'm getting a bit better at time management since my [new 24-hour job](https://xenodium.com/and-then-there-were-three), so I've been catching up on general project maintenance, delivering bugfixes and feature requests, merging pull requests, and general bookkeeping.
+
+At its most backed-up period, in mid-May, `agent-shell`'s open issues peaked at 75 while pending PRs peaked at 29.
+
+As of today, we are down to 13 open issues and 4 open PRs.
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/github.png)
+
+Side note: this chart was generated using the `/github-activity` skill shared in my [emacs-skills](https://github.com/xenodium/emacs-skills) repo.
+
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/github-activity.png)
+
+## agent-shell needs your support
+
+Vendor-neutral tooling matters, and there are a couple of ways to help keep `agent-shell` going. Some cost money, others just a click. All are appreciated ;)
+
+### Sponsorships for agent-shell longevity
+
+`agent-shell` is just me, an indie dev, while the tools it competes with have well-funded teams behind them. If this project is useful to you, please consider [sponsoring](https://github.com/sponsors/xenodium) the project. And if your employer benefits from your `agent-shell` use, nudge them to chip in too, they can typically contribute at a scale individuals can't.
+
+### GitHub stars for Anthropic credit
+
+[Anthropic offers 6 months of free Claude Max 20x](https://claude.com/contact-sales/claude-for-oss) for qualifying open-source projects with at least 5,000+ GitHub stars. [Starring agent-shell](https://github.com/xenodium/agent-shell/) costs nothing and can save me some money, so if you don't mind a couple of clicks, the project can really use [another GitHub star](https://github.com/xenodium/agent-shell/).
+
+## Pull requests
+
+Thank you to all contributors for these improvements!
+
+-   [#629](https://github.com/xenodium/agent-shell/pull/629): Write `.agent-shell/` to `.git/info/exclude` instead of `.gitignore` ([\@phairoh](https://github.com/phairoh))
+-   [#631](https://github.com/xenodium/agent-shell/pull/631): Add implementation/support for oh-my-pi (omp) ([\@tychoish](https://github.com/tychoish))
+-   [#632](https://github.com/xenodium/agent-shell/pull/632): Render tool call parameters for non-standard tools like MCP calls ([\@martenlienen](https://github.com/martenlienen))
+-   [#633](https://github.com/xenodium/agent-shell/pull/633): Add GitHub Actions workflow for ERT tests ([\@phairoh](https://github.com/phairoh))
+-   [#634](https://github.com/xenodium/agent-shell/pull/634): Update art generated by `agent-shell-hermes--ascii-art` ([\@TamsynUlthara](https://github.com/TamsynUlthara))
+-   [#639](https://github.com/xenodium/agent-shell/pull/639): Preserve window position when restarting ([\@Gleek](https://github.com/Gleek))
+-   [#647](https://github.com/xenodium/agent-shell/pull/647): Adjust region line counting when ending at the beginning of a line ([\@bcc32](https://github.com/bcc32))
+-   [#648](https://github.com/xenodium/agent-shell/pull/648): Don't italicize intraword underscores ([\@liaowang11](https://github.com/liaowang11))
+-   [#651](https://github.com/xenodium/agent-shell/pull/651): Post test results on fork PRs ([\@phairoh](https://github.com/phairoh))
+-   [#652](https://github.com/xenodium/agent-shell/pull/652): Fix file paths in README for model registration ([\@vellvisher](https://github.com/vellvisher))
+-   [#653](https://github.com/xenodium/agent-shell/pull/653): Add a reference to agent-shell-desktop.el ([\@timfel](https://github.com/timfel))
+-   [#656](https://github.com/xenodium/agent-shell/pull/656): Fix previous-item skipping the current fragment's heading ([\@liaowang11](https://github.com/liaowang11))
+-   [#658](https://github.com/xenodium/agent-shell/pull/658): Fix viewport previous-page navigation and stale position label ([\@liaowang11](https://github.com/liaowang11))
+-   [#659](https://github.com/xenodium/agent-shell/pull/659): Use native ERT JUnit reporting in CI ([\@phairoh](https://github.com/phairoh))
+-   [#661](https://github.com/xenodium/agent-shell/pull/661): Don't delete temp dir on agent-shell-restart ([\@arthurgleckler](https://github.com/arthurgleckler))
+-   [#664](https://github.com/xenodium/agent-shell/pull/664): Fix transcript section heading glued to interrupted agent message ([\@liaowang11](https://github.com/liaowang11))
+-   [#665](https://github.com/xenodium/agent-shell/pull/665): Don't trigger completion on path separators in file paths ([\@liaowang11](https://github.com/liaowang11))
+-   [#666](https://github.com/xenodium/agent-shell/pull/666): Preserve viewport edit draft when queued request executes ([\@liaowang11](https://github.com/liaowang11))
+-   [#667](https://github.com/xenodium/agent-shell/pull/667): Fix markdown rendering for non-streamed bodies ([\@arthurgleckler](https://github.com/arthurgleckler))
+-   [#672](https://github.com/xenodium/agent-shell/pull/672): Add agent-shell-narrow-to-block ([\@arthurgleckler](https://github.com/arthurgleckler))
+-   [#676](https://github.com/xenodium/agent-shell/pull/676): Render agent image content blocks inline ([\@melito](https://github.com/melito))
+-   [#686](https://github.com/xenodium/agent-shell/pull/686): Fix command to pull Qwen2.5 model in README ([\@jcubic](https://github.com/jcubic))
+-   [#687](https://github.com/xenodium/agent-shell/pull/687): Record session ID and model in transcript header ([\@alberti42](https://github.com/alberti42))
+-   [#693](https://github.com/xenodium/agent-shell/pull/693): Fixes for cline agent ([\@nhojb](https://github.com/nhojb))
+-   [#695](https://github.com/xenodium/agent-shell/pull/695): Fix unexpected resize of the window header ([\@jcubic](https://github.com/jcubic))
+-   [#696](https://github.com/xenodium/agent-shell/pull/696): Strip source-buffer properties from grabbed region context ([\@liaowang11](https://github.com/liaowang11))
+-   [#697](https://github.com/xenodium/agent-shell/pull/697): Fix agent-shell-send-dwim double-inserting context with prefix arg ([\@liaowang11](https://github.com/liaowang11))
+-   [#698](https://github.com/xenodium/agent-shell/pull/698): Fix mouse-copy inside formatted text ([\@jcubic](https://github.com/jcubic))
+-   [#702](https://github.com/xenodium/agent-shell/pull/702): Add cursor toolcall output adapter ([\@aburtsev](https://github.com/aburtsev))
+-   [#707](https://github.com/xenodium/agent-shell/pull/707): Add hermes to default agent configs ([\@eliferrous](https://github.com/eliferrous))
+-   [#709](https://github.com/xenodium/agent-shell/pull/709): Prevent programmatic fragments ending up in undo history ([\@martinbaillie](https://github.com/martinbaillie))
+-   [#711](https://github.com/xenodium/agent-shell/pull/711): Update goose to not require OpenAI key by default ([\@hoyon](https://github.com/hoyon))
+-   [#713](https://github.com/xenodium/agent-shell/pull/713): Align embedded-image rendering with link rendering ([\@alberti42](https://github.com/alberti42))
+-   [#715](https://github.com/xenodium/agent-shell/pull/715): Fix table column wrapping for CJK text ([\@ktakahashi74](https://github.com/ktakahashi74))
+-   [#716](https://github.com/xenodium/agent-shell/pull/716): Fix resuming copilot session ([\@gnufied](https://github.com/gnufied))
+-   [#717](https://github.com/xenodium/agent-shell/pull/717): Make the markdown render context available via a public function ([\@alberti42](https://github.com/alberti42))
+-   [#720](https://github.com/xenodium/agent-shell/pull/720): Add first-class Grok Build (xAI) ACP support ([\@eddof13](https://github.com/eddof13))
+-   [#721](https://github.com/xenodium/agent-shell/pull/721): Fix hidden streamed Markdown headings ([\@regadas](https://github.com/regadas))
+-   [#727](https://github.com/xenodium/agent-shell/pull/727): Fetches the proper Pi logo ([\@JanJoar](https://github.com/JanJoar))
+
+## Make it sustainable, sponsor the effort
+
+Liking `agent-shell`? Would like to see it evolve? Consider [sponsoring](https://github.com/sponsors/xenodium) the effort.
+
 # \[2026-06-23 Tue\] ytr: YouTube radio for Emacs
 ---
 id: ytr-youtube-radio-for-emacs
@@ -6106,7 +6346,7 @@ I build [iOS and macOS apps](https://apps.apple.com/us/developer/xenodium-ltd/id
 For starters, I should mention I run Emacs on macOS via the excellent [Emacs Plus](https://github.com/d12frosted/homebrew-emacs-plus) [homebrew](https://brew.sh/) recipe. These are the options I use:
 
 ``` {.bash org-language="sh"}
-brew install emacs-plus@30 --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-curvy-3d-icon
+brew install emacs-plus@30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
 ```
 
 ## Valeriy Savchenko's icons
@@ -6139,7 +6379,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 
 ## Frames
 
-You may have noticed the `--with-no-frame-refocus` Emacs Plus option. I didn't like Emacs refocusing other frames when closing one, so I [sent a tiny patch over to Emacs Plus](https://xenodium.com/no-emacs-frame-refocus-on-macos), which gave us that option.
+I didn't like Emacs refocusing other frames when closing one, so I [sent a tiny patch over to Emacs Plus](https://xenodium.com/no-emacs-frame-refocus-on-macos), which used to be available via the `--with-no-frame-refocus` option. These days it's the default behavior, so no extra option is needed.
 
 I also prefer reusing existing frames whenever possible.
 
