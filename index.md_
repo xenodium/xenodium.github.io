@@ -3,7 +3,7 @@
 id: agent-shell-0-63-updates
 ---
 
-It hasn't been long since the [0.55 update](https://xenodium.com/agent-shell-0-55-updates), but plenty has landed since. Let's go through the highlights as of v0.63.
+It's been a little over a month since the [0.55 update](https://xenodium.com/agent-shell-0-55-updates), but plenty has landed since. Let's go through the highlights as of v0.63.
 
 ## What's `agent-shell`?
 
@@ -16,9 +16,11 @@ The roster keeps growing. This cycle adds two new agents:
 -   [Grok Build](https://x.ai/) (xAI), [#720](https://github.com/xenodium/agent-shell/pull/720) by [\@eddof13](https://github.com/eddof13).
 -   [Oh My Pi](https://github.com/can1357/oh-my-pi) (`omp`), [#631](https://github.com/xenodium/agent-shell/pull/631) by [\@tychoish](https://github.com/tychoish).
 
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/omp.png)
+
 Additionally:
 
--   **Claude** regains rendering thinking output, since agent server started omitting by default.
+-   **Claude** regains rendering thinking output, since its ACP server started omitting by default.
 -   **Cursor** now runs on the official [Cursor CLI](https://cursor.com/docs/cli) (`agent acp`). Note a recent CLI is required, as the `acp` subcommand was only added in 2026.
 -   **Codex** now uses [\@agentclientprotocol/codex-acp](https://github.com/agentclientprotocol/codex-acp).
 -   **Cline** now accepts a default model and session mode via defcustoms ([#693](https://github.com/xenodium/agent-shell/pull/693) by [\@nhojb](https://github.com/nhojb)).
@@ -27,18 +29,18 @@ Additionally:
 
 ## Preferred agent
 
-`agent-shell-preferred-agent-config` gained finer control over agent selection. Set it to an agent identifier to skip the picker entirely, or wrap it to keep the picker with a preselected default:
+`agent-shell-preferred-agent-config` gained finer control over agent selection. Set to an agent identifier to skip the picker entirely, or wrap it to keep the picker with a preselected default:
 
 -   `(setq agent-shell-preferred-agent-config 'claude-code)` always starts Claude, no prompt.
 -   `(setq agent-shell-preferred-agent-config '(preselect . claude-code))` keeps the picker but preselects Claude as the default.
 
 ## Custom markdown renderers
 
-The new markdown renderer introduced in 0.55 is now extensible. Third-party packages can claim and render specific markdown constructs (source blocks, inline code ranges, and more) through a set of now-public helpers.
+The new markdown renderer introduced in 0.55 is now extensible. Third-party packages can claim and render specific markdown constructs (source blocks, inline code ranges, etc) through `agent-shell-markdown-render-functions`.
 
 Thanks to [Andrea Alberti](https://github.com/alberti42) for driving the first integration in [agent-shell-math-renderer](https://github.com/alberti42/agent-shell-math-renderer), which renders LaTeX math equations as SVGs.
 
-![](https://xenodium.github.io/images/agent-shell-0-63-updates/math-renderer-demo.jpeg)
+![](https://xenodium.github.io/images/agent-shell-0-63-updates/math.png)
 
 ## agent-shell faces
 
@@ -97,11 +99,11 @@ Expanded
 
 ## Inline image and rich content rendering
 
-`agent-shell` can now render agent-supplied image content inline, whether base64-encoded, a remote URL, or a `resource_link=/=resource` content block ([#676](https://github.com/xenodium/agent-shell/pull/676) by [\@melito](https://github.com/melito)). Audio and other binary resources now render as links you can open externally.
+`agent-shell` can now render agent-supplied image content inline, whether base64-encoded, a remote URL, or a `resource_link/resource` content block ([#676](https://github.com/xenodium/agent-shell/pull/676) by [\@melito](https://github.com/melito)). Audio and other binary resources now render as links that can open externally.
 
 ## Per-agent MCP servers
 
-You can now attach MCP servers to a specific agent through its config's `:mcp-servers` entry, rather than sharing one global list across every agent, as requested in [#593](https://github.com/xenodium/agent-shell/issues/593).
+You can now attach MCP servers per agent kind through its config using the `:mcp-servers` field, as requested in [#593](https://github.com/xenodium/agent-shell/issues/593).
 
 ## Diff improvements
 

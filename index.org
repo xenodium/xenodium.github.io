@@ -5,7 +5,7 @@
   :PROPERTIES:
   :CUSTOM_ID: agent-shell-0-63-updates
   :END:
-It hasn't been long since the [[https://xenodium.com/agent-shell-0-55-updates][0.55 update]], but plenty has landed since. Let's go through the highlights as of v0.63.
+It's been a little over a month since the [[https://xenodium.com/agent-shell-0-55-updates][0.55 update]], but plenty has landed since. Let's go through the highlights as of v0.63.
 
 ** What's =agent-shell=?
 
@@ -18,22 +18,33 @@ The roster keeps growing. This cycle adds two new agents:
 - [[https://x.ai/][Grok Build]] (xAI), [[https://github.com/xenodium/agent-shell/pull/720][#720]] by [[https://github.com/eddof13][@eddof13]].
 - [[https://github.com/can1357/oh-my-pi][Oh My Pi]] (=omp=), [[https://github.com/xenodium/agent-shell/pull/631][#631]] by [[https://github.com/tychoish][@tychoish]].
 
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-63-updates/omp.png]]
+
 Additionally:
 
+- *Claude* regains rendering thinking output, since its ACP server started omitting by default.
 - *Cursor* now runs on the official [[https://cursor.com/docs/cli][Cursor CLI]] (=agent acp=). Note a recent CLI is required, as the =acp= subcommand was only added in 2026.
 - *Codex* now uses [[https://github.com/agentclientprotocol/codex-acp][@agentclientprotocol/codex-acp]].
 - *Cline* now accepts a default model and session mode via defcustoms ([[https://github.com/xenodium/agent-shell/pull/693][#693]] by [[https://github.com/nhojb][@nhojb]]).
 - *Goose* no longer requires an OpenAI key by default ([[https://github.com/xenodium/agent-shell/pull/711][#711]] by [[https://github.com/hoyon][@hoyon]]).
 - *Qwen* now has explicit support for OpenAI-compatible keys.
 
+** Preferred agent
+
+=agent-shell-preferred-agent-config= gained finer control over agent selection. Set to an agent identifier to skip the picker entirely, or wrap it to keep the picker with a preselected default:
+
+- =(setq agent-shell-preferred-agent-config 'claude-code)= always starts Claude, no prompt.
+- =(setq agent-shell-preferred-agent-config '(preselect . claude-code))= keeps the picker but preselects Claude as the default.
+
 ** Custom markdown renderers
 
-The new markdown renderer introduced in 0.55 is now extensible. Third-party packages can claim and render specific markdown constructs (source blocks, inline code ranges, and more) through a set of now-public helpers.
+The new markdown renderer introduced in 0.55 is now extensible. Third-party packages can claim and render specific markdown constructs (source blocks, inline code ranges, etc) through =agent-shell-markdown-render-functions=.
 
 Thanks to [[https://github.com/alberti42][Andrea Alberti]] for driving the first integration in [[https://github.com/alberti42/agent-shell-math-renderer][agent-shell-math-renderer]], which renders LaTeX math equations as SVGs.
 
 #+ATTR_HTML: :width 85%
-[[file:images/agent-shell-0-63-updates/math-renderer-demo.jpeg]]
+[[file:images/agent-shell-0-63-updates/math.png]]
 
 ** agent-shell faces
 
@@ -98,11 +109,11 @@ Expanded
 
 ** Inline image and rich content rendering
 
-=agent-shell= can now render agent-supplied image content inline, whether base64-encoded, a remote URL, or a =resource_link=/=resource= content block ([[https://github.com/xenodium/agent-shell/pull/676][#676]] by [[https://github.com/melito][@melito]]). Audio and other binary resources now render as links you can open externally.
+=agent-shell= can now render agent-supplied image content inline, whether base64-encoded, a remote URL, or a =resource_link/resource= content block ([[https://github.com/xenodium/agent-shell/pull/676][#676]] by [[https://github.com/melito][@melito]]). Audio and other binary resources now render as links that can open externally.
 
 ** Per-agent MCP servers
 
-You can now attach MCP servers to a specific agent through its config's =:mcp-servers= entry, rather than sharing one global list across every agent, as requested in [[https://github.com/xenodium/agent-shell/issues/593][#593]].
+You can now attach MCP servers per agent kind through its config using the =:mcp-servers= field, as requested in [[https://github.com/xenodium/agent-shell/issues/593][#593]].
 
 ** Diff improvements
 
@@ -148,9 +159,9 @@ A new notification-adapter mechanism enables agent-specific logic to preprocess 
 
 =M-x agent-shell-narrow-to-block= narrows the buffer to the most recent N blocks (defaulting to 1), handy for focusing on the latest exchange ([[https://github.com/xenodium/agent-shell/pull/672][#672]] by [[https://github.com/arthurgleckler][@arthurgleckler]]).
 
-** System sleep support
+** Keeping the system awake while busy
 
-=agent-shell= now reacts to the system going to sleep and waking up, keeping connections in a saner state across suspend/resume. Thanks to [[https://github.com/shipmints][@shipmints]] for [[https://github.com/xenodium/agent-shell/issues/644][proposing the idea]].
+To keep a long agent turn from being cut short by idle sleep, =agent-shell= now keeps the system awake while an agent is busy, releasing it as soon as the turn finishes (the display may still blank). It won't override a hard sleep such as closing a laptop lid. This needs the =system-sleep= library (Emacs 31.1+) and can be disabled via =agent-shell-inhibit-system-sleep=. Thanks to [[https://github.com/shipmints][@shipmints]] for [[https://github.com/xenodium/agent-shell/issues/644][proposing the idea]].
 
 ** Artist support
 
@@ -186,7 +197,7 @@ Side note: this chart was generated using the =/github-activity= skill shared in
 
 ** agent-shell needs your support
 
-Vendor-neutral tooling matters more than ever, and there are a couple of ways to help keep =agent-shell= going. Some cost money, others just a click. All are appreciated ;)
+Vendor-neutral tooling matters, and there are a couple of ways to help keep =agent-shell= going. Some cost money, others just a click. All are appreciated ;)
 
 *** Sponsorships for agent-shell longevity
 
@@ -6432,7 +6443,7 @@ I build [[https://apps.apple.com/us/developer/xenodium-ltd/id304568690][iOS and 
 For starters, I should mention I run Emacs on macOS via the excellent [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs Plus]] [[https://brew.sh/][homebrew]] recipe. These are the options I use:
 
 #+begin_src sh
-  brew install emacs-plus@30 --with-no-frame-refocus --with-native-comp --with-savchenkovaleriy-big-sur-curvy-3d-icon
+  brew install emacs-plus@30 --with-savchenkovaleriy-big-sur-curvy-3d-icon
 #+end_src
 
 **  Valeriy Savchenko's icons
@@ -6466,7 +6477,7 @@ After setting ⌘ as Meta key, I discovered C-M-d is not available to Emacs for 
 
 ** Frames
 
-You may have noticed the =--with-no-frame-refocus= Emacs Plus option. I didn't like Emacs refocusing other frames when closing one, so I [[https://xenodium.com/no-emacs-frame-refocus-on-macos][sent a tiny patch over to Emacs Plus]], which gave us that option.
+I didn't like Emacs refocusing other frames when closing one, so I [[https://xenodium.com/no-emacs-frame-refocus-on-macos][sent a tiny patch over to Emacs Plus]], which used to be available via the =--with-no-frame-refocus= option. These days it's the default behavior, so no extra option is needed.
 
 I also prefer reusing existing frames whenever possible.
 
