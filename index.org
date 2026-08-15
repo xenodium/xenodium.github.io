@@ -1,6 +1,24 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2026-08-15 Sat] Focus windows across Emacs frames
+:PROPERTIES:
+:CUSTOM_ID: focus-windows-across-emacs-frames
+:END:
+
+Historically, I've only ever known two great ways of focusing Emacs windows: the built-in =other-window= command, which cycles through all the available windows, and the [[https://github.com/abo-abo/ace-window][ace-window]] package, offering random window access. It's not that there aren't more or better ways, I just didn't look any further as these were enough for my needs.
+
+While I really wanted to make =ace-window= my default choice, for whatever reason, it never stuck. =other-window= with a custom =M-o= binding always felt like the smoother fit for my limited needs. You see, I hardly ever have more than two visible windows, so whenever =ace-window= kicked into action (for 3 or more windows), it often took me by surprise. The one area =other-window= didn't fit my needs revolved around focus requiring visual feedback, but I eventually solved that with [[https://xenodium.com/introducing-winpulse][winpulse]] (a little package I wrote).
+
+As you can see, I'm a simple man using few Emacs windows, and when it comes to frames, I almost never use more than one. That is until somewhat recently, when I built [[https://xenodium.com/ytr-youtube-radio-for-emacs][ytr]], a tiny YouTube radio player that sits in the corner of your frame. While it all feels fairly integrated into your frame, under the hood, =ytr= renders in a separate frame. This broke my trusty =other-window= flow. I couldn't just focus my radio window using my well-internalized =M-o= binding.
+
+Turns out, =other-window= actually caters for focusing windows across frames, but only when invoked programmatically. Sure, I can wrap it with my own custom command, but Emacs already had me covered. I found the built-in =next-window-any-frame= command. All I had to do was bind it to =M-o= and [[https://en.wikipedia.org/wiki/Bob%27s_your_uncle][Bob's your uncle]].
+
+I can now switch between my current window and my YouTube radio, with my dear =M-o= binding. Balance restored.
+
+#+ATTR_HTML: :width 85%
+[[file:images/focus-windows-across-emacs-frames/other-window-frame.gif]]
+
 * [2026-08-15 Sat] agent-shell 0.73 updates
 :PROPERTIES:
 :CUSTOM_ID: agent-shell-0-73-updates
