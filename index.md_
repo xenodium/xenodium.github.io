@@ -1,3 +1,227 @@
+# \[2026-09-22 Tue\] agent-shell 0.78 updates
+---
+id: agent-shell-0-78-updates
+---
+
+Another month, another [agent-shell](https://github.com/xenodium/agent-shell) update. If you missed the last post, have a look at the [0.73 update](https://xenodium.com/agent-shell-0-73-updates).
+
+As usual, this post showcases highlights, but please check out the [full list of changes](https://github.com/xenodium/agent-shell/compare/v0.73.2...v0.78.2) if you're after the nitty-gritty.
+
+## What's `agent-shell`?
+
+[agent-shell](https://github.com/xenodium/agent-shell) is a native [Emacs](https://www.gnu.org/software/emacs/) mode to interact with AI agents powered by ACP ([Agent Client Protocol](https://agentclientprotocol.com/)).
+
+## New supported agents
+
+Two agents join the family, available as usual via `M-x agent-shell`, or explicitly as follows:
+
+-   [Antigravity](https://antigravity.google/docs/ide/extensions) (Google), [#795](https://github.com/xenodium/agent-shell/pull/795) by [\@tychoish](https://github.com/tychoish). Start it with `M-x agent-shell-start-antigravity-agent`.
+-   [Qoder CLI](https://qoder.com), [#831](https://github.com/xenodium/agent-shell/pull/831) by [\@unship](https://github.com/unship). Start it with `M-x agent-shell-start-qoder-agent`.
+
+## Prompt any time
+
+Likely the most impactful feature in the release. It's highly discoverable and plenty useful, so I'm expecting a fair amount of uptake.
+
+A typical shell experience offers a prompt. Users type and submit their commands and wait for the command to finish before the shell prompt is offered again.
+
+Deriving from `comint-mode`, `agent-shell` was no different. That is, until now.
+
+As of v0.78, `agent-shell` offers a writeable prompt at the end of the buffer at all times. Submit, and the prompt comes right back while the agent is busy handling the turn. Type and submit again and `agent-shell` will automatically queue your request if necessary.
+
+While queueing itself isn't a new feature, the shell prompt queueing route offers a freebie in terms of cognitive load. Submit prompts as you used to (via `RET` binding), and let `agent-shell` decide whether to handle now or queue for later.
+
+![](https://xenodium.github.io/images/agent-shell-0-78-updates/persistent-queue.gif)
+
+The persistent prompt is enabled by default via `agent-shell-persistent-prompt-enabled`. If this isn't your cup of tea, it can be easily disabled with:
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setopt agent-shell-persistent-prompt-enabled nil)
+```
+
+The viewport's compose buffer is there either way, and submitting from it mid-turn routes through exactly the same logic.
+
+## Steering a running turn
+
+As of this release, `agent-shell` can also steer turns (provided the agent supports the `_session/steering` ACP extension). Steering enables you to course correct in-flight prompts without cancelling or waiting for the prompt processing to finish. As of today, I'm aware of `Claude` and `Codex` handling ACP steering, but please reach out if you know of others.
+
+Steering an in-flight turn via `M-x agent-shell-prompt-steer` offers a similar experience to the existing `M-x agent-shell-prompt-queue`. That is, prompting the user for text in the minibuffer. Having said that, we now have a new and shiny persistent prompt, and as we now know, the `RET` binding automatically queues if needed. From the same prompt you can now also steer by submitting via the `M-RET` binding.
+
+![](https://xenodium.github.io/images/agent-shell-0-78-updates/persistent-steer.gif)
+
+Huge thanks to [\@OSadovy](https://github.com/OSadovy), who took on the legwork for steering in [#777](https://github.com/xenodium/agent-shell/pull/777).
+
+## Configurable RET
+
+With `RET` and `M-RET` respectively queueing and steering as needed, the default behaviour is configurable via `agent-shell-busy-submit-default-function` (queues by default) while the `M-RET` (or `C-u RET`) route uses `agent-shell-busy-submit-override-function` (steers by default). Both customizations accept a function, so swapping would offer `RET` steering and `M-RET` queueing with something like:
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setopt agent-shell-busy-submit-default-function
+        #'agent-shell-busy-submit-steer)
+(setopt agent-shell-busy-submit-override-function
+        #'agent-shell-busy-submit-queue)
+```
+
+Both apply wherever a prompt is submitted mid-turn, the shell prompt and the viewport's compose buffer alike. As emacsers, we want all sorts of customizations, so custom functions can be used too, if you'd like something a little different from what's offered.
+
+## Drag and drop
+
+While we could already `C-y` paste screenshots from the clipboard, we can now drag and drop files from external file managers onto either shell or viewport buffers. Images get a preview, anything else is attached as an `@path` link.
+
+![](https://xenodium.github.io/images/agent-shell-0-78-updates/drag-drop.gif)
+
+Thank you [\@dustinfarris](https://github.com/dustinfarris) for [#825](https://github.com/xenodium/agent-shell/pull/825). While on topic, [\@dustinfarris](https://github.com/dustinfarris) fixed file mentions carrying whitespace in paths ([#824](https://github.com/xenodium/agent-shell/pull/824)).
+
+### macOS freebie
+
+After all this time, I had no idea the temporary thumbnail generated by macOS's screenshot utility is draggable, and so you can now drop it straight into your `agent-shell` session.
+
+![](https://xenodium.github.io/images/agent-shell-0-78-updates/screenshot.gif)
+
+Thanks to [\@dustinfarris](https://github.com/dustinfarris) for the tip!
+
+## Displaying cost
+
+If you'd like to keep an eye on token cost, headers can now show the session's cumulative cost, right after the context usage indicator.
+
+Currently off by default, so opt in with:
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setopt agent-shell-show-cost-indicator t)
+```
+
+Keep in mind cost is displayed for agents reporting cost via ACP. Thank you [\@mrcnski](https://github.com/mrcnski) for [#834](https://github.com/xenodium/agent-shell/pull/834).
+
+## Searching folded buffers
+
+`agent-shell` folds lots away by default (tool calls, thinking, groups), requiring additional help if we want closer `isearch` integration. Thanks to [\@mrcnski](https://github.com/mrcnski)'s contribution in [#832](https://github.com/xenodium/agent-shell/pull/832), folded fragments now respect `search-invisible`.
+
+Searching also folds back what it expanded once you're done, groups included. Also thanks to [\@Gleek](https://github.com/Gleek) for [#827](https://github.com/xenodium/agent-shell/pull/827): expanding a fragment no longer clobbers `isearch`'s match data.
+
+## Slash command recognition
+
+Slash command completion is now offered more idiomatically across all three surfaces (shell prompt, viewport compose buffer, minibuffer): it only kicks in when whitespace alone precedes the `/`. Thank you [\@izeigerman](https://github.com/izeigerman) for [#810](https://github.com/xenodium/agent-shell/pull/810).
+
+File completion after `@` is unchanged.
+
+## Copying last output
+
+We now have `M-x agent-shell-copy-last-output`, which grabs the most recent output regardless of point location, so you can pull the latest response from anywhere in buffer.
+
+## Link improvements
+
+Links got a handful of fixes/improvements worth mentioning:
+
+-   File references inside `code` spans are now linked ([#781](https://github.com/xenodium/agent-shell/issues/781), [#782](https://github.com/xenodium/agent-shell/issues/782), thanks [\@OSadovy](https://github.com/OSadovy)).
+-   Links inside tables are now actionable.
+-   Links are now more robust while streaming.
+-   Links to local directories now open in `dired`.
+-   The cursor-sensor hint is no longer misaligned on links.
+
+## Viewport paging with prefix args
+
+`C-u N` on next/previous page now moves N interactions instead of one, and a negative prefix pages the other way. Moving forward past the newest interaction restores a parked compose snapshot, so `C-u N` does what pressing the key N times does, rather than stopping short of your draft. Thank you [\@liaowang11](https://github.com/liaowang11) for [#813](https://github.com/xenodium/agent-shell/pull/813).
+
+## Table faces
+
+Following on from last month's table work, plain data rows now get a face of their own, and every table face inherits from one base face. If you'd like to restyle tables wholesale, you now have a single place to do it. Thank you [\@mrcnski](https://github.com/mrcnski) for [#822](https://github.com/xenodium/agent-shell/pull/822).
+
+## Session handling
+
+-   Session lists are now paginated under the hood, requesting available sessions until agents run out ([#809](https://github.com/xenodium/agent-shell/pull/809) by [\@KarimAziev](https://github.com/KarimAziev)). If you'd rather cap your session list, `agent-shell-session-list-page-limit` takes a positive integer.
+-   Restarting shells now preserves window arrangement.
+
+## Public functions
+
+### `agent-shell-session-id`
+
+`agent-shell-session-id` returns the current ACP session ID. On that note, there's also `M-x agent-shell-copy-session-id` for when you just want it in your kill ring.
+
+### OpenCode config options
+
+`agent-shell-opencode-default-model-variant` was a bit narrow, so it's been replaced by `agent-shell-opencode-default-config-options`, an alist of whatever OpenCode advertises under "Available config options" when starting a new shell:
+
+``` {.commonlisp org-language="emacs-lisp"}
+(setopt agent-shell-opencode-default-config-options
+        '(("model" . "anthropic/claude-opus-4-5")
+          ("effort" . "high")
+          ("mode" . "plan")))
+```
+
+Options are applied in the order listed, and order matters. Thank you [\@nhojb](https://github.com/nhojb) for [#739](https://github.com/xenodium/agent-shell/pull/739).
+
+## New third-party packages
+
+Four more joining the lot:
+
+-   [agent-shell-org-config](https://github.com/lllShamanlll/agent-shell-org-config): Keep `agent-shell` agent, project, and skill definitions in org-roam.
+-   [agent-shell-permission-transient](https://github.com/Jamie-Cui/agent-shell-permission-transient): A compact Transient interface for responding to queued permission requests.
+-   [agent-shell-queue](https://github.com/tychoish/agent-shell-queue): A flexible prompt/shell queue for `agent-shell` sessions.
+-   [agent-shell-queue-transient](https://github.com/mrcnski/agent-shell-queue-transient): A Transient interface for the prompt queue in `agent-shell`.
+
+## Markdown overlay renderer now retired
+
+With the new renderer offering a richer Markdown experience for some time now, the deprecated `markdown-overlays` renderer is gone.
+
+## Housekeeping
+
+If you peeked at the [commit logs](https://github.com/xenodium/agent-shell/compare/v0.73.2...v0.78.2) for the period, you'll see it's been another busy month. Since the last post, 153 commits shipped, 32 issues have been closed and 25 pull requests merged. As of this writing, the backlog sits at 16 open issues and 6 open PRs (versus 11 and 5 last time around).
+
+Zooming out a little, here's how the backlog has tracked since March:
+
+![](https://xenodium.github.io/images/agent-shell-0-78-updates/gh-activity.png)
+
+Side note: this chart was generated using the `/github-activity` skill shared in my [emacs-skills](https://github.com/xenodium/emacs-skills) repo.
+
+From the graph, it's evident when [I became a father](https://xenodium.com/and-then-there-were-three), but you can also see I managed to bring things back down, hovering at a fairly stable level since.
+
+All of this requires daily attention 👉 [hint hint](https://github.com/sponsors/xenodium) 👈
+
+## agent-shell needs your support
+
+These days (especially at the workplace), vendor-neutral tooling matters more than ever, and there are a couple of ways to help keep `agent-shell` going. Some cost money, others just a click. All are appreciated ;)
+
+### Sponsorships for agent-shell longevity
+
+`agent-shell` is built and maintained by me, an indie dev, while the tools it often competes with at the workplace have well-funded teams behind them. Time spent on `agent-shell` is time away from other work that pays the bills, so if it's useful to you, please consider [sponsoring](https://github.com/sponsors/xenodium) the project. And if your employer benefits from your `agent-shell` use, nudge them to chip in too, they can typically contribute at a scale individuals can't.
+
+### GitHub stars for exposure
+
+GitHub stars help with exposure, attracting new users and potential sponsors. [Starring agent-shell](https://github.com/xenodium/agent-shell/) costs nothing and can potentially help bring in more funding, so if you don't mind a couple of clicks, the project can really use [another GitHub star](https://github.com/xenodium/agent-shell/).
+
+## Pull requests
+
+Thank you to all contributors for these improvements!
+
+-   [#739](https://github.com/xenodium/agent-shell/pull/739): Add opencode model variant customization ([\@nhojb](https://github.com/nhojb))
+-   [#772](https://github.com/xenodium/agent-shell/pull/772): Ask about killing the shell only when that is what was asked for ([\@OSadovy](https://github.com/OSadovy))
+-   [#777](https://github.com/xenodium/agent-shell/pull/777): Steer prompts into the running turn instead of queueing them ([\@OSadovy](https://github.com/OSadovy))
+-   [#794](https://github.com/xenodium/agent-shell/pull/794): Mark restored prompts with `comint-highlight-prompt` ([\@OSadovy](https://github.com/OSadovy))
+-   [#795](https://github.com/xenodium/agent-shell/pull/795): Add `agent-shell-antigravity` ([\@tychoish](https://github.com/tychoish))
+-   [#796](https://github.com/xenodium/agent-shell/pull/796): Add `agent-shell-queue` link ([\@tychoish](https://github.com/tychoish))
+-   [#801](https://github.com/xenodium/agent-shell/pull/801): Strip copies in the substring filter, not via yank-handler ([\@OSadovy](https://github.com/OSadovy))
+-   [#802](https://github.com/xenodium/agent-shell/pull/802): Fix chat prompt indentation ([\@nhojb](https://github.com/nhojb))
+-   [#804](https://github.com/xenodium/agent-shell/pull/804): Stop the live prompt flickering on every keystroke ([\@alberti42](https://github.com/alberti42))
+-   [#808](https://github.com/xenodium/agent-shell/pull/808): Fix viewport prompt font-lock face precedence ([\@liaowang11](https://github.com/liaowang11))
+-   [#809](https://github.com/xenodium/agent-shell/pull/809): Handle ACP session/list pagination ([\@KarimAziev](https://github.com/KarimAziev))
+-   [#810](https://github.com/xenodium/agent-shell/pull/810): Slash command completion at prompt start ([\@izeigerman](https://github.com/izeigerman))
+-   [#812](https://github.com/xenodium/agent-shell/pull/812): Display Pi terminal output in agent-shell ([\@timfel](https://github.com/timfel))
+-   [#813](https://github.com/xenodium/agent-shell/pull/813): Add prefix-arg page jumps to viewport paging ([\@liaowang11](https://github.com/liaowang11))
+-   [#821](https://github.com/xenodium/agent-shell/pull/821): Check dependencies against the `Package-Requires` floors ([\@alberti42](https://github.com/alberti42))
+-   [#822](https://github.com/xenodium/agent-shell/pull/822): Give plain table data rows a face ([\@mrcnski](https://github.com/mrcnski))
+-   [#824](https://github.com/xenodium/agent-shell/pull/824): Quote file mentions whose path holds whitespace ([\@dustinfarris](https://github.com/dustinfarris))
+-   [#825](https://github.com/xenodium/agent-shell/pull/825): Attach files dropped on a shell or viewport buffer ([\@dustinfarris](https://github.com/dustinfarris))
+-   [#827](https://github.com/xenodium/agent-shell/pull/827): Preserve isearch match data when expanding fragments ([\@Gleek](https://github.com/Gleek))
+-   [#828](https://github.com/xenodium/agent-shell/pull/828): Add `agent-shell-org-config` to Related projects ([\@lllShamanlll](https://github.com/lllShamanlll))
+-   [#830](https://github.com/xenodium/agent-shell/pull/830): Fix provider icon downloads via LobeHub CDN ([\@tjohnman](https://github.com/tjohnman))
+-   [#831](https://github.com/xenodium/agent-shell/pull/831): Add Qoder CLI ACP backend ([\@unship](https://github.com/unship))
+-   [#832](https://github.com/xenodium/agent-shell/pull/832): Respect `search-invisible` ([\@mrcnski](https://github.com/mrcnski))
+-   [#834](https://github.com/xenodium/agent-shell/pull/834): Show session cost in the header ([\@mrcnski](https://github.com/mrcnski))
+-   [#837](https://github.com/xenodium/agent-shell/pull/837): Add `agent-shell-queue-transient` link to README ([\@mrcnski](https://github.com/mrcnski))
+
+## Make it sustainable, sponsor the `agent-shell`
+
+Liking `agent-shell`? Would like to see it evolve? Consider [sponsoring](https://github.com/sponsors/xenodium) the effort.
+
 # \[2026-08-16 Sun\] Focus windows across Emacs frames
 ---
 id: focus-windows-across-emacs-frames
