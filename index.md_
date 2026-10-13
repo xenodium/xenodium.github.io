@@ -70,7 +70,7 @@ While on the subject of queueing, cancelling now offers to continue with the que
 
 `@` and `/` completion used to bundle two things: how to complete, and when to pop up. Turning the popping off lost completion altogether, leaving [corfu](https://github.com/minad/corfu) and company users out.
 
-They're now decoupled. The completion functions are always registered, so `completion-at-point`, corfu and company work either way. `agent-shell-file-completion-enabled` only decides whether completion pops as you type:
+They're now decoupled. The completion functions are always registered, so `completion-at-point`, corfu and company work either way. Two options decide whether completion pops as you type: `agent-shell-file-completion-enabled` for `@` and `agent-shell-command-completion-enabled` for `/`. For example, listing files can be slow in a large project, so to only complete `@` on demand while `/` keeps popping:
 
 ``` {.commonlisp org-language="emacs-lisp"}
 (setopt agent-shell-file-completion-enabled nil)
@@ -78,7 +78,7 @@ They're now decoupled. The completion functions are always registered, so `compl
 
 Trailing spaces (and `@` mention quoting) are now only inserted on a finished completion, fixing the stray spaces corfu and company users were seeing.
 
-Thanks to [\@bcc32](https://github.com/bcc32) for proposing the split in [#537](https://github.com/xenodium/agent-shell/issues/537), and to [\@jcubic](https://github.com/jcubic) for filing it and flagging the stray spaces.
+Thanks to [\@bcc32](https://github.com/bcc32) for proposing the split and separate `@` and `/` options in [#537](https://github.com/xenodium/agent-shell/issues/537), and to [\@jcubic](https://github.com/jcubic) for filing it and flagging the stray spaces.
 
 ## Moving by blocks
 
@@ -163,6 +163,8 @@ Elsewhere:
 ## News on the welcome screen
 
 New shells now show the last few release posts on the welcome screen, so they are a little more discoverable.
+
+![](https://xenodium.github.io/images/agent-shell-0-87-updates/news.png)
 
 ## Public functions
 
