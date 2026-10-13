@@ -1,6 +1,261 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2026-10-13 Tue] agent-shell 0.87 updates
+:PROPERTIES:
+:CUSTOM_ID: agent-shell-0-87-updates
+:END:
+It's October. New month, new [[https://github.com/xenodium/agent-shell][agent-shell]] update. If you missed the last post, have a look at the [[https://xenodium.com/agent-shell-0-78-updates][0.78 update]]. While the latest changes are focused primarily on bugfixes and polish, we have a handful of new features too.
+
+As usual, this post showcases highlights, but please check out the [[https://github.com/xenodium/agent-shell/compare/v0.78.2...v0.87.4][full list of changes]] if you're after the nitty-gritty.
+
+** What's =agent-shell=?
+
+[[https://github.com/xenodium/agent-shell][agent-shell]] brings your favorite AI agents to [[https://www.gnu.org/software/emacs/][Emacs]], keeping you at home: familiar buffers and bindings, no terminal emulation. All powered by ACP, the [[https://agentclientprotocol.com/][Agent Client Protocol]].
+
+** New supported agents
+
+A couple more join the family, bringing it to *23 agents*. As usual, they're all reachable via =M-x agent-shell=, or go straight to the new ones:
+
+- [[https://junie.jetbrains.com/docs/junie-cli-acp.html][Junie]] (JetBrains), [[https://github.com/xenodium/agent-shell/pull/847][#847]] by [[https://github.com/thanhvg][@thanhvg]]. Start it with =M-x agent-shell-junie-start-agent=.
+- [[https://openclaw.ai][OpenClaw]], [[https://github.com/xenodium/agent-shell/pull/878][#878]] by [[https://github.com/jtmoulia][@jtmoulia]]. Start it with =M-x agent-shell-openclaw-start-agent=.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-87-updates/agents.png]]
+
+** Animated prompts
+
+With the ability to prompt at any time ([[https://xenodium.com/agent-shell-0-78-updates#prompt-any-time][see my last post]]), you can queue prompts or steer agents straight from the persistent shell prompt. Animating the prompt ties it all together: it's now obvious at a glance that the agent is busy, and that anything else you submit will queue.
+
+Check out =agent-shell-prompt-busy-frames= for relevant customizations (more on that shortly).
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-87-updates/animated-prompt.gif]]
+
+Thanks to [[https://github.com/cark][@cark]] for the [[https://github.com/xenodium/agent-shell/issues/843][proposal]].
+
+** Busy indicators get further customizations
+
+The header's busy indicator has been animated for some time now. Amongst the existing customizations, =agent-shell-show-busy-indicator= could turn it off altogether. Having said that, there's now a middle ground: use static text via =agent-shell-busy-indicator-frames=.
+
+Just set it to a string like so:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-busy-indicator-frames "(busy)")
+#+end_src
+
+If you'd like to use smarter logic, you can now set it to a function as follows:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-busy-indicator-frames
+          (lambda ()
+            (if (agent-shell-session-id)
+                "(busy)"
+              "(connecting)")))
+#+end_src
+
+=agent-shell-prompt-busy-frames= takes all the same forms, so the prompt's own animation can also be a list of frames, a static string, or a function.
+
+** Queue merging
+
+With the new =agent-shell-prompt-queue-merge= setting (enabled by default), pending prompts are joined (separated by blank lines) and submitted as a single turn. Queued prompts are typically follow-ups to the same instruction, so the agent now sees them together rather than acting on the first before reading the rest.
+
+If you prefer the previous behaviour, disable it with:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-prompt-queue-merge nil)
+#+end_src
+
+Thank you [[https://github.com/Gleek][@Gleek]] for the [[https://github.com/xenodium/agent-shell/issues/791][proposal]].
+
+While on the subject of queueing, cancelling now offers to continue with the queue rather than quietly dropping it, and killing a shell now warns you about the pending work you'd lose.
+
+** More idiomatic completion
+
+=@= and =/= completion used to bundle two things: how to complete, and when to pop up. Turning the popping off lost completion altogether, leaving [[https://github.com/minad/corfu][corfu]] and company users out.
+
+They're now decoupled. The completion functions are always registered, so =completion-at-point=, corfu and company work either way. =agent-shell-file-completion-enabled= only decides whether completion pops as you type:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-file-completion-enabled nil)
+#+end_src
+
+Trailing spaces (and =@= mention quoting) are now only inserted on a finished completion, fixing the stray spaces corfu and company users were seeing.
+
+Thanks to [[https://github.com/bcc32][@bcc32]] for proposing the split in [[https://github.com/xenodium/agent-shell/issues/537][#537]], and to [[https://github.com/jcubic][@jcubic]] for filing it and flagging the stray spaces.
+
+** Moving by blocks
+
+=C-M-a= and =C-M-e= (=beginning-of-defun= and =end-of-defun=) now move between blocks. Thank you [[https://github.com/OSadovy][@OSadovy]] for [[https://github.com/xenodium/agent-shell/pull/876][#876]].
+
+** Customizable chat labels
+
+Chat mode draws "Me" and "Agent" labels (or rather "Claude", "Codex" etc.). If the current style isn't your jam, =agent-shell-chat-label-function= now lets you draw them yourself. It's handed an alist with =:text= and =:role= (either =user= or =agent=), and must return a single-line propertized string.
+
+The =display= property is honored, so labels can also be rendered as images. Thanks to [[https://github.com/nhojb][@nhojb]] for the idea.
+
+** Parseable transcripts
+
+Transcripts now open with YAML frontmatter, including a start timestamp as follows:
+
+#+begin_src yaml
+  ---
+  agent: "Claude"
+  started: "2026-10-11T09:30:12+01:00"
+  working_directory: "~/stuff/active/code/agent-shell"
+  session_id: "0f3c9a1e-5b7d-4e2a-9c81-6d4f2b8e7a35"
+  model: "claude-opus-4-5"
+  ---
+#+end_src
+
+Thank you [[https://github.com/vermiculus][@vermiculus]] for [[https://github.com/xenodium/agent-shell/pull/854][#854]].
+
+While on topic, transcripts also got a little sturdier, thanks to [[https://github.com/mrcnski][@mrcnski]]'s [[https://github.com/xenodium/agent-shell/issues/859][proposal]].
+
+** =M-x yank-media= support
+
+=M-x yank-media= now pastes images straight from the system clipboard ([[https://github.com/xenodium/agent-shell/issues/853][#853]]), no external utilities needed, the same way Org mode handles it. Pasted image previews also survive being queued or steered, thanks to [[https://github.com/Gleek][@Gleek]] for [[https://github.com/xenodium/agent-shell/pull/852][#852]].
+
+** Codex config options
+
+Codex gained =agent-shell-openai-default-config-options= for setting config options at session start, reasoning effort included. For example:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-openai-default-config-options
+          '(("reasoning_effort" . "high")))
+#+end_src
+
+Thank you [[https://github.com/ianthetechie][@ianthetechie]] for [[https://github.com/xenodium/agent-shell/pull/855][#855]].
+
+** Tool call output
+
+Tool call output can be fairly long. A single chunky line was enough to bog a buffer down. Long tool output lines are now limited ([[https://github.com/xenodium/agent-shell/pull/844][#844]] by [[https://github.com/Gleek][@Gleek]]), and fallback titles are truncated so they no longer flash chunkily as they stream.
+
+File summaries also count distinct files now, so reading the same file three times counts as one file rather than three ([[https://github.com/xenodium/agent-shell/pull/863][#863]], also by [[https://github.com/Gleek][@Gleek]]).
+
+** A bunch of fixes
+
+While we have a handful of new features, the bulk of this release went into fixes.
+
+Rendering:
+
+- Emphasis no longer swallows asterisks inside inline code ([[https://github.com/xenodium/agent-shell/issues/870][#870]]).
+- Bold around inline code now renders, as does a trailing quote or header line.
+- Streamed tables keep their alignment and markup ([[https://github.com/xenodium/agent-shell/issues/868][#868]]).
+- =M-x agent-shell-copy-as-markdown= no longer mangles bullets carrying bold text ([[https://github.com/xenodium/agent-shell/issues/867][#867]]).
+- Expanding or collapsing an item inside a group now works mid-stream.
+- Chat mode no longer hides notices rendered above the live prompt.
+- The graphical header no longer gets cut off when showing cost ([[https://github.com/xenodium/agent-shell/issues/849][#849]]).
+- Terminal hyperlinks (osc-8) are rendered ([[https://github.com/xenodium/agent-shell/pull/850][#850]] by [[https://github.com/gnufied][@gnufied]]).
+
+Performance and responsiveness:
+
+- Severe cursor lag from large collapsed tool outputs is gone ([[https://github.com/xenodium/agent-shell/issues/839][#839]]).
+- Bare =path:line= references are now found in linear time ([[https://github.com/xenodium/agent-shell/pull/848][#848]] by [[https://github.com/catern][@catern]]), and failed searches leave point where it was.
+- Heartbeat ticks skip redrawing when the busy frames haven't changed.
+- In [[https://github.com/xenodium/acp.el][acp.el]], draining the agent's output is now bounded in how long it holds the main thread ([[https://github.com/xenodium/acp.el/pull/32][#32]] by [[https://github.com/moyotar][@moyotar]]), so a chatty agent no longer makes Emacs feel laggy.
+- In [[https://github.com/xenodium/shell-maker][shell-maker]], launching a shell with =visual-wrap-prefix-mode= enabled no longer hangs Emacs ([[https://github.com/xenodium/agent-shell/issues/842][#842]]).
+
+Elsewhere:
+
+- Forking resumes the session, and keeps the fork rather than falling back to another session if that resume fails ([[https://github.com/xenodium/agent-shell/issues/871][#871]]).
+- Grouped config options are handled ([[https://github.com/xenodium/agent-shell/issues/851][#851]]), and a missing config change event is now emitted ([[https://github.com/xenodium/agent-shell/issues/864][#864]]).
+- =display-buffer-overriding-action= is preserved when displaying asynchronously ([[https://github.com/xenodium/agent-shell/pull/846][#846]] by [[https://github.com/bcc32][@bcc32]]), and docstring command binding specifiers are fixed ([[https://github.com/xenodium/agent-shell/pull/845][#845]], also by [[https://github.com/bcc32][@bcc32]]).
+- Shell command output now runs in the shell's directory via its file handler ([[https://github.com/xenodium/agent-shell/pull/879][#879]] by [[https://github.com/junyi-hou][@junyi-hou]]), which matters for TRAMP users.
+- The README gained guidance for agents hanging at "Loading..." over TRAMP ([[https://github.com/xenodium/agent-shell/issues/872][#872]]), which turned out to be about =tramp-remote-path= and direct async processes rather than a bug.
+
+** News on the welcome screen
+
+New shells now show the last few release posts on the welcome screen, so they are a little more discoverable.
+
+** Public functions
+
+A few additions for package authors building on =agent-shell=.
+
+*** Knowing when a shell is ready
+
+=agent-shell-initialized-p= returns non-nil once the handshake, authentication, session and any default options are all done. Until then, subscribe to the new =init-finished= event via =agent-shell-subscribe-to= ([[https://github.com/xenodium/agent-shell/issues/860][#860]]).
+
+*** Reading and setting config options
+
+Agent config options are now reachable from elisp rather than the UI alone:
+
+#+begin_src emacs-lisp
+  (agent-shell-config-options)
+  (agent-shell-config-option :category "thought_level")
+  (agent-shell-config-option-value :id "effort")
+  (agent-shell-set-config-option-value :id "effort" :value "high"
+                                       :on-success (lambda (_) (message "Set")))
+#+end_src
+
+*** Other bits
+
+- =agent-shell-last-activity-time= returns when the shell last saw a submitted prompt or an incoming notification ([[https://github.com/xenodium/agent-shell/issues/856][#856]]), handy for idle tracking.
+- =M-x agent-shell-save-traffic= writes the session's ACP traffic to a =.traffic= file and reveals it in =dired=, simplifying the bug-filing process.
+
+** New third-party package
+
+[[https://github.com/izeigerman/agent-shell-gc][agent-shell-gc]] joins the lot, bringing buffer garbage collection (auto-kill) to =agent-shell=.
+
+** Housekeeping
+
+If you peeked at the [[https://github.com/xenodium/agent-shell/compare/v0.78.2...v0.87.4][commit logs]] for the period, you'll see it's been a busy few weeks. Since the last post, 125 commits shipped, 33 issues have been closed and 15 pull requests merged. As of this writing, the backlog sits at 4 open issues and 6 open PRs (versus 16 and 6 last time around).
+
+Zooming out a little, here's how the backlog has tracked:
+
+#+ATTR_HTML: :width 100%
+[[file:images/agent-shell-0-87-updates/gh-activity.png]]
+
+As usual, this chart was generated using the =/github-activity= skill shared in my [[https://github.com/xenodium/emacs-skills][emacs-skills]] repo.
+
+Four open issues is the lowest it's been since the project's first week, which I'm pleased about.
+
+All of this requires daily attention.
+
+** Paying for tokens? Consider funding =agent-shell=.
+
+Tokens keep your agents running. [[https://github.com/sponsors/xenodium][Sponsors]] keep =agent-shell= running.
+
+=agent-shell= is built and maintained by me, an indie dev, while the tools it competes with have well-funded teams behind them. Vendor-neutral tooling matters more than ever.
+
+Using =agent-shell= at work? Ask your employer to [[https://github.com/sponsors/xenodium][sponsor]] too. Companies can contribute at a scale individuals can't.
+
+** Pull requests
+
+Thank you to all contributors for these improvements!
+
+*** agent-shell
+
+- [[https://github.com/xenodium/agent-shell/pull/797][#797]]: Render ACP elicitation forms ([[https://github.com/OSadovy][@OSadovy]])
+- [[https://github.com/xenodium/agent-shell/pull/844][#844]]: Limit long tool output lines ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/845][#845]]: Fix docstring command binding specifiers ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/846][#846]]: Preserve =display-buffer-overriding-action= when displaying asynchronously ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/847][#847]]: Add Junie ([[https://github.com/thanhvg][@thanhvg]])
+- [[https://github.com/xenodium/agent-shell/pull/848][#848]]: Find bare path:line references in linear time ([[https://github.com/catern][@catern]])
+- [[https://github.com/xenodium/agent-shell/pull/850][#850]]: Add support for rendering browse-url-data with osc-8 sequences ([[https://github.com/gnufied][@gnufied]])
+- [[https://github.com/xenodium/agent-shell/pull/852][#852]]: Preserve pasted image previews in queued and steered prompts ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/854][#854]]: Emit parse-able YAML frontmatter for transcripts ([[https://github.com/vermiculus][@vermiculus]])
+- [[https://github.com/xenodium/agent-shell/pull/855][#855]]: Add tunable for default Codex config options ([[https://github.com/ianthetechie][@ianthetechie]])
+- [[https://github.com/xenodium/agent-shell/pull/862][#862]]: Mention agent-shell-gc package in the README ([[https://github.com/izeigerman][@izeigerman]])
+- [[https://github.com/xenodium/agent-shell/pull/863][#863]]: Count distinct files in read, edit, and delete summaries ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/876][#876]]: Move by blocks with beginning-of-defun and end-of-defun ([[https://github.com/OSadovy][@OSadovy]])
+- [[https://github.com/xenodium/agent-shell/pull/878][#878]]: Add OpenClaw agent support ([[https://github.com/jtmoulia][@jtmoulia]])
+- [[https://github.com/xenodium/agent-shell/pull/879][#879]]: Run command output in shell directory via file handler ([[https://github.com/junyi-hou][@junyi-hou]])
+
+*** acp.el and shell-maker
+
+=agent-shell= stands on [[https://github.com/xenodium/acp.el][acp.el]] to speak ACP and [[https://github.com/xenodium/shell-maker][shell-maker]] for its shell foundations, so fixes landing there reach you just the same:
+
+- acp.el [[https://github.com/xenodium/acp.el/pull/32][#32]]: Bound how long a single drain holds the main thread ([[https://github.com/moyotar][@moyotar]])
+- shell-maker [[https://github.com/xenodium/shell-maker/pull/46][#46]]: Fix byte-compile warnings, runtime cl-lib, defvar ordering and lazy-org declarations ([[https://github.com/tothedarktowercame][@tothedarktowercame]])
+- shell-maker [[https://github.com/xenodium/shell-maker/pull/48][#48]]: Quote mode-map before splicing into eval'd define-derived-mode ([[https://github.com/necaris][@necaris]])
+
+** Make it sustainable, sponsor =agent-shell=
+
+As of this writing, we're *88% of the way to the 150 monthly sponsors goal*. If =agent-shell= is part of your daily workflow, please consider [[https://github.com/sponsors/xenodium][becoming a monthly sponsor]] (or ask your employer to).
+
+Not in a position to sponsor? A [[https://github.com/xenodium/agent-shell/][GitHub star]] helps with exposure and brings in new users.
+
 * [2026-09-22 Tue] agent-shell 0.78 updates
 :PROPERTIES:
 :CUSTOM_ID: agent-shell-0-78-updates
