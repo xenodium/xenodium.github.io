@@ -1,0 +1,54 @@
+# Publishes the site to GitHub Pages, including only images referenced
+# by index.org (keeps the site under GitHub Pages' 1 GB limit).
+#
+# Requires Settings > Pages > Source: "GitHub Actions".
+
+name: Deploy site
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time. Newer pushes supersede pending ones.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble site
+        run: |
+          mkdir _site
+          # Everything except images and repo tooling.
+          git ls-files | grep -v -e '^images/' -e '^\.github/' \
+            | rsync -a --files-from=- ./ _site/
+          # Only images referenced by index.org (file: links, relative src,
+          # and https://xenodium.github.io or raw.githubusercontent.com URLs).
+          grep -oE "images/[^]\"'[:space:])>|]+" index.org | sort -u \
+            | while read -r f; do [ -f "$f" ] && echo "$f"; done \
+            | rsync -a --files-from=- ./ _site/
+          echo "Images published: $(find _site/images -type f | wc -l)"
+          echo "Site size: $(du -sh _site | cut -f1)"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          # Default is 10 minutes; leave headroom for large sites.
+          timeout: 1800000
