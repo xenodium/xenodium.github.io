@@ -1,5 +1,6 @@
 # Publishes the site to GitHub Pages, including only images referenced
-# by index.org (keeps the site under GitHub Pages' 1 GB limit).
+# by index.org and index.md_ (keeps the site under GitHub Pages' 1 GB limit).
+# Note: images only used outside this repo (ie. other sites) aren't published.
 #
 # Requires Settings > Pages > Source: "GitHub Actions".
 
@@ -35,9 +36,10 @@ jobs:
           # Everything except images and repo tooling.
           git ls-files | grep -v -e '^images/' -e '^\.github/' \
             | rsync -a --files-from=- ./ _site/
-          # Only images referenced by index.org (file: links, relative src,
-          # and https://xenodium.github.io or raw.githubusercontent.com URLs).
-          grep -oE "images/[^]\"'[:space:])>|]+" index.org | sort -u \
+          # Only images referenced by index.org and index.md_, via file: links,
+          # relative src, and https://xenodium.github.io or
+          # raw.githubusercontent.com URLs.
+          grep -ohE "images/[^]\"'[:space:])>|]+" index.org index.md_ | sort -u \
             | while read -r f; do [ -f "$f" ] && echo "$f"; done \
             | rsync -a --files-from=- ./ _site/
           echo "Images published: $(find _site/images -type f | wc -l)"
