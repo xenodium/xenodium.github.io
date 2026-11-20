@@ -1,6 +1,321 @@
 #+TITLE: Álvaro Ramírez
 #+AUTHOR: Álvaro Ramírez
 #+OPTIONS: toc:nil num:nil ^:nil
+* [2026-11-19 Thu] agent-shell 0.98 updates
+:PROPERTIES:
+:CUSTOM_ID: agent-shell-0-98-updates
+:END:
+Another month, another [[https://github.com/xenodium/agent-shell][agent-shell]] update. If you missed the last post, have a look at the [[https://xenodium.com/agent-shell-0-87-updates][0.87 update]]. This time around, the most notable changes are around rendering, performance, and bugfixes, sprinkled with new features here and there.
+
+As usual, this post showcases highlights, but please check out the [[https://github.com/xenodium/agent-shell/compare/v0.87.4...v0.98.2][full list of changes]] if you're after the nitty-gritty.
+
+** What's =agent-shell=?
+
+[[https://github.com/xenodium/agent-shell][agent-shell]] brings your favorite AI agents to [[https://www.gnu.org/software/emacs/][Emacs]], keeping you at home: familiar buffers and bindings, no terminal emulation. All powered by ACP, the [[https://agentclientprotocol.com/][Agent Client Protocol]].
+
+** New supported agent
+
+[[https://github.com/deepseek-ai/deepseek-harness][DeepSeek Harness]] joins the family, bringing the total number of supported agents to 24. Start DeepSeek with =M-x agent-shell-deepseek-start-agent=, or pick it from =M-x agent-shell= as usual.
+
+** Antigravity moved to =agy= (action required)
+
+Latest Antigravity ships with ACP out of the box, so =agent-shell= now runs =agy acp= rather than a separate binary you had to download and unpack. If you're an Antigravity user, install a recent CLI, make sure =agy= is on your =PATH=, and sign in once:
+
+#+begin_src sh
+  agy acp --login
+#+end_src
+
+** Blockquotes: rendering + navigation + copy
+
+Blockquotes improved their display, rendering embedded Markdown ([[https://github.com/xenodium/agent-shell/issues/942][#942]]).
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-98-updates/blockquotes-markdown.png]]
+
+They also joined the TAB navigation party. =TAB= and =S-TAB= now visit blockquotes, stopping on their first quoted character.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-98-updates/blockquotes-tab.gif]]
+
+With point on a blockquote, =RET= now copies the quote's raw Markdown, without the =>= markers.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-98-updates/blockquotes-copy.gif]]
+
+** Images in table cells
+
+Images are now rendered as thumbnails within tables. Press =RET= on an image to open in full view.
+
+#+ATTR_HTML: :width 85%
+[[file:images/agent-shell-0-98-updates/images-table.gif]]
+
+Thank you [[https://github.com/alberti42][@alberti42]] for [[https://github.com/xenodium/agent-shell/pull/938][#938]]. Tables also realign in the resized window's own buffer now ([[https://github.com/xenodium/agent-shell/issues/934][#934]]), so splitting a window no longer leaves a table laid out for the window it used to be in.
+
+** Links
+
+Hovering a rendered link (or with point on one) now shows its target URL, so you can judge whether it's worth opening.
+
+Two new entry points landed alongside ([[https://github.com/xenodium/agent-shell/issues/933][#933]]):
+
+- =agent-shell-markdown-open-link-at-point= opens the link at point.
+- =agent-shell-markdown-xref-backend= plugs into =xref-backend-functions=, so =M-.= on a rendered =path:line= citation visits it. It returns nil anywhere else, web and binary links included, leaving point to the next backend.
+
+** Recursive folding
+
+=RET= toggles the fragment at point, as usual. =C-u RET= now toggles groups recursively ([[https://github.com/xenodium/agent-shell/issues/924][#924]], [[https://github.com/xenodium/agent-shell/issues/945][#945]]).
+
+** Queued -> steered
+
+Queued a prompt, but wanted to steer instead? Pressing =M-RET= on an empty prompt now offers to steer the last queued prompt into the running turn ([[https://github.com/xenodium/agent-shell/issues/918][#918]], [[https://github.com/xenodium/agent-shell/issues/919][#919]]). While this isn't something I need often, I'm pretty happy with the UX we landed on.
+
+While on the topic of steering, chat mode now handles steered prompt labelling ([[https://github.com/xenodium/agent-shell/pull/930][#930]], proposed by [[https://github.com/Gleek][@Gleek]]). If you'd like to render labels differently, =agent-shell-chat-label-function= now receives the =:steered= param.
+
+** Exposing more options in header
+
+Agents often expose options that never make it to the buffer header. Additional options are now offered via the =(+N)= menu ([[https://github.com/xenodium/agent-shell/issues/921][#921]]).
+
+** Filtering noisy notices
+
+Agents write all sorts to stderr, and =agent-shell= surfaces it under "Notices". You can now use =agent-shell-notice-filter-function= to filter notices (or modify) as preferred ([[https://github.com/xenodium/agent-shell/issues/950][#950]] by [[https://github.com/astoff][@astoff]]). It receives an alist with =:text=, one stderr line, and returns the text to show or nil to drop it:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-notice-filter-function
+          (lambda (notice)
+            (unless (string-prefix-p "[idle-compaction]" (map-elt notice :text))
+              (map-elt notice :text))))
+#+end_src
+
+A filter that signals or returns a non-string is reported, and the notice shown unfiltered.
+
+** Your own system prompt
+
+=agent-shell-system-prompt= is appended to the agent's default system prompt, sent whenever a session is created, loaded, resumed or forked ([[https://github.com/xenodium/acp.el/issues/37][acp.el #37]] by [[https://github.com/systemfreund][@systemfreund]]):
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-system-prompt "Keep answers short and respond like a pirate.")
+#+end_src
+
+Only agents advertising ACP's =systemPrompt= capability can take one. Configure a prompt for an agent that can't, and =agent-shell= says it's ignored rather than dropping it quietly. An agent config's =:system-prompt= takes precedence.
+
+** Secrets resolved at agent start
+
+=agent-shell-make-environment-variables= now takes a function as a value and calls it when the agent starts, rather than when your config loads ([[https://github.com/xenodium/agent-shell/issues/948][#948]] by [[https://github.com/nbarrientos][@nbarrientos]]). Handy for a password store still locked at init:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-opencode-environment
+          (agent-shell-make-environment-variables
+           "MY_SECRET" (lambda ()
+                         (auth-source-pick-first-password :host "example.org"))))
+#+end_src
+
+A function that errors or returns nil leaves the variable out of the agent's environment and says so in a boxed warning in the shell. Works across all agents.
+
+** Shells follow =project-switch-project=
+
+Starting a shell from =C-x p p= used to land in the current shell's directory rather than the project you just picked, and offer that directory's sessions to resume. It now starts in the chosen project ([[https://github.com/xenodium/agent-shell/pull/949][#949]] by [[https://github.com/OSadovy][@OSadovy]]).
+
+** Fork and show history
+
+When =agent-shell-session-fork-restore-history= is non-nil, forked sessions will attempt to restore interaction history as per =agent-shell-session-restore-verbosity=.
+
+=agent-shell-session-fork-restore-history= is off by default, so you'll need to enable it with:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-session-fork-restore-history t)
+#+end_src
+
+Note: You'll need an agent that supports loading a session right after forking it, like =claude-agent-acp 0.90.0= or newer.
+
+** Faster streaming
+
+Streaming performance received some love. Message chunks are coalesced before rendering ([[https://github.com/xenodium/agent-shell/pull/883][#883]] by [[https://github.com/moyotar][@moyotar]]), thought chunks are batched the same way, and restored sessions replay with far less overhead ([[https://github.com/xenodium/agent-shell/pull/897][#897]] by [[https://github.com/Gleek][@Gleek]]).
+
+** Lots of fixes
+
+As mentioned, the much effort in the release went into fixes and improvements.
+
+Rendering:
+
+- Bold renders next to text and punctuation ([[https://github.com/xenodium/agent-shell/pull/925][#925]] by [[https://github.com/vritser][@vritser]]), with CommonMark flanking rules relaxed for CJK ([[https://github.com/xenodium/agent-shell/issues/942][#942]]).
+- Numbered headers and bold steps no longer render as list items ([[https://github.com/xenodium/agent-shell/pull/939][#939]] by [[https://github.com/budu][@budu]]), nor does markup that merely reads like one.
+- A fenced block's last line is fontified ([[https://github.com/xenodium/agent-shell/pull/916][#916]] by [[https://github.com/liaowang11][@liaowang11]]), two flush source blocks render as two ([[https://github.com/xenodium/agent-shell/issues/940][#940]]), and nested ones stay verbatim while streaming.
+- Headers keep their title when a code fence follows directly ([[https://github.com/xenodium/agent-shell/issues/947][#947]]).
+- Text quoted into the prompt keeps its quote face ([[https://github.com/xenodium/agent-shell/pull/952][#952]] by [[https://github.com/OSadovy][@OSadovy]]).
+- Copilot multi-hunk diffs render as separate hunks ([[https://github.com/xenodium/agent-shell/issues/931][#931]]), and Codex streamed output is fenced correctly ([[https://github.com/xenodium/agent-shell/pull/906][#906]] by [[https://github.com/bartbunting][@bartbunting]]).
+- Icons scale correctly on HiDPI Linux ([[https://github.com/xenodium/agent-shell/pull/917][#917]] by [[https://github.com/heraplem][@heraplem]]).
+- Unfinished tool calls survive turn end ([[https://github.com/xenodium/agent-shell/issues/941][#941]]), so a late subagent keeps its title and grouping.
+
+Performance and responsiveness:
+
+- Buffers shown in no window measure against a live one ([[https://github.com/xenodium/agent-shell/pull/885][#885]] by [[https://github.com/bcc32][@bcc32]]), and measuring glyph height no longer triggers window hooks ([[https://github.com/xenodium/agent-shell/pull/886][#886]], also [[https://github.com/bcc32][@bcc32]]).
+- =agent-shell-cwd-function= is called once per command ([[https://github.com/xenodium/agent-shell/pull/857][#857]], also [[https://github.com/bcc32][@bcc32]]).
+- Pending Markdown is protected and fontification updates silenced ([[https://github.com/xenodium/agent-shell/pull/915][#915]] by [[https://github.com/daym][@daym]]).
+- Chat mode relabels only the last turn while streaming, not the whole buffer ([[https://github.com/xenodium/agent-shell/pull/943][#943]], profiled and proposed by [[https://github.com/Gleek][@Gleek]]).
+- In [[https://github.com/xenodium/shell-maker][shell-maker]], auto-scroll can be suppressed during bulk updates ([[https://github.com/xenodium/shell-maker/pull/50][#50]] by [[https://github.com/Gleek][@Gleek]]), which is what makes the faster replay possible.
+- Also in shell-maker, the =curl --version= check that ran on every submission is gone ([[https://github.com/xenodium/shell-maker/issues/32][#32]] by [[https://github.com/carlosdagos][@carlosdagos]]).
+- In [[https://github.com/xenodium/acp.el][acp.el]], agents handle =SIGTERM= before being killed on shutdown ([[https://github.com/xenodium/acp.el/pull/35][#35]] by [[https://github.com/fjolliton][@fjolliton]]).
+
+Elsewhere:
+
+- Undo history no longer carries programmatic renders: the compose buffer starts empty ([[https://github.com/xenodium/agent-shell/pull/893][#893]] by [[https://github.com/liaowang11][@liaowang11]]) and resets after a deferred render ([[https://github.com/xenodium/agent-shell/pull/902][#902]] by [[https://github.com/bcc32][@bcc32]]).
+- New worktrees stay under the main working tree ([[https://github.com/xenodium/agent-shell/pull/904][#904]] by [[https://github.com/xiaofeilovecoding][@xiaofeilovecoding]]).
+- A restored session finishes initializing even when rendering errors ([[https://github.com/xenodium/agent-shell/pull/887][#887]] by [[https://github.com/bcc32][@bcc32]]).
+- Flymake context is only used when =flymake-mode= is on ([[https://github.com/xenodium/agent-shell/pull/892][#892]] by [[https://github.com/liaowang11][@liaowang11]]), and single-line regions carry one line number ([[https://github.com/xenodium/agent-shell/pull/922][#922]] by [[https://github.com/martenlienen][@martenlienen]]).
+- Quoting a region leaves the mark where reading stopped ([[https://github.com/xenodium/agent-shell/pull/896][#896]] by [[https://github.com/OSadovy][@OSadovy]]).
+- Minibuffer completion keeps the agent's candidate order ([[https://github.com/xenodium/agent-shell/pull/929][#929]] by [[https://github.com/Zzull][@Zzull]]).
+- Remote URLs are skipped when parsing local links ([[https://github.com/xenodium/agent-shell/pull/926][#926]] by [[https://github.com/mpmiszczyk][@mpmiszczyk]]), and optional system-sleep functions are declared ([[https://github.com/xenodium/agent-shell/pull/928][#928]] by [[https://github.com/mboldt][@mboldt]]).
+- In shell-maker, non-ASCII prompt history no longer reads back as raw bytes, and entries already corrupted by older versions are decoded on read ([[https://github.com/xenodium/shell-maker/issues/49][#49]] by [[https://github.com/kazmuroi][@kazmuroi]]).
+- In [[https://github.com/xenodium/acp.el][acp.el]], agent stderr reaches error handlers one line at a time rather than in arbitrary pipe chunks (added for notice filtering).
+
+** Public functions
+
+A few more additions for package authors building on =agent-shell=.
+
+*** Prompt locations
+
+=agent-shell-prompt-ranges= returns the range of every prompt in the buffer, in buffer order, covering prompts typed at the shell, replayed by a restored session, and steered into a running turn ([[https://github.com/xenodium/agent-shell/issues/882][#882]]). Each comes back as an alist spanning the comint shell prompt itself (=:prompt-start=, =:prompt-end=) and the input typed after it (=:input-start=, =:input-end=).
+
+*** Usage events and ACP =_meta=
+
+=agent-shell-subscribe-to= now offers a =usage-update= event, broadcast when the agent reports context window or cost usage. Events now also carry ACP's =_meta=, so integrations can read whatever an agent attaches without waiting on =agent-shell=.
+
+*** Choosing sessions programmatically
+
+=agent-shell-session-strategy= now accepts a function. It's called with the resumeable sessions and returns =new=, =latest=, =prompt=, or a =(session-id . ID)= cons to load a specific one:
+
+#+begin_src emacs-lisp
+  (setopt agent-shell-session-strategy
+          (lambda (context)
+            (if (map-elt context :sessions) 'latest 'new)))
+#+end_src
+
+** Housekeeping
+
+If you peeked at the [[https://github.com/xenodium/agent-shell/compare/v0.87.4...v0.98.2][commit logs]] for the period, you'll see it's been another busy month. Since the last post, 193 commits landed, 32 issues have been closed and 27 pull requests merged. As of this writing, the backlog sits at 6 open issues and 5 open PRs (versus 4 and 6 last time around).
+
+Zooming out a little, here's how the backlog has tracked:
+
+#+ATTR_HTML: :width 100%
+[[file:images/agent-shell-0-98-updates/gh-activity.png]]
+
+As usual, this chart was generated using the =/github-activity= skill shared in my [[https://github.com/xenodium/emacs-skills][emacs-skills]] repo.
+
+All of this requires daily attention.
+
+**  [[https://github.com/sponsors/xenodium][Sponsoring]] keeps =agent-shell= running.
+
+While paying for tokens keeps agents running, [[https://github.com/sponsors/xenodium][sponsoring]] keeps =agent-shell= running.
+
+=agent-shell= is built and maintained by me, an indie dev, while the tools it competes with often have well-funded teams behind them. [[https://github.com/sponsors/xenodium][Funding]] Emacs-native tools, so we can keep living in our beloved editor, matters now more than ever.
+
+Using =agent-shell= at work? Ask your employer to [[https://github.com/sponsors/xenodium][sponsor]] too. Companies can contribute at a scale individuals can't.
+
+** Pull requests
+
+Thank you to all contributors for these improvements!
+
+*** agent-shell
+
+- [[https://github.com/xenodium/agent-shell/pull/857][#857]]: Call agent-shell-cwd-function only once per command ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/873][#873]]: Add Antigravity default-model-id and default-session-mode-id defcustoms ([[https://github.com/tychoish][@tychoish]])
+- [[https://github.com/xenodium/agent-shell/pull/883][#883]]: Coalesce streamed message chunks before rendering ([[https://github.com/moyotar][@moyotar]])
+- [[https://github.com/xenodium/agent-shell/pull/885][#885]]: Measure a buffer shown in no window against a live window ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/886][#886]]: Do not trigger window hooks when measuring glyph height ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/887][#887]]: Finish initializing a restored session even if rendering errors ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/889][#889]]: Add a separate provider notification handler ([[https://github.com/Cy6erBr4in][@Cy6erBr4in]])
+- [[https://github.com/xenodium/agent-shell/pull/892][#892]]: Only use flymake error context when flymake-mode is on ([[https://github.com/liaowang11][@liaowang11]])
+- [[https://github.com/xenodium/agent-shell/pull/893][#893]]: Start the viewport compose buffer with an empty undo history ([[https://github.com/liaowang11][@liaowang11]])
+- [[https://github.com/xenodium/agent-shell/pull/894][#894]]: Render the viewport's held-back markup when a turn ends ([[https://github.com/liaowang11][@liaowang11]])
+- [[https://github.com/xenodium/agent-shell/pull/896][#896]]: Leave the mark where reading stopped when quoting a region ([[https://github.com/OSadovy][@OSadovy]])
+- [[https://github.com/xenodium/agent-shell/pull/897][#897]]: Reduce overhead when replaying restored sessions ([[https://github.com/Gleek][@Gleek]])
+- [[https://github.com/xenodium/agent-shell/pull/902][#902]]: Reset undo history after a deferred markdown render ([[https://github.com/bcc32][@bcc32]])
+- [[https://github.com/xenodium/agent-shell/pull/904][#904]]: Keep new worktrees under the main working tree ([[https://github.com/xiaofeilovecoding][@xiaofeilovecoding]])
+- [[https://github.com/xenodium/agent-shell/pull/906][#906]]: Fix streamed Codex command output ([[https://github.com/bartbunting][@bartbunting]])
+- [[https://github.com/xenodium/agent-shell/pull/915][#915]]: Protect pending Markdown and silence fontification updates ([[https://github.com/daym][@daym]])
+- [[https://github.com/xenodium/agent-shell/pull/916][#916]]: Fontify the last line of a fenced code block ([[https://github.com/liaowang11][@liaowang11]])
+- [[https://github.com/xenodium/agent-shell/pull/917][#917]]: Fix HiDPI icon scaling on Linux ([[https://github.com/heraplem][@heraplem]])
+- [[https://github.com/xenodium/agent-shell/pull/922][#922]]: Use one line number for single-line region contexts ([[https://github.com/martenlienen][@martenlienen]])
+- [[https://github.com/xenodium/agent-shell/pull/925][#925]]: Fix bold rendering next to text and punctuation ([[https://github.com/vritser][@vritser]])
+- [[https://github.com/xenodium/agent-shell/pull/926][#926]]: Skip remote URLs in parse-local-links ([[https://github.com/mpmiszczyk][@mpmiszczyk]])
+- [[https://github.com/xenodium/agent-shell/pull/928][#928]]: Declare optional system-sleep functions ([[https://github.com/mboldt][@mboldt]])
+- [[https://github.com/xenodium/agent-shell/pull/929][#929]]: Keep original order of candidates for minibuffer completion ([[https://github.com/Zzull][@Zzull]])
+- [[https://github.com/xenodium/agent-shell/pull/938][#938]]: Lay out table cells that show images ([[https://github.com/alberti42][@alberti42]])
+- [[https://github.com/xenodium/agent-shell/pull/939][#939]]: Don't render numbered headers and bold steps as list items ([[https://github.com/budu][@budu]])
+- [[https://github.com/xenodium/agent-shell/pull/949][#949]]: Start a new shell in the project chosen with project-switch-project ([[https://github.com/OSadovy][@OSadovy]])
+- [[https://github.com/xenodium/agent-shell/pull/952][#952]]: Keep the quote face on text quoted into the prompt ([[https://github.com/OSadovy][@OSadovy]])
+
+*** acp.el and shell-maker
+
+=agent-shell= stands on [[https://github.com/xenodium/acp.el][acp.el]] to speak ACP and [[https://github.com/xenodium/shell-maker][shell-maker]] for its shell foundations, so fixes landing there reach you just the same:
+
+- acp.el [[https://github.com/xenodium/acp.el/pull/34][#34]]: Allow listing sessions without a working-directory filter ([[https://github.com/Gleek][@Gleek]])
+- acp.el [[https://github.com/xenodium/acp.el/pull/35][#35]]: Let the agent handle SIGTERM before killing it on shutdown ([[https://github.com/fjolliton][@fjolliton]])
+- shell-maker [[https://github.com/xenodium/shell-maker/pull/50][#50]]: Allow suppressing auto-scroll during bulk updates ([[https://github.com/Gleek][@Gleek]])
+
+** Make it sustainable, sponsor =agent-shell=
+
+As of this writing, we're *89% of the way to the 150 monthly sponsors goal*, a tiny closer since the [[https://xenodium.com/agent-shell-0-87-updates][last update]]. If =agent-shell= is part of your daily workflow, please consider [[https://github.com/sponsors/xenodium][becoming a monthly sponsor]] (or ask your employer to).
+
+Not in a position to sponsor? A [[https://github.com/xenodium/agent-shell/][GitHub star]] helps with exposure and brings in new users.
+
+* [2026-11-15 Sun] My Emacs 31 contributions
+:PROPERTIES:
+:CUSTOM_ID: my-emacs-31-contributions
+:END:
+
+For me, landing changes in Emacs upstream always felt somewhat out of reach, so I kinda postponed it for a long while. Perhaps the biggest hurdle was getting over the process to [[https://www.fsf.org/licensing/assigning.html][assign copyright to the Free Software Foundation]], which does feel a bit archaic (download, sign, and return a PDF) and slow (mostly waiting for an email response), though hey, I have nothing but sympathy. Open source is unsustainably tricky. As consumers, we often like free as in freedom and free as in beer, but neither pay the bills. We hope some company steps in to fund these projects, but that rarely happens. As a result, most open source projects are starved (even popular ones), run by volunteers working for free.
+
+All that is to say, if the upstream Emacs contribution/onboarding process seems less than ideal, cut it some slack. The project as a whole primarily runs on the blood, sweat, and tears of unpaid contributors. If you can, fund the maintainers you rely on (or better yet, get your employer to do so).
+
+If you've been thinking of contributing to Emacs upstream, don't procrastinate like me and just give it a try. Compared to the typical GitHub pull-request process, your first Emacs contribution may feel a little daunting and dated, but there's a lovely fuzzy light at the end of the tunnel. You see, Emacs has been [[https://www.theregister.com/applications/2026/11/01/mother-of-all-editors-emacs-is-50/5306727][around for 50 years]]. Very few software projects get to live this long. Landing contributions on a project with such a rich history is a real treat!
+
+But I digress... Let's get moving. Once I got over procrastinating, I finally got a handful of small contributions landed on the master branch. Thank you, Eli Zaretskii, Stefan Kangas, and Gerd Möllmann, for your help. From then on, I eagerly waited for them to formally make it to a stable release.
+
+Emacs 31 shipped the lot.
+
+** Hide Dired's absolute location
+
+I do enjoy a [[https://xenodium.com/my-emacs-eye-candy][visual (and functional) tweak here and there]], and a Dired tweak felt small enough to be the perfect candidate for my very first Emacs contribution.
+
+With that in mind, I tweaked =dired-hide-details-mode= by adding the =dired-hide-details-hide-absolute-location= user option, which hides the directory's absolute path, typically displayed at the top of Dired buffers ([[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=72272][bug#72272]], [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=7cbca90569472af5643905fca5b7ab2dea67f876][commit]]).
+
+More on this in my [[https://xenodium.com/hide-another-detail][Hide another detail]] post.
+
+#+ATTR_HTML: :width 95%
+[[file:images/hide-another-detail/after.png]]
+
+** macOS speech recognition permission
+
+At some point, I ran into a snag trying to run [[https://github.com/xenodium/macosrec][macosrec]] from my beloved =eshell=. The process just crashed with a cryptic =abort trap: 6=, so the issue wasn't super obvious. It turned out the utility required granting an OS permission that can only be requested by the host app (Emacs) if it includes the relevant description in its =Info.plist= file.
+
+As of version 31, Emacs includes =NSSpeechRecognitionUsageDescription= in its =Info.plist= ([[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=72827][bug#72827]], [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=c36ff7d8e46c75cfadea6f4c1f4eadb3aef37f2d][commit]]).
+
+** Send to... (aka macOS sharing)
+
+=context-menu-mode= now includes a "Send to..." item, enabling sending the current file(s) or region text to external apps or services. You can also invoke =M-x send-to= directly. On macOS, it's powered by the native sharing picker (I use it frequently to [[https://support.apple.com/en-us/119857][AirDrop]] things to my iPhone). Elsewhere, it falls back to =shell-command-do-open= ([[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=76120][bug#76120]], [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=813013691a9997cbdd483e1e5cef39453ac07d6d][commit]], [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=bd5b1c6b085b17870415009cbf63171e3d2fc91f][follow-up fix]]). These two implementations plug into new generic plumbing (=send-to-handlers=), so you could, for instance, add a handler sharing via Android's native share sheet (=android-browse-url= can do the heavy lifting) or KDE Connect on Linux (=kdeconnect-cli --share=).
+
+More in my [[https://xenodium.com/emacs-send-to-aka-macos-sharing-merged-upstream][Emacs send-to (aka macOS sharing) merged upstream]] post.
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-send-to-aka-macos-sharing-merged-upstream/context-menu.png]]
+
+#+ATTR_HTML: :width 95%
+[[file:images/emacs-send-to-aka-macos-sharing-merged-upstream/send-to.png]]
+
+** macOS dictation is back
+
+Emacs 30 lost macOS dictation when migrating to =NSTextInputClient=. Implementing =selectedRange= in =nsterm.m= brought it back ([[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=79070][bug#79070]], [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=6e64e0bd26b6c0f1c4e90c9bc0df37a2a9ac72da][commit]]). With LLMs/agents being a thing these days, dictating into your Emacs buffer may be just the thing to complement your AI workflow.
+
+I covered this in my [[https://xenodium.com/macos-dictation-returns-to-emacs-fix-merged][macOS dictation returns to Emacs (fix merged)]] post.
+
+#+ATTR_HTML: :width 95%
+[[file:images/macos-dictation-returns-to-emacs-fix-merged/dictation.webp]]
+
+** Make it all sustainable
+
+Are you getting value from any of my upstreamed changes or my Emacs packages? Please consider [[https://github.com/sponsors/xenodium][sponsoring]] to keep the work going. While my patches may seem relatively straightforward, some took [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=76120][quite a bit of effort to land upstream]].
+
+My Emacs work not your cup of tea? No worries. As mentioned earlier, sponsor the maintainers you rely on instead.
 
 * [2026-11-10 Tue] Journelly 1.5 released: faster all around
 :PROPERTIES:
